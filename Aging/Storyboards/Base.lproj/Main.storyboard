@@ -61,6 +61,7 @@
                     </view>
                     <connections>
                         <outlet property="ageLabel" destination="uOi-qK-SVL" id="pj0-oB-c8q"/>
+                        <outlet property="kidImage" destination="p0o-7l-6pl" id="sTo-s6-31i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

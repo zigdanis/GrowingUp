@@ -11,11 +11,16 @@ import UIKit
 class ViewController: UIViewController {
     
     @IBOutlet weak var ageLabel: UILabel!
+    @IBOutlet weak var kidImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupMainImage()
         maintainCurrentAge()
+    }
+    
+    private func setupMainImage() {
+        kidImage.layer.cornerRadius = 8
     }
 
     private func maintainCurrentAge() {
