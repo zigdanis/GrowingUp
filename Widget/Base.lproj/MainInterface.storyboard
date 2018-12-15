@@ -31,12 +31,22 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXM-FW-aS2">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
+                                <connections>
+                                    <action selector="widgetTouched" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="Df9-NV-mL5"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
                             <constraint firstItem="lm1-g6-qLc" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="16" id="1IS-17-eKL"/>
                             <constraint firstItem="F0s-1j-Jf4" firstAttribute="centerY" secondItem="lm1-g6-qLc" secondAttribute="centerY" id="9Ty-Um-ftG"/>
                             <constraint firstItem="lm1-g6-qLc" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="9yV-4v-IZe"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="tXM-FW-aS2" secondAttribute="bottom" id="BI1-7G-le8"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="tXM-FW-aS2" secondAttribute="trailing" id="Hne-oF-4At"/>
                             <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="F0s-1j-Jf4" secondAttribute="trailing" constant="16" id="U4s-5W-Rrx"/>
+                            <constraint firstItem="tXM-FW-aS2" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="cPE-jc-Eze"/>
+                            <constraint firstItem="tXM-FW-aS2" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="gd1-GB-Tgc"/>
                             <constraint firstItem="F0s-1j-Jf4" firstAttribute="leading" secondItem="lm1-g6-qLc" secondAttribute="trailing" constant="8" id="ra2-d0-eUZ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>

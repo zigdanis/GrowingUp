@@ -47,4 +47,11 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         ageLabel.text = AgeCalculator.currentAge()
     }
     
+    // MARK: - Actions
+    
+    @IBAction func widgetTouched() {
+        let url = URL(string: "aging-app://")!
+        extensionContext?.open(url, completionHandler: nil)
+    }
+    
 }
