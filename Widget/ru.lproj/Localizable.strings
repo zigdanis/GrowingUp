@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  Aging
+
+  Created by zigdanis on 15/12/2018.
+  Copyright © 2018 zigdanis. All rights reserved.
+*/
+
+/* Age label beginning */
+"I am: " = "Мне уже: ";

@@ -45,6 +45,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="92"/>
                     <connections>
+                        <outlet property="ageLabel" destination="F0s-1j-Jf4" id="zpC-It-d1i"/>
                         <outlet property="faceImage" destination="lm1-g6-qLc" id="Q5L-sk-lAb"/>
                     </connections>
                 </viewController>

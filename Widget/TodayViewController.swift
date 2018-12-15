@@ -8,28 +8,43 @@
 
 import UIKit
 import NotificationCenter
+import Core
 
 class TodayViewController: UIViewController, NCWidgetProviding {
         
+    @IBOutlet weak var ageLabel: UILabel!
     @IBOutlet weak var faceImage: UIImageView!
+    
+    private var attString = NSMutableAttributedString()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupFaceImage()
+        setupAgeLabel()
+        maintainCurrentAge()
     }
     
     private func setupFaceImage() {
         faceImage.layer.cornerRadius = faceImage.bounds.width / 2
     }
     
-    func widgetPerformUpdate(completionHandler: (@escaping (NCUpdateResult) -> Void)) {
-        // Perform any setup necessary in order to update the view.
-        
-        // If an error is encountered, use NCUpdateResult.Failed
-        // If there's no update required, use NCUpdateResult.NoData
-        // If there's an update, use NCUpdateResult.NewData
-        
-        completionHandler(NCUpdateResult.newData)
+    private func setupAgeLabel() {
+        ageLabel.minimumScaleFactor = 0.5
+        ageLabel.adjustsFontSizeToFitWidth = true
+        ageLabel.numberOfLines = 2
+    }
+    
+    //MARK: - Business Logic
+    
+    private func maintainCurrentAge() {
+        setupCurrentAge()
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            self?.setupCurrentAge()
+        }
+    }
+    
+    private func setupCurrentAge() {
+        ageLabel.text = AgeCalculator.currentAge()
     }
     
 }

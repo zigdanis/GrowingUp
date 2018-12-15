@@ -32,7 +32,6 @@ class ViewController: UIViewController {
     }
     
     private func setupCurrentAge() {
-       
         ageLabel.text = AgeCalculator.currentAge()
     }
     

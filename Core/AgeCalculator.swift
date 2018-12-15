@@ -12,11 +12,15 @@ import Foundation
 
 public struct AgeCalculator {
     
-    public static func currentAge() -> String {
-        
+    public static func ageComponents() -> DateComponents {
         let initial = DateComponents(year: 2018, month: 10, day: 20, hour: 15, minute: 25, second: 0)
         let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
-        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initial, to: now)
+        return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initial, to: now)
+    }
+    
+    public static func currentAge() -> String {
+        
+        let comps = AgeCalculator.ageComponents()
         let years = comps.year ?? 0
         let months = comps.month ?? 0
         let days = comps.day ?? 0
