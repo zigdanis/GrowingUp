@@ -1,0 +1,15 @@
+update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :telega do
+    telegram(
+      token: "443495039:AAGtuG2C8j_4pEaadDAUsvCOTsSW4xBMgSw",
+      chat_id: "-284033451",
+      text: "Testing Telegram build",
+      proxy: "https://localhost:9050"
+    )
+  end
+end

@@ -33,7 +33,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="kid" translatesAutoresizingMaskIntoConstraints="NO" id="p0o-7l-6pl">
                                 <rect key="frame" x="16" y="92.666666666666686" width="343" height="568.33333333333326"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12.12.2018" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9dC-G6-Po8">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="04.01.2019" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9dC-G6-Po8">
                                 <rect key="frame" x="16" y="663" width="343" height="14"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                 <nil key="textColor"/>
@@ -70,6 +70,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="kid" width="1024" height="1365"/>
+        <image name="kid" width="960" height="1280"/>
     </resources>
 </document>
