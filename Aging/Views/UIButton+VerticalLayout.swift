@@ -33,5 +33,6 @@ extension UIButton {
             return CGSize(width: width, height: height)
         }
         
-        return super.intrinsicContentSize    }
+        return super.intrinsicContentSize
+    }
 }
