@@ -13,10 +13,9 @@ class NewPersonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupGradientBackground()
     }
     
-    private func setupGradientBackground() {
+    @IBAction func addNewPersonTouched() {
         
     }
 }

@@ -31,6 +31,8 @@
 		098E561421C409E400E4CA1E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 098E561321C409E400E4CA1E /* Assets.xcassets */; };
 		098E561721C409E400E4CA1E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 098E561521C409E400E4CA1E /* LaunchScreen.storyboard */; };
 		0993D4FC21C40C1A001AA2BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0993D4FE21C40C1A001AA2BE /* InfoPlist.strings */; };
+		09A13C0F2222DE3800F76BBE /* UIButton+VerticalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C0E2222DE3800F76BBE /* UIButton+VerticalLayout.swift */; };
+		09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C102222E0F100F76BBE /* VerticalButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +107,8 @@
 		098E561621C409E400E4CA1E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		098E561821C409E400E4CA1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0993D4FF21C40C1D001AA2BE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		09A13C0E2222DE3800F76BBE /* UIButton+VerticalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+VerticalLayout.swift"; sourceTree = "<group>"; };
+		09A13C102222E0F100F76BBE /* VerticalButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButton.swift; sourceTree = "<group>"; };
 		09E7338A21C40DB000BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09E7338C21C43AF500BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -194,6 +198,8 @@
 			isa = PBXGroup;
 			children = (
 				094145FD2222C6260035D0E6 /* GradientView.swift */,
+				09A13C0E2222DE3800F76BBE /* UIButton+VerticalLayout.swift */,
+				09A13C102222E0F100F76BBE /* VerticalButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -447,8 +453,10 @@
 			files = (
 				094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */,
 				094145F72222C3BB0035D0E6 /* CoverViewController.swift in Sources */,
+				09A13C0F2222DE3800F76BBE /* UIButton+VerticalLayout.swift in Sources */,
 				094145FE2222C6260035D0E6 /* GradientView.swift in Sources */,
 				098E560F21C409E300E4CA1E /* ViewController.swift in Sources */,
+				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,
 			);
