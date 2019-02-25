@@ -11,9 +11,19 @@ import UIKit
 
 class NewPersonViewController: UIViewController {
 
+    @IBOutlet weak var addPersonButton: VerticalButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupAddPersonButton()
     }
+    
+    private func setupAddPersonButton() {
+        let title = NSLocalizedString("Add person", comment: "Title for the button on new person screen")
+        addPersonButton.setTitle(title, for: .normal)
+    }
+    
+    // MARK: - Actions
     
     @IBAction func addNewPersonTouched() {
         

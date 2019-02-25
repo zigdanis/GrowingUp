@@ -15,14 +15,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let startVC = SettingsViewController()
-        window?.rootViewController = startVC
-        window?.makeKeyAndVisible()
+        setupMainViewController()
+        setupNavigationControllerAppearence()
         return true
     }
 
+    private func setupMainViewController() {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let startVC = SettingsViewController()
+        let navigationVC = UINavigationController(rootViewController: startVC)
+        window?.rootViewController = navigationVC
+        window?.makeKeyAndVisible()
+    }
    
-
+    private func setupNavigationControllerAppearence() {
+        window?.tintColor = AppColor
+    }
 }
 
