@@ -46,7 +46,6 @@
                             <subviews>
                                 <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jru-U9-yCm" customClass="ImagePickerButton" customModule="Aging" customModuleProvider="target">
                                     <rect key="frame" x="0.0" y="0.0" width="117.33333333333333" height="129"/>
-                                    <state key="normal" image="kid"/>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="800" text="widget pic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KaM-Gw-5ZF">
                                     <rect key="frame" x="0.0" y="129" width="117.33333333333333" height="20.333333333333343"/>
@@ -80,7 +79,4 @@
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
         </view>
     </objects>
-    <resources>
-        <image name="kid" width="960" height="1280"/>
-    </resources>
 </document>

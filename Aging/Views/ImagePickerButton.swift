@@ -37,7 +37,7 @@ class ImagePickerButton: UIButton {
         resetCircleMask()
         backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
         appendCameraPic()
-        imageView?.contentMode = .scaleAspectFill
+        drawKidImage()
     }
     
     private func resetCircleMask() {
@@ -47,6 +47,22 @@ class ImagePickerButton: UIButton {
         layer.mask = maskLayer
     }
     
+    private func appendCameraPic() {
+        imageView?.contentMode = .scaleAspectFill
+        let bundle = Bundle(for: classForCoder)
+        let image = UIImage(named: "photo-camera", in: bundle, compatibleWith: traitCollection)
+        setImage(image, for: .normal)
+    }
+
+    private func drawKidImage() {
+        let bundle = Bundle(for: classForCoder)
+        let image = UIImage(named: "kid", in: bundle, compatibleWith: traitCollection)
+        let circle = image?.circleImage(for: CGSize(width: 300, height: 300))
+        setBackgroundImage(circle, for: .normal)
+    }
+    
+    // MARK: - Helpers
+    
     private func squaredBounds() -> CGRect {
         let isWide = bounds.width > bounds.height
         let minSide = isWide ? bounds.height : bounds.width
@@ -55,19 +71,5 @@ class ImagePickerButton: UIButton {
         let originY = isWide ? 0 : (diffSides / 2)
         return CGRect(x: originX, y: originY, width: minSide, height: minSide)
     }
-    
-    private func appendCameraPic() {
-        let cameraPic = UIImageView()
-        let bundle = Bundle(for: classForCoder)
-        cameraPic.image = UIImage(named: "photo-camera", in: bundle, compatibleWith: traitCollection)
-        addSubview(cameraPic)
-        cameraPic.translatesAutoresizingMaskIntoConstraints = false
-        let consts = [
-            cameraPic.widthAnchor.constraint(equalToConstant: 44),
-            cameraPic.centerXAnchor.constraint(equalTo: centerXAnchor),
-            cameraPic.centerYAnchor.constraint(equalTo: centerYAnchor)
-        ]
-        NSLayoutConstraint.activate(consts)
-    }
-    
+
 }

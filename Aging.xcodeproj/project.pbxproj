@@ -20,6 +20,7 @@
 		09051B6821C5697D008A99C6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B6A21C5697D008A99C6 /* Localizable.strings */; };
 		09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B7021C569EE008A99C6 /* InfoPlist.strings */; };
 		090F93962222D13500F6734B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F93952222D13500F6734B /* Constants.swift */; };
+		091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C440F2224781400FD4200 /* UIImage+Extensions.swift */; };
 		094145F72222C3BB0035D0E6 /* CoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F62222C3BB0035D0E6 /* CoverViewController.swift */; };
 		094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F82222C4B60035D0E6 /* NewPersonViewController.swift */; };
 		094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 094145FA2222C5000035D0E6 /* NewPersonViewController.xib */; };
@@ -98,6 +99,7 @@
 		09051B6F21C569EE008A99C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09051B7121C569EF008A99C6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		090F93952222D13500F6734B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		091C440F2224781400FD4200 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		094145F62222C3BB0035D0E6 /* CoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverViewController.swift; sourceTree = "<group>"; };
 		094145F82222C4B60035D0E6 /* NewPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
 		094145FA2222C5000035D0E6 /* NewPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				090F93952222D13500F6734B /* Constants.swift */,
+				091C440F2224781400FD4200 /* UIImage+Extensions.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				098E560F21C409E300E4CA1E /* ViewController.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
+				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,
 				09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */,
 			);
