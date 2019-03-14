@@ -13,7 +13,7 @@ typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person>) -
 typealias DeletePersonEntityGatewayCompletionHandler = (_ person: Result<Void>) -> Void
 
 protocol PersonsGateway {
-    func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
+//    func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler)
-    func delete(person: Person, completionHandler: @escaping DeletePersonEntityGatewayCompletionHandler)
+//    func delete(person: Person, completionHandler: @escaping DeletePersonEntityGatewayCompletionHandler)
 }

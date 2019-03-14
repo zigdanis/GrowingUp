@@ -15,7 +15,6 @@ struct Person: Equatable {
 }
 
 struct AddPersonParameters {
-    var id: String
     var name: String
     var birthday: Date
 }

@@ -34,13 +34,13 @@ class CoreDataPersonsGateway: PersonsGateway {
         }
     }
     
-    func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-        
-    }
-    
-    func delete(person: Person, completionHandler: @escaping DeletePersonEntityGatewayCompletionHandler) {
-        
-    }
+//    func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+//        
+//    }
+//    
+//    func delete(person: Person, completionHandler: @escaping DeletePersonEntityGatewayCompletionHandler) {
+//        
+//    }
     
     
 }
