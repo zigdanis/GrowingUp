@@ -285,25 +285,17 @@
 		098E560B21C409E300E4CA1E /* Aging */ = {
 			isa = PBXGroup;
 			children = (
-				094DF991223A703F00C331EC /* Core */,
+				098E560C21C409E300E4CA1E /* AppDelegate.swift */,
+				098E560E21C409E300E4CA1E /* ViewController.swift */,
 				098E561321C409E400E4CA1E /* Assets.xcassets */,
+				0993D4F421C40ADC001AA2BE /* Storyboards */,
+				098E561F21C40AB200E4CA1E /* Supporting FIles */,
+				094DF991223A703F00C331EC /* Core */,
 				090F93942222D12800F6734B /* Others */,
 				094145FC2222C6110035D0E6 /* Views */,
 				094145F52222C37A0035D0E6 /* View Controllers */,
-				098E561E21C40A8D00E4CA1E /* Classes */,
-				098E561F21C40AB200E4CA1E /* Supporting FIles */,
-				0993D4F421C40ADC001AA2BE /* Storyboards */,
 			);
 			path = Aging;
-			sourceTree = "<group>";
-		};
-		098E561E21C40A8D00E4CA1E /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				098E560C21C409E300E4CA1E /* AppDelegate.swift */,
-				098E560E21C409E300E4CA1E /* ViewController.swift */,
-			);
-			path = Classes;
 			sourceTree = "<group>";
 		};
 		098E561F21C40AB200E4CA1E /* Supporting FIles */ = {
