@@ -26,6 +26,10 @@
 		094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 094145FA2222C5000035D0E6 /* NewPersonViewController.xib */; };
 		094145FE2222C6260035D0E6 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145FD2222C6260035D0E6 /* GradientView.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
+		094DF994223A706C00C331EC /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF993223A706C00C331EC /* Person.swift */; };
+		094DF997223A713300C331EC /* PersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF996223A713300C331EC /* PersonsGateway.swift */; };
+		094DF999223A716C00C331EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF998223A716C00C331EC /* Result.swift */; };
+		094DF99C223A72A700C331EC /* AddPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF99B223A72A700C331EC /* AddPerson.swift */; };
 		09789E932224713B007AE4FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09789E922224713B007AE4FC /* Localizable.strings */; };
 		098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560C21C409E300E4CA1E /* AppDelegate.swift */; };
 		098E560F21C409E300E4CA1E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560E21C409E300E4CA1E /* ViewController.swift */; };
@@ -37,6 +41,7 @@
 		09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C122222EACD00F76BBE /* SettingsViewController.swift */; };
 		09A13C152222EAEB00F76BBE /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A13C142222EAEB00F76BBE /* SettingsViewController.xib */; };
 		09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C172223148700F76BBE /* ImagePickerButton.swift */; };
+		09C58EFF22270652008E7223 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C58EFE22270652008E7223 /* SettingsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +109,10 @@
 		094145F82222C4B60035D0E6 /* NewPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
 		094145FA2222C5000035D0E6 /* NewPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
 		094145FD2222C6260035D0E6 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
+		094DF993223A706C00C331EC /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		094DF996223A713300C331EC /* PersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGateway.swift; sourceTree = "<group>"; };
+		094DF998223A716C00C331EC /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		094DF99B223A72A700C331EC /* AddPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPerson.swift; sourceTree = "<group>"; };
 		09789E922224713B007AE4FC /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* Aging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		098E560C21C409E300E4CA1E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -117,6 +126,7 @@
 		09A13C122222EACD00F76BBE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		09A13C142222EAEB00F76BBE /* SettingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
 		09A13C172223148700F76BBE /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
+		09C58EFE22270652008E7223 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		09E7338A21C40DB000BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09E7338C21C43AF500BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -184,13 +194,14 @@
 			path = Core;
 			sourceTree = "<group>";
 		};
-		090F93942222D12800F6734B /* Helpers */ = {
+		090F93942222D12800F6734B /* Others */ = {
 			isa = PBXGroup;
 			children = (
 				090F93952222D13500F6734B /* Constants.swift */,
 				091C440F2224781400FD4200 /* UIImage+Extensions.swift */,
+				094DF998223A716C00C331EC /* Result.swift */,
 			);
-			path = Helpers;
+			path = Others;
 			sourceTree = "<group>";
 		};
 		094145F52222C37A0035D0E6 /* View Controllers */ = {
@@ -201,6 +212,7 @@
 				094145FA2222C5000035D0E6 /* NewPersonViewController.xib */,
 				09A13C122222EACD00F76BBE /* SettingsViewController.swift */,
 				09A13C142222EAEB00F76BBE /* SettingsViewController.xib */,
+				09C58EFE22270652008E7223 /* SettingsViewModel.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -213,6 +225,40 @@
 				09A13C172223148700F76BBE /* ImagePickerButton.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		094DF991223A703F00C331EC /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				094DF992223A704B00C331EC /* Entities */,
+				094DF995223A711A00C331EC /* Gateways */,
+				094DF99A223A728900C331EC /* UseCases */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		094DF992223A704B00C331EC /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				094DF993223A706C00C331EC /* Person.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		094DF995223A711A00C331EC /* Gateways */ = {
+			isa = PBXGroup;
+			children = (
+				094DF996223A713300C331EC /* PersonsGateway.swift */,
+			);
+			path = Gateways;
+			sourceTree = "<group>";
+		};
+		094DF99A223A728900C331EC /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				094DF99B223A72A700C331EC /* AddPerson.swift */,
+			);
+			path = UseCases;
 			sourceTree = "<group>";
 		};
 		098E560021C409E300E4CA1E = {
@@ -239,8 +285,9 @@
 		098E560B21C409E300E4CA1E /* Aging */ = {
 			isa = PBXGroup;
 			children = (
+				094DF991223A703F00C331EC /* Core */,
 				098E561321C409E400E4CA1E /* Assets.xcassets */,
-				090F93942222D12800F6734B /* Helpers */,
+				090F93942222D12800F6734B /* Others */,
 				094145FC2222C6110035D0E6 /* Views */,
 				094145F52222C37A0035D0E6 /* View Controllers */,
 				098E561E21C40A8D00E4CA1E /* Classes */,
@@ -465,14 +512,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				094DF997223A713300C331EC /* PersonsGateway.swift in Sources */,
 				094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */,
 				09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */,
 				094145F72222C3BB0035D0E6 /* CoverViewController.swift in Sources */,
+				094DF999223A716C00C331EC /* Result.swift in Sources */,
+				094DF99C223A72A700C331EC /* AddPerson.swift in Sources */,
 				094145FE2222C6260035D0E6 /* GradientView.swift in Sources */,
 				098E560F21C409E300E4CA1E /* ViewController.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
+				094DF994223A706C00C331EC /* Person.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
+				09C58EFF22270652008E7223 /* SettingsViewModel.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,
 				09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */,
 			);
