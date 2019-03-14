@@ -30,6 +30,13 @@
 		094DF997223A713300C331EC /* PersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF996223A713300C331EC /* PersonsGateway.swift */; };
 		094DF999223A716C00C331EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF998223A716C00C331EC /* Result.swift */; };
 		094DF99C223A72A700C331EC /* AddPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF99B223A72A700C331EC /* AddPerson.swift */; };
+		094DF9A4223A7CDF00C331EC /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A3223A7CDF00C331EC /* AddPersonConfigurator.swift */; };
+		094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A5223A956F00C331EC /* AddPersonPresenter.swift */; };
+		094DF9A8223A95BA00C331EC /* AddPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */; };
+		094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */; };
+		094DF9AF223AA46A00C331EC /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9AE223AA46A00C331EC /* CoreDataPerson.swift */; };
+		094DF9B2223AA50600C331EC /* LocalPersistancePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */; };
+		094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B3223AA53B00C331EC /* Aging.xcdatamodeld */; };
 		09789E932224713B007AE4FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09789E922224713B007AE4FC /* Localizable.strings */; };
 		098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560C21C409E300E4CA1E /* AppDelegate.swift */; };
 		098E560F21C409E300E4CA1E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560E21C409E300E4CA1E /* ViewController.swift */; };
@@ -113,6 +120,13 @@
 		094DF996223A713300C331EC /* PersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGateway.swift; sourceTree = "<group>"; };
 		094DF998223A716C00C331EC /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		094DF99B223A72A700C331EC /* AddPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPerson.swift; sourceTree = "<group>"; };
+		094DF9A3223A7CDF00C331EC /* AddPersonConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonConfigurator.swift; sourceTree = "<group>"; };
+		094DF9A5223A956F00C331EC /* AddPersonPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenter.swift; sourceTree = "<group>"; };
+		094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewController.swift; sourceTree = "<group>"; };
+		094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewRouter.swift; sourceTree = "<group>"; };
+		094DF9AE223AA46A00C331EC /* CoreDataPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPerson.swift; sourceTree = "<group>"; };
+		094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPersistancePersonsGateway.swift; sourceTree = "<group>"; };
+		094DF9B4223AA53B00C331EC /* Aging.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Aging.xcdatamodel; sourceTree = "<group>"; };
 		09789E922224713B007AE4FC /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* Aging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		098E560C21C409E300E4CA1E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -261,6 +275,59 @@
 			path = UseCases;
 			sourceTree = "<group>";
 		};
+		094DF9A1223A7C5400C331EC /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9A2223A7C6A00C331EC /* AddPerson */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		094DF9A2223A7C6A00C331EC /* AddPerson */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9A3223A7CDF00C331EC /* AddPersonConfigurator.swift */,
+				094DF9A5223A956F00C331EC /* AddPersonPresenter.swift */,
+				094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */,
+				094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */,
+			);
+			path = AddPerson;
+			sourceTree = "<group>";
+		};
+		094DF9AB223AA42E00C331EC /* EntityGateway */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9AC223AA44400C331EC /* LocalPersistance */,
+			);
+			path = EntityGateway;
+			sourceTree = "<group>";
+		};
+		094DF9AC223AA44400C331EC /* LocalPersistance */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9B0223AA47A00C331EC /* Gateways */,
+				094DF9AD223AA45500C331EC /* Entities */,
+				094DF9B3223AA53B00C331EC /* Aging.xcdatamodeld */,
+			);
+			path = LocalPersistance;
+			sourceTree = "<group>";
+		};
+		094DF9AD223AA45500C331EC /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9AE223AA46A00C331EC /* CoreDataPerson.swift */,
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		094DF9B0223AA47A00C331EC /* Gateways */ = {
+			isa = PBXGroup;
+			children = (
+				094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */,
+			);
+			path = Gateways;
+			sourceTree = "<group>";
+		};
 		098E560021C409E300E4CA1E = {
 			isa = PBXGroup;
 			children = (
@@ -285,12 +352,14 @@
 		098E560B21C409E300E4CA1E /* Aging */ = {
 			isa = PBXGroup;
 			children = (
+				094DF9AB223AA42E00C331EC /* EntityGateway */,
+				094DF9A1223A7C5400C331EC /* Scenes */,
+				094DF991223A703F00C331EC /* Core */,
 				098E560C21C409E300E4CA1E /* AppDelegate.swift */,
 				098E560E21C409E300E4CA1E /* ViewController.swift */,
 				098E561321C409E400E4CA1E /* Assets.xcassets */,
 				0993D4F421C40ADC001AA2BE /* Storyboards */,
 				098E561F21C40AB200E4CA1E /* Supporting FIles */,
-				094DF991223A703F00C331EC /* Core */,
 				090F93942222D12800F6734B /* Others */,
 				094145FC2222C6110035D0E6 /* Views */,
 				094145F52222C37A0035D0E6 /* View Controllers */,
@@ -512,7 +581,14 @@
 				094DF99C223A72A700C331EC /* AddPerson.swift in Sources */,
 				094145FE2222C6260035D0E6 /* GradientView.swift in Sources */,
 				098E560F21C409E300E4CA1E /* ViewController.swift in Sources */,
+				094DF9B2223AA50600C331EC /* LocalPersistancePersonsGateway.swift in Sources */,
+				094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
+				094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */,
+				094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */,
+				094DF9A4223A7CDF00C331EC /* AddPersonConfigurator.swift in Sources */,
+				094DF9A8223A95BA00C331EC /* AddPersonViewController.swift in Sources */,
+				094DF9AF223AA46A00C331EC /* CoreDataPerson.swift in Sources */,
 				094DF994223A706C00C331EC /* Person.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
@@ -917,6 +993,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		094DF9B3223AA53B00C331EC /* Aging.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				094DF9B4223AA53B00C331EC /* Aging.xcdatamodel */,
+			);
+			currentVersion = 094DF9B4223AA53B00C331EC /* Aging.xcdatamodel */;
+			path = Aging.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 098E560121C409E300E4CA1E /* Project object */;
 }
