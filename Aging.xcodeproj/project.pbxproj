@@ -35,8 +35,11 @@
 		094DF9A8223A95BA00C331EC /* AddPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */; };
 		094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */; };
 		094DF9AF223AA46A00C331EC /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9AE223AA46A00C331EC /* CoreDataPerson.swift */; };
-		094DF9B2223AA50600C331EC /* LocalPersistancePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */; };
+		094DF9B2223AA50600C331EC /* CoreDataPersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B1223AA50600C331EC /* CoreDataPersonsGateway.swift */; };
 		094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B3223AA53B00C331EC /* Aging.xcdatamodeld */; };
+		094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B6223AAEF600C331EC /* NSManagedObjectContext+Utils.swift */; };
+		094DF9B9223AAF7100C331EC /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B8223AAF7100C331EC /* CoreDataStack.swift */; };
+		094DF9BB223AB13600C331EC /* CoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9BA223AB13600C331EC /* CoreError.swift */; };
 		09789E932224713B007AE4FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09789E922224713B007AE4FC /* Localizable.strings */; };
 		098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560C21C409E300E4CA1E /* AppDelegate.swift */; };
 		098E560F21C409E300E4CA1E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560E21C409E300E4CA1E /* ViewController.swift */; };
@@ -125,8 +128,11 @@
 		094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewController.swift; sourceTree = "<group>"; };
 		094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewRouter.swift; sourceTree = "<group>"; };
 		094DF9AE223AA46A00C331EC /* CoreDataPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPerson.swift; sourceTree = "<group>"; };
-		094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPersistancePersonsGateway.swift; sourceTree = "<group>"; };
+		094DF9B1223AA50600C331EC /* CoreDataPersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGateway.swift; sourceTree = "<group>"; };
 		094DF9B4223AA53B00C331EC /* Aging.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Aging.xcdatamodel; sourceTree = "<group>"; };
+		094DF9B6223AAEF600C331EC /* NSManagedObjectContext+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Utils.swift"; sourceTree = "<group>"; };
+		094DF9B8223AAF7100C331EC /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		094DF9BA223AB13600C331EC /* CoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreError.swift; sourceTree = "<group>"; };
 		09789E922224713B007AE4FC /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* Aging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		098E560C21C409E300E4CA1E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -214,6 +220,7 @@
 				090F93952222D13500F6734B /* Constants.swift */,
 				091C440F2224781400FD4200 /* UIImage+Extensions.swift */,
 				094DF998223A716C00C331EC /* Result.swift */,
+				094DF9BA223AB13600C331EC /* CoreError.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -308,6 +315,8 @@
 				094DF9B0223AA47A00C331EC /* Gateways */,
 				094DF9AD223AA45500C331EC /* Entities */,
 				094DF9B3223AA53B00C331EC /* Aging.xcdatamodeld */,
+				094DF9B6223AAEF600C331EC /* NSManagedObjectContext+Utils.swift */,
+				094DF9B8223AAF7100C331EC /* CoreDataStack.swift */,
 			);
 			path = LocalPersistance;
 			sourceTree = "<group>";
@@ -323,7 +332,7 @@
 		094DF9B0223AA47A00C331EC /* Gateways */ = {
 			isa = PBXGroup;
 			children = (
-				094DF9B1223AA50600C331EC /* LocalPersistancePersonsGateway.swift */,
+				094DF9B1223AA50600C331EC /* CoreDataPersonsGateway.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -581,17 +590,20 @@
 				094DF99C223A72A700C331EC /* AddPerson.swift in Sources */,
 				094145FE2222C6260035D0E6 /* GradientView.swift in Sources */,
 				098E560F21C409E300E4CA1E /* ViewController.swift in Sources */,
-				094DF9B2223AA50600C331EC /* LocalPersistancePersonsGateway.swift in Sources */,
+				094DF9B2223AA50600C331EC /* CoreDataPersonsGateway.swift in Sources */,
 				094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
 				094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */,
 				094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */,
 				094DF9A4223A7CDF00C331EC /* AddPersonConfigurator.swift in Sources */,
 				094DF9A8223A95BA00C331EC /* AddPersonViewController.swift in Sources */,
+				094DF9B9223AAF7100C331EC /* CoreDataStack.swift in Sources */,
 				094DF9AF223AA46A00C331EC /* CoreDataPerson.swift in Sources */,
+				094DF9BB223AB13600C331EC /* CoreError.swift in Sources */,
 				094DF994223A706C00C331EC /* Person.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
+				094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */,
 				09C58EFF22270652008E7223 /* SettingsViewModel.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,
 				09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */,
