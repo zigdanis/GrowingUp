@@ -38,10 +38,30 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
     
     
     func addButtonPressed(parameters: AddPersonParameters) {
-        
+        router.dismiss()
+        view?.updateAddButtonState(isEnabled: false)
+        view?.updateCancelButtonState(isEnabled: false)
+        addPersonUseCase.add(parameters: parameters) { result in
+            switch result {
+            case let .success(person):
+                self.handlePersonAdded(person)
+            case let .failure(error):
+                self.handleAddPersonError(error)
+            }
+        }
     }
     
     func cancelButtonPressed() {
+        router.dismiss()
+    }
+    
+    // MARK: - Private
+    
+    private func handlePersonAdded(_ person: Person) {
         
+    }
+    
+    private func handleAddPersonError(_ error: CoreError) {
+        view?.displayAddPersonError(title: error.title, message: error.message)
     }
 }

@@ -12,6 +12,11 @@ struct CoreError: Error {
     var localizedDescription: String {
         return message
     }
-    
+    var title = ""
     var message = ""
+    
+    init(title: String = "", message: String) {
+        self.title = title
+        self.message = message
+    }
 }

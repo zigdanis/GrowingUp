@@ -14,3 +14,9 @@ extension AddPersonParameters {
         return AddPersonParameters(name: "name", birthday: Date())
     }
 }
+
+extension AddPersonParameters: Equatable {}
+
+public func == (lhs: AddPersonParameters, rhs: AddPersonParameters) -> Bool {
+    return lhs.name == rhs.name && lhs.birthday == rhs.birthday
+}

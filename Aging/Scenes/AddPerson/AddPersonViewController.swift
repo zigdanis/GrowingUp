@@ -25,6 +25,11 @@ class AddPersonViewController: UIViewController, AddPersonView {
         super.init(nibName: nil, bundle: nil)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configurator.configure(addPersonViewController: self)
+    }
+    
     required init(coder: NSCoder) {
         fatalError("init(coder:) not implemented")
     }

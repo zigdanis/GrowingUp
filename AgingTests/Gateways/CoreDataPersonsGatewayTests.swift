@@ -15,7 +15,7 @@ import XCTest
 // without a valid context
 class CoreDataPersonsGatewayTests: XCTestCase {
 
-    
+    // https://www.martinfowler.com/bliki/TestDouble.html
     var inMemoryCoreDataStack = InMemoryCoreDataStack()
     var managedObjectContextSpy = NSManagedObjectContextSpy()
     var inMemoryCoreDataBooksGateway: CoreDataPersonsGateway {

@@ -47,6 +47,12 @@
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
 		094DF9D7223AE66100C331EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D6223AE66100C331EC /* Result.swift */; };
 		09789E932224713B007AE4FC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09789E922224713B007AE4FC /* Localizable.strings */; };
+		098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */; };
+		098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */; };
+		098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */; };
+		098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */; };
+		09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */; };
+		09805504223C3C0100E24D40 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805503223C3C0100E24D40 /* Person.swift */; };
 		098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560C21C409E300E4CA1E /* AppDelegate.swift */; };
 		098E560F21C409E300E4CA1E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098E560E21C409E300E4CA1E /* ViewController.swift */; };
 		098E561221C409E300E4CA1E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 098E561021C409E300E4CA1E /* Main.storyboard */; };
@@ -155,6 +161,12 @@
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		094DF9D6223AE66100C331EC /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		09789E922224713B007AE4FC /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterTests.swift; sourceTree = "<group>"; };
+		098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewSpy.swift; sourceTree = "<group>"; };
+		098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseSpy.swift; sourceTree = "<group>"; };
+		098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewRouterSpy.swift; sourceTree = "<group>"; };
+		09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterDelegateSpy.swift; sourceTree = "<group>"; };
+		09805503223C3C0100E24D40 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* Aging.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aging.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		098E560C21C409E300E4CA1E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		098E560E21C409E300E4CA1E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -368,6 +380,7 @@
 		094DF9C1223AB35D00C331EC /* AgingTests */ = {
 			isa = PBXGroup;
 			children = (
+				098054F4223C295400E24D40 /* Presenters */,
 				094DF9CA223ADC3800C331EC /* Gateways */,
 				094DF9CD223ADCD400C331EC /* Helpers */,
 				094DF9C2223AB35D00C331EC /* AgingTests.swift */,
@@ -387,6 +400,10 @@
 		094DF9CD223ADCD400C331EC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				09805500223C34EB00E24D40 /* Delegates */,
+				098054FD223C328200E24D40 /* Routers */,
+				098054FA223C2B7000E24D40 /* UserCases */,
+				098054F7223C2A6D00E24D40 /* Views */,
 				094DF9D3223ADEDB00C331EC /* Creators */,
 				094DF9CE223ADCE500C331EC /* CoreData */,
 				094DF9D6223AE66100C331EC /* Result.swift */,
@@ -407,8 +424,49 @@
 			isa = PBXGroup;
 			children = (
 				094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */,
+				09805503223C3C0100E24D40 /* Person.swift */,
 			);
 			path = Creators;
+			sourceTree = "<group>";
+		};
+		098054F4223C295400E24D40 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */,
+			);
+			path = Presenters;
+			sourceTree = "<group>";
+		};
+		098054F7223C2A6D00E24D40 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		098054FA223C2B7000E24D40 /* UserCases */ = {
+			isa = PBXGroup;
+			children = (
+				098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */,
+			);
+			path = UserCases;
+			sourceTree = "<group>";
+		};
+		098054FD223C328200E24D40 /* Routers */ = {
+			isa = PBXGroup;
+			children = (
+				098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */,
+			);
+			path = Routers;
+			sourceTree = "<group>";
+		};
+		09805500223C34EB00E24D40 /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */,
+			);
+			path = Delegates;
 			sourceTree = "<group>";
 		};
 		098E560021C409E300E4CA1E = {
@@ -688,10 +746,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */,
+				098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */,
 				094DF9D7223AE66100C331EC /* Result.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
+				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
+				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
+				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
+				098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
 				094DF9C3223AB35D00C331EC /* AgingTests.swift in Sources */,
 			);
