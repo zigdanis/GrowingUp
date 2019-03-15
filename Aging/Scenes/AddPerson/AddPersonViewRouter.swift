@@ -11,3 +11,16 @@ import Foundation
 protocol AddPersonViewRouter {
     func dismiss()
 }
+
+class AddPersonViewRouterImplementation: AddPersonViewRouter {
+    
+    private weak var addPersonViewController: AddPersonViewController?
+    
+    init(addPersonViewController: AddPersonViewController) {
+        self.addPersonViewController = addPersonViewController
+    }
+    
+    func dismiss() {
+        addPersonViewController?.dismiss(animated: true)
+    }
+}

@@ -22,8 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func setupMainViewController() {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let startVC = SettingsViewController()
-        let navigationVC = UINavigationController(rootViewController: startVC)
+        let configurator = AddPersonConfiguratorImplementation(addPersonPresenterDelegate: self)
+        let mainVC = AddPersonViewController(configurator: configurator)
+        let navigationVC = UINavigationController(rootViewController: mainVC)
         window?.rootViewController = navigationVC
         window?.makeKeyAndVisible()
     }
@@ -33,3 +34,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+extension AppDelegate: AddPersonPresenterDelegate {
+    func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
+        
+    }
+    
+    func addPersonPresenterCancel(presenter: AddPersonPresenter) {
+        
+    }
+    
+}

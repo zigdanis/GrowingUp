@@ -17,11 +17,10 @@ protocol AddPersonView: class {
 
 class AddPersonViewController: UIViewController, AddPersonView {
     
-    let presenter: AddPersonPresenter
+    var presenter: AddPersonPresenter!
     let configurator: AddPersonConfigurator
     
-    init(presenter: AddPersonPresenter, configurator: AddPersonConfigurator) {
-        self.presenter = presenter
+    init(configurator: AddPersonConfigurator) {
         self.configurator = configurator
         super.init(nibName: nil, bundle: nil)
     }

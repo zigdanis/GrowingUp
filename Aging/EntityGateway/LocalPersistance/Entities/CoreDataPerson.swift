@@ -20,10 +20,5 @@ extension CoreDataPerson {
         name = parameters.name
         birthdate = parameters.birthday
     }
-    
-    func populate(with person: Person) {
-        id = person.id
-        name = person.name
-        birthdate = person.birthday
-    }
+
 }

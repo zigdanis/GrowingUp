@@ -20,16 +20,12 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
         self.addPersonPresenterDelegate = addPersonPresenterDelegate
     }
     
-    func configure(addPersonViewController: AddPersonViewController) {
-        
-//        let personsGateway = CacheBooksGateway(apiBooksGateway: apiBooksGateway,
-//                                             localPersistenceBooksGateway: coreDataBooksGateway)
-//        
-//        let addBookUseCase = AddBookUseCaseImplementation(booksGateway: booksGateway)
-//        let router = AddBookViewRouterImplementation(addBookViewController: addBookViewController)
-//        
-//        let presenter = AddBookPresenterImplementation(view: addBookViewController, addBookUseCase: addBookUseCase, router: router, delegate: addBookPresenterDelegate)
-//        
-//        addBookViewController.presenter = presenter
+    func configure(addPersonViewController: AddPersonViewController) {        
+        let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
+        let personsGateway = CoreDataPersonsGateway(viewContext: viewContext)
+        let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
+        let router = AddPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
+        let presenter = AddPersonPresenterImplementation(view: addPersonViewController, addPersonUseCase: addPersonUseCase, router: router, delegate: addPersonPresenterDelegate)
+        addPersonViewController.presenter = presenter
     }
 }
