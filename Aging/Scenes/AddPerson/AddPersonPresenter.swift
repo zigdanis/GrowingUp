@@ -38,10 +38,9 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
     
     
     func addButtonPressed(parameters: AddPersonParameters) {
-        router.dismiss()
-        view?.updateAddButtonState(isEnabled: false)
-        view?.updateCancelButtonState(isEnabled: false)
+        updateNavigationItemsState(isEnabled: false)
         addPersonUseCase.add(parameters: parameters) { result in
+            self.updateNavigationItemsState(isEnabled: true)
             switch result {
             case let .success(person):
                 self.handlePersonAdded(person)
@@ -52,16 +51,21 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
     }
     
     func cancelButtonPressed() {
-        router.dismiss()
+        delegate?.addPersonPresenterCancel(presenter: self)
     }
     
     // MARK: - Private
     
     private func handlePersonAdded(_ person: Person) {
-        
+        delegate?.addPersonPresenter(self, didAdd: person)
     }
     
     private func handleAddPersonError(_ error: CoreError) {
         view?.displayAddPersonError(title: error.title, message: error.message)
+    }
+   
+    private func updateNavigationItemsState(isEnabled enabled: Bool) {
+        view?.updateAddButtonState(isEnabled: enabled)
+        view?.updateCancelButtonState(isEnabled: enabled)
     }
 }

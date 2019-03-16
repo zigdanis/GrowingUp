@@ -25,14 +25,11 @@ class AddPersonPresenterTests: XCTestCase {
         sut = AddPersonPresenterImplementation(view: addPersonViewSpy, addPersonUseCase: addPersonUseCaseSpy, router: addPersonViewRouterSpy, delegate: addPersonPresenterDelegateSpy)
     }
     
-    func test_SUT_AddButtonPressed_DismissView() {
-        // Given
-        let params = AddPersonParameters.createParameters()
-        addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
+    func test_SUT_CancelPressed_CalledCancelOnDelegate() {
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.cancelButtonPressed()
         // Then
-        XCTAssertTrue(addPersonViewRouterSpy.dismissCalled, "Expected to dismiss view after saved person")
+        XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledCancel, "Should have been called cancel on delegate")
     }
     
     func test_SUT_AddButtonPressed_AddAndCancelButtonsDisabledBeforeCompletionHandler() {
@@ -44,6 +41,17 @@ class AddPersonPresenterTests: XCTestCase {
         // Then
         XCTAssertFalse(addPersonViewSpy.addButtonEnabledState ?? true, "Add button should've been set to disabled")
         XCTAssertFalse(addPersonViewSpy.cancelButtonEnabledState ?? true, "Cancel button should've been set to disabled")
+    }
+    
+    func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
+        // Given
+        let params = AddPersonParameters.createParameters()
+        addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
+        // When
+        sut.addButtonPressed(parameters: params)
+        // Then
+        XCTAssertTrue(addPersonViewSpy.addButtonEnabledState ?? false, "Add button should've been set to enabled")
+        XCTAssertTrue(addPersonViewSpy.cancelButtonEnabledState ?? false, "Cancel button should've been set to enabled")
     }
     
     func test_SUT_AddButtonPressed_ShouldSavePerson() {
@@ -59,11 +67,17 @@ class AddPersonPresenterTests: XCTestCase {
         XCTAssertEqual(expectedParameters, params, "Should have been called addPerson for AddPersonUseCase")
     }
     
-    func test_SUT_CancelButtonPressed_DismissView() {
+    func test_SUT_AddButtonPressed_CallingAddPersonDelegateMethod() {
+        // Given
+        let params = AddPersonParameters.createParameters()
+        let expectedPersonToAdd = Person.createPerson()
+        addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
         // When
-        sut.cancelButtonPressed()
+        sut.addButtonPressed(parameters: params)
         // Then
-        XCTAssertTrue(addPersonViewRouterSpy.dismissCalled, "Should have been called dismiss on cancel tap")
+        XCTAssertEqual(addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
+        XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledAddPerson, "Should have been call addPerson on Delegate")
+        
     }
     
     func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() {
