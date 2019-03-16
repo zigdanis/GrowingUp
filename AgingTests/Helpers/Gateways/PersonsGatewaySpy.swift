@@ -1,0 +1,22 @@
+//
+//  PersonsGatewaySpy.swift
+//  AgingTests
+//
+//  Created by zigdanis on 16/03/2019.
+//  Copyright © 2019 zigdanis. All rights reserved.
+//
+
+import Foundation
+@testable import Aging
+
+class PersonsGatewaySpy: PersonsGateway {
+    
+    var addPersonParameters: AddPersonParameters!
+    var addPersonResultToBeReturned: Result<Person>!
+    
+    func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+        addPersonParameters = parameters
+        completionHandler(addPersonResultToBeReturned)
+    }
+    
+}

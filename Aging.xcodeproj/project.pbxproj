@@ -22,6 +22,8 @@
 		090F93962222D13500F6734B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F93952222D13500F6734B /* Constants.swift */; };
 		091BEEAD223D38F800A3D057 /* TextFieldTableVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */; };
 		091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */; };
+		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
+		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C440F2224781400FD4200 /* UIImage+Extensions.swift */; };
 		094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F82222C4B60035D0E6 /* NewPersonViewController.swift */; };
 		094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 094145FA2222C5000035D0E6 /* NewPersonViewController.xib */; };
@@ -41,7 +43,6 @@
 		094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B6223AAEF600C331EC /* NSManagedObjectContext+Utils.swift */; };
 		094DF9B9223AAF7100C331EC /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9B8223AAF7100C331EC /* CoreDataStack.swift */; };
 		094DF9BB223AB13600C331EC /* CoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9BA223AB13600C331EC /* CoreError.swift */; };
-		094DF9C3223AB35D00C331EC /* AgingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9C2223AB35D00C331EC /* AgingTests.swift */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
 		094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
@@ -134,6 +135,8 @@
 		090F93952222D13500F6734B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableVIewCell.swift; sourceTree = "<group>"; };
 		091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableVIewCell.xib; sourceTree = "<group>"; };
+		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
+		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		091C440F2224781400FD4200 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		094145F82222C4B60035D0E6 /* NewPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
 		094145FA2222C5000035D0E6 /* NewPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
@@ -153,7 +156,6 @@
 		094DF9B8223AAF7100C331EC /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9BA223AB13600C331EC /* CoreError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreError.swift; sourceTree = "<group>"; };
 		094DF9C0223AB35D00C331EC /* AgingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AgingTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		094DF9C2223AB35D00C331EC /* AgingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgingTests.swift; sourceTree = "<group>"; };
 		094DF9C4223AB35D00C331EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewayTests.swift; sourceTree = "<group>"; };
 		094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMempryCoreDataStack.swift; sourceTree = "<group>"; };
@@ -272,6 +274,22 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		091BEEB0223D612C00A3D057 /* UseCases */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */,
+			);
+			path = UseCases;
+			sourceTree = "<group>";
+		};
+		091BEEB3223D61E800A3D057 /* Gateways */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
+			);
+			path = Gateways;
+			sourceTree = "<group>";
+		};
 		094145F52222C37A0035D0E6 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -385,10 +403,10 @@
 		094DF9C1223AB35D00C331EC /* AgingTests */ = {
 			isa = PBXGroup;
 			children = (
+				091BEEB0223D612C00A3D057 /* UseCases */,
 				098054F4223C295400E24D40 /* Presenters */,
 				094DF9CA223ADC3800C331EC /* Gateways */,
 				094DF9CD223ADCD400C331EC /* Helpers */,
-				094DF9C2223AB35D00C331EC /* AgingTests.swift */,
 				094DF9C4223AB35D00C331EC /* Info.plist */,
 			);
 			path = AgingTests;
@@ -405,13 +423,14 @@
 		094DF9CD223ADCD400C331EC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				094DF9D6223AE66100C331EC /* Result.swift */,
+				091BEEB3223D61E800A3D057 /* Gateways */,
 				09805500223C34EB00E24D40 /* Delegates */,
 				098054FD223C328200E24D40 /* Routers */,
 				098054FA223C2B7000E24D40 /* UserCases */,
 				098054F7223C2A6D00E24D40 /* Views */,
 				094DF9D3223ADEDB00C331EC /* Creators */,
 				094DF9CE223ADCE500C331EC /* CoreData */,
-				094DF9D6223AE66100C331EC /* Result.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -758,12 +777,13 @@
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
+				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
-				094DF9C3223AB35D00C331EC /* AgingTests.swift in Sources */,
+				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
