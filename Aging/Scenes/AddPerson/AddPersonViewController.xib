@@ -10,10 +10,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SettingsViewController" customModule="Aging" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddPersonViewController" customModule="Aging" customModuleProvider="target">
             <connections>
                 <outlet property="appPicButton" destination="9uC-Q7-wPc" id="OIO-17-GoU"/>
                 <outlet property="appPicLabel" destination="Wao-5K-xjL" id="NIr-VR-BcS"/>
+                <outlet property="tableView" destination="BNM-va-OSY" id="H3i-1i-Ew4"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Qgh-rF-OAL"/>
                 <outlet property="widgetPicButton" destination="jru-U9-yCm" id="PVo-Cn-pfY"/>
                 <outlet property="widgetPicLabel" destination="KaM-Gw-5ZF" id="tNQ-TZ-8V5"/>

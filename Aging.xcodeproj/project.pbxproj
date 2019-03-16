@@ -20,8 +20,9 @@
 		09051B6821C5697D008A99C6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B6A21C5697D008A99C6 /* Localizable.strings */; };
 		09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B7021C569EE008A99C6 /* InfoPlist.strings */; };
 		090F93962222D13500F6734B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F93952222D13500F6734B /* Constants.swift */; };
+		091BEEAD223D38F800A3D057 /* TextFieldTableVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */; };
+		091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */; };
 		091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C440F2224781400FD4200 /* UIImage+Extensions.swift */; };
-		094145F72222C3BB0035D0E6 /* CoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F62222C3BB0035D0E6 /* CoverViewController.swift */; };
 		094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F82222C4B60035D0E6 /* NewPersonViewController.swift */; };
 		094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 094145FA2222C5000035D0E6 /* NewPersonViewController.xib */; };
 		094145FE2222C6260035D0E6 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145FD2222C6260035D0E6 /* GradientView.swift */; };
@@ -60,10 +61,8 @@
 		098E561721C409E400E4CA1E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 098E561521C409E400E4CA1E /* LaunchScreen.storyboard */; };
 		0993D4FC21C40C1A001AA2BE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0993D4FE21C40C1A001AA2BE /* InfoPlist.strings */; };
 		09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C102222E0F100F76BBE /* VerticalButton.swift */; };
-		09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C122222EACD00F76BBE /* SettingsViewController.swift */; };
-		09A13C152222EAEB00F76BBE /* SettingsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A13C142222EAEB00F76BBE /* SettingsViewController.xib */; };
+		09A13C152222EAEB00F76BBE /* AddPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */; };
 		09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C172223148700F76BBE /* ImagePickerButton.swift */; };
-		09C58EFF22270652008E7223 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09C58EFE22270652008E7223 /* SettingsViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -133,8 +132,9 @@
 		09051B6F21C569EE008A99C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09051B7121C569EF008A99C6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		090F93952222D13500F6734B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableVIewCell.swift; sourceTree = "<group>"; };
+		091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableVIewCell.xib; sourceTree = "<group>"; };
 		091C440F2224781400FD4200 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
-		094145F62222C3BB0035D0E6 /* CoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoverViewController.swift; sourceTree = "<group>"; };
 		094145F82222C4B60035D0E6 /* NewPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
 		094145FA2222C5000035D0E6 /* NewPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
 		094145FD2222C6260035D0E6 /* GradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GradientView.swift; sourceTree = "<group>"; };
@@ -176,10 +176,8 @@
 		098E561821C409E400E4CA1E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0993D4FF21C40C1D001AA2BE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09A13C102222E0F100F76BBE /* VerticalButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButton.swift; sourceTree = "<group>"; };
-		09A13C122222EACD00F76BBE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
-		09A13C142222EAEB00F76BBE /* SettingsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsViewController.xib; sourceTree = "<group>"; };
+		09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddPersonViewController.xib; sourceTree = "<group>"; };
 		09A13C172223148700F76BBE /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
-		09C58EFE22270652008E7223 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		09E7338A21C40DB000BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09E7338C21C43AF500BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -265,15 +263,20 @@
 			path = Others;
 			sourceTree = "<group>";
 		};
+		091BEEAB223D38C300A3D057 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */,
+				091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		094145F52222C37A0035D0E6 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				094145F62222C3BB0035D0E6 /* CoverViewController.swift */,
 				094145F82222C4B60035D0E6 /* NewPersonViewController.swift */,
 				094145FA2222C5000035D0E6 /* NewPersonViewController.xib */,
-				09A13C122222EACD00F76BBE /* SettingsViewController.swift */,
-				09A13C142222EAEB00F76BBE /* SettingsViewController.xib */,
-				09C58EFE22270652008E7223 /* SettingsViewModel.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -336,7 +339,9 @@
 				094DF9A3223A7CDF00C331EC /* AddPersonConfigurator.swift */,
 				094DF9A5223A956F00C331EC /* AddPersonPresenter.swift */,
 				094DF9A7223A95BA00C331EC /* AddPersonViewController.swift */,
+				09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */,
 				094DF9A9223A95FD00C331EC /* AddPersonViewRouter.swift */,
+				091BEEAB223D38C300A3D057 /* Cells */,
 			);
 			path = AddPerson;
 			sourceTree = "<group>";
@@ -714,12 +719,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */,
-				09A13C152222EAEB00F76BBE /* SettingsViewController.xib in Resources */,
+				09A13C152222EAEB00F76BBE /* AddPersonViewController.xib in Resources */,
 				098E561721C409E400E4CA1E /* LaunchScreen.storyboard in Resources */,
 				09789E932224713B007AE4FC /* Localizable.strings in Resources */,
 				098E561421C409E400E4CA1E /* Assets.xcassets in Resources */,
 				098E561221C409E300E4CA1E /* Main.storyboard in Resources */,
 				0993D4FC21C40C1A001AA2BE /* InfoPlist.strings in Resources */,
+				091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,7 +774,7 @@
 				094DF997223A713300C331EC /* PersonsGateway.swift in Sources */,
 				094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */,
 				09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */,
-				094145F72222C3BB0035D0E6 /* CoverViewController.swift in Sources */,
+				091BEEAD223D38F800A3D057 /* TextFieldTableVIewCell.swift in Sources */,
 				094DF999223A716C00C331EC /* Result.swift in Sources */,
 				094DF99C223A72A700C331EC /* AddPerson.swift in Sources */,
 				094145FE2222C6260035D0E6 /* GradientView.swift in Sources */,
@@ -787,9 +793,7 @@
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
 				094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */,
-				09C58EFF22270652008E7223 /* SettingsViewModel.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,
-				09A13C132222EACD00F76BBE /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

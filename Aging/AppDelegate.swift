@@ -40,7 +40,7 @@ extension AppDelegate: AddPersonPresenterDelegate {
     }
     
     func addPersonPresenterCancel(presenter: AddPersonPresenter) {
-        
+        print("Cancel tapped")
     }
     
 }
