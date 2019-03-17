@@ -55,9 +55,9 @@
 		0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533D223ECBC40081FB10 /* VerticalButton.swift */; };
 		09165370223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */; };
 		09165371223ECBC40081FB10 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165341223ECBC40081FB10 /* CoreDataStack.swift */; };
-		09165372223ECBC40081FB10 /* Aging.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165342223ECBC40081FB10 /* Aging.xcdatamodeld */; };
 		09165373223ECBC40081FB10 /* CoreDataPersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */; };
 		09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
+		0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
@@ -167,7 +167,6 @@
 		0916532B223ECBC40081FB10 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		0916532C223ECBC40081FB10 /* CoreError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreError.swift; sourceTree = "<group>"; };
 		0916532D223ECBC40081FB10 /* Date+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
-		09165333223ECBC40081FB10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09165334223ECBC40081FB10 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		09165335223ECBC40081FB10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09165336223ECBC40081FB10 /* GrowingUp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GrowingUp.entitlements; sourceTree = "<group>"; };
@@ -179,12 +178,12 @@
 		0916533D223ECBC40081FB10 /* VerticalButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalButton.swift; sourceTree = "<group>"; };
 		09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Utils.swift"; sourceTree = "<group>"; };
 		09165341223ECBC40081FB10 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
-		09165343223ECBC40081FB10 /* Aging.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Aging.xcdatamodel; sourceTree = "<group>"; };
 		09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGateway.swift; sourceTree = "<group>"; };
 		09165347223ECBC40081FB10 /* CoreDataPerson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataPerson.swift; sourceTree = "<group>"; };
 		0916534A223ECBC40081FB10 /* rswift */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rswift; sourceTree = "<group>"; };
 		0916534B223ECBC40081FB10 /* License */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License; sourceTree = "<group>"; };
 		09165377223ECE5D0081FB10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUp.xcdatamodel; sourceTree = "<group>"; };
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
@@ -429,7 +428,7 @@
 			children = (
 				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
 				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
-				09165342223ECBC40081FB10 /* Aging.xcdatamodeld */,
+				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
 				09165344223ECBC40081FB10 /* Gateways */,
 				09165346223ECBC40081FB10 /* Entities */,
 			);
@@ -509,7 +508,7 @@
 			path = iOS;
 			sourceTree = "<group>";
 		};
-		094DF9C1223AB35D00C331EC /* AgingTests */ = {
+		094DF9C1223AB35D00C331EC /* GrowingUpTests */ = {
 			isa = PBXGroup;
 			children = (
 				091BEEB0223D612C00A3D057 /* UseCases */,
@@ -518,7 +517,7 @@
 				094DF9CD223ADCD400C331EC /* Helpers */,
 				094DF9C4223AB35D00C331EC /* Info.plist */,
 			);
-			path = AgingTests;
+			path = GrowingUpTests;
 			sourceTree = "<group>";
 		};
 		094DF9CA223ADC3800C331EC /* Gateways */ = {
@@ -608,7 +607,7 @@
 				09165305223ECBC40081FB10 /* GrowingUp */,
 				09051B3F21C558DB008A99C6 /* Widget */,
 				09051B5721C55EB6008A99C6 /* Core */,
-				094DF9C1223AB35D00C331EC /* AgingTests */,
+				094DF9C1223AB35D00C331EC /* GrowingUpTests */,
 				09051B3C21C558DB008A99C6 /* Frameworks */,
 				098E560A21C409E300E4CA1E /* Products */,
 				091BEEC6223E30BB00A3D057 /* Carthage */,
@@ -935,7 +934,7 @@
 				0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
-				09165372223ECBC40081FB10 /* Aging.xcdatamodeld in Sources */,
+				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
 				09165353223ECBC40081FB10 /* TextFieldTableVIewCell.swift in Sources */,
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
 				0916535B223ECBC40081FB10 /* PersonsGateway.swift in Sources */,
@@ -1035,7 +1034,6 @@
 		0916532F223ECBC40081FB10 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09165333223ECBC40081FB10 /* Base */,
 				09165335223ECBC40081FB10 /* ru */,
 				09165377223ECE5D0081FB10 /* en */,
 			);
@@ -1168,13 +1166,13 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
-				INFOPLIST_FILE = AgingTests/Info.plist;
+				INFOPLIST_FILE = $PRODUCT_NAME/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.AgingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUpTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1189,13 +1187,13 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
-				INFOPLIST_FILE = AgingTests/Info.plist;
+				INFOPLIST_FILE = $PRODUCT_NAME/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.AgingTests;
+				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUpTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1422,13 +1420,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		09165342223ECBC40081FB10 /* Aging.xcdatamodeld */ = {
+		09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				09165343223ECBC40081FB10 /* Aging.xcdatamodel */,
+				09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */,
 			);
-			currentVersion = 09165343223ECBC40081FB10 /* Aging.xcdatamodel */;
-			path = Aging.xcdatamodeld;
+			currentVersion = 09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */;
+			path = GrowingUp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
