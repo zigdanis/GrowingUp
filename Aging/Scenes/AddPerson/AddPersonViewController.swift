@@ -95,18 +95,17 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
         case 0:
             let identifier = R.reuseIdentifier.textFieldTableVIewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
-        case 1:
+        case 1...2:
             let identifier = R.reuseIdentifier.labelTableViewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-            return cell
-        case 2:
-            let identifier = R.reuseIdentifier.labelTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
         default:
             let identifier = R.reuseIdentifier.switchTableViewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
         }
         

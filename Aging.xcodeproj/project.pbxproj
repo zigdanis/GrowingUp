@@ -70,6 +70,7 @@
 		09A69E5D223E4A0100291044 /* LabelTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A69E5C223E4A0100291044 /* LabelTableViewCell.xib */; };
 		09A69E5F223E665600291044 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A69E5E223E665600291044 /* SwitchTableViewCell.swift */; };
 		09A69E61223E66D700291044 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A69E60223E66D700291044 /* SwitchTableViewCell.xib */; };
+		09A69E63223E84FD00291044 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A69E62223E84FD00291044 /* Date+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -194,6 +195,7 @@
 		09A69E5C223E4A0100291044 /* LabelTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LabelTableViewCell.xib; sourceTree = "<group>"; };
 		09A69E5E223E665600291044 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		09A69E60223E66D700291044 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
+		09A69E62223E84FD00291044 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		09E7338A21C40DB000BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09E7338C21C43AF500BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -273,6 +275,7 @@
 			isa = PBXGroup;
 			children = (
 				090F93952222D13500F6734B /* Constants.swift */,
+				09A69E62223E84FD00291044 /* Date+Extensions.swift */,
 				091C440F2224781400FD4200 /* UIImage+Extensions.swift */,
 				094DF998223A716C00C331EC /* Result.swift */,
 				094DF9BA223AB13600C331EC /* CoreError.swift */,
@@ -931,6 +934,7 @@
 				094DF9B2223AA50600C331EC /* CoreDataPersonsGateway.swift in Sources */,
 				094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
+				09A69E63223E84FD00291044 /* Date+Extensions.swift in Sources */,
 				09A69E5B223E49AD00291044 /* LabelTableViewCell.swift in Sources */,
 				091BEEC2223D7F1200A3D057 /* R.generated.swift in Sources */,
 				094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */,

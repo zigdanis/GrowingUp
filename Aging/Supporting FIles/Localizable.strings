@@ -14,3 +14,30 @@
 
 /* "Title for the button on new person screen" */
 "Add person" = "Add person";
+
+/* Title for the person's name value */
+"Name" = "Name";
+
+/* Title for the person's date of birth */
+"Date of birth" = "Date of birth";
+
+/* Title for the person's time of birth */
+"Time of birth" = "Time of birth";
+
+/* Title for the person's showing date componenets */
+"Show years" = "Show years";
+
+/* Title for the person's showing date componenets */
+"Show months" = "Show months";
+
+/* Title for the person's showing date componenets */
+"Show days" = "Show days";
+
+/* Title for the person's showing date componenets */
+"Show hours" = "Show hours";
+
+/* Title for the person's showing date componenets */
+"Show minutes" = "Show minutes";
+
+/* Title for the person's showing date componenets */
+"Show seconds" = "Show seconds";

@@ -33,11 +33,17 @@ class ImagePickerButton: UIButton {
         resetCircleMask()
     }
     
+    func drawImage(_ image: UIImage) {
+        let circle = image.circleImage(for: CGSize(width: 300, height: 300))
+        setBackgroundImage(circle, for: .normal)
+    }
+    
+    // MARK: - Private
+    
     private func commonInit() {
         resetCircleMask()
         backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5)
         appendCameraPic()
-        drawKidImage()
     }
     
     private func resetCircleMask() {
@@ -52,13 +58,6 @@ class ImagePickerButton: UIButton {
         let bundle = Bundle(for: classForCoder)
         let image = UIImage(named: "photo-camera", in: bundle, compatibleWith: traitCollection)
         setImage(image, for: .normal)
-    }
-
-    private func drawKidImage() {
-        let bundle = Bundle(for: classForCoder)
-        let image = UIImage(named: "kid", in: bundle, compatibleWith: traitCollection)
-        let circle = image?.circleImage(for: CGSize(width: 300, height: 300))
-        setBackgroundImage(circle, for: .normal)
     }
     
     // MARK: - Helpers

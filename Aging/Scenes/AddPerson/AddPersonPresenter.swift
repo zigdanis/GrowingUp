@@ -12,6 +12,9 @@ protocol AddPersonPresenter {
     var router: AddPersonViewRouter { get }
     func addButtonPressed(parameters: AddPersonParameters)
     func cancelButtonPressed()
+    func configure(cell: TextFieldCellView, forRow row: Int)
+    func configure(cell: LabelCellView, forRow row: Int)
+    func configure(cell: SwitchCellView, forRow row: Int)
 }
 
 protocol AddPersonPresenterDelegate: class {
@@ -25,6 +28,10 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
     private var addPersonUseCase: AddPersonUseCase
     private weak var delegate: AddPersonPresenterDelegate?
     private(set) var router: AddPersonViewRouter
+    private var addPersonName: String?
+    private var addPersonDateOfBirth: Date?
+    private var addPersonTimeOfBirth: Date?
+    private var addPersonDateComponents = AddPersonDateComponents()
     
     init(view: AddPersonView,
          addPersonUseCase: AddPersonUseCase,
@@ -36,6 +43,7 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
         self.delegate = delegate
     }
     
+    // MARK: - AddPersonPresenter
     
     func addButtonPressed(parameters: AddPersonParameters) {
         updateNavigationItemsState(isEnabled: false)
@@ -52,6 +60,53 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
     
     func cancelButtonPressed() {
         delegate?.addPersonPresenterCancel(presenter: self)
+    }
+    
+    func configure(cell: TextFieldCellView, forRow row: Int) {
+        cell.display(title: R.string.localizable.name())
+        cell.display(placeholder: R.string.localizable.name())
+        guard let personName = addPersonName else { return }
+        cell.display(value: personName)
+    }
+    
+    func configure(cell: LabelCellView, forRow row: Int) {
+        switch row {
+        case 1:
+            cell.display(title: R.string.localizable.dateOfBirth())
+            let value = addPersonDateOfBirth?.dateString() ?? "xx.xx.xxxx"
+            cell.display(value: value)
+        case 2:
+            cell.display(title: R.string.localizable.timeOfBirth())
+            let value = addPersonTimeOfBirth?.timeString() ?? "xx:xx"
+            cell.display(value: value)
+        default:
+            assertionFailure("We support LabelCellView only for rows in [1...2]")
+        }
+    }
+    
+    func configure(cell: SwitchCellView, forRow row: Int) {
+        switch row {
+        case 3:
+            cell.display(title: R.string.localizable.showYears())
+            cell.setSwitch(isOn: addPersonDateComponents.years)
+        case 4:
+            cell.display(title: R.string.localizable.showMonths())
+            cell.setSwitch(isOn: addPersonDateComponents.months)
+        case 5:
+            cell.display(title: R.string.localizable.showDays())
+            cell.setSwitch(isOn: addPersonDateComponents.days)
+        case 6:
+            cell.display(title: R.string.localizable.showHours())
+            cell.setSwitch(isOn: addPersonDateComponents.hours)
+        case 7:
+            cell.display(title: R.string.localizable.showMinutes())
+            cell.setSwitch(isOn: addPersonDateComponents.minutes)
+        case 8:
+            cell.display(title: R.string.localizable.showSeconds())
+            cell.setSwitch(isOn: addPersonDateComponents.seconds)
+        default:
+            assertionFailure("We support SwitchCellView only for rows in [3...8]")
+        }
     }
     
     // MARK: - Private
