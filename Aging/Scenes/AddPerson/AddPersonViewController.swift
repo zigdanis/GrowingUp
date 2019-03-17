@@ -15,7 +15,7 @@ protocol AddPersonView: class {
     func displayAddPersonError(title: String, message: String)
 }
 
-class AddPersonViewController: UIViewController, AddPersonView {
+class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataSource {
     
     var presenter: AddPersonPresenter!
     private let configurator: AddPersonConfigurator
@@ -40,6 +40,7 @@ class AddPersonViewController: UIViewController, AddPersonView {
         configurator.configure(addPersonViewController: self)
         setupNavigationBar()
         setupImagePickerViews()
+        setupTableView()
     }
     
     private func setupNavigationBar() {
@@ -52,6 +53,11 @@ class AddPersonViewController: UIViewController, AddPersonView {
         widgetPicLabel.text = NSLocalizedString("widget pic", comment: "text on label under widget pic rounded button")
     }
     
+    private func setupTableView() {
+        tableView.dataSource = self
+        tableView.register(R.nib.textFieldTableVIewCell)
+    }
+    
     // MARK: - Actions
     
     @objc private func cancelTapped() {
@@ -61,6 +67,8 @@ class AddPersonViewController: UIViewController, AddPersonView {
     @objc private func doneTapped() {
 //        presenter.addButtonPressed(parameters: <#T##AddPersonParameters#>)
     }
+    
+    // MARK: - AddPersonView
     
     func updateAddButtonState(isEnabled enabled: Bool) {
 
@@ -72,6 +80,18 @@ class AddPersonViewController: UIViewController, AddPersonView {
     
     func displayAddPersonError(title: String, message: String) {
         
+    }
+    
+    // MARK: - UITableViewDataSource
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let identifier = R.reuseIdentifier.textFieldTableVIewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+        return cell
     }
     
     
