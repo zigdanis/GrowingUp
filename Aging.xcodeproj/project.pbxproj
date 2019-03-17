@@ -24,6 +24,7 @@
 		091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
+		091BEEC2223D7F1200A3D057 /* R.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEC1223D7F1200A3D057 /* R.generated.swift */; };
 		091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091C440F2224781400FD4200 /* UIImage+Extensions.swift */; };
 		094145F92222C4B60035D0E6 /* NewPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094145F82222C4B60035D0E6 /* NewPersonViewController.swift */; };
 		094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 094145FA2222C5000035D0E6 /* NewPersonViewController.xib */; };
@@ -64,6 +65,7 @@
 		09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C102222E0F100F76BBE /* VerticalButton.swift */; };
 		09A13C152222EAEB00F76BBE /* AddPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */; };
 		09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C172223148700F76BBE /* ImagePickerButton.swift */; };
+		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +139,10 @@
 		091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableVIewCell.xib; sourceTree = "<group>"; };
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
+		091BEEBA223D7D2E00A3D057 /* rswift */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = rswift; sourceTree = "<group>"; };
+		091BEEBB223D7D2F00A3D057 /* License */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License; sourceTree = "<group>"; };
+		091BEEC1223D7F1200A3D057 /* R.generated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = R.generated.swift; sourceTree = "<group>"; };
+		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
 		091C440F2224781400FD4200 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		094145F82222C4B60035D0E6 /* NewPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
 		094145FA2222C5000035D0E6 /* NewPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
@@ -215,6 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
+				09A69E57223E331000291044 /* Rswift.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,6 +295,47 @@
 				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
 			);
 			path = Gateways;
+			sourceTree = "<group>";
+		};
+		091BEEB6223D7CF600A3D057 /* 3rd Party Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEB9223D7D2E00A3D057 /* rswift */,
+			);
+			path = "3rd Party Libraries";
+			sourceTree = "<group>";
+		};
+		091BEEB9223D7D2E00A3D057 /* rswift */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEBA223D7D2E00A3D057 /* rswift */,
+				091BEEBB223D7D2F00A3D057 /* License */,
+			);
+			path = rswift;
+			sourceTree = "<group>";
+		};
+		091BEEC6223E30BB00A3D057 /* Carthage */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEFA223E30BB00A3D057 /* Build */,
+			);
+			path = Carthage;
+			sourceTree = "<group>";
+		};
+		091BEEFA223E30BB00A3D057 /* Build */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEFC223E30BB00A3D057 /* iOS */,
+			);
+			path = Build;
+			sourceTree = "<group>";
+		};
+		091BEEFC223E30BB00A3D057 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				091BEEFE223E30BB00A3D057 /* Rswift.framework */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		094145F52222C37A0035D0E6 /* View Controllers */ = {
@@ -502,6 +550,7 @@
 				094DF9C1223AB35D00C331EC /* AgingTests */,
 				09051B3C21C558DB008A99C6 /* Frameworks */,
 				098E560A21C409E300E4CA1E /* Products */,
+				091BEEC6223E30BB00A3D057 /* Carthage */,
 			);
 			sourceTree = "<group>";
 		};
@@ -519,6 +568,7 @@
 		098E560B21C409E300E4CA1E /* Aging */ = {
 			isa = PBXGroup;
 			children = (
+				091BEEB6223D7CF600A3D057 /* 3rd Party Libraries */,
 				094DF9AB223AA42E00C331EC /* EntityGateway */,
 				094DF9A1223A7C5400C331EC /* Scenes */,
 				094DF991223A703F00C331EC /* Core */,
@@ -537,6 +587,7 @@
 		098E561F21C40AB200E4CA1E /* Supporting FIles */ = {
 			isa = PBXGroup;
 			children = (
+				091BEEC1223D7F1200A3D057 /* R.generated.swift */,
 				09051B4F21C55B93008A99C6 /* Aging.entitlements */,
 				098E561821C409E400E4CA1E /* Info.plist */,
 				0993D4FE21C40C1A001AA2BE /* InfoPlist.strings */,
@@ -625,11 +676,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 098E561B21C409E400E4CA1E /* Build configuration list for PBXNativeTarget "Aging" */;
 			buildPhases = (
+				091BEEBE223D7D5800A3D057 /* R.Swift */,
 				098E560521C409E300E4CA1E /* Sources */,
 				098E560621C409E300E4CA1E /* Frameworks */,
 				098E560721C409E300E4CA1E /* Resources */,
 				09051B4C21C558DB008A99C6 /* Embed App Extensions */,
 				09051B6221C55EB6008A99C6 /* Embed Frameworks */,
+				09A69E58223E332500291044 /* Carthage Copy Frameworks */,
+				09A69E59223E43B400291044 /* Carthage Outdated Warnings */,
 			);
 			buildRules = (
 			);
@@ -750,6 +804,67 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		091BEEBE223D7D5800A3D057 /* R.Swift */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$TEMP_DIR/rswift-lastrun",
+			);
+			name = R.Swift;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$SRCROOT/$PRODUCT_NAME/Supporting Files/R.generated.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/$PRODUCT_NAME/3rd Party Libraries/rswift/rswift\" generate \"$SRCROOT/$PRODUCT_NAME/Supporting Files/R.generated.swift\"\n";
+		};
+		09A69E58223E332500291044 /* Carthage Copy Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Carthage/Build/iOS/Rswift.framework",
+			);
+			name = "Carthage Copy Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Rswift.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
+		};
+		09A69E59223E43B400291044 /* Carthage Outdated Warnings */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Carthage Outdated Warnings";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		09051B3721C558DB008A99C6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -802,6 +917,7 @@
 				094DF9B2223AA50600C331EC /* CoreDataPersonsGateway.swift in Sources */,
 				094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
+				091BEEC2223D7F1200A3D057 /* R.generated.swift in Sources */,
 				094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */,
 				094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */,
 				094DF9A4223A7CDF00C331EC /* AddPersonConfigurator.swift in Sources */,
@@ -1177,7 +1293,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "Aging/Supporting Files//Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1202,7 +1318,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "Aging/Supporting Files//Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (

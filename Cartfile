@@ -1,0 +1,3 @@
+github "mac-cain13/R.swift.Library"
+
+# carthage update --platform iOS --cache-builds --new-resolver
