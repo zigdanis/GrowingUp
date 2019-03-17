@@ -49,8 +49,8 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     }
     
     private func setupImagePickerViews() {
-        appPicLabel.text = NSLocalizedString("app pic", comment: "text on label under app pic rounded button")
-        widgetPicLabel.text = NSLocalizedString("widget pic", comment: "text on label under widget pic rounded button")
+        appPicLabel.text = R.string.localizable.appPic()
+        widgetPicLabel.text = R.string.localizable.widgetPic()
     }
     
     private func setupTableView() {

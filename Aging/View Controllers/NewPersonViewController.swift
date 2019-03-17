@@ -19,7 +19,7 @@ class NewPersonViewController: UIViewController {
     }
     
     private func setupAddPersonButton() {
-        let title = NSLocalizedString("Add person", comment: "Title for the button on new person screen")
+        let title = R.string.localizable.addPerson()
         addPersonButton.setTitle(title, for: .normal)
     }
     

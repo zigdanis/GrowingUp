@@ -5,3 +5,12 @@
   Created by zigdanis on 25/02/2019.
   Copyright © 2019 zigdanis. All rights reserved.
 */
+
+/* "text on label under app pic rounded button" */
+"app pic" = "app pic";
+
+/* "text on label under widget pic rounded button" */
+"widget pic" = "widget pic";
+
+/* "Title for the button on new person screen" */
+"Add person" = "Add person";
