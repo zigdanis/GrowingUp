@@ -1,13 +1,13 @@
 //
 //  AddPersonUseCaseSpy.swift
-//  AgingTests
+//  GrowingUpTests
 //
 //  Created by zigdanis on 15/03/2019.
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
 import Foundation
-@testable import Aging
+@testable import GrowingUp
 
 class AddPersonUseCaseSpy: AddPersonUseCase {
     

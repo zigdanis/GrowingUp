@@ -1,13 +1,13 @@
 //
 //  CoreDataPersonsGatewayTests.swift
-//  AgingTests
+//  GrowingUpTests
 //
 //  Created by zigdanis on 14/03/2019.
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
 import XCTest
-@testable import Aging
+@testable import GrowingUp
 
 // Discussion:
 // Happy path is tested using an in memory core data stack while the error paths are "simulated" using a stub NSManagedObjectContextStub

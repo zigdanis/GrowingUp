@@ -23,7 +23,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>aging-app</string>
+				<string>growingup-app</string>
 			</array>
 		</dict>
 	</array>

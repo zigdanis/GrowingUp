@@ -1,6 +1,6 @@
 //
 //  InMempryCoreDataStack.swift
-//  AgingTests
+//  GrowingUpTests
 //
 //  Created by zigdanis on 14/03/2019.
 //  Copyright © 2019 zigdanis. All rights reserved.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@testable import Aging
+@testable import GrowingUp
 
 class InMemoryCoreDataStack: CoreDataStack {
     
@@ -20,7 +20,7 @@ class InMemoryCoreDataStack: CoreDataStack {
          application to it. This property is optional since there are legitimate
          error conditions that could cause the creation of the store to fail.
          */
-        let container = NSPersistentContainer(name: "Aging")
+        let container = NSPersistentContainer(name: "GrowingUp")
         let persistentStoreDescription = NSPersistentStoreDescription()
         persistentStoreDescription.type = NSInMemoryStoreType
         

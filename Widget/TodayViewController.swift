@@ -50,7 +50,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     // MARK: - Actions
     
     @IBAction func widgetTouched() {
-        let url = URL(string: "aging-app://")!
+        let url = URL(string: "growingup-app://")!
         extensionContext?.open(url, completionHandler: nil)
     }
     
