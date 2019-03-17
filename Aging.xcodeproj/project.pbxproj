@@ -66,6 +66,10 @@
 		09A13C152222EAEB00F76BBE /* AddPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */; };
 		09A13C182223148700F76BBE /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A13C172223148700F76BBE /* ImagePickerButton.swift */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
+		09A69E5B223E49AD00291044 /* LabelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A69E5A223E49AD00291044 /* LabelTableViewCell.swift */; };
+		09A69E5D223E4A0100291044 /* LabelTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A69E5C223E4A0100291044 /* LabelTableViewCell.xib */; };
+		09A69E5F223E665600291044 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A69E5E223E665600291044 /* SwitchTableViewCell.swift */; };
+		09A69E61223E66D700291044 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09A69E60223E66D700291044 /* SwitchTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -186,6 +190,10 @@
 		09A13C102222E0F100F76BBE /* VerticalButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalButton.swift; sourceTree = "<group>"; };
 		09A13C142222EAEB00F76BBE /* AddPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddPersonViewController.xib; sourceTree = "<group>"; };
 		09A13C172223148700F76BBE /* ImagePickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerButton.swift; sourceTree = "<group>"; };
+		09A69E5A223E49AD00291044 /* LabelTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTableViewCell.swift; sourceTree = "<group>"; };
+		09A69E5C223E4A0100291044 /* LabelTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LabelTableViewCell.xib; sourceTree = "<group>"; };
+		09A69E5E223E665600291044 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
+		09A69E60223E66D700291044 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		09E7338A21C40DB000BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09E7338C21C43AF500BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -277,6 +285,10 @@
 			children = (
 				091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */,
 				091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */,
+				09A69E5A223E49AD00291044 /* LabelTableViewCell.swift */,
+				09A69E5C223E4A0100291044 /* LabelTableViewCell.xib */,
+				09A69E5E223E665600291044 /* SwitchTableViewCell.swift */,
+				09A69E60223E66D700291044 /* SwitchTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -792,11 +804,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				094145FB2222C5000035D0E6 /* NewPersonViewController.xib in Resources */,
+				09A69E61223E66D700291044 /* SwitchTableViewCell.xib in Resources */,
 				09A13C152222EAEB00F76BBE /* AddPersonViewController.xib in Resources */,
 				098E561721C409E400E4CA1E /* LaunchScreen.storyboard in Resources */,
 				09789E932224713B007AE4FC /* Localizable.strings in Resources */,
 				098E561421C409E400E4CA1E /* Assets.xcassets in Resources */,
 				098E561221C409E300E4CA1E /* Main.storyboard in Resources */,
+				09A69E5D223E4A0100291044 /* LabelTableViewCell.xib in Resources */,
 				0993D4FC21C40C1A001AA2BE /* InfoPlist.strings in Resources */,
 				091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */,
 			);
@@ -847,7 +861,7 @@
 		};
 		09A69E59223E43B400291044 /* Carthage Outdated Warnings */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -859,7 +873,7 @@
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings\n";
 		};
@@ -917,6 +931,7 @@
 				094DF9B2223AA50600C331EC /* CoreDataPersonsGateway.swift in Sources */,
 				094DF9AA223A95FD00C331EC /* AddPersonViewRouter.swift in Sources */,
 				09A13C112222E0F100F76BBE /* VerticalButton.swift in Sources */,
+				09A69E5B223E49AD00291044 /* LabelTableViewCell.swift in Sources */,
 				091BEEC2223D7F1200A3D057 /* R.generated.swift in Sources */,
 				094DF9A6223A956F00C331EC /* AddPersonPresenter.swift in Sources */,
 				094DF9B5223AA53B00C331EC /* Aging.xcdatamodeld in Sources */,
@@ -926,6 +941,7 @@
 				094DF9AF223AA46A00C331EC /* CoreDataPerson.swift in Sources */,
 				094DF9BB223AB13600C331EC /* CoreError.swift in Sources */,
 				094DF994223A706C00C331EC /* Person.swift in Sources */,
+				09A69E5F223E665600291044 /* SwitchTableViewCell.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
 				094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */,

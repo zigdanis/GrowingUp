@@ -14,7 +14,7 @@ protocol TextFieldCellView {
     func display(placeholder: String)
 }
 
-class TextFieldTableViewCell: UITableViewCell {
+class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueField: UITextField!
@@ -24,7 +24,7 @@ class TextFieldTableViewCell: UITableViewCell {
     }
     
     func display(placeholder: String) {
-        
+        valueField.placeholder = placeholder
     }
     
     func display(value: String) {

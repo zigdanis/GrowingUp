@@ -56,6 +56,8 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     private func setupTableView() {
         tableView.dataSource = self
         tableView.register(R.nib.textFieldTableVIewCell)
+        tableView.register(R.nib.labelTableViewCell)
+        tableView.register(R.nib.switchTableViewCell)
     }
     
     // MARK: - Actions
@@ -85,13 +87,29 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     // MARK: - UITableViewDataSource
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 9
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let identifier = R.reuseIdentifier.textFieldTableVIewCell
-        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-        return cell
+        switch indexPath.row {
+        case 0:
+            let identifier = R.reuseIdentifier.textFieldTableVIewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            return cell
+        case 1:
+            let identifier = R.reuseIdentifier.labelTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            return cell
+        case 2:
+            let identifier = R.reuseIdentifier.labelTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            return cell
+        default:
+            let identifier = R.reuseIdentifier.switchTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+            return cell
+        }
+        
     }
     
     
