@@ -1,4 +1,11 @@
+# MacOS
 .DS_Store
+
+## Build generated
+build/
+DerivedData/
+
+## Various settings
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -7,15 +14,39 @@
 !default.mode2v3
 *.perspectivev3
 !default.perspectivev3
+xcuserdata/
+
+## Other
 *.moved-aside
-.idea/
+*.xccheckout
+*.xcscmblueprint
+
+## Obj-C/Swift specific
+*.hmap
 *.ipa
-*.zip
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+
+# CocoaPods
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+Pods/
+
+# Carthage
+Carthage/Checkouts
+Carthage/Build
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# R.Swift
 *.generated.swift
-build/
-xcuserdata
-DerivedData
-Pods
-fastlane/report.xml 
-Readme.html
-Carthage/

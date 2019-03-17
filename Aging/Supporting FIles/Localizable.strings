@@ -41,3 +41,6 @@
 
 /* Title for the person's showing date componenets */
 "Show seconds" = "Show seconds";
+
+/* Title for Error Alerts */
+"Alert" = "Alert";

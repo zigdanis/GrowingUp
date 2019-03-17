@@ -20,6 +20,7 @@
 		09051B6821C5697D008A99C6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B6A21C5697D008A99C6 /* Localizable.strings */; };
 		09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B7021C569EE008A99C6 /* InfoPlist.strings */; };
 		090F93962222D13500F6734B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F93952222D13500F6734B /* Constants.swift */; };
+		09165304223E8DDD0081FB10 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165303223E8DDD0081FB10 /* UIViewController+Extensions.swift */; };
 		091BEEAD223D38F800A3D057 /* TextFieldTableVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */; };
 		091BEEAF223D393300A3D057 /* TextFieldTableVIewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
@@ -140,6 +141,7 @@
 		09051B6F21C569EE008A99C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09051B7121C569EF008A99C6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		090F93952222D13500F6734B /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		09165303223E8DDD0081FB10 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		091BEEAC223D38F800A3D057 /* TextFieldTableVIewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableVIewCell.swift; sourceTree = "<group>"; };
 		091BEEAE223D393300A3D057 /* TextFieldTableVIewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TextFieldTableVIewCell.xib; sourceTree = "<group>"; };
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				091C440F2224781400FD4200 /* UIImage+Extensions.swift */,
 				094DF998223A716C00C331EC /* Result.swift */,
 				094DF9BA223AB13600C331EC /* CoreError.swift */,
+				09165303223E8DDD0081FB10 /* UIViewController+Extensions.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -947,6 +950,7 @@
 				094DF994223A706C00C331EC /* Person.swift in Sources */,
 				09A69E5F223E665600291044 /* SwitchTableViewCell.swift in Sources */,
 				098E560D21C409E300E4CA1E /* AppDelegate.swift in Sources */,
+				09165304223E8DDD0081FB10 /* UIViewController+Extensions.swift in Sources */,
 				091C44102224781400FD4200 /* UIImage+Extensions.swift in Sources */,
 				094DF9B7223AAEF600C331EC /* NSManagedObjectContext+Utils.swift in Sources */,
 				090F93962222D13500F6734B /* Constants.swift in Sources */,

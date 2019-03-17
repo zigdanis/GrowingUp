@@ -73,15 +73,15 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     // MARK: - AddPersonView
     
     func updateAddButtonState(isEnabled enabled: Bool) {
-
+        navigationItem.rightBarButtonItem?.isEnabled = enabled
     }
     
     func updateCancelButtonState(isEnabled enabled: Bool) {
-        
+        navigationItem.leftBarButtonItem?.isEnabled = enabled
     }
     
     func displayAddPersonError(title: String, message: String) {
-        
+        showAlert(title: title, message: message)
     }
     
     // MARK: - UITableViewDataSource
