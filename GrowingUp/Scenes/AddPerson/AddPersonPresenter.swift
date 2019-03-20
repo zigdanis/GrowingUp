@@ -52,7 +52,8 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     
     func addButtonPressed() {
 		
-		guard let name = nameCellPresenter.valuesForRow[0] else {
+		guard let name = nameCellPresenter.valuesForRow[0],
+				!name.isEmpty else {
 			let error = CoreError(title: "Error", message: "Can't save person without name")
 			return handleAddPersonError(error)
 		}

@@ -22,11 +22,11 @@ final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 	var valuesForRow = [Int: String]()
 	
 	func configure(cell: TextFieldCellView, forRow row: Int) {
+		cell.setup(with: self, forRow: row)
 		cell.display(title: R.string.localizable.name())
 		cell.display(placeholder: R.string.localizable.name())
 		guard let value = valuesForRow[row] else { return }
 		cell.display(value: value)
-		cell.setup(with: self, forRow: row)
 	}
 }
 

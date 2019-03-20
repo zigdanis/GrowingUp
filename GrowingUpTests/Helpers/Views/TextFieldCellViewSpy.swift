@@ -13,7 +13,8 @@ class TextFieldCellViewSpy: TextFieldCellView {
 	var displayedTitle: String?
 	var displayedValue: String?
 	var displayedPlaceholder: String?
-	
+	var delegate: TextFieldCellViewDelegate?
+	var row: Int?
 	
 	func display(title: String) {
 		displayedTitle = title
@@ -28,6 +29,7 @@ class TextFieldCellViewSpy: TextFieldCellView {
 	}
 	
 	func setup(with delegate: TextFieldCellViewDelegate, forRow row: Int) {
-		
+		self.delegate = delegate
+		self.row = row
 	}
 }

@@ -38,5 +38,16 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		XCTAssertNotEqual("John", tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
 	}
 	
+	func test_SUT_WhenConfiguredWithoutData_ChangesValueAfterUserInput() {
+		// Given
+		let tfCellSpy = TextFieldCellViewSpy()
+		let expectedName = "John"
+		// When
+		sut.configure(cell: tfCellSpy, forRow: 0)
+		tfCellSpy.delegate?.modelValue(forRow: 0, didUpdateTo: expectedName)
+		// Then
+		XCTAssertEqual(expectedName, sut.valuesForRow[0], "The model value in presenter didn't updated after user input")
+	}
+	
 }
 
