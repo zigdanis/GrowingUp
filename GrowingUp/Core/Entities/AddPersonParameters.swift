@@ -8,14 +8,14 @@
 
 import Foundation
 
-struct AddPersonParameters {
+struct AddPersonParameters: Equatable {
 	var name: String
 	var dateOfBirth: Date
 	var timeOfBirth: Date
 	var dateComponenets: AddPersonDateComponents
 }
 
-struct AddPersonDateComponents {
+struct AddPersonDateComponents: Equatable {
 	var years = true
 	var months = true
 	var days = true

@@ -79,6 +79,8 @@
 		098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */; };
 		098798652242D1E500A15D90 /* DateCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798642242D1E500A15D90 /* DateCellPresenterTests.swift */; };
 		098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798662242D26E00A15D90 /* DateCellViewSpy.swift */; };
+		098798692242D86800A15D90 /* SwitchCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798682242D86800A15D90 /* SwitchCellPresenterTests.swift */; };
+		0987986B2242DBD700A15D90 /* SwitchCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987986A2242DBD700A15D90 /* SwitchCellViewSpy.swift */; };
 		0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443C2241426C003C321D /* SwitchCellPresenter.swift */; };
 		0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443E224163DF003C321D /* DateCellPresenter.swift */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
@@ -218,6 +220,8 @@
 		098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenterTests.swift; sourceTree = "<group>"; };
 		098798642242D1E500A15D90 /* DateCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellPresenterTests.swift; sourceTree = "<group>"; };
 		098798662242D26E00A15D90 /* DateCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellViewSpy.swift; sourceTree = "<group>"; };
+		098798682242D86800A15D90 /* SwitchCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenterTests.swift; sourceTree = "<group>"; };
+		0987986A2242DBD700A15D90 /* SwitchCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellViewSpy.swift; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* GrowingUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowingUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0996443C2241426C003C321D /* SwitchCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenter.swift; sourceTree = "<group>"; };
 		0996443E224163DF003C321D /* DateCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellPresenter.swift; sourceTree = "<group>"; };
@@ -594,6 +598,7 @@
 				098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */,
 				098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */,
 				098798642242D1E500A15D90 /* DateCellPresenterTests.swift */,
+				098798682242D86800A15D90 /* SwitchCellPresenterTests.swift */,
 			);
 			path = Presenters;
 			sourceTree = "<group>";
@@ -604,6 +609,7 @@
 				098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */,
 				09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */,
 				098798662242D26E00A15D90 /* DateCellViewSpy.swift */,
+				0987986A2242DBD700A15D90 /* SwitchCellViewSpy.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -961,7 +967,9 @@
 				098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
+				098798692242D86800A15D90 /* SwitchCellPresenterTests.swift in Sources */,
 				09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */,
+				0987986B2242DBD700A15D90 /* SwitchCellViewSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				0987985B2242B4C000A15D90 /* LabelCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,

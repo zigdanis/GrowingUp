@@ -11,7 +11,12 @@ import XCTest
 
 final class TextFieldCellPresenterTests: XCTestCase {
 	
-	var sut = TextFieldCellPresenterImplementation()
+	var sut: TextFieldCellPresenterImplementation!
+	
+	override func setUp() {
+		super.setUp()
+		sut = TextFieldCellPresenterImplementation()
+	}
 	
 	func test_SUT_ConfigureTextFieldCell_HasNameTitle() {
 		// Given

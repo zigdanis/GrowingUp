@@ -11,19 +11,36 @@ import XCTest
 
 final class DateCellPresenterTests: XCTestCase {
 	
-	var sut = DateCellPresenterImplementation()
+	var sut: DateCellPresenterImplementation!
+	
+	override func setUp() {
+		super.setUp()
+		sut = DateCellPresenterImplementation()
+	}
 	
 	func test_SUT_WhenConfiguredWithDate_ShouldDisplayValue() {
 		// Given
 		let date = Date()
 		sut.valuesForRow[1] = date
-		let labelCellSpy = DateCellViewSpy()
+		let dateCellSpy = DateCellViewSpy()
 		// When
-		sut.configure(cell: labelCellSpy, forRow: 1)
+		sut.configure(cell: dateCellSpy, forRow: 1)
 		// Then
-		XCTAssertEqual(date.dateString(), labelCellSpy.displayedValue, "The value we expected was not displayed")
+		XCTAssertEqual(date.dateString(), dateCellSpy.displayedValue, "The value we expected was not displayed")
 	}
 	
+	func test_SUT_WhenConfiguredWithoutData_ShouldShowPlaceholders() {
+		// Given
+		let dateCellSpy = DateCellViewSpy()
+		// When
+		sut.configure(cell: dateCellSpy, forRow: 1)
+		// Then
+		XCTAssertEqual("xx.xx.xxxx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
+		// When
+		sut.configure(cell: dateCellSpy, forRow: 2)
+		// Then
+		XCTAssertEqual("xx:xx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
+	}
 
 }
 
