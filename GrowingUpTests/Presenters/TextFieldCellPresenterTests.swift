@@ -17,12 +17,20 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		// Given
 		sut.valuesForRow[0] = "John"
 		let tfCellSpy = TextFieldCellViewSpy()
-		
 		// When
 		sut.configure(cell: tfCellSpy, forRow: 0)
-		
 		// Then
-		XCTAssertEqual("John", tfCellSpy.displayedValue, "The title we expected was not displayed")
+		XCTAssertEqual("John", tfCellSpy.displayedValue, "The value we expected was not displayed")
+	}
+	
+	func test_SUT_WhenConfiguredCellForRow_DifferResultsForRows() {
+		// Given
+		sut.valuesForRow[0] = "John"
+		let tfCellSpy = TextFieldCellViewSpy()
+		// When
+		sut.configure(cell: tfCellSpy, forRow: 1)
+		// Then
+		XCTAssertNotEqual("John", tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
 	}
 	
 }

@@ -8,12 +8,12 @@
 
 import UIKit
 
-protocol LabelCellView {
+protocol DateCellView {
     func display(title: String)
     func display(value: String)
 }
 
-final class LabelTableViewCell: UITableViewCell, LabelCellView {
+final class DateTableViewCell: UITableViewCell, DateCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!

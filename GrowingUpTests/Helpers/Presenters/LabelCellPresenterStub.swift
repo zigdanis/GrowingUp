@@ -9,11 +9,11 @@
 import Foundation
 @testable import GrowingUp
 
-final class LabelCellPresenterStub: LabelCellPresenter {
+final class LabelCellPresenterStub: DateCellPresenter {
 	
 	var valuesForRow = [Int : Date]()
 	
-	func configure(cell: LabelCellView, forRow row: Int) {
+	func configure(cell: DateCellView, forRow row: Int) {
 
 	}
 	

@@ -57,7 +57,7 @@ class AddPersonViewController: UIViewController, AddPersonView {
         tableView.dataSource = self
 		tableView.delegate = self
         tableView.register(R.nib.textFieldTableVIewCell)
-        tableView.register(R.nib.labelTableViewCell)
+        tableView.register(R.nib.dateTableViewCell)
         tableView.register(R.nib.switchTableViewCell)
     }
 	
@@ -100,7 +100,7 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
             presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
         case 1...2:
-            let identifier = R.reuseIdentifier.labelTableViewCell
+            let identifier = R.reuseIdentifier.dateTableViewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
             presenter.configure(cell: cell, forRow: indexPath.row)
             return cell

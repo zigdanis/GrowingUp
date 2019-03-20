@@ -1,5 +1,5 @@
 //
-//  LabelCellPresenter.swift
+//  DateCellPresenter.swift
 //  GrowingUp
 //
 //  Created by zigdanis on 19/03/2019.
@@ -8,20 +8,20 @@
 
 import Foundation
 
-protocol LabelCellPresenter {
-	func configure(cell: LabelCellView, forRow row: Int)
+protocol DateCellPresenter {
+	func configure(cell: DateCellView, forRow row: Int)
 	var valuesForRow: [Int: Date] { get set }
 }
 
-protocol LabelCellDelegate: class {
+protocol DateCellDelegate: class {
 	func modelValue(forRow row: Int, didUpdateTo value: Date)
 }
 
-final class LabelCellPresenterImplementation: LabelCellPresenter {
+final class DateCellPresenterImplementation: DateCellPresenter {
 	
 	var valuesForRow = [Int: Date]()
 	
-	func configure(cell: LabelCellView, forRow row: Int) {
+	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
 		case 1:
 			cell.display(title: R.string.localizable.dateOfBirth())
@@ -37,7 +37,7 @@ final class LabelCellPresenterImplementation: LabelCellPresenter {
 	}
 }
 
-extension LabelCellPresenterImplementation: LabelCellDelegate {
+extension DateCellPresenterImplementation: DateCellDelegate {
 	
 	func modelValue(forRow row: Int, didUpdateTo value: Date) {
 		valuesForRow[row] = value

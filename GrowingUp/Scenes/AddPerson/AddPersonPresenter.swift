@@ -13,7 +13,7 @@ protocol AddPersonPresenter {
     func addButtonPressed()
     func cancelButtonPressed()
     func configure(cell: TextFieldCellView, forRow row: Int)
-    func configure(cell: LabelCellView, forRow row: Int)
+    func configure(cell: DateCellView, forRow row: Int)
     func configure(cell: SwitchCellView, forRow row: Int)
 }
 
@@ -29,7 +29,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     private weak var delegate: AddPersonPresenterDelegate?
     private(set) var router: AddPersonViewRouter
 	private let nameCellPresenter: TextFieldCellPresenter
-	private let dateCellsPresenter: LabelCellPresenter
+	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
     
     init(view: AddPersonView,
@@ -37,7 +37,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
          router: AddPersonViewRouter,
          delegate: AddPersonPresenterDelegate?,
 		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: LabelCellPresenter,
+		 dateCellsPresenter: DateCellPresenter,
 		 dateComponentsCellsPresenter: SwitchCellPresenter) {
         self.view = view
         self.addPersonUseCase = addPersonUseCase
@@ -87,7 +87,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		nameCellPresenter.configure(cell: cell, forRow: row)
     }
     
-    func configure(cell: LabelCellView, forRow row: Int) {
+    func configure(cell: DateCellView, forRow row: Int) {
        	dateCellsPresenter.configure(cell: cell, forRow: row)
     }
     

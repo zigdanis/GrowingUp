@@ -26,7 +26,7 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
         let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
         let router = AddPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
-		let dateCellPresenter = LabelCellPresenterImplementation()
+		let dateCellPresenter = DateCellPresenterImplementation()
 		let dateComponentsPresenter = SwitchCellPresenterImplementation()
         let presenter = AddPersonPresenterImplementation(
 			view: addPersonViewController,
