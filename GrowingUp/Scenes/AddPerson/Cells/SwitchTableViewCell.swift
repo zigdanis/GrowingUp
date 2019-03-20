@@ -11,13 +11,21 @@ import UIKit
 protocol SwitchCellView {
     func display(title: String)
     func setSwitch(isOn: Bool)
+	func setup(with delegate: SwitchCellDelegate, forRow row: Int)
 }
 
-class SwitchTableViewCell: UITableViewCell, SwitchCellView {
+final class SwitchTableViewCell: UITableViewCell, SwitchCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueSwitch: UISwitch!
-    
+	private weak var delegate: SwitchCellDelegate?
+	private var row: Int?
+	
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		valueSwitch.addTarget(self, action: #selector(switchValueChanged(sender:)), for: .valueChanged)
+	}
+	
     func display(title: String) {
         titleLabel.text = title
     }
@@ -25,5 +33,15 @@ class SwitchTableViewCell: UITableViewCell, SwitchCellView {
     func setSwitch(isOn: Bool) {
         valueSwitch.setOn(isOn, animated: false)
     }
-    
+	
+	func setup(with delegate: SwitchCellDelegate, forRow row: Int) {
+		self.delegate = delegate
+		self.row = row
+	}
+	
+	@objc private func switchValueChanged(sender: UISwitch) {
+		guard let row = row else { return }
+		guard let delegate = delegate else { return }
+		delegate.modelValue(forRow: row, didUpdateTo: sender.isOn)
+	}
 }

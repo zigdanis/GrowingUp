@@ -18,7 +18,7 @@ extension CoreDataPerson {
     func populate(with parameters: AddPersonParameters) {
         id = NSUUID().uuidString
         name = parameters.name
-        birthdate = parameters.birthday
+        birthdate = parameters.combinedDate()
     }
-
+	
 }

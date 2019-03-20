@@ -8,16 +8,25 @@
 
 import UIKit
 
-protocol TextFieldCellView {
+protocol TextFieldCellView: class {
     func display(title: String)
     func display(value: String)
     func display(placeholder: String)
+	func setup(with delegate: TextFieldCellViewDelegate, forRow row: Int)
 }
 
 class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueField: UITextField!
+	private weak var delegate: TextFieldCellViewDelegate?
+	private var row: Int?
+	
+	override func awakeFromNib() {
+		super.awakeFromNib()
+		valueField.delegate = self
+		valueField.addTarget(self, action: #selector(textDidChange(sender:)), for: .allEditingEvents)
+	}
     
     func display(title: String) {
         titleLabel.text = title
@@ -30,5 +39,27 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
     func display(value: String) {
         valueField.text = value
     }
-    
+	
+	func setup(with delegate: TextFieldCellViewDelegate, forRow row: Int) {
+		self.delegate = delegate
+		self.row = row
+	}
+	
+	@objc private func textDidChange(sender: UITextField) {
+		guard let row = row else { return }
+		guard let delegate = delegate else { return }
+		guard let value = sender.text else { return }
+		delegate.modelValue(forRow: row, didUpdateTo: value)
+	}
+	
 }
+
+extension TextFieldTableViewCell: UITextFieldDelegate {
+	
+	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+		textField.resignFirstResponder()
+		return true
+	}
+	
+}
+

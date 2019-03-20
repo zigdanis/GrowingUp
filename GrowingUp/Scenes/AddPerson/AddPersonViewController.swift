@@ -15,7 +15,7 @@ protocol AddPersonView: class {
     func displayAddPersonError(title: String, message: String)
 }
 
-class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataSource {
+class AddPersonViewController: UIViewController, AddPersonView {
     
     var presenter: AddPersonPresenter!
     private let configurator: AddPersonConfigurator
@@ -55,11 +55,12 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     
     private func setupTableView() {
         tableView.dataSource = self
+		tableView.delegate = self
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.labelTableViewCell)
         tableView.register(R.nib.switchTableViewCell)
     }
-    
+	
     // MARK: - Actions
     
     @objc private func cancelTapped() {
@@ -67,7 +68,7 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     }
     
     @objc private func doneTapped() {
-//        presenter.addButtonPressed(parameters: <#T##AddPersonParameters#>)
+        presenter.addButtonPressed()
     }
     
     // MARK: - AddPersonView
@@ -83,8 +84,9 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
     func displayAddPersonError(title: String, message: String) {
         showAlert(title: title, message: message)
     }
-    
-    // MARK: - UITableViewDataSource
+}
+
+extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 9
@@ -102,14 +104,15 @@ class AddPersonViewController: UIViewController, AddPersonView, UITableViewDataS
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
             presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
-        default:
+		default:
             let identifier = R.reuseIdentifier.switchTableViewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
             presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
         }
-        
     }
-    
-    
+	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+	}
 }

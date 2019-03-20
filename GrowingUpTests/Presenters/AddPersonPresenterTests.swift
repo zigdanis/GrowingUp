@@ -9,20 +9,25 @@
 import XCTest
 @testable import GrowingUp
 
-class AddPersonPresenterTests: XCTestCase {
+final class AddPersonPresenterTests: XCTestCase {
     
     // https://www.martinfowler.com/bliki/TestDouble.html
     let addPersonViewSpy = AddPersonViewSpy()
     let addPersonUseCaseSpy = AddPersonUseCaseSpy()
     let addPersonViewRouterSpy = AddPersonViewRouterSpy()
     let addPersonPresenterDelegateSpy = AddPersonPresenterDelegateSpy()
+	let nameCellStub = TextFieldCellPresenterStub()
+	let dateCellsStub = LabelCellPresenterStub()
+	let dateComponentsStub = SwitchCellPresenterStub()
+	
     var sut: AddPersonPresenterImplementation!
+	
     
     // MARK: - Set up
     
     override func setUp() {
         super.setUp()
-        sut = AddPersonPresenterImplementation(view: addPersonViewSpy, addPersonUseCase: addPersonUseCaseSpy, router: addPersonViewRouterSpy, delegate: addPersonPresenterDelegateSpy)
+		sut = AddPersonPresenterImplementation(view: addPersonViewSpy, addPersonUseCase: addPersonUseCaseSpy, router: addPersonViewRouterSpy, delegate: addPersonPresenterDelegateSpy, nameCellPresenter: nameCellStub, dateCellsPresenter: dateCellsStub, dateComponentsCellsPresenter: dateComponentsStub)
     }
     
     func test_SUT_CancelPressed_CalledCancelOnDelegate() {
@@ -34,10 +39,10 @@ class AddPersonPresenterTests: XCTestCase {
     
     func test_SUT_AddButtonPressed_AddAndCancelButtonsDisabledBeforeCompletionHandler() {
         // Given
-        let params = AddPersonParameters.createParameters()
+		setupSUT_WithAddPersonData()
         addPersonUseCaseSpy.callCompletionHandlerImmediate = false
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.addButtonPressed()
         // Then
         XCTAssertFalse(addPersonViewSpy.addButtonEnabledState ?? true, "Add button should've been set to disabled")
         XCTAssertFalse(addPersonViewSpy.cancelButtonEnabledState ?? true, "Cancel button should've been set to disabled")
@@ -45,52 +50,60 @@ class AddPersonPresenterTests: XCTestCase {
     
     func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
         // Given
-        let params = AddPersonParameters.createParameters()
+		setupSUT_WithAddPersonData()
         addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.addButtonPressed()
         // Then
         XCTAssertTrue(addPersonViewSpy.addButtonEnabledState ?? false, "Add button should've been set to enabled")
         XCTAssertTrue(addPersonViewSpy.cancelButtonEnabledState ?? false, "Cancel button should've been set to enabled")
     }
-    
+	
     func test_SUT_AddButtonPressed_ShouldSavePerson() {
         // Given
-        let params = AddPersonParameters.createParameters()
+		let parameters = setupSUT_WithAddPersonData()
         addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.addButtonPressed()
         // Then
-        guard let expectedParameters = addPersonUseCaseSpy.personToAddParameters else {
-            return XCTFail("Expected to get AddPersonParameters from AddPersonUseCase")
-        }
-        XCTAssertEqual(expectedParameters, params, "Should have been called addPerson for AddPersonUseCase")
+        XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
-    
+	
     func test_SUT_AddButtonPressed_CallingAddPersonDelegateMethod() {
         // Given
-        let params = AddPersonParameters.createParameters()
+		setupSUT_WithAddPersonData()
         let expectedPersonToAdd = Person.createPerson()
         addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.addButtonPressed()
         // Then
         XCTAssertEqual(addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
         XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledAddPerson, "Should have been call addPerson on Delegate")
-        
+
     }
-    
+
     func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() {
         // Given
+		setupSUT_WithAddPersonData()
         let expectedErrorTitle = "Error"
         let expectedErrorMessage = "Some error message"
-        let params = AddPersonParameters.createParameters()
         addPersonUseCaseSpy.resultToBeReturned = .failure(CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
         // When
-        sut.addButtonPressed(parameters: params)
+        sut.addButtonPressed()
         // Then
         XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
         XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
     }
-    
+	
+	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
+		nameCellStub.valuesForRow[0] = "John"
+		let bDate = Date()
+		let tDate = Date()
+		dateCellsStub.valuesForRow[1] = bDate
+		dateCellsStub.valuesForRow[2] = tDate
+		for i in 3...8 {
+			dateComponentsStub.valuesForRow[i] = true
+		}
+		return AddPersonParameters(name: "John", dateOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
+	}
 }

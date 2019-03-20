@@ -13,7 +13,7 @@ protocol LabelCellView {
     func display(value: String)
 }
 
-class LabelTableViewCell: UITableViewCell, LabelCellView {
+final class LabelTableViewCell: UITableViewCell, LabelCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueLabel: UILabel!
@@ -25,5 +25,5 @@ class LabelTableViewCell: UITableViewCell, LabelCellView {
     func display(value: String) {
         valueLabel.text = value
     }
-    
+	
 }

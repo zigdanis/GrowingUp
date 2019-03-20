@@ -22,8 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func setupMainViewController() {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let configurator = AddPersonConfiguratorImplementation(addPersonPresenterDelegate: self)
-        let mainVC = AddPersonViewController(configurator: configurator)
+//        let configurator = AddPersonConfiguratorImplementation(addPersonPresenterDelegate: self)
+		let mainVC = UIViewController()
+//        let mainVC = AddPersonViewController(configurator: configurator)
         let navigationVC = UINavigationController(rootViewController: mainVC)
         window?.rootViewController = navigationVC
         window?.makeKeyAndVisible()

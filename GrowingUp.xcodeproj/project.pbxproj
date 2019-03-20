@@ -72,7 +72,16 @@
 		098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */; };
 		09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */; };
 		09805504223C3C0100E24D40 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805503223C3C0100E24D40 /* Person.swift */; };
+		098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */; };
+		0987985B2242B4C000A15D90 /* LabelCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */; };
+		0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */; };
+		098798612242B96000A15D90 /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798602242B96000A15D90 /* AddPersonParameters.swift */; };
+		098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */; };
+		0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443C2241426C003C321D /* SwitchCellPresenter.swift */; };
+		0996443F224163DF003C321D /* LabelCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443E224163DF003C321D /* LabelCellPresenter.swift */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
+		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
+		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -200,7 +209,16 @@
 		098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewRouterSpy.swift; sourceTree = "<group>"; };
 		09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterDelegateSpy.swift; sourceTree = "<group>"; };
 		09805503223C3C0100E24D40 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenterStub.swift; sourceTree = "<group>"; };
+		0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCellPresenterStub.swift; sourceTree = "<group>"; };
+		0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenterStub.swift; sourceTree = "<group>"; };
+		098798602242B96000A15D90 /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
+		098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenterTests.swift; sourceTree = "<group>"; };
 		098E560921C409E300E4CA1E /* GrowingUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowingUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0996443C2241426C003C321D /* SwitchCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenter.swift; sourceTree = "<group>"; };
+		0996443E224163DF003C321D /* LabelCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCellPresenter.swift; sourceTree = "<group>"; };
+		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
+		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		09E7339221C453D200BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -314,12 +332,12 @@
 		0916530F223ECBC40081FB10 /* AddPerson */ = {
 			isa = PBXGroup;
 			children = (
-				09165310223ECBC40081FB10 /* Cells */,
-				09165317223ECBC40081FB10 /* AddPersonPresenter.swift */,
-				09165318223ECBC40081FB10 /* AddPersonViewController.xib */,
-				09165319223ECBC40081FB10 /* AddPersonViewController.swift */,
 				0916531A223ECBC40081FB10 /* AddPersonConfigurator.swift */,
+				09165319223ECBC40081FB10 /* AddPersonViewController.swift */,
+				09165318223ECBC40081FB10 /* AddPersonViewController.xib */,
+				09165317223ECBC40081FB10 /* AddPersonPresenter.swift */,
 				0916531B223ECBC40081FB10 /* AddPersonViewRouter.swift */,
+				09165310223ECBC40081FB10 /* Cells */,
 			);
 			path = AddPerson;
 			sourceTree = "<group>";
@@ -327,12 +345,15 @@
 		09165310223ECBC40081FB10 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				09165311223ECBC40081FB10 /* LabelTableViewCell.swift */,
-				09165312223ECBC40081FB10 /* LabelTableViewCell.xib */,
-				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
 				09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */,
-				09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */,
+				09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */,
+				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
+				09165311223ECBC40081FB10 /* LabelTableViewCell.swift */,
+				0996443E224163DF003C321D /* LabelCellPresenter.swift */,
+				09165312223ECBC40081FB10 /* LabelTableViewCell.xib */,
 				09165316223ECBC40081FB10 /* SwitchTableViewCell.swift */,
+				0996443C2241426C003C321D /* SwitchCellPresenter.swift */,
+				09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -367,6 +388,7 @@
 			isa = PBXGroup;
 			children = (
 				09165322223ECBC40081FB10 /* Person.swift */,
+				098798602242B96000A15D90 /* AddPersonParameters.swift */,
 			);
 			path = Entities;
 			sourceTree = "<group>";
@@ -531,6 +553,7 @@
 		094DF9CD223ADCD400C331EC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				098798572242B45C00A15D90 /* Presenters */,
 				094DF9D6223AE66100C331EC /* Result.swift */,
 				091BEEB3223D61E800A3D057 /* Gateways */,
 				09805500223C34EB00E24D40 /* Delegates */,
@@ -565,6 +588,7 @@
 			isa = PBXGroup;
 			children = (
 				098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */,
+				098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */,
 			);
 			path = Presenters;
 			sourceTree = "<group>";
@@ -573,6 +597,7 @@
 			isa = PBXGroup;
 			children = (
 				098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */,
+				09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -599,6 +624,16 @@
 				09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */,
 			);
 			path = Delegates;
+			sourceTree = "<group>";
+		};
+		098798572242B45C00A15D90 /* Presenters */ = {
+			isa = PBXGroup;
+			children = (
+				098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */,
+				0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */,
+				0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */,
+			);
+			path = Presenters;
 			sourceTree = "<group>";
 		};
 		098E560021C409E300E4CA1E = {
@@ -911,12 +946,17 @@
 			files = (
 				09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */,
 				098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */,
+				098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */,
 				094DF9D7223AE66100C331EC /* Result.swift in Sources */,
+				0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,
+				098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
+				09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
+				0987985B2242B4C000A15D90 /* LabelCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */,
@@ -933,9 +973,11 @@
 				09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */,
 				0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
+				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
 				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
 				09165353223ECBC40081FB10 /* TextFieldTableVIewCell.swift in Sources */,
+				098798612242B96000A15D90 /* AddPersonParameters.swift in Sources */,
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
 				0916535B223ECBC40081FB10 /* PersonsGateway.swift in Sources */,
 				09165373223ECBC40081FB10 /* CoreDataPersonsGateway.swift in Sources */,
@@ -948,6 +990,7 @@
 				09165361223ECBC40081FB10 /* Constants.swift in Sources */,
 				09165356223ECBC40081FB10 /* AddPersonPresenter.swift in Sources */,
 				09165370223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift in Sources */,
+				0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */,
 				09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */,
 				09165350223ECBC40081FB10 /* LabelTableViewCell.swift in Sources */,
 				09165362223ECBC40081FB10 /* UIViewController+Extensions.swift in Sources */,
@@ -957,6 +1000,7 @@
 				0916534F223ECBC40081FB10 /* ViewController.swift in Sources */,
 				09165358223ECBC40081FB10 /* AddPersonViewController.swift in Sources */,
 				0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */,
+				0996443F224163DF003C321D /* LabelCellPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

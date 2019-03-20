@@ -10,7 +10,7 @@ import Foundation
 
 protocol AddPersonPresenter {
     var router: AddPersonViewRouter { get }
-    func addButtonPressed(parameters: AddPersonParameters)
+    func addButtonPressed()
     func cancelButtonPressed()
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: LabelCellView, forRow row: Int)
@@ -22,30 +22,51 @@ protocol AddPersonPresenterDelegate: class {
     func addPersonPresenterCancel(presenter: AddPersonPresenter)
 }
 
-class AddPersonPresenterImplementation: AddPersonPresenter {
+final class AddPersonPresenterImplementation: AddPersonPresenter {
 
     private weak var view: AddPersonView?
     private var addPersonUseCase: AddPersonUseCase
     private weak var delegate: AddPersonPresenterDelegate?
     private(set) var router: AddPersonViewRouter
-    private var addPersonName: String?
-    private var addPersonDateOfBirth: Date?
-    private var addPersonTimeOfBirth: Date?
-    private var addPersonDateComponents = AddPersonDateComponents()
+	private let nameCellPresenter: TextFieldCellPresenter
+	private let dateCellsPresenter: LabelCellPresenter
+	private let dateComponentsCellsPresenter: SwitchCellPresenter
     
     init(view: AddPersonView,
          addPersonUseCase: AddPersonUseCase,
          router: AddPersonViewRouter,
-         delegate: AddPersonPresenterDelegate?) {
+         delegate: AddPersonPresenterDelegate?,
+		 nameCellPresenter: TextFieldCellPresenter,
+		 dateCellsPresenter: LabelCellPresenter,
+		 dateComponentsCellsPresenter: SwitchCellPresenter) {
         self.view = view
         self.addPersonUseCase = addPersonUseCase
         self.router = router
         self.delegate = delegate
+		self.nameCellPresenter = nameCellPresenter
+		self.dateCellsPresenter = dateCellsPresenter
+		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
     }
     
     // MARK: - AddPersonPresenter
     
-    func addButtonPressed(parameters: AddPersonParameters) {
+    func addButtonPressed() {
+		
+		guard let name = nameCellPresenter.valuesForRow[0] else {
+			let error = CoreError(title: "Error", message: "Can't save person without name")
+			return handleAddPersonError(error)
+		}
+		guard let dateOfBirth = dateCellsPresenter.valuesForRow[1] else {
+			let error = CoreError(title: "Error", message: "Can't save person without birthdate")
+			return handleAddPersonError(error)
+		}
+		guard let timeOfBirth = dateCellsPresenter.valuesForRow[2] else {
+			let error = CoreError(title: "Error", message: "Can't save person without birthdate")
+			return handleAddPersonError(error)
+		}
+		let components = dateComponentsCellsPresenter.updatedComponents()
+		
+		let parameters = AddPersonParameters(name: name, dateOfBirth: dateOfBirth, timeOfBirth: timeOfBirth, dateComponenets: components)
         updateNavigationItemsState(isEnabled: false)
         addPersonUseCase.add(parameters: parameters) { result in
             self.updateNavigationItemsState(isEnabled: true)
@@ -62,51 +83,16 @@ class AddPersonPresenterImplementation: AddPersonPresenter {
         delegate?.addPersonPresenterCancel(presenter: self)
     }
     
-    func configure(cell: TextFieldCellView, forRow row: Int) {
-        cell.display(title: R.string.localizable.name())
-        cell.display(placeholder: R.string.localizable.name())
-        guard let personName = addPersonName else { return }
-        cell.display(value: personName)
+	func configure(cell: TextFieldCellView, forRow row: Int) {
+		nameCellPresenter.configure(cell: cell, forRow: row)
     }
     
     func configure(cell: LabelCellView, forRow row: Int) {
-        switch row {
-        case 1:
-            cell.display(title: R.string.localizable.dateOfBirth())
-            let value = addPersonDateOfBirth?.dateString() ?? "xx.xx.xxxx"
-            cell.display(value: value)
-        case 2:
-            cell.display(title: R.string.localizable.timeOfBirth())
-            let value = addPersonTimeOfBirth?.timeString() ?? "xx:xx"
-            cell.display(value: value)
-        default:
-            assertionFailure("We support LabelCellView only for rows in [1...2]")
-        }
+       	dateCellsPresenter.configure(cell: cell, forRow: row)
     }
     
     func configure(cell: SwitchCellView, forRow row: Int) {
-        switch row {
-        case 3:
-            cell.display(title: R.string.localizable.showYears())
-            cell.setSwitch(isOn: addPersonDateComponents.years)
-        case 4:
-            cell.display(title: R.string.localizable.showMonths())
-            cell.setSwitch(isOn: addPersonDateComponents.months)
-        case 5:
-            cell.display(title: R.string.localizable.showDays())
-            cell.setSwitch(isOn: addPersonDateComponents.days)
-        case 6:
-            cell.display(title: R.string.localizable.showHours())
-            cell.setSwitch(isOn: addPersonDateComponents.hours)
-        case 7:
-            cell.display(title: R.string.localizable.showMinutes())
-            cell.setSwitch(isOn: addPersonDateComponents.minutes)
-        case 8:
-            cell.display(title: R.string.localizable.showSeconds())
-            cell.setSwitch(isOn: addPersonDateComponents.seconds)
-        default:
-            assertionFailure("We support SwitchCellView only for rows in [3...8]")
-        }
+        dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
     }
     
     // MARK: - Private
