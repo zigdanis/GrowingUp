@@ -144,7 +144,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		dateCellsStub.valueFor(row: 1, didChangeTo: bDate)
 		dateCellsStub.valueFor(row: 2, didChangeTo: tDate)
 		for i in 3...8 {
-			dateComponentsStub.valuesForRow[i] = true
+			dateComponentsStub.valueFor(row: i, didChangeTo: true)
 		}
 		return AddPersonParameters(name: "John", dateOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
 	}

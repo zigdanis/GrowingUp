@@ -8,19 +8,25 @@
 
 import Foundation
 
-protocol SwitchCellPresenter {
+protocol SwitchCellPresenter: class {
 	func configure(cell: SwitchCellView, forRow row: Int)
-	var valuesForRow: [Int: Bool] { get set }
+	func valueFor(row: Int, didChangeTo value: Bool)
+	func valueFor(row: Int) -> Bool?
 	func updatedComponents() -> AddPersonDateComponents
-}
-
-protocol SwitchCellDelegate: class {
-	func modelValue(forRow row: Int, didUpdateTo value: Bool)
 }
 
 final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 	
-	var valuesForRow = [Int: Bool]()
+	private var storage = [Int: Bool]()
+	
+	func valueFor(row: Int, didChangeTo value: Bool) {
+		storage[row] = value
+	}
+	
+	func valueFor(row: Int) -> Bool? {
+		return storage[row]
+	}
+	
 	
 	func configure(cell: SwitchCellView, forRow row: Int) {
 		switch row {
@@ -39,13 +45,13 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 		default:
 			assertionFailure("We support SwitchCellView only for rows in [3...8]")
 		}
-		guard let value = valuesForRow[row] else { return }
+		guard let value = storage[row] else { return }
 		cell.setSwitch(isOn: value)
 	}
 	
 	func updatedComponents() -> AddPersonDateComponents {
 		var components = AddPersonDateComponents()
-		for (key, value) in valuesForRow {
+		for (key, value) in storage {
 			switch key {
 			case 3: components.years = value
 			case 4: components.months = value
@@ -60,11 +66,4 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 		return components
 	}
 	
-}
-
-extension SwitchCellPresenterImplementation: SwitchCellDelegate {
-	
-	func modelValue(forRow row: Int, didUpdateTo value: Bool) {
-		valuesForRow[row] = value
-	}
 }

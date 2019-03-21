@@ -19,7 +19,7 @@ class SwitchCellPresenterTests: XCTestCase {
 	
 	func test_SUT_WhenConfiguredWithTrue_DisplayTrueValue() {
 		// Given
-		sut.valuesForRow[3] = true
+		sut.valueFor(row: 3, didChangeTo: true)
 		let switchCellSpy = SwitchCellViewSpy()
 		// When
 		sut.configure(cell: switchCellSpy, forRow: 3)
@@ -29,7 +29,7 @@ class SwitchCellPresenterTests: XCTestCase {
 	
 	func test_SUT_WhenConfiguredWithFalse_DisplayFalseValue() {
 		// Given
-		sut.valuesForRow[3] = false
+		sut.valueFor(row: 3, didChangeTo: false)
 		let switchCellSpy = SwitchCellViewSpy()
 		// When
 		sut.configure(cell: switchCellSpy, forRow: 3)
@@ -41,12 +41,16 @@ class SwitchCellPresenterTests: XCTestCase {
 		// Given
 		let components = AddPersonDateComponents(years: true, months: false, days: true, hours: false, minutes: true, seconds: false)
 		// When
-		sut.valuesForRow = [ 3: true,
+		
+		let valuesForRow = [ 3: true,
 							 4: false,
 							 5: true,
 							 6: false,
 							 7: true,
 							 8: false ]
+		for (key, value) in valuesForRow {
+			sut.valueFor(row: key, didChangeTo: value)
+		}
 		// Then
 		XCTAssertEqual(sut.updatedComponents(), components, "The value we expected was not produced")
 	}

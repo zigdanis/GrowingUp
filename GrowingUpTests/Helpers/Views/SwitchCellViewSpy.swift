@@ -22,7 +22,7 @@ final class SwitchCellViewSpy: SwitchCellView {
 		displayedStatus = isOn
 	}
 	
-	func setup(with delegate: SwitchCellDelegate, forRow row: Int) {
+	func setup(with presenter: SwitchCellPresenter, forRow row: Int) {
 		
 	}
 	

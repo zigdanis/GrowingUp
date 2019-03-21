@@ -11,11 +11,18 @@ import Foundation
 
 final class SwitchCellPresenterStub: SwitchCellPresenter {
 	
+	private var storage = [Int: Bool]()
+	
 	func configure(cell: SwitchCellView, forRow row: Int) {
 	}
 	
-	var valuesForRow = [Int: Bool]()
+	func valueFor(row: Int, didChangeTo value: Bool) {
+		storage[row] = value
+	}
 	
+	func valueFor(row: Int) -> Bool? {
+		return storage[row]
+	}
 	func updatedComponents() -> AddPersonDateComponents {
 		return AddPersonDateComponents()
 	}

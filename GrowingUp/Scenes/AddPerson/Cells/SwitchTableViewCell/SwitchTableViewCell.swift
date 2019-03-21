@@ -11,14 +11,14 @@ import UIKit
 protocol SwitchCellView {
     func display(title: String)
     func setSwitch(isOn: Bool)
-	func setup(with delegate: SwitchCellDelegate, forRow row: Int)
+	func setup(with presenter: SwitchCellPresenter, forRow row: Int)
 }
 
 final class SwitchTableViewCell: UITableViewCell, SwitchCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueSwitch: UISwitch!
-	private weak var delegate: SwitchCellDelegate?
+	private weak var presenter: SwitchCellPresenter?
 	private var row: Int?
 	
 	override func awakeFromNib() {
@@ -34,14 +34,14 @@ final class SwitchTableViewCell: UITableViewCell, SwitchCellView {
         valueSwitch.setOn(isOn, animated: false)
     }
 	
-	func setup(with delegate: SwitchCellDelegate, forRow row: Int) {
-		self.delegate = delegate
+	func setup(with presenter: SwitchCellPresenter, forRow row: Int) {
+		self.presenter = presenter
 		self.row = row
 	}
 	
 	@objc private func switchValueChanged(sender: UISwitch) {
 		guard let row = row else { return }
-		guard let delegate = delegate else { return }
-		delegate.modelValue(forRow: row, didUpdateTo: sender.isOn)
+		guard let presenter = presenter else { return }
+		presenter.valueFor(row: row, didChangeTo: sender.isOn)
 	}
 }
