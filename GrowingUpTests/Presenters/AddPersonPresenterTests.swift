@@ -104,7 +104,7 @@ final class AddPersonPresenterTests: XCTestCase {
 	
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
 		// Given
-		nameCellStub.valuesForRow[0] = "John"
+		nameCellStub.valueFor(row: 0, didChangeTo: "John")
 		// When
 		sut.addButtonPressed()
 		// Then
@@ -114,7 +114,7 @@ final class AddPersonPresenterTests: XCTestCase {
 	
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
 		// Given
-		nameCellStub.valuesForRow[0] = "John"
+		nameCellStub.valueFor(row: 0, didChangeTo: "John")
 		dateCellsStub.valueFor(row: 1, didChangeTo: Date())
 		// When
 		sut.addButtonPressed()
@@ -138,7 +138,7 @@ final class AddPersonPresenterTests: XCTestCase {
 	// MARK: - Helpers
 	
 	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
-		nameCellStub.valuesForRow[0] = "John"
+		nameCellStub.valueFor(row: 0, didChangeTo: "John")
 		let bDate = Date()
 		let tDate = Date().addingTimeInterval(1)
 		dateCellsStub.valueFor(row: 1, didChangeTo: bDate)

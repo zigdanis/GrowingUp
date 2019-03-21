@@ -83,12 +83,12 @@ final class AddPersonViewController: UIViewController, AddPersonView {
     
 	@objc internal func cancelTapped() {
         presenter.cancelButtonPressed()
-		tableView.endEditing(true)
+		view.endEditing(true)
     }
     
     @objc private func doneTapped() {
         presenter.addButtonPressed()
-		tableView.endEditing(true)
+		view.endEditing(true)
     }
 	
     // MARK: - AddPersonView
@@ -111,12 +111,14 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 		datePickerView.layoutIfNeeded()
 		datePickerView.alpha = 1
 		datePickerView.showPicker()
+		view.endEditing(true)
 	}
 	
 	func showTimePickerView() {
 		timePickerView.layoutIfNeeded()
 		timePickerView.alpha = 1
 		timePickerView.showPicker()
+		view.endEditing(true)
 	}
 }
 

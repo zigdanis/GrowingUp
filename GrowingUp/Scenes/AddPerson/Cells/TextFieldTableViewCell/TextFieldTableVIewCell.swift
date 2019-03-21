@@ -12,14 +12,14 @@ protocol TextFieldCellView: class {
     func display(title: String)
     func display(value: String)
     func display(placeholder: String)
-	func setup(with delegate: TextFieldCellViewDelegate, forRow row: Int)
+	func setup(with presenter: TextFieldCellPresenter, forRow row: Int)
 }
 
 class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
     
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueField: UITextField!
-	private weak var delegate: TextFieldCellViewDelegate?
+	private weak var presenter: TextFieldCellPresenter?
 	private var row: Int?
 	
 	override func awakeFromNib() {
@@ -40,16 +40,16 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
         valueField.text = value
     }
 	
-	func setup(with delegate: TextFieldCellViewDelegate, forRow row: Int) {
-		self.delegate = delegate
+	func setup(with presenter: TextFieldCellPresenter, forRow row: Int) {
+		self.presenter = presenter
 		self.row = row
 	}
 	
 	@objc private func textDidChange(sender: UITextField) {
 		guard let row = row else { return }
-		guard let delegate = delegate else { return }
+		guard let presenter = presenter else { return }
 		guard let value = sender.text else { return }
-		delegate.modelValue(forRow: row, didUpdateTo: value)
+		presenter.valueFor(row: row, didChangeTo: value)
 	}
 	
 }

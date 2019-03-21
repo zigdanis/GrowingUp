@@ -108,7 +108,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     }
 	
 	private func collectAddPersonParameters() throws -> AddPersonParameters {
-		guard let name = nameCellPresenter.valuesForRow[0], !name.isEmpty else {
+		guard let name = nameCellPresenter.valueFor(row: 0), !name.isEmpty else {
 			throw CoreError.noNameValue
 		}
 		guard let dateOfBirth = dateCellsPresenter.valueFor(row: 1) else {

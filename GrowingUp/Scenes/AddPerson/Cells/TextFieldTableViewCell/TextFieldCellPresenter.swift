@@ -8,32 +8,30 @@
 
 import Foundation
 
-protocol TextFieldCellPresenter {
+protocol TextFieldCellPresenter: class {
 	func configure(cell: TextFieldCellView, forRow row: Int)
-	var valuesForRow: [Int: String] { get set }
-}
-
-protocol TextFieldCellViewDelegate: class {
-	func modelValue(forRow row: Int, didUpdateTo value: String)
+	func valueFor(row: Int, didChangeTo value: String)
+	func valueFor(row: Int) -> String?
 }
 
 final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 	
-	var valuesForRow = [Int: String]()
+	private var storage = [Int: String]()
 	
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		cell.setup(with: self, forRow: row)
 		cell.display(title: R.string.localizable.name())
 		cell.display(placeholder: R.string.localizable.name())
-		guard let value = valuesForRow[row] else { return }
+		guard let value = storage[row] else { return }
 		cell.display(value: value)
+	}
+	
+	func valueFor(row: Int, didChangeTo value: String) {
+		storage[row] = value
+	}
+	
+	func valueFor(row: Int) -> String? {
+		return storage[row]
 	}
 }
 
-extension TextFieldCellPresenterImplementation: TextFieldCellViewDelegate {
-	
-	func modelValue(forRow row: Int, didUpdateTo value: String) {
-		valuesForRow[row] = value
-	}
-	
-}

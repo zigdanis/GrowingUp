@@ -20,22 +20,24 @@ final class TextFieldCellPresenterTests: XCTestCase {
 	
 	func test_SUT_ConfigureTextFieldCell_HasNameTitle() {
 		// Given
-		sut.valuesForRow[0] = "John"
+		let expectedName = "John"
+		sut.valueFor(row: 0, didChangeTo: expectedName)
 		let tfCellSpy = TextFieldCellViewSpy()
 		// When
 		sut.configure(cell: tfCellSpy, forRow: 0)
 		// Then
-		XCTAssertEqual("John", tfCellSpy.displayedValue, "The value we expected was not displayed")
+		XCTAssertEqual(expectedName, tfCellSpy.displayedValue, "The value we expected was not displayed")
 	}
 	
 	func test_SUT_WhenConfiguredCellForRow_DifferResultsForRows() {
 		// Given
-		sut.valuesForRow[0] = "John"
+		let expectedName = "John"
+		sut.valueFor(row: 0, didChangeTo: expectedName)
 		let tfCellSpy = TextFieldCellViewSpy()
 		// When
 		sut.configure(cell: tfCellSpy, forRow: 1)
 		// Then
-		XCTAssertNotEqual("John", tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
+		XCTAssertNotEqual(expectedName, tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
 	}
 	
 	func test_SUT_WhenConfiguredWithoutData_ChangesValueAfterUserInput() {
@@ -44,9 +46,9 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		let expectedName = "John"
 		// When
 		sut.configure(cell: tfCellSpy, forRow: 0)
-		tfCellSpy.delegate?.modelValue(forRow: 0, didUpdateTo: expectedName)
+		tfCellSpy.presenter?.valueFor(row: 0, didChangeTo: expectedName)
 		// Then
-		XCTAssertEqual(expectedName, sut.valuesForRow[0], "The model value in presenter didn't updated after user input")
+		XCTAssertEqual(expectedName, sut.valueFor(row: 0), "The model value in presenter didn't updated after user input")
 	}
 	
 }
