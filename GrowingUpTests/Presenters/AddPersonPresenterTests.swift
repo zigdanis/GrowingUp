@@ -17,11 +17,10 @@ final class AddPersonPresenterTests: XCTestCase {
     let addPersonViewRouterSpy = AddPersonViewRouterSpy()
     let addPersonPresenterDelegateSpy = AddPersonPresenterDelegateSpy()
 	let nameCellStub = TextFieldCellPresenterStub()
-	let dateCellsStub = LabelCellPresenterStub()
+	let dateCellsStub = DateCellPresenterStub()
 	let dateComponentsStub = SwitchCellPresenterStub()
 	
     var sut: AddPersonPresenterImplementation!
-	
     
     // MARK: - Set up
     
@@ -95,12 +94,55 @@ final class AddPersonPresenterTests: XCTestCase {
         XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
     }
 	
+	func test_SUT_AddButtonPressedWithoutName_ShouldShowError() {
+		// When
+		sut.addButtonPressed()
+		// Then
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noNameValue.title, "Error message doesn't match")
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noNameValue.message, "Error message doesn't match")
+	}
+	
+	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
+		// Given
+		nameCellStub.valuesForRow[0] = "John"
+		// When
+		sut.addButtonPressed()
+		// Then
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noDayValue.title, "Error message doesn't match")
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noDayValue.message, "Error message doesn't match")
+	}
+	
+	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
+		// Given
+		nameCellStub.valuesForRow[0] = "John"
+		dateCellsStub.valueFor(row: 1, didChangeTo: Date())
+		// When
+		sut.addButtonPressed()
+		// Then
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noTimeValue.title, "Error message doesn't match")
+		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noTimeValue.message, "Error message doesn't match")
+	}
+	
+	func test_SUT_WhenSettingDateForRow_PassingItToDateCellsPresenter() {
+		// Given
+		let expectedDay = Date()
+		let expectedTime = Date().addingTimeInterval(1)
+		// When
+		sut.dateFor(row: 1, didUpdateTo: expectedDay)
+		sut.dateFor(row: 2, didUpdateTo: expectedTime)
+		// Then
+		XCTAssertEqual(dateCellsStub.valueFor(row: 1), expectedDay, "Expected value doesn't match")
+		XCTAssertEqual(dateCellsStub.valueFor(row: 2), expectedTime, "Expected value doesn't match")
+	}
+	
+	// MARK: - Helpers
+	
 	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
 		nameCellStub.valuesForRow[0] = "John"
 		let bDate = Date()
-		let tDate = Date()
-		dateCellsStub.valuesForRow[1] = bDate
-		dateCellsStub.valuesForRow[2] = tDate
+		let tDate = Date().addingTimeInterval(1)
+		dateCellsStub.valueFor(row: 1, didChangeTo: bDate)
+		dateCellsStub.valueFor(row: 2, didChangeTo: tDate)
 		for i in 3...8 {
 			dateComponentsStub.valuesForRow[i] = true
 		}

@@ -21,12 +21,22 @@ final class DateCellPresenterTests: XCTestCase {
 	func test_SUT_WhenConfiguredWithDate_ShouldDisplayValue() {
 		// Given
 		let date = Date()
-		sut.valuesForRow[1] = date
+		sut.valueFor(row: 1, didChangeTo: date)
 		let dateCellSpy = DateCellViewSpy()
 		// When
 		sut.configure(cell: dateCellSpy, forRow: 1)
 		// Then
 		XCTAssertEqual(date.dateString(), dateCellSpy.displayedValue, "The value we expected was not displayed")
+	}
+	
+	func test_SUT_WhenConfiguredWithDate_ShouldReturnThatValue() {
+		// Given
+		let expectedDate = Date()
+		sut.valueFor(row: 1, didChangeTo: expectedDate)
+		// When
+		let date = sut.valueFor(row: 1)
+		// Then
+		XCTAssertEqual(date, expectedDate, "The value we expected did npt match")
 	}
 	
 	func test_SUT_WhenConfiguredWithoutData_ShouldShowPlaceholders() {

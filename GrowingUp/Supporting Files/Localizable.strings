@@ -18,8 +18,8 @@
 /* Title for the person's name value */
 "Name" = "Name";
 
-/* Title for the person's date of birth */
-"Date of birth" = "Date of birth";
+/* Title for the person's day of birth */
+"Day of birth" = "Day of birth";
 
 /* Title for the person's time of birth */
 "Time of birth" = "Time of birth";

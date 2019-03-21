@@ -74,7 +74,7 @@
 		09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */; };
 		09805504223C3C0100E24D40 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09805503223C3C0100E24D40 /* Person.swift */; };
 		098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */; };
-		0987985B2242B4C000A15D90 /* LabelCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */; };
+		0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987985A2242B4C000A15D90 /* DateCellPresenterStub.swift */; };
 		0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */; };
 		098798612242B96000A15D90 /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798602242B96000A15D90 /* AddPersonParameters.swift */; };
 		098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */; };
@@ -216,7 +216,7 @@
 		09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterDelegateSpy.swift; sourceTree = "<group>"; };
 		09805503223C3C0100E24D40 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenterStub.swift; sourceTree = "<group>"; };
-		0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCellPresenterStub.swift; sourceTree = "<group>"; };
+		0987985A2242B4C000A15D90 /* DateCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellPresenterStub.swift; sourceTree = "<group>"; };
 		0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenterStub.swift; sourceTree = "<group>"; };
 		098798602242B96000A15D90 /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenterTests.swift; sourceTree = "<group>"; };
@@ -647,7 +647,7 @@
 			isa = PBXGroup;
 			children = (
 				098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */,
-				0987985A2242B4C000A15D90 /* LabelCellPresenterStub.swift */,
+				0987985A2242B4C000A15D90 /* DateCellPresenterStub.swift */,
 				0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */,
 			);
 			path = Presenters;
@@ -1006,7 +1006,7 @@
 				09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */,
 				0987986B2242DBD700A15D90 /* SwitchCellViewSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
-				0987985B2242B4C000A15D90 /* LabelCellPresenterStub.swift in Sources */,
+				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */,

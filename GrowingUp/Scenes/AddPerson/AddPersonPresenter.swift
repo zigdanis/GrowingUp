@@ -50,25 +50,16 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     }
     
     // MARK: - AddPersonPresenter
-    
+
     func addButtonPressed() {
+		var params: AddPersonParameters?
+		do {
+			params = try collectAddPersonParameters()
+		} catch {
+			handleAddPersonError(error as! CoreError)
+		}
 		
-		guard let name = nameCellPresenter.valuesForRow[0],
-				!name.isEmpty else {
-			let error = CoreError(title: "Error", message: "Can't save person without name")
-			return handleAddPersonError(error)
-		}
-		guard let dateOfBirth = dateCellsPresenter.valuesForRow[1] else {
-			let error = CoreError(title: "Error", message: "Can't save person without day of birth")
-			return handleAddPersonError(error)
-		}
-		guard let timeOfBirth = dateCellsPresenter.valuesForRow[2] else {
-			let error = CoreError(title: "Error", message: "Can't save person without time of birth")
-			return handleAddPersonError(error)
-		}
-		let components = dateComponentsCellsPresenter.updatedComponents()
-		
-		let parameters = AddPersonParameters(name: name, dateOfBirth: dateOfBirth, timeOfBirth: timeOfBirth, dateComponenets: components)
+		guard let parameters = params else { return }
         updateNavigationItemsState(isEnabled: false)
         addPersonUseCase.add(parameters: parameters) { result in
             self.updateNavigationItemsState(isEnabled: true)
@@ -98,7 +89,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     }
 	
 	func dateFor(row: Int, didUpdateTo date: Date) {
-		dateCellsPresenter.modelValue(forRow: row, didUpdateTo: date)
+		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
 	}
     
     // MARK: - Private
@@ -115,4 +106,21 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
         view?.updateAddButtonState(isEnabled: enabled)
         view?.updateCancelButtonState(isEnabled: enabled)
     }
+	
+	private func collectAddPersonParameters() throws -> AddPersonParameters {
+		guard let name = nameCellPresenter.valuesForRow[0], !name.isEmpty else {
+			throw CoreError.noNameValue
+		}
+		guard let dateOfBirth = dateCellsPresenter.valueFor(row: 1) else {
+			throw CoreError.noDayValue
+		}
+		guard let timeOfBirth = dateCellsPresenter.valueFor(row: 2) else {
+			throw CoreError.noTimeValue
+		}
+		let components = dateComponentsCellsPresenter.updatedComponents()
+		return AddPersonParameters(name: name,
+								   dateOfBirth: dateOfBirth,
+								   timeOfBirth: timeOfBirth,
+								   dateComponenets: components)
+	}
 }

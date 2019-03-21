@@ -19,4 +19,8 @@ struct CoreError: Error {
         self.title = title
         self.message = message
     }
+	
+	static let noNameValue = CoreError(title: "Error", message: "Can't save person without specified name")
+	static let noDayValue = CoreError(title: "Error", message: "Can't save person without specified day of birth")
+	static let noTimeValue = CoreError(title: "Error", message: "Can't save person without specified time of birth")
 }

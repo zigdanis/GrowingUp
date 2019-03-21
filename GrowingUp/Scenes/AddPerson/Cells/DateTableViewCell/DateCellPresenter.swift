@@ -10,31 +10,35 @@ import Foundation
 
 protocol DateCellPresenter {
 	func configure(cell: DateCellView, forRow row: Int)
-	var valuesForRow: [Int: Date] { get set }
-	func modelValue(forRow row: Int, didUpdateTo value: Date)
+	func valueFor(row: Int, didChangeTo value: Date)
+	func valueFor(row: Int) -> Date?
 }
 
 final class DateCellPresenterImplementation: DateCellPresenter {
 	
-	var valuesForRow = [Int: Date]()
+	private var storage = [Int: Date]()
 	
 	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
 		case 1:
-			cell.display(title: R.string.localizable.dateOfBirth())
-			let value = valuesForRow[row]?.dateString() ?? "xx.xx.xxxx"
+			cell.display(title: R.string.localizable.dayOfBirth())
+			let value = storage[row]?.dateString() ?? "xx.xx.xxxx"
 			cell.display(value: value)
 		case 2:
 			cell.display(title: R.string.localizable.timeOfBirth())
-			let value = valuesForRow[row]?.timeString() ?? "xx:xx"
+			let value = storage[row]?.timeString() ?? "xx:xx"
 			cell.display(value: value)
 		default:
 			assertionFailure("We support LabelCellView only for rows in [1...2]")
 		}
 	}
 	
-	func modelValue(forRow row: Int, didUpdateTo value: Date) {
-		valuesForRow[row] = value
+	func valueFor(row: Int, didChangeTo value: Date) {
+		storage[row] = value
+	}
+	
+	func valueFor(row: Int) -> Date? {
+		return storage[row]
 	}
 }
 
