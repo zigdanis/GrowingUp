@@ -66,6 +66,7 @@
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
 		094DF9D7223AE66100C331EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D6223AE66100C331EC /* Result.swift */; };
+		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */; };
 		098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */; };
 		098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */; };
@@ -207,6 +208,7 @@
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		094DF9D6223AE66100C331EC /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterTests.swift; sourceTree = "<group>"; };
 		098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewSpy.swift; sourceTree = "<group>"; };
 		098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseSpy.swift; sourceTree = "<group>"; };
@@ -303,6 +305,7 @@
 		09165305223ECBC40081FB10 /* GrowingUp */ = {
 			isa = PBXGroup;
 			children = (
+				09165339223ECBC40081FB10 /* AppDelegate.swift */,
 				09165306223ECBC40081FB10 /* Storyboards */,
 				0916530D223ECBC40081FB10 /* ViewController.swift */,
 				0916530E223ECBC40081FB10 /* Scenes */,
@@ -311,7 +314,6 @@
 				09165324223ECBC40081FB10 /* View Controllers */,
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
-				09165339223ECBC40081FB10 /* AppDelegate.swift */,
 				0916533A223ECBC40081FB10 /* Views */,
 				0916533E223ECBC40081FB10 /* EntityGateway */,
 				09165348223ECBC40081FB10 /* 3rd Party Libraries */,
@@ -345,6 +347,7 @@
 				09165318223ECBC40081FB10 /* AddPersonViewController.xib */,
 				09165317223ECBC40081FB10 /* AddPersonPresenter.swift */,
 				0916531B223ECBC40081FB10 /* AddPersonViewRouter.swift */,
+				095716CF2243658500EA806C /* Views */,
 				09165310223ECBC40081FB10 /* Cells */,
 			);
 			path = AddPerson;
@@ -353,15 +356,9 @@
 		09165310223ECBC40081FB10 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */,
-				09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */,
-				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
-				09165311223ECBC40081FB10 /* DateTableViewCell.swift */,
-				0996443E224163DF003C321D /* DateCellPresenter.swift */,
-				09165312223ECBC40081FB10 /* DateTableViewCell.xib */,
-				09165316223ECBC40081FB10 /* SwitchTableViewCell.swift */,
-				0996443C2241426C003C321D /* SwitchCellPresenter.swift */,
-				09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */,
+				09F5A62F224409C600AD0B9D /* TextFieldTableViewCell */,
+				09F5A630224409D900AD0B9D /* DateTableViewCell */,
+				09F5A631224409F400AD0B9D /* SwitchTableViewCell */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -592,6 +589,14 @@
 			path = Creators;
 			sourceTree = "<group>";
 		};
+		095716CF2243658500EA806C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				095716D02243659700EA806C /* DatePickerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		098054F4223C295400E24D40 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,6 +675,36 @@
 				094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		09F5A62F224409C600AD0B9D /* TextFieldTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */,
+				09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */,
+				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
+			);
+			path = TextFieldTableViewCell;
+			sourceTree = "<group>";
+		};
+		09F5A630224409D900AD0B9D /* DateTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				09165311223ECBC40081FB10 /* DateTableViewCell.swift */,
+				0996443E224163DF003C321D /* DateCellPresenter.swift */,
+				09165312223ECBC40081FB10 /* DateTableViewCell.xib */,
+			);
+			path = DateTableViewCell;
+			sourceTree = "<group>";
+		};
+		09F5A631224409F400AD0B9D /* SwitchTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				09165316223ECBC40081FB10 /* SwitchTableViewCell.swift */,
+				0996443C2241426C003C321D /* SwitchCellPresenter.swift */,
+				09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */,
+			);
+			path = SwitchTableViewCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -988,6 +1023,7 @@
 				09165360223ECBC40081FB10 /* NewPersonViewController.swift in Sources */,
 				09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */,
 				0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */,
+				095716D12243659700EA806C /* DatePickerView.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
@@ -1391,7 +1427,7 @@
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "$PRODUCT_NAME/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1416,7 +1452,7 @@
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "$PRODUCT_NAME/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

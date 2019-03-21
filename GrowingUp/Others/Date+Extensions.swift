@@ -10,13 +10,13 @@ import Foundation
 
 private let dateFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateStyle = .short
+    formatter.dateFormat = "dd.MM.yyyy"
     return formatter
 }()
 
 private let timeFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.timeStyle = .short
+	formatter.dateFormat = "HH:mm"
     return formatter
 }()
 

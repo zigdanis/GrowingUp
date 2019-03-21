@@ -15,7 +15,7 @@ protocol AddPersonView: class {
     func displayAddPersonError(title: String, message: String)
 }
 
-class AddPersonViewController: UIViewController, AddPersonView {
+final class AddPersonViewController: UIViewController, AddPersonView {
     
     var presenter: AddPersonPresenter!
     private let configurator: AddPersonConfigurator
@@ -25,6 +25,8 @@ class AddPersonViewController: UIViewController, AddPersonView {
     @IBOutlet weak var appPicLabel: UILabel!
     @IBOutlet weak var widgetPicLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
+	private lazy var datePickerView: DatePickerView = bdPickerView(for: .date)
+	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
     
     init(configurator: AddPersonConfigurator) {
         self.configurator = configurator
@@ -42,7 +44,7 @@ class AddPersonViewController: UIViewController, AddPersonView {
         setupImagePickerViews()
         setupTableView()
     }
-    
+	
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
@@ -61,16 +63,34 @@ class AddPersonViewController: UIViewController, AddPersonView {
         tableView.register(R.nib.switchTableViewCell)
     }
 	
+	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
+		let picker = DatePickerView(mode: mode)
+		picker.delegate = self
+		picker.translatesAutoresizingMaskIntoConstraints = false
+		let parentView: UIView! = navigationController?.view ?? view
+		parentView.addSubview(picker)
+		let consts = [
+			picker.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
+			picker.topAnchor.constraint(equalTo: parentView.topAnchor),
+			parentView.trailingAnchor.constraint(equalTo: picker.trailingAnchor),
+			parentView.bottomAnchor.constraint(equalTo: picker.bottomAnchor)
+		]
+		NSLayoutConstraint.activate(consts)
+		return picker
+	}
+		
     // MARK: - Actions
     
-    @objc private func cancelTapped() {
+	@objc internal func cancelTapped() {
         presenter.cancelButtonPressed()
+		tableView.endEditing(true)
     }
     
     @objc private func doneTapped() {
         presenter.addButtonPressed()
+		tableView.endEditing(true)
     }
-    
+	
     // MARK: - AddPersonView
     
     func updateAddButtonState(isEnabled enabled: Bool) {
@@ -84,6 +104,20 @@ class AddPersonViewController: UIViewController, AddPersonView {
     func displayAddPersonError(title: String, message: String) {
         showAlert(title: title, message: message)
     }
+	
+	// MARK: - Business Logic
+	
+	func showDatePickerView() {
+		datePickerView.layoutIfNeeded()
+		datePickerView.alpha = 1
+		datePickerView.showPicker()
+	}
+	
+	func showTimePickerView() {
+		timePickerView.layoutIfNeeded()
+		timePickerView.alpha = 1
+		timePickerView.showPicker()
+	}
 }
 
 extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
@@ -113,6 +147,27 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
     }
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: true)
+		tableView.deselectRow(at: indexPath, animated: false)
+		if indexPath.row == 1 {
+			showDatePickerView()
+		} else if indexPath.row == 2 {
+			showTimePickerView()
+		}
+ 	}
+}
+
+extension AddPersonViewController: DatePickerViewDelegate {
+	
+	func datePickerDidHide(picker: DatePickerView) {
+		picker.alpha = 0
+	}
+	
+	func datePicker(picker: DatePickerView, selectedDate date: Date) {
+		if picker === datePickerView {
+			presenter.dateFor(row: 1, didUpdateTo: date)
+		} else if picker === timePickerView {
+			presenter.dateFor(row: 2, didUpdateTo: date)
+		}
+		tableView.reloadData()
 	}
 }

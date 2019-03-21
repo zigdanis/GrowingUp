@@ -11,9 +11,6 @@ import Foundation
 protocol DateCellPresenter {
 	func configure(cell: DateCellView, forRow row: Int)
 	var valuesForRow: [Int: Date] { get set }
-}
-
-protocol DateCellDelegate: class {
 	func modelValue(forRow row: Int, didUpdateTo value: Date)
 }
 
@@ -35,11 +32,9 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 			assertionFailure("We support LabelCellView only for rows in [1...2]")
 		}
 	}
-}
-
-extension DateCellPresenterImplementation: DateCellDelegate {
 	
 	func modelValue(forRow row: Int, didUpdateTo value: Date) {
 		valuesForRow[row] = value
 	}
 }
+

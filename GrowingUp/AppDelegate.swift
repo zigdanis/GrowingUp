@@ -37,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: AddPersonPresenterDelegate {
     func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
-        
+        print("Did Add Person")
     }
     
     func addPersonPresenterCancel(presenter: AddPersonPresenter) {

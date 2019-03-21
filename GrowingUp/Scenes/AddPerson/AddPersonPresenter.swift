@@ -15,6 +15,7 @@ protocol AddPersonPresenter {
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: DateCellView, forRow row: Int)
     func configure(cell: SwitchCellView, forRow row: Int)
+	func dateFor(row: Int, didUpdateTo date: Date)
 }
 
 protocol AddPersonPresenterDelegate: class {
@@ -58,11 +59,11 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 			return handleAddPersonError(error)
 		}
 		guard let dateOfBirth = dateCellsPresenter.valuesForRow[1] else {
-			let error = CoreError(title: "Error", message: "Can't save person without birthdate")
+			let error = CoreError(title: "Error", message: "Can't save person without day of birth")
 			return handleAddPersonError(error)
 		}
 		guard let timeOfBirth = dateCellsPresenter.valuesForRow[2] else {
-			let error = CoreError(title: "Error", message: "Can't save person without birthdate")
+			let error = CoreError(title: "Error", message: "Can't save person without time of birth")
 			return handleAddPersonError(error)
 		}
 		let components = dateComponentsCellsPresenter.updatedComponents()
@@ -95,6 +96,10 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     func configure(cell: SwitchCellView, forRow row: Int) {
         dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
     }
+	
+	func dateFor(row: Int, didUpdateTo date: Date) {
+		dateCellsPresenter.modelValue(forRow: row, didUpdateTo: date)
+	}
     
     // MARK: - Private
     
