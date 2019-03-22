@@ -63,7 +63,13 @@
                     <constraint firstItem="MUg-nb-A2L" firstAttribute="top" secondItem="8TY-9Q-5qE" secondAttribute="top" constant="20" id="ifZ-ss-m4e"/>
                 </constraints>
             </tableViewCellContentView>
-            <point key="canvasLocation" x="-83.4375" y="91.373239436619713"/>
+            <connections>
+                <outlet property="appPicButton" destination="xze-bH-C5E" id="rcT-k4-6lT"/>
+                <outlet property="appPicLabel" destination="ZVU-Af-IfO" id="0bh-Tu-1FB"/>
+                <outlet property="widgetPicButton" destination="UZ4-Vx-ffs" id="xIF-is-xlV"/>
+                <outlet property="widgetPicLabel" destination="2Co-7N-hZM" id="9Hk-7Q-hPm"/>
+            </connections>
+            <point key="canvasLocation" x="-36" y="24"/>
         </tableViewCell>
     </objects>
 </document>

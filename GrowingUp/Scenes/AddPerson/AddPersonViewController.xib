@@ -12,12 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AddPersonViewController" customModule="GrowingUp" customModuleProvider="target">
             <connections>
-                <outlet property="appPicButton" destination="9uC-Q7-wPc" id="OIO-17-GoU"/>
-                <outlet property="appPicLabel" destination="Wao-5K-xjL" id="NIr-VR-BcS"/>
                 <outlet property="tableView" destination="BNM-va-OSY" id="H3i-1i-Ew4"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Qgh-rF-OAL"/>
-                <outlet property="widgetPicButton" destination="jru-U9-yCm" id="PVo-Cn-pfY"/>
-                <outlet property="widgetPicLabel" destination="KaM-Gw-5ZF" id="tNQ-TZ-8V5"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -25,55 +21,16 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="60" translatesAutoresizingMaskIntoConstraints="NO" id="Bji-gH-en8">
-                    <rect key="frame" x="40" y="84" width="240" height="121.5"/>
-                    <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="ltX-QU-RDc">
-                            <rect key="frame" x="0.0" y="0.0" width="90" height="121.5"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9uC-Q7-wPc" customClass="ImagePickerButton" customModule="GrowingUp" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="90" height="101"/>
-                                </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="800" text="app pic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wao-5K-xjL">
-                                    <rect key="frame" x="0.0" y="101" width="90" height="20.5"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                        </stackView>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Slc-7i-CPF">
-                            <rect key="frame" x="150" y="0.0" width="90" height="121.5"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jru-U9-yCm" customClass="ImagePickerButton" customModule="GrowingUp" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="90" height="101"/>
-                                </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="800" text="widget pic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KaM-Gw-5ZF">
-                                    <rect key="frame" x="0.0" y="101" width="90" height="20.5"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                        </stackView>
-                    </subviews>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Bji-gH-en8" secondAttribute="height" multiplier="375:190" id="CZQ-wy-v06"/>
-                    </constraints>
-                </stackView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="BNM-va-OSY">
-                    <rect key="frame" x="0.0" y="225.5" width="320" height="342.5"/>
+                    <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="Bji-gH-en8" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="20" id="1pJ-QR-PBO"/>
-                <constraint firstAttribute="trailing" secondItem="Bji-gH-en8" secondAttribute="trailing" constant="40" id="Nca-eM-AUs"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="BNM-va-OSY" secondAttribute="trailing" id="P5O-MF-Vzu"/>
                 <constraint firstItem="BNM-va-OSY" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="TGb-nM-95l"/>
-                <constraint firstItem="Bji-gH-en8" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="40" id="V4d-HV-xxZ"/>
-                <constraint firstItem="BNM-va-OSY" firstAttribute="top" secondItem="Bji-gH-en8" secondAttribute="bottom" constant="20" id="ozH-RE-yH5"/>
+                <constraint firstItem="BNM-va-OSY" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="c6N-i7-9cK"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="BNM-va-OSY" secondAttribute="bottom" id="utb-H9-2Sp"/>
             </constraints>
             <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>

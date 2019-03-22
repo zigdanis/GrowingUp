@@ -28,10 +28,6 @@ final class AddPersonViewController: UIViewController, AddPersonView {
     var presenter: AddPersonPresenter!
     private let configurator: AddPersonConfigurator
     
-    @IBOutlet weak var appPicButton: ImagePickerButton!
-    @IBOutlet weak var widgetPicButton: ImagePickerButton!
-    @IBOutlet weak var appPicLabel: UILabel!
-    @IBOutlet weak var widgetPicLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
 	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
 	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
@@ -49,18 +45,12 @@ final class AddPersonViewController: UIViewController, AddPersonView {
         super.viewDidLoad()
         configurator.configure(addPersonViewController: self)
         setupNavigationBar()
-        setupImagePickerViews()
         setupTableView()
     }
 	
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
-    }
-    
-    private func setupImagePickerViews() {
-        appPicLabel.text = R.string.localizable.appPic()
-        widgetPicLabel.text = R.string.localizable.widgetPic()
     }
     
     private func setupTableView() {
@@ -71,6 +61,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
         tableView.register(R.nib.switchTableViewCell)
 		tableView.register(R.nib.imagePickersTableViewCell)
 		tableView.tableFooterView = UIView()
+		tableView.keyboardDismissMode = .onDrag
     }
 	
 	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
