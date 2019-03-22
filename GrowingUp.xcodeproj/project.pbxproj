@@ -800,6 +800,7 @@
 				09051B6221C55EB6008A99C6 /* Embed Frameworks */,
 				09A69E58223E332500291044 /* Carthage Copy Frameworks */,
 				09A69E59223E43B400291044 /* Carthage Outdated Warnings */,
+				09AC10CD22457FB500AC12D5 /* Swift Lint */,
 			);
 			buildRules = (
 			);
@@ -982,6 +983,24 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings\n";
+		};
+		09AC10CD22457FB500AC12D5 /* Swift Lint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Lint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

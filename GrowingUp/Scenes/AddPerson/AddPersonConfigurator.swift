@@ -14,7 +14,7 @@ protocol AddPersonConfigurator {
 
 class AddPersonConfiguratorImplementation: AddPersonConfigurator {
     
-    var addPersonPresenterDelegate: AddPersonPresenterDelegate?
+    weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
     
     init(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
         self.addPersonPresenterDelegate = addPersonPresenterDelegate
