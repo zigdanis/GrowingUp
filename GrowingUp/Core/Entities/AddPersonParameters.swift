@@ -10,7 +10,7 @@ import Foundation
 
 struct AddPersonParameters: Equatable {
 	var name: String
-	var dateOfBirth: Date
+	var dayOfBirth: Date
 	var timeOfBirth: Date
 	var dateComponenets: AddPersonDateComponents
 }
@@ -28,7 +28,7 @@ extension AddPersonParameters {
 	
 	func dateComponents() -> DateComponents {
 		var components = DateComponents()
-		let yearMonthDay = Calendar.current.dateComponents([.year, .month, .day], from: dateOfBirth)
+		let yearMonthDay = Calendar.current.dateComponents([.year, .month, .day], from: dayOfBirth)
 		let hourMinuteSecond = Calendar.current.dateComponents([.year, .month, .day], from: timeOfBirth)
 		components.setValue(yearMonthDay.year, for: .year)
 		components.setValue(yearMonthDay.month, for: .month)

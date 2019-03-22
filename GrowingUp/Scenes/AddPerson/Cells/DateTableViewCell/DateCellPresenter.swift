@@ -20,16 +20,16 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 	
 	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
-		case 1:
+		case APC.dayPickerRow:
 			cell.display(title: R.string.localizable.dayOfBirth())
 			let value = storage[row]?.dateString() ?? "xx.xx.xxxx"
 			cell.display(value: value)
-		case 2:
+		case APC.timePickerRow:
 			cell.display(title: R.string.localizable.timeOfBirth())
 			let value = storage[row]?.timeString() ?? "xx:xx"
 			cell.display(value: value)
 		default:
-			assertionFailure("We support LabelCellView only for rows in [1...2]")
+			assertionFailure("We support LabelCellView only for rows in [APC.dayPickerRow, APC.timePickerRow]")
 		}
 	}
 	

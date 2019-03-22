@@ -108,18 +108,18 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     }
 	
 	private func collectAddPersonParameters() throws -> AddPersonParameters {
-		guard let name = nameCellPresenter.valueFor(row: 0), !name.isEmpty else {
+		guard let name = nameCellPresenter.valueFor(row: APC.nameFieldRow), !name.isEmpty else {
 			throw CoreError.noNameValue
 		}
-		guard let dateOfBirth = dateCellsPresenter.valueFor(row: 1) else {
+		guard let dayOfBirth = dateCellsPresenter.valueFor(row: APC.dayPickerRow) else {
 			throw CoreError.noDayValue
 		}
-		guard let timeOfBirth = dateCellsPresenter.valueFor(row: 2) else {
+		guard let timeOfBirth = dateCellsPresenter.valueFor(row: APC.timePickerRow) else {
 			throw CoreError.noTimeValue
 		}
 		let components = dateComponentsCellsPresenter.updatedComponents()
 		return AddPersonParameters(name: name,
-								   dateOfBirth: dateOfBirth,
+								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
 								   dateComponenets: components)
 	}

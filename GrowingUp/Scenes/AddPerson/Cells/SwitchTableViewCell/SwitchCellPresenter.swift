@@ -20,18 +20,19 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 	private var storage = [Int: Bool]()
 	
 	func configure(cell: SwitchCellView, forRow row: Int) {
+		let supportedRows = Array(APC.dateComponentsRows)
 		switch row {
-		case 3:
+		case supportedRows[0]:
 			cell.display(title: R.string.localizable.showYears())
-		case 4:
+		case supportedRows[1]:
 			cell.display(title: R.string.localizable.showMonths())
-		case 5:
+		case supportedRows[2]:
 			cell.display(title: R.string.localizable.showDays())
-		case 6:
+		case supportedRows[3]:
 			cell.display(title: R.string.localizable.showHours())
-		case 7:
+		case supportedRows[4]:
 			cell.display(title: R.string.localizable.showMinutes())
-		case 8:
+		case supportedRows[5]:
 			cell.display(title: R.string.localizable.showSeconds())
 		default:
 			assertionFailure("We support SwitchCellView only for rows in [3...8]")
@@ -50,16 +51,17 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 	
 	func updatedComponents() -> AddPersonDateComponents {
 		var components = AddPersonDateComponents()
+		let supportedRows = Array(APC.dateComponentsRows)
 		for (key, value) in storage {
 			switch key {
-			case 3: components.years = value
-			case 4: components.months = value
-			case 5: components.days = value
-			case 6: components.hours = value
-			case 7: components.minutes = value
-			case 8: components.seconds = value
+			case supportedRows[0]: components.years = value
+			case supportedRows[1]: components.months = value
+			case supportedRows[2]: components.days = value
+			case supportedRows[3]: components.hours = value
+			case supportedRows[4]: components.minutes = value
+			case supportedRows[5]: components.seconds = value
 			default:
-				assertionFailure("We support SwitchCellView only for rows in [3...8]")
+				assertionFailure("We support SwitchCellView only for rows in APC.dateComponentsRows")
 			}
 		}
 		return components

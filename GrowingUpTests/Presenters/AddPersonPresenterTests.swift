@@ -104,7 +104,7 @@ final class AddPersonPresenterTests: XCTestCase {
 	
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: 0, didChangeTo: "John")
+		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
 		// When
 		sut.addButtonPressed()
 		// Then
@@ -114,8 +114,8 @@ final class AddPersonPresenterTests: XCTestCase {
 	
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: 0, didChangeTo: "John")
-		dateCellsStub.valueFor(row: 1, didChangeTo: Date())
+		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
+		dateCellsStub.valueFor(row: APC.dayPickerRow, didChangeTo: Date())
 		// When
 		sut.addButtonPressed()
 		// Then
@@ -138,14 +138,14 @@ final class AddPersonPresenterTests: XCTestCase {
 	// MARK: - Helpers
 	
 	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
-		nameCellStub.valueFor(row: 0, didChangeTo: "John")
+		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
 		let bDate = Date()
 		let tDate = Date().addingTimeInterval(1)
-		dateCellsStub.valueFor(row: 1, didChangeTo: bDate)
-		dateCellsStub.valueFor(row: 2, didChangeTo: tDate)
-		for i in 3...8 {
+		dateCellsStub.valueFor(row: APC.dayPickerRow, didChangeTo: bDate)
+		dateCellsStub.valueFor(row: APC.timePickerRow, didChangeTo: tDate)
+		for i in APC.dateComponentsRows {
 			dateComponentsStub.valueFor(row: i, didChangeTo: true)
 		}
-		return AddPersonParameters(name: "John", dateOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
 	}
 }

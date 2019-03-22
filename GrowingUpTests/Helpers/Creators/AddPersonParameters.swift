@@ -11,6 +11,6 @@ import Foundation
 
 extension AddPersonParameters {
     static func createParameters() -> AddPersonParameters {
-        return AddPersonParameters(name: "name", dateOfBirth: Date(), timeOfBirth: Date(), dateComponenets: AddPersonDateComponents())
+        return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), dateComponenets: AddPersonDateComponents())
     }
 }

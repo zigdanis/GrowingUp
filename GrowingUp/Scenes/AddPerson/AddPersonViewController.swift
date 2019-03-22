@@ -15,7 +15,15 @@ protocol AddPersonView: class {
     func displayAddPersonError(title: String, message: String)
 }
 
+typealias APC = AddPersonViewController
+
 final class AddPersonViewController: UIViewController, AddPersonView {
+	
+	static let imagePickerRow = 0
+	static let nameFieldRow = 1
+	static let dayPickerRow = 2
+	static let timePickerRow = 3
+	static let dateComponentsRows = 4...9
     
     var presenter: AddPersonPresenter!
     private let configurator: AddPersonConfigurator
@@ -25,7 +33,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
     @IBOutlet weak var appPicLabel: UILabel!
     @IBOutlet weak var widgetPicLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-	private lazy var datePickerView: DatePickerView = bdPickerView(for: .date)
+	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
 	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
     
     init(configurator: AddPersonConfigurator) {
@@ -61,6 +69,8 @@ final class AddPersonViewController: UIViewController, AddPersonView {
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.dateTableViewCell)
         tableView.register(R.nib.switchTableViewCell)
+		tableView.register(R.nib.imagePickersTableViewCell)
+		tableView.tableFooterView = UIView()
     }
 	
 	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
@@ -107,10 +117,10 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 	
 	// MARK: - Business Logic
 	
-	func showDatePickerView() {
-		datePickerView.layoutIfNeeded()
-		datePickerView.alpha = 1
-		datePickerView.showPicker()
+	func showDayPickerView() {
+		dayPickerView.layoutIfNeeded()
+		dayPickerView.alpha = 1
+		dayPickerView.showPicker()
 		view.endEditing(true)
 	}
 	
@@ -125,17 +135,21 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 9
+        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
-        case 0:
+		case APC.imagePickerRow:
+			let identifier = R.reuseIdentifier.imagePickersTableViewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			return cell
+        case APC.nameFieldRow:
             let identifier = R.reuseIdentifier.textFieldTableVIewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
             presenter.configure(cell: cell, forRow: indexPath.row)
             return cell
-        case 1...2:
+        case APC.dayPickerRow, APC.timePickerRow:
             let identifier = R.reuseIdentifier.dateTableViewCell
             let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
             presenter.configure(cell: cell, forRow: indexPath.row)
@@ -150,12 +164,12 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
 	
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
-		if indexPath.row == 0 {
+		if indexPath.row == APC.nameFieldRow {
 			let cell = tableView.cellForRow(at: indexPath)
 			cell?.becomeFirstResponder()
-		} else if indexPath.row == 1 {
-			showDatePickerView()
-		} else if indexPath.row == 2 {
+		} else if indexPath.row == APC.dayPickerRow {
+			showDayPickerView()
+		} else if indexPath.row == APC.timePickerRow {
 			showTimePickerView()
 		}
  	}
@@ -168,10 +182,10 @@ extension AddPersonViewController: DatePickerViewDelegate {
 	}
 	
 	func datePicker(picker: DatePickerView, selectedDate date: Date) {
-		if picker === datePickerView {
-			presenter.dateFor(row: 1, didUpdateTo: date)
+		if picker === dayPickerView {
+			presenter.dateFor(row: APC.dayPickerRow, didUpdateTo: date)
 		} else if picker === timePickerView {
-			presenter.dateFor(row: 2, didUpdateTo: date)
+			presenter.dateFor(row: APC.timePickerRow, didUpdateTo: date)
 		}
 		tableView.reloadData()
 	}
