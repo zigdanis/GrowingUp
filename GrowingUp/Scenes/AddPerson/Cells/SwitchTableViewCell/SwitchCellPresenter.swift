@@ -19,15 +19,6 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 	
 	private var storage = [Int: Bool]()
 	
-	func valueFor(row: Int, didChangeTo value: Bool) {
-		storage[row] = value
-	}
-	
-	func valueFor(row: Int) -> Bool? {
-		return storage[row]
-	}
-	
-	
 	func configure(cell: SwitchCellView, forRow row: Int) {
 		switch row {
 		case 3:
@@ -47,6 +38,14 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 		}
 		guard let value = storage[row] else { return }
 		cell.setSwitch(isOn: value)
+	}
+	
+	func valueFor(row: Int, didChangeTo value: Bool) {
+		storage[row] = value
+	}
+	
+	func valueFor(row: Int) -> Bool? {
+		return storage[row]
 	}
 	
 	func updatedComponents() -> AddPersonDateComponents {

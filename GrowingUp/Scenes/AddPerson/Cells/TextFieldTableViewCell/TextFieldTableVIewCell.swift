@@ -27,6 +27,13 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 		valueField.delegate = self
 		valueField.addTarget(self, action: #selector(textDidChange(sender:)), for: .allEditingEvents)
 	}
+
+	override func becomeFirstResponder() -> Bool {
+		valueField.becomeFirstResponder()
+		return super.becomeFirstResponder()
+	}
+	
+	// MARK: - TextFieldCellView
     
     func display(title: String) {
         titleLabel.text = title
@@ -44,6 +51,8 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 		self.presenter = presenter
 		self.row = row
 	}
+	
+	// MARK: - Actions
 	
 	@objc private func textDidChange(sender: UITextField) {
 		guard let row = row else { return }
