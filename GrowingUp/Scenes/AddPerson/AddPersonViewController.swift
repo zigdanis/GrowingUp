@@ -129,29 +129,29 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
         return 10
     }
 
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		switch indexPath.row {
 		case APC.imagePickerRow:
 			let identifier = R.reuseIdentifier.imagePickersTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			return cell
-        case APC.nameFieldRow:
-            let identifier = R.reuseIdentifier.textFieldTableVIewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-            presenter.configure(cell: cell, forRow: indexPath.row)
-            return cell
-        case APC.dayPickerRow, APC.timePickerRow:
-            let identifier = R.reuseIdentifier.dateTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-            presenter.configure(cell: cell, forRow: indexPath.row)
-            return cell
+		case APC.nameFieldRow:
+			let identifier = R.reuseIdentifier.textFieldTableVIewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			presenter.configure(cell: cell, forRow: indexPath.row)
+			return cell
+		case APC.dayPickerRow, APC.timePickerRow:
+			let identifier = R.reuseIdentifier.dateTableViewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			presenter.configure(cell: cell, forRow: indexPath.row)
+			return cell
 		default:
-            let identifier = R.reuseIdentifier.switchTableViewCell
-            let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-            presenter.configure(cell: cell, forRow: indexPath.row)
-            return cell
-        }
-    }
+			let identifier = R.reuseIdentifier.switchTableViewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			presenter.configure(cell: cell, forRow: indexPath.row)
+			return cell
+		}
+	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
