@@ -56,7 +56,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		do {
 			params = try collectAddPersonParameters()
 		} catch {
-			handleAddPersonError(error as! CoreError)
+			handleAddPersonError(error)
 		}
 
 		guard let parameters = params else { return }
@@ -98,8 +98,11 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
         delegate?.addPersonPresenter(self, didAdd: person)
     }
 
-    private func handleAddPersonError(_ error: CoreError) {
-        view?.displayAddPersonError(title: error.title, message: error.message)
+    private func handleAddPersonError(_ error: Error) {
+		let coreError = error as? CoreError
+		let title = coreError?.title ?? R.string.localizable.error()
+		let message = coreError?.message ?? error.localizedDescription
+        view?.displayAddPersonError(title: title, message: message)
     }
 
     private func updateNavigationItemsState(isEnabled enabled: Bool) {

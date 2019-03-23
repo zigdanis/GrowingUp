@@ -44,3 +44,6 @@
 
 /* Title for Error Alerts */
 "Alert" = "Alert";
+
+/* Error title */
+"Error" = "Error";

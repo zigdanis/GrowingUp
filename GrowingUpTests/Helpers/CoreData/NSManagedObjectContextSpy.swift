@@ -26,7 +26,7 @@ class NSManagedObjectContextSpy: NSManagedObjectContextProtocol {
         if let fetchErrorToThrow = fetchErrorToThrow {
             throw fetchErrorToThrow
         } else {
-            return entitiesToReturn as! [T]
+            return entitiesToReturn as! [T] // swiftlint:disable:this force_cast
         }
     }
 
