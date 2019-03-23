@@ -13,7 +13,6 @@ final class SwitchCellViewSpy: SwitchCellView {
 	var displayedTitle: String?
 	var displayedStatus: Bool?
 
-
 	func display(title: String) {
 		displayedTitle = title
 	}
@@ -25,6 +24,5 @@ final class SwitchCellViewSpy: SwitchCellView {
 	func setup(with presenter: SwitchCellPresenter, forRow row: Int) {
 
 	}
-
 
 }

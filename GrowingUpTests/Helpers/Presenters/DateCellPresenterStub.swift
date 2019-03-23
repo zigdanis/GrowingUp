@@ -11,7 +11,7 @@ import Foundation
 
 final class DateCellPresenterStub: DateCellPresenter {
 
-	var storage = [Int : Date]()
+	var storage = [Int: Date]()
 
 	func valueFor(row: Int, didChangeTo value: Date) {
 		storage[row] = value

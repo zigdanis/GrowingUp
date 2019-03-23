@@ -27,5 +27,4 @@ final class SwitchCellPresenterStub: SwitchCellPresenter {
 		return AddPersonDateComponents()
 	}
 
-
 }

@@ -24,5 +24,4 @@ class AddPersonPresenterDelegateSpy: AddPersonPresenterDelegate {
         didCalledCancel = true
     }
 
-
 }

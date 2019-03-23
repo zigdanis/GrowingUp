@@ -30,7 +30,7 @@ class NSManagedObjectContextSpy: NSManagedObjectContextProtocol {
         }
     }
 
-    func addEntity<T: NSManagedObject>(withType type : T.Type) -> T? {
+    func addEntity<T: NSManagedObject>(withType type: T.Type) -> T? {
         return addEntityToReturn as? T
     }
 

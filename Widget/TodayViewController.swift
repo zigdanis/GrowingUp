@@ -34,7 +34,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
         ageLabel.numberOfLines = 2
     }
 
-    //MARK: - Business Logic
+    // MARK: - Business Logic
 
     private func maintainCurrentAge() {
         setupCurrentAge()

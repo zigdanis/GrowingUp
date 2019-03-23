@@ -11,7 +11,9 @@ import Foundation
 
 extension Result: Equatable { }
 
-public func ==<T>(lhs: Result<T>, rhs: Result<T>) -> Bool {
+// swiftlint:disable compiler_protocol_init
+public func == <T>(lhs: Result<T>, rhs: Result<T>) -> Bool {
     // Shouldn't be used for PRODUCTION enum comparison. Good enough for unit tests.
     return String(stringInterpolationSegment: lhs) == String(stringInterpolationSegment: rhs)
 }
+// swiftlint:enable compiler_protocol_init
