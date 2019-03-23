@@ -25,6 +25,7 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
         let personsGateway = CoreDataPersonsGateway(viewContext: viewContext)
         let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
         let router = AddPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
+		let imagesCellPresenter = ImagesCellPresenterImplementation()
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
 		let dateCellPresenter = DateCellPresenterImplementation()
 		let dateComponentsPresenter = SwitchCellPresenterImplementation()
@@ -33,6 +34,7 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
 			addPersonUseCase: addPersonUseCase,
 			router: router,
 			delegate: addPersonPresenterDelegate,
+			imagesCellPresenter: imagesCellPresenter,
 			nameCellPresenter: nameCellPresenter,
 			dateCellsPresenter: dateCellPresenter,
 			dateComponentsCellsPresenter: dateComponentsPresenter

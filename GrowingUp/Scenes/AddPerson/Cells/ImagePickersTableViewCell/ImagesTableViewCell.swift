@@ -8,7 +8,14 @@
 
 import UIKit
 
-class ImagePickersTableViewCell: UITableViewCell {
+typealias PersonPics = (appPic: UIImage?, widgetPic: UIImage?)
+
+protocol ImagesCellView: class {
+	func display(appPic: UIImage?)
+	func display(widgetPic: UIImage?)
+}
+
+class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	@IBOutlet weak var appPicButton: ImagePickerButton!
 	@IBOutlet weak var widgetPicButton: ImagePickerButton!
 	@IBOutlet weak var appPicLabel: UILabel!
@@ -23,5 +30,13 @@ class ImagePickersTableViewCell: UITableViewCell {
 	private func setupImagePickerViews() {
 		appPicLabel.text = R.string.localizable.appPic()
 		widgetPicLabel.text = R.string.localizable.widgetPic()
+	}
+
+	func display(appPic: UIImage?) {
+		appPicButton.drawImage(appPic)
+	}
+
+	func display(widgetPic: UIImage?) {
+		widgetPicButton.drawImage(widgetPic)
 	}
 }

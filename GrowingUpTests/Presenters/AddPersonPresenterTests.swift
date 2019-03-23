@@ -16,6 +16,7 @@ final class AddPersonPresenterTests: XCTestCase {
     let addPersonUseCaseSpy = AddPersonUseCaseSpy()
     let addPersonViewRouterSpy = AddPersonViewRouterSpy()
     let addPersonPresenterDelegateSpy = AddPersonPresenterDelegateSpy()
+	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
 	let dateComponentsStub = SwitchCellPresenterStub()
@@ -26,7 +27,14 @@ final class AddPersonPresenterTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-		sut = AddPersonPresenterImplementation(view: addPersonViewSpy, addPersonUseCase: addPersonUseCaseSpy, router: addPersonViewRouterSpy, delegate: addPersonPresenterDelegateSpy, nameCellPresenter: nameCellStub, dateCellsPresenter: dateCellsStub, dateComponentsCellsPresenter: dateComponentsStub)
+		sut = AddPersonPresenterImplementation(view: addPersonViewSpy,
+											   addPersonUseCase: addPersonUseCaseSpy,
+											   router: addPersonViewRouterSpy,
+											   delegate: addPersonPresenterDelegateSpy,
+											   imagesCellPresenter: imagesCellStub,
+											   nameCellPresenter: nameCellStub,
+											   dateCellsPresenter: dateCellsStub,
+											   dateComponentsCellsPresenter: dateComponentsStub)
     }
 
     func test_SUT_CancelPressed_CalledCancelOnDelegate() {

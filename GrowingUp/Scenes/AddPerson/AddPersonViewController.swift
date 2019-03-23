@@ -59,7 +59,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.dateTableViewCell)
         tableView.register(R.nib.switchTableViewCell)
-		tableView.register(R.nib.imagePickersTableViewCell)
+		tableView.register(R.nib.imagesTableViewCell)
 		tableView.tableFooterView = UIView()
 		tableView.keyboardDismissMode = .onDrag
     }
@@ -132,8 +132,9 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch indexPath.row {
 		case APC.imagePickerRow:
-			let identifier = R.reuseIdentifier.imagePickersTableViewCell
+			let identifier = R.reuseIdentifier.imagesTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case APC.nameFieldRow:
 			let identifier = R.reuseIdentifier.textFieldTableVIewCell

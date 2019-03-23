@@ -12,6 +12,7 @@ protocol AddPersonPresenter {
     var router: AddPersonViewRouter { get }
     func addButtonPressed()
     func cancelButtonPressed()
+	func configure(cell: ImagesCellView, forRow row: Int)
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: DateCellView, forRow row: Int)
     func configure(cell: SwitchCellView, forRow row: Int)
@@ -29,6 +30,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     private var addPersonUseCase: AddPersonUseCase
     private weak var delegate: AddPersonPresenterDelegate?
     private(set) var router: AddPersonViewRouter
+	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
@@ -38,6 +40,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		 addPersonUseCase: AddPersonUseCase,
 		 router: AddPersonViewRouter,
 		 delegate: AddPersonPresenterDelegate?,
+		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
 		 dateCellsPresenter: DateCellPresenter,
 		 dateComponentsCellsPresenter: SwitchCellPresenter) {
@@ -45,6 +48,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		self.addPersonUseCase = addPersonUseCase
 		self.router = router
 		self.delegate = delegate
+		self.imagesCellPresenter = imagesCellPresenter
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
@@ -77,6 +81,10 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     func cancelButtonPressed() {
         delegate?.addPersonPresenterCancel(presenter: self)
     }
+
+	func configure(cell: ImagesCellView, forRow row: Int) {
+		imagesCellPresenter.configure(cell: cell, forRow: row)
+	}
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		nameCellPresenter.configure(cell: cell, forRow: row)

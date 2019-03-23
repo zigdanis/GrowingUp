@@ -33,8 +33,8 @@ class ImagePickerButton: UIButton {
         resetCircleMask()
     }
 
-    func drawImage(_ image: UIImage) {
-        let circle = image.circleImage(for: CGSize(width: 300, height: 300))
+    func drawImage(_ image: UIImage?) {
+        let circle = image?.circleImage(for: CGSize(width: 300, height: 300))
         setBackgroundImage(circle, for: .normal)
     }
 

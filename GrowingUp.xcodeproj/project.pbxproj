@@ -84,9 +84,13 @@
 		0987986B2242DBD700A15D90 /* SwitchCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0987986A2242DBD700A15D90 /* SwitchCellViewSpy.swift */; };
 		0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443C2241426C003C321D /* SwitchCellPresenter.swift */; };
 		0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443E224163DF003C321D /* DateCellPresenter.swift */; };
-		099FB5CE2244C827008F29EE /* ImagePickersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagePickersTableViewCell.swift */; };
-		099FB5D02244C84B008F29EE /* ImagePickersTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagePickersTableViewCell.xib */; };
+		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
+		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
+		09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */; };
+		09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */; };
+		09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */; };
+		09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
 /* End PBXBuildFile section */
@@ -229,8 +233,12 @@
 		098E560921C409E300E4CA1E /* GrowingUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowingUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0996443C2241426C003C321D /* SwitchCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenter.swift; sourceTree = "<group>"; };
 		0996443E224163DF003C321D /* DateCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellPresenter.swift; sourceTree = "<group>"; };
-		099FB5CD2244C827008F29EE /* ImagePickersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickersTableViewCell.swift; sourceTree = "<group>"; };
-		099FB5CF2244C84B008F29EE /* ImagePickersTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagePickersTableViewCell.xib; sourceTree = "<group>"; };
+		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
+		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
+		09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenter.swift; sourceTree = "<group>"; };
+		09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenterStub.swift; sourceTree = "<group>"; };
+		09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenterTests.swift; sourceTree = "<group>"; };
+		09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellViewSpy.swift; sourceTree = "<group>"; };
 		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
@@ -606,6 +614,7 @@
 			isa = PBXGroup;
 			children = (
 				098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */,
+				09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */,
 				098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */,
 				098798642242D1E500A15D90 /* DateCellPresenterTests.swift */,
 				098798682242D86800A15D90 /* SwitchCellPresenterTests.swift */,
@@ -617,6 +626,7 @@
 			isa = PBXGroup;
 			children = (
 				098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */,
+				09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */,
 				09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */,
 				098798662242D26E00A15D90 /* DateCellViewSpy.swift */,
 				0987986A2242DBD700A15D90 /* SwitchCellViewSpy.swift */,
@@ -651,6 +661,7 @@
 		098798572242B45C00A15D90 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */,
 				098798582242B46900A15D90 /* TextFieldCellPresenterStub.swift */,
 				0987985A2242B4C000A15D90 /* DateCellPresenterStub.swift */,
 				0987985C2242B5CB00A15D90 /* SwitchCellPresenterStub.swift */,
@@ -685,8 +696,9 @@
 		099FB5CC2244C713008F29EE /* ImagePickersTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				099FB5CD2244C827008F29EE /* ImagePickersTableViewCell.swift */,
-				099FB5CF2244C84B008F29EE /* ImagePickersTableViewCell.xib */,
+				099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */,
+				09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */,
+				099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */,
 			);
 			path = ImagePickersTableViewCell;
 			sourceTree = "<group>";
@@ -917,7 +929,7 @@
 				09165354223ECBC40081FB10 /* SwitchTableViewCell.xib in Resources */,
 				09165351223ECBC40081FB10 /* DateTableViewCell.xib in Resources */,
 				0916535E223ECBC40081FB10 /* Assets.xcassets in Resources */,
-				099FB5D02244C84B008F29EE /* ImagePickersTableViewCell.xib in Resources */,
+				099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */,
 				0916534D223ECBC40081FB10 /* Main.storyboard in Resources */,
 				09165367223ECBC40081FB10 /* InfoPlist.strings in Resources */,
 			);
@@ -1027,12 +1039,14 @@
 			files = (
 				098798652242D1E500A15D90 /* DateCellPresenterTests.swift in Sources */,
 				09805502223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift in Sources */,
+				09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */,
 				098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */,
 				098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */,
 				094DF9D7223AE66100C331EC /* Result.swift in Sources */,
 				0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,
+				09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */,
 				098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
@@ -1043,6 +1057,7 @@
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
+				09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */,
 				098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */,
 				098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
@@ -1082,12 +1097,13 @@
 				09165362223ECBC40081FB10 /* UIViewController+Extensions.swift in Sources */,
 				09165359223ECBC40081FB10 /* AddPersonConfigurator.swift in Sources */,
 				09165371223ECBC40081FB10 /* CoreDataStack.swift in Sources */,
+				09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,
 				0916534F223ECBC40081FB10 /* ViewController.swift in Sources */,
 				09165358223ECBC40081FB10 /* AddPersonViewController.swift in Sources */,
 				0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */,
 				0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */,
-				099FB5CE2244C827008F29EE /* ImagePickersTableViewCell.swift in Sources */,
+				099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
