@@ -41,4 +41,3 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 		return storage[row]
 	}
 }
-

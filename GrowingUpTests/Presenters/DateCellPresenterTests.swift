@@ -53,5 +53,3 @@ final class DateCellPresenterTests: XCTestCase {
 	}
 
 }
-
-

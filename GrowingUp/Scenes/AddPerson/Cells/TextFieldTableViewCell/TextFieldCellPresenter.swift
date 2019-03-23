@@ -34,4 +34,3 @@ final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 		return storage[row]
 	}
 }
-
