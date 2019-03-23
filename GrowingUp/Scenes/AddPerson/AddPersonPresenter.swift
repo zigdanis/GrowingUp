@@ -33,6 +33,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
+// swiftlint:disable vertical_parameter_alignment
 	init(view: AddPersonView,
 		 addPersonUseCase: AddPersonUseCase,
 		 router: AddPersonViewRouter,
@@ -48,6 +49,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
+// swiftlint:enable vertical_parameter_alignment
 
     // MARK: - AddPersonPresenter
 
