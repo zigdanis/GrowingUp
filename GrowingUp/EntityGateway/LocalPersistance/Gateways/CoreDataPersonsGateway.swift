@@ -42,5 +42,4 @@ class CoreDataPersonsGateway: PersonsGateway {
 //        
 //    }
 
-
 }
