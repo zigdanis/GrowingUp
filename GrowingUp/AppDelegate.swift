@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = navigationVC
         window?.makeKeyAndVisible()
     }
-   
+
     private func setupNavigationControllerAppearence() {
         window?.tintColor = AppColor
     }
@@ -39,9 +39,9 @@ extension AppDelegate: AddPersonPresenterDelegate {
     func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
         print("Did Add Person")
     }
-    
+
     func addPersonPresenterCancel(presenter: AddPersonPresenter) {
         print("Cancel tapped")
     }
-    
+
 }

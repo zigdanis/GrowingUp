@@ -32,7 +32,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
-    
+
     init(view: AddPersonView,
          addPersonUseCase: AddPersonUseCase,
          router: AddPersonViewRouter,
@@ -48,7 +48,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
     }
-    
+
     // MARK: - AddPersonPresenter
 
     func addButtonPressed() {
@@ -58,7 +58,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 		} catch {
 			handleAddPersonError(error as! CoreError)
 		}
-		
+
 		guard let parameters = params else { return }
         updateNavigationItemsState(isEnabled: false)
         addPersonUseCase.add(parameters: parameters) { result in
@@ -71,42 +71,42 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
             }
         }
     }
-    
+
     func cancelButtonPressed() {
         delegate?.addPersonPresenterCancel(presenter: self)
     }
-    
+
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		nameCellPresenter.configure(cell: cell, forRow: row)
     }
-    
+
     func configure(cell: DateCellView, forRow row: Int) {
        	dateCellsPresenter.configure(cell: cell, forRow: row)
     }
-    
+
     func configure(cell: SwitchCellView, forRow row: Int) {
         dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
     }
-	
+
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
 	}
-    
+
     // MARK: - Private
-    
+
     private func handlePersonAdded(_ person: Person) {
         delegate?.addPersonPresenter(self, didAdd: person)
     }
-    
+
     private func handleAddPersonError(_ error: CoreError) {
         view?.displayAddPersonError(title: error.title, message: error.message)
     }
-   
+
     private func updateNavigationItemsState(isEnabled enabled: Bool) {
         view?.updateAddButtonState(isEnabled: enabled)
         view?.updateCancelButtonState(isEnabled: enabled)
     }
-	
+
 	private func collectAddPersonParameters() throws -> AddPersonParameters {
 		guard let name = nameCellPresenter.valueFor(row: APC.nameFieldRow), !name.isEmpty else {
 			throw CoreError.noNameValue

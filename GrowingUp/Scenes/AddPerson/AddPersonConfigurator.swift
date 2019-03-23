@@ -13,14 +13,14 @@ protocol AddPersonConfigurator {
 }
 
 class AddPersonConfiguratorImplementation: AddPersonConfigurator {
-    
+
     weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
-    
+
     init(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
         self.addPersonPresenterDelegate = addPersonPresenterDelegate
     }
-    
-    func configure(addPersonViewController: AddPersonViewController) {        
+
+    func configure(addPersonViewController: AddPersonViewController) {
         let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
         let personsGateway = CoreDataPersonsGateway(viewContext: viewContext)
         let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)

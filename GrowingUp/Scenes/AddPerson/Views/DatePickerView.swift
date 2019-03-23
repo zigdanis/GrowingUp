@@ -14,14 +14,14 @@ protocol DatePickerViewDelegate: class {
 }
 
 final class DatePickerView: UIView {
-	
+
 	weak var delegate: DatePickerViewDelegate?
 	private let hoverView = UIView()
 	private let paddingView = UIView()
 	private let datePicker = UIDatePicker()
 	private let toolbar = UIToolbar()
 	private var toolbarTop: NSLayoutConstraint!
-	
+
 	init(mode: UIDatePicker.Mode) {
 		super.init(frame: .zero)
 		backgroundColor = .clear
@@ -31,14 +31,14 @@ final class DatePickerView: UIView {
 		setupDatePicker(with: mode)
 		setupToolbar()
 	}
-	
+
 	@available(iOS, unavailable, message: "Class does not intended to be created from xib")
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	// MARK: - Setup
-	
+
 	private func setupHoverView() {
 		hoverView.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.3)
 		hoverView.translatesAutoresizingMaskIntoConstraints = false
@@ -51,11 +51,11 @@ final class DatePickerView: UIView {
 			bottomAnchor.constraint(equalTo: hoverView.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
-		
+
 		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(cancelTapped))
 		hoverView.addGestureRecognizer(tapGesture)
 	}
-	
+
 	private func setupPaddingView() {
 		paddingView.backgroundColor = .white
 		paddingView.translatesAutoresizingMaskIntoConstraints = false
@@ -81,7 +81,7 @@ final class DatePickerView: UIView {
 		]
 		NSLayoutConstraint.activate(consts)
 	}
-	
+
 	private func setupToolbar() {
 		let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 		let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
@@ -98,9 +98,9 @@ final class DatePickerView: UIView {
 		toolbarTop = toolbar.topAnchor.constraint(equalTo: bottomAnchor)
 		toolbarTop.isActive = true
 	}
-	
+
 	// MARK: - Business Logic
-	
+
 	private func hidePicker() {
 		toolbarTop.isActive = true
 		UIView.animate(withDuration: 0.2, animations: {
@@ -110,7 +110,7 @@ final class DatePickerView: UIView {
 			self.delegate?.datePickerDidHide(picker: self)
 		})
 	}
-	
+
 	func showPicker() {
 		toolbarTop.isActive = false
 		UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.6, options: [], animations: {
@@ -118,16 +118,16 @@ final class DatePickerView: UIView {
 			self.hoverView.alpha = 1
 		}, completion: nil)
 	}
-	
+
 	// MARK: - Actions
-	
+
 	@objc private func cancelTapped() {
 		hidePicker()
 	}
-	
+
 	@objc private func doneTapped() {
 		delegate?.datePicker(picker: self, selectedDate: datePicker.date)
 		hidePicker()
 	}
-	
+
 }

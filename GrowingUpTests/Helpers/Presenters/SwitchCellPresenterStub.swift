@@ -10,22 +10,22 @@ import Foundation
 @testable import GrowingUp
 
 final class SwitchCellPresenterStub: SwitchCellPresenter {
-	
+
 	private var storage = [Int: Bool]()
-	
+
 	func configure(cell: SwitchCellView, forRow row: Int) {
 	}
-	
+
 	func valueFor(row: Int, didChangeTo value: Bool) {
 		storage[row] = value
 	}
-	
+
 	func valueFor(row: Int) -> Bool? {
 		return storage[row]
 	}
 	func updatedComponents() -> AddPersonDateComponents {
 		return AddPersonDateComponents()
 	}
-	
-	
+
+
 }

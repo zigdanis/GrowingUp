@@ -10,10 +10,10 @@ import Foundation
 
 // See https://github.com/antitypical/Result
 enum Result<T> {
-    
+
     case success(T)
     case failure(CoreError)
-    
+
     public func dematerialize() throws -> T {
         switch self {
         case let .success(value):

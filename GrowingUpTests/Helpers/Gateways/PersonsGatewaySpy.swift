@@ -10,13 +10,13 @@ import Foundation
 @testable import GrowingUp
 
 class PersonsGatewaySpy: PersonsGateway {
-    
+
     var addPersonParameters: AddPersonParameters!
     var addPersonResultToBeReturned: Result<Person>!
-    
+
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         addPersonParameters = parameters
         completionHandler(addPersonResultToBeReturned)
     }
-    
+
 }

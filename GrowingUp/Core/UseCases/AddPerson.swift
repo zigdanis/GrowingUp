@@ -16,15 +16,15 @@ protocol AddPersonUseCase {
 
 class AddPersonUseCaseImplementation: AddPersonUseCase {
     let personsGateway: PersonsGateway
-    
+
     init(personsGateway: PersonsGateway) {
         self.personsGateway = personsGateway
     }
-    
+
     func add(parameters: AddPersonParameters, completionHandler: @escaping (Result<Person>) -> Void) {
         personsGateway.add(parameters: parameters) { (result) in
             completionHandler(result)
         }
     }
-    
+
 }

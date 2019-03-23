@@ -10,7 +10,7 @@ import XCTest
 @testable import GrowingUp
 
 class AddPersonUseCaseTests: XCTestCase {
-    
+
     var sut: AddPersonUseCaseImplementation!
     let personsGatewaySpy = PersonsGatewaySpy()
 
@@ -34,7 +34,7 @@ class AddPersonUseCaseTests: XCTestCase {
         }
         waitForExpectations(timeout: 1, handler: nil)
     }
-    
+
     func test_SUT_AddPersonFail_CallsCompletionHandler() {
         // Given
         let params = AddPersonParameters.createParameters()

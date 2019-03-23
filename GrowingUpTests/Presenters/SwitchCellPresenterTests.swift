@@ -10,13 +10,13 @@ import XCTest
 @testable import GrowingUp
 
 class SwitchCellPresenterTests: XCTestCase {
-	
+
 	var sut: SwitchCellPresenterImplementation!
 
     override func setUp() {
 		sut = SwitchCellPresenterImplementation()
     }
-	
+
 	func test_SUT_WhenConfiguredWithTrue_DisplayTrueValue() {
 		// Given
 		sut.valueFor(row: APC.dateComponentsRows.lowerBound, didChangeTo: true)
@@ -26,7 +26,7 @@ class SwitchCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(switchCellSpy.displayedStatus, true, "The value we expected was not displayed")
 	}
-	
+
 	func test_SUT_WhenConfiguredWithFalse_DisplayFalseValue() {
 		// Given
 		sut.valueFor(row: APC.dateComponentsRows.lowerBound, didChangeTo: false)
@@ -36,12 +36,12 @@ class SwitchCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(switchCellSpy.displayedStatus, false, "The value we expected was not displayed")
 	}
-	
+
 	func test_SUT_WhenConfiguredWithData_ProduceExpectedParameters() {
 		// Given
 		let components = AddPersonDateComponents(years: true, months: false, days: true, hours: false, minutes: true, seconds: false)
 		// When
-		
+
 		let valuesForRow = [ 4: true,
 							 5: false,
 							 6: true,

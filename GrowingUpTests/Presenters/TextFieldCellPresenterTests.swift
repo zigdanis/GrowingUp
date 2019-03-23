@@ -10,14 +10,14 @@ import XCTest
 @testable import GrowingUp
 
 final class TextFieldCellPresenterTests: XCTestCase {
-	
+
 	var sut: TextFieldCellPresenterImplementation!
-	
+
 	override func setUp() {
 		super.setUp()
 		sut = TextFieldCellPresenterImplementation()
 	}
-	
+
 	func test_SUT_ConfigureTextFieldCell_HasNameTitle() {
 		// Given
 		let expectedName = "John"
@@ -28,7 +28,7 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(expectedName, tfCellSpy.displayedValue, "The value we expected was not displayed")
 	}
-	
+
 	func test_SUT_WhenConfiguredCellForRow_DifferResultsForRows() {
 		// Given
 		let expectedName = "John"
@@ -39,7 +39,7 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertNotEqual(expectedName, tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
 	}
-	
+
 	func test_SUT_WhenConfiguredWithoutData_ChangesValueAfterUserInput() {
 		// Given
 		let tfCellSpy = TextFieldCellViewSpy()
@@ -50,6 +50,6 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(expectedName, sut.valueFor(row: 0), "The model value in presenter didn't updated after user input")
 	}
-	
+
 }
 

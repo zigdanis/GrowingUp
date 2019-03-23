@@ -10,7 +10,7 @@ import Foundation
 @testable import GrowingUp
 
 extension Person {
-    
+
     static func createPerson() -> Person {
         return Person(id: "0", name: "name", birthday: Date())
     }

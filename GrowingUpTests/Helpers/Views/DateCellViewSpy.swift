@@ -10,16 +10,16 @@ import Foundation
 @testable import GrowingUp
 
 final class DateCellViewSpy: DateCellView {
-	
+
 	var displayedTitle: String?
 	var displayedValue: String?
-	
+
 	func display(title: String) {
 		displayedTitle = title
 	}
-	
+
 	func display(value: String) {
 		displayedValue = value
 	}
-	
+
 }

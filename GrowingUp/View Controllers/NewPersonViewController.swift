@@ -12,20 +12,20 @@ import UIKit
 class NewPersonViewController: UIViewController {
 
     @IBOutlet weak var addPersonButton: VerticalButton!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupAddPersonButton()
     }
-    
+
     private func setupAddPersonButton() {
         let title = R.string.localizable.addPerson()
         addPersonButton.setTitle(title, for: .normal)
     }
-    
+
     // MARK: - Actions
-    
+
     @IBAction func addNewPersonTouched() {
-        
+
     }
 }

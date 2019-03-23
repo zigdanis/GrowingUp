@@ -15,9 +15,9 @@ protocol TextFieldCellPresenter: class {
 }
 
 final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
-	
+
 	private var storage = [Int: String]()
-	
+
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		cell.setup(with: self, forRow: row)
 		cell.display(title: R.string.localizable.name())
@@ -25,11 +25,11 @@ final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 		guard let value = storage[row] else { return }
 		cell.display(value: value)
 	}
-	
+
 	func valueFor(row: Int, didChangeTo value: String) {
 		storage[row] = value
 	}
-	
+
 	func valueFor(row: Int) -> String? {
 		return storage[row]
 	}

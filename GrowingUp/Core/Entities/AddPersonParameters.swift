@@ -25,7 +25,7 @@ struct AddPersonDateComponents: Equatable {
 }
 
 extension AddPersonParameters {
-	
+
 	func dateComponents() -> DateComponents {
 		var components = DateComponents()
 		let yearMonthDay = Calendar.current.dateComponents([.year, .month, .day], from: dayOfBirth)
@@ -38,7 +38,7 @@ extension AddPersonParameters {
 		components.setValue(hourMinuteSecond.second, for: .second)
 		return components
 	}
-	
+
 	func combinedDate() -> Date? {
 		let components = dateComponents()
 		return Calendar.current.date(from: components)

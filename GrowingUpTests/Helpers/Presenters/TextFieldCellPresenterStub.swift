@@ -10,19 +10,19 @@ import Foundation
 @testable import GrowingUp
 
 final class TextFieldCellPresenterStub: TextFieldCellPresenter {
-	
+
 	private var storage = [Int: String]()
-	
+
 	func configure(cell: TextFieldCellView, forRow row: Int) {
-		
+
 	}
-	
+
 	func valueFor(row: Int, didChangeTo value: String) {
 		storage[row] = value
 	}
-	
+
 	func valueFor(row: Int) -> String? {
 		return storage[row]
 	}
-	
+
 }

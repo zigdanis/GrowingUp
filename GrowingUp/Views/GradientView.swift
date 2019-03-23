@@ -11,22 +11,22 @@ import UIKit
 
 @IBDesignable
 class GradientView: UIView {
-    
+
     @IBInspectable var startColor = UIColor.white {
         didSet { setNeedsDisplay() }
     }
-    
+
     @IBInspectable var endColor = #colorLiteral(red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1) {
         didSet { setNeedsDisplay() }
     }
-    
+
     private let gradient = CAGradientLayer()
-    
+
     override func layoutSublayers(of layer: CALayer) {
         super.layoutSublayers(of: layer)
         gradient.frame = bounds
     }
-    
+
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         gradient.frame = bounds

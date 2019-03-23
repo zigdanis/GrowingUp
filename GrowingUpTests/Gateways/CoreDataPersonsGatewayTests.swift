@@ -24,13 +24,13 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     var errorPathCoreDataBooksGateway: CoreDataPersonsGateway {
         return CoreDataPersonsGateway(viewContext: managedObjectContextSpy)
     }
-    
+
     func test_SUT_AddPersonWithParameters_Succeed() {
-    
+
         // Given
         let addPersonParameters = AddPersonParameters.createParameters()
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-        
+
         // When
         inMemoryCoreDataBooksGateway.add(parameters: addPersonParameters) { (result) in
             // Then
@@ -40,20 +40,20 @@ class CoreDataPersonsGatewayTests: XCTestCase {
             Assert(person: person, builtFromParameters: addPersonParameters)
             addPersonCompletionHandlerExpectation.fulfill()
         }
-        
+
         // Exit
         waitForExpectations(timeout: 1, handler: nil)
     }
-    
+
     func test_SUT_AddPersonWithParameters_FailsWhenSaving() {
-        
+
         // Given
         let expectedResultToBeReturned: Result<Person> = .failure(CoreError(message: "Failed saving the context"))
         let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
         managedObjectContextSpy.addEntityToReturn = addedCoreDataPerson
         managedObjectContextSpy.saveErrorToReturn = CoreError(message: "Some core data error")
         let addPersonCompletionHandlerExpectation = expectation(description: "Add book completion handler expectation")
-        
+
         // When
         errorPathCoreDataBooksGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
             // Then
@@ -61,30 +61,30 @@ class CoreDataPersonsGatewayTests: XCTestCase {
             XCTAssertTrue(self.managedObjectContextSpy.deletedObject! === addedCoreDataPerson, "The inserted entity should've been deleted")
             addPersonCompletionHandlerExpectation.fulfill()
         }
-        
+
         // Exit
         waitForExpectations(timeout: 1, handler: nil)
     }
-    
+
     func test_SUT_AddWithParameters_FailsWithoutReachingSave() {
-        
+
         // Given
         let expectedResultToBeReturned: Result<Person> = .failure(CoreError(message: "Failed adding the person in the data base"))
         managedObjectContextSpy.addEntityToReturn = nil
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-        
+
         // When
         errorPathCoreDataBooksGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
             // Then
             XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
             addPersonCompletionHandlerExpectation.fulfill()
         }
-        
+
         // Exit
         waitForExpectations(timeout: 1, handler: nil)
     }
 
-    
+
 }
 
 

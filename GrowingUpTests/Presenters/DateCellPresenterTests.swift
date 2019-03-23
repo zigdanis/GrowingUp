@@ -10,14 +10,14 @@ import XCTest
 @testable import GrowingUp
 
 final class DateCellPresenterTests: XCTestCase {
-	
+
 	var sut: DateCellPresenterImplementation!
-	
+
 	override func setUp() {
 		super.setUp()
 		sut = DateCellPresenterImplementation()
 	}
-	
+
 	func test_SUT_WhenConfiguredWithDate_ShouldDisplayValue() {
 		// Given
 		let date = Date()
@@ -28,7 +28,7 @@ final class DateCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(date.dateString(), dateCellSpy.displayedValue, "The value we expected was not displayed")
 	}
-	
+
 	func test_SUT_WhenConfiguredWithDate_ShouldReturnThatValue() {
 		// Given
 		let expectedDate = Date()
@@ -38,7 +38,7 @@ final class DateCellPresenterTests: XCTestCase {
 		// Then
 		XCTAssertEqual(date, expectedDate, "The value we expected did npt match")
 	}
-	
+
 	func test_SUT_WhenConfiguredWithoutData_ShouldShowPlaceholders() {
 		// Given
 		let dateCellSpy = DateCellViewSpy()

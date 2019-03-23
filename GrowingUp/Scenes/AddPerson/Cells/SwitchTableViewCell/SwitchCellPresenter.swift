@@ -16,9 +16,9 @@ protocol SwitchCellPresenter: class {
 }
 
 final class SwitchCellPresenterImplementation: SwitchCellPresenter {
-	
+
 	private var storage = [Int: Bool]()
-	
+
 	func configure(cell: SwitchCellView, forRow row: Int) {
 		let supportedRows = Array(APC.dateComponentsRows)
 		switch row {
@@ -40,15 +40,15 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 		guard let value = storage[row] else { return }
 		cell.setSwitch(isOn: value)
 	}
-	
+
 	func valueFor(row: Int, didChangeTo value: Bool) {
 		storage[row] = value
 	}
-	
+
 	func valueFor(row: Int) -> Bool? {
 		return storage[row]
 	}
-	
+
 	func updatedComponents() -> AddPersonDateComponents {
 		var components = AddPersonDateComponents()
 		let supportedRows = Array(APC.dateComponentsRows)
@@ -66,5 +66,5 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 		}
 		return components
 	}
-	
+
 }

@@ -10,7 +10,7 @@ import XCTest
 @testable import GrowingUp
 
 final class AddPersonPresenterTests: XCTestCase {
-    
+
     // https://www.martinfowler.com/bliki/TestDouble.html
     let addPersonViewSpy = AddPersonViewSpy()
     let addPersonUseCaseSpy = AddPersonUseCaseSpy()
@@ -19,23 +19,23 @@ final class AddPersonPresenterTests: XCTestCase {
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
 	let dateComponentsStub = SwitchCellPresenterStub()
-	
+
     var sut: AddPersonPresenterImplementation!
-    
+
     // MARK: - Set up
-    
+
     override func setUp() {
         super.setUp()
 		sut = AddPersonPresenterImplementation(view: addPersonViewSpy, addPersonUseCase: addPersonUseCaseSpy, router: addPersonViewRouterSpy, delegate: addPersonPresenterDelegateSpy, nameCellPresenter: nameCellStub, dateCellsPresenter: dateCellsStub, dateComponentsCellsPresenter: dateComponentsStub)
     }
-    
+
     func test_SUT_CancelPressed_CalledCancelOnDelegate() {
         // When
         sut.cancelButtonPressed()
         // Then
         XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledCancel, "Should have been called cancel on delegate")
     }
-    
+
     func test_SUT_AddButtonPressed_AddAndCancelButtonsDisabledBeforeCompletionHandler() {
         // Given
 		setupSUT_WithAddPersonData()
@@ -46,7 +46,7 @@ final class AddPersonPresenterTests: XCTestCase {
         XCTAssertFalse(addPersonViewSpy.addButtonEnabledState ?? true, "Add button should've been set to disabled")
         XCTAssertFalse(addPersonViewSpy.cancelButtonEnabledState ?? true, "Cancel button should've been set to disabled")
     }
-    
+
     func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
         // Given
 		setupSUT_WithAddPersonData()
@@ -57,7 +57,7 @@ final class AddPersonPresenterTests: XCTestCase {
         XCTAssertTrue(addPersonViewSpy.addButtonEnabledState ?? false, "Add button should've been set to enabled")
         XCTAssertTrue(addPersonViewSpy.cancelButtonEnabledState ?? false, "Cancel button should've been set to enabled")
     }
-	
+
     func test_SUT_AddButtonPressed_ShouldSavePerson() {
         // Given
 		let parameters = setupSUT_WithAddPersonData()
@@ -67,7 +67,7 @@ final class AddPersonPresenterTests: XCTestCase {
         // Then
         XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
-	
+
     func test_SUT_AddButtonPressed_CallingAddPersonDelegateMethod() {
         // Given
 		setupSUT_WithAddPersonData()
@@ -93,7 +93,7 @@ final class AddPersonPresenterTests: XCTestCase {
         XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
         XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
     }
-	
+
 	func test_SUT_AddButtonPressedWithoutName_ShouldShowError() {
 		// When
 		sut.addButtonPressed()
@@ -101,7 +101,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noNameValue.title, "Error message doesn't match")
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noNameValue.message, "Error message doesn't match")
 	}
-	
+
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
 		// Given
 		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
@@ -111,7 +111,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noDayValue.title, "Error message doesn't match")
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noDayValue.message, "Error message doesn't match")
 	}
-	
+
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
 		// Given
 		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
@@ -122,7 +122,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noTimeValue.title, "Error message doesn't match")
 		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noTimeValue.message, "Error message doesn't match")
 	}
-	
+
 	func test_SUT_WhenSettingDateForRow_PassingItToDateCellsPresenter() {
 		// Given
 		let expectedDay = Date()
@@ -134,9 +134,9 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(dateCellsStub.valueFor(row: 1), expectedDay, "Expected value doesn't match")
 		XCTAssertEqual(dateCellsStub.valueFor(row: 2), expectedTime, "Expected value doesn't match")
 	}
-	
+
 	// MARK: - Helpers
-	
+
 	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
 		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
 		let bDate = Date()

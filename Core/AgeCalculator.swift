@@ -11,15 +11,15 @@ private let bundleIdentifier = "pro.ziganshin.Core"
 import Foundation
 
 public struct AgeCalculator {
-	
+
     public static func ageComponents() -> DateComponents {
 		let initial = DateComponents(year: 2018, month: 10, day: 20, hour: 15, minute: 25, second: 0)
         let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
         return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initial, to: now)
     }
-    
+
     public static func currentAge() -> String {
-        
+
         let comps = AgeCalculator.ageComponents()
         let years = comps.year ?? 0
         let months = comps.month ?? 0
@@ -27,7 +27,7 @@ public struct AgeCalculator {
         let hours = comps.hour ?? 0
         let minutes = comps.minute ?? 0
         let seconds = comps.second ?? 0
-        
+
         guard let bundle = Bundle(identifier: bundleIdentifier) else { return "" }
         var result = ""
         if years > 0 {
@@ -48,8 +48,8 @@ public struct AgeCalculator {
         if seconds > 0 {
             result += " " + String(format: NSLocalizedString("%li seconds", bundle: bundle, comment: "Seconds"), seconds)
         }
-        
+
         return result.trimmingCharacters(in: .whitespaces)
     }
-    
+
 }

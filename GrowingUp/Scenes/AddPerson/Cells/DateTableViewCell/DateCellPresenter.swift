@@ -15,9 +15,9 @@ protocol DateCellPresenter: class {
 }
 
 final class DateCellPresenterImplementation: DateCellPresenter {
-	
+
 	private var storage = [Int: Date]()
-	
+
 	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
 		case APC.dayPickerRow:
@@ -32,11 +32,11 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 			assertionFailure("We support LabelCellView only for rows in [APC.dayPickerRow, APC.timePickerRow]")
 		}
 	}
-	
+
 	func valueFor(row: Int, didChangeTo value: Date) {
 		storage[row] = value
 	}
-	
+
 	func valueFor(row: Int) -> Date? {
 		return storage[row]
 	}

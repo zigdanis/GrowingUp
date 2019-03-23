@@ -10,19 +10,19 @@ import Foundation
 @testable import GrowingUp
 
 class AddPersonPresenterDelegateSpy: AddPersonPresenterDelegate {
-    
+
     var addedPerson: Person?
     var didCalledAddPerson = false
     var didCalledCancel = false
-    
+
     func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
         didCalledAddPerson = true
         addedPerson = person
     }
-    
+
     func addPersonPresenterCancel(presenter: AddPersonPresenter) {
         didCalledCancel = true
     }
-    
-    
+
+
 }

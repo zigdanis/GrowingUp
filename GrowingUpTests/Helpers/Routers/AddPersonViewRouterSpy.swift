@@ -10,9 +10,9 @@ import Foundation
 @testable import GrowingUp
 
 class AddPersonViewRouterSpy: AddPersonViewRouter {
-    
+
     var dismissCalled = false
-    
+
     func dismiss() {
         dismissCalled = true
     }
