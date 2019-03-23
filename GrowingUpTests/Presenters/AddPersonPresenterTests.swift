@@ -143,8 +143,8 @@ final class AddPersonPresenterTests: XCTestCase {
 		let tDate = Date().addingTimeInterval(1)
 		dateCellsStub.valueFor(row: APC.dayPickerRow, didChangeTo: bDate)
 		dateCellsStub.valueFor(row: APC.timePickerRow, didChangeTo: tDate)
-		for i in APC.dateComponentsRows {
-			dateComponentsStub.valueFor(row: i, didChangeTo: true)
+		for row in APC.dateComponentsRows {
+			dateComponentsStub.valueFor(row: row, didChangeTo: true)
 		}
 		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
 	}

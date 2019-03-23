@@ -33,21 +33,21 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
-    init(view: AddPersonView,
-         addPersonUseCase: AddPersonUseCase,
-         router: AddPersonViewRouter,
-         delegate: AddPersonPresenterDelegate?,
+	init(view: AddPersonView,
+		 addPersonUseCase: AddPersonUseCase,
+		 router: AddPersonViewRouter,
+		 delegate: AddPersonPresenterDelegate?,
 		 nameCellPresenter: TextFieldCellPresenter,
 		 dateCellsPresenter: DateCellPresenter,
 		 dateComponentsCellsPresenter: SwitchCellPresenter) {
-        self.view = view
-        self.addPersonUseCase = addPersonUseCase
-        self.router = router
-        self.delegate = delegate
+		self.view = view
+		self.addPersonUseCase = addPersonUseCase
+		self.router = router
+		self.delegate = delegate
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
-    }
+	}
 
     // MARK: - AddPersonPresenter
 

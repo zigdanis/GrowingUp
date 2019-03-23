@@ -9,7 +9,7 @@
 import Foundation
 
 struct Person: Equatable {
-    var id: String
+	var id: String // swiftlint:disable:this identifier_name
     var name: String
     var birthday: Date
 }

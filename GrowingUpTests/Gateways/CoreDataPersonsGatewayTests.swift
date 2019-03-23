@@ -37,7 +37,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
             guard let person = try? result.dematerialize() else {
                 return XCTFail("Should've saved the person with success")
             }
-            Assert(person: person, builtFromParameters: addPersonParameters)
+            assert(person: person, builtFromParameters: addPersonParameters)
             addPersonCompletionHandlerExpectation.fulfill()
         }
 
@@ -88,7 +88,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 }
 
 
-fileprivate func Assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
+fileprivate func assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
     XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
     XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate()?.timeIntervalSince1970, "birthday mismatch", file: file, line: line)
     XCTAssertFalse(person.id.isEmpty, "id should not be empty", file: file, line: line)

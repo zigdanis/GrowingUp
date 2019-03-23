@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func setupNavigationControllerAppearence() {
-        window?.tintColor = AppColor
+        window?.tintColor = .appColor
     }
 }
 
