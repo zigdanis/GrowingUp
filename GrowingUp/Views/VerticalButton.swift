@@ -30,9 +30,9 @@ class VerticalButton: UIButton {
         centerVertically()
     }
 
-    override var intrinsicContentSize: CGSize {
-        get { return verticalAlignedIntrinsicContentSize() }
-    }
+	override var intrinsicContentSize: CGSize {
+		return verticalAlignedIntrinsicContentSize()
+	}
 
     private func centerVertically(padding: CGFloat = 6) {
         let imageSize = imageView?.frame.size ?? .zero
