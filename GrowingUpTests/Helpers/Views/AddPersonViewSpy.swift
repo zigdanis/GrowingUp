@@ -15,6 +15,8 @@ class AddPersonViewSpy: AddPersonView {
     var cancelButtonEnabledState: Bool?
     var displayAddPersonErrorTitle: String?
     var displayAddPersonErrorMessage: String?
+	var showedAppPicImagePicker = false
+	var showedWidgetPicImagePicker = false
 
     func updateAddButtonState(isEnabled enabled: Bool) {
         addButtonEnabledState = enabled
@@ -29,4 +31,11 @@ class AddPersonViewSpy: AddPersonView {
         displayAddPersonErrorMessage = message
     }
 
+	func showAppPicImagePickerFor(row: Int) {
+		showedAppPicImagePicker = true
+	}
+
+	func showWidgetPicImagePickerFor(row: Int) {
+		showedWidgetPicImagePicker = true
+	}
 }

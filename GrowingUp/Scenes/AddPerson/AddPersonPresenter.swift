@@ -83,7 +83,8 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
     }
 
 	func configure(cell: ImagesCellView, forRow row: Int) {
-		imagesCellPresenter.configure(cell: cell, forRow: row)
+		guard let view = view else { return }
+		imagesCellPresenter.configure(cell: cell, forRow: row, with: view)
 	}
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {

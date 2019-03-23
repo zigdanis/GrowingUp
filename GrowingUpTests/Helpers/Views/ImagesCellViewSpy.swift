@@ -13,6 +13,8 @@ class ImagesCellViewSpy: ImagesCellView {
 
 	var displayedAppPic: UIImage?
 	var displayedWidgetPic: UIImage?
+	weak var providedDelegate: ImagesCellViewDelegate?
+	var providedRow: Int?
 
 	func display(appPic: UIImage?) {
 		displayedAppPic = appPic
@@ -20,5 +22,10 @@ class ImagesCellViewSpy: ImagesCellView {
 
 	func display(widgetPic: UIImage?) {
 		displayedWidgetPic = widgetPic
+	}
+
+	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
+		providedDelegate = delegate
+		providedRow = row
 	}
 }

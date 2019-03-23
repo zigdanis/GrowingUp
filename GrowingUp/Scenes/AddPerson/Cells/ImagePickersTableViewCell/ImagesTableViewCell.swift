@@ -13,6 +13,12 @@ typealias PersonPics = (appPic: UIImage?, widgetPic: UIImage?)
 protocol ImagesCellView: class {
 	func display(appPic: UIImage?)
 	func display(widgetPic: UIImage?)
+	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int)
+}
+
+protocol ImagesCellViewDelegate: class {
+	func showAppPicImagePickerFor(row: Int)
+	func showWidgetPicImagePickerFor(row: Int)
 }
 
 class ImagesTableViewCell: UITableViewCell, ImagesCellView {
@@ -20,11 +26,14 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	@IBOutlet weak var widgetPicButton: ImagePickerButton!
 	@IBOutlet weak var appPicLabel: UILabel!
 	@IBOutlet weak var widgetPicLabel: UILabel!
+	private weak var delegate: ImagesCellViewDelegate?
+	private var row: Int?
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		selectionStyle = .none
 		setupImagePickerViews()
+		setupPickerButtons()
 	}
 
 	private func setupImagePickerViews() {
@@ -32,11 +41,35 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		widgetPicLabel.text = R.string.localizable.widgetPic()
 	}
 
+	private func setupPickerButtons() {
+		appPicButton.addTarget(self, action: #selector(appPicTouched), for: .touchUpInside)
+		widgetPicButton.addTarget(self, action: #selector(widgetPicTouched), for: .touchUpInside)
+	}
+
+	// MARK: - ImagesCellView
+
 	func display(appPic: UIImage?) {
 		appPicButton.drawImage(appPic)
 	}
 
 	func display(widgetPic: UIImage?) {
 		widgetPicButton.drawImage(widgetPic)
+	}
+
+	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
+		self.delegate = delegate
+		self.row = row
+	}
+
+	// MARK: - Actions
+
+	@objc private func appPicTouched() {
+		guard let row = row else { return }
+		delegate?.showAppPicImagePickerFor(row: row)
+	}
+
+	@objc private func widgetPicTouched() {
+		guard let row = row else { return }
+		delegate?.showWidgetPicImagePickerFor(row: row)
 	}
 }

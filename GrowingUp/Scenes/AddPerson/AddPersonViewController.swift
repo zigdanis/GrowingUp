@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-protocol AddPersonView: class {
+protocol AddPersonView: ImagesCellViewDelegate {
     func updateAddButtonState(isEnabled enabled: Bool)
     func updateCancelButtonState(isEnabled enabled: Bool)
     func displayAddPersonError(title: String, message: String)
@@ -181,4 +181,15 @@ extension AddPersonViewController: DatePickerViewDelegate {
 		}
 		tableView.reloadData()
 	}
+}
+
+extension AddPersonViewController: ImagesCellViewDelegate {
+	func showAppPicImagePickerFor(row: Int) {
+		print("Show Image picker for App Pic at row = \(row)")
+	}
+
+	func showWidgetPicImagePickerFor(row: Int) {
+		print("Show Image picker for Widget Pic at row = \(row)")
+	}
+
 }

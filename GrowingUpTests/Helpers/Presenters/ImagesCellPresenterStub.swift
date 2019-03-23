@@ -13,8 +13,8 @@ class ImagesCellPresenterStub: ImagesCellPresenter {
 
 	private var storage = [Int: PersonPics]()
 
-	func configure(cell: ImagesCellView, forRow row: Int) {
-
+	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate) {
+		cell.setup(with: delegate, forRow: row)
 	}
 
 	func valueFor(row: Int, didChangeTo value: PersonPics) {
