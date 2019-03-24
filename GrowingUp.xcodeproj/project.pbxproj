@@ -20,8 +20,6 @@
 		09051B6821C5697D008A99C6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B6A21C5697D008A99C6 /* Localizable.strings */; };
 		09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 09051B7021C569EE008A99C6 /* InfoPlist.strings */; };
 		0916534C223ECBC40081FB10 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09165307223ECBC40081FB10 /* LaunchScreen.storyboard */; };
-		0916534D223ECBC40081FB10 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09165309223ECBC40081FB10 /* Main.storyboard */; };
-		0916534E223ECBC40081FB10 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0916530B223ECBC40081FB10 /* Main.strings */; };
 		0916534F223ECBC40081FB10 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916530D223ECBC40081FB10 /* ViewController.swift */; };
 		09165350223ECBC40081FB10 /* DateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165311223ECBC40081FB10 /* DateTableViewCell.swift */; };
 		09165351223ECBC40081FB10 /* DateTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09165312223ECBC40081FB10 /* DateTableViewCell.xib */; };
@@ -93,6 +91,7 @@
 		09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
+		09F2D5B02247EF5200C05BA5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 09F2D5AE2247EF5200C05BA5 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,7 +147,6 @@
 		09051B3B21C558DB008A99C6 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09051B3D21C558DB008A99C6 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		09051B4021C558DB008A99C6 /* TodayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewController.swift; sourceTree = "<group>"; };
-		09051B4321C558DB008A99C6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		09051B4521C558DB008A99C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WidgetAssets.xcassets; sourceTree = "<group>"; };
 		09051B5021C55BA3008A99C6 /* Widget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Widget.entitlements; sourceTree = "<group>"; };
@@ -160,9 +158,6 @@
 		09051B6B21C5697F008A99C6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		09051B6F21C569EE008A99C6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09051B7121C569EF008A99C6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		09165308223ECBC40081FB10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		0916530A223ECBC40081FB10 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		0916530C223ECBC40081FB10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		0916530D223ECBC40081FB10 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		09165311223ECBC40081FB10 /* DateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTableViewCell.swift; sourceTree = "<group>"; };
 		09165312223ECBC40081FB10 /* DateTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTableViewCell.xib; sourceTree = "<group>"; };
@@ -243,6 +238,9 @@
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		09E7339221C453D200BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		09F2D5AC2247EECF00C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		09F2D5AD2247EECF00C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		09F2D5AF2247EF5200C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -337,8 +335,7 @@
 			isa = PBXGroup;
 			children = (
 				09165307223ECBC40081FB10 /* LaunchScreen.storyboard */,
-				09165309223ECBC40081FB10 /* Main.storyboard */,
-				0916530B223ECBC40081FB10 /* Main.strings */,
+				09F2D5AE2247EF5200C05BA5 /* Main.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -873,7 +870,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
 				ru,
 			);
 			mainGroup = 098E560021C409E300E4CA1E;
@@ -920,9 +916,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0916534E223ECBC40081FB10 /* Main.strings in Resources */,
 				09165369223ECBC40081FB10 /* Localizable.strings in Resources */,
 				09165352223ECBC40081FB10 /* TextFieldTableVIewCell.xib in Resources */,
+				09F2D5B02247EF5200C05BA5 /* Main.storyboard in Resources */,
 				0916534C223ECBC40081FB10 /* LaunchScreen.storyboard in Resources */,
 				0916535F223ECBC40081FB10 /* NewPersonViewController.xib in Resources */,
 				09165357223ECBC40081FB10 /* AddPersonViewController.xib in Resources */,
@@ -930,7 +926,6 @@
 				09165351223ECBC40081FB10 /* DateTableViewCell.xib in Resources */,
 				0916535E223ECBC40081FB10 /* Assets.xcassets in Resources */,
 				099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */,
-				0916534D223ECBC40081FB10 /* Main.storyboard in Resources */,
 				09165367223ECBC40081FB10 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1131,7 +1126,7 @@
 		09051B4221C558DB008A99C6 /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09051B4321C558DB008A99C6 /* Base */,
+				09F2D5AC2247EECF00C05BA5 /* en */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -1157,25 +1152,9 @@
 		09165307223ECBC40081FB10 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09165308223ECBC40081FB10 /* Base */,
+				09F2D5AD2247EECF00C05BA5 /* en */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		09165309223ECBC40081FB10 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0916530A223ECBC40081FB10 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		0916530B223ECBC40081FB10 /* Main.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0916530C223ECBC40081FB10 /* ru */,
-			);
-			name = Main.strings;
 			sourceTree = "<group>";
 		};
 		0916532F223ECBC40081FB10 /* InfoPlist.strings */ = {
@@ -1194,6 +1173,14 @@
 				09E7339221C453D200BA4157 /* en */,
 			);
 			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		09F2D5AE2247EF5200C05BA5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				09F2D5AF2247EF5200C05BA5 /* en */,
+			);
+			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1404,7 +1391,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1460,7 +1447,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
