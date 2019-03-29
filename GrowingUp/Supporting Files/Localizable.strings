@@ -47,3 +47,9 @@
 
 /* Error title */
 "Error" = "Error";
+
+/* Cropping image screen's Cancel button title */
+"Cancel" = "Cancel";
+
+/* Cropping image screen's Use button title */
+"Use" = "Use";
