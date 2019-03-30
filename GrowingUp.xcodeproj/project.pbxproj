@@ -86,9 +86,7 @@
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
 		09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */; };
-		09B4E953224DEEC500F4E3F2 /* WDCropBorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94D224DEEC500F4E3F2 /* WDCropBorderView.swift */; };
 		09B4E954224DEEC500F4E3F2 /* WDImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */; };
-		09B4E955224DEEC500F4E3F2 /* WDImageCropOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94F224DEEC500F4E3F2 /* WDImageCropOverlayView.swift */; };
 		09B4E956224DEEC500F4E3F2 /* WDImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */; };
 		09B4E959224E154A00F4E3F2 /* CGRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E958224E154A00F4E3F2 /* CGRect+Extensions.swift */; };
 		09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */; };
@@ -237,9 +235,7 @@
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
 		09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropView.swift; sourceTree = "<group>"; };
-		09B4E94D224DEEC500F4E3F2 /* WDCropBorderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDCropBorderView.swift; sourceTree = "<group>"; };
 		09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImagePicker.swift; sourceTree = "<group>"; };
-		09B4E94F224DEEC500F4E3F2 /* WDImageCropOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropOverlayView.swift; sourceTree = "<group>"; };
 		09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropViewController.swift; sourceTree = "<group>"; };
 		09B4E958224E154A00F4E3F2 /* CGRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extensions.swift"; sourceTree = "<group>"; };
 		09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenter.swift; sourceTree = "<group>"; };
@@ -719,8 +715,6 @@
 				09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */,
 				09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */,
 				09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */,
-				09B4E94D224DEEC500F4E3F2 /* WDCropBorderView.swift */,
-				09B4E94F224DEEC500F4E3F2 /* WDImageCropOverlayView.swift */,
 				09B4E958224E154A00F4E3F2 /* CGRect+Extensions.swift */,
 			);
 			path = WDImagePicker;
@@ -1091,7 +1085,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				09165360223ECBC40081FB10 /* NewPersonViewController.swift in Sources */,
-				09B4E955224DEEC500F4E3F2 /* WDImageCropOverlayView.swift in Sources */,
 				09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */,
 				0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */,
 				095716D12243659700EA806C /* DatePickerView.swift in Sources */,
@@ -1124,7 +1117,6 @@
 				09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,
 				0916534F223ECBC40081FB10 /* ViewController.swift in Sources */,
-				09B4E953224DEEC500F4E3F2 /* WDCropBorderView.swift in Sources */,
 				09B4E956224DEEC500F4E3F2 /* WDImageCropViewController.swift in Sources */,
 				09165358223ECBC40081FB10 /* AddPersonViewController.swift in Sources */,
 				0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */,

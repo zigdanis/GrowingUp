@@ -16,14 +16,11 @@ protocol WDImagePickerDelegate: class {
 class WDImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate, WDImageCropControllerDelegate {
 
 	let imagePickerController: UIImagePickerController
-	let cropSize: CGSize
 	weak var delegate: WDImagePickerDelegate?
 
-	init(cropSize: CGSize) {
-		self.cropSize = cropSize
+	override init() {
 		imagePickerController = UIImagePickerController()
         super.init()
-
 		setupImagePickerController()
     }
 
@@ -49,8 +46,7 @@ class WDImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationCont
 		guard let sourceImage = info[.originalImage] as? UIImage else {
 			return hideController()
 		}
-        let cropController = WDImageCropViewController(sourceImage: sourceImage,
-													   cropSize: cropSize)
+        let cropController = WDImageCropViewController(sourceImage: sourceImage)
         cropController.delegate = self
         picker.pushViewController(cropController, animated: true)
     }

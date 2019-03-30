@@ -15,17 +15,11 @@ class WDImageCropView: UIView {
     private let imageView = UIImageView()
     private var xOffset: CGFloat = 0
     private var yOffset: CGFloat = 0
-	private let cropSize: CGSize
+	private let cropSize = UIScreen.main.bounds.size
 	private let imageToCrop: UIImage
 
-	private var imageTop: NSLayoutConstraint!
-	private var imageLeading: NSLayoutConstraint!
-	private var imageTrailing: NSLayoutConstraint!
-	private var imageBottom: NSLayoutConstraint!
-
-	init(imageToCrop: UIImage, cropSize: CGSize) {
+	init(imageToCrop: UIImage) {
 		self.imageToCrop = imageToCrop
-		self.cropSize = cropSize
 		super.init(frame: .zero)
 
 		isUserInteractionEnabled = true
@@ -72,12 +66,11 @@ class WDImageCropView: UIView {
 		imageView.backgroundColor = UIColor.black
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		scrollView.addSubview(imageView)
-		imageLeading = imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
-		imageTop = imageView.topAnchor.constraint(equalTo: scrollView.topAnchor)
-		imageTrailing = scrollView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
-		imageBottom = scrollView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor)
 		let consts: [NSLayoutConstraint] = [
-			imageTop, imageLeading, imageTrailing, imageBottom
+			imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+			imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+			scrollView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
+			scrollView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
 		imageView.layoutIfNeeded()
@@ -102,44 +95,18 @@ class WDImageCropView: UIView {
 	// MARK: - Business Logic
 
     func croppedImage() -> UIImage {
-        // Calculate rect that needs to be cropped
         var visibleRect = calcVisibleRectForCropArea()
-
-        // transform visible rect to image orientation
         let rectTransform = orientationTransformedRectOfImage(imageToCrop)
         visibleRect = visibleRect.applying(rectTransform)
-
-        // finally crop image
         let imageRef = imageToCrop.cgImage?.cropping(to: visibleRect)
         let result = UIImage(cgImage: imageRef!, scale: imageToCrop.scale,
             orientation: imageToCrop.imageOrientation)
-
         return result
     }
 
     private func calcVisibleRectForCropArea() -> CGRect {
-        // scaled width/height in regards of real width to crop width
-        let scaleWidth = imageToCrop.size.width / cropSize.width
-        let scaleHeight = imageToCrop.size.height / cropSize.height
-        var scale: CGFloat = 0
-
-        if cropSize.width == cropSize.height {
-            scale = max(scaleWidth, scaleHeight)
-        } else if cropSize.width > cropSize.height {
-            scale = imageToCrop.size.width < imageToCrop.size.height ?
-                max(scaleWidth, scaleHeight) :
-                min(scaleWidth, scaleHeight)
-        } else {
-            scale = imageToCrop.size.width < imageToCrop.size.height ?
-                min(scaleWidth, scaleHeight) :
-                max(scaleWidth, scaleHeight)
-        }
-
-        // extract visible rect from scrollview and scale it
-        var visibleRect = scrollView.convert(scrollView.bounds, to: imageView)
-        visibleRect = visibleRect.scaleRect(withMultiplier: scale)
-
-        return visibleRect
+		let scale = 1 / scrollView.zoomScale
+        return scrollView.bounds.scaleRect(withMultiplier: scale)
     }
 
     private func orientationTransformedRectOfImage(_ image: UIImage) -> CGAffineTransform {

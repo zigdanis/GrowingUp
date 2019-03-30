@@ -16,17 +16,15 @@ class WDImageCropViewController: UIViewController {
 
 	let sourceImage: UIImage
     weak var delegate: WDImageCropControllerDelegate?
-    let cropSize: CGSize
 
 	private let imageCropView: WDImageCropView
     private let toolbar = UIToolbar(frame: .zero)
     private let useButton = UIButton(type: .custom)
     private let cancelButton = UIButton(type: .custom)
 
-	init(sourceImage: UIImage, cropSize: CGSize) {
+	init(sourceImage: UIImage) {
 		self.sourceImage = sourceImage
-		self.cropSize = cropSize
-		imageCropView = WDImageCropView(imageToCrop: sourceImage, cropSize: cropSize)
+		imageCropView = WDImageCropView(imageToCrop: sourceImage)
 		super.init(nibName: nil, bundle: nil)
 	}
 

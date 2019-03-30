@@ -82,8 +82,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 	}
 
 	private func generateWDImagePicker() -> WDImagePicker {
-		let size = CGSize(width: 320, height: 320)
-		let picker = WDImagePicker(cropSize: size)
+		let picker = WDImagePicker()
 		picker.delegate = self
 		return picker
 	}
