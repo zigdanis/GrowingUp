@@ -55,9 +55,10 @@ class WDImageCropViewController: UIViewController {
 		imageCropView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageCropView)
 		let consts = [
+			imageCropView.topAnchor.constraint(equalTo: view.topAnchor),
 			imageCropView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			view.trailingAnchor.constraint(equalTo: imageCropView.trailingAnchor),
-			imageCropView.topAnchor.constraint(equalTo: view.topAnchor)
+			view.bottomAnchor.constraint(equalTo: imageCropView.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
     }
@@ -74,10 +75,10 @@ class WDImageCropViewController: UIViewController {
 		view.addSubview(toolbar)
 		let consts = [
 			toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-			toolbar.topAnchor.constraint(equalTo: imageCropView.bottomAnchor),
 			view.trailingAnchor.constraint(equalTo: toolbar.trailingAnchor),
 			view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: toolbar.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
+		toolbar.setContentCompressionResistancePriority(.init(900), for: .vertical)
 	}
 }

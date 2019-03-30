@@ -9,53 +9,29 @@
 import UIKit
 import QuartzCore
 
-private class ScrollView: UIScrollView {
-    fileprivate override func layoutSubviews() {
-        super.layoutSubviews()
+class WDImageCropView: UIView {
 
-        if let zoomView = self.delegate?.viewForZooming?(in: self) {
-            let boundsSize = self.bounds.size
-            var frameToCenter = zoomView.frame
-
-            // center horizontally
-            if frameToCenter.size.width < boundsSize.width {
-                frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2
-            } else {
-                frameToCenter.origin.x = 0
-            }
-
-            // center vertically
-            if frameToCenter.size.height < boundsSize.height {
-                frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2
-            } else {
-                frameToCenter.origin.y = 0
-            }
-
-            zoomView.frame = frameToCenter
-        }
-    }
-}
-
-class WDImageCropView: UIView, UIScrollViewDelegate {
-
-    private let scrollView = ScrollView()
+    private let scrollView = UIScrollView()
     private let imageView = UIImageView()
-	private let cropOverlayView = WDImageCropOverlayView()
     private var xOffset: CGFloat = 0
     private var yOffset: CGFloat = 0
 	private let cropSize: CGSize
 	private let imageToCrop: UIImage
 
+	private var imageTop: NSLayoutConstraint!
+	private var imageLeading: NSLayoutConstraint!
+	private var imageTrailing: NSLayoutConstraint!
+	private var imageBottom: NSLayoutConstraint!
+
 	init(imageToCrop: UIImage, cropSize: CGSize) {
 		self.imageToCrop = imageToCrop
 		self.cropSize = cropSize
 		super.init(frame: .zero)
+
 		isUserInteractionEnabled = true
 		backgroundColor = UIColor.black
-
 		setupScrollView()
 		setupImageView()
-		setupCropOverlay()
 	}
 
 	@available(iOS, unavailable, message: "Class does not intended to be created from xib")
@@ -63,18 +39,23 @@ class WDImageCropView: UIView, UIScrollViewDelegate {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		setupInitialPositionForScrollView()
+		centerScrollViewContent()
+	}
+
 	private func setupScrollView() {
 		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.showsHorizontalScrollIndicator = false
 		scrollView.showsVerticalScrollIndicator = false
 		scrollView.delegate = self
-		scrollView.clipsToBounds = false
+		scrollView.clipsToBounds = true
 		scrollView.decelerationRate = .init(rawValue: 0)
 		scrollView.backgroundColor = UIColor.clear
-		scrollView.minimumZoomScale = 0.5
-		scrollView.maximumZoomScale = 20
-		scrollView.setZoomScale(1.0, animated: false)
 		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		scrollView.alwaysBounceVertical = true
+		scrollView.alwaysBounceHorizontal = true
 		addSubview(scrollView)
 		let consts = [
 			scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -91,69 +72,32 @@ class WDImageCropView: UIView, UIScrollViewDelegate {
 		imageView.backgroundColor = UIColor.black
 		imageView.translatesAutoresizingMaskIntoConstraints = false
 		scrollView.addSubview(imageView)
-		let consts = [
-			imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-			imageView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-			scrollView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor),
-			scrollView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor)
+		imageLeading = imageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor)
+		imageTop = imageView.topAnchor.constraint(equalTo: scrollView.topAnchor)
+		imageTrailing = scrollView.trailingAnchor.constraint(equalTo: imageView.trailingAnchor)
+		imageBottom = scrollView.bottomAnchor.constraint(equalTo: imageView.bottomAnchor)
+		let consts: [NSLayoutConstraint] = [
+			imageTop, imageLeading, imageTrailing, imageBottom
 		]
 		NSLayoutConstraint.activate(consts)
+		imageView.layoutIfNeeded()
 	}
 
-	private func setupCropOverlay() {
-		cropOverlayView.cropSize = cropSize
-		cropOverlayView.translatesAutoresizingMaskIntoConstraints = false
-		addSubview(cropOverlayView)
-		let consts = [
-			cropOverlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
-			cropOverlayView.topAnchor.constraint(equalTo: topAnchor),
-			trailingAnchor.constraint(equalTo: cropOverlayView.trailingAnchor),
-			bottomAnchor.constraint(equalTo: cropOverlayView.bottomAnchor)
-		]
-		NSLayoutConstraint.activate(consts)
+	private func setupInitialPositionForScrollView() {
+		let widthScale = scrollView.bounds.width / imageView.bounds.width
+		let heightScale = scrollView.bounds.height / imageView.bounds.height
+		let minSufficientScale = max(widthScale, heightScale)
+
+		scrollView.minimumZoomScale = minSufficientScale
+		scrollView.zoomScale = minSufficientScale * 1.1
 	}
 
-    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-		return scrollView
+	private func centerScrollViewContent() {
+		let xOffset = (imageView.frame.width - scrollView.bounds.width) / 2
+		let yOffset = (imageView.frame.height - scrollView.bounds.height) / 2
+		let offset = CGPoint(x: xOffset, y: yOffset)
+		scrollView.contentOffset = offset
 	}
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        let size = self.cropSize
-        let toolbarSize = CGFloat(UIDevice.current.userInterfaceIdiom == .pad ? 0 : 54)
-        self.xOffset = floor((self.bounds.width - size.width) * 0.5)
-        self.yOffset = floor((self.bounds.height - toolbarSize - size.height) * 0.5)
-
-        let height = self.imageToCrop.size.height
-        let width = self.imageToCrop.size.width
-
-        var factor: CGFloat = 0
-        var factoredHeight: CGFloat = 0
-        var factoredWidth: CGFloat = 0
-
-        if width > height {
-            factor = width / size.width
-            factoredWidth = size.width
-            factoredHeight =  height / factor
-        } else {
-            factor = height / size.height
-            factoredWidth = width / factor
-            factoredHeight = size.height
-        }
-
-        self.cropOverlayView.frame = self.bounds
-        self.scrollView.frame = CGRect(x: xOffset, y: yOffset, width: size.width, height: size.height)
-        self.scrollView.contentSize = CGSize(width: size.width, height: size.height)
-        self.imageView.frame = CGRect(x: 0, y: floor((size.height - factoredHeight) * 0.5),
-            width: factoredWidth, height: factoredHeight)
-    }
-
-	// MARK: - UIScrollView Delegate
-
-    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        return imageView
-    }
 
 	// MARK: - Business Logic
 
@@ -214,4 +158,12 @@ class WDImageCropView: UIView, UIScrollViewDelegate {
 
         return rectTransform.scaledBy(x: image.scale, y: image.scale)
     }
+}
+
+extension WDImageCropView: UIScrollViewDelegate {
+
+	func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+		return imageView
+	}
+
 }
