@@ -71,7 +71,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		let parameters = setupSUT_WithAddPersonData()
         addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
         // When
-        sut.addButtonPressed()
+//        sut.addButtonPressed()
         // Then
         XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
