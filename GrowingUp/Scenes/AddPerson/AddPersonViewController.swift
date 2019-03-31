@@ -31,7 +31,8 @@ final class AddPersonViewController: UIViewController, AddPersonView {
     @IBOutlet weak var tableView: UITableView!
 	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
 	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
-	private lazy var wdImagePicker: WDImagePicker = generateWDImagePicker()
+	private lazy var appPicImagePicker = WDImagePicker()
+	private lazy var widgetPicImagePicker = WDImagePicker()
 
     init(configurator: AddPersonConfigurator) {
         self.configurator = configurator
@@ -81,12 +82,6 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 		return picker
 	}
 
-	private func generateWDImagePicker() -> WDImagePicker {
-		let picker = WDImagePicker()
-		picker.delegate = self
-		return picker
-	}
-
     // MARK: - Actions
 
 	@objc internal func cancelTapped() {
@@ -127,11 +122,6 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 		timePickerView.alpha = 1
 		timePickerView.showPicker()
 		view.endEditing(true)
-	}
-
-	func showImagePicker() {
-		let imagePicker = wdImagePicker.imagePickerController
-		present(imagePicker, animated: true)
 	}
 }
 
@@ -198,25 +188,29 @@ extension AddPersonViewController: DatePickerViewDelegate {
 extension AddPersonViewController: ImagesCellViewDelegate {
 
 	func showAppPicImagePickerFor(row: Int) {
-		print("Show Image picker for App Pic at row = \(row)")
-		showImagePicker()
+		appPicImagePicker.delegate = self
+		present(appPicImagePicker.imagePickerController, animated: true)
 	}
 
 	func showWidgetPicImagePickerFor(row: Int) {
-		print("Show Image picker for Widget Pic at row = \(row)")
-		showImagePicker()
+		widgetPicImagePicker.delegate = self
+		present(widgetPicImagePicker.imagePickerController, animated: true)
 	}
 }
 
 extension AddPersonViewController: WDImagePickerDelegate {
 
 	func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage) {
-		print("picked image with size = \(pickedImage.size)")
+		if imagePicker === appPicImagePicker {
+			presenter.appImagePicked(image: PersonImage(uiImage: pickedImage))
+		} else if imagePicker === widgetPicImagePicker {
+			presenter.widgetImagePicked(image: PersonImage(uiImage: pickedImage))
+		}
+		tableView.reloadData()
 		imagePicker.imagePickerController.dismiss(animated: true)
 	}
 
 	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {
-		print("Cancel imagePicker")
 		imagePicker.imagePickerController.dismiss(animated: true)
 	}
 

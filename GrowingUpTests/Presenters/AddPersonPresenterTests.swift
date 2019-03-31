@@ -143,6 +143,22 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(dateCellsStub.valueFor(row: 2), expectedTime, "Expected value doesn't match")
 	}
 
+	func test_SUT_WhenCalledWithNewPersonPic_ReplaceItOnImagesCellPresenter() {
+		// Given
+		let expectedAppPic = UIImage()
+		let personAppPic = PersonImage(uiImage: expectedAppPic)
+		let expectedWidgetPic = UIImage()
+		let personWidgetPic = PersonImage(uiImage: expectedWidgetPic)
+		// When
+		sut.appImagePicked(image: personAppPic)
+		sut.widgetImagePicked(image: personWidgetPic)
+		// Then
+		let appPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.appPic
+		let widgetPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.widgetPic
+		XCTAssertEqual(appPic, expectedAppPic, "Value for the person App pic doesn't match to expected")
+		XCTAssertEqual(widgetPic, expectedWidgetPic, "Value for the person Widget pic doesn't match to expected")
+	}
+
 	// MARK: - Helpers
 
 	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {

@@ -17,6 +17,8 @@ protocol AddPersonPresenter {
     func configure(cell: DateCellView, forRow row: Int)
     func configure(cell: SwitchCellView, forRow row: Int)
 	func dateFor(row: Int, didUpdateTo date: Date)
+	func appImagePicked(image: PersonImage)
+	func widgetImagePicked(image: PersonImage)
 }
 
 protocol AddPersonPresenterDelegate: class {
@@ -101,6 +103,18 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
+	}
+
+	func appImagePicked(image: PersonImage) {
+		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? (nil, nil)
+		personPics.appPic = image.uiImage
+		imagesCellPresenter.valueFor(row: APC.imagePickerRow, didChangeTo: personPics)
+	}
+
+	func widgetImagePicked(image: PersonImage) {
+		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? (nil, nil)
+		personPics.widgetPic = image.uiImage
+		imagesCellPresenter.valueFor(row: APC.imagePickerRow, didChangeTo: personPics)
 	}
 
     // MARK: - Private
