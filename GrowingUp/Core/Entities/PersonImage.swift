@@ -9,6 +9,21 @@
 import Foundation
 import UIKit
 
-struct PersonImage {
-	let uiImage: UIImage
+struct PersonImage: Equatable {
+	var id: UUID?
+	var uiImage: UIImage?
+
+	init(id: UUID? = nil, uiImage: UIImage? = nil) {
+		self.id = id
+		self.uiImage = uiImage
+	}
+}
+
+struct PersonImages {
+	var appPic: PersonImage?
+	var widgetPic: PersonImage?
+
+	static func emptyImages() -> PersonImages {
+		return PersonImages(appPic: nil, widgetPic: nil)
+	}
 }

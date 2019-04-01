@@ -106,14 +106,14 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	}
 
 	func appImagePicked(image: PersonImage) {
-		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? (nil, nil)
-		personPics.appPic = image.uiImage
+		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.appPic = image
 		imagesCellPresenter.valueFor(row: APC.imagePickerRow, didChangeTo: personPics)
 	}
 
 	func widgetImagePicked(image: PersonImage) {
-		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? (nil, nil)
-		personPics.widgetPic = image.uiImage
+		var personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.widgetPic = image
 		imagesCellPresenter.valueFor(row: APC.imagePickerRow, didChangeTo: personPics)
 	}
 
@@ -146,9 +146,14 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 			throw CoreError.noTimeValue
 		}
 		let components = dateComponentsCellsPresenter.updatedComponents()
+		let personPics = imagesCellPresenter.valueFor(row: APC.imagePickerRow)
+		let appPic = personPics?.appPic
+		let widgetPic = personPics?.widgetPic
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
-								   dateComponenets: components)
+								   dateComponenets: components,
+								   appImage: appPic,
+								   widgetImage: widgetPic)
 	}
 }

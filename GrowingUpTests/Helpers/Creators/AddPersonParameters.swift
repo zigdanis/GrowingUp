@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import UIKit
 @testable import GrowingUp
 
 extension AddPersonParameters {
     static func createParameters() -> AddPersonParameters {
-        return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), dateComponenets: AddPersonDateComponents())
+		let appPic = PersonImage(uiImage: UIImage())
+		let widgetPic = PersonImage(uiImage: UIImage())
+		return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), dateComponenets: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
     }
 }

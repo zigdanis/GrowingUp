@@ -89,5 +89,4 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 private func assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
     XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
     XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate()?.timeIntervalSince1970, "birthday mismatch", file: file, line: line)
-    XCTAssertFalse(person.id.isEmpty, "id should not be empty", file: file, line: line)
 }

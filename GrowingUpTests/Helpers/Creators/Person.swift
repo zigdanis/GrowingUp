@@ -12,6 +12,6 @@ import Foundation
 extension Person {
 
     static func createPerson() -> Person {
-        return Person(id: "0", name: "name", birthday: Date())
+        return Person(id: UUID(), name: "name", birthday: Date())
     }
 }

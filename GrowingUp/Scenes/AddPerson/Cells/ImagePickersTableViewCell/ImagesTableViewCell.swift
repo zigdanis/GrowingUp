@@ -8,11 +8,9 @@
 
 import UIKit
 
-typealias PersonPics = (appPic: UIImage?, widgetPic: UIImage?)
-
 protocol ImagesCellView: class {
-	func display(appPic: UIImage?)
-	func display(widgetPic: UIImage?)
+	func display(appPic: PersonImage?)
+	func display(widgetPic: PersonImage?)
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int)
 }
 
@@ -48,12 +46,12 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 
 	// MARK: - ImagesCellView
 
-	func display(appPic: UIImage?) {
-		appPicButton.drawImage(appPic)
+	func display(appPic: PersonImage?) {
+		appPicButton.drawImage(appPic?.uiImage)
 	}
 
-	func display(widgetPic: UIImage?) {
-		widgetPicButton.drawImage(widgetPic)
+	func display(widgetPic: PersonImage?) {
+		widgetPicButton.drawImage(widgetPic?.uiImage)
 	}
 
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {

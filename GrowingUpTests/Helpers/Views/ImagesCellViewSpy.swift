@@ -11,16 +11,16 @@ import UIKit
 
 class ImagesCellViewSpy: ImagesCellView {
 
-	var displayedAppPic: UIImage?
-	var displayedWidgetPic: UIImage?
+	var displayedAppPic: PersonImage?
+	var displayedWidgetPic: PersonImage?
 	weak var providedDelegate: ImagesCellViewDelegate?
 	var providedRow: Int?
 
-	func display(appPic: UIImage?) {
+	func display(appPic: PersonImage?) {
 		displayedAppPic = appPic
 	}
 
-	func display(widgetPic: UIImage?) {
+	func display(widgetPic: PersonImage?) {
 		displayedWidgetPic = widgetPic
 	}
 

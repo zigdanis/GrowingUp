@@ -71,7 +71,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		let parameters = setupSUT_WithAddPersonData()
         addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
         // When
-//        sut.addButtonPressed()
+        sut.addButtonPressed()
         // Then
         XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
@@ -155,8 +155,8 @@ final class AddPersonPresenterTests: XCTestCase {
 		// Then
 		let appPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.appPic
 		let widgetPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.widgetPic
-		XCTAssertEqual(appPic, expectedAppPic, "Value for the person App pic doesn't match to expected")
-		XCTAssertEqual(widgetPic, expectedWidgetPic, "Value for the person Widget pic doesn't match to expected")
+		XCTAssertEqual(appPic, personAppPic, "Value for the person App pic doesn't match to expected")
+		XCTAssertEqual(widgetPic, personWidgetPic, "Value for the person Widget pic doesn't match to expected")
 	}
 
 	// MARK: - Helpers
@@ -170,6 +170,10 @@ final class AddPersonPresenterTests: XCTestCase {
 		for row in APC.dateComponentsRows {
 			dateComponentsStub.valueFor(row: row, didChangeTo: true)
 		}
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents())
+		let appPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let pics = PersonImages(appPic: appPic, widgetPic: widgetPic)
+		imagesCellStub.valueFor(row: APC.imagePickerRow, didChangeTo: pics)
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
 	}
 }

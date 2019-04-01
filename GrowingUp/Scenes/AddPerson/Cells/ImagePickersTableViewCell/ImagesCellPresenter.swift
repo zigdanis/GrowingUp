@@ -10,13 +10,13 @@ import Foundation
 
 protocol ImagesCellPresenter: class {
 	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate)
-	func valueFor(row: Int, didChangeTo value: PersonPics)
-	func valueFor(row: Int) -> PersonPics?
+	func valueFor(row: Int, didChangeTo value: PersonImages)
+	func valueFor(row: Int) -> PersonImages?
 }
 
 class ImagesCellPresenterImplementation: ImagesCellPresenter {
 
-	private var storage = [Int: PersonPics]()
+	private var storage = [Int: PersonImages]()
 
 	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate) {
 		let pics = storage[row]
@@ -25,11 +25,11 @@ class ImagesCellPresenterImplementation: ImagesCellPresenter {
 		cell.setup(with: delegate, forRow: row)
 	}
 
-	func valueFor(row: Int, didChangeTo value: PersonPics) {
+	func valueFor(row: Int, didChangeTo value: PersonImages) {
 		storage[row] = value
 	}
 
-	func valueFor(row: Int) -> PersonPics? {
+	func valueFor(row: Int) -> PersonImages? {
 		return storage[row]
 	}
 

@@ -328,14 +328,14 @@
 				09165339223ECBC40081FB10 /* AppDelegate.swift */,
 				09165306223ECBC40081FB10 /* Storyboards */,
 				0916530D223ECBC40081FB10 /* ViewController.swift */,
-				0916530E223ECBC40081FB10 /* Scenes */,
 				0916531C223ECBC40081FB10 /* Core */,
+				0916533E223ECBC40081FB10 /* EntityGateway */,
+				0916530E223ECBC40081FB10 /* Scenes */,
 				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165324223ECBC40081FB10 /* View Controllers */,
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				0916533A223ECBC40081FB10 /* Views */,
-				0916533E223ECBC40081FB10 /* EntityGateway */,
 				09165348223ECBC40081FB10 /* 3rd Party Libraries */,
 			);
 			path = GrowingUp;

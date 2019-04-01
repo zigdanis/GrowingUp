@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Foundation
 @testable import GrowingUp
 
 class ImagesCellPresenterTests: XCTestCase {
@@ -22,13 +23,15 @@ class ImagesCellPresenterTests: XCTestCase {
 
 	func test_SUT_ConfiguredWithImages_DisplayImagesOnCell() {
 		// Given
-		let expectedPics: PersonPics = (UIImage(), UIImage())
+		let appPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let expectedPics = PersonImages(appPic: appPic, widgetPic: widgetPic)
 		sut.valueFor(row: APC.imagePickerRow, didChangeTo: expectedPics)
 		// When
 		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
 		// Then
-		XCTAssertEqual(imagesCellSpy.displayedAppPic, expectedPics.appPic, "Value displayed on cell doesn't match to expected")
-		XCTAssertEqual(imagesCellSpy.displayedWidgetPic, expectedPics.widgetPic, "Value displayed on cell doesn't match to expected")
+		XCTAssertEqual(imagesCellSpy.displayedAppPic, appPic, "Value displayed on cell doesn't match to expected")
+		XCTAssertEqual(imagesCellSpy.displayedWidgetPic, widgetPic, "Value displayed on cell doesn't match to expected")
 	}
 
 	func test_SUT_WithoutConfiguring_DoNotDisplayImagesOnCell() {
@@ -41,9 +44,13 @@ class ImagesCellPresenterTests: XCTestCase {
 
 	func test_SUT_AfterChangingConfiguredImages_DisplayChangesOnCell() {
 		// Given
-		let initialPics: PersonPics = (UIImage(), UIImage())
-		let expectedPics: PersonPics = (UIImage(), UIImage())
-		let emptyPics: PersonPics = (nil, nil)
+		let initialAppPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let initialWidgetPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let initialPics = PersonImages(appPic: initialAppPic, widgetPic: initialWidgetPic)
+		let expectedAppPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let expectedWidgetPic = PersonImage(id: UUID(), uiImage: UIImage())
+		let expectedPics = PersonImages(appPic: expectedAppPic, widgetPic: expectedWidgetPic)
+		let emptyPics = PersonImages(appPic: nil, widgetPic: nil)
 		sut.valueFor(row: APC.imagePickerRow, didChangeTo: initialPics)
 		// When
 		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)

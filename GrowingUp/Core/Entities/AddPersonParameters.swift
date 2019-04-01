@@ -13,6 +13,8 @@ struct AddPersonParameters: Equatable {
 	var dayOfBirth: Date
 	var timeOfBirth: Date
 	var dateComponenets: AddPersonDateComponents
+	var appImage: PersonImage?
+	var widgetImage: PersonImage?
 }
 
 struct AddPersonDateComponents: Equatable {

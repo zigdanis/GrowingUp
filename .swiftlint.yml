@@ -5,3 +5,6 @@ excluded:
 line_length: 300
 type_name: 
   max_length: 45
+identifier_name:
+  excluded:
+    - id
