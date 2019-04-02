@@ -15,12 +15,14 @@ struct CoreError: Error {
     var title = ""
     var message = ""
 
-    init(title: String = "", message: String) {
+    init(title: String = "Error", message: String) {
         self.title = title
         self.message = message
     }
 
-	static let noNameValue = CoreError(title: "Error", message: "Can't save person without specified name")
-	static let noDayValue = CoreError(title: "Error", message: "Can't save person without specified day of birth")
-	static let noTimeValue = CoreError(title: "Error", message: "Can't save person without specified time of birth")
+	static let noNameValue = CoreError(message: "Can't save person without specified name")
+	static let noDayValue = CoreError(message: "Can't save person without specified day of birth")
+	static let noTimeValue = CoreError(message: "Can't save person without specified time of birth")
+	static let coreDataAddFailed = CoreError(message: "Failed adding the person in the data base")
+	static let coreDataSaveFailed = CoreError(message: "Failed saving the context")
 }

@@ -10,11 +10,11 @@ import Foundation
 import UIKit
 
 struct PersonImage: Equatable {
-	var id: UUID?
+	var id: UUID
 	var uiImage: UIImage?
 
 	init(id: UUID? = nil, uiImage: UIImage? = nil) {
-		self.id = id
+		self.id = id ?? UUID()
 		self.uiImage = uiImage
 	}
 }

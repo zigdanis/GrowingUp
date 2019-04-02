@@ -18,8 +18,7 @@ class CoreDataPersonsGateway: PersonsGateway {
 
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         guard let coreDataPerson = viewContext.addEntity(withType: CoreDataPerson.self) else {
-            let error = CoreError(message: "Failed adding the person in the data base")
-            let result = Result<Person>.failure(error)
+            let result = Result<Person>.failure(CoreError.coreDataAddFailed)
             return completionHandler(result)
         }
 
@@ -30,7 +29,7 @@ class CoreDataPersonsGateway: PersonsGateway {
             completionHandler(.success(coreDataPerson.person))
         } catch {
             viewContext.delete(coreDataPerson)
-            completionHandler(.failure(CoreError(message: "Failed saving the context")))
+            completionHandler(.failure(CoreError.coreDataSaveFailed))
         }
     }
 
