@@ -248,11 +248,11 @@
 		09D26ADD2251091700BF452F /* PersonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImage.swift; sourceTree = "<group>"; };
 		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
+		09E6F55722569D260059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		09E6F55822569D590059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		09E6F55922569DBB0059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		09E7339221C453D200BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		09F2D5AC2247EECF00C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
-		09F2D5AD2247EECF00C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		09F2D5AF2247EF5200C05BA5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -869,6 +869,7 @@
 				TargetAttributes = {
 					09051B3A21C558DB008A99C6 = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -880,14 +881,16 @@
 					};
 					09051B5521C55EB6008A99C6 = {
 						CreatedOnToolsVersion = 10.1;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1020;
 					};
 					094DF9BF223AB35D00C331EC = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						TestTargetID = 098E560821C409E300E4CA1E;
 					};
 					098E560821C409E300E4CA1E = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 0;
@@ -906,6 +909,7 @@
 			knownRegions = (
 				en,
 				ru,
+				Base,
 			);
 			mainGroup = 098E560021C409E300E4CA1E;
 			productRefGroup = 098E560A21C409E300E4CA1E /* Products */;
@@ -1168,7 +1172,7 @@
 		09051B4221C558DB008A99C6 /* MainInterface.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09F2D5AC2247EECF00C05BA5 /* en */,
+				09E6F55922569DBB0059E592 /* Base */,
 			);
 			name = MainInterface.storyboard;
 			sourceTree = "<group>";
@@ -1194,7 +1198,7 @@
 		09165307223ECBC40081FB10 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09F2D5AD2247EECF00C05BA5 /* en */,
+				09E6F55722569D260059E592 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -1220,7 +1224,7 @@
 		09F2D5AE2247EF5200C05BA5 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				09F2D5AF2247EF5200C05BA5 /* en */,
+				09E6F55822569D590059E592 /* Base */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -1244,7 +1248,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1265,7 +1269,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -1298,7 +1302,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1332,7 +1336,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1354,7 +1358,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUpTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingUp.app/GrowingUp";
 			};
@@ -1375,7 +1379,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUpTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowingUp.app/GrowingUp";
 			};
@@ -1519,7 +1523,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1544,7 +1548,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
