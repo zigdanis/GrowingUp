@@ -12,7 +12,7 @@ import Foundation
 class PersonsGatewaySpy: PersonsGateway {
 
     var addPersonParameters: AddPersonParameters!
-    var addPersonResultToBeReturned: Result<Person>!
+    var addPersonResultToBeReturned: Result<Person, CoreError>!
 
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         addPersonParameters = parameters

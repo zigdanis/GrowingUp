@@ -11,7 +11,7 @@ import Foundation
 
 class AddPersonUseCaseSpy: AddPersonUseCase {
 
-    var resultToBeReturned: Result<Person>!
+    var resultToBeReturned: Result<Person, CoreError>!
     var callCompletionHandlerImmediate = true
     var personToAddParameters: AddPersonParameters?
     private var completionHandler: AddPersonUseCaseCompletionHandler?

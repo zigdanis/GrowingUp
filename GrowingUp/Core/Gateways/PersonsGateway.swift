@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person>) -> Void
+typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
 
 protocol PersonsGateway {
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler)

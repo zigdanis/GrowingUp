@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CoreError: Error {
+struct CoreError: Error, Equatable {
     var localizedDescription: String {
         return message
     }

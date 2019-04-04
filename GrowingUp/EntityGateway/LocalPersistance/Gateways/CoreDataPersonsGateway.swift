@@ -18,7 +18,7 @@ class CoreDataPersonsGateway: PersonsGateway {
 
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         guard let coreDataPerson = viewContext.addEntity(withType: CoreDataPerson.self) else {
-            let result = Result<Person>.failure(CoreError.coreDataAddFailed)
+            let result = Result<Person, CoreError>.failure(CoreError.coreDataAddFailed)
             return completionHandler(result)
         }
 

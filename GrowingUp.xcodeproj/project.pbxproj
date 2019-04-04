@@ -65,7 +65,6 @@
 		094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
-		094DF9D7223AE66100C331EC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D6223AE66100C331EC /* Result.swift */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */; };
 		098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */; };
@@ -217,7 +216,6 @@
 		094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMempryCoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
-		094DF9D6223AE66100C331EC /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterTests.swift; sourceTree = "<group>"; };
 		098054F8223C2A7900E24D40 /* AddPersonViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonViewSpy.swift; sourceTree = "<group>"; };
@@ -596,7 +594,6 @@
 			isa = PBXGroup;
 			children = (
 				098798572242B45C00A15D90 /* Presenters */,
-				094DF9D6223AE66100C331EC /* Result.swift */,
 				091BEEB3223D61E800A3D057 /* Gateways */,
 				09805500223C34EB00E24D40 /* Delegates */,
 				098054FD223C328200E24D40 /* Routers */,
@@ -1077,7 +1074,6 @@
 				09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */,
 				098054F9223C2A7900E24D40 /* AddPersonViewSpy.swift in Sources */,
 				098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */,
-				094DF9D7223AE66100C331EC /* Result.swift in Sources */,
 				0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,

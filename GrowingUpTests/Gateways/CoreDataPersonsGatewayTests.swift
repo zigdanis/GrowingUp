@@ -34,7 +34,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
         // When
         inMemoryCoreDataBooksGateway.add(parameters: addPersonParameters) { (result) in
             // Then
-            guard let person = try? result.dematerialize() else {
+            guard let person = try? result.get() else {
                 return XCTFail("Should've saved the person with success")
             }
             assert(person: person, builtFromParameters: addPersonParameters)
@@ -48,7 +48,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     func test_SUT_AddPersonWithParameters_FailsWhenSaving() {
 
         // Given
-        let expectedResultToBeReturned: Result<Person> = .failure(CoreError(message: "Failed saving the context"))
+        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError(message: "Failed saving the context"))
         let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
         managedObjectContextSpy.addEntityToReturn = addedCoreDataPerson
         managedObjectContextSpy.saveErrorToReturn = CoreError(message: "Some core data error")
@@ -69,7 +69,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     func test_SUT_AddWithParameters_FailsWithoutReachingSave() {
 
         // Given
-        let expectedResultToBeReturned: Result<Person> = .failure(CoreError(message: "Failed adding the person in the data base"))
+        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError(message: "Failed adding the person in the data base"))
         managedObjectContextSpy.addEntityToReturn = nil
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
 

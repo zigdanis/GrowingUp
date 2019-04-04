@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias AddPersonUseCaseCompletionHandler = (_ person: Result<Person>) -> Void
+typealias AddPersonUseCaseCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
 
 protocol AddPersonUseCase {
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler)
@@ -21,7 +21,7 @@ class AddPersonUseCaseImplementation: AddPersonUseCase {
         self.personsGateway = personsGateway
     }
 
-    func add(parameters: AddPersonParameters, completionHandler: @escaping (Result<Person>) -> Void) {
+    func add(parameters: AddPersonParameters, completionHandler: @escaping (Result<Person, CoreError>) -> Void) {
         personsGateway.add(parameters: parameters) { (result) in
             completionHandler(result)
         }

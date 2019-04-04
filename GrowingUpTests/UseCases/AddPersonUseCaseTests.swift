@@ -22,13 +22,14 @@ class AddPersonUseCaseTests: XCTestCase {
     func test_SUT_AddPerson_PassingParamsToPersonsGatewayAndCallsCompletionHandler() {
         // Given
         let params = AddPersonParameters.createParameters()
-        let expectedResultToBeReturned: Result<Person> = .success(Person.createPerson())
+        let expectedResultToBeReturned: Result<Person, CoreError> = .success(Person.createPerson())
         personsGatewaySpy.addPersonResultToBeReturned = expectedResultToBeReturned
         let addPersonExpectation = expectation(description: "Add Person Expectation")
         // When
         sut.add(parameters: params) { result in
             // Then
             XCTAssertEqual(self.personsGatewaySpy.addPersonParameters, params, "Should have been call PersonsGateway AddPerson method with specified params")
+
             XCTAssertEqual(expectedResultToBeReturned, result, "Completion handler didn't return expected result")
             addPersonExpectation.fulfill()
         }
@@ -38,7 +39,7 @@ class AddPersonUseCaseTests: XCTestCase {
     func test_SUT_AddPersonFail_CallsCompletionHandler() {
         // Given
         let params = AddPersonParameters.createParameters()
-        let expectedResultToBeReturned: Result<Person> = .failure(CoreError(message: "Some Error"))
+        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError(message: "Some Error"))
         personsGatewaySpy.addPersonResultToBeReturned = expectedResultToBeReturned
         let addPersonExpectation = expectation(description: "Add Person Expectation")
         // When

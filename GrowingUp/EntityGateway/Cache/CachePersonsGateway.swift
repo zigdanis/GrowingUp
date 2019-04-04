@@ -18,6 +18,12 @@ class CachePersonsGateway: PersonsGateway {
 	}
 
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+
+		// TaskManager save App Pic
+		// TaskManager save widget Pic
+		// TaskManager save Person to CoreData
+
+		// Call me when you will finish with all of that
 		coreDataGateway.add(parameters: parameters, completionHandler: completionHandler)
 	}
 
