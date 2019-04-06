@@ -22,7 +22,9 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
 
     func configure(addPersonViewController: AddPersonViewController) {
         let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
-        let personsGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+        let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+		let taskManager = TaskManagerOnGCD()
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
         let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
         let router = AddPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
