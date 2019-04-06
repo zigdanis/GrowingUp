@@ -12,7 +12,7 @@ import Disk
 final class CachePersonsGateway: PersonsGateway {
 
 	let coreDataGateway: CoreDataPersonsGateway
-	private let tasksManager = TasksManagerImplementation()
+	private let tasksManager = TaskManagerOnGCD()
 
 	init(coreDataGateway: CoreDataPersonsGateway) {
 		self.coreDataGateway = coreDataGateway

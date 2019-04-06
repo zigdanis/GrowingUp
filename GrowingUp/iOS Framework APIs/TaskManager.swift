@@ -11,11 +11,11 @@ import Foundation
 typealias Task = () -> (Bool)
 typealias TasksCompletion = (_ success: Bool) -> Void
 
-protocol TasksManager {
+protocol TaskManager {
 	func process(tasks: [Task], withCompletion completion: @escaping TasksCompletion)
 }
 
-final class TasksManagerImplementation: TasksManager {
+final class TaskManagerOnGCD: TaskManager {
 
 	func process(tasks: [Task], withCompletion completion: @escaping TasksCompletion) {
 		let queue = DispatchQueue.global(qos: .userInitiated)
