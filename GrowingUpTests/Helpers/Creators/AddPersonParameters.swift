@@ -12,8 +12,8 @@ import UIKit
 
 extension AddPersonParameters {
     static func createParameters() -> AddPersonParameters {
-		let appPic = PersonImage(uiImage: UIImage())
-		let widgetPic = PersonImage(uiImage: UIImage())
+		let appPic = PersonImage()
+		let widgetPic = PersonImage()
 		return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), dateComponenets: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
     }
 }

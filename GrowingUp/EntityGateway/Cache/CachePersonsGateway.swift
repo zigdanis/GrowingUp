@@ -12,15 +12,16 @@ import Disk
 final class CachePersonsGateway: PersonsGateway {
 
 	let coreDataGateway: CoreDataPersonsGateway
-	private let tasksManager = TaskManagerOnGCD()
+	let taskManager: TaskManager
 
-	init(coreDataGateway: CoreDataPersonsGateway) {
+	init(coreDataGateway: CoreDataPersonsGateway, taskManager: TaskManager) {
 		self.coreDataGateway = coreDataGateway
+		self.taskManager = taskManager
 	}
 
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 
-		var tasks = [Task]()
+		var tasks = [Task<Person>]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
 			tasks.append(appPicSaving)
 		}
@@ -29,54 +30,42 @@ final class CachePersonsGateway: PersonsGateway {
 		}
 		tasks.append(coreDataSave(for: parameters))
 
-		// TaskManager save App Pic
-		// TaskManager save widget Pic
-		// TaskManager save Person to CoreData
-
-		// Call me when you will finish with all of that
-		coreDataGateway.add(parameters: parameters, completionHandler: completionHandler)
+		taskManager.process(tasks: tasks, withCompletion: completionHandler)
 	}
 
-	private func coreDataSave(for parameters: AddPersonParameters) -> Task {
+	private func coreDataSave(for parameters: AddPersonParameters) -> Task<Person> {
 		return {
 			let moc = CoreDataStackImplementation.sharedInstance
 				.persistentContainer.newBackgroundContext()
-			var isCompleted = false
-			let coreData = CoreDataPersonsGateway(viewContext: moc)
-			coreData.add(parameters: parameters, completionHandler: { result in
-				do {
-					try _ = result.get()
-					isCompleted = true
-				} catch {
-					isCompleted = false
-				}
-			})
-			return isCompleted
+			let result = self.coreDataGateway.add(parameters: parameters, with: moc)
+			return result.map({ $0 as Person? })
 		}
 	}
 
-	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task? {
+	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let appPic = parameters.appImage?.uiImage else { return nil }
 		guard let appPicId = parameters.appImage?.id else { return nil }
 		return {
 			do {
 				try Disk.save(appPic, to: .documents, as: appPicId.uuidString)
-				return true
+				return .success(nil)
 			} catch {
-				return false
+				let coreError = CoreError(message: error.localizedDescription)
+				return .failure(coreError)
 			}
 		}
 	}
 
-	private func widgetPicSavingTask(for parameters: AddPersonParameters) -> Task? {
+	private func widgetPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let widgetPic = parameters.widgetImage?.uiImage else { return nil }
 		guard let widgetPicId = parameters.widgetImage?.id else { return nil }
 		return {
 			do {
 				try Disk.save(widgetPic, to: .documents, as: widgetPicId.uuidString)
-				return true
+				return .success(nil)
 			} catch {
-				return false
+				let coreError = CoreError(message: error.localizedDescription)
+				return .failure(coreError)
 			}
 		}
 	}

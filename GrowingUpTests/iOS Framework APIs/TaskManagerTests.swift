@@ -19,13 +19,13 @@ class TaskManagerTests: XCTestCase {
 
 	func test_SUT_QueuedWith3Tasks_CallingAllOfThem() {
 		// Given
-		var tasks = [Task]()
+		var tasks = [Task<Person>]()
 		var calledJob1 = false
 		var calledJob2 = false
 		var calledJob3 = false
-		tasks.append({ calledJob1 = true; return false })
-		tasks.append({ calledJob2 = true; return false })
-		tasks.append({ calledJob3 = true; return false })
+		tasks.append({ calledJob1 = true; return .failure(CoreError.unknownError) })
+		tasks.append({ calledJob2 = true; return .failure(CoreError.unknownError) })
+		tasks.append({ calledJob3 = true; return .failure(CoreError.unknownError) })
 		let expectedToFinish = expectation(description: "Expected to finish all 3 jobs")
 		// When
 		sut.process(tasks: tasks) { _ in
@@ -38,15 +38,17 @@ class TaskManagerTests: XCTestCase {
 
 	func test_SUT_QueuedWith3SucceddedTasks_CallingCompletionWithSuccess() {
 		// Given
-		var tasks = [Task]()
-		tasks.append({ return true })
-		tasks.append({ return true })
-		tasks.append({ return true })
+		let expectedPerson = Person.createPerson()
+		var tasks = [Task<Person>]()
+		tasks.append({ return .success(expectedPerson) })
+		tasks.append({ return .success(expectedPerson) })
+		tasks.append({ return .success(expectedPerson) })
 		let workIsDone = expectation(description: "Expected to call all 3 tasks")
 		// When
-		sut.process(tasks: tasks) { isSuccedded in
+		sut.process(tasks: tasks) { result in
 			// Then
-			XCTAssertTrue(isSuccedded, "Expected to call completion with success")
+			let person = try? result.get()
+			XCTAssertEqual(person, expectedPerson, "Expected to call completion with person")
 			workIsDone.fulfill()
 		}
 		waitForExpectations(timeout: 0.1, handler: nil)
@@ -54,15 +56,16 @@ class TaskManagerTests: XCTestCase {
 
 	func test_SUT_QueuedWithFailingTask_CallingCompletionWithFailing() {
 		// Given
-		var tasks = [Task]()
-		tasks.append({ return true })
-		tasks.append({ return false })
-		tasks.append({ return true })
+		var tasks = [Task<Person>]()
+		tasks.append({ return .success(.createPerson()) })
+		tasks.append({ return .failure(.unknownError) })
+		tasks.append({ return .success(.createPerson()) })
 		let workIsDone = expectation(description: "Expected to call all 3 tasks")
 		// When
-		sut.process(tasks: tasks) { isSuccedded in
+		sut.process(tasks: tasks) { result in
 			// Then
-			XCTAssertFalse(isSuccedded, "Expected to call completion with failure")
+			let person = try? result.get()
+			XCTAssertNil(person, "Expected to return result with failure")
 			workIsDone.fulfill()
 		}
 		waitForExpectations(timeout: 0.1, handler: nil)
@@ -72,7 +75,7 @@ class TaskManagerTests: XCTestCase {
 		// Given
 		let workIsDone = expectation(description: "Expected to finish all jobs")
 		// When
-		sut.process(tasks: []) { _ in
+		sut.process(tasks: [Task<Person>]()) { _ in
 			// Then
 			XCTAssertTrue(Thread.isMainThread, "Expected to be called on main thread")
 			workIsDone.fulfill()
@@ -82,10 +85,10 @@ class TaskManagerTests: XCTestCase {
 
 	func test_SUT_CallingJobs_OnNonMainThread() {
 		// Given
-		var tasks = [Task]()
+		var tasks = [Task<Person>]()
 		tasks.append({
 			XCTAssertFalse(Thread.isMainThread, "Expected to be called on global queue")
-			return false
+			return .failure(.unknownError)
 		})
 		let workIsDone = expectation(description: "Expected to finish all jobs")
 		// When

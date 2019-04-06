@@ -8,7 +8,11 @@
 
 import Foundation
 
-class CoreDataPersonsGateway: PersonsGateway {
+protocol CoreDataPersonsGateway: PersonsGateway {
+	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
+}
+
+final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 
 	let viewContext: NSManagedObjectContextProtocol
 
@@ -16,21 +20,26 @@ class CoreDataPersonsGateway: PersonsGateway {
 		self.viewContext = viewContext
 	}
 
-	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-		guard let coreDataPerson = viewContext.addEntity(withType: CoreDataPerson.self) else {
-			let result = Result<Person, CoreError>.failure(CoreError.coreDataAddFailed)
-			return completionHandler(result)
+	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
+		guard let coreDataPerson = context.addEntity(withType: CoreDataPerson.self) else {
+			return .failure(CoreError.coreDataAddFailed)
 		}
 
 		coreDataPerson.populate(with: parameters)
 
 		do {
-			try viewContext.save()
-			completionHandler(.success(coreDataPerson.person))
+			try context.save()
+			return .success(coreDataPerson.person)
 		} catch {
-			viewContext.delete(coreDataPerson)
-			completionHandler(.failure(CoreError.coreDataSaveFailed))
+			context.delete(coreDataPerson)
+			return .failure(CoreError.coreDataSaveFailed)
 		}
+
+	}
+
+	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+		let result = add(parameters: parameters, with: viewContext)
+		completionHandler(result)
 	}
 
 }

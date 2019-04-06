@@ -60,6 +60,9 @@
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */; };
+		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
+		0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */; };
+		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
 		092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
@@ -212,6 +215,9 @@
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
 		0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerTests.swift; sourceTree = "<group>"; };
+		0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGatewayTests.swift; sourceTree = "<group>"; };
+		0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewaySpy.swift; sourceTree = "<group>"; };
+		0929F1EF2259190000212F29 /* TaskManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSpy.swift; sourceTree = "<group>"; };
 		092AA35D2257C79D002EAEE8 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGateway.swift; sourceTree = "<group>"; };
 		094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -538,6 +544,7 @@
 			isa = PBXGroup;
 			children = (
 				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
+				0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -583,6 +590,14 @@
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
 		};
+		0929F1EE225918EA00212F29 /* iOS Framework APIs */ = {
+			isa = PBXGroup;
+			children = (
+				0929F1EF2259190000212F29 /* TaskManagerSpy.swift */,
+			);
+			path = "iOS Framework APIs";
+			sourceTree = "<group>";
+		};
 		09410BCD2253DACC006D672F /* Cache */ = {
 			isa = PBXGroup;
 			children = (
@@ -608,6 +623,7 @@
 			isa = PBXGroup;
 			children = (
 				094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */,
+				0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -615,6 +631,7 @@
 		094DF9CD223ADCD400C331EC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				0929F1EE225918EA00212F29 /* iOS Framework APIs */,
 				098798572242B45C00A15D90 /* Presenters */,
 				091BEEB3223D61E800A3D057 /* Gateways */,
 				09805500223C34EB00E24D40 /* Delegates */,
@@ -1103,13 +1120,16 @@
 				0987985D2242B5CB00A15D90 /* SwitchCellPresenterStub.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* AddPersonViewRouterSpy.swift in Sources */,
+				0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */,
 				09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */,
 				098798592242B46900A15D90 /* TextFieldCellPresenterStub.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				098798692242D86800A15D90 /* SwitchCellPresenterTests.swift in Sources */,
 				09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */,
+				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
 				0987986B2242DBD700A15D90 /* SwitchCellViewSpy.swift in Sources */,
+				0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */,
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,

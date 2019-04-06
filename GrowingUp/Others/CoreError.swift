@@ -25,4 +25,7 @@ struct CoreError: Error, Equatable {
 	static let noTimeValue = CoreError(message: "Can't save person without specified time of birth")
 	static let coreDataAddFailed = CoreError(message: "Failed adding the person in the data base")
 	static let coreDataSaveFailed = CoreError(message: "Failed saving the context")
+	static let asyncWorkError = CoreError(message: "Asyncronous work were not finished before final notification called")
+	static let missingValue = CoreError(message: "Missing value")
+	static let unknownError = CoreError(message: "Unknown error occured")
 }

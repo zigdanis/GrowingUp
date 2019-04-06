@@ -8,29 +8,42 @@
 
 import Foundation
 
-typealias Task = () -> (Bool)
-typealias TasksCompletion = (_ success: Bool) -> Void
+typealias Task<T> = () -> (Result<T?, CoreError>)
+typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void
 
 protocol TaskManager {
-	func process(tasks: [Task], withCompletion completion: @escaping TasksCompletion)
+	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>)
 }
 
 final class TaskManagerOnGCD: TaskManager {
 
-	func process(tasks: [Task], withCompletion completion: @escaping TasksCompletion) {
+	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>) {
 		let queue = DispatchQueue.global(qos: .userInitiated)
 		let group = DispatchGroup()
-		var isSuccedded = true
+		var finalValue: T?
+		var finalError: CoreError?
 		for task in tasks {
 			let workItem = DispatchWorkItem {
-				if !task() {
-					isSuccedded = false
+				let result = task()
+				switch result {
+				case .success(let value):
+					guard let value = value else { return }
+					finalValue = value
+				case .failure(let error):
+					finalError = error
 				}
 			}
 			queue.async(group: group, execute: workItem)
 		}
 		group.notify(queue: DispatchQueue.main) {
-			completion(isSuccedded)
+			if let error = finalError {
+				completion(.failure(error))
+			} else if let value = finalValue {
+				completion(.success(value))
+			} else {
+				completion(.failure(.missingValue))
+			}
 		}
 	}
+
 }
