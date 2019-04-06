@@ -10,27 +10,27 @@ import Foundation
 
 class CoreDataPersonsGateway: PersonsGateway {
 
-    let viewContext: NSManagedObjectContextProtocol
+	let viewContext: NSManagedObjectContextProtocol
 
-    init(viewContext: NSManagedObjectContextProtocol) {
-        self.viewContext = viewContext
-    }
+	init(viewContext: NSManagedObjectContextProtocol) {
+		self.viewContext = viewContext
+	}
 
-    func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-        guard let coreDataPerson = viewContext.addEntity(withType: CoreDataPerson.self) else {
-            let result = Result<Person, CoreError>.failure(CoreError.coreDataAddFailed)
-            return completionHandler(result)
-        }
+	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+		guard let coreDataPerson = viewContext.addEntity(withType: CoreDataPerson.self) else {
+			let result = Result<Person, CoreError>.failure(CoreError.coreDataAddFailed)
+			return completionHandler(result)
+		}
 
-        coreDataPerson.populate(with: parameters)
+		coreDataPerson.populate(with: parameters)
 
-        do {
-            try viewContext.save()
-            completionHandler(.success(coreDataPerson.person))
-        } catch {
-            viewContext.delete(coreDataPerson)
-            completionHandler(.failure(CoreError.coreDataSaveFailed))
-        }
-    }
+		do {
+			try viewContext.save()
+			completionHandler(.success(coreDataPerson.person))
+		} catch {
+			viewContext.delete(coreDataPerson)
+			completionHandler(.failure(CoreError.coreDataSaveFailed))
+		}
+	}
 
 }

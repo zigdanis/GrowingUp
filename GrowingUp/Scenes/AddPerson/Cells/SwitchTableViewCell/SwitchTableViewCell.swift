@@ -39,7 +39,8 @@ final class SwitchTableViewCell: UITableViewCell, SwitchCellView {
 		self.row = row
 	}
 
-	@objc private func switchValueChanged(sender: UISwitch) {
+	@objc
+	private func switchValueChanged(sender: UISwitch) {
 		guard let row = row else { return }
 		guard let presenter = presenter else { return }
 		presenter.valueFor(row: row, didChangeTo: sender.isOn)

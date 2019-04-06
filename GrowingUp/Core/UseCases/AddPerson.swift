@@ -14,7 +14,7 @@ protocol AddPersonUseCase {
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler)
 }
 
-class AddPersonUseCaseImplementation: AddPersonUseCase {
+final class AddPersonUseCaseImplementation: AddPersonUseCase {
     let personsGateway: PersonsGateway
 
     init(personsGateway: PersonsGateway) {
