@@ -40,11 +40,13 @@ class WDImageCropViewController: UIViewController {
 		navigationController?.isNavigationBarHidden = true
     }
 
-    @objc private func cancelTapped() {
+    @objc
+	private func cancelTapped() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc private func useTapped() {
+    @objc
+	private func useTapped() {
         let croppedImage = imageCropView.croppedImage()
         delegate?.imageCropController(self, didFinishWithCroppedImage: croppedImage)
     }

@@ -161,7 +161,8 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	// MARK: - Helpers
 
-	@discardableResult private func setupSUT_WithAddPersonData() -> AddPersonParameters {
+	@discardableResult
+	private func setupSUT_WithAddPersonData() -> AddPersonParameters {
 		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
 		let bDate = Date()
 		let tDate = Date().addingTimeInterval(1)

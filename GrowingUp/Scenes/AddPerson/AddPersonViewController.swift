@@ -84,12 +84,14 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 
     // MARK: - Actions
 
-	@objc internal func cancelTapped() {
+	@objc
+	internal func cancelTapped() {
         presenter.cancelButtonPressed()
 		view.endEditing(true)
     }
 
-    @objc private func doneTapped() {
+    @objc
+	private func doneTapped() {
         presenter.addButtonPressed()
 		view.endEditing(true)
     }

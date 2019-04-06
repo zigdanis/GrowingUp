@@ -54,7 +54,8 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
 	// MARK: - Actions
 
-	@objc private func textDidChange(sender: UITextField) {
+	@objc
+	private func textDidChange(sender: UITextField) {
 		guard let row = row else { return }
 		guard let presenter = presenter else { return }
 		guard let value = sender.text else { return }

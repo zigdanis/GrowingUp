@@ -1,5 +1,5 @@
-# opt_in_rules:
-#   - attributes
+opt_in_rules:
+  - attributes
 excluded:
   - GrowingUp/Supporting Files/R.generated.swift
   - Carthage

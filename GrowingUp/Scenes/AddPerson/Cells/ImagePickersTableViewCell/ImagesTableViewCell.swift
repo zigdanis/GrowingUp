@@ -61,12 +61,14 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 
 	// MARK: - Actions
 
-	@objc private func appPicTouched() {
+	@objc
+	private func appPicTouched() {
 		guard let row = row else { return }
 		delegate?.showAppPicImagePickerFor(row: row)
 	}
 
-	@objc private func widgetPicTouched() {
+	@objc
+	private func widgetPicTouched() {
 		guard let row = row else { return }
 		delegate?.showWidgetPicImagePickerFor(row: row)
 	}

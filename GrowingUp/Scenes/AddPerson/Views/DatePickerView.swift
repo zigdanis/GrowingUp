@@ -121,11 +121,13 @@ final class DatePickerView: UIView {
 
 	// MARK: - Actions
 
-	@objc private func cancelTapped() {
+	@objc
+	private func cancelTapped() {
 		hidePicker()
 	}
 
-	@objc private func doneTapped() {
+	@objc
+	private func doneTapped() {
 		delegate?.datePicker(picker: self, selectedDate: datePicker.date)
 		hidePicker()
 	}
