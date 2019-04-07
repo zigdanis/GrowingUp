@@ -24,7 +24,7 @@
 		09165350223ECBC40081FB10 /* DateTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165311223ECBC40081FB10 /* DateTableViewCell.swift */; };
 		09165351223ECBC40081FB10 /* DateTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09165312223ECBC40081FB10 /* DateTableViewCell.xib */; };
 		09165352223ECBC40081FB10 /* TextFieldTableVIewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */; };
-		09165353223ECBC40081FB10 /* TextFieldTableVIewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */; };
+		09165353223ECBC40081FB10 /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165314223ECBC40081FB10 /* TextFieldTableViewCell.swift */; };
 		09165354223ECBC40081FB10 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */; };
 		09165355223ECBC40081FB10 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165316223ECBC40081FB10 /* SwitchTableViewCell.swift */; };
 		09165356223ECBC40081FB10 /* AddPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165317223ECBC40081FB10 /* AddPersonPresenter.swift */; };
@@ -33,12 +33,12 @@
 		09165359223ECBC40081FB10 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916531A223ECBC40081FB10 /* AddPersonConfigurator.swift */; };
 		0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916531B223ECBC40081FB10 /* AddPersonViewRouter.swift */; };
 		0916535B223ECBC40081FB10 /* PersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916531E223ECBC40081FB10 /* PersonsGateway.swift */; };
-		0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165320223ECBC40081FB10 /* AddPerson.swift */; };
+		0916535C223ECBC40081FB10 /* AddPersonUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165320223ECBC40081FB10 /* AddPersonUseCase.swift */; };
 		0916535D223ECBC40081FB10 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165322223ECBC40081FB10 /* Person.swift */; };
 		0916535E223ECBC40081FB10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09165323223ECBC40081FB10 /* Assets.xcassets */; };
 		0916535F223ECBC40081FB10 /* NewPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09165325223ECBC40081FB10 /* NewPersonViewController.xib */; };
 		09165360223ECBC40081FB10 /* NewPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165326223ECBC40081FB10 /* NewPersonViewController.swift */; };
-		09165361223ECBC40081FB10 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165328223ECBC40081FB10 /* Constants.swift */; };
+		09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165328223ECBC40081FB10 /* UIColor+Extensions.swift */; };
 		09165362223ECBC40081FB10 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165329223ECBC40081FB10 /* UIViewController+Extensions.swift */; };
 		09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */; };
 		09165364223ECBC40081FB10 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916532B223ECBC40081FB10 /* Result.swift */; };
@@ -67,7 +67,7 @@
 		09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
-		094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */; };
+		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
@@ -173,7 +173,7 @@
 		09165311223ECBC40081FB10 /* DateTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateTableViewCell.swift; sourceTree = "<group>"; };
 		09165312223ECBC40081FB10 /* DateTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DateTableViewCell.xib; sourceTree = "<group>"; };
 		09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextFieldTableVIewCell.xib; sourceTree = "<group>"; };
-		09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableVIewCell.swift; sourceTree = "<group>"; };
+		09165314223ECBC40081FB10 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
 		09165315223ECBC40081FB10 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		09165316223ECBC40081FB10 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		09165317223ECBC40081FB10 /* AddPersonPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPersonPresenter.swift; sourceTree = "<group>"; };
@@ -182,12 +182,12 @@
 		0916531A223ECBC40081FB10 /* AddPersonConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPersonConfigurator.swift; sourceTree = "<group>"; };
 		0916531B223ECBC40081FB10 /* AddPersonViewRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPersonViewRouter.swift; sourceTree = "<group>"; };
 		0916531E223ECBC40081FB10 /* PersonsGateway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonsGateway.swift; sourceTree = "<group>"; };
-		09165320223ECBC40081FB10 /* AddPerson.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPerson.swift; sourceTree = "<group>"; };
+		09165320223ECBC40081FB10 /* AddPersonUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPersonUseCase.swift; sourceTree = "<group>"; };
 		09165322223ECBC40081FB10 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
 		09165323223ECBC40081FB10 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09165325223ECBC40081FB10 /* NewPersonViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewPersonViewController.xib; sourceTree = "<group>"; };
 		09165326223ECBC40081FB10 /* NewPersonViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewPersonViewController.swift; sourceTree = "<group>"; };
-		09165328223ECBC40081FB10 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		09165328223ECBC40081FB10 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		09165329223ECBC40081FB10 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		0916532B223ECBC40081FB10 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
@@ -223,7 +223,7 @@
 		094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		094DF9C4223AB35D00C331EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewayTests.swift; sourceTree = "<group>"; };
-		094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMempryCoreDataStack.swift; sourceTree = "<group>"; };
+		094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
@@ -342,7 +342,6 @@
 				09165306223ECBC40081FB10 /* Storyboards */,
 				0916530D223ECBC40081FB10 /* ViewController.swift */,
 				0916531C223ECBC40081FB10 /* Core */,
-				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				0916533E223ECBC40081FB10 /* EntityGateway */,
 				0916530E223ECBC40081FB10 /* Scenes */,
 				09165323223ECBC40081FB10 /* Assets.xcassets */,
@@ -350,6 +349,7 @@
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				0916533A223ECBC40081FB10 /* Views */,
+				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				09165348223ECBC40081FB10 /* 3rd Party Libraries */,
 			);
 			path = GrowingUp;
@@ -418,7 +418,7 @@
 		0916531F223ECBC40081FB10 /* UseCases */ = {
 			isa = PBXGroup;
 			children = (
-				09165320223ECBC40081FB10 /* AddPerson.swift */,
+				09165320223ECBC40081FB10 /* AddPersonUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -445,7 +445,7 @@
 		09165327223ECBC40081FB10 /* Others */ = {
 			isa = PBXGroup;
 			children = (
-				09165328223ECBC40081FB10 /* Constants.swift */,
+				09165328223ECBC40081FB10 /* UIColor+Extensions.swift */,
 				09165329223ECBC40081FB10 /* UIViewController+Extensions.swift */,
 				0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */,
 				0916532B223ECBC40081FB10 /* Result.swift */,
@@ -647,7 +647,7 @@
 		094DF9CE223ADCE500C331EC /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
-				094DF9CF223ADCF800C331EC /* InMempryCoreDataStack.swift */,
+				094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */,
 				094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */,
 			);
 			path = CoreData;
@@ -777,7 +777,7 @@
 		09F5A62F224409C600AD0B9D /* TextFieldTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
-				09165314223ECBC40081FB10 /* TextFieldTableVIewCell.swift */,
+				09165314223ECBC40081FB10 /* TextFieldTableViewCell.swift */,
 				09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */,
 				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
 			);
@@ -1133,7 +1133,7 @@
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */,
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
-				094DF9D0223ADCF800C331EC /* InMempryCoreDataStack.swift in Sources */,
+				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */,
 				098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */,
@@ -1149,7 +1149,7 @@
 			files = (
 				09165360223ECBC40081FB10 /* NewPersonViewController.swift in Sources */,
 				09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */,
-				0916535C223ECBC40081FB10 /* AddPerson.swift in Sources */,
+				0916535C223ECBC40081FB10 /* AddPersonUseCase.swift in Sources */,
 				095716D12243659700EA806C /* DatePickerView.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
@@ -1157,7 +1157,7 @@
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
 				092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */,
 				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
-				09165353223ECBC40081FB10 /* TextFieldTableVIewCell.swift in Sources */,
+				09165353223ECBC40081FB10 /* TextFieldTableViewCell.swift in Sources */,
 				098798612242B96000A15D90 /* AddPersonParameters.swift in Sources */,
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
 				0916535B223ECBC40081FB10 /* PersonsGateway.swift in Sources */,
@@ -1168,7 +1168,7 @@
 				0916536C223ECBC40081FB10 /* AppDelegate.swift in Sources */,
 				09165355223ECBC40081FB10 /* SwitchTableViewCell.swift in Sources */,
 				09165365223ECBC40081FB10 /* CoreError.swift in Sources */,
-				09165361223ECBC40081FB10 /* Constants.swift in Sources */,
+				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
 				09165356223ECBC40081FB10 /* AddPersonPresenter.swift in Sources */,
 				09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */,
 				09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */,
