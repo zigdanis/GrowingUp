@@ -50,4 +50,12 @@ extension UIImage {
         context.setFillColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5040713028))
         context.fill(rect)
     }
+
+	func scaled(to size: CGSize) -> UIImage {
+		UIGraphicsBeginImageContextWithOptions(size, true, 0)
+		defer { UIGraphicsEndImageContext() }
+		draw(in: CGRect(origin: .zero, size: size))
+		return UIGraphicsGetImageFromCurrentImageContext()!
+	}
+
 }

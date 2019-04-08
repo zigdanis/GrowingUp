@@ -82,6 +82,7 @@ class WDImageCropView: UIView {
 		let minSufficientScale = max(widthScale, heightScale)
 
 		scrollView.minimumZoomScale = minSufficientScale
+		scrollView.maximumZoomScale = max(1, minSufficientScale * 1.1)
 		scrollView.zoomScale = minSufficientScale * 1.1
 	}
 
@@ -94,15 +95,42 @@ class WDImageCropView: UIView {
 
 	// MARK: - Business Logic
 
-    func croppedImage() -> UIImage {
+    func croppedAndScaledImage() throws -> UIImage {
         var visibleRect = calcVisibleRectForCropArea()
         let rectTransform = orientationTransformedRectOfImage(imageToCrop)
         visibleRect = visibleRect.applying(rectTransform)
-        let imageRef = imageToCrop.cgImage?.cropping(to: visibleRect)
-        let result = UIImage(cgImage: imageRef!, scale: imageToCrop.scale,
+		guard let imageRef = imageToCrop.cgImage?.cropping(to: visibleRect) else {
+			throw WDImageError.imageCropFailed
+		}
+		guard let scaledRef = scaled(cgImage: imageRef) else {
+			throw WDImageError.imageScaleFailed
+		}
+        return UIImage(cgImage: scaledRef, scale: imageToCrop.scale,
             orientation: imageToCrop.imageOrientation)
-        return result
     }
+
+	private func scaled(cgImage: CGImage) -> CGImage? {
+		let scale = UIScreen.main.scale
+		let width = min(Int(cropSize.width * scale), cgImage.width)
+		let height = min(Int(cropSize.height * scale), cgImage.height)
+		let bitsPerComponent = cgImage.bitsPerComponent
+		let bytesPerRow = width * cgImage.bitsPerPixel / 8
+		guard let colorSpace = cgImage.colorSpace else { return nil }
+		let bitmapInfo = CGBitmapInfo(rawValue: 5)
+
+		let context = CGContext(data: nil,
+									  width: width,
+									  height: height,
+									  bitsPerComponent: bitsPerComponent,
+									  bytesPerRow: bytesPerRow,
+									  space: colorSpace,
+									  bitmapInfo: bitmapInfo.rawValue)
+		context?.interpolationQuality = .high
+		let scaledSize = CGSize(width: width, height: height)
+		let rect = CGRect(origin: .zero, size: scaledSize)
+		context?.draw(cgImage, in: rect)
+		return context?.makeImage()
+	}
 
     private func calcVisibleRectForCropArea() -> CGRect {
 		let scale = 1 / scrollView.zoomScale

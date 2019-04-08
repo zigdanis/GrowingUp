@@ -54,4 +54,8 @@ class WDImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationCont
     func imageCropController(_ imageCropController: WDImageCropViewController, didFinishWithCroppedImage croppedImage: UIImage) {
         delegate?.imagePicker(self, pickedImage: croppedImage)
     }
+
+	func imageCropControllerFailedCroppingImage(_ imageCropController: WDImageCropViewController) {
+		delegate?.imagePickerDidCancel(self)
+	}
 }

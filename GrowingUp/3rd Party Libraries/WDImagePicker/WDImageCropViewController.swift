@@ -10,6 +10,7 @@ import UIKit
 
 protocol WDImageCropControllerDelegate: class {
     func imageCropController(_ imageCropController: WDImageCropViewController, didFinishWithCroppedImage croppedImage: UIImage)
+	func imageCropControllerFailedCroppingImage(_ imageCropController: WDImageCropViewController)
 }
 
 class WDImageCropViewController: UIViewController {
@@ -47,8 +48,12 @@ class WDImageCropViewController: UIViewController {
 
     @objc
 	private func useTapped() {
-        let croppedImage = imageCropView.croppedImage()
-        delegate?.imageCropController(self, didFinishWithCroppedImage: croppedImage)
+		do {
+			let croppedImage = try imageCropView.croppedAndScaledImage()
+			delegate?.imageCropController(self, didFinishWithCroppedImage: croppedImage)
+		} catch {
+			delegate?.imageCropControllerFailedCroppingImage(self)
+		}
     }
 
     private func setupCropView() {
