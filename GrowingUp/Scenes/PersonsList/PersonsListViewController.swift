@@ -8,9 +8,10 @@
 
 import UIKit
 
-protocol PersonPersonalView: class {
-	init(person: Person)
-	var index: Int { get }
+extension Person {
+	static func create() -> Person {
+		return Person(id: UUID(), name: "SSS", birthday: Date())
+	}
 }
 
 final class PersonsListViewController: UIViewController {
@@ -20,7 +21,8 @@ final class PersonsListViewController: UIViewController {
 													  navigationOrientation: .horizontal,
 													  options: nil)
 	private var currentIndex = 0
-	private var cachedScreens = [Int: PersonPersonalView]()
+	private var cachedScreens = [Int: PersonOverviewViewController]()
+	private var persons = [ Person.create(), Person.create(), Person.create() ]
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -41,50 +43,50 @@ final class PersonsListViewController: UIViewController {
 			view.bottomAnchor.constraint(equalTo: pageController.view.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
-//		let person = Person.init(id: UUID(), name: "String", birthday: Date())
-//		let personVC = PersonPersonalView(person: person)
-//		cachedScreens[0] = personVC
-//		pageController.setViewControllers([personVC], direction: .forward, animated: true, completion: nil)
-		pageController.setViewControllers([UIViewController()], direction: .forward, animated: true, completion: nil)
+
+		guard let firstPerson = persons.first else { return }
+		let personVC = PersonOverviewViewController(person: firstPerson, index: 0)
+		cachedScreens[0] = personVC
+		pageController.setViewControllers([personVC], direction: .forward, animated: true, completion: nil)
 	}
 
 }
 
 extension PersonsListViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
 
-	private func indexForController(_ vc: UIViewController?) -> Int {
-		guard let tutScreen = vc as? PersonPersonalView else { return 0 }
-		return tutScreen.index
+	private func indexFor(viewController: UIViewController?) -> Int {
+		guard let personVC = viewController as? PersonOverviewViewController else { return 0 }
+		return personVC.index
 	}
 
 	private func controllerForIndex(_ index: Int) -> UIViewController? {
-		return nil
-//		guard let screen = TutorialScreen(rawValue: index) else { return nil }
-//		if let cached = cachedScreens[screen] {
-//			return cached
-//		} else {
-//			let tutVC = TutorialViewController(screen: screen)
-//			tutVC.bottomPanelHeight = bottomPanel.bounds.height
-//			cachedScreens[screen] = tutVC
-//			return tutVC
-//		}
+		guard index >= 0 else { return nil }
+		guard index < persons.count else { return nil }
+		let person = persons[index]
+		if let cached = cachedScreens[index] {
+			return cached
+		} else {
+			let personVC = PersonOverviewViewController(person: person, index: index)
+			cachedScreens[index] = personVC
+			return personVC
+		}
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-		var index = indexForController(viewController)
+		var index = indexFor(viewController: viewController)
 		index += 1
 		return controllerForIndex(index)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-		var index = indexForController(viewController)
+		var index = indexFor(viewController: viewController)
 		index -= 1
 		return controllerForIndex(index)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 		let currentVC = pageController.viewControllers?.first
-		currentIndex = indexForController(currentVC)
+		currentIndex = indexFor(viewController: currentVC)
 	}
 
 }

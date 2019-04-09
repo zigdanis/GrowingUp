@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Person: Equatable {
+struct Person: Equatable, Hashable {
 	var id: UUID
     var name: String
     var birthday: Date

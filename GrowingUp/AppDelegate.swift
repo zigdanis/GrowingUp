@@ -29,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //		let mainVC = UIViewController()
 //		let mainVC = AddPersonViewController(configurator: configurator)
 		let mainVC = PersonsListViewController()
-        let navigationVC = UINavigationController(rootViewController: mainVC)
-        window?.rootViewController = navigationVC
+//        let navigationVC = UINavigationController(rootViewController: mainVC)
+        window?.rootViewController = mainVC
         window?.makeKeyAndVisible()
     }
 

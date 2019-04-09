@@ -100,6 +100,11 @@
 		09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */; };
 		09D26ADE2251091700BF452F /* PersonImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D26ADD2251091700BF452F /* PersonImage.swift */; };
 		09D6977A225C865C00EFFEAC /* PersonsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69779225C865C00EFFEAC /* PersonsListViewController.xib */; };
+		09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */; };
+		09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977E225C95F500EFFEAC /* PersonOverviewViewController.swift */; };
+		09D69781225C960000EFFEAC /* PersonOverviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D69780225C960000EFFEAC /* PersonOverviewPresenter.swift */; };
+		09D69783225C960C00EFFEAC /* PersonOverviewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */; };
+		09D69785225C961C00EFFEAC /* PersonOverviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
 		09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CB9225BD2E600D9C985 /* WDImageError.swift */; };
@@ -261,6 +266,11 @@
 		09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellViewSpy.swift; sourceTree = "<group>"; };
 		09D26ADD2251091700BF452F /* PersonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImage.swift; sourceTree = "<group>"; };
 		09D69779225C865C00EFFEAC /* PersonsListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonsListViewController.xib; sourceTree = "<group>"; };
+		09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewConfigurator.swift; sourceTree = "<group>"; };
+		09D6977E225C95F500EFFEAC /* PersonOverviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewViewController.swift; sourceTree = "<group>"; };
+		09D69780225C960000EFFEAC /* PersonOverviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewPresenter.swift; sourceTree = "<group>"; };
+		09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewRouter.swift; sourceTree = "<group>"; };
+		09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonOverviewViewController.xib; sourceTree = "<group>"; };
 		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
 		09E6F55722569D260059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -377,6 +387,7 @@
 		0916530E223ECBC40081FB10 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				09D6977B225C90C200EFFEAC /* PersonOverview */,
 				09EC1CBB225BDB7F00D9C985 /* PersonsList */,
 				0916530F223ECBC40081FB10 /* AddPerson */,
 			);
@@ -785,6 +796,18 @@
 			path = WDImagePicker;
 			sourceTree = "<group>";
 		};
+		09D6977B225C90C200EFFEAC /* PersonOverview */ = {
+			isa = PBXGroup;
+			children = (
+				09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */,
+				09D6977E225C95F500EFFEAC /* PersonOverviewViewController.swift */,
+				09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */,
+				09D69780225C960000EFFEAC /* PersonOverviewPresenter.swift */,
+				09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */,
+			);
+			path = PersonOverview;
+			sourceTree = "<group>";
+		};
 		09EC1CBB225BDB7F00D9C985 /* PersonsList */ = {
 			isa = PBXGroup;
 			children = (
@@ -1026,6 +1049,7 @@
 				09165354223ECBC40081FB10 /* SwitchTableViewCell.xib in Resources */,
 				09D6977A225C865C00EFFEAC /* PersonsListViewController.xib in Resources */,
 				09165351223ECBC40081FB10 /* DateTableViewCell.xib in Resources */,
+				09D69785225C961C00EFFEAC /* PersonOverviewViewController.xib in Resources */,
 				0916535E223ECBC40081FB10 /* Assets.xcassets in Resources */,
 				099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */,
 				09165367223ECBC40081FB10 /* InfoPlist.strings in Resources */,
@@ -1179,6 +1203,7 @@
 				09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				09D26ADE2251091700BF452F /* PersonImage.swift in Sources */,
+				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
 				092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */,
 				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
@@ -1188,9 +1213,11 @@
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
 				0916535B223ECBC40081FB10 /* PersonsGateway.swift in Sources */,
 				09165373223ECBC40081FB10 /* CoreDataPersonsGateway.swift in Sources */,
+				09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */,
 				0916535D223ECBC40081FB10 /* Person.swift in Sources */,
 				0916536A223ECBC40081FB10 /* R.generated.swift in Sources */,
 				0916536C223ECBC40081FB10 /* AppDelegate.swift in Sources */,
+				09D69781225C960000EFFEAC /* PersonOverviewPresenter.swift in Sources */,
 				09165355223ECBC40081FB10 /* SwitchTableViewCell.swift in Sources */,
 				09165365223ECBC40081FB10 /* CoreError.swift in Sources */,
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
@@ -1212,6 +1239,7 @@
 				0916534F223ECBC40081FB10 /* ViewController.swift in Sources */,
 				09B4E956224DEEC500F4E3F2 /* WDImageCropViewController.swift in Sources */,
 				09165358223ECBC40081FB10 /* AddPersonViewController.swift in Sources */,
+				09D69783225C960C00EFFEAC /* PersonOverviewRouter.swift in Sources */,
 				0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */,
 				09B4E959224E154A00F4E3F2 /* CGRect+Extensions.swift in Sources */,
 				0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */,
