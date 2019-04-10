@@ -39,6 +39,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
         super.init(nibName: nil, bundle: nil)
     }
 
+	@available(iOS, unavailable, message: "init(coder:) not implemented")
     required init(coder: NSCoder) {
         fatalError("init(coder:) not implemented")
     }

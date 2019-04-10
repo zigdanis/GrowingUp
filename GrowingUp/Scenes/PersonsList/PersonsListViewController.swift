@@ -8,26 +8,39 @@
 
 import UIKit
 
-extension Person {
-	static func create() -> Person {
-		return Person(id: UUID(), name: "SSS", birthday: Date())
-	}
+protocol PageViewControllerViewable: UIViewController {
+	var index: Int { get }
 }
 
-final class PersonsListViewController: UIViewController {
+protocol PersonListView {
+
+}
+
+final class PersonsListViewController: UIViewController, PersonListView {
 
 	@IBOutlet weak var pageIndicator: UIPageControl!
 	private let pageController = UIPageViewController(transitionStyle: .scroll,
 													  navigationOrientation: .horizontal,
 													  options: nil)
-	private var currentIndex = 0
-	private var cachedScreens = [Int: PersonOverviewViewController]()
-	private var persons = [ Person.create(), Person.create(), Person.create() ]
+	var presenter: PersonsListPresenter!
+	var configurator: PersonsListConfigurator!
+
+	init(configurator: PersonsListConfigurator) {
+		self.configurator = configurator
+		super.init(nibName: nil, bundle: nil)
+	}
+
+	@available(iOS, unavailable, message: "init(coder:) not implemented")
+	required init(coder: NSCoder) {
+		fatalError("init(coder:) not implemented")
+	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		configurator.configure(personsListController: self)
 		view.backgroundColor = #colorLiteral(red: 0.9568627451, green: 0.9568627451, blue: 0.9568627451, alpha: 1)
 		setupPageViewController()
+		setupPageIndicator()
 	}
 
 	private func setupPageViewController() {
@@ -44,10 +57,13 @@ final class PersonsListViewController: UIViewController {
 		]
 		NSLayoutConstraint.activate(consts)
 
-		guard let firstPerson = persons.first else { return }
-		let personVC = PersonOverviewViewController(person: firstPerson, index: 0)
-		cachedScreens[0] = personVC
-		pageController.setViewControllers([personVC], direction: .forward, animated: true, completion: nil)
+		guard let firstPVCScreen = presenter.pageViewControllerScreen(atIndex: 0) else { return }
+		pageController.setViewControllers([firstPVCScreen], direction: .forward, animated: true, completion: nil)
+	}
+
+	private func setupPageIndicator() {
+		pageIndicator.pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.5)
+		pageIndicator.currentPageIndicatorTintColor = UIColor.appColor
 	}
 
 }
@@ -55,38 +71,25 @@ final class PersonsListViewController: UIViewController {
 extension PersonsListViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
 
 	private func indexFor(viewController: UIViewController?) -> Int {
-		guard let personVC = viewController as? PersonOverviewViewController else { return 0 }
-		return personVC.index
-	}
-
-	private func controllerForIndex(_ index: Int) -> UIViewController? {
-		guard index >= 0 else { return nil }
-		guard index < persons.count else { return nil }
-		let person = persons[index]
-		if let cached = cachedScreens[index] {
-			return cached
-		} else {
-			let personVC = PersonOverviewViewController(person: person, index: index)
-			cachedScreens[index] = personVC
-			return personVC
-		}
+		return (viewController as? PageViewControllerViewable)?.index ?? 0
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
 		var index = indexFor(viewController: viewController)
 		index += 1
-		return controllerForIndex(index)
+		return presenter.pageViewControllerScreen(atIndex: index)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
 		var index = indexFor(viewController: viewController)
 		index -= 1
-		return controllerForIndex(index)
+		return presenter.pageViewControllerScreen(atIndex: index)
 	}
 
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 		let currentVC = pageController.viewControllers?.first
-		currentIndex = indexFor(viewController: currentVC)
+		let currentIndex = indexFor(viewController: currentVC)
+		pageIndicator.currentPage = currentIndex
 	}
 
 }

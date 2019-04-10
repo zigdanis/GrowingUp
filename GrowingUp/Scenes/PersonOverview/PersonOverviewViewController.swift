@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol PersonOverviewView {
+protocol PersonOverviewView: class {
 	var index: Int { get }
 	var person: Person { get }
 }

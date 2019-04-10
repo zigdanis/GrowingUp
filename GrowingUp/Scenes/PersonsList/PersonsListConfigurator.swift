@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+protocol PersonsListConfigurator {
+	func configure(personsListController: PersonsListViewController)
+}
+
+final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
+
+	func configure(personsListController: PersonsListViewController) {
+		let presenter = PersonsListPresenterImplementation()
+		personsListController.presenter = presenter
+	}
+}
