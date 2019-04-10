@@ -29,7 +29,7 @@ protocol AddPersonPresenterDelegate: class {
 final class AddPersonPresenterImplementation: AddPersonPresenter {
 
     private weak var view: AddPersonView?
-    private var addPersonUseCase: AddPersonUseCase
+    private let addPersonUseCase: AddPersonUseCase
     private weak var delegate: AddPersonPresenterDelegate?
     private(set) var router: AddPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter

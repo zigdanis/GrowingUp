@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+protocol PersonOverviewPresenter {
+
+}
+
+final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
+}

@@ -8,8 +8,7 @@
 
 import UIKit
 
-protocol PersonOverviewView: class {
-	var index: Int { get }
+protocol PersonOverviewView: PageViewControllerViewable {
 	var person: Person { get }
 }
 
@@ -17,6 +16,8 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 
 	var person: Person
 	var index: Int
+	var presenter: PersonOverviewPresenter!
+	var configurator: PersonOverviewConfigurator!
 
 	init(person: Person, index: Int) {
 		self.person = person
@@ -27,5 +28,10 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	@available(iOS, unavailable, message: "Object of this class should use init()")
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		configurator.configure(personOverviewController: self)
 	}
 }

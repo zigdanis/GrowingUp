@@ -33,6 +33,11 @@ final class CachePersonsGateway: PersonsGateway {
 		taskManager.process(tasks: tasks, withCompletion: completionHandler)
 	}
 
+	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	}
+
+	// MARK: - Private
+
 	private func coreDataSave(for parameters: AddPersonParameters) -> Task<Person> {
 		return {
 			let moc = CoreDataStackImplementation.sharedInstance

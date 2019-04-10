@@ -42,4 +42,7 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		completionHandler(result)
 	}
 
+	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	}
+
 }

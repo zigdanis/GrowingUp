@@ -15,7 +15,12 @@ protocol PersonsListConfigurator {
 final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 
 	func configure(personsListController: PersonsListViewController) {
-		let presenter = PersonsListPresenterImplementation()
+		let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
+		let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+		let taskManager = TaskManagerOnGCD()
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
+		let displayPersonsUseCase = DisplayPersonsUseCaseImplementation(personsGateway: personsGateway)
+		let presenter = PersonsListPresenterImplementation(view: personsListController, displayPersonsUseCase: displayPersonsUseCase)
 		personsListController.presenter = presenter
 	}
 }

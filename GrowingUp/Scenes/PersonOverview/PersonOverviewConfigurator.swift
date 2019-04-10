@@ -7,3 +7,15 @@
 //
 
 import Foundation
+
+protocol PersonOverviewConfigurator {
+	func configure(personOverviewController: PersonOverviewViewController)
+}
+
+final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator {
+
+	func configure(personOverviewController: PersonOverviewViewController) {
+		let presenter = PersonOverviewPresenterImplementation()
+		personOverviewController.presenter = presenter
+	}
+}

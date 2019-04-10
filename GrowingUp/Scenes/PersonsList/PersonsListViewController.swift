@@ -12,11 +12,11 @@ protocol PageViewControllerViewable: UIViewController {
 	var index: Int { get }
 }
 
-protocol PersonListView {
-
+protocol PersonsListView: class {
+	func updateListOfScreens()
 }
 
-final class PersonsListViewController: UIViewController, PersonListView {
+final class PersonsListViewController: UIViewController, PersonsListView {
 
 	@IBOutlet weak var pageIndicator: UIPageControl!
 	private let pageController = UIPageViewController(transitionStyle: .scroll,
@@ -56,14 +56,18 @@ final class PersonsListViewController: UIViewController, PersonListView {
 			view.bottomAnchor.constraint(equalTo: pageController.view.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
-
-		guard let firstPVCScreen = presenter.pageViewControllerScreen(atIndex: 0) else { return }
-		pageController.setViewControllers([firstPVCScreen], direction: .forward, animated: true, completion: nil)
 	}
 
 	private func setupPageIndicator() {
 		pageIndicator.pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.5)
 		pageIndicator.currentPageIndicatorTintColor = UIColor.appColor
+	}
+
+	// MARK: - PersonsListView
+
+	func updateListOfScreens() {
+		guard let firstPVCScreen = presenter.pageViewControllerScreen(atIndex: 0) else { return }
+		pageController.setViewControllers([firstPVCScreen], direction: .forward, animated: true, completion: nil)
 	}
 
 }
