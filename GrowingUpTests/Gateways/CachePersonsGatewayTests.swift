@@ -22,10 +22,13 @@ class CachePersonsGatewayTests: XCTestCase {
 	func test_SUT_WhenAddingPerson_CallingTaskManager() {
 		// Given
 		let params = AddPersonParameters.createParameters()
+		let expectedValue = Person.createPerson()
+		taskManagerSpy.expectedResultValue = expectedValue
 		let savedPerson = expectation(description: "Expecting to save Person")
 		// When
-		sut.add(parameters: params) { _ in
+		sut.add(parameters: params) { result in
 			// Then
+			XCTAssertEqual(result, .success(expectedValue), "Expected to receive saved Person")
 			XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
 			savedPerson.fulfill()
 		}
@@ -47,4 +50,32 @@ class CachePersonsGatewayTests: XCTestCase {
 		waitForExpectations(timeout: 0.1)
 	}
 
+	func test_SUT_WhenFetchingPersons_CallingTaskManagerWithExpectedResult() {
+		// Given
+		let expectedValue = [Person.createPerson()]
+		taskManagerSpy.expectedResultValue = expectedValue
+		let workIsDone = expectation(description: "Expecting to fetch Persons")
+		// When
+		sut.fetchPersons { result in
+			// Then
+			XCTAssertEqual(result, .success(expectedValue), "Expected to receive array of Persons")
+			XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
+			workIsDone.fulfill()
+		}
+		waitForExpectations(timeout: 0.1)
+	}
+
+	func test_SUT_WhenFetchingPersons_CallingCoreDataPersonsGateway() {
+		// Given
+		let taskManager = TaskManagerOnGCD()
+		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		let workIsDone = expectation(description: "Expecting to finish fetching")
+		// When
+		sut.fetchPersons { _ in
+			// Then
+			XCTAssertTrue(self.coreDataGatewaySpy.fetchWithContextCalled, "Epected to call fetching persons from CoreData")
+			workIsDone.fulfill()
+		}
+		waitForExpectations(timeout: 0.1)
+	}
 }

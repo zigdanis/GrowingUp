@@ -12,9 +12,17 @@ import Foundation
 class TaskManagerSpy: TaskManager {
 
 	var processTasksCalled = false
+	var expectedResultValue: Any!
+	var expectedError: CoreError!
+	var shouldSucceed = true
 
 	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>) {
 		processTasksCalled = true
-		completion(.failure(.unknownError))
+		if shouldSucceed {
+			let casted = expectedResultValue as! T //swiftlint:disable:this force_cast
+			completion(.success(casted))
+		} else {
+			completion(.failure(expectedError))
+		}
 	}
 }
