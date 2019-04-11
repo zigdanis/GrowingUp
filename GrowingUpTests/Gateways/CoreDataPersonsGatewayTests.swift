@@ -69,7 +69,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     func test_SUT_AddWithParameters_FailsWithoutReachingSave() {
 
         // Given
-        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError(message: "Failed adding the person in the data base"))
+        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError.coreDataAddFailed)
         managedObjectContextSpy.addEntityToReturn = nil
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
 

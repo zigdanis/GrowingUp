@@ -13,6 +13,8 @@ class CoreDataPersonsGatewaySpy: CoreDataPersonsGateway {
 
 	var addWithContextCalled = false
 	var addCalled = false
+	var fetchWithContextCalled = false
+	var fetchCalled = false
 
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
 		addWithContextCalled = true
@@ -21,5 +23,14 @@ class CoreDataPersonsGatewaySpy: CoreDataPersonsGateway {
 
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		addCalled = true
+	}
+
+	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
+		fetchWithContextCalled = true
+		return .failure(CoreError.unknownError)
+	}
+
+	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		fetchCalled = true
 	}
 }
