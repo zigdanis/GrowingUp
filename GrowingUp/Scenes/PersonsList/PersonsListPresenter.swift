@@ -38,11 +38,11 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable? {
 		guard index >= 0 else { return nil }
 		guard index < persons.count else { return nil }
-//		let person = persons[index]
+		let person = persons[index]
 		if let cached = cachedScreens[index] {
 			return cached
 		} else {
-			let configurator = PersonOverviewConfiguratorImplementation(index: index)
+			let configurator = PersonOverviewConfiguratorImplementation(index: index, person: person)
 			let personVC = PersonOverviewViewController(configurator: configurator)
 			cachedScreens[index] = personVC
 			return personVC

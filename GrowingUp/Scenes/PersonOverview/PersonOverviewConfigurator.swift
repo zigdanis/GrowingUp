@@ -15,13 +15,15 @@ protocol PersonOverviewConfigurator {
 final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator {
 
 	let index: Int
+	let person: Person
 
-	init(index: Int) {
+	init(index: Int, person: Person) {
 		self.index = index
+		self.person = person
 	}
 
 	func configure(personOverviewController: PersonOverviewViewController) {
-		let presenter = PersonOverviewPresenterImplementation()
+		let presenter = PersonOverviewPresenterImplementation(person: person)
 		personOverviewController.presenter = presenter
 		personOverviewController.index = index
 	}

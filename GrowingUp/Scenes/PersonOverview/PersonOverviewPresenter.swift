@@ -13,4 +13,11 @@ protocol PersonOverviewPresenter {
 }
 
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
+
+	let person: Person
+
+	init(person: Person) {
+		self.person = person
+	}
+
 }
