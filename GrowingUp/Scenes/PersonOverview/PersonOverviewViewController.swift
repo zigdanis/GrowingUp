@@ -9,19 +9,18 @@
 import UIKit
 
 protocol PersonOverviewView: PageViewControllerViewable {
-	var person: Person { get }
+//	var person: Person { get }
 }
 
 final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 
-	var person: Person
-	var index: Int
+//	var person: Person
+	var index: Int = 0
 	var presenter: PersonOverviewPresenter!
 	var configurator: PersonOverviewConfigurator!
 
-	init(person: Person, index: Int) {
-		self.person = person
-		self.index = index
+	init(configurator: PersonOverviewConfigurator) {
+		self.configurator = configurator
 		super.init(nibName: nil, bundle: nil)
 	}
 

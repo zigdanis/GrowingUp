@@ -34,6 +34,14 @@ final class CachePersonsGateway: PersonsGateway {
 	}
 
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		let task: Task<[Person]> = {
+			let moc = CoreDataStackImplementation.sharedInstance
+				.persistentContainer.newBackgroundContext()
+			let result = self.coreDataGateway.fetchPersons(with: moc)
+			return result.map({ $0 as [Person]? })
+		}
+
+		taskManager.process(tasks: [task], withCompletion: completionHandler)
 	}
 
 	// MARK: - Private

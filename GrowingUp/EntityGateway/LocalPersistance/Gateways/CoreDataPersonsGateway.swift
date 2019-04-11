@@ -10,6 +10,7 @@ import Foundation
 
 protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
+	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError>
 }
 
 final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
@@ -37,12 +38,24 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 
 	}
 
+	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
+		do {
+			let coreDataPersons = try context.allEntities(withType: CoreDataPerson.self)
+			let persons = coreDataPersons.map { $0.person }
+			return .success(persons)
+		} catch {
+			return .failure(CoreError.coreDataFetchFailed)
+		}
+	}
+
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		let result = add(parameters: parameters, with: viewContext)
 		completionHandler(result)
 	}
 
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		let result = fetchPersons(with: viewContext)
+		completionHandler(result)
 	}
 
 }

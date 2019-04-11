@@ -14,8 +14,15 @@ protocol PersonOverviewConfigurator {
 
 final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator {
 
+	let index: Int
+
+	init(index: Int) {
+		self.index = index
+	}
+
 	func configure(personOverviewController: PersonOverviewViewController) {
 		let presenter = PersonOverviewPresenterImplementation()
 		personOverviewController.presenter = presenter
+		personOverviewController.index = index
 	}
 }
