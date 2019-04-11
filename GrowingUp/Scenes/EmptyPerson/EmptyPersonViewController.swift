@@ -32,4 +32,10 @@ final class EmptyPersonViewController: UIViewController, EmptyPersonView, PageVi
 		super.viewDidLoad()
 		configurator.configure(emptyPersonController: self)
 	}
+
+	// MARK: - Actions
+
+	@IBAction func addPersonTouched() {
+		presenter.addButtonPressed()
+	}
 }

@@ -6,12 +6,24 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol EmptyPersonViewRouter {
-
+	func presentAddPerson(addPersonPresenterDelegate: AddPersonPresenterDelegate?)
 }
 
 final class EmptyPersonViewRouterImplementation: EmptyPersonViewRouter {
 
+	private weak var emptyPersonViewController: EmptyPersonViewController?
+
+	init(emptyPersonViewController: EmptyPersonViewController) {
+		self.emptyPersonViewController = emptyPersonViewController
+	}
+
+	func presentAddPerson(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
+		let configurator = AddPersonConfiguratorImplementation(addPersonPresenterDelegate: addPersonPresenterDelegate)
+		let addPersonViewController = AddPersonViewController(configurator: configurator)
+		let navigationViewController = UINavigationController(rootViewController: addPersonViewController)
+		emptyPersonViewController?.present(navigationViewController, animated: true)
+	}
 }

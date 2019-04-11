@@ -46,7 +46,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		if let cached = cachedScreens[index] {
 			return cached
 		} else if index == persons.count {
-			let configurator = EmptyPersonConfiguratorImplementation(index: index)
+			let configurator = EmptyPersonConfiguratorImplementation(index: index, addPersonPresenterDelegate: self)
 			let emptyVC = EmptyPersonViewController(configurator: configurator)
 			cachedScreens[index] = emptyVC
 			return emptyVC
@@ -57,5 +57,16 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 			cachedScreens[index] = personVC
 			return personVC
 		}
+	}
+}
+
+extension PersonsListPresenterImplementation: AddPersonPresenterDelegate {
+
+	func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
+		presenter.router.dismiss()
+	}
+
+	func addPersonPresenterCancel(presenter: AddPersonPresenter) {
+		presenter.router.dismiss()
 	}
 }

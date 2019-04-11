@@ -13,14 +13,18 @@ protocol EmptyPersonConfigurator {
 }
 
 final class EmptyPersonConfiguratorImplementation: EmptyPersonConfigurator {
-	let index: Int
 
-	init(index: Int) {
+	private let index: Int
+	private weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
+
+	init(index: Int, addPersonPresenterDelegate: AddPersonPresenterDelegate) {
 		self.index = index
+		self.addPersonPresenterDelegate = addPersonPresenterDelegate
 	}
 
 	func configure(emptyPersonController: EmptyPersonViewController) {
-		let presenter = EmptyPersonPresenterImplementation()
+		let router = EmptyPersonViewRouterImplementation(emptyPersonViewController: emptyPersonController)
+		let presenter = EmptyPersonPresenterImplementation(router: router, addPersonPresenterDelegate: addPersonPresenterDelegate)
 		emptyPersonController.presenter = presenter
 		emptyPersonController.index = index
 	}
