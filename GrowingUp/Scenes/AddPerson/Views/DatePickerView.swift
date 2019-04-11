@@ -60,12 +60,16 @@ final class DatePickerView: UIView {
 		paddingView.backgroundColor = .white
 		paddingView.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(paddingView)
-		let consts = [
+		var consts = [
 			paddingView.leadingAnchor.constraint(equalTo: leadingAnchor),
-			paddingView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-			trailingAnchor.constraint(equalTo: paddingView.trailingAnchor),
-			bottomAnchor.constraint(equalTo: paddingView.bottomAnchor)
+			trailingAnchor.constraint(equalTo: paddingView.trailingAnchor)
 		]
+		let top = paddingView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+		let bottom = bottomAnchor.constraint(equalTo: paddingView.bottomAnchor)
+		top.priority = .defaultHigh
+		bottom.priority = .defaultHigh
+		consts.append(top)
+		consts.append(bottom)
 		NSLayoutConstraint.activate(consts)
 	}
 

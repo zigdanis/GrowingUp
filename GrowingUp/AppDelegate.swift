@@ -16,10 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         setupMainViewController()
         setupNavigationControllerAppearence()
-		#if DEBUG
-		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-		print("urls = \(urls)")
-		#endif
+//		#if DEBUG
+//		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+//		print("urls = \(urls)")
+//		#endif
 		return true
     }
 
@@ -34,15 +34,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupNavigationControllerAppearence() {
         window?.tintColor = .appColor
     }
-}
-
-extension AppDelegate: AddPersonPresenterDelegate {
-    func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
-        print("Did Add Person")
-    }
-
-    func addPersonPresenterCancel(presenter: AddPersonPresenter) {
-        print("Cancel tapped")
-    }
-
 }
