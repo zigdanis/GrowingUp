@@ -12,6 +12,7 @@ import Foundation
 final class DateCellPresenterStub: DateCellPresenter {
 
 	var storage = [Int: Date]()
+	var didCallConfigure = false
 
 	func valueFor(row: Int, didChangeTo value: Date) {
 		storage[row] = value
@@ -22,7 +23,7 @@ final class DateCellPresenterStub: DateCellPresenter {
 	}
 
 	func configure(cell: DateCellView, forRow row: Int) {
-
+		didCallConfigure = true
 	}
 
 }

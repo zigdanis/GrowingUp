@@ -12,8 +12,10 @@ import Foundation
 final class SwitchCellPresenterStub: SwitchCellPresenter {
 
 	private var storage = [Int: Bool]()
+	var didCallConfigure = false
 
 	func configure(cell: SwitchCellView, forRow row: Int) {
+		didCallConfigure = true
 	}
 
 	func valueFor(row: Int, didChangeTo value: Bool) {

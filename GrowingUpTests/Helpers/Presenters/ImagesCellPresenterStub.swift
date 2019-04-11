@@ -11,9 +11,12 @@ import Foundation
 
 class ImagesCellPresenterStub: ImagesCellPresenter {
 
+	var didCallConfigure = false
+
 	private var storage = [Int: PersonImages]()
 
 	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate) {
+		didCallConfigure = true
 		cell.setup(with: delegate, forRow: row)
 	}
 

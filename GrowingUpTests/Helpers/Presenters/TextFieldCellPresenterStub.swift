@@ -11,10 +11,11 @@ import Foundation
 
 final class TextFieldCellPresenterStub: TextFieldCellPresenter {
 
+	var didCallConfigure = false
 	private var storage = [Int: String]()
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
-
+		didCallConfigure = true
 	}
 
 	func valueFor(row: Int, didChangeTo value: String) {

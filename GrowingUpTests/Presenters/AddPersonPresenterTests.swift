@@ -159,6 +159,24 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(widgetPic, personWidgetPic, "Value for the person Widget pic doesn't match to expected")
 	}
 
+	func test_SUT_WhenConfiguringCells_ShouldCallTheirPresenters() {
+		// Given
+		let imgSpy = ImagesCellViewSpy()
+		let tfSpy = TextFieldCellViewSpy()
+		let dateSpy = DateCellViewSpy()
+		let switchSpy = SwitchCellViewSpy()
+		// When
+		sut.configure(cell: imgSpy, forRow: 0)
+		sut.configure(cell: tfSpy, forRow: 0)
+		sut.configure(cell: dateSpy, forRow: 0)
+		sut.configure(cell: switchSpy, forRow: 0)
+		// Then
+		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
+		XCTAssertTrue(nameCellStub.didCallConfigure, "Expected to call child presenter")
+		XCTAssertTrue(dateCellsStub.didCallConfigure, "Expected to call child presenter")
+		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
+	}
+
 	// MARK: - Helpers
 
 	@discardableResult

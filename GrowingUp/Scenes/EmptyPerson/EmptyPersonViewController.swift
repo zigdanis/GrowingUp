@@ -13,5 +13,4 @@ protocol EmptyPersonView {
 }
 
 final class EmptyPersonViewController: UIViewController, EmptyPersonView {
-	
 }
