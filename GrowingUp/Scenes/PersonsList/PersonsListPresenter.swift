@@ -63,6 +63,9 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 extension PersonsListPresenterImplementation: AddPersonPresenterDelegate {
 
 	func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
+		cachedScreens[persons.count] = nil
+		persons.append(person)
+		view?.updateListOfScreens()
 		presenter.router.dismiss()
 	}
 

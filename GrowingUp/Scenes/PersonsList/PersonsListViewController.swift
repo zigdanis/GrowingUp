@@ -66,9 +66,12 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	// MARK: - PersonsListView
 
 	func updateListOfScreens() {
-		pageIndicator.numberOfPages = presenter.numberOfPages()
-		guard let firstPVCScreen = presenter.pageViewControllerScreen(atIndex: 0) else { return }
-		pageController.setViewControllers([firstPVCScreen], direction: .forward, animated: true, completion: nil)
+		let total = presenter.numberOfPages()
+		pageIndicator.numberOfPages = total
+		let index = max(total - 2, 0)
+		pageIndicator.currentPage = index
+		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
+		pageController.setViewControllers([lastScreen], direction: .forward, animated: true, completion: nil)
 	}
 
 }
