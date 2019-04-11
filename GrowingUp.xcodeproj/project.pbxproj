@@ -88,6 +88,11 @@
 		0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443C2241426C003C321D /* SwitchCellPresenter.swift */; };
 		0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0996443E224163DF003C321D /* DateCellPresenter.swift */; };
 		099C9158225E9871005C963C /* DisplayPersonsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9157225E9871005C963C /* DisplayPersonsUseCase.swift */; };
+		099C915B225F2034005C963C /* EmptyPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C915A225F2034005C963C /* EmptyPersonConfigurator.swift */; };
+		099C915D225F203F005C963C /* EmptyPersonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C915C225F203F005C963C /* EmptyPersonViewController.swift */; };
+		099C915F225F2044005C963C /* EmptyPersonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099C915E225F2044005C963C /* EmptyPersonViewController.xib */; };
+		099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9160225F2062005C963C /* EmptyPersonPresenter.swift */; };
+		099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9162225F2074005C963C /* EmptyPersonViewRouter.swift */; };
 		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
@@ -256,6 +261,11 @@
 		0996443C2241426C003C321D /* SwitchCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCellPresenter.swift; sourceTree = "<group>"; };
 		0996443E224163DF003C321D /* DateCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateCellPresenter.swift; sourceTree = "<group>"; };
 		099C9157225E9871005C963C /* DisplayPersonsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPersonsUseCase.swift; sourceTree = "<group>"; };
+		099C915A225F2034005C963C /* EmptyPersonConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonConfigurator.swift; sourceTree = "<group>"; };
+		099C915C225F203F005C963C /* EmptyPersonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonViewController.swift; sourceTree = "<group>"; };
+		099C915E225F2044005C963C /* EmptyPersonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyPersonViewController.xib; sourceTree = "<group>"; };
+		099C9160225F2062005C963C /* EmptyPersonPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonPresenter.swift; sourceTree = "<group>"; };
+		099C9162225F2074005C963C /* EmptyPersonViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonViewRouter.swift; sourceTree = "<group>"; };
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
 		09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropView.swift; sourceTree = "<group>"; };
@@ -389,6 +399,7 @@
 		0916530E223ECBC40081FB10 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				099C9159225F1FA1005C963C /* EmptyPerson */,
 				09D6977B225C90C200EFFEAC /* PersonOverview */,
 				09EC1CBB225BDB7F00D9C985 /* PersonsList */,
 				0916530F223ECBC40081FB10 /* AddPerson */,
@@ -777,6 +788,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		099C9159225F1FA1005C963C /* EmptyPerson */ = {
+			isa = PBXGroup;
+			children = (
+				099C915A225F2034005C963C /* EmptyPersonConfigurator.swift */,
+				099C915C225F203F005C963C /* EmptyPersonViewController.swift */,
+				099C915E225F2044005C963C /* EmptyPersonViewController.xib */,
+				099C9160225F2062005C963C /* EmptyPersonPresenter.swift */,
+				099C9162225F2074005C963C /* EmptyPersonViewRouter.swift */,
+			);
+			path = EmptyPerson;
+			sourceTree = "<group>";
+		};
 		099FB5CC2244C713008F29EE /* ImagePickersTableViewCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1043,6 +1066,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				099C915F225F2044005C963C /* EmptyPersonViewController.xib in Resources */,
 				09165369223ECBC40081FB10 /* Localizable.strings in Resources */,
 				09165352223ECBC40081FB10 /* TextFieldTableVIewCell.xib in Resources */,
 				09F2D5B02247EF5200C05BA5 /* Main.storyboard in Resources */,
@@ -1207,6 +1231,8 @@
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				09D26ADE2251091700BF452F /* PersonImage.swift in Sources */,
 				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
+				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
+				099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */,
 				0916535A223ECBC40081FB10 /* AddPersonViewRouter.swift in Sources */,
 				092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */,
 				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
@@ -1219,6 +1245,7 @@
 				09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */,
 				0916535D223ECBC40081FB10 /* Person.swift in Sources */,
 				0916536A223ECBC40081FB10 /* R.generated.swift in Sources */,
+				099C915B225F2034005C963C /* EmptyPersonConfigurator.swift in Sources */,
 				0916536C223ECBC40081FB10 /* AppDelegate.swift in Sources */,
 				09D69781225C960000EFFEAC /* PersonOverviewPresenter.swift in Sources */,
 				09165355223ECBC40081FB10 /* SwitchTableViewCell.swift in Sources */,
@@ -1249,6 +1276,7 @@
 				0996443F224163DF003C321D /* DateCellPresenter.swift in Sources */,
 				09EC1CC1225BDBB500D9C985 /* PersonsListPresenter.swift in Sources */,
 				099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */,
+				099C915D225F203F005C963C /* EmptyPersonViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
