@@ -31,11 +31,13 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		do {
 			try context.save()
 			return .success(coreDataPerson.person)
+		} catch let error as CoreError {
+			context.delete(coreDataPerson)
+			return .failure(error)
 		} catch {
 			context.delete(coreDataPerson)
 			return .failure(CoreError.coreDataSaveFailed)
 		}
-
 	}
 
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
@@ -43,6 +45,8 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 			let coreDataPersons = try context.allEntities(withType: CoreDataPerson.self)
 			let persons = coreDataPersons.map { $0.person }
 			return .success(persons)
+		} catch let error as CoreError {
+			return .failure(error)
 		} catch {
 			return .failure(CoreError.coreDataFetchFailed)
 		}

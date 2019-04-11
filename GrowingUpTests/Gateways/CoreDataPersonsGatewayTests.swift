@@ -18,10 +18,10 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     // https://www.martinfowler.com/bliki/TestDouble.html
     var inMemoryCoreDataStack = InMemoryCoreDataStack()
     var managedObjectContextSpy = NSManagedObjectContextSpy()
-    var inMemoryCoreDataBooksGateway: CoreDataPersonsGateway {
+    var inMemoryCoreDataGateway: CoreDataPersonsGateway {
         return CoreDataPersonsGatewayImplementation(viewContext: inMemoryCoreDataStack.persistentContainer.viewContext)
     }
-    var errorPathCoreDataBooksGateway: CoreDataPersonsGateway {
+    var errorPathCoreDataGateway: CoreDataPersonsGateway {
         return CoreDataPersonsGatewayImplementation(viewContext: managedObjectContextSpy)
     }
 
@@ -32,7 +32,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
 
         // When
-        inMemoryCoreDataBooksGateway.add(parameters: addPersonParameters) { (result) in
+        inMemoryCoreDataGateway.add(parameters: addPersonParameters) { (result) in
             // Then
             guard let person = try? result.get() else {
                 return XCTFail("Should've saved the person with success")
@@ -48,14 +48,15 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     func test_SUT_AddPersonWithParameters_FailsWhenSaving() {
 
         // Given
-        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError(message: "Failed saving the context"))
+		let expectedErrorToThrow = CoreError(message: "Some core data error")
+        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(expectedErrorToThrow)
         let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
         managedObjectContextSpy.addEntityToReturn = addedCoreDataPerson
-        managedObjectContextSpy.saveErrorToReturn = CoreError(message: "Some core data error")
-        let addPersonCompletionHandlerExpectation = expectation(description: "Add book completion handler expectation")
+        managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
+        let addPersonCompletionHandlerExpectation = expectation(description: "Add Person completion handler expectation")
 
         // When
-        errorPathCoreDataBooksGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
+        errorPathCoreDataGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
             // Then
             XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
             XCTAssertTrue(self.managedObjectContextSpy.deletedObject! === addedCoreDataPerson, "The inserted entity should've been deleted")
@@ -74,7 +75,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
 
         // When
-        errorPathCoreDataBooksGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
+        errorPathCoreDataGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
             // Then
             XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
             addPersonCompletionHandlerExpectation.fulfill()
@@ -83,6 +84,37 @@ class CoreDataPersonsGatewayTests: XCTestCase {
         // Exit
         waitForExpectations(timeout: 1, handler: nil)
     }
+
+	func test_SUT_FetchPersons_ShouldSucceed() {
+		// Given
+		let workIsDone = expectation(description: "Fetch persons completion handler expectation")
+		// When
+		inMemoryCoreDataGateway.fetchPersons { result in
+			// Then
+			switch result {
+			case .failure: XCTFail("Should've fetched persons with success")
+			default: ()
+			}
+			workIsDone.fulfill()
+		}
+		// Exit
+		waitForExpectations(timeout: 0.1, handler: nil)
+	}
+
+	func test_SUT_FetchPersons_FailsWhenSaving() {
+		// Given
+		let errorToThrow = CoreError(message: "Some core data error")
+		let expectedResult: Result<[Person], CoreError> = .failure(errorToThrow)
+		managedObjectContextSpy.fetchErrorToThrow = errorToThrow
+		let workIsDone = expectation(description: "Fetch Persons completion handler expectation")
+		// When
+		errorPathCoreDataGateway.fetchPersons { result in
+			XCTAssertEqual(result, expectedResult, "Failure error wasn't returned")
+			workIsDone.fulfill()
+		}
+		// Exit
+		waitForExpectations(timeout: 0.1, handler: nil)
+	}
 
 }
 
