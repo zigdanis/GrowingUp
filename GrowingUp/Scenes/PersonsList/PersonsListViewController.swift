@@ -66,6 +66,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	// MARK: - PersonsListView
 
 	func updateListOfScreens() {
+		pageIndicator.numberOfPages = presenter.numberOfPages()
 		guard let firstPVCScreen = presenter.pageViewControllerScreen(atIndex: 0) else { return }
 		pageController.setViewControllers([firstPVCScreen], direction: .forward, animated: true, completion: nil)
 	}

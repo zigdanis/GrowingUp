@@ -12,5 +12,5 @@ protocol EmptyPersonPresenter {
 
 }
 
-final class EmptyPersonPresenterImplementation: EmptyPersonView {
+final class EmptyPersonPresenterImplementation: EmptyPersonPresenter {
 }

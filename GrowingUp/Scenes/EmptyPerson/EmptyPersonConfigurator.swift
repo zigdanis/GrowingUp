@@ -9,9 +9,19 @@
 import Foundation
 
 protocol EmptyPersonConfigurator {
-
+	func configure(emptyPersonController: EmptyPersonViewController)
 }
 
 final class EmptyPersonConfiguratorImplementation: EmptyPersonConfigurator {
-	
+	let index: Int
+
+	init(index: Int) {
+		self.index = index
+	}
+
+	func configure(emptyPersonController: EmptyPersonViewController) {
+		let presenter = EmptyPersonPresenterImplementation()
+		emptyPersonController.presenter = presenter
+		emptyPersonController.index = index
+	}
 }

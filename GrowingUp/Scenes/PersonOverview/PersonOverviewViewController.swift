@@ -9,12 +9,10 @@
 import UIKit
 
 protocol PersonOverviewView: PageViewControllerViewable {
-//	var person: Person { get }
 }
 
 final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 
-//	var person: Person
 	var index: Int = 0
 	var presenter: PersonOverviewPresenter!
 	var configurator: PersonOverviewConfigurator!

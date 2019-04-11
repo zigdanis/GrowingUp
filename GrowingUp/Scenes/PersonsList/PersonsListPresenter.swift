@@ -10,10 +10,11 @@ import Foundation
 
 protocol PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable?
+	func numberOfPages() -> Int
 }
 
 final class PersonsListPresenterImplementation: PersonsListPresenter {
-	private var cachedScreens = [Int: PersonOverviewView]()
+	private var cachedScreens = [Int: PageViewControllerViewable]()
 	private var persons = [Person]()
 	private weak var view: PersonsListView?
 	private let displayPersonsUseCase: DisplayPersonsUseCase
@@ -35,13 +36,22 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		}
 	}
 
+	func numberOfPages() -> Int {
+		return persons.count + 1
+	}
+
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable? {
 		guard index >= 0 else { return nil }
-		guard index < persons.count else { return nil }
-		let person = persons[index]
+		guard index <= persons.count else { return nil }
 		if let cached = cachedScreens[index] {
 			return cached
+		} else if index == persons.count {
+			let configurator = EmptyPersonConfiguratorImplementation(index: index)
+			let emptyVC = EmptyPersonViewController(configurator: configurator)
+			cachedScreens[index] = emptyVC
+			return emptyVC
 		} else {
+			let person = persons[index]
 			let configurator = PersonOverviewConfiguratorImplementation(index: index, person: person)
 			let personVC = PersonOverviewViewController(configurator: configurator)
 			cachedScreens[index] = personVC
