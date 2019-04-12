@@ -29,8 +29,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		displayPersonsUseCase.displayPersons { result in
 			switch result {
 			case .success(let value): self.persons = value
-			// TODO: - Add Logging Errors
-			case .failure(let error): print("Error occured = \(error.message)")
+			case .failure(let error): Logging.log(error)
 			}
 			self.view?.updateListOfScreens()
 		}

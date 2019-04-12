@@ -60,6 +60,7 @@
 		0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */; };
 		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
 		092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
+		092C32CD226129310067B2DB /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
@@ -230,6 +231,7 @@
 		0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		0929F1EF2259190000212F29 /* TaskManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSpy.swift; sourceTree = "<group>"; };
 		092AA35D2257C79D002EAEE8 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
+		092C32CC226129310067B2DB /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGateway.swift; sourceTree = "<group>"; };
 		094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		094DF9C4223AB35D00C331EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -369,11 +371,11 @@
 			isa = PBXGroup;
 			children = (
 				09165339223ECBC40081FB10 /* AppDelegate.swift */,
+				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165306223ECBC40081FB10 /* Storyboards */,
 				0916531C223ECBC40081FB10 /* Core */,
 				0916533E223ECBC40081FB10 /* EntityGateway */,
 				0916530E223ECBC40081FB10 /* Scenes */,
-				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				0916533A223ECBC40081FB10 /* Views */,
@@ -472,6 +474,7 @@
 				0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
 				0916532D223ECBC40081FB10 /* Date+Extensions.swift */,
+				092C32CC226129310067B2DB /* Logging.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -1219,6 +1222,7 @@
 				09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				09D26ADE2251091700BF452F /* PersonImage.swift in Sources */,
+				092C32CD226129310067B2DB /* Logging.swift in Sources */,
 				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
 				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
 				099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */,
