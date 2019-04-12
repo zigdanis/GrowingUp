@@ -9,9 +9,15 @@
 import UIKit
 
 protocol PersonOverviewView: PageViewControllerViewable {
+	func displayPersonName(name: String)
+	func displayPersonAppImage(image: PersonImage)
 }
 
 final class PersonOverviewViewController: UIViewController, PersonOverviewView {
+
+	@IBOutlet weak var appImage: UIImageView!
+	@IBOutlet weak var personName: UILabel!
+	@IBOutlet weak var personAge: UILabel!
 
 	var index: Int = 0
 	var presenter: PersonOverviewPresenter!
@@ -30,5 +36,16 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configurator.configure(personOverviewController: self)
+		presenter.loadPerson()
+	}
+
+	// MARK: - PersonOverviewView
+
+	func displayPersonName(name: String) {
+		personName.text = name
+	}
+
+	func displayPersonAppImage(image: PersonImage) {
+		appImage.image = image.uiImage
 	}
 }

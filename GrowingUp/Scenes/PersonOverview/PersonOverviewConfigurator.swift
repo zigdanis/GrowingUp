@@ -23,7 +23,7 @@ final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator
 	}
 
 	func configure(personOverviewController: PersonOverviewViewController) {
-		let presenter = PersonOverviewPresenterImplementation(person: person)
+		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController)
 		personOverviewController.presenter = presenter
 		personOverviewController.index = index
 	}

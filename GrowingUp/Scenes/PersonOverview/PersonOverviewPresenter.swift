@@ -9,15 +9,21 @@
 import Foundation
 
 protocol PersonOverviewPresenter {
-
+	func loadPerson()
 }
 
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	let person: Person
+	weak var view: PersonOverviewView?
 
-	init(person: Person) {
+	init(person: Person, personOverviewView: PersonOverviewView) {
 		self.person = person
+		self.view = personOverviewView
+	}
+
+	func loadPerson() {
+		view?.displayPersonName(name: person.name)
 	}
 
 }
