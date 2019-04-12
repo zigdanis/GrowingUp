@@ -94,6 +94,8 @@
 		099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9160225F2062005C963C /* EmptyPersonPresenter.swift */; };
 		099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9162225F2074005C963C /* EmptyPersonViewRouter.swift */; };
 		099C9165225F4D64005C963C /* DisplayPersonsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9164225F4D64005C963C /* DisplayPersonsUseCaseTests.swift */; };
+		099C916F225FCAEE005C963C /* EmptyPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C916E225FCAEE005C963C /* EmptyPersonPresenterTests.swift */; };
+		099C9171225FCB45005C963C /* EmptyPersonViewRouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9170225FCB45005C963C /* EmptyPersonViewRouterSpy.swift */; };
 		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
@@ -268,6 +270,8 @@
 		099C9160225F2062005C963C /* EmptyPersonPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonPresenter.swift; sourceTree = "<group>"; };
 		099C9162225F2074005C963C /* EmptyPersonViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonViewRouter.swift; sourceTree = "<group>"; };
 		099C9164225F4D64005C963C /* DisplayPersonsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPersonsUseCaseTests.swift; sourceTree = "<group>"; };
+		099C916E225FCAEE005C963C /* EmptyPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonPresenterTests.swift; sourceTree = "<group>"; };
+		099C9170225FCB45005C963C /* EmptyPersonViewRouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonViewRouterSpy.swift; sourceTree = "<group>"; };
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
 		09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropView.swift; sourceTree = "<group>"; };
@@ -716,6 +720,7 @@
 				098798622242BE1400A15D90 /* TextFieldCellPresenterTests.swift */,
 				098798642242D1E500A15D90 /* DateCellPresenterTests.swift */,
 				098798682242D86800A15D90 /* SwitchCellPresenterTests.swift */,
+				099C916E225FCAEE005C963C /* EmptyPersonPresenterTests.swift */,
 			);
 			path = Presenters;
 			sourceTree = "<group>";
@@ -744,6 +749,7 @@
 			isa = PBXGroup;
 			children = (
 				098054FE223C328C00E24D40 /* AddPersonViewRouterSpy.swift */,
+				099C9170225FCB45005C963C /* EmptyPersonViewRouterSpy.swift */,
 			);
 			path = Routers;
 			sourceTree = "<group>";
@@ -1214,9 +1220,11 @@
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
+				099C9171225FCB45005C963C /* EmptyPersonViewRouterSpy.swift in Sources */,
 				09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */,
 				098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */,
 				098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */,
+				099C916F225FCAEE005C963C /* EmptyPersonPresenterTests.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 			);
