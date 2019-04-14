@@ -1,5 +1,5 @@
 //
-//  AddPersonViewRouter.swift
+//  EditPersonViewRouter.swift
 //  GrowingUp
 //
 //  Created by zigdanis on 14/03/2019.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-protocol AddPersonViewRouter {
+protocol EditPersonViewRouter {
     func dismiss()
 }
 
-class AddPersonViewRouterImplementation: AddPersonViewRouter {
+class EditPersonViewRouterImplementation: EditPersonViewRouter {
 
-    private weak var addPersonViewController: AddPersonViewController?
+    private weak var addPersonViewController: EditPersonViewController?
 
-    init(addPersonViewController: AddPersonViewController) {
+    init(addPersonViewController: EditPersonViewController) {
         self.addPersonViewController = addPersonViewController
     }
 

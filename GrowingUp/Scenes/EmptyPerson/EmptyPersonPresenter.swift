@@ -15,9 +15,9 @@ protocol EmptyPersonPresenter {
 final class EmptyPersonPresenterImplementation: EmptyPersonPresenter {
 
 	private let router: EmptyPersonViewRouter
-	private weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
+	private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-	init(router: EmptyPersonViewRouter, addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
+	init(router: EmptyPersonViewRouter, addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
 		self.router = router
 		self.addPersonPresenterDelegate = addPersonPresenterDelegate
 	}

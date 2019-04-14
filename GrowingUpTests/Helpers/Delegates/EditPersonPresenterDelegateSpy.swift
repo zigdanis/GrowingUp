@@ -1,5 +1,5 @@
 //
-//  AddPersonPresenterDelegateSpy.swift
+//  EditPersonPresenterDelegateSpy.swift
 //  GrowingUpTests
 //
 //  Created by zigdanis on 15/03/2019.
@@ -9,18 +9,18 @@
 import Foundation
 @testable import GrowingUp
 
-class AddPersonPresenterDelegateSpy: AddPersonPresenterDelegate {
+class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
 
     var addedPerson: Person?
     var didCalledAddPerson = false
     var didCalledCancel = false
 
-    func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
+    func addPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
         didCalledAddPerson = true
         addedPerson = person
     }
 
-    func addPersonPresenterCancel(presenter: AddPersonPresenter) {
+    func addPersonPresenterCancel(presenter: EditPersonPresenter) {
         didCalledCancel = true
     }
 

@@ -13,7 +13,7 @@ import Foundation
 class ImagesCellPresenterTests: XCTestCase {
 
 	let imagesCellSpy = ImagesCellViewSpy()
-	let addPersonViewSpy = AddPersonViewSpy()
+	let addPersonViewSpy = EditPersonViewSpy()
 	var sut: ImagesCellPresenterImplementation!
 
 	override func setUp() {

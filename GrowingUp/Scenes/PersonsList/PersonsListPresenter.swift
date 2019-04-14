@@ -59,16 +59,16 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 }
 
-extension PersonsListPresenterImplementation: AddPersonPresenterDelegate {
+extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 
-	func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person) {
+	func addPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
 		cachedScreens[persons.count] = nil
 		persons.append(person)
 		view?.updateListOfScreens()
 		presenter.router.dismiss()
 	}
 
-	func addPersonPresenterCancel(presenter: AddPersonPresenter) {
+	func addPersonPresenterCancel(presenter: EditPersonPresenter) {
 		presenter.router.dismiss()
 	}
 }

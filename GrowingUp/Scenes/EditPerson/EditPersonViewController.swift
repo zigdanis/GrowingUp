@@ -1,5 +1,5 @@
 //
-//  AddPersonViewController.swift
+//  EditPersonViewController.swift
 //  GrowingUp
 //
 //  Created by zigdanis on 14/03/2019.
@@ -9,16 +9,16 @@
 import Foundation
 import UIKit
 
-protocol AddPersonView: ImagesCellViewDelegate {
+protocol EditPersonView: ImagesCellViewDelegate {
     func updateAddButtonState(isEnabled enabled: Bool)
     func updateCancelButtonState(isEnabled enabled: Bool)
     func displayAddPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
 }
 
-typealias APC = AddPersonViewController
+typealias APC = EditPersonViewController
 
-final class AddPersonViewController: UIViewController, AddPersonView {
+final class EditPersonViewController: UIViewController, EditPersonView {
 
 	static let imagePickerRow = 0
 	static let nameFieldRow = 1
@@ -26,8 +26,8 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 	static let timePickerRow = 3
 	static let dateComponentsRows = 4...9
 
-    var presenter: AddPersonPresenter!
-    private let configurator: AddPersonConfigurator
+    var presenter: EditPersonPresenter!
+    private let configurator: EditPersonConfigurator
 
     @IBOutlet weak var tableView: UITableView!
 	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
@@ -35,7 +35,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 	private lazy var appPicImagePicker = WDImagePicker()
 	private lazy var widgetPicImagePicker = WDImagePicker()
 
-    init(configurator: AddPersonConfigurator) {
+    init(configurator: EditPersonConfigurator) {
         self.configurator = configurator
         super.init(nibName: nil, bundle: nil)
     }
@@ -98,7 +98,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 		view.endEditing(true)
     }
 
-    // MARK: - AddPersonView
+    // MARK: - EditPersonView
 
     func updateAddButtonState(isEnabled enabled: Bool) {
         navigationItem.rightBarButtonItem?.isEnabled = enabled
@@ -112,7 +112,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 		self.title = title
 	}
 
-    func displayAddPersonError(title: String, message: String) {
+	func displayAddPersonError(title: String, message: String) {
         showAlert(title: title, message: message)
     }
 
@@ -133,7 +133,7 @@ final class AddPersonViewController: UIViewController, AddPersonView {
 	}
 }
 
-extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
+extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 10
@@ -177,7 +177,7 @@ extension AddPersonViewController: UITableViewDataSource, UITableViewDelegate {
  	}
 }
 
-extension AddPersonViewController: DatePickerViewDelegate {
+extension EditPersonViewController: DatePickerViewDelegate {
 
 	func datePickerDidHide(picker: DatePickerView) {
 		picker.alpha = 0
@@ -193,7 +193,7 @@ extension AddPersonViewController: DatePickerViewDelegate {
 	}
 }
 
-extension AddPersonViewController: ImagesCellViewDelegate {
+extension EditPersonViewController: ImagesCellViewDelegate {
 
 	func showAppPicImagePickerFor(row: Int) {
 		appPicImagePicker.delegate = self
@@ -206,7 +206,7 @@ extension AddPersonViewController: ImagesCellViewDelegate {
 	}
 }
 
-extension AddPersonViewController: WDImagePickerDelegate {
+extension EditPersonViewController: WDImagePickerDelegate {
 
 	func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage) {
 		if imagePicker === appPicImagePicker {

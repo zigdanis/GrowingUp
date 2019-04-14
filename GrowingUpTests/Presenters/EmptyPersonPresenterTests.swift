@@ -13,7 +13,7 @@ class EmptyPersonPresenterTests: XCTestCase {
 
 	var sut: EmptyPersonPresenterImplementation!
 	let routerSpy = EmptyPersonViewRouterSpy()
-	let delegateSpy = AddPersonPresenterDelegateSpy()
+	let delegateSpy = EditPersonPresenterDelegateSpy()
 
     override func setUp() {
     	sut = EmptyPersonPresenterImplementation(router: routerSpy, addPersonPresenterDelegate: delegateSpy)

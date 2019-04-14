@@ -13,7 +13,7 @@ final class EmptyPersonViewRouterSpy: EmptyPersonViewRouter {
 
 	var didCallPresentAddPerson = false
 
-	func presentAddPerson(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
+	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
 		didCallPresentAddPerson = true
 	}
 }

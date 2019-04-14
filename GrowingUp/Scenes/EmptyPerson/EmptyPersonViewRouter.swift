@@ -9,7 +9,7 @@
 import UIKit
 
 protocol EmptyPersonViewRouter {
-	func presentAddPerson(addPersonPresenterDelegate: AddPersonPresenterDelegate?)
+	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?)
 }
 
 final class EmptyPersonViewRouterImplementation: EmptyPersonViewRouter {
@@ -20,9 +20,9 @@ final class EmptyPersonViewRouterImplementation: EmptyPersonViewRouter {
 		self.emptyPersonViewController = emptyPersonViewController
 	}
 
-	func presentAddPerson(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
-		let configurator = AddPersonConfiguratorImplementation(addPersonPresenterDelegate: addPersonPresenterDelegate)
-		let addPersonViewController = AddPersonViewController(configurator: configurator)
+	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+		let configurator = EditPersonConfiguratorImplementation(addPersonPresenterDelegate: addPersonPresenterDelegate)
+		let addPersonViewController = EditPersonViewController(configurator: configurator)
 		let navigationViewController = UINavigationController(rootViewController: addPersonViewController)
 		emptyPersonViewController?.present(navigationViewController, animated: true)
 	}

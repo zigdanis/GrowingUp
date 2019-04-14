@@ -1,5 +1,5 @@
 //
-//  AddPersonViewSpy.swift
+//  EditPersonViewSpy.swift
 //  GrowingUpTests
 //
 //  Created by zigdanis on 15/03/2019.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import GrowingUp
 
-class AddPersonViewSpy: AddPersonView {
+class EditPersonViewSpy: EditPersonView {
 
     var addButtonEnabledState: Bool?
     var cancelButtonEnabledState: Bool?
@@ -27,7 +27,7 @@ class AddPersonViewSpy: AddPersonView {
         cancelButtonEnabledState = enabled
     }
 
-    func displayAddPersonError(title: String, message: String) {
+	func displayAddPersonError(title: String, message: String) {
         displayAddPersonErrorTitle = title
         displayAddPersonErrorMessage = message
     }

@@ -1,5 +1,5 @@
 //
-//  AddPersonConfigurator.swift
+//  EditPersonConfigurator.swift
 //  GrowingUp
 //
 //  Created by zigdanis on 14/03/2019.
@@ -8,30 +8,30 @@
 
 import Foundation
 
-protocol AddPersonConfigurator {
-    func configure(addPersonViewController: AddPersonViewController)
+protocol EditPersonConfigurator {
+    func configure(addPersonViewController: EditPersonViewController)
 }
 
-class AddPersonConfiguratorImplementation: AddPersonConfigurator {
+class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 
-    weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
+    weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-    init(addPersonPresenterDelegate: AddPersonPresenterDelegate?) {
+    init(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
         self.addPersonPresenterDelegate = addPersonPresenterDelegate
     }
 
-    func configure(addPersonViewController: AddPersonViewController) {
+    func configure(addPersonViewController: EditPersonViewController) {
         let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
         let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
         let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
-        let router = AddPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
+        let router = EditPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
 		let dateCellPresenter = DateCellPresenterImplementation()
 		let dateComponentsPresenter = SwitchCellPresenterImplementation()
-        let presenter = AddPersonPresenterImplementation(
+        let presenter = EditPersonPresenterImplementation(
 			view: addPersonViewController,
 			addPersonUseCase: addPersonUseCase,
 			router: router,

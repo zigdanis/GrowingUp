@@ -1,5 +1,5 @@
 //
-//  AddPersonViewRouterSpy.swift
+//  EditPersonViewRouterSpy.swift
 //  GrowingUpTests
 //
 //  Created by zigdanis on 15/03/2019.
@@ -9,7 +9,7 @@
 import Foundation
 @testable import GrowingUp
 
-class AddPersonViewRouterSpy: AddPersonViewRouter {
+class EditPersonViewRouterSpy: EditPersonViewRouter {
 
     var dismissCalled = false
 

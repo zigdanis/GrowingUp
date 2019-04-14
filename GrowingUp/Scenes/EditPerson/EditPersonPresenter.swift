@@ -1,5 +1,5 @@
 //
-//  AddPersonPresenter.swift
+//  EditPersonPresenter.swift
 //  GrowingUp
 //
 //  Created by zigdanis on 14/03/2019.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-protocol AddPersonPresenter: TextFieldObserver {
-    var router: AddPersonViewRouter { get }
+protocol EditPersonPresenter: TextFieldObserver {
+    var router: EditPersonViewRouter { get }
     func addButtonPressed()
     func cancelButtonPressed()
 	func configure(cell: ImagesCellView, forRow row: Int)
@@ -21,27 +21,27 @@ protocol AddPersonPresenter: TextFieldObserver {
 	func widgetImagePicked(image: PersonImage)
 }
 
-protocol AddPersonPresenterDelegate: class {
-    func addPersonPresenter(_ presenter: AddPersonPresenter, didAdd person: Person)
-    func addPersonPresenterCancel(presenter: AddPersonPresenter)
+protocol EditPersonPresenterDelegate: class {
+    func addPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
+    func addPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
-final class AddPersonPresenterImplementation: AddPersonPresenter {
+final class EditPersonPresenterImplementation: EditPersonPresenter {
 
-    private weak var view: AddPersonView?
+    private weak var view: EditPersonView?
     private let addPersonUseCase: AddPersonUseCase
-    private weak var delegate: AddPersonPresenterDelegate?
-    private(set) var router: AddPersonViewRouter
+    private weak var delegate: EditPersonPresenterDelegate?
+    private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
 // swiftlint:disable vertical_parameter_alignment
-	init(view: AddPersonView,
+	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
-		 router: AddPersonViewRouter,
-		 delegate: AddPersonPresenterDelegate?,
+		 router: EditPersonViewRouter,
+		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
 		 dateCellsPresenter: DateCellPresenter,
@@ -57,7 +57,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	}
 // swiftlint:enable vertical_parameter_alignment
 
-    // MARK: - AddPersonPresenter
+    // MARK: - EditPersonPresenter
 
     func addButtonPressed() {
 		var params: AddPersonParameters?
@@ -158,7 +158,7 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 	}
 }
 
-extension AddPersonPresenterImplementation: TextFieldObserver {
+extension EditPersonPresenterImplementation: TextFieldObserver {
 
 	func textDidChange(forView: TextFieldCellView, text: String) {
 		view?.displayScreenTitle(title: text)

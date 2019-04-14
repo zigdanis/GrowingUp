@@ -9,25 +9,25 @@
 import XCTest
 @testable import GrowingUp
 
-final class AddPersonPresenterTests: XCTestCase {
+final class EditPersonPresenterTests: XCTestCase {
 
     // https://www.martinfowler.com/bliki/TestDouble.html
-    let addPersonViewSpy = AddPersonViewSpy()
+    let addPersonViewSpy = EditPersonViewSpy()
     let addPersonUseCaseSpy = AddPersonUseCaseSpy()
-    let addPersonViewRouterSpy = AddPersonViewRouterSpy()
-    let addPersonPresenterDelegateSpy = AddPersonPresenterDelegateSpy()
+    let addPersonViewRouterSpy = EditPersonViewRouterSpy()
+    let addPersonPresenterDelegateSpy = EditPersonPresenterDelegateSpy()
 	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
 	let dateComponentsStub = SwitchCellPresenterStub()
 
-    var sut: AddPersonPresenterImplementation!
+    var sut: EditPersonPresenterImplementation!
 
     // MARK: - Set up
 
     override func setUp() {
         super.setUp()
-		sut = AddPersonPresenterImplementation(view: addPersonViewSpy,
+		sut = EditPersonPresenterImplementation(view: addPersonViewSpy,
 											   addPersonUseCase: addPersonUseCaseSpy,
 											   router: addPersonViewRouterSpy,
 											   delegate: addPersonPresenterDelegateSpy,
@@ -76,7 +76,7 @@ final class AddPersonPresenterTests: XCTestCase {
         XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
 
-    func test_SUT_AddButtonPressed_CallingAddPersonDelegateMethod() {
+    func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() {
         // Given
 		setupSUT_WithAddPersonData()
         let expectedPersonToAdd = Person.createPerson()
@@ -98,8 +98,8 @@ final class AddPersonPresenterTests: XCTestCase {
         // When
         sut.addButtonPressed()
         // Then
-        XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
-        XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
+		XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
+		XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
     }
 
 	func test_SUT_AddButtonPressedWithoutName_ShouldShowError() {

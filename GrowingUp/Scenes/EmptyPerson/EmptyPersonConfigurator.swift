@@ -15,9 +15,9 @@ protocol EmptyPersonConfigurator {
 final class EmptyPersonConfiguratorImplementation: EmptyPersonConfigurator {
 
 	private let index: Int
-	private weak var addPersonPresenterDelegate: AddPersonPresenterDelegate?
+	private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-	init(index: Int, addPersonPresenterDelegate: AddPersonPresenterDelegate) {
+	init(index: Int, addPersonPresenterDelegate: EditPersonPresenterDelegate) {
 		self.index = index
 		self.addPersonPresenterDelegate = addPersonPresenterDelegate
 	}
