@@ -12,6 +12,9 @@ import UIKit
 struct PersonImage: Equatable {
 	var id: UUID
 	var uiImage: UIImage?
+	var cachingKey: String {
+		return id.uuidString + ".jpg"
+	}
 
 	init(id: UUID? = nil, uiImage: UIImage? = nil) {
 		self.id = id ?? UUID()

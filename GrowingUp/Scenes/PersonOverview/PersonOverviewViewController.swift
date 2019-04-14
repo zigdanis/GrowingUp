@@ -46,6 +46,6 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonAppImage(image: PersonImage) {
-		appImage.setCachedImage(key: image.id.uuidString)
+		appImage.setCachedImage(key: image.cachingKey)
 	}
 }

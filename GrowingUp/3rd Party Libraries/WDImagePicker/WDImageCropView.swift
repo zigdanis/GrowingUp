@@ -105,8 +105,9 @@ class WDImageCropView: UIView {
 		guard let scaledRef = scaled(cgImage: imageRef) else {
 			throw WDImageError.imageScaleFailed
 		}
-        return UIImage(cgImage: scaledRef, scale: imageToCrop.scale,
+        let img = UIImage(cgImage: scaledRef, scale: imageToCrop.scale,
             orientation: imageToCrop.imageOrientation)
+		return img
     }
 
 	private func scaled(cgImage: CGImage) -> CGImage? {
@@ -129,7 +130,8 @@ class WDImageCropView: UIView {
 		let scaledSize = CGSize(width: width, height: height)
 		let rect = CGRect(origin: .zero, size: scaledSize)
 		context?.draw(cgImage, in: rect)
-		return context?.makeImage()
+		let img = context?.makeImage()
+		return img
 	}
 
     private func calcVisibleRectForCropArea() -> CGRect {

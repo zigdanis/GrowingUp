@@ -57,10 +57,10 @@ final class CachePersonsGateway: PersonsGateway {
 
 	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let appPic = parameters.appImage?.uiImage else { return nil }
-		guard let appPicId = parameters.appImage?.id else { return nil }
+		guard let appPicKey = parameters.appImage?.cachingKey else { return nil }
 		return {
 			do {
-				try Disk.save(appPic, to: .documents, as: appPicId.uuidString)
+				try Disk.save(appPic, to: .documents, as: appPicKey)
 				return .success(nil)
 			} catch {
 				let coreError = CoreError(message: error.localizedDescription)
@@ -71,10 +71,10 @@ final class CachePersonsGateway: PersonsGateway {
 
 	private func widgetPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let widgetPic = parameters.widgetImage?.uiImage else { return nil }
-		guard let widgetPicId = parameters.widgetImage?.id else { return nil }
+		guard let widgetPicKey = parameters.widgetImage?.cachingKey else { return nil }
 		return {
 			do {
-				try Disk.save(widgetPic, to: .documents, as: widgetPicId.uuidString)
+				try Disk.save(widgetPic, to: .documents, as: widgetPicKey)
 				return .success(nil)
 			} catch {
 				let coreError = CoreError(message: error.localizedDescription)
