@@ -35,6 +35,10 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		fatalError("init(coder:) not implemented")
 	}
 
+	override var preferredStatusBarStyle: UIStatusBarStyle {
+		return .lightContent
+	}
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configurator.configure(personsListController: self)
