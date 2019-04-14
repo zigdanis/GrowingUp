@@ -61,6 +61,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	private func setupPageIndicator() {
 		pageIndicator.pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.5)
 		pageIndicator.currentPageIndicatorTintColor = UIColor.appColor
+		pageIndicator.pageIndicatorTintColor = UIColor.lightGray
 	}
 
 	// MARK: - PersonsListView
