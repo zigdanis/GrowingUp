@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol PersonOverviewPresenter {
 	func loadPerson()
@@ -26,6 +27,19 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		view?.displayPersonName(name: person.name)
 		let personAppPic = PersonImage(id: person.appPicId, uiImage: nil)
 		view?.displayPersonAppImage(image: personAppPic)
+		scheduleAgeTicker()
+	}
+
+	private func scheduleAgeTicker() {
+		showAge()
+		Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+			self.showAge()
+		}
+	}
+
+	private func showAge() {
+		let age = AgeCalculator.currentAge(for: person.dateComponents)
+		view?.displayPersonAge(age: age)
 	}
 
 }

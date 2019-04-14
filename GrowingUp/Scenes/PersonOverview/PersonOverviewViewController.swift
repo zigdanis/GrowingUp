@@ -11,6 +11,7 @@ import UIKit
 protocol PersonOverviewView: PageViewControllerViewable {
 	func displayPersonName(name: String)
 	func displayPersonAppImage(image: PersonImage)
+	func displayPersonAge(age: String)
 }
 
 final class PersonOverviewViewController: UIViewController, PersonOverviewView {
@@ -47,5 +48,9 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 
 	func displayPersonAppImage(image: PersonImage) {
 		appImage.setCachedImage(key: image.cachingKey)
+	}
+
+	func displayPersonAge(age: String) {
+		personAge.text = age
 	}
 }

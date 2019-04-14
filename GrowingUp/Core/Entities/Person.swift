@@ -14,4 +14,10 @@ struct Person: Equatable, Hashable {
     var birthday: Date
 	var appPicId: UUID?
 	var widgetPicId: UUID?
+
+	var dateComponents: DateComponents {
+		let then = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: birthday)
+		let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
+		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: then, to: now)
+	}
 }

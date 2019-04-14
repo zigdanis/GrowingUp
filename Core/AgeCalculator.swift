@@ -18,9 +18,8 @@ public enum AgeCalculator {
         return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initial, to: now)
     }
 
-    public static func currentAge() -> String {
+	public static func currentAge(for comps: DateComponents) -> String {
 
-        let comps = AgeCalculator.ageComponents()
         let years = comps.year ?? 0
         let months = comps.month ?? 0
         let days = comps.day ?? 0
