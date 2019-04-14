@@ -12,7 +12,11 @@ import CoreData
 extension CoreDataPerson {
 
     var person: Person {
-		return Person(id: id ?? UUID(), name: name ?? "", birthday: birthdate ?? Date())
+		return Person(id: id ?? UUID(),
+					  name: name ?? "",
+					  birthday: birthdate ?? Date(),
+					  appPicId: appPicId,
+					  widgetPicId: widgetPicId)
     }
 
     func populate(with parameters: AddPersonParameters) {

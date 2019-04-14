@@ -24,6 +24,8 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	func loadPerson() {
 		view?.displayPersonName(name: person.name)
+		let personAppPic = PersonImage(id: person.appPicId, uiImage: nil)
+		view?.displayPersonAppImage(image: personAppPic)
 	}
 
 }

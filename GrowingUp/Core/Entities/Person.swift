@@ -12,4 +12,6 @@ struct Person: Equatable, Hashable {
 	var id: UUID
     var name: String
     var birthday: Date
+	var appPicId: UUID?
+	var widgetPicId: UUID?
 }
