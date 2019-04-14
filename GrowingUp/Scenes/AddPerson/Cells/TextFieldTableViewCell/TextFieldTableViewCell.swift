@@ -12,7 +12,7 @@ protocol TextFieldCellView: class {
     func display(title: String)
     func display(value: String)
     func display(placeholder: String)
-	func setup(with presenter: TextFieldCellPresenter, forRow row: Int)
+	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
 class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
@@ -20,6 +20,7 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueField: UITextField!
 	private weak var presenter: TextFieldCellPresenter?
+	private weak var observer: TextFieldObserver?
 	private var row: Int?
 
 	override func awakeFromNib() {
@@ -47,8 +48,9 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
         valueField.text = value
     }
 
-	func setup(with presenter: TextFieldCellPresenter, forRow row: Int) {
+	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int) {
 		self.presenter = presenter
+		self.observer = observer
 		self.row = row
 	}
 
@@ -65,6 +67,14 @@ class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 }
 
 extension TextFieldTableViewCell: UITextFieldDelegate {
+
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+		guard let text = textField.text else { return true }
+		guard let textRange = Range(range, in: text) else { return true }
+		let updatedText = text.replacingCharacters(in: textRange, with: string)
+		observer?.textDidChange(forView: self, text: updatedText)
+		return true
+	}
 
 	func textFieldShouldReturn(_ textField: UITextField) -> Bool {
 		textField.resignFirstResponder()

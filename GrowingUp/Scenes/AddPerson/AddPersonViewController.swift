@@ -13,6 +13,7 @@ protocol AddPersonView: ImagesCellViewDelegate {
     func updateAddButtonState(isEnabled enabled: Bool)
     func updateCancelButtonState(isEnabled enabled: Bool)
     func displayAddPersonError(title: String, message: String)
+	func displayScreenTitle(title: String)
 }
 
 typealias APC = AddPersonViewController
@@ -106,6 +107,10 @@ final class AddPersonViewController: UIViewController, AddPersonView {
     func updateCancelButtonState(isEnabled enabled: Bool) {
         navigationItem.leftBarButtonItem?.isEnabled = enabled
     }
+
+	func displayScreenTitle(title: String) {
+		self.title = title
+	}
 
     func displayAddPersonError(title: String, message: String) {
         showAlert(title: title, message: message)

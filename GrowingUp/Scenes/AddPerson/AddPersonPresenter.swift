@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol AddPersonPresenter {
+protocol AddPersonPresenter: TextFieldObserver {
     var router: AddPersonViewRouter { get }
     func addButtonPressed()
     func cancelButtonPressed()
@@ -155,5 +155,12 @@ final class AddPersonPresenterImplementation: AddPersonPresenter {
 								   dateComponenets: components,
 								   appImage: appPic,
 								   widgetImage: widgetPic)
+	}
+}
+
+extension AddPersonPresenterImplementation: TextFieldObserver {
+
+	func textDidChange(forView: TextFieldCellView, text: String) {
+		view?.displayScreenTitle(title: text)
 	}
 }

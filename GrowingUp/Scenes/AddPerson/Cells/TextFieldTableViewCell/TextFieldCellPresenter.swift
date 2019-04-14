@@ -17,9 +17,10 @@ protocol TextFieldCellPresenter: class {
 final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 
 	private var storage = [Int: String]()
+	weak var textFieldObserver: TextFieldObserver?
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
-		cell.setup(with: self, forRow: row)
+		cell.setup(with: self, observer: textFieldObserver, forRow: row)
 		cell.display(title: R.string.localizable.name())
 		cell.display(placeholder: R.string.localizable.name())
 		guard let value = storage[row] else { return }

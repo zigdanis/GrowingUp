@@ -41,6 +41,7 @@ class AddPersonConfiguratorImplementation: AddPersonConfigurator {
 			dateCellsPresenter: dateCellPresenter,
 			dateComponentsCellsPresenter: dateComponentsPresenter
 		)
+		nameCellPresenter.textFieldObserver = presenter
         addPersonViewController.presenter = presenter
     }
 }
