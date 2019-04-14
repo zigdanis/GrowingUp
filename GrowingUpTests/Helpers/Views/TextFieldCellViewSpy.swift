@@ -14,6 +14,7 @@ class TextFieldCellViewSpy: TextFieldCellView {
 	var displayedValue: String?
 	var displayedPlaceholder: String?
 	var presenter: TextFieldCellPresenter?
+	var observer: TextFieldObserver?
 	var row: Int?
 
 	func display(title: String) {
@@ -28,8 +29,9 @@ class TextFieldCellViewSpy: TextFieldCellView {
 		displayedPlaceholder = placeholder
 	}
 
-	func setup(with presenter: TextFieldCellPresenter, forRow row: Int) {
+	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int) {
 		self.presenter = presenter
+		self.observer = observer
 		self.row = row
 	}
 }

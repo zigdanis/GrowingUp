@@ -102,7 +102,7 @@
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
-		09AE1B2A2263B37200D6A78B /* TextFieldObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B292263B37200D6A78B /* TextFieldObserver.swift */; };
+		09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */; };
 		09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */; };
 		09B4E954224DEEC500F4E3F2 /* WDImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */; };
 		09B4E956224DEEC500F4E3F2 /* WDImageCropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */; };
@@ -280,7 +280,7 @@
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
 		09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeCalculatorTests.swift; sourceTree = "<group>"; };
-		09AE1B292263B37200D6A78B /* TextFieldObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldObserver.swift; sourceTree = "<group>"; };
+		09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldObserverSpy.swift; sourceTree = "<group>"; };
 		09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropView.swift; sourceTree = "<group>"; };
 		09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImagePicker.swift; sourceTree = "<group>"; };
 		09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropViewController.swift; sourceTree = "<group>"; };
@@ -758,6 +758,7 @@
 			isa = PBXGroup;
 			children = (
 				09805501223C34FA00E24D40 /* AddPersonPresenterDelegateSpy.swift */,
+				09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */,
 			);
 			path = Delegates;
 			sourceTree = "<group>";
@@ -860,7 +861,6 @@
 			children = (
 				09165314223ECBC40081FB10 /* TextFieldTableViewCell.swift */,
 				09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */,
-				09AE1B292263B37200D6A78B /* TextFieldObserver.swift */,
 				09165313223ECBC40081FB10 /* TextFieldTableVIewCell.xib */,
 			);
 			path = TextFieldTableViewCell;
@@ -1218,6 +1218,7 @@
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
+				09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */,
 				092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */,
 				0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */,
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
@@ -1280,7 +1281,6 @@
 				09B4E954224DEEC500F4E3F2 /* WDImagePicker.swift in Sources */,
 				09165362223ECBC40081FB10 /* UIViewController+Extensions.swift in Sources */,
 				09165359223ECBC40081FB10 /* AddPersonConfigurator.swift in Sources */,
-				09AE1B2A2263B37200D6A78B /* TextFieldObserver.swift in Sources */,
 				09165371223ECBC40081FB10 /* CoreDataStack.swift in Sources */,
 				09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,

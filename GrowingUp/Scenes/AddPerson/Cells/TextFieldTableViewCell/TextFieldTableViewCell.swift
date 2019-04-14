@@ -15,6 +15,10 @@ protocol TextFieldCellView: class {
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
+protocol TextFieldObserver: class {
+	func textDidChange(forView: TextFieldCellView, text: String)
+}
+
 class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
     @IBOutlet weak var titleLabel: UILabel!

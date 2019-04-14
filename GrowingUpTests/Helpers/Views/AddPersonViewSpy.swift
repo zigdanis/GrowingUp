@@ -15,6 +15,7 @@ class AddPersonViewSpy: AddPersonView {
     var cancelButtonEnabledState: Bool?
     var displayAddPersonErrorTitle: String?
     var displayAddPersonErrorMessage: String?
+	var displayedScreenTitle: String?
 	var showedAppPicImagePicker = false
 	var showedWidgetPicImagePicker = false
 
@@ -37,5 +38,9 @@ class AddPersonViewSpy: AddPersonView {
 
 	func showWidgetPicImagePickerFor(row: Int) {
 		showedWidgetPicImagePicker = true
+	}
+
+	func displayScreenTitle(title: String) {
+		displayedScreenTitle = title
 	}
 }

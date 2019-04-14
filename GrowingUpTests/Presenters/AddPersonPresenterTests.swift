@@ -177,6 +177,16 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
 	}
 
+	func test_WhenTextFieldObserverUpdateText_SUT_CallingViewToUpdateTitle() {
+		// Given
+		let expectedTitle = "Hello"
+		let tfSpy = TextFieldCellViewSpy()
+		// When
+		sut.textDidChange(forView: tfSpy, text: expectedTitle)
+		// Then
+		XCTAssertEqual(addPersonViewSpy.displayedScreenTitle, expectedTitle, "Expected To Display New Title")
+	}
+
 	// MARK: - Helpers
 
 	@discardableResult
