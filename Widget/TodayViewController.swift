@@ -44,7 +44,7 @@ class TodayViewController: UIViewController, NCWidgetProviding {
     }
 
     private func setupCurrentAge() {
-        ageLabel.text = AgeCalculator.currentAge(for: AgeCalculator.ageComponents())
+        ageLabel.text = AgeCalculator.ageString(for: AgeCalculator.ageComponents())
     }
 
     // MARK: - Actions

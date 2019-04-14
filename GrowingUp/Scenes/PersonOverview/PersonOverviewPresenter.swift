@@ -38,7 +38,7 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 	}
 
 	private func showAge() {
-		let age = AgeCalculator.currentAge(for: person.dateComponents)
+		let age = AgeCalculator.ageString(for: person.dateComponents)
 		view?.displayPersonAge(age: age)
 	}
 
