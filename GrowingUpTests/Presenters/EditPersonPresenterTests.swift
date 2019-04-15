@@ -27,14 +27,15 @@ final class EditPersonPresenterTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-		sut = EditPersonPresenterImplementation(view: addPersonViewSpy,
-											   addPersonUseCase: addPersonUseCaseSpy,
-											   router: addPersonViewRouterSpy,
-											   delegate: addPersonPresenterDelegateSpy,
-											   imagesCellPresenter: imagesCellStub,
-											   nameCellPresenter: nameCellStub,
-											   dateCellsPresenter: dateCellsStub,
-											   dateComponentsCellsPresenter: dateComponentsStub)
+		sut = EditPersonPresenterImplementation(type: .create,
+												view: addPersonViewSpy,
+												addPersonUseCase: addPersonUseCaseSpy,
+												router: addPersonViewRouterSpy,
+												delegate: addPersonPresenterDelegateSpy,
+												imagesCellPresenter: imagesCellStub,
+												nameCellPresenter: nameCellStub,
+												dateCellsPresenter: dateCellsStub,
+												dateComponentsCellsPresenter: dateComponentsStub)
     }
 
     func test_SUT_CancelPressed_CalledCancelOnDelegate() {

@@ -9,11 +9,19 @@
 import Foundation
 import UIKit
 
+enum BarButtonItemStyle {
+	case close
+	case cancel
+	case done
+	case save
+}
+
 protocol EditPersonView: ImagesCellViewDelegate {
     func updateAddButtonState(isEnabled enabled: Bool)
     func updateCancelButtonState(isEnabled enabled: Bool)
     func displayAddPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
+	func displayBarButton(with style: BarButtonItemStyle)
 }
 
 typealias APC = EditPersonViewController
@@ -48,13 +56,8 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     override func viewDidLoad() {
         super.viewDidLoad()
         configurator.configure(addPersonViewController: self)
-        setupNavigationBar()
         setupTableView()
-    }
-
-    private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+		presenter.viewDidLoad()
     }
 
     private func setupTableView() {
@@ -98,6 +101,16 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		view.endEditing(true)
     }
 
+	@objc
+	private func closeTapped() {
+		view.endEditing(true)
+	}
+
+	@objc
+	private func saveTapped() {
+		view.endEditing(true)
+	}
+
     // MARK: - EditPersonView
 
     func updateAddButtonState(isEnabled enabled: Bool) {
@@ -115,6 +128,19 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	func displayAddPersonError(title: String, message: String) {
         showAlert(title: title, message: message)
     }
+
+	func displayBarButton(with style: BarButtonItemStyle) {
+		switch style {
+		case .cancel:
+			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+		case .close:
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.close(), style: .done, target: self, action: #selector(closeTapped))
+		case .done:
+			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+		case .save:
+			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
+		}
+	}
 
 	// MARK: - Business Logic
 

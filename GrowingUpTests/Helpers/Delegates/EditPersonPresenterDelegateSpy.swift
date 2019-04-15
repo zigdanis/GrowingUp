@@ -15,12 +15,12 @@ class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
     var didCalledAddPerson = false
     var didCalledCancel = false
 
-    func addPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
+    func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
         didCalledAddPerson = true
         addedPerson = person
     }
 
-    func addPersonPresenterCancel(presenter: EditPersonPresenter) {
+	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
         didCalledCancel = true
     }
 

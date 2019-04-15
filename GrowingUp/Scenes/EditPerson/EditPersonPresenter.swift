@@ -10,6 +10,7 @@ import Foundation
 
 protocol EditPersonPresenter: TextFieldObserver {
     var router: EditPersonViewRouter { get }
+	func viewDidLoad()
     func addButtonPressed()
     func cancelButtonPressed()
 	func configure(cell: ImagesCellView, forRow row: Int)
@@ -22,12 +23,13 @@ protocol EditPersonPresenter: TextFieldObserver {
 }
 
 protocol EditPersonPresenterDelegate: class {
-    func addPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
-    func addPersonPresenterCancel(presenter: EditPersonPresenter)
+    func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
+    func editPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
 final class EditPersonPresenterImplementation: EditPersonPresenter {
 
+	private let type: IntentType
     private weak var view: EditPersonView?
     private let addPersonUseCase: AddPersonUseCase
     private weak var delegate: EditPersonPresenterDelegate?
@@ -38,7 +40,8 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
 // swiftlint:disable vertical_parameter_alignment
-	init(view: EditPersonView,
+	init(type: IntentType,
+		 view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
 		 router: EditPersonViewRouter,
 		 delegate: EditPersonPresenterDelegate?,
@@ -46,6 +49,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		 nameCellPresenter: TextFieldCellPresenter,
 		 dateCellsPresenter: DateCellPresenter,
 		 dateComponentsCellsPresenter: SwitchCellPresenter) {
+		self.type = type
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
 		self.router = router
@@ -58,6 +62,17 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 // swiftlint:enable vertical_parameter_alignment
 
     // MARK: - EditPersonPresenter
+
+	func viewDidLoad() {
+		switch type {
+		case .create:
+			view?.displayBarButton(with: .cancel)
+			view?.displayBarButton(with: .done)
+		case .edit:
+			view?.displayBarButton(with: .close)
+			view?.displayBarButton(with: .save)
+		}
+	}
 
     func addButtonPressed() {
 		var params: AddPersonParameters?
@@ -81,7 +96,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
     }
 
     func cancelButtonPressed() {
-        delegate?.addPersonPresenterCancel(presenter: self)
+        delegate?.editPersonPresenterCancel(presenter: self)
     }
 
 	func configure(cell: ImagesCellView, forRow row: Int) {
@@ -120,7 +135,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
     // MARK: - Private
 
     private func handlePersonAdded(_ person: Person) {
-        delegate?.addPersonPresenter(self, didAdd: person)
+        delegate?.editPersonPresenter(self, didAdd: person)
     }
 
     private func handleAddPersonError(_ error: Error) {

@@ -8,15 +8,22 @@
 
 import Foundation
 
+enum IntentType {
+	case create
+	case edit
+}
+
 protocol EditPersonConfigurator {
     func configure(addPersonViewController: EditPersonViewController)
 }
 
 class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 
-    weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
+    private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
+	private let type: IntentType
 
-    init(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+	init(type: IntentType, addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+		self.type = type
         self.addPersonPresenterDelegate = addPersonPresenterDelegate
     }
 
@@ -32,6 +39,7 @@ class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 		let dateCellPresenter = DateCellPresenterImplementation()
 		let dateComponentsPresenter = SwitchCellPresenterImplementation()
         let presenter = EditPersonPresenterImplementation(
+			type: type,
 			view: addPersonViewController,
 			addPersonUseCase: addPersonUseCase,
 			router: router,
