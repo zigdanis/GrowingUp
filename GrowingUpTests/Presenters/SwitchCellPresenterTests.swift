@@ -19,20 +19,20 @@ class SwitchCellPresenterTests: XCTestCase {
 
 	func test_SUT_WhenConfiguredWithTrue_DisplayTrueValue() {
 		// Given
-		sut.valueFor(row: APC.dateComponentsRows.lowerBound, didChangeTo: true)
+		sut.valueFor(row: EPC.dateComponentsRows.lowerBound, didChangeTo: true)
 		let switchCellSpy = SwitchCellViewSpy()
 		// When
-		sut.configure(cell: switchCellSpy, forRow: APC.dateComponentsRows.lowerBound)
+		sut.configure(cell: switchCellSpy, forRow: EPC.dateComponentsRows.lowerBound)
 		// Then
 		XCTAssertEqual(switchCellSpy.displayedStatus, true, "The value we expected was not displayed")
 	}
 
 	func test_SUT_WhenConfiguredWithFalse_DisplayFalseValue() {
 		// Given
-		sut.valueFor(row: APC.dateComponentsRows.lowerBound, didChangeTo: false)
+		sut.valueFor(row: EPC.dateComponentsRows.lowerBound, didChangeTo: false)
 		let switchCellSpy = SwitchCellViewSpy()
 		// When
-		sut.configure(cell: switchCellSpy, forRow: APC.dateComponentsRows.lowerBound)
+		sut.configure(cell: switchCellSpy, forRow: EPC.dateComponentsRows.lowerBound)
 		// Then
 		XCTAssertEqual(switchCellSpy.displayedStatus, false, "The value we expected was not displayed")
 	}

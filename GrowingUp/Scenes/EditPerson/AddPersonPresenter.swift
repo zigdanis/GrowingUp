@@ -1,58 +1,35 @@
 //
-//  EditPersonPresenter.swift
+//  AddPersonPresenter.swift
 //  GrowingUp
 //
-//  Created by zigdanis on 14/03/2019.
+//  Created by zigdanis on 16/04/2019.
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
 import Foundation
 
-protocol EditPersonPresenter: TextFieldObserver {
-    var router: EditPersonViewRouter { get }
-	func viewDidLoad()
-    func rightBarButtonPressed()
-	func leftBarButtonPressed()
-	func configure(cell: ImagesCellView, forRow row: Int)
-    func configure(cell: TextFieldCellView, forRow row: Int)
-    func configure(cell: DateCellView, forRow row: Int)
-    func configure(cell: SwitchCellView, forRow row: Int)
-	func dateFor(row: Int, didUpdateTo date: Date)
-	func appImagePicked(image: PersonImage)
-	func widgetImagePicked(image: PersonImage)
-}
+final class AddPersonPresenter: EditPersonPresenter {
 
-protocol EditPersonPresenterDelegate: class {
-    func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
-    func editPersonPresenterCancel(presenter: EditPersonPresenter)
-}
-
-final class EditPersonPresenterImplementation: EditPersonPresenter {
-
-	private let person: Person
-    private weak var view: EditPersonView?
-    private let editPersonUseCase: EditPersonUseCase
-    private weak var delegate: EditPersonPresenterDelegate?
-    private(set) var router: EditPersonViewRouter
+	private weak var view: EditPersonView?
+	private let addPersonUseCase: AddPersonUseCase
+	private weak var delegate: EditPersonPresenterDelegate?
+	private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
-// swiftlint:disable vertical_parameter_alignment
-	init(person: Person,
-		 view: EditPersonView,
-		 editPersonUseCase: EditPersonUseCase,
+	// swiftlint:disable vertical_parameter_alignment
+	init(view: EditPersonView,
+		 addPersonUseCase: AddPersonUseCase,
 		 router: EditPersonViewRouter,
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
 		 dateCellsPresenter: DateCellPresenter,
 		 dateComponentsCellsPresenter: SwitchCellPresenter) {
-		self.person = person
 		self.view = view
-		self.editPersonUseCase = editPersonUseCase
+		self.addPersonUseCase = addPersonUseCase
 		self.router = router
 		self.delegate = delegate
 		self.imagesCellPresenter = imagesCellPresenter
@@ -60,9 +37,9 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
-// swiftlint:enable vertical_parameter_alignment
+	// swiftlint:enable vertical_parameter_alignment
 
-    // MARK: - EditPersonPresenter
+	// MARK: - EditPersonPresenter
 
 	func viewDidLoad() {
 		view?.displayBarButton(with: .close)
@@ -74,25 +51,25 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		do {
 			params = try collectAddPersonParameters()
 		} catch {
-			handleEditPersonError(error)
+			handleAddPersonError(error)
 		}
 
 		guard let parameters = params else { return }
-        updateNavigationItemsState(isEnabled: false)
-		editPersonUseCase.edit(person: person, with: parameters) { result in
+		updateNavigationItemsState(isEnabled: false)
+		addPersonUseCase.add(parameters: parameters) { result in
 			self.updateNavigationItemsState(isEnabled: true)
 			switch result {
 			case let .success(person):
-				self.handlePersonEdited(person)
+				self.handlePersonAdded(person)
 			case let .failure(error):
-				self.handleEditPersonError(error)
+				self.handleAddPersonError(error)
 			}
 		}
-    }
+	}
 
 	func leftBarButtonPressed() {
-        delegate?.editPersonPresenterCancel(presenter: self)
-    }
+		delegate?.editPersonPresenterCancel(presenter: self)
+	}
 
 	func configure(cell: ImagesCellView, forRow row: Int) {
 		guard let view = view else { return }
@@ -101,15 +78,15 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		nameCellPresenter.configure(cell: cell, forRow: row)
-    }
+	}
 
-    func configure(cell: DateCellView, forRow row: Int) {
-       	dateCellsPresenter.configure(cell: cell, forRow: row)
-    }
+	func configure(cell: DateCellView, forRow row: Int) {
+		dateCellsPresenter.configure(cell: cell, forRow: row)
+	}
 
-    func configure(cell: SwitchCellView, forRow row: Int) {
-        dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
-    }
+	func configure(cell: SwitchCellView, forRow row: Int) {
+		dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
+	}
 
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
@@ -127,23 +104,23 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-    // MARK: - Private
+	// MARK: - Private
 
-    private func handlePersonEdited(_ person: Person) {
-		delegate?.editPersonPresenter(self, didEdit: person)
-    }
+	private func handlePersonAdded(_ person: Person) {
+		delegate?.editPersonPresenter(self, didAdd: person)
+	}
 
-    private func handleEditPersonError(_ error: Error) {
+	private func handleAddPersonError(_ error: Error) {
 		let coreError = error as? CoreError
 		let title = coreError?.title ?? R.string.localizable.error()
 		let message = coreError?.message ?? error.localizedDescription
-        view?.displayEditPersonError(title: title, message: message)
-    }
+		view?.displayEditPersonError(title: title, message: message)
+	}
 
-    private func updateNavigationItemsState(isEnabled enabled: Bool) {
-        view?.updateAddButtonState(isEnabled: enabled)
-        view?.updateCancelButtonState(isEnabled: enabled)
-    }
+	private func updateNavigationItemsState(isEnabled enabled: Bool) {
+		view?.updateAddButtonState(isEnabled: enabled)
+		view?.updateCancelButtonState(isEnabled: enabled)
+	}
 
 	private func collectAddPersonParameters() throws -> AddPersonParameters {
 		guard let name = nameCellPresenter.valueFor(row: EPC.nameFieldRow), !name.isEmpty else {
@@ -168,7 +145,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	}
 }
 
-extension EditPersonPresenterImplementation: TextFieldObserver {
+extension AddPersonPresenter: TextFieldObserver {
 
 	func textDidChange(forView: TextFieldCellView, text: String) {
 		view?.displayScreenTitle(title: text)

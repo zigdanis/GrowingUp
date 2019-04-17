@@ -10,6 +10,7 @@ import Foundation
 
 protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
+	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError>
 }
 
@@ -40,6 +41,32 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		}
 	}
 
+	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
+		var coreDataPerson: CoreDataPerson?
+		do {
+			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id as CVarArg)
+			coreDataPerson = try context.allEntities(withType: CoreDataPerson.self, predicate: predicate).first
+		} catch let error as CoreError {
+			return .failure(error)
+		} catch {
+			return .failure(CoreError.coreDataFetchFailed)
+		}
+
+		guard let cdPerson = coreDataPerson else {
+			return .failure(CoreError.coreDataFetchFailed)
+		}
+		cdPerson.populate(with: parameters)
+
+		do {
+			try context.save()
+			return .success(cdPerson.person)
+		} catch let error as CoreError {
+			return .failure(error)
+		} catch {
+			return .failure(CoreError.coreDataSaveFailed)
+		}
+	}
+
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
 		do {
 			let coreDataPersons = try context.allEntities(withType: CoreDataPerson.self)
@@ -59,6 +86,11 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		let result = fetchPersons(with: viewContext)
+		completionHandler(result)
+	}
+
+	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+		let result = edit(person: person, with: parameters, with: viewContext)
 		completionHandler(result)
 	}
 

@@ -21,10 +21,10 @@ final class DateCellPresenterTests: XCTestCase {
 	func test_SUT_WhenConfiguredWithDate_ShouldDisplayValue() {
 		// Given
 		let date = Date()
-		sut.valueFor(row: APC.dayPickerRow, didChangeTo: date)
+		sut.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
 		let dateCellSpy = DateCellViewSpy()
 		// When
-		sut.configure(cell: dateCellSpy, forRow: APC.dayPickerRow)
+		sut.configure(cell: dateCellSpy, forRow: EPC.dayPickerRow)
 		// Then
 		XCTAssertEqual(date.dateString(), dateCellSpy.displayedValue, "The value we expected was not displayed")
 	}
@@ -32,9 +32,9 @@ final class DateCellPresenterTests: XCTestCase {
 	func test_SUT_WhenConfiguredWithDate_ShouldReturnThatValue() {
 		// Given
 		let expectedDate = Date()
-		sut.valueFor(row: APC.dayPickerRow, didChangeTo: expectedDate)
+		sut.valueFor(row: EPC.dayPickerRow, didChangeTo: expectedDate)
 		// When
-		let date = sut.valueFor(row: APC.dayPickerRow)
+		let date = sut.valueFor(row: EPC.dayPickerRow)
 		// Then
 		XCTAssertEqual(date, expectedDate, "The value we expected did npt match")
 	}
@@ -43,11 +43,11 @@ final class DateCellPresenterTests: XCTestCase {
 		// Given
 		let dateCellSpy = DateCellViewSpy()
 		// When
-		sut.configure(cell: dateCellSpy, forRow: APC.dayPickerRow)
+		sut.configure(cell: dateCellSpy, forRow: EPC.dayPickerRow)
 		// Then
 		XCTAssertEqual("xx.xx.xxxx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
 		// When
-		sut.configure(cell: dateCellSpy, forRow: APC.timePickerRow)
+		sut.configure(cell: dateCellSpy, forRow: EPC.timePickerRow)
 		// Then
 		XCTAssertEqual("xx:xx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
 	}

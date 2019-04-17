@@ -12,19 +12,19 @@ import UIKit
 enum BarButtonItemStyle {
 	case close
 	case cancel
-	case done
+	case add
 	case save
 }
 
 protocol EditPersonView: ImagesCellViewDelegate {
     func updateAddButtonState(isEnabled enabled: Bool)
     func updateCancelButtonState(isEnabled enabled: Bool)
-    func displayAddPersonError(title: String, message: String)
+    func displayEditPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
 	func displayBarButton(with style: BarButtonItemStyle)
 }
 
-typealias APC = EditPersonViewController
+typealias EPC = EditPersonViewController
 
 final class EditPersonViewController: UIViewController, EditPersonView {
 
@@ -55,7 +55,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        configurator.configure(addPersonViewController: self)
+        configurator.configure(editPersonViewController: self)
         setupTableView()
 		presenter.viewDidLoad()
     }
@@ -91,13 +91,13 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 
 	@objc
 	internal func cancelTapped() {
-        presenter.cancelButtonPressed()
+        presenter.leftBarButtonPressed()
 		view.endEditing(true)
     }
 
     @objc
-	private func doneTapped() {
-        presenter.addButtonPressed()
+	private func addTapped() {
+        presenter.rightBarButtonPressed()
 		view.endEditing(true)
     }
 
@@ -125,7 +125,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		self.title = title
 	}
 
-	func displayAddPersonError(title: String, message: String) {
+	func displayEditPersonError(title: String, message: String) {
         showAlert(title: title, message: message)
     }
 
@@ -135,8 +135,8 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 		case .close:
 			navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.close(), style: .done, target: self, action: #selector(closeTapped))
-		case .done:
-			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+		case .add:
+			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
 		case .save:
 			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
 		}
@@ -167,17 +167,17 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch indexPath.row {
-		case APC.imagePickerRow:
+		case EPC.imagePickerRow:
 			let identifier = R.reuseIdentifier.imagesTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
-		case APC.nameFieldRow:
+		case EPC.nameFieldRow:
 			let identifier = R.reuseIdentifier.textFieldTableVIewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
-		case APC.dayPickerRow, APC.timePickerRow:
+		case EPC.dayPickerRow, EPC.timePickerRow:
 			let identifier = R.reuseIdentifier.dateTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
@@ -192,12 +192,12 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
-		if indexPath.row == APC.nameFieldRow {
+		if indexPath.row == EPC.nameFieldRow {
 			let cell = tableView.cellForRow(at: indexPath)
 			cell?.becomeFirstResponder()
-		} else if indexPath.row == APC.dayPickerRow {
+		} else if indexPath.row == EPC.dayPickerRow {
 			showDayPickerView()
-		} else if indexPath.row == APC.timePickerRow {
+		} else if indexPath.row == EPC.timePickerRow {
 			showTimePickerView()
 		}
  	}
@@ -211,9 +211,9 @@ extension EditPersonViewController: DatePickerViewDelegate {
 
 	func datePicker(picker: DatePickerView, selectedDate date: Date) {
 		if picker === dayPickerView {
-			presenter.dateFor(row: APC.dayPickerRow, didUpdateTo: date)
+			presenter.dateFor(row: EPC.dayPickerRow, didUpdateTo: date)
 		} else if picker === timePickerView {
-			presenter.dateFor(row: APC.timePickerRow, didUpdateTo: date)
+			presenter.dateFor(row: EPC.timePickerRow, didUpdateTo: date)
 		}
 		tableView.reloadData()
 	}

@@ -44,6 +44,17 @@ final class CachePersonsGateway: PersonsGateway {
 		taskManager.process(tasks: [task], withCompletion: completionHandler)
 	}
 
+	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+		let task: Task<Person> = {
+			let moc = CoreDataStackImplementation.sharedInstance
+				.persistentContainer.newBackgroundContext()
+			let result = self.coreDataGateway.edit(person: person, with: parameters, with: moc)
+			return result.map({ $0 as Person? })
+		}
+
+		taskManager.process(tasks: [task], withCompletion: completionHandler)
+	}
+
 	// MARK: - Private
 
 	private func coreDataSave(for parameters: AddPersonParameters) -> Task<Person> {

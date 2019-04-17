@@ -26,9 +26,9 @@ class ImagesCellPresenterTests: XCTestCase {
 		let appPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let expectedPics = PersonImages(appPic: appPic, widgetPic: widgetPic)
-		sut.valueFor(row: APC.imagePickerRow, didChangeTo: expectedPics)
+		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: expectedPics)
 		// When
-		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
+		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
 		// Then
 		XCTAssertEqual(imagesCellSpy.displayedAppPic, appPic, "Value displayed on cell doesn't match to expected")
 		XCTAssertEqual(imagesCellSpy.displayedWidgetPic, widgetPic, "Value displayed on cell doesn't match to expected")
@@ -36,7 +36,7 @@ class ImagesCellPresenterTests: XCTestCase {
 
 	func test_SUT_WithoutConfiguring_DoNotDisplayImagesOnCell() {
 		// When
-		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
+		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
 		// Then
 		XCTAssertNil(imagesCellSpy.displayedAppPic, "Expected to have nil images displayed")
 		XCTAssertNil(imagesCellSpy.displayedWidgetPic, "Expected to have nil images displayed")
@@ -51,17 +51,17 @@ class ImagesCellPresenterTests: XCTestCase {
 		let expectedWidgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let expectedPics = PersonImages(appPic: expectedAppPic, widgetPic: expectedWidgetPic)
 		let emptyPics = PersonImages(appPic: nil, widgetPic: nil)
-		sut.valueFor(row: APC.imagePickerRow, didChangeTo: initialPics)
+		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: initialPics)
 		// When
-		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
-		sut.valueFor(row: APC.imagePickerRow, didChangeTo: expectedPics)
-		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
+		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
+		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: expectedPics)
+		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
 		// Then
 		XCTAssertEqual(imagesCellSpy.displayedAppPic, expectedPics.appPic, "Value displayed on cell doesn't match to expected")
 		XCTAssertEqual(imagesCellSpy.displayedWidgetPic, expectedPics.widgetPic, "Value displayed on cell doesn't match to expected")
 		// When
-		sut.valueFor(row: APC.imagePickerRow, didChangeTo: emptyPics)
-		sut.configure(cell: imagesCellSpy, forRow: APC.imagePickerRow, with: addPersonViewSpy)
+		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: emptyPics)
+		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
 		XCTAssertNil(imagesCellSpy.displayedAppPic, "Expected to have nil images displayed")
 		XCTAssertNil(imagesCellSpy.displayedWidgetPic, "Expected to have nil images displayed")
 	}

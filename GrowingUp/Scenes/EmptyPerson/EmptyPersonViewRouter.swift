@@ -21,7 +21,7 @@ final class EmptyPersonViewRouterImplementation: EmptyPersonViewRouter {
 	}
 
 	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-		let configurator = EditPersonConfiguratorImplementation(type: .create, addPersonPresenterDelegate: addPersonPresenterDelegate)
+		let configurator = AddPersonConfigurator(editPersonPresenterDelegate: addPersonPresenterDelegate)
 		let addPersonViewController = EditPersonViewController(configurator: configurator)
 		let navigationViewController = UINavigationController(rootViewController: addPersonViewController)
 		emptyPersonViewController?.present(navigationViewController, animated: true)

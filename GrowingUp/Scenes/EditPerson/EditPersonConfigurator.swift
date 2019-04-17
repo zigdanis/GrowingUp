@@ -8,48 +8,43 @@
 
 import Foundation
 
-enum IntentType {
-	case create
-	case edit
-}
-
 protocol EditPersonConfigurator {
-    func configure(addPersonViewController: EditPersonViewController)
+    func configure(editPersonViewController: EditPersonViewController)
 }
 
 class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 
-    private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
-	private let type: IntentType
+	private let person: Person
+    private weak var editPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-	init(type: IntentType, addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-		self.type = type
-        self.addPersonPresenterDelegate = addPersonPresenterDelegate
+	init(person: Person, editPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+		self.person = person
+        self.editPersonPresenterDelegate = editPersonPresenterDelegate
     }
 
-    func configure(addPersonViewController: EditPersonViewController) {
+    func configure(editPersonViewController: EditPersonViewController) {
         let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
         let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
-        let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
-        let router = EditPersonViewRouterImplementation(addPersonViewController: addPersonViewController)
+        let editPersonUseCase = EditPersonUseCaseImplementation(personsGateway: personsGateway)
+        let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
 		let dateCellPresenter = DateCellPresenterImplementation()
 		let dateComponentsPresenter = SwitchCellPresenterImplementation()
         let presenter = EditPersonPresenterImplementation(
-			type: type,
-			view: addPersonViewController,
-			addPersonUseCase: addPersonUseCase,
+			person: person,
+			view: editPersonViewController,
+			editPersonUseCase: editPersonUseCase,
 			router: router,
-			delegate: addPersonPresenterDelegate,
+			delegate: editPersonPresenterDelegate,
 			imagesCellPresenter: imagesCellPresenter,
 			nameCellPresenter: nameCellPresenter,
 			dateCellsPresenter: dateCellPresenter,
 			dateComponentsCellsPresenter: dateComponentsPresenter
 		)
 		nameCellPresenter.textFieldObserver = presenter
-        addPersonViewController.presenter = presenter
+        editPersonViewController.presenter = presenter
     }
 }

@@ -20,11 +20,11 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 
 	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
-		case APC.dayPickerRow:
+		case EPC.dayPickerRow:
 			cell.display(title: R.string.localizable.dayOfBirth())
 			let value = storage[row]?.dateString() ?? "xx.xx.xxxx"
 			cell.display(value: value)
-		case APC.timePickerRow:
+		case EPC.timePickerRow:
 			cell.display(title: R.string.localizable.timeOfBirth())
 			let value = storage[row]?.timeString() ?? "xx:xx"
 			cell.display(value: value)

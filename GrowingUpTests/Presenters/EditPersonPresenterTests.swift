@@ -113,7 +113,7 @@ final class EditPersonPresenterTests: XCTestCase {
 
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
 		// When
 		sut.addButtonPressed()
 		// Then
@@ -123,8 +123,8 @@ final class EditPersonPresenterTests: XCTestCase {
 
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
-		dateCellsStub.valueFor(row: APC.dayPickerRow, didChangeTo: Date())
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
+		dateCellsStub.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
 		// When
 		sut.addButtonPressed()
 		// Then
@@ -154,8 +154,8 @@ final class EditPersonPresenterTests: XCTestCase {
 		sut.appImagePicked(image: personAppPic)
 		sut.widgetImagePicked(image: personWidgetPic)
 		// Then
-		let appPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.appPic
-		let widgetPic = imagesCellStub.valueFor(row: APC.imagePickerRow)?.widgetPic
+		let appPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.appPic
+		let widgetPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.widgetPic
 		XCTAssertEqual(appPic, personAppPic, "Value for the person App pic doesn't match to expected")
 		XCTAssertEqual(widgetPic, personWidgetPic, "Value for the person Widget pic doesn't match to expected")
 	}
@@ -192,18 +192,18 @@ final class EditPersonPresenterTests: XCTestCase {
 
 	@discardableResult
 	private func setupSUT_WithAddPersonData() -> AddPersonParameters {
-		nameCellStub.valueFor(row: APC.nameFieldRow, didChangeTo: "John")
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
 		let bDate = Date()
 		let tDate = Date().addingTimeInterval(1)
-		dateCellsStub.valueFor(row: APC.dayPickerRow, didChangeTo: bDate)
-		dateCellsStub.valueFor(row: APC.timePickerRow, didChangeTo: tDate)
-		for row in APC.dateComponentsRows {
+		dateCellsStub.valueFor(row: EPC.dayPickerRow, didChangeTo: bDate)
+		dateCellsStub.valueFor(row: EPC.timePickerRow, didChangeTo: tDate)
+		for row in EPC.dateComponentsRows {
 			dateComponentsStub.valueFor(row: row, didChangeTo: true)
 		}
 		let appPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let pics = PersonImages(appPic: appPic, widgetPic: widgetPic)
-		imagesCellStub.valueFor(row: APC.imagePickerRow, didChangeTo: pics)
+		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
 		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
 	}
 }

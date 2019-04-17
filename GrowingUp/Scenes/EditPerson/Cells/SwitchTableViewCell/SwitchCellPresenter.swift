@@ -20,7 +20,7 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 	private var storage = [Int: Bool]()
 
 	func configure(cell: SwitchCellView, forRow row: Int) {
-		let supportedRows = Array(APC.dateComponentsRows)
+		let supportedRows = Array(EPC.dateComponentsRows)
 		switch row {
 		case supportedRows[0]:
 			cell.display(title: R.string.localizable.showYears())
@@ -51,7 +51,7 @@ final class SwitchCellPresenterImplementation: SwitchCellPresenter {
 
 	func updatedComponents() -> AddPersonDateComponents {
 		var components = AddPersonDateComponents()
-		let supportedRows = Array(APC.dateComponentsRows)
+		let supportedRows = Array(EPC.dateComponentsRows)
 		for (key, value) in storage {
 			switch key {
 			case supportedRows[0]: components.years = value

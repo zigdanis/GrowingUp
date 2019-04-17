@@ -14,13 +14,13 @@ protocol EditPersonViewRouter {
 
 class EditPersonViewRouterImplementation: EditPersonViewRouter {
 
-    private weak var addPersonViewController: EditPersonViewController?
+    private weak var editPersonViewController: EditPersonViewController?
 
-    init(addPersonViewController: EditPersonViewController) {
-        self.addPersonViewController = addPersonViewController
+    init(editPersonViewController: EditPersonViewController) {
+        self.editPersonViewController = editPersonViewController
     }
 
     func dismiss() {
-        addPersonViewController?.dismiss(animated: true)
+        editPersonViewController?.dismiss(animated: true)
     }
 }
