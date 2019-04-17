@@ -31,7 +31,7 @@ extension AddPersonParameters {
 	func dateComponents() -> DateComponents {
 		var components = DateComponents()
 		let yearMonthDay = Calendar.current.dateComponents([.year, .month, .day], from: dayOfBirth)
-		let hourMinuteSecond = Calendar.current.dateComponents([.year, .month, .day], from: timeOfBirth)
+		let hourMinuteSecond = Calendar.current.dateComponents([.hour, .minute, .second], from: timeOfBirth)
 		components.setValue(yearMonthDay.year, for: .year)
 		components.setValue(yearMonthDay.month, for: .month)
 		components.setValue(yearMonthDay.day, for: .day)
