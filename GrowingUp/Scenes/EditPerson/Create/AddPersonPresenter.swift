@@ -42,8 +42,8 @@ final class AddPersonPresenter: EditPersonPresenter {
 	// MARK: - EditPersonPresenter
 
 	func viewDidLoad() {
-		view?.displayBarButton(with: .close)
-		view?.displayBarButton(with: .save)
+		view?.displayBarButton(with: .cancel)
+		view?.displayBarButton(with: .add)
 	}
 
 	func rightBarButtonPressed() {

@@ -17,7 +17,7 @@ class EditPersonViewSpy: EditPersonView {
 	var displayedScreenTitle: String?
 	var showedAppPicImagePicker = false
 	var showedWidgetPicImagePicker = false
-	var didCallDisplayBarButton = false
+	var displayedBarButtons = [BarButtonItemStyle]()
 
 	func updateBarButtonsState(isEnabled enabled: Bool) {
         barButtonsEnabledState = enabled
@@ -41,6 +41,6 @@ class EditPersonViewSpy: EditPersonView {
 	}
 
 	func displayBarButton(with style: BarButtonItemStyle) {
-		didCallDisplayBarButton = true
+		displayedBarButtons.append(style)
 	}
 }
