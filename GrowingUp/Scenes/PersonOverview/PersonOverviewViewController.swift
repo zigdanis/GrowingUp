@@ -40,6 +40,10 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		presenter.loadPerson()
 	}
 
+	@IBAction func editPersonTouched() {
+		presenter.showEditPerson()
+	}
+
 	// MARK: - PersonOverviewView
 
 	func displayPersonName(name: String) {

@@ -23,7 +23,8 @@ final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator
 	}
 
 	func configure(personOverviewController: PersonOverviewViewController) {
-		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController)
+		let router = PersonOverviewRouterImplementation(person: person, personOverviewViewController: personOverviewController)
+		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController, router: router)
 		personOverviewController.presenter = presenter
 		personOverviewController.index = index
 	}

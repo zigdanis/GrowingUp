@@ -67,6 +67,8 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	func viewDidLoad() {
 		view?.displayBarButton(with: .close)
 		view?.displayBarButton(with: .save)
+		view?.displayScreenTitle(title: person.name)
+		// TODO: - Display Person birthday and selected date componenets
 	}
 
 	func rightBarButtonPressed() {

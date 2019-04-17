@@ -11,16 +11,19 @@ import Core
 
 protocol PersonOverviewPresenter {
 	func loadPerson()
+	func showEditPerson()
 }
 
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	let person: Person
 	weak var view: PersonOverviewView?
+	private let router: PersonOverviewRouter
 
-	init(person: Person, personOverviewView: PersonOverviewView) {
+	init(person: Person, personOverviewView: PersonOverviewView, router: PersonOverviewRouter) {
 		self.person = person
 		self.view = personOverviewView
+		self.router = router
 	}
 
 	func loadPerson() {
@@ -28,6 +31,10 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		let personAppPic = PersonImage(id: person.appPicId, uiImage: nil)
 		view?.displayPersonAppImage(image: personAppPic)
 		scheduleAgeTicker()
+	}
+
+	func showEditPerson() {
+		router.showEditPerson(presenterDelegate: self)
 	}
 
 	private func scheduleAgeTicker() {
@@ -41,5 +48,18 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		let age = AgeCalculator.ageString(for: person.dateComponents)
 		view?.displayPersonAge(age: age)
 	}
+}
 
+extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
+
+	}
+
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+
+	}
+
+	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
+
+	}
 }
