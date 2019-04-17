@@ -20,4 +20,14 @@ struct Person: Equatable, Hashable {
 		let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
 		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: then, to: now)
 	}
+
+	var dayOfBirth: Date {
+		let dayComponents = Calendar.current.dateComponents([.year, .month, .day], from: birthday)
+		return Calendar.current.date(from: dayComponents) ?? Date()
+	}
+
+	var timeOfBirth: Date {
+		let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: birthday)
+		return Calendar.current.date(from: timeComponents) ?? Date()
+	}
 }

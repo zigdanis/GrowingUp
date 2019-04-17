@@ -191,7 +191,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		// When
 		sut.viewDidLoad()
 		// Then
-		XCTAssertTrue(editPersonViewSpy.displayedBarButtons.contains(.close), "Expected to display Cancel button")
+		XCTAssertTrue(editPersonViewSpy.displayedBarButtons.contains(.cancel), "Expected to display Cancel button")
 		XCTAssertTrue(editPersonViewSpy.displayedBarButtons.contains(.save), "Expected to display Save button")
 		XCTAssertEqual(editPersonViewSpy.displayedBarButtons.count, 2, "Expected to display only 2 type of buttons")
 	}

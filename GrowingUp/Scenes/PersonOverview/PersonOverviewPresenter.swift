@@ -52,14 +52,14 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
-
+		presenter.router.dismiss()
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
-
+		presenter.router.dismiss()
 	}
 
 	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
-
+		presenter.router.dismiss()
 	}
 }

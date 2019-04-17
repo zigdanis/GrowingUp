@@ -185,12 +185,12 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(addPersonViewSpy.displayedScreenTitle, expectedTitle, "Expected To Display New Title")
 	}
 
-	func test_SUT_OnViewDidLoad_SetsBarButtonsWithCancelAndAddTypes() {
+	func test_SUT_OnViewDidLoad_SetsBarButtonsWithCancelAndDoneTypes() {
 		// When
 		sut.viewDidLoad()
 		// Then
 		XCTAssertTrue(addPersonViewSpy.displayedBarButtons.contains(.cancel), "Expected to display Cancel button")
-		XCTAssertTrue(addPersonViewSpy.displayedBarButtons.contains(.add), "Expected to display Save button")
+		XCTAssertTrue(addPersonViewSpy.displayedBarButtons.contains(.done), "Expected to display Save button")
 		XCTAssertEqual(addPersonViewSpy.displayedBarButtons.count, 2, "Expected to display only 2 type of buttons")
 	}
 

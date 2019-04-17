@@ -10,9 +10,8 @@ import Foundation
 import UIKit
 
 enum BarButtonItemStyle {
-	case close
 	case cancel
-	case add
+	case done
 	case save
 }
 
@@ -125,10 +124,8 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		switch style {
 		case .cancel:
 			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
-		case .close:
-			navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.close(), style: .done, target: self, action: #selector(cancelTapped))
-		case .add:
-			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+		case .done:
+			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(addTapped))
 		case .save:
 			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
 		}

@@ -51,7 +51,9 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonAppImage(image: PersonImage) {
-		appImage.setCachedImage(key: image.cachingKey)
+		ImagesCache.loadImageFromDisk(image: image) { img in
+			self.appImage.image = img
+		}
 	}
 
 	func displayPersonAge(age: String) {

@@ -47,11 +47,31 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	// MARK: - ImagesCellView
 
 	func display(appPic: PersonImage?) {
-		appPicButton.drawImage(appPic?.uiImage)
+		guard let appPic = appPic else {
+			appPicButton.drawImage(nil)
+			return
+		}
+		if let uiImage = appPic.uiImage {
+			appPicButton.drawImage(uiImage)
+		} else {
+			ImagesCache.loadImageFromDisk(image: appPic) { img in
+				self.appPicButton.drawImage(img)
+			}
+		}
 	}
 
 	func display(widgetPic: PersonImage?) {
-		widgetPicButton.drawImage(widgetPic?.uiImage)
+		guard let widgetPic = widgetPic else {
+			widgetPicButton.drawImage(nil)
+			return
+		}
+		if let uiImage = widgetPic.uiImage {
+			widgetPicButton.drawImage(uiImage)
+		} else {
+			ImagesCache.loadImageFromDisk(image: widgetPic) { img in
+				self.widgetPicButton.drawImage(img)
+			}
+		}
 	}
 
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {

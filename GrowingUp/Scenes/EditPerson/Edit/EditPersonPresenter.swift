@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Disk
 
 protocol EditPersonPresenter: TextFieldObserver {
     var router: EditPersonViewRouter { get }
@@ -65,10 +66,21 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
     // MARK: - EditPersonPresenter
 
 	func viewDidLoad() {
-		view?.displayBarButton(with: .close)
+		view?.displayBarButton(with: .cancel)
 		view?.displayBarButton(with: .save)
-		view?.displayScreenTitle(title: person.name)
-		// TODO: - Display Person birthday and selected date componenets
+
+		nameCellPresenter.valueFor(row: EPC.nameFieldRow, didChangeTo: person.name)
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: person.dayOfBirth)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: person.timeOfBirth)
+
+		loadAndShowPersonPics()
+	}
+
+	private func loadAndShowPersonPics() {
+		let appPic = PersonImage(id: person.appPicId)
+		let widgetPic = PersonImage(id: person.widgetPicId)
+		let personImages = PersonImages(appPic: appPic, widgetPic: widgetPic)
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personImages)
 	}
 
 	func rightBarButtonPressed() {

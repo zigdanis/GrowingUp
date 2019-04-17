@@ -20,6 +20,12 @@ struct PersonImage: Equatable {
 		self.id = id ?? UUID()
 		self.uiImage = uiImage
 	}
+
+	init?(id: UUID?) {
+		guard let id = id else { return nil }
+		self.id = id
+		self.uiImage = nil
+	}
 }
 
 struct PersonImages {

@@ -43,7 +43,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	func viewDidLoad() {
 		view?.displayBarButton(with: .cancel)
-		view?.displayBarButton(with: .add)
+		view?.displayBarButton(with: .done)
 	}
 
 	func rightBarButtonPressed() {
