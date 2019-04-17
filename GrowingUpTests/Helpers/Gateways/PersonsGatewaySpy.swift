@@ -15,6 +15,8 @@ class PersonsGatewaySpy: PersonsGateway {
     var addPersonResultToBeReturned: Result<Person, CoreError>!
 	var fetchPersonsCalled = false
 	var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
+	var editPersonCalled = false
+	var editPersonResultToBeReturned: Result<Person, CoreError>!
 
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         addPersonParameters = parameters
@@ -24,5 +26,10 @@ class PersonsGatewaySpy: PersonsGateway {
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		fetchPersonsCalled = true
 		completionHandler(fetchPersonsResultToBeReturned)
+	}
+
+	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+		editPersonCalled = true
+		completionHandler(editPersonResultToBeReturned)
 	}
 }

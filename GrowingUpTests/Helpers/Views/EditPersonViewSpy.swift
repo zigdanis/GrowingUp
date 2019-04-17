@@ -11,26 +11,22 @@ import Foundation
 
 class EditPersonViewSpy: EditPersonView {
 
-    var addButtonEnabledState: Bool?
-    var cancelButtonEnabledState: Bool?
+    var barButtonsEnabledState: Bool?
     var displayAddPersonErrorTitle: String?
     var displayAddPersonErrorMessage: String?
 	var displayedScreenTitle: String?
 	var showedAppPicImagePicker = false
 	var showedWidgetPicImagePicker = false
+	var didCallDisplayBarButton = false
 
-    func updateAddButtonState(isEnabled enabled: Bool) {
-        addButtonEnabledState = enabled
+	func updateBarButtonsState(isEnabled enabled: Bool) {
+        barButtonsEnabledState = enabled
     }
 
-    func updateCancelButtonState(isEnabled enabled: Bool) {
-        cancelButtonEnabledState = enabled
-    }
-
-	func displayAddPersonError(title: String, message: String) {
-        displayAddPersonErrorTitle = title
-        displayAddPersonErrorMessage = message
-    }
+	func displayEditPersonError(title: String, message: String) {
+		displayAddPersonErrorTitle = title
+		displayAddPersonErrorMessage = message
+	}
 
 	func showAppPicImagePickerFor(row: Int) {
 		showedAppPicImagePicker = true
@@ -42,5 +38,9 @@ class EditPersonViewSpy: EditPersonView {
 
 	func displayScreenTitle(title: String) {
 		displayedScreenTitle = title
+	}
+
+	func displayBarButton(with style: BarButtonItemStyle) {
+		didCallDisplayBarButton = true
 	}
 }

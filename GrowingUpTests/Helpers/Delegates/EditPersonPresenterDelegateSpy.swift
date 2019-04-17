@@ -12,13 +12,20 @@ import Foundation
 class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
 
     var addedPerson: Person?
+	var editedPerson: Person?
     var didCalledAddPerson = false
+	var didCalledEditPerson = false
     var didCalledCancel = false
 
     func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
         didCalledAddPerson = true
         addedPerson = person
     }
+
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+		didCalledEditPerson = true
+		editedPerson = person
+	}
 
 	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
         didCalledCancel = true

@@ -118,8 +118,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 	}
 
 	private func updateNavigationItemsState(isEnabled enabled: Bool) {
-		view?.updateAddButtonState(isEnabled: enabled)
-		view?.updateCancelButtonState(isEnabled: enabled)
+		view?.updateBarButtonsState(isEnabled: enabled)
 	}
 
 	private func collectAddPersonParameters() throws -> AddPersonParameters {

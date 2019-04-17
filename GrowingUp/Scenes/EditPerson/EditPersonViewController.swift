@@ -17,8 +17,7 @@ enum BarButtonItemStyle {
 }
 
 protocol EditPersonView: ImagesCellViewDelegate {
-    func updateAddButtonState(isEnabled enabled: Bool)
-    func updateCancelButtonState(isEnabled enabled: Bool)
+    func updateBarButtonsState(isEnabled enabled: Bool)
     func displayEditPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
 	func displayBarButton(with style: BarButtonItemStyle)
@@ -102,23 +101,16 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     }
 
 	@objc
-	private func closeTapped() {
-		view.endEditing(true)
-	}
-
-	@objc
 	private func saveTapped() {
+		presenter.rightBarButtonPressed()
 		view.endEditing(true)
 	}
 
     // MARK: - EditPersonView
 
-    func updateAddButtonState(isEnabled enabled: Bool) {
+    func updateBarButtonsState(isEnabled enabled: Bool) {
         navigationItem.rightBarButtonItem?.isEnabled = enabled
-    }
-
-    func updateCancelButtonState(isEnabled enabled: Bool) {
-        navigationItem.leftBarButtonItem?.isEnabled = enabled
+		navigationItem.leftBarButtonItem?.isEnabled = enabled
     }
 
 	func displayScreenTitle(title: String) {
@@ -134,7 +126,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		case .cancel:
 			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 		case .close:
-			navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.close(), style: .done, target: self, action: #selector(closeTapped))
+			navigationItem.leftBarButtonItem = UIBarButtonItem(title: R.string.localizable.close(), style: .done, target: self, action: #selector(cancelTapped))
 		case .add:
 			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
 		case .save:
