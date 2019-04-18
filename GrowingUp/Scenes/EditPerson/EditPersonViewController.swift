@@ -134,16 +134,18 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	// MARK: - Business Logic
 
 	func showDayPickerView() {
+		let selectedDate = presenter.dateForDayPicker()
 		dayPickerView.layoutIfNeeded()
 		dayPickerView.alpha = 1
-		dayPickerView.showPicker()
+		dayPickerView.showPicker(with: selectedDate)
 		view.endEditing(true)
 	}
 
 	func showTimePickerView() {
+		let selectedDate = presenter.dateForTimePicker()
 		timePickerView.layoutIfNeeded()
 		timePickerView.alpha = 1
-		timePickerView.showPicker()
+		timePickerView.showPicker(with: selectedDate)
 		view.endEditing(true)
 	}
 }

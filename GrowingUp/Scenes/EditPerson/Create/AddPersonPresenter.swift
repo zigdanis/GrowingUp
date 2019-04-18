@@ -104,6 +104,14 @@ final class AddPersonPresenter: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
+	func dateForDayPicker() -> Date {
+		return dateCellsPresenter.valueFor(row: EPC.dayPickerRow) ?? Date()
+	}
+
+	func dateForTimePicker() -> Date {
+		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
+	}
+
 	// MARK: - Private
 
 	private func handlePersonAdded(_ person: Person) {

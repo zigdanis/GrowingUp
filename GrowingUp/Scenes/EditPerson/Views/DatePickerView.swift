@@ -115,7 +115,8 @@ final class DatePickerView: UIView {
 		})
 	}
 
-	func showPicker() {
+	func showPicker(with date: Date) {
+		datePicker.date = date
 		toolbarTop.isActive = false
 		UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.6, options: [], animations: {
 			self.layoutSubviews()
