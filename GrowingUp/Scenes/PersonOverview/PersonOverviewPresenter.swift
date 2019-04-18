@@ -16,9 +16,10 @@ protocol PersonOverviewPresenter {
 
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
-	let person: Person
 	weak var view: PersonOverviewView?
+	private var person: Person
 	private let router: PersonOverviewRouter
+	private var timer: Timer?
 
 	init(person: Person, personOverviewView: PersonOverviewView, router: PersonOverviewRouter) {
 		self.person = person
@@ -34,12 +35,13 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 	}
 
 	func showEditPerson() {
-		router.showEditPerson(presenterDelegate: self)
+		router.showEdit(for: person, presenterDelegate: self)
 	}
 
 	private func scheduleAgeTicker() {
+		timer?.invalidate()
 		showAge()
-		Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
 			self.showAge()
 		}
 	}
@@ -56,6 +58,8 @@ extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+		self.person = person
+		loadPerson()
 		presenter.router.dismiss()
 	}
 

@@ -68,6 +68,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	func viewDidLoad() {
 		view?.displayBarButton(with: .cancel)
 		view?.displayBarButton(with: .save)
+		view?.displayScreenTitle(title: person.name)
 
 		nameCellPresenter.valueFor(row: EPC.nameFieldRow, didChangeTo: person.name)
 		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: person.dayOfBirth)

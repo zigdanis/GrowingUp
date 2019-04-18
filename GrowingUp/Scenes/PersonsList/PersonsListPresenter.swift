@@ -26,7 +26,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 
 	private func loadListOfPersons() {
-		displayPersonsUseCase.displayPersons { result in
+		displayPersonsUseCase.fetchPersons { result in
 			switch result {
 			case .success(let value): self.persons = value
 			case .failure(let error): Logging.log(error)

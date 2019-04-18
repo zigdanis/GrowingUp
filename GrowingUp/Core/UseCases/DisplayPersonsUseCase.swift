@@ -8,10 +8,10 @@
 
 import Foundation
 
-typealias DisplayPersonsUseCaseCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
+typealias FetchPersonsUseCaseCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
 
 protocol DisplayPersonsUseCase {
-	func displayPersons(completionHandler: @escaping DisplayPersonsUseCaseCompletionHandler)
+	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler)
 }
 
 final class DisplayPersonsUseCaseImplementation: DisplayPersonsUseCase {
@@ -23,7 +23,7 @@ final class DisplayPersonsUseCaseImplementation: DisplayPersonsUseCase {
 
 	// MARK: - DisplayPersonsUseCase
 
-	func displayPersons(completionHandler: @escaping (Result<[Person], CoreError>) -> Void) {
+	func fetchPersons(completionHandler: @escaping (Result<[Person], CoreError>) -> Void) {
 		self.personsGateway.fetchPersons { (result) in
 			completionHandler(result)
 		}

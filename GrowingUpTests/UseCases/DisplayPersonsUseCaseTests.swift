@@ -25,7 +25,7 @@ class DisplayPersonsUseCaseTests: XCTestCase {
 		gatewaySpy.fetchPersonsResultToBeReturned = expectedResult
 		let workIsDone = expectation(description: "Expecting to finish fetching PersonsGateway")
 		// When
-		sut.displayPersons { result in
+		sut.fetchPersons { result in
 			// Then
 			XCTAssertTrue(self.gatewaySpy.fetchPersonsCalled, "Expected to receive fetchPersons call in PersonsGateway")
 			XCTAssertEqual(result, expectedResult, "Expected to get fetched persons")
@@ -40,7 +40,7 @@ class DisplayPersonsUseCaseTests: XCTestCase {
 		gatewaySpy.fetchPersonsResultToBeReturned = expectedResult
 		let workIsDone = expectation(description: "Expecting to finish fetching PersonsGateway")
 		// When
-		sut.displayPersons { result in
+		sut.fetchPersons { result in
 			// Then
 			XCTAssertTrue(self.gatewaySpy.fetchPersonsCalled, "Expected to receive fetchPersons call in PersonsGateway")
 			XCTAssertEqual(result, expectedResult, "Expected to get fetched persons")

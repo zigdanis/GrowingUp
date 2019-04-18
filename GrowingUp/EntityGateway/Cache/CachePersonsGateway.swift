@@ -45,17 +45,29 @@ final class CachePersonsGateway: PersonsGateway {
 	}
 
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
-		let task: Task<Person> = {
+
+		var tasks = [Task<Person>]()
+		if let appPicSaving = appPicSavingTask(for: parameters) {
+			tasks.append(appPicSaving)
+		}
+		if let widgetPicSaving = widgetPicSavingTask(for: parameters) {
+			tasks.append(widgetPicSaving)
+		}
+		tasks.append(coreDataEdit(person: person, with: parameters))
+
+		taskManager.process(tasks: tasks, withCompletion: completionHandler)
+	}
+
+	// MARK: - Private
+
+	private func coreDataEdit(person: Person, with parameters: AddPersonParameters) -> Task<Person> {
+		return {
 			let moc = CoreDataStackImplementation.sharedInstance
 				.persistentContainer.newBackgroundContext()
 			let result = self.coreDataGateway.edit(person: person, with: parameters, with: moc)
 			return result.map({ $0 as Person? })
 		}
-
-		taskManager.process(tasks: [task], withCompletion: completionHandler)
 	}
-
-	// MARK: - Private
 
 	private func coreDataSave(for parameters: AddPersonParameters) -> Task<Person> {
 		return {
