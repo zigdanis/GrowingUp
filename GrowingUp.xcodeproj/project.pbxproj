@@ -105,6 +105,7 @@
 		099C9171225FCB45005C963C /* EmptyPersonViewRouterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9170225FCB45005C963C /* EmptyPersonViewRouterSpy.swift */; };
 		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
+		09A5B5262268C4E900E5F72F /* WDImageCropOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5B5252268C4E900E5F72F /* WDImageCropOverlayView.swift */; };
 		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
 		09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */; };
@@ -289,6 +290,7 @@
 		099C9170225FCB45005C963C /* EmptyPersonViewRouterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonViewRouterSpy.swift; sourceTree = "<group>"; };
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
+		09A5B5252268C4E900E5F72F /* WDImageCropOverlayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropOverlayView.swift; sourceTree = "<group>"; };
 		09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeCalculatorTests.swift; sourceTree = "<group>"; };
 		09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldObserverSpy.swift; sourceTree = "<group>"; };
 		09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WDImageCropView.swift; sourceTree = "<group>"; };
@@ -857,6 +859,7 @@
 				09B4E94E224DEEC500F4E3F2 /* WDImagePicker.swift */,
 				09B4E950224DEEC500F4E3F2 /* WDImageCropViewController.swift */,
 				09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */,
+				09A5B5252268C4E900E5F72F /* WDImageCropOverlayView.swift */,
 				09B4E958224E154A00F4E3F2 /* CGRect+Extensions.swift */,
 				09EC1CB9225BD2E600D9C985 /* WDImageError.swift */,
 			);
@@ -1329,6 +1332,7 @@
 				09EC1CC1225BDBB500D9C985 /* PersonsListPresenter.swift in Sources */,
 				099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */,
 				099C915D225F203F005C963C /* EmptyPersonViewController.swift in Sources */,
+				09A5B5262268C4E900E5F72F /* WDImageCropOverlayView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

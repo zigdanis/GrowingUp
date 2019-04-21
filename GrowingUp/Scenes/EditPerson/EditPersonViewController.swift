@@ -38,8 +38,8 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     @IBOutlet weak var tableView: UITableView!
 	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
 	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
-	private lazy var appPicImagePicker = WDImagePicker()
-	private lazy var widgetPicImagePicker = WDImagePicker()
+	private lazy var appPicImagePicker = WDImagePicker(cropSize: .screen)
+	private lazy var widgetPicImagePicker = WDImagePicker(cropSize: .circle)
 
     init(configurator: EditPersonConfigurator) {
         self.configurator = configurator

@@ -8,6 +8,11 @@
 
 import UIKit
 
+enum CropSize {
+	case screen
+	case circle
+}
+
 protocol WDImagePickerDelegate: class {
     func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage)
     func imagePickerDidCancel(_ imagePicker: WDImagePicker)
@@ -17,11 +22,18 @@ class WDImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationCont
 
 	let imagePickerController: UIImagePickerController
 	weak var delegate: WDImagePickerDelegate?
+	private let cropSize: CropSize
 
-	override init() {
-		imagePickerController = UIImagePickerController()
-        super.init()
+	init(cropSize: CropSize) {
+		self.cropSize = cropSize
+		self.imagePickerController = UIImagePickerController()
+		super.init()
 		setupImagePickerController()
+	}
+
+	@available(iOS, unavailable, message: "Use init(cropSize:) instead")
+	override init() {
+		fatalError("Use init(cropSize:) instead")
     }
 
 	private func setupImagePickerController() {
@@ -46,7 +58,7 @@ class WDImagePicker: NSObject, UIImagePickerControllerDelegate, UINavigationCont
 		guard let sourceImage = info[.originalImage] as? UIImage else {
 			return hideController()
 		}
-        let cropController = WDImageCropViewController(sourceImage: sourceImage)
+		let cropController = WDImageCropViewController(sourceImage: sourceImage, cropSize: cropSize)
         cropController.delegate = self
         picker.pushViewController(cropController, animated: true)
     }

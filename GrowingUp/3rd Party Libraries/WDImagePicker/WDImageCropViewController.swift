@@ -23,20 +23,20 @@ class WDImageCropViewController: UIViewController {
     private let useButton = UIButton(type: .custom)
     private let cancelButton = UIButton(type: .custom)
 
-	init(sourceImage: UIImage) {
+	init(sourceImage: UIImage, cropSize: CropSize) {
 		self.sourceImage = sourceImage
-		imageCropView = WDImageCropView(imageToCrop: sourceImage)
+		self.imageCropView = WDImageCropView(imageToCrop: sourceImage, cropSize: cropSize)
 		super.init(nibName: nil, bundle: nil)
 	}
 
-	@available(iOS, unavailable, message: "Class doesn not intended to be created from xib")
+	@available(iOS, unavailable, message: "Class does not intended to be created from xib")
 	required init?(coder aDecoder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupCropView()
+		setupCropView()
 		setupToolbar()
 		navigationController?.isNavigationBarHidden = true
     }

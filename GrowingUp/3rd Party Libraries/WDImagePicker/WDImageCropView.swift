@@ -11,21 +11,31 @@ import QuartzCore
 
 class WDImageCropView: UIView {
 
-    private let scrollView = UIScrollView()
+	private let cropSize: CropSize
+	private let overlayView: WDImageCropOverlayView
+	private let scrollView = UIScrollView()
     private let imageView = UIImageView()
     private var xOffset: CGFloat = 0
     private var yOffset: CGFloat = 0
-	private let cropSize = UIScreen.main.bounds.size
 	private let imageToCrop: UIImage
+	private var croppingSize: CGSize {
+		switch cropSize {
+		case .screen: return UIScreen.main.bounds.size
+		case .circle: return circleRect().size
+		}
+	}
 
-	init(imageToCrop: UIImage) {
+	init(imageToCrop: UIImage, cropSize: CropSize) {
+		self.cropSize = cropSize
 		self.imageToCrop = imageToCrop
+		self.overlayView = WDImageCropOverlayView(cropSize: cropSize)
 		super.init(frame: .zero)
 
 		isUserInteractionEnabled = true
 		backgroundColor = UIColor.black
 		setupScrollView()
 		setupImageView()
+		setupOverlayView()
 	}
 
 	@available(iOS, unavailable, message: "Class does not intended to be created from xib")
@@ -35,8 +45,9 @@ class WDImageCropView: UIView {
 
 	override func layoutSubviews() {
 		super.layoutSubviews()
-		setupInitialPositionForScrollView()
+		setupZoomScaleForScrollView()
 		centerScrollViewContent()
+		setupScrollViewInsets()
 	}
 
 	private func setupScrollView() {
@@ -76,9 +87,26 @@ class WDImageCropView: UIView {
 		imageView.layoutIfNeeded()
 	}
 
-	private func setupInitialPositionForScrollView() {
-		let widthScale = scrollView.bounds.width / imageView.bounds.width
-		let heightScale = scrollView.bounds.height / imageView.bounds.height
+	private func setupOverlayView() {
+		guard cropSize == .circle else { return }
+		overlayView.translatesAutoresizingMaskIntoConstraints = false
+		addSubview(overlayView)
+		let consts = [
+			overlayView.leadingAnchor.constraint(equalTo: leadingAnchor),
+			overlayView.topAnchor.constraint(equalTo: topAnchor),
+			trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+			bottomAnchor.constraint(equalTo: overlayView.bottomAnchor)
+		]
+		NSLayoutConstraint.activate(consts)
+	}
+
+	// MARK: - UIScrollView Setup
+
+	private func setupZoomScaleForScrollView() {
+		let croppingWidth = croppingSize.width
+		let croppingHeight = croppingSize.height
+		let widthScale = croppingWidth / imageView.bounds.width
+		let heightScale = croppingHeight / imageView.bounds.height
 		let minSufficientScale = max(widthScale, heightScale)
 
 		scrollView.minimumZoomScale = minSufficientScale
@@ -91,6 +119,16 @@ class WDImageCropView: UIView {
 		let yOffset = (imageView.frame.height - scrollView.bounds.height) / 2
 		let offset = CGPoint(x: xOffset, y: yOffset)
 		scrollView.contentOffset = offset
+	}
+
+	private func setupScrollViewInsets() {
+		let croppingRect = cropSize == .circle ? circleRect() : bounds
+		let top = croppingRect.minY
+		let left = croppingRect.minX
+		let bottom = scrollView.bounds.height - croppingRect.maxY
+		let right = scrollView.bounds.width - croppingRect.maxX
+		let insets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+		scrollView.contentInset = insets
 	}
 
 	// MARK: - Business Logic
@@ -112,8 +150,8 @@ class WDImageCropView: UIView {
 
 	private func scaled(cgImage: CGImage) -> CGImage? {
 		let scale = UIScreen.main.scale
-		let width = min(Int(cropSize.width * scale), cgImage.width)
-		let height = min(Int(cropSize.height * scale), cgImage.height)
+		let width = min(Int(croppingSize.width * scale), cgImage.width)
+		let height = min(Int(croppingSize.height * scale), cgImage.height)
 		let bitsPerComponent = cgImage.bitsPerComponent
 		let bytesPerRow = width * cgImage.bitsPerPixel / 8
 		guard let colorSpace = cgImage.colorSpace else { return nil }
@@ -135,8 +173,9 @@ class WDImageCropView: UIView {
 	}
 
     private func calcVisibleRectForCropArea() -> CGRect {
-		let scale = 1 / scrollView.zoomScale
-        return scrollView.bounds.scaleRect(withMultiplier: scale)
+		let croppingRect = cropSize == .circle ? circleRect() : bounds
+		let result = convert(croppingRect, to: imageView).integral
+		return result
     }
 
     private func orientationTransformedRectOfImage(_ image: UIImage) -> CGAffineTransform {
@@ -155,6 +194,16 @@ class WDImageCropView: UIView {
 
         return rectTransform.scaledBy(x: image.scale, y: image.scale)
     }
+
+	private func circleRect() -> CGRect {
+		let side = UIScreen.main.bounds.width * 0.75
+		let circleSize = CGSize(width: side, height: side)
+		let width = circleSize.width
+		let height = circleSize.height
+		let origin = CGPoint(x: (bounds.width - width) / 2,
+							 y: (bounds.height - height) / 2)
+		return CGRect(origin: origin, size: circleSize)
+	}
 }
 
 extension WDImageCropView: UIScrollViewDelegate {
