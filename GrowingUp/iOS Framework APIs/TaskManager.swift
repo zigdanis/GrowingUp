@@ -8,7 +8,6 @@
 
 import Foundation
 
-// TODO: - Change T? to just T. To get rid of conversion to Optionals
 typealias Task<T> = () -> (Result<T?, CoreError>)
 typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void
 

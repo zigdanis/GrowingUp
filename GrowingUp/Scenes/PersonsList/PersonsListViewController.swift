@@ -51,6 +51,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		pageController.delegate = self
 		pageController.dataSource = self
 		addChild(pageController)
+		pageController.view.translatesAutoresizingMaskIntoConstraints = false
 		view.insertSubview(pageController.view, at: 0)
 		pageController.didMove(toParent: self)
 		let consts = [
