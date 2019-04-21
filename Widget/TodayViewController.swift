@@ -10,48 +10,64 @@ import UIKit
 import NotificationCenter
 import Core
 
-class TodayViewController: UIViewController, NCWidgetProviding {
+final class TodayViewController: UIViewController, NCWidgetProviding {
 
-    @IBOutlet weak var ageLabel: UILabel!
-    @IBOutlet weak var faceImage: UIImageView!
-
-    private var attString = NSMutableAttributedString()
+	private let identifier = "PersonTableViewCell"
+	@IBOutlet weak var tableView: UITableView!
+	private var numberOfRows = 1
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupFaceImage()
-        setupAgeLabel()
-        maintainCurrentAge()
+		setupTableView()
+		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
     }
 
-    private func setupFaceImage() {
-        faceImage.layer.cornerRadius = faceImage.bounds.width / 2
-    }
+	private func setupTableView() {
+		tableView.delegate = self
+		tableView.dataSource = self
+		let nib = UINib(nibName: identifier, bundle: nil)
+		tableView.register(nib, forCellReuseIdentifier: identifier)
+		tableView.estimatedRowHeight = 44
+		tableView.tableFooterView = UIView()
+	}
 
-    private func setupAgeLabel() {
-        ageLabel.minimumScaleFactor = 0.5
-        ageLabel.adjustsFontSizeToFitWidth = true
-        ageLabel.numberOfLines = 2
-    }
+	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
+		switch activeDisplayMode {
+		case .compact:
+			numberOfRows = 1
+			preferredContentSize = maxSize
+		case .expanded:
+			numberOfRows = 3
+			preferredContentSize = CGSize(width: maxSize.width, height: 300)
+		@unknown default:
+			fatalError("We are not ready for the new DisplayMode")
+		}
+		tableView.reloadData()
+	}
 
     // MARK: - Business Logic
 
-    private func maintainCurrentAge() {
-        setupCurrentAge()
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            self?.setupCurrentAge()
-        }
-    }
-
-    private func setupCurrentAge() {
-        ageLabel.text = AgeCalculator.ageString(for: AgeCalculator.ageComponents())
-    }
-
     // MARK: - Actions
 
-    @IBAction func widgetTouched() {
+    private func widgetTouched() {
         let url = URL(string: "growingup-app://")!
         extensionContext?.open(url, completionHandler: nil)
     }
 
+}
+
+extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
+
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		return preferredContentSize.height / CGFloat(numberOfRows)
+	}
+
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return numberOfRows
+	}
+
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+		return cell
+	}
 }

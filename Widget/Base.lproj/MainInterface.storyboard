@@ -18,36 +18,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="face" translatesAutoresizingMaskIntoConstraints="NO" id="lm1-g6-qLc">
-                                <rect key="frame" x="16" y="16" width="60" height="60"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="Flp-hr-Sy5"/>
-                                    <constraint firstAttribute="height" constant="60" id="XAa-NX-yDq"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I am:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F0s-1j-Jf4">
-                                <rect key="frame" x="84" y="35.5" width="220" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tXM-FW-aS2">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4wt-ze-B69">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
-                                <connections>
-                                    <action selector="widgetTouched" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="Df9-NV-mL5"/>
-                                </connections>
-                            </button>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <sections/>
+                            </tableView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="lm1-g6-qLc" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" constant="16" id="1IS-17-eKL"/>
-                            <constraint firstItem="F0s-1j-Jf4" firstAttribute="centerY" secondItem="lm1-g6-qLc" secondAttribute="centerY" id="9Ty-Um-ftG"/>
-                            <constraint firstItem="lm1-g6-qLc" firstAttribute="centerY" secondItem="S3S-Oj-5AN" secondAttribute="centerY" id="9yV-4v-IZe"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="tXM-FW-aS2" secondAttribute="bottom" id="BI1-7G-le8"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="tXM-FW-aS2" secondAttribute="trailing" id="Hne-oF-4At"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="F0s-1j-Jf4" secondAttribute="trailing" constant="16" id="U4s-5W-Rrx"/>
-                            <constraint firstItem="tXM-FW-aS2" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="cPE-jc-Eze"/>
-                            <constraint firstItem="tXM-FW-aS2" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="gd1-GB-Tgc"/>
-                            <constraint firstItem="F0s-1j-Jf4" firstAttribute="leading" secondItem="lm1-g6-qLc" secondAttribute="trailing" constant="8" id="ra2-d0-eUZ"/>
+                            <constraint firstItem="4wt-ze-B69" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="9VK-8Q-Jdg"/>
+                            <constraint firstItem="4wt-ze-B69" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="cdw-pY-etK"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="4wt-ze-B69" secondAttribute="trailing" id="ecq-Vu-s5z"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="top" secondItem="4wt-ze-B69" secondAttribute="top" id="smx-Fo-a4g"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
                     </view>
@@ -55,8 +36,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="92"/>
                     <connections>
-                        <outlet property="ageLabel" destination="F0s-1j-Jf4" id="zpC-It-d1i"/>
-                        <outlet property="faceImage" destination="lm1-g6-qLc" id="Q5L-sk-lAb"/>
+                        <outlet property="tableView" destination="4wt-ze-B69" id="I7s-9C-Kha"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -64,7 +44,4 @@
             <point key="canvasLocation" x="139.19999999999999" y="133.13343328335833"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="face" width="561" height="561"/>
-    </resources>
 </document>
