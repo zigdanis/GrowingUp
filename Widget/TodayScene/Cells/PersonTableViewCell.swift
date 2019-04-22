@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 
 protocol PersonCellView {
-
+	func displayName(name: String)
+	func displayAge(age: String)
+	func displayWidgetPic(pic: UIImage)
 }
 
 final class PersonTableViewCell: UITableViewCell, PersonCellView {
@@ -27,4 +29,17 @@ final class PersonTableViewCell: UITableViewCell, PersonCellView {
 		faceImage.layer.cornerRadius = faceImage.bounds.width / 2
 	}
 
+	// MARK: - PersonCellView
+
+	func displayName(name: String) {
+		nameLabel.text = name
+	}
+
+	func displayAge(age: String) {
+		ageLabel.text = age
+	}
+
+	func displayWidgetPic(pic: UIImage) {
+		faceImage.image = pic
+	}
 }

@@ -14,7 +14,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding {
 
 	private let identifier = "PersonTableViewCell"
 	@IBOutlet weak var tableView: UITableView!
-	private var numberOfRows = 1
+	private let presenter = TodayPresenterImplementation()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,18 +34,16 @@ final class TodayViewController: UIViewController, NCWidgetProviding {
 	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
 		switch activeDisplayMode {
 		case .compact:
-			numberOfRows = 1
+			presenter.maxRows = 1
 			preferredContentSize = maxSize
 		case .expanded:
-			numberOfRows = 3
+			presenter.maxRows = 3
 			preferredContentSize = CGSize(width: maxSize.width, height: 300)
 		@unknown default:
 			fatalError("We are not ready for the new DisplayMode")
 		}
 		tableView.reloadData()
 	}
-
-    // MARK: - Business Logic
 
     // MARK: - Actions
 
@@ -59,11 +57,11 @@ final class TodayViewController: UIViewController, NCWidgetProviding {
 extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return preferredContentSize.height / CGFloat(numberOfRows)
+		return preferredContentSize.height / CGFloat(presenter.numberOfPersons())
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return numberOfRows
+		return presenter.numberOfPersons()
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
