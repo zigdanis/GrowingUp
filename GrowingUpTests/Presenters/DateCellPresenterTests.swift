@@ -50,7 +50,7 @@ final class DateCellPresenterTests: XCTestCase {
 		// When
 		sut.configure(cell: dateCellSpy, forRow: EPC.timePickerRow)
 		// Then
-		XCTAssertEqual("xx:xx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
+		XCTAssertEqual("00:00", dateCellSpy.displayedValue, "The Value we expected was not displayed")
 	}
 
 }
