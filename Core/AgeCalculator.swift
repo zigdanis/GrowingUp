@@ -6,9 +6,9 @@
 //  Copyright © 2018 zigdanis. All rights reserved.
 //
 
-private let bundleIdentifier = "pro.ziganshin.Core"
-
 import Foundation
+
+private let bundleIdentifier = "pro.ziganshin.Core"
 
 public enum AgeCalculator {
 

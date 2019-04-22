@@ -8,19 +8,18 @@
 
 import Foundation
 import Disk
-import Core
 
-final class CachePersonsGateway: PersonsGateway {
+public final class CachePersonsGateway: PersonsGateway {
 
 	let coreDataGateway: CoreDataPersonsGateway
 	let taskManager: TaskManager
 
-	init(coreDataGateway: CoreDataPersonsGateway, taskManager: TaskManager) {
+	public init(coreDataGateway: CoreDataPersonsGateway, taskManager: TaskManager) {
 		self.coreDataGateway = coreDataGateway
 		self.taskManager = taskManager
 	}
 
-	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 
 		var tasks = [Task<Person>]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
@@ -34,7 +33,7 @@ final class CachePersonsGateway: PersonsGateway {
 		taskManager.process(tasks: tasks, withCompletion: completionHandler)
 	}
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	public func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		let task: Task<[Person]> = {
 			let moc = CoreDataStackImplementation.sharedInstance
 				.persistentContainer.newBackgroundContext()
@@ -45,7 +44,7 @@ final class CachePersonsGateway: PersonsGateway {
 		taskManager.process(tasks: [task], withCompletion: completionHandler)
 	}
 
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 
 		var tasks = [Task<Person>]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
@@ -82,9 +81,10 @@ final class CachePersonsGateway: PersonsGateway {
 	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let appPic = parameters.appImage?.uiImage else { return nil }
 		guard let appPicKey = parameters.appImage?.cachingKey else { return nil }
+		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			do {
-				try Disk.save(appPic, to: .documents, as: appPicKey)
+				try Disk.save(appPic, to: directory, as: appPicKey)
 				return .success(nil)
 			} catch {
 				let coreError = CoreError(message: error.localizedDescription)
@@ -96,9 +96,10 @@ final class CachePersonsGateway: PersonsGateway {
 	private func widgetPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let widgetPic = parameters.widgetImage?.uiImage else { return nil }
 		guard let widgetPicKey = parameters.widgetImage?.cachingKey else { return nil }
+		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			do {
-				try Disk.save(widgetPic, to: .documents, as: widgetPicKey)
+				try Disk.save(widgetPic, to: directory, as: widgetPicKey)
 				return .success(nil)
 			} catch {
 				let coreError = CoreError(message: error.localizedDescription)

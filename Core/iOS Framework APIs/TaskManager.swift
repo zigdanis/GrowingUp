@@ -7,18 +7,19 @@
 //
 
 import Foundation
-import Core
 
-typealias Task<T> = () -> (Result<T?, CoreError>)
-typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void
+public typealias Task<T> = () -> (Result<T?, CoreError>)
+public typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void
 
-protocol TaskManager {
+public protocol TaskManager {
 	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>)
 }
 
-final class TaskManagerOnGCD: TaskManager {
+public final class TaskManagerOnGCD: TaskManager {
 
-	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>) {
+	public init() { }
+
+	public func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>) {
 		let queue = DispatchQueue.global(qos: .userInitiated)
 		let group = DispatchGroup()
 		var finalValue: T?

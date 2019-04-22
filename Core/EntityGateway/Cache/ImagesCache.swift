@@ -9,15 +9,13 @@
 import Foundation
 import UIKit
 import Disk
-import Core
 
-let asd = AgeCalculator.ageComponents()
+public enum ImagesCache {
 
-enum ImagesCache {
-
-	static func loadImageFromDisk(image: PersonImage, completion: @escaping (UIImage?) -> Void) {
+	public static func loadImageFromDisk(image: PersonImage, completion: @escaping (UIImage?) -> Void) {
 		DispatchQueue.global(qos: .userInitiated).async {
-			let image = try? Disk.retrieve(image.cachingKey, from: .documents, as: UIImage.self)
+			let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
+			let image = try? Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self)
 			DispatchQueue.main.async(execute: {
 				completion(image)
 			})

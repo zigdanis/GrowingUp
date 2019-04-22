@@ -44,19 +44,16 @@
 		0916536E223ECBC40081FB10 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533C223ECBC40081FB10 /* GradientView.swift */; };
 		0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533D223ECBC40081FB10 /* VerticalButton.swift */; };
 		0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
-		091AE0DB2253F9030041DBCE /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */; };
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
 		0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */; };
 		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
-		092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		092C32CD226129310067B2DB /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		092C32CF22612A0E0067B2DB /* PersonsListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CE22612A0E0067B2DB /* PersonsListPresenterTests.swift */; };
 		092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D022612A6C0067B2DB /* PersonsListViewSpy.swift */; };
 		092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */; };
-		09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
@@ -68,10 +65,14 @@
 		095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
 		095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165341223ECBC40081FB10 /* CoreDataStack.swift */; };
 		095000DF226DEBA800789BED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
+		095000E0226DECD700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
+		095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
+		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
+		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
+		095000E5226E3F2700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
-		095DEC4A2267B4D100E74C13 /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		096E61ED226667F6000181D4 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */; };
 		096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EE22666D46000181D4 /* AddPersonPresenter.swift */; };
 		096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F9D6C226CE4B100DBB8D9 /* PersonTableViewCell.swift */; };
@@ -344,6 +345,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				095000E0226DECD700789BED /* Disk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,9 +360,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				091AE0DB2253F9030041DBCE /* Disk.framework in Frameworks */,
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
 				09A69E57223E331000291044 /* Rswift.framework in Frameworks */,
+				095000E5226E3F2700789BED /* Disk.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +394,7 @@
 		09051B5721C55EB6008A99C6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
@@ -411,13 +414,11 @@
 				09165339223ECBC40081FB10 /* AppDelegate.swift */,
 				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165306223ECBC40081FB10 /* Storyboards */,
-				0916531C223ECBC40081FB10 /* Core */,
 				0916533E223ECBC40081FB10 /* EntityGateway */,
 				0916530E223ECBC40081FB10 /* Scenes */,
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				0916533A223ECBC40081FB10 /* Views */,
-				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				09165348223ECBC40081FB10 /* 3rd Party Libraries */,
 			);
 			path = GrowingUp;
@@ -465,13 +466,6 @@
 				09F5A631224409F400AD0B9D /* SwitchTableViewCell */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		0916531C223ECBC40081FB10 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Core;
 			sourceTree = "<group>";
 		};
 		0916531D223ECBC40081FB10 /* Gateways */ = {
@@ -540,7 +534,6 @@
 		0916533E223ECBC40081FB10 /* EntityGateway */ = {
 			isa = PBXGroup;
 			children = (
-				09410BCD2253DACC006D672F /* Cache */,
 				0916533F223ECBC40081FB10 /* LocalPersistance */,
 			);
 			path = EntityGateway;
@@ -708,6 +701,7 @@
 		095000D5226DD93B00789BED /* EntityGateway */ = {
 			isa = PBXGroup;
 			children = (
+				09410BCD2253DACC006D672F /* Cache */,
 				095000D6226DD94700789BED /* LocalPersistance */,
 			);
 			path = EntityGateway;
@@ -1258,8 +1252,11 @@
 				0983E768226D9658007EC8D2 /* AddPersonParameters.swift in Sources */,
 				0983E767226D9658007EC8D2 /* Person.swift in Sources */,
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
+				095000E3226DEDB600789BED /* TaskManager.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
+				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */,
+				095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */,
 				0983E766226D9652007EC8D2 /* FetchPersonsUseCase.swift in Sources */,
 				095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */,
 				0983E763226D964A007EC8D2 /* PersonsGateway.swift in Sources */,
@@ -1324,14 +1321,12 @@
 				09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */,
 				096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
-				095DEC4A2267B4D100E74C13 /* ImagesCache.swift in Sources */,
 				095000D2226DD3C100789BED /* Constants.swift in Sources */,
 				092C32CD226129310067B2DB /* Logging.swift in Sources */,
 				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
 				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
 				099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */,
 				0916535A223ECBC40081FB10 /* EditPersonViewRouter.swift in Sources */,
-				092AA35E2257C79D002EAEE8 /* TaskManager.swift in Sources */,
 				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
 				09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */,
 				09165353223ECBC40081FB10 /* TextFieldTableViewCell.swift in Sources */,
@@ -1345,7 +1340,6 @@
 				09165355223ECBC40081FB10 /* SwitchTableViewCell.swift in Sources */,
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
 				09165356223ECBC40081FB10 /* EditPersonPresenter.swift in Sources */,
-				09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */,
 				09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */,
 				09EC1CC3225BDBE100D9C985 /* PersonsListViewRouter.swift in Sources */,
 				0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */,
@@ -1501,7 +1495,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = Core;
+				FRAMEWORK_SEARCH_PATHS = (
+					Core,
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1536,7 +1533,10 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = Core;
+				FRAMEWORK_SEARCH_PATHS = (
+					Core,
+					"$(PROJECT_DIR)/Carthage/Build/iOS",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";

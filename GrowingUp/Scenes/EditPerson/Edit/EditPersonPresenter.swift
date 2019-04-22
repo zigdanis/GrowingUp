@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import Disk
 import Core
 
 protocol EditPersonPresenter: TextFieldObserver {
