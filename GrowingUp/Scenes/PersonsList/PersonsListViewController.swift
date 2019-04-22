@@ -42,7 +42,6 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configurator.configure(personsListController: self)
-		view.backgroundColor = #colorLiteral(red: 0.9568627451, green: 0.9568627451, blue: 0.9568627451, alpha: 1)
 		setupPageViewController()
 		setupPageIndicator()
 	}
@@ -61,6 +60,8 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 			view.bottomAnchor.constraint(equalTo: pageController.view.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
+
+		pageController.view.backgroundColor = #colorLiteral(red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1)
 	}
 
 	private func setupPageIndicator() {
