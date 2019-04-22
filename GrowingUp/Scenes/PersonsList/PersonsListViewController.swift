@@ -77,7 +77,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		let index = max(total - 2, 0)
 		pageIndicator.currentPage = index
 		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
-		pageController.setViewControllers([lastScreen], direction: .forward, animated: true, completion: nil)
+		pageController.setViewControllers([lastScreen], direction: .forward, animated: false, completion: nil)
 	}
 
 }
