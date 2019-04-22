@@ -7,23 +7,22 @@
 //
 
 import Foundation
-import Core
 
-protocol CoreDataPersonsGateway: PersonsGateway {
+public protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError>
 }
 
-final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
+public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 
 	let viewContext: NSManagedObjectContextProtocol
 
-	init(viewContext: NSManagedObjectContextProtocol) {
+	public init(viewContext: NSManagedObjectContextProtocol) {
 		self.viewContext = viewContext
 	}
 
-	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
+	public func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
 		guard let coreDataPerson = context.addEntity(withType: CoreDataPerson.self) else {
 			return .failure(CoreError.coreDataAddFailed)
 		}
@@ -42,7 +41,7 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		}
 	}
 
-	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
+	public func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
 		var coreDataPerson: CoreDataPerson?
 		do {
 			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id as CVarArg)
@@ -68,7 +67,7 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		}
 	}
 
-	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
+	public func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError> {
 		do {
 			let coreDataPersons = try context.allEntities(withType: CoreDataPerson.self)
 			let persons = coreDataPersons.map { $0.person }
@@ -80,17 +79,17 @@ final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
 		}
 	}
 
-	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		let result = add(parameters: parameters, with: viewContext)
 		completionHandler(result)
 	}
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	public func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		let result = fetchPersons(with: viewContext)
 		completionHandler(result)
 	}
 
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		let result = edit(person: person, with: parameters, with: viewContext)
 		completionHandler(result)
 	}

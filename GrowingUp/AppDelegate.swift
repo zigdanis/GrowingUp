@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupNavigationControllerAppearence()
 		#if DEBUG
 		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-		print("urls = \(urls)")
+		print("Documents URL = \(urls)")
 		#endif
 		return true
     }

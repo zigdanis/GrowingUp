@@ -43,10 +43,6 @@
 		0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533B223ECBC40081FB10 /* ImagePickerButton.swift */; };
 		0916536E223ECBC40081FB10 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533C223ECBC40081FB10 /* GradientView.swift */; };
 		0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533D223ECBC40081FB10 /* VerticalButton.swift */; };
-		09165370223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */; };
-		09165371223ECBC40081FB10 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165341223ECBC40081FB10 /* CoreDataStack.swift */; };
-		09165373223ECBC40081FB10 /* CoreDataPersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */; };
-		09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
 		0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		091AE0DB2253F9030041DBCE /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
@@ -66,6 +62,12 @@
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
+		095000D2226DD3C100789BED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
+		095000D7226DD95800789BED /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */; };
+		095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */; };
+		095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
+		095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165341223ECBC40081FB10 /* CoreDataStack.swift */; };
+		095000DF226DEBA800789BED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
@@ -257,6 +259,7 @@
 		094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
+		095000D1226DD3C100789BED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonPresenterTests.swift; sourceTree = "<group>"; };
 		095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseSpy.swift; sourceTree = "<group>"; };
@@ -389,6 +392,7 @@
 		09051B5721C55EB6008A99C6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
 				0916531D223ECBC40081FB10 /* Gateways */,
@@ -506,6 +510,7 @@
 				0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */,
 				0916532D223ECBC40081FB10 /* Date+Extensions.swift */,
 				092C32CC226129310067B2DB /* Logging.swift */,
+				095000D1226DD3C100789BED /* Constants.swift */,
 			);
 			path = Others;
 			sourceTree = "<group>";
@@ -544,29 +549,9 @@
 		0916533F223ECBC40081FB10 /* LocalPersistance */ = {
 			isa = PBXGroup;
 			children = (
-				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
-				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
 				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
-				09165344223ECBC40081FB10 /* Gateways */,
-				09165346223ECBC40081FB10 /* Entities */,
 			);
 			path = LocalPersistance;
-			sourceTree = "<group>";
-		};
-		09165344223ECBC40081FB10 /* Gateways */ = {
-			isa = PBXGroup;
-			children = (
-				09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */,
-			);
-			path = Gateways;
-			sourceTree = "<group>";
-		};
-		09165346223ECBC40081FB10 /* Entities */ = {
-			isa = PBXGroup;
-			children = (
-				09165347223ECBC40081FB10 /* CoreDataPerson.swift */,
-			);
-			path = Entities;
 			sourceTree = "<group>";
 		};
 		09165348223ECBC40081FB10 /* 3rd Party Libraries */ = {
@@ -718,6 +703,25 @@
 				09805503223C3C0100E24D40 /* Person.swift */,
 			);
 			path = Creators;
+			sourceTree = "<group>";
+		};
+		095000D5226DD93B00789BED /* EntityGateway */ = {
+			isa = PBXGroup;
+			children = (
+				095000D6226DD94700789BED /* LocalPersistance */,
+			);
+			path = EntityGateway;
+			sourceTree = "<group>";
+		};
+		095000D6226DD94700789BED /* LocalPersistance */ = {
+			isa = PBXGroup;
+			children = (
+				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
+				09165347223ECBC40081FB10 /* CoreDataPerson.swift */,
+				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
+				09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */,
+			);
+			path = LocalPersistance;
 			sourceTree = "<group>";
 		};
 		095716CF2243658500EA806C /* Views */ = {
@@ -1052,7 +1056,7 @@
 						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -1073,7 +1077,7 @@
 						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.DataProtection = {
 								enabled = 1;
@@ -1250,12 +1254,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				0983E76A226D9677007EC8D2 /* CoreError.swift in Sources */,
+				095000D7226DD95800789BED /* NSManagedObjectContext+Utils.swift in Sources */,
 				0983E768226D9658007EC8D2 /* AddPersonParameters.swift in Sources */,
 				0983E767226D9658007EC8D2 /* Person.swift in Sources */,
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
+				095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */,
 				0983E766226D9652007EC8D2 /* FetchPersonsUseCase.swift in Sources */,
+				095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */,
 				0983E763226D964A007EC8D2 /* PersonsGateway.swift in Sources */,
+				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
+				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
 			);
@@ -1310,13 +1319,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09165374223ECBC40081FB10 /* CoreDataPerson.swift in Sources */,
 				095716D12243659700EA806C /* DatePickerView.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
 				09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */,
 				096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				095DEC4A2267B4D100E74C13 /* ImagesCache.swift in Sources */,
+				095000D2226DD3C100789BED /* Constants.swift in Sources */,
 				092C32CD226129310067B2DB /* Logging.swift in Sources */,
 				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
 				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
@@ -1327,7 +1336,6 @@
 				09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */,
 				09165353223ECBC40081FB10 /* TextFieldTableViewCell.swift in Sources */,
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
-				09165373223ECBC40081FB10 /* CoreDataPersonsGateway.swift in Sources */,
 				09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */,
 				0916536A223ECBC40081FB10 /* R.generated.swift in Sources */,
 				099C915B225F2034005C963C /* EmptyPersonConfigurator.swift in Sources */,
@@ -1340,7 +1348,6 @@
 				09410BCF2253DAEC006D672F /* CachePersonsGateway.swift in Sources */,
 				09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */,
 				09EC1CC3225BDBE100D9C985 /* PersonsListViewRouter.swift in Sources */,
-				09165370223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift in Sources */,
 				0996443D2241426C003C321D /* SwitchCellPresenter.swift in Sources */,
 				09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */,
 				09165350223ECBC40081FB10 /* DateTableViewCell.swift in Sources */,
@@ -1348,7 +1355,6 @@
 				09B4E954224DEEC500F4E3F2 /* WDImagePicker.swift in Sources */,
 				09165362223ECBC40081FB10 /* UIViewController+Extensions.swift in Sources */,
 				09165359223ECBC40081FB10 /* EditPersonConfigurator.swift in Sources */,
-				09165371223ECBC40081FB10 /* CoreDataStack.swift in Sources */,
 				09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,
 				09B4E956224DEEC500F4E3F2 /* WDImageCropViewController.swift in Sources */,

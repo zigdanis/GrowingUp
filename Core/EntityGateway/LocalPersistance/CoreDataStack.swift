@@ -9,29 +9,29 @@
 import Foundation
 import CoreData
 
-protocol CoreDataStack {
+public protocol CoreDataStack {
     var persistentContainer: NSPersistentContainer { get }
     func saveContext()
 }
 
-class CoreDataStackImplementation {
+public final class CoreDataStackImplementation {
 
-    static let sharedInstance = CoreDataStackImplementation()
+    public static let sharedInstance = CoreDataStackImplementation()
 
-    // MARK: - Core Data stack
-
-    lazy var persistentContainer: NSPersistentContainer = self.recreatePersistanContainer()
-
-	private func deleteSQLiteStore(for url: URL) {
-		do {
-			try FileManager.default.removeItem(at: url)
-		} catch let error as NSError {
-			fatalError("Unresolved error \(error), \(error.userInfo)")
-		}
-	}
+    public lazy var persistentContainer: NSPersistentContainer = self.recreatePersistanContainer()
 
 	private func recreatePersistanContainer() -> NSPersistentContainer {
+		let fileURL = FileManager.default
+			.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId)?
+			.appendingPathComponent("Application Support/GrowingUp.sqlite")
+		guard let appGroupURL = fileURL else {
+			fatalError("Failed to get App Group URL")
+		}
+		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
+		print("App Group URL = \(appGroupURL)")
+		let description = NSPersistentStoreDescription(url: appGroupURL)
 		let container = NSPersistentContainer(name: "GrowingUp")
+		container.persistentStoreDescriptions = [description]
 		container.loadPersistentStores(completionHandler: { (description, error) in
 			if let error = error as NSError? {
 				if error.domain == NSCocoaErrorDomain {
@@ -47,7 +47,7 @@ class CoreDataStackImplementation {
 
     // MARK: - Core Data Saving support
 
-    func saveContext () {
+    public func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {
@@ -60,4 +60,23 @@ class CoreDataStackImplementation {
             }
         }
     }
+
+	// MARk: - Helpers
+
+	private func deleteSQLiteStore(for url: URL) {
+		do {
+			try FileManager.default.removeItem(at: url)
+		} catch let error as NSError {
+			fatalError("Unresolved error \(error), \(error.userInfo)")
+		}
+	}
+
+	private func checkAndCreateDirectoryIfNeeded(at path: URL) {
+		let directoryPath = path.deletingLastPathComponent()
+		do {
+			try FileManager.default.createDirectory(at: directoryPath, withIntermediateDirectories: true, attributes: nil)
+		} catch {
+			fatalError("Failed to create directory in App Group folder for .sqlite file at \(directoryPath)")
+		}
+	}
 }
