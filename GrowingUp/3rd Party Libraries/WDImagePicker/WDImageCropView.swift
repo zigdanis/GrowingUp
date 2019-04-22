@@ -140,7 +140,11 @@ class WDImageCropView: UIView {
 		guard let imageRef = imageToCrop.cgImage?.cropping(to: visibleRect) else {
 			throw WDImageError.imageCropFailed
 		}
-		guard let scaledRef = scaled(cgImage: imageRef) else {
+		let isRotated = imageToCrop.imageOrientation == .left ||
+						imageToCrop.imageOrientation == .right ||
+						imageToCrop.imageOrientation == .leftMirrored ||
+						imageToCrop.imageOrientation == .rightMirrored
+		guard let scaledRef = scaled(cgImage: imageRef, rotated: isRotated) else {
 			throw WDImageError.imageScaleFailed
 		}
         let img = UIImage(cgImage: scaledRef, scale: imageToCrop.scale,
@@ -148,10 +152,12 @@ class WDImageCropView: UIView {
 		return img
     }
 
-	private func scaled(cgImage: CGImage) -> CGImage? {
+	private func scaled(cgImage: CGImage, rotated: Bool) -> CGImage? {
 		let scale = UIScreen.main.scale
-		let width = min(Int(croppingSize.width * scale), cgImage.width)
-		let height = min(Int(croppingSize.height * scale), cgImage.height)
+		let scalingWidth = rotated ? Int(croppingSize.height * scale) : Int(croppingSize.width * scale)
+		let scalingHeight = rotated ? Int(croppingSize.width * scale) : Int(croppingSize.height * scale)
+		let width = min(scalingWidth, cgImage.width)
+		let height = min(scalingHeight, cgImage.height)
 		let bitsPerComponent = cgImage.bitsPerComponent
 		let bytesPerRow = width * cgImage.bitsPerPixel / 8
 		guard let colorSpace = cgImage.colorSpace else { return nil }

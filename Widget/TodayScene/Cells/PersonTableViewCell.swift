@@ -57,7 +57,6 @@ final class PersonTableViewCell: UITableViewCell, PersonCellView {
 	private func setupCurrentAge(for person: Person) {
 		let components = person.dateComponents
 		let age = AgeCalculator.ageString(for: components)
-		print("setup current age to \(age)")
 		ageLabel.text = age
 	}
 
