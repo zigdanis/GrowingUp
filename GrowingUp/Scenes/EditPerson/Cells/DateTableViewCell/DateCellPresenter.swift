@@ -18,6 +18,15 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 
 	private var storage = [Int: Date]()
 
+	init() {
+		var components = DateComponents()
+		components.year = 2019
+		components.month = 1
+		components.day = 1
+		let zeroHour = Calendar.current.date(from: components) ?? Date()
+		valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
+	}
+
 	func configure(cell: DateCellView, forRow row: Int) {
 		switch row {
 		case EPC.dayPickerRow:
