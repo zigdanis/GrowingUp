@@ -25,6 +25,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 		presenter.view = self
 		setupTableView()
 		setupMaxWidgetSize()
+		presenter.loadPersons()
     }
 
 	private func setupMaxWidgetSize() {
@@ -51,7 +52,8 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 			preferredContentSize = maxSize
 		case .expanded:
 			presenter.maxRows = 3
-			preferredContentSize = CGSize(width: maxSize.width, height: 300)
+			let height = CGFloat(presenter.numberOfPersons() * 100)
+			preferredContentSize = CGSize(width: maxSize.width, height: height)
 		@unknown default:
 			fatalError("We are not ready for the new DisplayMode")
 		}
@@ -91,5 +93,17 @@ extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 		}
 		presenter.configure(cell: personCell, atIndex: indexPath.row)
 		return cell
+	}
+
+	func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		guard let personCell = cell as? PersonCellView else {
+			fatalError("Expected to dequeue PersonCellView")
+		}
+		personCell.cancelTimer()
+	}
+
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+		widgetTouched()
 	}
 }

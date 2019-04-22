@@ -48,7 +48,8 @@
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="5Zg-Tk-wvU" secondAttribute="bottom" constant="2" id="dF9-VU-XXE"/>
                     <constraint firstAttribute="trailing" secondItem="i7I-tW-Usq" secondAttribute="trailing" constant="10" id="gM9-OM-Kgc"/>
                     <constraint firstItem="5Zg-Tk-wvU" firstAttribute="top" secondItem="yTB-ty-o5I" secondAttribute="bottom" constant="2" id="hn6-Gy-Jq6"/>
-                    <constraint firstItem="5Zg-Tk-wvU" firstAttribute="centerX" secondItem="yTB-ty-o5I" secondAttribute="centerX" id="jGo-T1-JdZ"/>
+                    <constraint firstItem="5Zg-Tk-wvU" firstAttribute="centerX" secondItem="yTB-ty-o5I" secondAttribute="centerX" priority="600" id="jGo-T1-JdZ"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5Zg-Tk-wvU" secondAttribute="trailing" constant="4" id="qRV-jC-3pn"/>
                     <constraint firstItem="i7I-tW-Usq" firstAttribute="centerY" secondItem="yTB-ty-o5I" secondAttribute="centerY" id="qoC-Py-n2t"/>
                 </constraints>
             </tableViewCellContentView>

@@ -70,6 +70,7 @@
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		095000E5226E3F2700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
+		095000E6226E43B700789BED /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
@@ -1237,6 +1238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				095000E6226E43B700789BED /* GrowingUp.xcdatamodeld in Sources */,
 				0983E762226D9420007EC8D2 /* TodayPresenter.swift in Sources */,
 				096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */,
 				09051B4121C558DB008A99C6 /* TodayViewController.swift in Sources */,
@@ -1447,7 +1449,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1468,7 +1470,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

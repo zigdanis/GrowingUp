@@ -13,19 +13,20 @@ protocol TodayPresenter {
 	func numberOfPersons() -> Int
 	var maxRows: Int { get set }
 	func configure(cell: PersonCellView, atIndex index: Int)
+	func loadPersons()
 }
 
 final class TodayPresenterImplementation: TodayPresenter {
 
-	var maxRows: Int = 1
+	var maxRows: Int = 3
 	private var persons = [Person]()
 	weak var view: TodayView?
-//	private let fetchUseCase: FetchPersonsUseCaseImplementation
+	private let fetchUseCase: FetchPersonsUseCase
 
 	init() {
-//		let personsGateway = CachePersons
-//		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: <#T##PersonsGateway#>)
-		loadPersons()
+		let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
+		let personsGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
 	}
 
 	func numberOfPersons() -> Int {
@@ -33,13 +34,25 @@ final class TodayPresenterImplementation: TodayPresenter {
 	}
 
 	func configure(cell: PersonCellView, atIndex index: Int) {
-		cell.displayName(name: "Hello")
-		cell.displayAge(age: "a lot of years")
-		
+		let person = persons[index]
+		cell.displayName(name: person.name)
+		cell.displayAge(for: person)
+
+		guard let image = PersonImage(id: person.widgetPicId) else { return }
+		ImagesCache.loadImageFromDisk(image: image) { img in
+			cell.displayWidgetPic(pic: img)
+		}
 	}
 
-	private func loadPersons() {
-
-		view?.reloadTableData()
+	func loadPersons() {
+		fetchUseCase.fetchPersons { result in
+			switch result {
+			case .success(let persons):
+				self.persons = persons
+			case .failure(let error):
+				print("Failed to fetch Persons from CoreData with error \(error.message)")
+			}
+			self.view?.reloadTableData()
+		}
 	}
 }
