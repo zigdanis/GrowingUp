@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import GrowingUp
+@testable import Core
 
 final class TextFieldCellPresenterTests: XCTestCase {
 

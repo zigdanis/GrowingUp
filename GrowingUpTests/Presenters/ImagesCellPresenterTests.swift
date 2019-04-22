@@ -9,6 +9,7 @@
 import XCTest
 import Foundation
 @testable import GrowingUp
+@testable import Core
 
 class ImagesCellPresenterTests: XCTestCase {
 

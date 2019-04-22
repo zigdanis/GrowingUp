@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import GrowingUp
+@testable import Core
 
 // Discussion:
 // Happy path is tested using an in memory core data stack while the error paths are "simulated" using a stub NSManagedObjectContextStub

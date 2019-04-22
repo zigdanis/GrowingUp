@@ -10,6 +10,7 @@ import Foundation
 import CoreData
 
 @testable import GrowingUp
+@testable import Core
 
 class InMemoryCoreDataStack: CoreDataStack {
 

@@ -7,6 +7,7 @@
 //
 
 @testable import GrowingUp
+@testable import Core
 
 class TextFieldCellViewSpy: TextFieldCellView {
 

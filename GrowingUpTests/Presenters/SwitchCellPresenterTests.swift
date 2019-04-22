@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import GrowingUp
+@testable import Core
 
 class SwitchCellPresenterTests: XCTestCase {
 
@@ -39,8 +40,10 @@ class SwitchCellPresenterTests: XCTestCase {
 
 	func test_SUT_WhenConfiguredWithData_ProduceExpectedParameters() {
 		// Given
-		let components = AddPersonDateComponents(years: true, months: false, days: true, hours: false, minutes: true, seconds: false)
-		// When
+		var components = AddPersonDateComponents()
+		components.months = false
+		components.hours = false
+		components.seconds = false
 
 		let valuesForRow = [ 4: true,
 							 5: false,

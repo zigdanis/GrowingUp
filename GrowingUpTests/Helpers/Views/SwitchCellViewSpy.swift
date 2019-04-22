@@ -8,6 +8,7 @@
 
 import Foundation
 @testable import GrowingUp
+@testable import Core
 
 final class SwitchCellViewSpy: SwitchCellView {
 	var displayedTitle: String?

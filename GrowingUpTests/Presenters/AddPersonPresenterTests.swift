@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import GrowingUp
+@testable import Core
 
 final class AddPersonPresenterTests: XCTestCase {
 
@@ -210,6 +211,6 @@ final class AddPersonPresenterTests: XCTestCase {
 		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let pics = PersonImages(appPic: appPic, widgetPic: widgetPic)
 		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponenets: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponents: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
 	}
 }
