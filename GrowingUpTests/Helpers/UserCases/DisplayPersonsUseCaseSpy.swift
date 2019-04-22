@@ -10,7 +10,7 @@ import Foundation
 @testable import GrowingUp
 @testable import Core
 
-class DisplayPersonsUseCaseSpy: DisplayPersonsUseCase {
+class DisplayPersonsUseCaseSpy: FetchPersonsUseCase {
 
 	var displayPersonsCalled = false
 	var resultToBeReturned: Result<[Person], CoreError>!

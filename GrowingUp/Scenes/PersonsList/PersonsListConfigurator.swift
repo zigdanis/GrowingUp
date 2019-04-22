@@ -20,8 +20,8 @@ final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 		let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
-		let displayPersonsUseCase = DisplayPersonsUseCaseImplementation(personsGateway: personsGateway)
-		let presenter = PersonsListPresenterImplementation(view: personsListController, displayPersonsUseCase: displayPersonsUseCase)
+		let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
+		let presenter = PersonsListPresenterImplementation(view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
 		personsListController.presenter = presenter
 	}
 }

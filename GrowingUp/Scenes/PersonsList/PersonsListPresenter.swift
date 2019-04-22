@@ -18,16 +18,16 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private var cachedScreens = [Int: PageViewControllerViewable]()
 	private var persons = [Person]()
 	private weak var view: PersonsListView?
-	private let displayPersonsUseCase: DisplayPersonsUseCase
+	private let fetchPersonsUseCase: FetchPersonsUseCase
 
-	init(view: PersonsListView, displayPersonsUseCase: DisplayPersonsUseCase) {
+	init(view: PersonsListView, displayPersonsUseCase: FetchPersonsUseCase) {
 		self.view = view
-		self.displayPersonsUseCase = displayPersonsUseCase
+		self.fetchPersonsUseCase = displayPersonsUseCase
 		loadListOfPersons()
 	}
 
 	private func loadListOfPersons() {
-		displayPersonsUseCase.fetchPersons { result in
+		fetchPersonsUseCase.fetchPersons { result in
 			switch result {
 			case .success(let value): self.persons = value
 			case .failure(let error): Logging.log(error)

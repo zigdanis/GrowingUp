@@ -10,7 +10,11 @@ import UIKit
 import NotificationCenter
 import Core
 
-final class TodayViewController: UIViewController, NCWidgetProviding {
+protocol TodayView: class {
+	func reloadTableData()
+}
+
+final class TodayViewController: UIViewController, NCWidgetProviding, TodayView {
 
 	private let identifier = "PersonTableViewCell"
 	@IBOutlet weak var tableView: UITableView!
@@ -18,9 +22,18 @@ final class TodayViewController: UIViewController, NCWidgetProviding {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		presenter.view = self
 		setupTableView()
-		extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+		setupMaxWidgetSize()
     }
+
+	private func setupMaxWidgetSize() {
+		if presenter.numberOfPersons() > 1 {
+			extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+		} else {
+			extensionContext?.widgetLargestAvailableDisplayMode = .compact
+		}
+	}
 
 	private func setupTableView() {
 		tableView.delegate = self
@@ -45,6 +58,13 @@ final class TodayViewController: UIViewController, NCWidgetProviding {
 		tableView.reloadData()
 	}
 
+	// MARK: - TodayView
+
+	func reloadTableData() {
+		setupMaxWidgetSize()
+		tableView.reloadData()
+	}
+
     // MARK: - Actions
 
     private func widgetTouched() {
@@ -66,6 +86,10 @@ extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+		guard let personCell = cell as? PersonCellView else {
+			fatalError("Expected to dequeue PersonCellView")
+		}
+		presenter.configure(cell: personCell, atIndex: indexPath.row)
 		return cell
 	}
 }

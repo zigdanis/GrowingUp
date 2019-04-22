@@ -10,11 +10,11 @@ import Foundation
 
 public typealias FetchPersonsUseCaseCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
 
-public protocol DisplayPersonsUseCase {
+public protocol FetchPersonsUseCase {
 	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler)
 }
 
-public final class DisplayPersonsUseCaseImplementation: DisplayPersonsUseCase {
+public final class FetchPersonsUseCaseImplementation: FetchPersonsUseCase {
 	let personsGateway: PersonsGateway
 
 	public init(personsGateway: PersonsGateway) {

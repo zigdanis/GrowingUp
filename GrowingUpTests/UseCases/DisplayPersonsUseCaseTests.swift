@@ -12,11 +12,11 @@ import XCTest
 
 class DisplayPersonsUseCaseTests: XCTestCase {
 
-	var sut: DisplayPersonsUseCaseImplementation!
+	var sut: FetchPersonsUseCaseImplementation!
 	let gatewaySpy = PersonsGatewaySpy()
 
     override func setUp() {
-		sut = DisplayPersonsUseCaseImplementation(personsGateway: gatewaySpy)
+		sut = FetchPersonsUseCaseImplementation(personsGateway: gatewaySpy)
     }
 
 	func test_SUT_WhenFetchPersons_CallingGatewayAndCompletion() {
