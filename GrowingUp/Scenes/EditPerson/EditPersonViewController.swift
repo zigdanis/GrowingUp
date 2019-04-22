@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Core
 
 enum BarButtonItemStyle {
 	case cancel

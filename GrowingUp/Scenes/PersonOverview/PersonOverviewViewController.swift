@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Core
 
 protocol PersonOverviewView: PageViewControllerViewable {
 	func displayPersonName(name: String)

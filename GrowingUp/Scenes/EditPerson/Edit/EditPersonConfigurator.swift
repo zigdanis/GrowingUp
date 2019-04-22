@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol EditPersonConfigurator {
     func configure(editPersonViewController: EditPersonViewController)

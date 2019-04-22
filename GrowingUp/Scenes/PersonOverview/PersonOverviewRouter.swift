@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Core
 
 protocol PersonOverviewRouter {
 	func showEdit(for person: Person, presenterDelegate: EditPersonPresenterDelegate?)

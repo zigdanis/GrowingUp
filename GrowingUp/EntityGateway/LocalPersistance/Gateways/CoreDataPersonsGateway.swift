@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 typealias Task<T> = () -> (Result<T?, CoreError>)
 typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void

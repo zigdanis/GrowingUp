@@ -8,11 +8,11 @@
 
 import Foundation
 
-typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
-typealias EditPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
-typealias FetchPersonsEntityGatewayCompletionHandler = (_ books: Result<[Person], CoreError>) -> Void
+public typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
+public typealias EditPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
+public typealias FetchPersonsEntityGatewayCompletionHandler = (_ books: Result<[Person], CoreError>) -> Void
 
-protocol PersonsGateway {
+public protocol PersonsGateway {
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler)
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler)

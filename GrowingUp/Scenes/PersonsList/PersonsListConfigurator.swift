@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol PersonsListConfigurator {
 	func configure(personsListController: PersonsListViewController)

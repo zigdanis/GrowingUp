@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 enum Logging {
 	static func log(_ error: CoreError) {

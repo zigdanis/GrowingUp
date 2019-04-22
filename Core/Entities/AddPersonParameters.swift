@@ -8,25 +8,41 @@
 
 import Foundation
 
-struct AddPersonParameters: Equatable {
-	var name: String
-	var dayOfBirth: Date
-	var timeOfBirth: Date
-	var dateComponenets: AddPersonDateComponents
-	var appImage: PersonImage?
-	var widgetImage: PersonImage?
+public struct AddPersonParameters: Equatable {
+	public var name: String
+	public var dayOfBirth: Date
+	public var timeOfBirth: Date
+	public var dateComponennts: AddPersonDateComponents
+	public var appImage: PersonImage?
+	public var widgetImage: PersonImage?
+
+	public init(name: String,
+				dayOfBirth: Date,
+				timeOfBirth: Date,
+				dateComponents: AddPersonDateComponents,
+				appImage: PersonImage?,
+				widgetImage: PersonImage?) {
+		self.name = name
+		self.dayOfBirth = dayOfBirth
+		self.timeOfBirth = timeOfBirth
+		self.dateComponennts = dateComponents
+		self.appImage = appImage
+		self.widgetImage = widgetImage
+	}
 }
 
-struct AddPersonDateComponents: Equatable {
-	var years = true
-	var months = true
-	var days = true
-	var hours = true
-	var minutes = true
-	var seconds = true
+public struct AddPersonDateComponents: Equatable {
+	public var years = true
+	public var months = true
+	public var days = true
+	public var hours = true
+	public var minutes = true
+	public var seconds = true
+
+	public init() {}
 }
 
-extension AddPersonParameters {
+public extension AddPersonParameters {
 
 	func dateComponents() -> DateComponents {
 		var components = DateComponents()

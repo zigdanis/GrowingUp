@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol SwitchCellPresenter: class {
 	func configure(cell: SwitchCellView, forRow row: Int)

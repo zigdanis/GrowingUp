@@ -8,25 +8,38 @@
 
 import Foundation
 
-struct Person: Equatable, Hashable {
-	var id: UUID
-    var name: String
-    var birthday: Date
-	var appPicId: UUID?
-	var widgetPicId: UUID?
+public struct Person: Equatable, Hashable {
 
-	var dateComponents: DateComponents {
+	public var id: UUID
+    public var name: String
+    public var birthday: Date
+	public var appPicId: UUID?
+	public var widgetPicId: UUID?
+
+	public init(id: UUID,
+				name: String,
+				birthday: Date,
+				appPicId: UUID?,
+				widgetPicId: UUID?) {
+		self.id = id
+		self.name = name
+		self.birthday = birthday
+		self.appPicId = appPicId
+		self.widgetPicId = widgetPicId
+	}
+
+	public var dateComponents: DateComponents {
 		let then = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: birthday)
 		let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
 		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: then, to: now)
 	}
 
-	var dayOfBirth: Date {
+	public var dayOfBirth: Date {
 		let dayComponents = Calendar.current.dateComponents([.year, .month, .day], from: birthday)
 		return Calendar.current.date(from: dayComponents) ?? Date()
 	}
 
-	var timeOfBirth: Date {
+	public var timeOfBirth: Date {
 		let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: birthday)
 		return Calendar.current.date(from: timeComponents) ?? Date()
 	}

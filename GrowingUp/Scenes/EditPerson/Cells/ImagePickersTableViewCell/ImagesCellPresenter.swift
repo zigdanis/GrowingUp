@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol ImagesCellPresenter: class {
 	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate)

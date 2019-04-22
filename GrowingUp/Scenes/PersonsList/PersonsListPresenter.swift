@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 protocol PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable?

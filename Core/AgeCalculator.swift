@@ -10,8 +10,7 @@ private let bundleIdentifier = "pro.ziganshin.Core"
 
 import Foundation
 
-public enum
-AgeCalculator {
+public enum AgeCalculator {
 
     public static func ageComponents() -> DateComponents {
 		let initial = DateComponents(year: 2018, month: 10, day: 20, hour: 15, minute: 25, second: 0)

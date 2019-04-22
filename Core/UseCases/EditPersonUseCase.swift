@@ -8,20 +8,20 @@
 
 import Foundation
 
-typealias EditPersonUseCaseCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
+public typealias EditPersonUseCaseCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
 
-protocol EditPersonUseCase {
+public protocol EditPersonUseCase {
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonUseCaseCompletionHandler)
 }
 
-final class EditPersonUseCaseImplementation: EditPersonUseCase {
+public final class EditPersonUseCaseImplementation: EditPersonUseCase {
 	let personsGateway: PersonsGateway
 
-	init(personsGateway: PersonsGateway) {
+	public init(personsGateway: PersonsGateway) {
 		self.personsGateway = personsGateway
 	}
 
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping (Result<Person, CoreError>) -> Void) {
+	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping (Result<Person, CoreError>) -> Void) {
 		personsGateway.edit(person: person, with: parameters) { (result) in
 			completionHandler(result)
 		}

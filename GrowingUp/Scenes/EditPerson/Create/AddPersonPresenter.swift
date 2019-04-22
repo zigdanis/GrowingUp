@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Core
 
 final class AddPersonPresenter: EditPersonPresenter {
 
@@ -19,7 +20,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
-	// swiftlint:disable vertical_parameter_alignment
 	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
 		 router: EditPersonViewRouter,
@@ -37,7 +37,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
-	// swiftlint:enable vertical_parameter_alignment
 
 	// MARK: - EditPersonPresenter
 
@@ -146,7 +145,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
-								   dateComponenets: components,
+								   dateComponents: components,
 								   appImage: appPic,
 								   widgetImage: widgetPic)
 	}

@@ -1,3 +1,5 @@
+disabled_rules:
+  - vertical_parameter_alignment
 opt_in_rules:
   - attributes
   - closure_end_indentation

@@ -8,6 +8,7 @@
 
 import Foundation
 import Disk
+import Core
 
 final class CachePersonsGateway: PersonsGateway {
 

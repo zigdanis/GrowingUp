@@ -8,6 +8,7 @@
 
 import Foundation
 import Disk
+import Core
 
 protocol EditPersonPresenter: TextFieldObserver {
     var router: EditPersonViewRouter { get }
@@ -43,7 +44,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	private let dateCellsPresenter: DateCellPresenter
 	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
-// swiftlint:disable vertical_parameter_alignment
 	init(person: Person,
 		 view: EditPersonView,
 		 editPersonUseCase: EditPersonUseCase,
@@ -63,7 +63,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.dateCellsPresenter = dateCellsPresenter
 		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
-// swiftlint:enable vertical_parameter_alignment
 
     // MARK: - EditPersonPresenter
 
@@ -185,7 +184,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
-								   dateComponenets: components,
+								   dateComponents: components,
 								   appImage: appPic,
 								   widgetImage: widgetPic)
 	}
