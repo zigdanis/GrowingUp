@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Core
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         setupMainViewController()
         setupNavigationControllerAppearence()
+		setupFileProtectionLevelForSharedContainer()
 		#if DEBUG
 		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 		print("Documents URL = \(urls)")
@@ -34,4 +36,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupNavigationControllerAppearence() {
         window?.tintColor = .appColor
     }
+
+	private func setupFileProtectionLevelForSharedContainer() {
+		let pathURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId)
+		guard let path = pathURL?.path else { return }
+		do {
+			let noneAtts: [FileAttributeKey: Any] = [
+				FileAttributeKey.protectionKey: FileProtectionType.none
+			]
+			try FileManager.default.setAttributes(noneAtts, ofItemAtPath: path)
+		} catch {
+			let error = CoreError(message: "Failed to set attributes for shared container URL. Error = \(error.localizedDescription)")
+			Logging.log(error)
+		}
+	}
 }

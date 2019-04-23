@@ -55,8 +55,13 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = appPic.uiImage {
 			appPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDisk(image: appPic) { img in
-				self.appPicButton.drawImage(img)
+			ImagesCache.loadImageFromDisk(image: appPic) { result in
+				switch result {
+				case .success(let img):
+					self.appPicButton.drawImage(img)
+				case .failure(let error):
+					Logging.log(error)
+				}
 			}
 		}
 	}
@@ -69,8 +74,13 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = widgetPic.uiImage {
 			widgetPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDisk(image: widgetPic) { img in
-				self.widgetPicButton.drawImage(img)
+			ImagesCache.loadImageFromDisk(image: widgetPic) { result in
+				switch result {
+				case .success(let img):
+					self.widgetPicButton.drawImage(img)
+				case .failure(let error):
+					Logging.log(error)
+				}
 			}
 		}
 	}

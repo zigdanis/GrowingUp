@@ -48,10 +48,10 @@
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
 		0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */; };
 		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
-		092C32CD226129310067B2DB /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		092C32CF22612A0E0067B2DB /* PersonsListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CE22612A0E0067B2DB /* PersonsListPresenterTests.swift */; };
 		092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D022612A6C0067B2DB /* PersonsListViewSpy.swift */; };
 		092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */; };
+		092F4190226F9A370049E29E /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
@@ -383,6 +383,7 @@
 		09051B5721C55EB6008A99C6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				092C32CC226129310067B2DB /* Logging.swift */,
 				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
@@ -491,7 +492,6 @@
 				09165329223ECBC40081FB10 /* UIViewController+Extensions.swift */,
 				0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */,
 				0916532D223ECBC40081FB10 /* Date+Extensions.swift */,
-				092C32CC226129310067B2DB /* Logging.swift */,
 				095000D1226DD3C100789BED /* Constants.swift */,
 			);
 			path = Others;
@@ -1229,6 +1229,7 @@
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				095000E3226DEDB600789BED /* TaskManager.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
+				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */,
 				095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */,
@@ -1294,7 +1295,6 @@
 				096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */,
 				09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */,
 				095000D2226DD3C100789BED /* Constants.swift in Sources */,
-				092C32CD226129310067B2DB /* Logging.swift in Sources */,
 				09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */,
 				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
 				099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */,

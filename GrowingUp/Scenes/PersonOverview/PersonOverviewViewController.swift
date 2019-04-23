@@ -52,8 +52,13 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonAppImage(image: PersonImage) {
-		ImagesCache.loadImageFromDisk(image: image) { img in
-			self.appImage.image = img
+		ImagesCache.loadImageFromDisk(image: image) { result in
+			switch result {
+			case.success(let img):
+				self.appImage.image = img
+			case .failure(let error):
+				Logging.log(error)
+			}
 		}
 	}
 

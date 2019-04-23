@@ -7,10 +7,9 @@
 //
 
 import Foundation
-import Core
 
-enum Logging {
-	static func log(_ error: CoreError) {
+public enum Logging {
+	public static func log(_ error: CoreError) {
 		print("Error with title = \(error.title)\nMessage = \(error.message)")
 	}
 }
