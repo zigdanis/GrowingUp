@@ -74,6 +74,7 @@ final class DatePickerView: UIView {
 	}
 
 	private func setupDatePicker(with mode: UIDatePicker.Mode) {
+		datePicker.maximumDate = Date()
 		datePicker.datePickerMode = mode
 		datePicker.backgroundColor = .white
 		datePicker.translatesAutoresizingMaskIntoConstraints = false

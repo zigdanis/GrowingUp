@@ -43,6 +43,13 @@ final class AddPersonPresenter: EditPersonPresenter {
 	func viewDidLoad() {
 		view?.displayBarButton(with: .cancel)
 		view?.displayBarButton(with: .done)
+
+		var components = DateComponents()
+		components.year = 2019
+		components.month = 1
+		components.day = 1
+		let zeroHour = Calendar.current.date(from: components) ?? Date()
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
 	}
 
 	func rightBarButtonPressed() {
