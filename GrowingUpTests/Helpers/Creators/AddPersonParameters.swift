@@ -15,6 +15,6 @@ extension AddPersonParameters {
     static func createParameters() -> AddPersonParameters {
 		let appPic = PersonImage()
 		let widgetPic = PersonImage()
-		return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), dateComponents: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
+		return AddPersonParameters(name: "name", dayOfBirth: Date(), timeOfBirth: Date(), appImage: appPic, widgetImage: widgetPic)
     }
 }

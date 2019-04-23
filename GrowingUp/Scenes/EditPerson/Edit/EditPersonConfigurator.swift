@@ -33,7 +33,6 @@ class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
 		let dateCellPresenter = DateCellPresenterImplementation()
-		let dateComponentsPresenter = SwitchCellPresenterImplementation()
         let presenter = EditPersonPresenterImplementation(
 			person: person,
 			view: editPersonViewController,
@@ -42,8 +41,7 @@ class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 			delegate: editPersonPresenterDelegate,
 			imagesCellPresenter: imagesCellPresenter,
 			nameCellPresenter: nameCellPresenter,
-			dateCellsPresenter: dateCellPresenter,
-			dateComponentsCellsPresenter: dateComponentsPresenter
+			dateCellsPresenter: dateCellPresenter
 		)
 		nameCellPresenter.textFieldObserver = presenter
         editPersonViewController.presenter = presenter

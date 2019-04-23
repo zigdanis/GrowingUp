@@ -18,7 +18,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
-	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
 	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
@@ -26,8 +25,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter,
-		 dateComponentsCellsPresenter: SwitchCellPresenter) {
+		 dateCellsPresenter: DateCellPresenter) {
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
 		self.router = router
@@ -35,7 +33,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 		self.imagesCellPresenter = imagesCellPresenter
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
-		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
 
 	// MARK: - EditPersonPresenter
@@ -90,10 +87,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 		dateCellsPresenter.configure(cell: cell, forRow: row)
 	}
 
-	func configure(cell: SwitchCellView, forRow row: Int) {
-		dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
-	}
-
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
 	}
@@ -145,14 +138,12 @@ final class AddPersonPresenter: EditPersonPresenter {
 		guard let timeOfBirth = dateCellsPresenter.valueFor(row: EPC.timePickerRow) else {
 			throw CoreError.noTimeValue
 		}
-		let components = dateComponentsCellsPresenter.updatedComponents()
 		let personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow)
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
-								   dateComponents: components,
 								   appImage: appPic,
 								   widgetImage: widgetPic)
 	}

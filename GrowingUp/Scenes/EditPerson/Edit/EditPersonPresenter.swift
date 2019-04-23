@@ -17,7 +17,6 @@ protocol EditPersonPresenter: TextFieldObserver {
 	func configure(cell: ImagesCellView, forRow row: Int)
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: DateCellView, forRow row: Int)
-    func configure(cell: SwitchCellView, forRow row: Int)
 	func dateFor(row: Int, didUpdateTo date: Date)
 	func appImagePicked(image: PersonImage)
 	func widgetImagePicked(image: PersonImage)
@@ -41,7 +40,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
-	private let dateComponentsCellsPresenter: SwitchCellPresenter
 
 	init(person: Person,
 		 view: EditPersonView,
@@ -50,8 +48,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter,
-		 dateComponentsCellsPresenter: SwitchCellPresenter) {
+		 dateCellsPresenter: DateCellPresenter) {
 		self.person = person
 		self.view = view
 		self.editPersonUseCase = editPersonUseCase
@@ -60,7 +57,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.imagesCellPresenter = imagesCellPresenter
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
-		self.dateComponentsCellsPresenter = dateComponentsCellsPresenter
 	}
 
     // MARK: - EditPersonPresenter
@@ -122,10 +118,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
        	dateCellsPresenter.configure(cell: cell, forRow: row)
     }
 
-    func configure(cell: SwitchCellView, forRow row: Int) {
-        dateComponentsCellsPresenter.configure(cell: cell, forRow: row)
-    }
-
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
 	}
@@ -176,14 +168,12 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		guard let timeOfBirth = dateCellsPresenter.valueFor(row: EPC.timePickerRow) else {
 			throw CoreError.noTimeValue
 		}
-		let components = dateComponentsCellsPresenter.updatedComponents()
 		let personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow)
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
-								   dateComponents: components,
 								   appImage: appPic,
 								   widgetImage: widgetPic)
 	}

@@ -12,34 +12,20 @@ public struct AddPersonParameters: Equatable {
 	public var name: String
 	public var dayOfBirth: Date
 	public var timeOfBirth: Date
-	public var dateComponennts: AddPersonDateComponents
 	public var appImage: PersonImage?
 	public var widgetImage: PersonImage?
 
 	public init(name: String,
 				dayOfBirth: Date,
 				timeOfBirth: Date,
-				dateComponents: AddPersonDateComponents,
 				appImage: PersonImage?,
 				widgetImage: PersonImage?) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
 		self.timeOfBirth = timeOfBirth
-		self.dateComponennts = dateComponents
 		self.appImage = appImage
 		self.widgetImage = widgetImage
 	}
-}
-
-public struct AddPersonDateComponents: Equatable {
-	public var years = true
-	public var months = true
-	public var days = true
-	public var hours = true
-	public var minutes = true
-	public var seconds = true
-
-	public init() {}
 }
 
 public extension AddPersonParameters {

@@ -20,7 +20,6 @@ final class EditPersonPresenterTests: XCTestCase {
 	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
-	let dateComponentsStub = SwitchCellPresenterStub()
 
     var sut: EditPersonPresenterImplementation!
 
@@ -36,8 +35,7 @@ final class EditPersonPresenterTests: XCTestCase {
 												delegate: addPersonPresenterDelegateSpy,
 												imagesCellPresenter: imagesCellStub,
 												nameCellPresenter: nameCellStub,
-												dateCellsPresenter: dateCellsStub,
-												dateComponentsCellsPresenter: dateComponentsStub)
+												dateCellsPresenter: dateCellsStub)
     }
 
     func test_SUT_ClosePressed_CalledCancelOnDelegate() {
@@ -165,12 +163,10 @@ final class EditPersonPresenterTests: XCTestCase {
 		let imgSpy = ImagesCellViewSpy()
 		let tfSpy = TextFieldCellViewSpy()
 		let dateSpy = DateCellViewSpy()
-		let switchSpy = SwitchCellViewSpy()
 		// When
 		sut.configure(cell: imgSpy, forRow: 0)
 		sut.configure(cell: tfSpy, forRow: 0)
 		sut.configure(cell: dateSpy, forRow: 0)
-		sut.configure(cell: switchSpy, forRow: 0)
 		// Then
 		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
 		XCTAssertTrue(nameCellStub.didCallConfigure, "Expected to call child presenter")
@@ -206,13 +202,10 @@ final class EditPersonPresenterTests: XCTestCase {
 		let tDate = Date().addingTimeInterval(1)
 		dateCellsStub.valueFor(row: EPC.dayPickerRow, didChangeTo: bDate)
 		dateCellsStub.valueFor(row: EPC.timePickerRow, didChangeTo: tDate)
-		for row in EPC.dateComponentsRows {
-			dateComponentsStub.valueFor(row: row, didChangeTo: true)
-		}
 		let appPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let pics = PersonImages(appPic: appPic, widgetPic: widgetPic)
 		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, dateComponents: AddPersonDateComponents(), appImage: appPic, widgetImage: widgetPic)
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic)
 	}
 }

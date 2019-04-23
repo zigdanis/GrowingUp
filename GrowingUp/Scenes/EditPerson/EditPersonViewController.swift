@@ -31,7 +31,6 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	static let nameFieldRow = 1
 	static let dayPickerRow = 2
 	static let timePickerRow = 3
-	static let dateComponentsRows = 4...9
 
     var presenter: EditPersonPresenter!
     private let configurator: EditPersonConfigurator
@@ -64,7 +63,6 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		tableView.delegate = self
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.dateTableViewCell)
-        tableView.register(R.nib.switchTableViewCell)
 		tableView.register(R.nib.imagesTableViewCell)
 		tableView.tableFooterView = UIView()
 		tableView.keyboardDismissMode = .onDrag
@@ -154,7 +152,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 4
     }
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -175,10 +173,7 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		default:
-			let identifier = R.reuseIdentifier.switchTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
-			presenter.configure(cell: cell, forRow: indexPath.row)
-			return cell
+			fatalError("This indexPath is not supported")
 		}
 	}
 
