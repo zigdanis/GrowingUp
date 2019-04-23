@@ -22,6 +22,7 @@ protocol EditPersonPresenter: TextFieldObserver {
 	func widgetImagePicked(image: PersonImage)
 	func dateForDayPicker() -> Date
 	func dateForTimePicker() -> Date
+	func shouldShowRemoveButton() -> Bool
 }
 
 protocol EditPersonPresenterDelegate: class {
@@ -141,6 +142,11 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	func dateForTimePicker() -> Date {
 		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
 	}
+
+	func shouldShowRemoveButton() -> Bool {
+		return true
+	}
+
     // MARK: - Private
 
     private func handlePersonEdited(_ person: Person) {

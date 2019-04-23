@@ -56,3 +56,6 @@
 
 /* Title of the UIBarButtonItem */
 "Close" = "Close";
+
+/* Title for Button (that deletes Person) on Edit Person Page */
+"Remove" = "Remove";

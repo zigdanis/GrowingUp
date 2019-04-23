@@ -111,6 +111,10 @@ final class AddPersonPresenter: EditPersonPresenter {
 		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
 	}
 
+	func shouldShowRemoveButton() -> Bool {
+		return false
+	}
+
 	// MARK: - Private
 
 	private func handlePersonAdded(_ person: Person) {

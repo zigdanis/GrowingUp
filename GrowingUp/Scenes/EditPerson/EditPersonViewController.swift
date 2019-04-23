@@ -55,6 +55,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
         super.viewDidLoad()
         configurator.configure(editPersonViewController: self)
         setupTableView()
+		setupTableFooter()
 		presenter.viewDidLoad()
     }
 
@@ -64,9 +65,17 @@ final class EditPersonViewController: UIViewController, EditPersonView {
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.dateTableViewCell)
 		tableView.register(R.nib.imagesTableViewCell)
-		tableView.tableFooterView = UIView()
 		tableView.keyboardDismissMode = .onDrag
     }
+
+	private func setupTableFooter() {
+		if presenter.shouldShowRemoveButton() {
+			let rect = CGRect(x: 0, y: 0, width: 320, height: 66)
+			tableView.tableFooterView = RemoveButtonFooter(frame: rect)
+		} else {
+			tableView.tableFooterView = UIView()
+		}
+	}
 
 	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
 		let picker = DatePickerView(mode: mode)
