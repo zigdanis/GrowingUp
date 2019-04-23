@@ -21,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a8S-5a-Wjs" customClass="VerticalButton" customModule="GrowingUp" customModuleProvider="target">
-                    <rect key="frame" x="52.5" y="223" width="215" height="122"/>
+                    <rect key="frame" x="99" y="209" width="122" height="150"/>
                     <state key="normal" title="Add person" image="add_icon">
                         <color key="titleColor" red="0.22352941179999999" green="0.74117647060000003" blue="0.8980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </state>
@@ -36,11 +36,6 @@
                 <constraint firstItem="a8S-5a-Wjs" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="p2b-IV-NIa"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <userDefinedRuntimeAttributes>
-                <userDefinedRuntimeAttribute type="color" keyPath="startColor">
-                    <color key="value" red="0.82352941176470584" green="0.82352941176470584" blue="0.82352941176470584" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                </userDefinedRuntimeAttribute>
-            </userDefinedRuntimeAttributes>
         </view>
     </objects>
     <resources>

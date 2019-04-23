@@ -24,6 +24,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 													  options: nil)
 	var presenter: PersonsListPresenter!
 	var configurator: PersonsListConfigurator!
+	var currentStatusBarStyle: UIStatusBarStyle = .lightContent
 
 	init(configurator: PersonsListConfigurator) {
 		self.configurator = configurator
@@ -36,7 +37,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	}
 
 	override var preferredStatusBarStyle: UIStatusBarStyle {
-		return .lightContent
+		return currentStatusBarStyle
 	}
 
 	override func viewDidLoad() {
@@ -105,6 +106,13 @@ extension PersonsListViewController: UIPageViewControllerDataSource, UIPageViewC
 		let currentVC = pageController.viewControllers?.first
 		let currentIndex = indexFor(viewController: currentVC)
 		pageIndicator.currentPage = currentIndex
+
+		if currentIndex == presenter.numberOfPages() - 1 {
+			currentStatusBarStyle = .default
+		} else {
+			currentStatusBarStyle = .lightContent
+		}
+		setNeedsStatusBarAppearanceUpdate()
 	}
 
 }
