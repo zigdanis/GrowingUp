@@ -112,12 +112,49 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		managedObjectContextSpy.entitiesToReturn = [addedCoreDataPerson]
 		managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
-		let addPersonCompletionHandlerExpectation = expectation(description: "Add Person completion handler expectation")
+		let editPersonCompletionHandlerExpectation = expectation(description: "Edit Person completion handler expectation")
 		// When
 		errorPathCoreDataGateway.edit(person: addedCoreDataPerson.person, with: AddPersonParameters.createParameters()) { (result) in
 			// Then
 			XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
-			addPersonCompletionHandlerExpectation.fulfill()
+			editPersonCompletionHandlerExpectation.fulfill()
+		}
+		// Exit
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
+	func test_SUT_RemovePerson_ShouldSucceed() {
+		// Given
+		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
+		cdPerson.id = UUID()
+		inMemoryCoreDataStack.saveContext()
+		// When
+		let result = inMemoryCoreDataGateway.remove(person: cdPerson.person, with: inMemoryCoreDataStack.persistentContainer.viewContext)
+		// Then
+		switch result {
+		case .success: ()
+		case .failure(let error):
+			XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
+		}
+	}
+
+	func test_SUT_RemovePerson_FailsWhenSaving() {
+		// Given
+		let expectedErrorToThrow = CoreError(message: "Some core data error")
+		let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
+		managedObjectContextSpy.entitiesToReturn = [addedCoreDataPerson]
+		managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
+		let removePersonCompletionHandlerExpectation = expectation(description: "Remove Person completion handler expectation")
+		// When
+		errorPathCoreDataGateway.remove(person: addedCoreDataPerson.person) { (result) in
+			// Then
+			switch result {
+			case .success:
+				XCTFail("Expected to throw an Error")
+			case .failure(let error):
+				XCTAssertEqual(error, expectedErrorToThrow, "Expected to throw an Error")
+			}
+			removePersonCompletionHandlerExpectation.fulfill()
 		}
 		// Exit
 		waitForExpectations(timeout: 1, handler: nil)
