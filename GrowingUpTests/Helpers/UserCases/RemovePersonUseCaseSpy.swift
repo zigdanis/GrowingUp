@@ -19,5 +19,3 @@ final class RemovePersonUseCaseSpy: RemovePersonUseCase {
 		completionHandler(resultToBeReturned)
 	}
 }
-
-

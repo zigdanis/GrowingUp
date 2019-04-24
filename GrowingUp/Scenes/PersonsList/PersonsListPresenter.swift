@@ -24,6 +24,11 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		self.view = view
 		self.fetchPersonsUseCase = displayPersonsUseCase
 		loadListOfPersons()
+		subscribeToOpenPersonWithIdNotifications()
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	private func loadListOfPersons() {
@@ -34,6 +39,17 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 			}
 			self.view?.updateListOfScreens()
 		}
+	}
+
+	private func subscribeToOpenPersonWithIdNotifications() {
+		NotificationCenter.default.addObserver(self, selector: #selector(openPersonNotificationSent), name: Constants.openPersonNotification, object: nil)
+	}
+
+	@objc
+	private func openPersonNotificationSent(notif: Notification) {
+		let key = Constants.widgetPersonIndexKey
+		guard let personIndex = notif.userInfo?[key] as? Int else { return }
+		self.view?.scrollToPage(atIndex: personIndex)
 	}
 
 	func numberOfPages() -> Int {

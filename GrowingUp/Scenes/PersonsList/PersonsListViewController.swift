@@ -14,6 +14,7 @@ protocol PageViewControllerViewable: UIViewController {
 
 protocol PersonsListView: class {
 	func updateListOfScreens()
+	func scrollToPage(atIndex index: Int)
 }
 
 final class PersonsListViewController: UIViewController, PersonsListView {
@@ -80,6 +81,13 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		pageIndicator.currentPage = index
 		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
 		pageController.setViewControllers([lastScreen], direction: .forward, animated: false, completion: nil)
+		updateStatusBarAppearence(forIndex: index)
+	}
+
+	func scrollToPage(atIndex index: Int) {
+		guard let screen = presenter.pageViewControllerScreen(atIndex: index) else { return }
+		pageController.setViewControllers([screen], direction: .forward, animated: false, completion: nil)
+		pageIndicator.currentPage = index
 		updateStatusBarAppearence(forIndex: index)
 	}
 

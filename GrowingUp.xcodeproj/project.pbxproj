@@ -124,6 +124,7 @@
 		09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */; };
 		09CFE6B622703C26007AB456 /* RemovePersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B522703C26007AB456 /* RemovePersonUseCaseTests.swift */; };
 		09CFE6B822709FAB007AB456 /* RemovePersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B722709FAB007AB456 /* RemovePersonUseCaseSpy.swift */; };
+		09CFE6B92270F10D007AB456 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
 		09D6977A225C865C00EFFEAC /* PersonsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69779225C865C00EFFEAC /* PersonsListViewController.xib */; };
 		09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */; };
 		09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977E225C95F500EFFEAC /* PersonOverviewViewController.swift */; };
@@ -1226,6 +1227,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09CFE6B92270F10D007AB456 /* Constants.swift in Sources */,
 				095000E6226E43B700789BED /* GrowingUp.xcdatamodeld in Sources */,
 				0983E762226D9420007EC8D2 /* TodayPresenter.swift in Sources */,
 				096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */,

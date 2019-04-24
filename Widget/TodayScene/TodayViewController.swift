@@ -69,8 +69,9 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 
     // MARK: - Actions
 
-    private func widgetTouched() {
-        let url = URL(string: "growingup-app://")!
+	private func widgetTouched(atIndex index: Int) {
+		let str = "growingup-app://?\(Constants.widgetPersonIndexKey)=\(index)"
+		let url = URL(string: str)!
         extensionContext?.open(url, completionHandler: nil)
     }
 
@@ -104,6 +105,6 @@ extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		widgetTouched()
+		widgetTouched(atIndex: indexPath.row)
 	}
 }

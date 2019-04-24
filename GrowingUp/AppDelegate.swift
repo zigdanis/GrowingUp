@@ -50,4 +50,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			Logging.log(error)
 		}
 	}
+
+	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+		guard let appStr = options[.sourceApplication] as? String else { return true }
+		guard appStr == Constants.widgetBundle else { return true }
+		let components = URLComponents(string: url.absoluteString)
+		let indexComponent = components?.queryItems?
+			.first(where: { $0.name == Constants.widgetPersonIndexKey })
+		let personIndexStr = indexComponent?.value ?? ""
+		let personIndex = Int(personIndexStr) ?? 0
+		print("Open URL with personIndex = \(personIndex)")
+		NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
+		return true
+	}
+
 }

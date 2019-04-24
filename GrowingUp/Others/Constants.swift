@@ -10,4 +10,7 @@ import Foundation
 
 enum Constants {
 	static let appGroupId = "group.pro.ziganshin.aging"
+	static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
+	static let widgetPersonIndexKey = "personIndex"
+	static let openPersonNotification = Notification.Name(rawValue: "pro.ziganshin.GrowingUp.openPersonWithIndex")
 }
