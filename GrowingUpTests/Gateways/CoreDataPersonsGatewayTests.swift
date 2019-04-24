@@ -86,6 +86,43 @@ class CoreDataPersonsGatewayTests: XCTestCase {
         waitForExpectations(timeout: 1, handler: nil)
     }
 
+	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() {
+		// Given
+		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
+		cdPerson.id = UUID()
+		inMemoryCoreDataStack.saveContext()
+		var editParams = AddPersonParameters.createParameters()
+		let expectedName = "John Snow"
+		editParams.name = expectedName
+		// When
+		let result = inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams, with: inMemoryCoreDataStack.persistentContainer.viewContext)
+		// Then
+		switch result {
+		case .success(let person):
+			assert(person: person, builtFromParameters: editParams)
+		case .failure(let error):
+			XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
+		}
+	}
+
+	func test_SUT_EditPersonWithParameters_FailsWhenSaving() {
+		// Given
+		let expectedErrorToThrow = CoreError(message: "Some core data error")
+		let expectedResultToBeReturned: Result<Person, CoreError> = .failure(expectedErrorToThrow)
+		let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
+		managedObjectContextSpy.entitiesToReturn = [addedCoreDataPerson]
+		managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
+		let addPersonCompletionHandlerExpectation = expectation(description: "Add Person completion handler expectation")
+		// When
+		errorPathCoreDataGateway.edit(person: addedCoreDataPerson.person, with: AddPersonParameters.createParameters()) { (result) in
+			// Then
+			XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
+			addPersonCompletionHandlerExpectation.fulfill()
+		}
+		// Exit
+		waitForExpectations(timeout: 1, handler: nil)
+	}
+
 	func test_SUT_FetchPersons_ShouldSucceed() {
 		// Given
 		let workIsDone = expectation(description: "Fetch persons completion handler expectation")
@@ -122,4 +159,6 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 private func assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
     XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
     XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate()?.timeIntervalSince1970, "birthday mismatch", file: file, line: line)
+	XCTAssertEqual(person.appPicId, parameters.appImage?.id, "app pic mismatch", file: file, line: line)
+	XCTAssertEqual(person.widgetPicId, parameters.widgetImage?.id, "widget pic mismatch", file: file, line: line)
 }
