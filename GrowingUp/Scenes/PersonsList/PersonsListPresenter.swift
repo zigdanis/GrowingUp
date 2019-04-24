@@ -37,11 +37,12 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 
 	func numberOfPages() -> Int {
-		return persons.count + 1
+		return min(persons.count + 1, 3)
 	}
 
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable? {
 		guard index >= 0 else { return nil }
+		guard index < 3 else { return nil }
 		guard index <= persons.count else { return nil }
 		if let cached = cachedScreens[index] {
 			return cached

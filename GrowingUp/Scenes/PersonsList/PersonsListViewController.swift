@@ -76,7 +76,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	func updateListOfScreens() {
 		let total = presenter.numberOfPages()
 		pageIndicator.numberOfPages = total
-		let index = max(total - 2, 0)
+		let index = total == 3 ? 2 : max(total - 2, 0)
 		pageIndicator.currentPage = index
 		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
 		pageController.setViewControllers([lastScreen], direction: .forward, animated: false, completion: nil)
@@ -84,7 +84,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	}
 
 	private func updateStatusBarAppearence(forIndex index: Int) {
-		if index == presenter.numberOfPages() - 1 {
+		if (index == presenter.numberOfPages() - 1) && (index != 2) {
 			currentStatusBarStyle = .default
 		} else {
 			currentStatusBarStyle = .lightContent
