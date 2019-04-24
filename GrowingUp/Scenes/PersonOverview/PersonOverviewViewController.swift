@@ -39,6 +39,17 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		super.viewDidLoad()
 		configurator.configure(personOverviewController: self)
 		presenter.loadPerson()
+		setupTapGesture()
+	}
+
+	private func setupTapGesture() {
+		let tapGesture = UITapGestureRecognizer(target: self, action: #selector(screenPressed))
+		view.addGestureRecognizer(tapGesture)
+	}
+
+	@objc
+	private func screenPressed() {
+		presenter.showEditPerson()
 	}
 
 	@IBAction func editPersonTouched() {
