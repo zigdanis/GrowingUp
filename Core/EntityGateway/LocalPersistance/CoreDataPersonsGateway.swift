@@ -12,6 +12,7 @@ public protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError>
+	func remove(person: Person, with context: NSManagedObjectContextProtocol) -> Result<Void, CoreError>
 }
 
 public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
@@ -79,6 +80,32 @@ public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway 
 		}
 	}
 
+	public func remove(person: Person, with context: NSManagedObjectContextProtocol) -> Result<Void, CoreError> {
+		var coreDataPerson: CoreDataPerson?
+		do {
+			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id as CVarArg)
+			coreDataPerson = try context.allEntities(withType: CoreDataPerson.self, predicate: predicate).first
+		} catch let error as CoreError {
+			return .failure(error)
+		} catch {
+			return .failure(CoreError.coreDataFetchFailed)
+		}
+
+		guard let cdPerson = coreDataPerson else {
+			return .failure(CoreError.coreDataFetchFailed)
+		}
+		context.delete(cdPerson)
+
+		do {
+			try context.save()
+			return .success(())
+		} catch let error as CoreError {
+			return .failure(error)
+		} catch {
+			return .failure(CoreError.coreDataSaveFailed)
+		}
+	}
+
 	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		let result = add(parameters: parameters, with: viewContext)
 		completionHandler(result)
@@ -91,6 +118,11 @@ public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway 
 
 	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		let result = edit(person: person, with: parameters, with: viewContext)
+		completionHandler(result)
+	}
+
+	public func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+		let result = remove(person: person, with: viewContext)
 		completionHandler(result)
 	}
 

@@ -10,7 +10,7 @@ import XCTest
 @testable import GrowingUp
 @testable import Core
 
-class DisplayPersonsUseCaseTests: XCTestCase {
+class FetchPersonsUseCaseTests: XCTestCase {
 
 	var sut: FetchPersonsUseCaseImplementation!
 	let gatewaySpy = PersonsGatewaySpy()

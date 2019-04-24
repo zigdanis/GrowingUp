@@ -20,7 +20,6 @@ public final class CachePersonsGateway: PersonsGateway {
 	}
 
 	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-
 		var tasks = [Task<Person>]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
 			tasks.append(appPicSaving)
@@ -45,7 +44,6 @@ public final class CachePersonsGateway: PersonsGateway {
 	}
 
 	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
-
 		var tasks = [Task<Person>]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
 			tasks.append(appPicSaving)
@@ -54,6 +52,19 @@ public final class CachePersonsGateway: PersonsGateway {
 			tasks.append(widgetPicSaving)
 		}
 		tasks.append(coreDataEdit(person: person, with: parameters))
+
+		taskManager.process(tasks: tasks, withCompletion: completionHandler)
+	}
+
+	public func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+		var tasks = [Task<Void>]()
+		if let appPicDelete = appPicDeleteTask(for: person) {
+			tasks.append(appPicDelete)
+		}
+		if let widgetPicDelete = widgetPicDeleteTask(for: person) {
+			tasks.append(widgetPicDelete)
+		}
+		tasks.append(coreDataRemove(person: person))
 
 		taskManager.process(tasks: tasks, withCompletion: completionHandler)
 	}
@@ -78,6 +89,15 @@ public final class CachePersonsGateway: PersonsGateway {
 		}
 	}
 
+	private func coreDataRemove(person: Person) -> Task<Void> {
+		return {
+			let moc = CoreDataStackImplementation.sharedInstance
+				.persistentContainer.newBackgroundContext()
+			let result = self.coreDataGateway.remove(person: person, with: moc)
+			return result.map({ $0 as Void? })
+		}
+	}
+
 	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task<Person>? {
 		guard let appPic = parameters.appImage?.uiImage else { return nil }
 		guard let appPicKey = parameters.appImage?.cachingKey else { return nil }
@@ -87,7 +107,7 @@ public final class CachePersonsGateway: PersonsGateway {
 				try Disk.save(appPic, to: directory, as: appPicKey)
 				return .success(nil)
 			} catch {
-				let coreError = CoreError(message: error.localizedDescription)
+				let coreError = CoreError(message: "Save App pic failed with message = \(error.localizedDescription)")
 				return .failure(coreError)
 			}
 		}
@@ -102,7 +122,35 @@ public final class CachePersonsGateway: PersonsGateway {
 				try Disk.save(widgetPic, to: directory, as: widgetPicKey)
 				return .success(nil)
 			} catch {
-				let coreError = CoreError(message: error.localizedDescription)
+				let coreError = CoreError(message: "Save Widget pic failed with message = \(error.localizedDescription)")
+				return .failure(coreError)
+			}
+		}
+	}
+
+	private func appPicDeleteTask(for person: Person) -> Task<Void>? {
+		guard let appPic = PersonImage(id: person.appPicId) else { return nil }
+		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
+		return {
+			do {
+				try Disk.remove(appPic.cachingKey, from: directory)
+				return .success(nil)
+			} catch {
+				let coreError = CoreError(message: "Remove App pic failed with message = \(error.localizedDescription)")
+				return .failure(coreError)
+			}
+		}
+	}
+
+	private func widgetPicDeleteTask(for person: Person) -> Task<Void>? {
+		guard let widgetPic = PersonImage(id: person.widgetPicId) else { return nil }
+		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
+		return {
+			do {
+				try Disk.remove(widgetPic.cachingKey, from: directory)
+				return .success(nil)
+			} catch {
+				let coreError = CoreError(message: "Remove Widget pic failed with message = \(error.localizedDescription)")
 				return .failure(coreError)
 			}
 		}
