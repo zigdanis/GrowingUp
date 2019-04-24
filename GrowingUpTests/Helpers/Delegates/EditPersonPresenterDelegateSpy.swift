@@ -14,8 +14,10 @@ class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
 
     var addedPerson: Person?
 	var editedPerson: Person?
+	var removedPerson: Person?
     var didCalledAddPerson = false
 	var didCalledEditPerson = false
+	var didCalledRemovePerson = false
     var didCalledCancel = false
 
     func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
@@ -26,6 +28,11 @@ class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
 		didCalledEditPerson = true
 		editedPerson = person
+	}
+
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
+		removedPerson = person
+		didCalledRemovePerson = true
 	}
 
 	func editPersonPresenterCancel(presenter: EditPersonPresenter) {

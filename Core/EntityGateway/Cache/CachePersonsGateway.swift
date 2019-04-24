@@ -71,20 +71,20 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	// MARK: - Private
 
-	private func coreDataEdit(person: Person, with parameters: AddPersonParameters) -> Task<Person> {
-		return {
-			let moc = CoreDataStackImplementation.sharedInstance
-				.persistentContainer.newBackgroundContext()
-			let result = self.coreDataGateway.edit(person: person, with: parameters, with: moc)
-			return result.map({ $0 as Person? })
-		}
-	}
-
 	private func coreDataSave(for parameters: AddPersonParameters) -> Task<Person> {
 		return {
 			let moc = CoreDataStackImplementation.sharedInstance
 				.persistentContainer.newBackgroundContext()
 			let result = self.coreDataGateway.add(parameters: parameters, with: moc)
+			return result.map({ $0 as Person? })
+		}
+	}
+
+	private func coreDataEdit(person: Person, with parameters: AddPersonParameters) -> Task<Person> {
+		return {
+			let moc = CoreDataStackImplementation.sharedInstance
+				.persistentContainer.newBackgroundContext()
+			let result = self.coreDataGateway.edit(person: person, with: parameters, with: moc)
 			return result.map({ $0 as Person? })
 		}
 	}

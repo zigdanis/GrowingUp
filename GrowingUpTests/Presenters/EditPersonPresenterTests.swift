@@ -15,6 +15,7 @@ final class EditPersonPresenterTests: XCTestCase {
     // https://www.martinfowler.com/bliki/TestDouble.html
     let editPersonViewSpy = EditPersonViewSpy()
     let editPersonUseCaseSpy = EditPersonUseCaseSpy()
+	let removePersonUseCaseSpy = RemovePersonUseCaseSpy()
     let addPersonViewRouterSpy = EditPersonViewRouterSpy()
     let addPersonPresenterDelegateSpy = EditPersonPresenterDelegateSpy()
 	let imagesCellStub = ImagesCellPresenterStub()
@@ -31,6 +32,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		sut = EditPersonPresenterImplementation(person: person,
 												view: editPersonViewSpy,
 												editPersonUseCase: editPersonUseCaseSpy,
+												removePersonUseCase: removePersonUseCaseSpy,
 												router: addPersonViewRouterSpy,
 												delegate: addPersonPresenterDelegateSpy,
 												imagesCellPresenter: imagesCellStub,
@@ -191,6 +193,16 @@ final class EditPersonPresenterTests: XCTestCase {
 		XCTAssertTrue(editPersonViewSpy.displayedBarButtons.contains(.cancel), "Expected to display Cancel button")
 		XCTAssertTrue(editPersonViewSpy.displayedBarButtons.contains(.save), "Expected to display Save button")
 		XCTAssertEqual(editPersonViewSpy.displayedBarButtons.count, 2, "Expected to display only 2 type of buttons")
+	}
+
+	func test_SUT_WhenCalledToRemovePerson_CallingRemovePersonUseCaseAndEditPresenterDelegate() {
+		// Given
+		removePersonUseCaseSpy.resultToBeReturned = .success(())
+		// When
+		sut.removePersonPressed()
+		// Then
+		XCTAssertTrue(removePersonUseCaseSpy.didCallRemovePerson, "Expected to call remove person use case")
+		XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledRemovePerson, "Expected to call remove Person")
 	}
 
 	// MARK: - Helpers
