@@ -47,6 +47,10 @@ final class AddPersonPresenter: EditPersonPresenter {
 		components.day = 1
 		let zeroHour = Calendar.current.date(from: components) ?? Date()
 		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
+
+		#if DEBUG
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
+		#endif
 	}
 
 	func rightBarButtonPressed() {
@@ -73,6 +77,8 @@ final class AddPersonPresenter: EditPersonPresenter {
 	func leftBarButtonPressed() {
 		delegate?.editPersonPresenterCancel(presenter: self)
 	}
+
+	func removePersonPressed() {}
 
 	func configure(cell: ImagesCellView, forRow row: Int) {
 		guard let view = view else { return }

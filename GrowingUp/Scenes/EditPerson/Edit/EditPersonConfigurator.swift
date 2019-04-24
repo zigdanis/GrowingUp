@@ -29,6 +29,7 @@ class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
         let editPersonUseCase = EditPersonUseCaseImplementation(personsGateway: personsGateway)
+		let removePersonUseCase = RemovePersonUseCaseImplementation(personsGateway: personsGateway)
         let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
 		let nameCellPresenter = TextFieldCellPresenterImplementation()
@@ -37,6 +38,7 @@ class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 			person: person,
 			view: editPersonViewController,
 			editPersonUseCase: editPersonUseCase,
+			removePersonUseCase: removePersonUseCase,
 			router: router,
 			delegate: editPersonPresenterDelegate,
 			imagesCellPresenter: imagesCellPresenter,

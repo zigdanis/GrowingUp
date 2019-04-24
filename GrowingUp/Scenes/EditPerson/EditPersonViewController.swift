@@ -71,7 +71,9 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	private func setupTableFooter() {
 		if presenter.shouldShowRemoveButton() {
 			let rect = CGRect(x: 0, y: 0, width: 320, height: 66)
-			tableView.tableFooterView = RemoveButtonFooter(frame: rect)
+			let footer = RemoveButtonFooter(frame: rect)
+			footer.delegate = self
+			tableView.tableFooterView = footer
 		} else {
 			tableView.tableFooterView = UIView()
 		}
@@ -243,5 +245,10 @@ extension EditPersonViewController: WDImagePickerDelegate {
 	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {
 		imagePicker.imagePickerController.dismiss(animated: true)
 	}
+}
 
+extension EditPersonViewController: RemoveButtonDelegate {
+	func removeTouched() {
+		presenter.removePersonPressed()
+	}
 }

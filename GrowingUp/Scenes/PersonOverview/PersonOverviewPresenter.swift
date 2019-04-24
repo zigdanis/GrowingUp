@@ -17,6 +17,7 @@ protocol PersonOverviewPresenter {
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	weak var view: PersonOverviewView?
+	weak var personPresenterDelegate: EditPersonPresenterDelegate?
 	private var person: Person
 	private let router: PersonOverviewRouter
 	private var timer: Timer?
@@ -53,14 +54,16 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 }
 
 extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
-		presenter.router.dismiss()
-	}
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
 		self.person = person
 		loadPerson()
 		presenter.router.dismiss()
+	}
+
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
+		personPresenterDelegate?.editPersonPresenter(presenter, didRemove: person)
 	}
 
 	func editPersonPresenterCancel(presenter: EditPersonPresenter) {

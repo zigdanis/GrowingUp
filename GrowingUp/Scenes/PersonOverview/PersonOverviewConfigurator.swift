@@ -17,6 +17,7 @@ final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator
 
 	let index: Int
 	let person: Person
+	weak var editPresenterDelegate: EditPersonPresenterDelegate?
 
 	init(index: Int, person: Person) {
 		self.index = index
@@ -26,6 +27,7 @@ final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator
 	func configure(personOverviewController: PersonOverviewViewController) {
 		let router = PersonOverviewRouterImplementation(personOverviewViewController: personOverviewController)
 		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController, router: router)
+		presenter.personPresenterDelegate = editPresenterDelegate
 		personOverviewController.presenter = presenter
 		personOverviewController.index = index
 	}

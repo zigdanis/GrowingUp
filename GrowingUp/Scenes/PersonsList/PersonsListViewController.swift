@@ -80,6 +80,16 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		pageIndicator.currentPage = index
 		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
 		pageController.setViewControllers([lastScreen], direction: .forward, animated: false, completion: nil)
+		updateStatusBarAppearence(forIndex: index)
+	}
+
+	private func updateStatusBarAppearence(forIndex index: Int) {
+		if index == presenter.numberOfPages() - 1 {
+			currentStatusBarStyle = .default
+		} else {
+			currentStatusBarStyle = .lightContent
+		}
+		setNeedsStatusBarAppearanceUpdate()
 	}
 
 }
@@ -106,13 +116,7 @@ extension PersonsListViewController: UIPageViewControllerDataSource, UIPageViewC
 		let currentVC = pageController.viewControllers?.first
 		let currentIndex = indexFor(viewController: currentVC)
 		pageIndicator.currentPage = currentIndex
-
-		if currentIndex == presenter.numberOfPages() - 1 {
-			currentStatusBarStyle = .default
-		} else {
-			currentStatusBarStyle = .lightContent
-		}
-		setNeedsStatusBarAppearanceUpdate()
+		updateStatusBarAppearence(forIndex: currentIndex)
 	}
 
 }

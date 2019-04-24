@@ -8,8 +8,13 @@
 
 import UIKit
 
+protocol RemoveButtonDelegate: class {
+	func removeTouched()
+}
+
 final class RemoveButtonFooter: UIView {
 
+	weak var delegate: RemoveButtonDelegate?
 	private let button = UIButton(type: .custom)
 
 	init() {
@@ -50,6 +55,6 @@ final class RemoveButtonFooter: UIView {
 
 	@objc
 	private func removeTouched() {
-		print("Remove touched")
+		delegate?.removeTouched()
 	}
 }

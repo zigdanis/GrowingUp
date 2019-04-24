@@ -53,6 +53,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		} else {
 			let person = persons[index]
 			let configurator = PersonOverviewConfiguratorImplementation(index: index, person: person)
+			configurator.editPresenterDelegate = self
 			let personVC = PersonOverviewViewController(configurator: configurator)
 			cachedScreens[index] = personVC
 			return personVC
@@ -62,18 +63,22 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 
 extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
-		if let index = persons.firstIndex(of: person) {
-			cachedScreens[index] = nil
-			persons[index] = person
-		}
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
+		cachedScreens[persons.count] = nil
+		persons.append(person)
 		view?.updateListOfScreens()
 		presenter.router.dismiss()
 	}
 
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
-		cachedScreens[persons.count] = nil
-		persons.append(person)
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {}
+
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
+		if let index = persons.firstIndex(of: person) {
+			for key in cachedScreens.keys.filter({ $0 >= index }) {
+				cachedScreens[key] = nil
+			}
+			persons.remove(at: index)
+		}
 		view?.updateListOfScreens()
 		presenter.router.dismiss()
 	}

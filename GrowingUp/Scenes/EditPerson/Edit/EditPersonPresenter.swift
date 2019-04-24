@@ -14,6 +14,7 @@ protocol EditPersonPresenter: TextFieldObserver {
 	func viewDidLoad()
     func rightBarButtonPressed()
 	func leftBarButtonPressed()
+	func removePersonPressed()
 	func configure(cell: ImagesCellView, forRow row: Int)
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: DateCellView, forRow row: Int)
@@ -28,6 +29,7 @@ protocol EditPersonPresenter: TextFieldObserver {
 protocol EditPersonPresenterDelegate: class {
     func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person)
     func editPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
@@ -36,6 +38,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	private let person: Person
     private weak var view: EditPersonView?
     private let editPersonUseCase: EditPersonUseCase
+	private let removePersonUseCase: RemovePersonUseCase
     private weak var delegate: EditPersonPresenterDelegate?
     private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
@@ -45,6 +48,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	init(person: Person,
 		 view: EditPersonView,
 		 editPersonUseCase: EditPersonUseCase,
+		 removePersonUseCase: RemovePersonUseCase,
 		 router: EditPersonViewRouter,
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
@@ -53,6 +57,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.person = person
 		self.view = view
 		self.editPersonUseCase = editPersonUseCase
+		self.removePersonUseCase = removePersonUseCase
 		self.router = router
 		self.delegate = delegate
 		self.imagesCellPresenter = imagesCellPresenter
@@ -106,6 +111,19 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
         delegate?.editPersonPresenterCancel(presenter: self)
     }
 
+	func removePersonPressed() {
+		updateNavigationItemsState(isEnabled: false)
+		removePersonUseCase.remove(person: person) { result in
+			self.updateNavigationItemsState(isEnabled: true)
+			switch result {
+			case .success:
+				self.handlePersonRemoved()
+			case .failure(let error):
+				self.handleEditPersonError(error)
+			}
+		}
+	}
+
 	func configure(cell: ImagesCellView, forRow row: Int) {
 		guard let view = view else { return }
 		imagesCellPresenter.configure(cell: cell, forRow: row, with: view)
@@ -157,8 +175,13 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		let coreError = error as? CoreError
 		let title = coreError?.title ?? R.string.localizable.error()
 		let message = coreError?.message ?? error.localizedDescription
-        view?.displayEditPersonError(title: title, message: message)
+		Logging.log(coreError ?? CoreError(title: title, message: message))
+		view?.displayEditPersonError(title: title, message: message)
     }
+
+	private func handlePersonRemoved() {
+		delegate?.editPersonPresenter(self, didRemove: person)
+	}
 
     private func updateNavigationItemsState(isEnabled enabled: Bool) {
 		view?.updateBarButtonsState(isEnabled: enabled)
