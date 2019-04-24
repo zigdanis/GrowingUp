@@ -18,6 +18,8 @@ class PersonsGatewaySpy: PersonsGateway {
 	var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
 	var editPersonCalled = false
 	var editPersonResultToBeReturned: Result<Person, CoreError>!
+	var removePersonCalled = false
+	var removePersonResultToBeReturned: Result<Void, CoreError>!
 
     func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
         addPersonParameters = parameters
@@ -31,6 +33,12 @@ class PersonsGatewaySpy: PersonsGateway {
 
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		editPersonCalled = true
+		addPersonParameters = parameters
 		completionHandler(editPersonResultToBeReturned)
+	}
+
+	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+		removePersonCalled = true
+		completionHandler(removePersonResultToBeReturned)
 	}
 }

@@ -45,7 +45,8 @@ class AddPersonUseCaseTests: XCTestCase {
         let addPersonExpectation = expectation(description: "Add Person Expectation")
         // When
         sut.add(parameters: params) { result in
-            XCTAssertEqual(self.personsGatewaySpy.addPersonParameters, params, "Should have been call PersonsGateway AddPerson method with specified params")
+			// Then
+			XCTAssertEqual(self.personsGatewaySpy.addPersonParameters, params, "Should have been call PersonsGateway AddPerson method with specified params")
             XCTAssertEqual(expectedResultToBeReturned, result, "Completion handler didn'w return expected result")
             addPersonExpectation.fulfill()
         }

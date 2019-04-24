@@ -121,6 +121,7 @@
 		09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */; };
 		09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */; };
 		09CFE6B02270290D007AB456 /* RemovePersonUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */; };
+		09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */; };
 		09D6977A225C865C00EFFEAC /* PersonsListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69779225C865C00EFFEAC /* PersonsListViewController.xib */; };
 		09D6977D225C95E900EFFEAC /* PersonOverviewConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */; };
 		09D6977F225C95F500EFFEAC /* PersonOverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6977E225C95F500EFFEAC /* PersonOverviewViewController.swift */; };
@@ -304,6 +305,7 @@
 		09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenterTests.swift; sourceTree = "<group>"; };
 		09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellViewSpy.swift; sourceTree = "<group>"; };
 		09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCase.swift; sourceTree = "<group>"; };
+		09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		09D26ADD2251091700BF452F /* PersonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImage.swift; sourceTree = "<group>"; };
 		09D69779225C865C00EFFEAC /* PersonsListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonsListViewController.xib; sourceTree = "<group>"; };
 		09D6977C225C95E900EFFEAC /* PersonOverviewConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewConfigurator.swift; sourceTree = "<group>"; };
@@ -562,6 +564,7 @@
 			isa = PBXGroup;
 			children = (
 				091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */,
+				09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */,
 				099C9164225F4D64005C963C /* FetchPersonsUseCaseTests.swift */,
 			);
 			path = UseCases;
@@ -1258,6 +1261,7 @@
 				09805502223C34FA00E24D40 /* EditPersonPresenterDelegateSpy.swift in Sources */,
 				09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */,
 				098054F9223C2A7900E24D40 /* EditPersonViewSpy.swift in Sources */,
+				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
 				098798632242BE1400A15D90 /* TextFieldCellPresenterTests.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* EditPersonViewRouterSpy.swift in Sources */,

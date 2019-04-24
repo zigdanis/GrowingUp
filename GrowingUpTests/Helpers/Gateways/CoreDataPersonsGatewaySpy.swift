@@ -18,6 +18,8 @@ class CoreDataPersonsGatewaySpy: CoreDataPersonsGateway {
 	var fetchCalled = false
 	var editWithContextCalled = false
 	var editCalled = false
+	var removeWithContextCalled = false
+	var removeCalled = false
 
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
 		addWithContextCalled = true
@@ -44,5 +46,14 @@ class CoreDataPersonsGatewaySpy: CoreDataPersonsGateway {
 
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		editCalled = true
+	}
+
+	func remove(person: Person, with context: NSManagedObjectContextProtocol) -> Result<Void, CoreError> {
+		removeWithContextCalled = true
+		return .failure(CoreError.unknownError)
+	}
+
+	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+		removeCalled = true
 	}
 }
