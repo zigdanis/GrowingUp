@@ -51,6 +51,68 @@ class CachePersonsGatewayTests: XCTestCase {
 		waitForExpectations(timeout: 0.1)
 	}
 
+	func test_SUT_WhenEditingPersons_CallingTaskManagerWithExpectedResult() {
+		// Given
+		let expectedPerson = Person.createPerson()
+		let params = AddPersonParameters.createParameters()
+		taskManagerSpy.expectedResultValue = expectedPerson
+		let workIsDone = expectation(description: "Expecting to edit Person")
+		// When
+		sut.edit(person: Person.createPerson(), with: params) { result in
+			// Then
+			XCTAssertEqual(result, .success(expectedPerson), "Expected to receive edited Person")
+			XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
+			workIsDone.fulfill()
+		}
+		waitForExpectations(timeout: 0.1)
+	}
+
+	func test_SUT_WhenEditingPersons_CallingCoreDataPersonsGateway() {
+		// Given
+		let taskManager = TaskManagerOnGCD()
+		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		let workIsDone = expectation(description: "Expecting to finish editing")
+		// When
+		sut.edit(person: Person.createPerson(), with: AddPersonParameters.createParameters(), completionHandler: { _ in
+			// Then
+			XCTAssertTrue(self.coreDataGatewaySpy.editWithContextCalled, "Epected to call Edit Person from CoreData")
+			workIsDone.fulfill()
+		})
+		waitForExpectations(timeout: 0.1)
+	}
+
+	func test_SUT_WhenRemovingPersons_CallingTaskManagerWithExpectedResult() {
+		// Given
+		taskManagerSpy.expectedResultValue = ()
+		let workIsDone = expectation(description: "Expecting to Remove Person")
+		// When
+		sut.remove(person: Person.createPerson()) { result in
+			// Then
+			switch result {
+			case .success: ()
+			case .failure(let error):
+				XCTFail("Expected to Remove Person but got error = \(error.localizedDescription)")
+			}
+			XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
+			workIsDone.fulfill()
+		}
+		waitForExpectations(timeout: 0.1)
+	}
+
+	func test_SUT_WhenRemovingPersons_CallingCoreDataPersonsGateway() {
+		// Given
+		let taskManager = TaskManagerOnGCD()
+		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		let workIsDone = expectation(description: "Expecting to finish removing")
+		// When
+		sut.remove(person: Person.createPerson(), completionHandler: { _ in
+			// Then
+			XCTAssertTrue(self.coreDataGatewaySpy.removeWithContextCalled, "Epected to call Remove Person from CoreData")
+			workIsDone.fulfill()
+		})
+		waitForExpectations(timeout: 0.1)
+	}
+
 	func test_SUT_WhenFetchingPersons_CallingTaskManagerWithExpectedResult() {
 		// Given
 		let expectedValue = [Person.createPerson()]
