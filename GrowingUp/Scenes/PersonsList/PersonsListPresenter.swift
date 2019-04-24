@@ -84,6 +84,7 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 		cachedScreens[persons.count] = nil
 		persons.append(person)
 		view?.updateListOfScreens()
+		view?.scrollToPage(atIndex: persons.count - 1)
 		presenter.router.dismiss()
 	}
 

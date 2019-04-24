@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 		print("Documents URL = \(urls)")
 		#endif
+		if let openURL = launchOptions?[.url] as? URL {
+			handleOpenURL(url: openURL)
+		}
 		return true
     }
 
@@ -54,6 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
 		guard let appStr = options[.sourceApplication] as? String else { return true }
 		guard appStr == Constants.widgetBundle else { return true }
+		handleOpenURL(url: url)
+		return true
+	}
+
+	private func handleOpenURL(url: URL) {
 		let components = URLComponents(string: url.absoluteString)
 		let indexComponent = components?.queryItems?
 			.first(where: { $0.name == Constants.widgetPersonIndexKey })
@@ -61,7 +69,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let personIndex = Int(personIndexStr) ?? 0
 		print("Open URL with personIndex = \(personIndex)")
 		NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
-		return true
 	}
 
 }

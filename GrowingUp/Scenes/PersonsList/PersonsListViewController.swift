@@ -26,6 +26,8 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	var presenter: PersonsListPresenter!
 	var configurator: PersonsListConfigurator!
 	var currentStatusBarStyle: UIStatusBarStyle = .lightContent
+	private var didScrolledOnLaunchOnce = false
+	private var shouldScrollToPageOnLaunch: Int?
 
 	init(configurator: PersonsListConfigurator) {
 		self.configurator = configurator
@@ -46,6 +48,17 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		configurator.configure(personsListController: self)
 		setupPageViewController()
 		setupPageIndicator()
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		guard !didScrolledOnLaunchOnce else { return }
+		if let index = shouldScrollToPageOnLaunch {
+			didScrolledOnLaunchOnce = true
+			DispatchQueue.main.async {
+				self.scrollToPage(atIndex: index)
+			}
+		}
 	}
 
 	private func setupPageViewController() {
@@ -77,14 +90,15 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	func updateListOfScreens() {
 		let total = presenter.numberOfPages()
 		pageIndicator.numberOfPages = total
-		let index = total == 3 ? 2 : max(total - 2, 0)
+		let index = 0
 		pageIndicator.currentPage = index
-		guard let lastScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
-		pageController.setViewControllers([lastScreen], direction: .forward, animated: false, completion: nil)
+		guard let firstScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
+		pageController.setViewControllers([firstScreen], direction: .forward, animated: false, completion: nil)
 		updateStatusBarAppearence(forIndex: index)
 	}
 
 	func scrollToPage(atIndex index: Int) {
+		shouldScrollToPageOnLaunch = index
 		guard let screen = presenter.pageViewControllerScreen(atIndex: index) else { return }
 		pageController.setViewControllers([screen], direction: .forward, animated: false, completion: nil)
 		pageIndicator.currentPage = index
