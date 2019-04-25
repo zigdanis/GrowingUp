@@ -1,0 +1,40 @@
+/* 
+  Localizable.strings
+  GrowingUp
+
+  Created by zigdanis on 25/02/2019.
+  Copyright © 2019 zigdanis. All rights reserved.
+*/
+
+/* "text on label under app pic rounded button" */
+"main pic" = "основное";
+
+/* "text on label under widget pic rounded button" */
+"widget pic" = "в виджете";
+
+/* "Title for the button on new person screen" */
+"Add person" = "Добавить";
+
+/* Title for the person's name value */
+"Name" = "Имя";
+
+/* Title for the person's day of birth */
+"Day of birth" = "День рождения";
+
+/* Title for the person's time of birth */
+"Time of birth" = "Время рождения";
+
+/* Title for Error Alerts */
+"Alert" = "Внимание";
+
+/* Error title */
+"Error" = "Ошибка";
+
+/* Cropping image screen's Cancel button title */
+"Cancel" = "Сбросить";
+
+/* Cropping image screen's Use button title */
+"Use" = "Готово";
+
+/* Title for Button (that deletes Person) on Edit Person Page */
+"Remove" = "Удалить";

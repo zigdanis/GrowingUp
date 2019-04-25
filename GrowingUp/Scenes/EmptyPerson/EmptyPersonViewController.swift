@@ -17,6 +17,7 @@ final class EmptyPersonViewController: UIViewController, EmptyPersonView, PageVi
 	var index: Int = 0
 	var presenter: EmptyPersonPresenter!
 	var configurator: EmptyPersonConfigurator!
+	@IBOutlet weak var addPersonButton: VerticalButton!
 
 	init(configurator: EmptyPersonConfigurator) {
 		self.configurator = configurator
@@ -31,6 +32,11 @@ final class EmptyPersonViewController: UIViewController, EmptyPersonView, PageVi
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		configurator.configure(emptyPersonController: self)
+		setupButton()
+	}
+
+	private func setupButton() {
+		addPersonButton.setTitle(R.string.localizable.addPerson(), for: .normal)
 	}
 
 	// MARK: - Actions

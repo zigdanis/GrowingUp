@@ -7,7 +7,7 @@
 */
 
 /* "text on label under app pic rounded button" */
-"app pic" = "app pic";
+"main pic" = "app pic";
 
 /* "text on label under widget pic rounded button" */
 "widget pic" = "widget pic";
@@ -24,24 +24,6 @@
 /* Title for the person's time of birth */
 "Time of birth" = "Time of birth";
 
-/* Title for the person's showing date componenets */
-"Show years" = "Show years";
-
-/* Title for the person's showing date componenets */
-"Show months" = "Show months";
-
-/* Title for the person's showing date componenets */
-"Show days" = "Show days";
-
-/* Title for the person's showing date componenets */
-"Show hours" = "Show hours";
-
-/* Title for the person's showing date componenets */
-"Show minutes" = "Show minutes";
-
-/* Title for the person's showing date componenets */
-"Show seconds" = "Show seconds";
-
 /* Title for Error Alerts */
 "Alert" = "Alert";
 
@@ -53,9 +35,6 @@
 
 /* Cropping image screen's Use button title */
 "Use" = "Use";
-
-/* Title of the UIBarButtonItem */
-"Close" = "Close";
 
 /* Title for Button (that deletes Person) on Edit Person Page */
 "Remove" = "Remove";

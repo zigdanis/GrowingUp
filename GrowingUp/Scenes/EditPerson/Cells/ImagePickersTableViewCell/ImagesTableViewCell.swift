@@ -36,7 +36,7 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	}
 
 	private func setupImagePickerViews() {
-		appPicLabel.text = R.string.localizable.appPic()
+		appPicLabel.text = R.string.localizable.mainPic()
 		widgetPicLabel.text = R.string.localizable.widgetPic()
 	}
 
