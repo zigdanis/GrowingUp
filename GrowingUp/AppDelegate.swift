@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupMainViewController()
         setupNavigationControllerAppearence()
 		setupFileProtectionLevelForSharedContainer()
+		Logging.setup()
 		#if DEBUG
 		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
 		Logging.logMessage("Documents URL = \(urls)")

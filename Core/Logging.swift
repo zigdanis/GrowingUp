@@ -7,13 +7,27 @@
 //
 
 import Foundation
+import SwiftyBeaver
+
+let log = SwiftyBeaver.self
 
 public enum Logging {
+
+	public static func setup() {
+		let console = ConsoleDestination()
+		let file = FileDestination()
+		#if DEBUG
+		file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
+		#endif
+		log.addDestination(console)
+		log.addDestination(file)
+	}
+
 	public static func logError(_ error: CoreError) {
-		print("❌ \(error.title)\n\(error.message)")
+		log.error("❌ \(error.title)\n\(error.message)")
 	}
 
 	public static func logMessage(_ message: String) {
-		print("✍️ \(message)")
+		log.debug("✍️ \(message)")
 	}
 }

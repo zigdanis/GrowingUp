@@ -54,6 +54,8 @@
 		092F4190226F9A370049E29E /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		092F4192226FA31A0049E29E /* RemoveButtonFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092F4191226FA31A0049E29E /* RemoveButtonFooter.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
+		0945918B2272329F00F263D1 /* SwiftyBeaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0945918A2272329F00F263D1 /* SwiftyBeaver.framework */; };
+		0945918C227232BA00F263D1 /* SwiftyBeaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0945918A2272329F00F263D1 /* SwiftyBeaver.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
@@ -254,6 +256,7 @@
 		092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPersonsUseCaseSpy.swift; sourceTree = "<group>"; };
 		092F4191226FA31A0049E29E /* RemoveButtonFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveButtonFooter.swift; sourceTree = "<group>"; };
 		09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGateway.swift; sourceTree = "<group>"; };
+		0945918A2272329F00F263D1 /* SwiftyBeaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyBeaver.framework; path = Carthage/Build/iOS/SwiftyBeaver.framework; sourceTree = "<group>"; };
 		094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		094DF9C4223AB35D00C331EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewayTests.swift; sourceTree = "<group>"; };
@@ -346,6 +349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				095000E0226DECD700789BED /* Disk.framework in Frameworks */,
+				0945918C227232BA00F263D1 /* SwiftyBeaver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +367,7 @@
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
 				09A69E57223E331000291044 /* Rswift.framework in Frameworks */,
 				095000E5226E3F2700789BED /* Disk.framework in Frameworks */,
+				0945918B2272329F00F263D1 /* SwiftyBeaver.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,6 +377,7 @@
 		09051B3C21C558DB008A99C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0945918A2272329F00F263D1 /* SwiftyBeaver.framework */,
 				09051B3D21C558DB008A99C6 /* NotificationCenter.framework */,
 			);
 			name = Frameworks;
@@ -1172,6 +1178,7 @@
 			inputPaths = (
 				"$(SRCROOT)/Carthage/Build/iOS/Rswift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Disk.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SwiftyBeaver.framework",
 			);
 			name = "Carthage Copy Frameworks";
 			outputFileListPaths = (
@@ -1179,6 +1186,7 @@
 			outputPaths = (
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Rswift.framework",
 				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Disk.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyBeaver.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

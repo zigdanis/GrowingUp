@@ -1,4 +1,5 @@
 github "mac-cain13/R.swift.Library"
 github "saoudrizwan/Disk"
+github "SwiftyBeaver/SwiftyBeaver"
 
 # carthage update --platform iOS --cache-builds --new-resolver
