@@ -44,7 +44,7 @@ final class TodayPresenterImplementation: TodayPresenter {
 			case .success(let img):
 				cell.displayWidgetPic(pic: img)
 			case .failure(let error):
-				Logging.log(error)
+				Logging.logError(error)
 			}
 		}
 	}
@@ -55,7 +55,8 @@ final class TodayPresenterImplementation: TodayPresenter {
 			case .success(let persons):
 				self.persons = persons
 			case .failure(let error):
-				print("Failed to fetch Persons from CoreData with error \(error.message)")
+				Logging.logMessage("Failed to fetch Persons from CoreData")
+				Logging.logError(error)
 			}
 			self.view?.reloadTableData()
 		}

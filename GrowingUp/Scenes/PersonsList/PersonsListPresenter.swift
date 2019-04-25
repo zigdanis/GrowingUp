@@ -35,7 +35,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 		fetchPersonsUseCase.fetchPersons { result in
 			switch result {
 			case .success(let value): self.persons = value
-			case .failure(let error): Logging.log(error)
+			case .failure(let error): Logging.logError(error)
 			}
 			self.view?.updateListOfScreens()
 		}

@@ -28,7 +28,7 @@ public final class CoreDataStackImplementation {
 			fatalError("Failed to get App Group URL")
 		}
 		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
-		print("App Group URL = \(appGroupURL)")
+		Logging.logMessage("App Group URL = \(appGroupURL)")
 		let description = NSPersistentStoreDescription(url: appGroupURL)
 		let container = NSPersistentContainer(name: "GrowingUp")
 		container.persistentStoreDescriptions = [description]

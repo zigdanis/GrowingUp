@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		setupFileProtectionLevelForSharedContainer()
 		#if DEBUG
 		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-		print("Documents URL = \(urls)")
+		Logging.logMessage("Documents URL = \(urls)")
 		#endif
 		if let openURL = launchOptions?[.url] as? URL {
 			handleOpenURL(url: openURL)
@@ -50,7 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			try FileManager.default.setAttributes(noneAtts, ofItemAtPath: path)
 		} catch {
 			let error = CoreError(message: "Failed to set attributes for shared container URL. Error = \(error.localizedDescription)")
-			Logging.log(error)
+			Logging.logError(error)
 		}
 	}
 
@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			.first(where: { $0.name == Constants.widgetPersonIndexKey })
 		let personIndexStr = indexComponent?.value ?? ""
 		let personIndex = Int(personIndexStr) ?? 0
-		print("Open URL with personIndex = \(personIndex)")
+		Logging.logMessage("Open URL with personIndex = \(personIndex)")
 		NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
 	}
 

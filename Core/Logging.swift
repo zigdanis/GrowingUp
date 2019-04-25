@@ -9,7 +9,11 @@
 import Foundation
 
 public enum Logging {
-	public static func log(_ error: CoreError) {
-		print("Error with title = \(error.title)\nMessage = \(error.message)")
+	public static func logError(_ error: CoreError) {
+		print("❌ \(error.title)\n\(error.message)")
+	}
+
+	public static func logMessage(_ message: String) {
+		print("✍️ \(message)")
 	}
 }

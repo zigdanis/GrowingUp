@@ -60,7 +60,7 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 				case .success(let img):
 					self.appPicButton.drawImage(img)
 				case .failure(let error):
-					Logging.log(error)
+					Logging.logError(error)
 				}
 			}
 		}
@@ -79,7 +79,7 @@ class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 				case .success(let img):
 					self.widgetPicButton.drawImage(img)
 				case .failure(let error):
-					Logging.log(error)
+					Logging.logError(error)
 				}
 			}
 		}

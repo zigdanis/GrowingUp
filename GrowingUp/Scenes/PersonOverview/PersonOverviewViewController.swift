@@ -68,7 +68,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 			case.success(let img):
 				self.appImage.image = img
 			case .failure(let error):
-				Logging.log(error)
+				Logging.logError(error)
 			}
 		}
 	}
