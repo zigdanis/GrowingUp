@@ -7,14 +7,14 @@
 //
 
 import UIKit
+import Core
 
 protocol PageViewControllerViewable: UIViewController {
 	var index: Int { get }
 }
 
 protocol PersonsListView: class {
-	func updateListOfScreens()
-	func scrollToPage(atIndex index: Int)
+	func updateListOfScreens(defaultPage index: Int)
 }
 
 final class PersonsListViewController: UIViewController, PersonsListView {
@@ -26,8 +26,6 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	var presenter: PersonsListPresenter!
 	var configurator: PersonsListConfigurator!
 	var currentStatusBarStyle: UIStatusBarStyle = .lightContent
-	private var didScrolledOnLaunchOnce = false
-	private var shouldScrollToPageOnLaunch: Int?
 
 	init(configurator: PersonsListConfigurator) {
 		self.configurator = configurator
@@ -48,17 +46,6 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		configurator.configure(personsListController: self)
 		setupPageViewController()
 		setupPageIndicator()
-	}
-
-	override func viewDidAppear(_ animated: Bool) {
-		super.viewDidAppear(animated)
-		guard !didScrolledOnLaunchOnce else { return }
-		if let index = shouldScrollToPageOnLaunch {
-			didScrolledOnLaunchOnce = true
-			DispatchQueue.main.async {
-				self.scrollToPage(atIndex: index)
-			}
-		}
 	}
 
 	private func setupPageViewController() {
@@ -87,21 +74,16 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 
 	// MARK: - PersonsListView
 
-	func updateListOfScreens() {
+	func updateListOfScreens(defaultPage index: Int) {
+		Logging.logMessage("Calling updateListOfScreens(defaultPage: \(index))")
 		let total = presenter.numberOfPages()
 		pageIndicator.numberOfPages = total
-		let index = 0
 		pageIndicator.currentPage = index
-		guard let firstScreen = presenter.pageViewControllerScreen(atIndex: index) else { return }
-		pageController.setViewControllers([firstScreen], direction: .forward, animated: false, completion: nil)
-		updateStatusBarAppearence(forIndex: index)
-	}
-
-	func scrollToPage(atIndex index: Int) {
-		shouldScrollToPageOnLaunch = index
-		guard let screen = presenter.pageViewControllerScreen(atIndex: index) else { return }
+		guard let screen = presenter.pageViewControllerScreen(atIndex: index) else {
+			Logging.logWarning("Couldn't get the ViewController for index \(index)")
+			return }
+		pageController.dismiss(animated: true)
 		pageController.setViewControllers([screen], direction: .forward, animated: false, completion: nil)
-		pageIndicator.currentPage = index
 		updateStatusBarAppearence(forIndex: index)
 	}
 

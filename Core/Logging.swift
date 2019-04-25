@@ -30,4 +30,8 @@ public enum Logging {
 	public static func logMessage(_ message: String) {
 		log.debug("✍️ \(message)")
 	}
+
+	public static func logWarning(_ warning: String) {
+		log.warning("⚠️ \(warning)")
+	}
 }

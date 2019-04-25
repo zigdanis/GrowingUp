@@ -20,12 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		setupFileProtectionLevelForSharedContainer()
 		Logging.setup()
 		#if DEBUG
-		let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-		Logging.logMessage("Documents URL = \(urls)")
+			let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+			Logging.logMessage("Documents URL = \(urls)")
 		#endif
-		if let openURL = launchOptions?[.url] as? URL {
-			handleOpenURL(url: openURL)
-		}
 		return true
     }
 

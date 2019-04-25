@@ -19,6 +19,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private var persons = [Person]()
 	private weak var view: PersonsListView?
 	private let fetchPersonsUseCase: FetchPersonsUseCase
+	private var defaultPage: Int = 0
 
 	init(view: PersonsListView, displayPersonsUseCase: FetchPersonsUseCase) {
 		self.view = view
@@ -37,7 +38,8 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 			case .success(let value): self.persons = value
 			case .failure(let error): Logging.logError(error)
 			}
-			self.view?.updateListOfScreens()
+			self.cachedScreens.removeAll()
+			self.view?.updateListOfScreens(defaultPage: self.defaultPage)
 		}
 	}
 
@@ -49,7 +51,9 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private func openPersonNotificationSent(notif: Notification) {
 		let key = Constants.widgetPersonIndexKey
 		guard let personIndex = notif.userInfo?[key] as? Int else { return }
-		self.view?.scrollToPage(atIndex: personIndex)
+		Logging.logMessage("Open person page Notification received for index \(personIndex)")
+		self.defaultPage = personIndex
+		self.view?.updateListOfScreens(defaultPage: defaultPage)
 	}
 
 	func numberOfPages() -> Int {
@@ -83,21 +87,24 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
 		cachedScreens[persons.count] = nil
 		persons.append(person)
-		view?.updateListOfScreens()
-		view?.scrollToPage(atIndex: persons.count - 1)
+		let scrollTo = persons.count - 1
+		Logging.logMessage("Did Add a new Person. Scrolling to the \(scrollTo) index")
+		view?.updateListOfScreens(defaultPage: scrollTo)
 		presenter.router.dismiss()
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
+
+		// TODO:
 		if let index = persons.firstIndex(of: person) {
 			for key in cachedScreens.keys.filter({ $0 >= index }) {
 				cachedScreens[key] = nil
 			}
 			persons.remove(at: index)
 		}
-		view?.updateListOfScreens()
+		view?.updateListOfScreens(defaultPage: 0)
 		presenter.router.dismiss()
 	}
 

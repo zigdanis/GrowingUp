@@ -13,13 +13,9 @@ import Foundation
 class PersonsListViewSpy: PersonsListView {
 
 	var didCallUpdateListOfScreens = false
-	var didCallScrollToPage = false
 
-	func updateListOfScreens() {
+	func updateListOfScreens(defaultPage index: Int) {
 		didCallUpdateListOfScreens = true
 	}
 
-	func scrollToPage(atIndex index: Int) {
-		didCallScrollToPage = true
-	}
 }
