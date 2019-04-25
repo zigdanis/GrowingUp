@@ -7,3 +7,5 @@
 */
 
 "CFBundleDisplayName" = "Взросление";
+
+"NSPhotoLibraryUsageDescription" = "Приложение устанавливает изображения для добавленных людей";

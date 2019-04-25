@@ -7,3 +7,5 @@
 */
 
 "CFBundleDisplayName" = "GrowingUp";
+
+"NSPhotoLibraryUsageDescription" = "This app sets images for the added persons";
