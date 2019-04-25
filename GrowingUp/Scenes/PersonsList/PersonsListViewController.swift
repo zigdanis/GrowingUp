@@ -81,7 +81,8 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		pageIndicator.currentPage = index
 		guard let screen = presenter.pageViewControllerScreen(atIndex: index) else {
 			Logging.logWarning("Couldn't get the ViewController for index \(index)")
-			return }
+			return
+		}
 		pageController.dismiss(animated: true)
 		pageController.setViewControllers([screen], direction: .forward, animated: false, completion: nil)
 		updateStatusBarAppearence(forIndex: index)

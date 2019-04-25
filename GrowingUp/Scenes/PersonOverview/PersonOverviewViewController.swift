@@ -11,7 +11,7 @@ import Core
 
 protocol PersonOverviewView: PageViewControllerViewable {
 	func displayPersonName(name: String)
-	func displayPersonAppImage(image: PersonImage)
+	func displayPersonAppImage(image: PersonImage?)
 	func displayPersonAge(age: String)
 }
 
@@ -62,7 +62,8 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		personName.text = name
 	}
 
-	func displayPersonAppImage(image: PersonImage) {
+	func displayPersonAppImage(image: PersonImage?) {
+		guard let image = image else { return }
 		ImagesCache.loadImageFromDisk(image: image) { result in
 			switch result {
 			case.success(let img):

@@ -85,6 +85,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
+		Logging.logMessage("Added new Person")
 		cachedScreens[persons.count] = nil
 		persons.append(person)
 		let scrollTo = persons.count - 1
@@ -96,15 +97,14 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
-
-		// TODO:
+		Logging.logMessage("Removed Person")
+		cachedScreens.removeAll()
 		if let index = persons.firstIndex(of: person) {
-			for key in cachedScreens.keys.filter({ $0 >= index }) {
-				cachedScreens[key] = nil
-			}
 			persons.remove(at: index)
+			view?.updateListOfScreens(defaultPage: index)
+		} else {
+			Logging.logError(CoreError(message: "Couldn't find person in persons array when removed him/her"))
 		}
-		view?.updateListOfScreens(defaultPage: 0)
 		presenter.router.dismiss()
 	}
 

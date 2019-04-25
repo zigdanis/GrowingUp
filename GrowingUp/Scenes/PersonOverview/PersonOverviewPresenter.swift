@@ -30,7 +30,7 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	func loadPerson() {
 		view?.displayPersonName(name: person.name)
-		let personAppPic = PersonImage(id: person.appPicId, uiImage: nil)
+		let personAppPic = PersonImage(id: person.appPicId)
 		view?.displayPersonAppImage(image: personAppPic)
 		scheduleAgeTicker()
 	}
@@ -57,6 +57,7 @@ extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+		Logging.logMessage("Edited Person")
 		self.person = person
 		loadPerson()
 		presenter.router.dismiss()
