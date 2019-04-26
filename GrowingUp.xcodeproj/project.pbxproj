@@ -78,6 +78,7 @@
 		096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F9D6C226CE4B100DBB8D9 /* PersonTableViewCell.swift */; };
 		096F9D6F226CE4DE00DBB8D9 /* PersonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096F9D6E226CE4DE00DBB8D9 /* PersonTableViewCell.xib */; };
 		0978FDE7227256ED00487BC2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0978FDE9227256ED00487BC2 /* Localizable.strings */; };
+		097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097E1AED22739175003D4FB4 /* Obfuscator.swift */; };
 		098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */; };
 		098054F9223C2A7900E24D40 /* EditPersonViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F8223C2A7900E24D40 /* EditPersonViewSpy.swift */; };
 		098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */; };
@@ -271,6 +272,7 @@
 		096F9D6E226CE4DE00DBB8D9 /* PersonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonTableViewCell.xib; sourceTree = "<group>"; };
 		0978FDE8227256ED00487BC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0978FDEA227256FF00487BC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		097E1AED22739175003D4FB4 /* Obfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obfuscator.swift; sourceTree = "<group>"; };
 		098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterTests.swift; sourceTree = "<group>"; };
 		098054F8223C2A7900E24D40 /* EditPersonViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonViewSpy.swift; sourceTree = "<group>"; };
 		098054FB223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseSpy.swift; sourceTree = "<group>"; };
@@ -617,6 +619,7 @@
 			isa = PBXGroup;
 			children = (
 				092AA35D2257C79D002EAEE8 /* TaskManager.swift */,
+				097E1AED22739175003D4FB4 /* Obfuscator.swift */,
 			);
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
@@ -1262,6 +1265,7 @@
 				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
+				097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

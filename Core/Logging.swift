@@ -16,7 +16,11 @@ public enum Logging {
 	public static func setup() {
 		let console = ConsoleDestination()
 		let file = FileDestination()
-		let platform = SBPlatformDestination(appID: Constants.swiftyBearAppId, appSecret: Constants.swiftyBearAppSecret, encryptionKey: Constants.swiftyBearEncryption)
+		let obfuscator = Obfuscator()
+		let appId = obfuscator.reveal(key: Constants.obfusSBAppId)
+		let appSecretId = obfuscator.reveal(key: Constants.obfusSBAppSecret)
+		let encryption = obfuscator.reveal(key: Constants.obfusSBEncryption)
+		let platform = SBPlatformDestination(appID: appId, appSecret: appSecretId, encryptionKey: encryption)
 		#if DEBUG
 		file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
 		#endif
