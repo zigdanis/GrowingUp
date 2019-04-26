@@ -47,7 +47,7 @@ final class PersonTableViewCell: UITableViewCell, PersonCellView {
 	}
 
 	func displayWidgetPic(pic: UIImage?) {
-		faceImage.image = pic
+		faceImage.image = pic ?? #imageLiteral(resourceName: "face")
 	}
 
 	func cancelTimer() {

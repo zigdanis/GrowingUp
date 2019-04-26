@@ -38,12 +38,14 @@ final class TodayPresenterImplementation: TodayPresenter {
 		cell.displayName(name: person.name)
 		cell.displayAge(for: person)
 
+		cell.displayWidgetPic(pic: nil)
 		guard let image = PersonImage(id: person.widgetPicId) else { return }
 		ImagesCache.loadImageFromDisk(image: image) { result in
 			switch result {
 			case .success(let img):
 				cell.displayWidgetPic(pic: img)
 			case .failure(let error):
+				cell.displayWidgetPic(pic: nil)
 				Logging.logError(error)
 			}
 		}
