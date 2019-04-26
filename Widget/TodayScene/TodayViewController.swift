@@ -18,6 +18,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 
 	private let identifier = "PersonTableViewCell"
 	@IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var addPersonButton: UIButton!
 	private let presenter = TodayPresenterImplementation()
 
     override func viewDidLoad() {
@@ -25,6 +26,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 		presenter.view = self
 		setupTableView()
 		setupMaxWidgetSize()
+		setupAddPersonButton()
 		presenter.loadPersons()
     }
 
@@ -43,6 +45,12 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 		tableView.register(nib, forCellReuseIdentifier: identifier)
 		tableView.estimatedRowHeight = 44
 		tableView.tableFooterView = UIView()
+	}
+
+	private func setupAddPersonButton() {
+		guard let bundle = Bundle(identifier: Constants.bundleIdentifier) else { return }
+		let ttl = NSLocalizedString("Add person", bundle: bundle, comment: "")
+		addPersonButton.setTitle(ttl, for: .normal)
 	}
 
 	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
@@ -65,6 +73,9 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 	func reloadTableData() {
 		setupMaxWidgetSize()
 		tableView.reloadData()
+		let isHidden = presenter.numberOfPersons() == 0
+		tableView.isHidden = isHidden
+		addPersonButton.isHidden = !isHidden
 	}
 
     // MARK: - Actions
@@ -75,6 +86,9 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
         extensionContext?.open(url, completionHandler: nil)
     }
 
+	@IBAction func addPersonTouched() {
+		widgetTouched(atIndex: 0)
+	}
 }
 
 extension TodayViewController: UITableViewDelegate, UITableViewDataSource {

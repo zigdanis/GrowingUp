@@ -8,8 +8,6 @@
 
 import Foundation
 
-private let bundleIdentifier = "pro.ziganshin.Core"
-
 public enum AgeCalculator {
 
     public static func ageComponents() -> DateComponents {
@@ -27,7 +25,7 @@ public enum AgeCalculator {
         let minutes = comps.minute ?? 0
         let seconds = comps.second ?? 0
 
-        guard let bundle = Bundle(identifier: bundleIdentifier) else { return "" }
+        guard let bundle = Bundle(identifier: Constants.bundleIdentifier) else { return "" }
         var result = ""
         if years > 0 {
             result += " " + String(format: NSLocalizedString("%li years", bundle: bundle, comment: "Years"), years)

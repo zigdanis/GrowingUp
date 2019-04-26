@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  GrowingUp
+
+  Created by zigdanis on 26/04/2019.
+  Copyright © 2019 zigdanis. All rights reserved.
+*/
+
+/* "Title for the button on new person screen" */
+"Add person" = "Add person";

@@ -23,12 +23,23 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <sections/>
                             </tableView>
+                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20q-rm-LUK">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
+                                <state key="normal" title="Add person"/>
+                                <connections>
+                                    <action selector="addPersonTouched" destination="M4Y-Lb-cyx" eventType="touchUpInside" id="sse-zj-AeD"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="20q-rm-LUK" secondAttribute="trailing" id="1ni-aU-zUO"/>
                             <constraint firstItem="4wt-ze-B69" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="9VK-8Q-Jdg"/>
+                            <constraint firstItem="20q-rm-LUK" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="F4H-Cd-HcL"/>
                             <constraint firstItem="4wt-ze-B69" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="cdw-pY-etK"/>
                             <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="4wt-ze-B69" secondAttribute="trailing" id="ecq-Vu-s5z"/>
                             <constraint firstItem="ssy-KU-ocm" firstAttribute="top" secondItem="4wt-ze-B69" secondAttribute="top" id="smx-Fo-a4g"/>
+                            <constraint firstItem="20q-rm-LUK" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="tab-qx-G94"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="20q-rm-LUK" secondAttribute="bottom" id="wVt-IV-MxK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
                     </view>
@@ -36,6 +47,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="92"/>
                     <connections>
+                        <outlet property="addPersonButton" destination="20q-rm-LUK" id="yyt-u7-vNz"/>
                         <outlet property="tableView" destination="4wt-ze-B69" id="I7s-9C-Kha"/>
                     </connections>
                 </viewController>
