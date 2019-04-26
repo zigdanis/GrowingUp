@@ -13,4 +13,8 @@ enum Constants {
 	static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
 	static let widgetPersonIndexKey = "personIndex"
 	static let openPersonNotification = Notification.Name(rawValue: "pro.ziganshin.GrowingUp.openPersonWithIndex")
+
+	static let swiftyBearAppId = "bJPXa3"
+	static let swiftyBearAppSecret = "q0fxlcfjfoajqbjpw2wlrwfc6gvunh5k"
+	static let swiftyBearEncryption = "rteZzjbjHucLtxjeiaicf8nfcLkEra6e"
 }

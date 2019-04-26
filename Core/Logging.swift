@@ -16,11 +16,13 @@ public enum Logging {
 	public static func setup() {
 		let console = ConsoleDestination()
 		let file = FileDestination()
+		let platform = SBPlatformDestination(appID: Constants.swiftyBearAppId, appSecret: Constants.swiftyBearAppSecret, encryptionKey: Constants.swiftyBearEncryption)
 		#if DEBUG
 		file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
 		#endif
 		log.addDestination(console)
 		log.addDestination(file)
+		log.addDestination(platform)
 	}
 
 	public static func logError(_ error: CoreError) {
