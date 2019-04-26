@@ -94,7 +94,12 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 		presenter.router.dismiss()
 	}
 
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {}
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+		if let index = persons.firstIndex(where: { $0.id == person.id }) {
+			persons.remove(at: index)
+			persons.insert(person, at: index)
+		}
+	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
 		Logging.logMessage("Removed Person")

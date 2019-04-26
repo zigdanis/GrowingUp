@@ -29,7 +29,9 @@ extension CoreDataPerson {
     }
 
     public func populate(with parameters: AddPersonParameters) {
-        id = UUID()
+		if id == nil {
+			id = UUID()
+		}
         name = parameters.name
 		birthdate = parameters.combinedDate() as NSDate?
 		appPicId = parameters.appImage?.id

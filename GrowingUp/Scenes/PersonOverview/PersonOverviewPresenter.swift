@@ -61,6 +61,7 @@ extension PersonOverviewPresenterImplementation: EditPersonPresenterDelegate {
 		self.person = person
 		loadPerson()
 		presenter.router.dismiss()
+		personPresenterDelegate?.editPersonPresenter(presenter, didEdit: person)
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
