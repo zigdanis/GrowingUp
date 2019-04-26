@@ -20,6 +20,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	@IBOutlet weak var appImage: UIImageView!
 	@IBOutlet weak var personName: UILabel!
 	@IBOutlet weak var personAge: UILabel!
+	@IBOutlet weak var noPicPlaceholder: UILabel!
 
 	var index: Int = 0
 	var presenter: PersonOverviewPresenter!
@@ -63,6 +64,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonAppImage(image: PersonImage?) {
+		noPicPlaceholder.isHidden = image != nil
 		guard let image = image else { return }
 		ImagesCache.loadImageFromDisk(image: image) { result in
 			switch result {

@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PersonOverviewViewController" customModule="GrowingUp" customModuleProvider="target">
             <connections>
                 <outlet property="appImage" destination="neN-za-Zce" id="VXo-A0-7Hz"/>
+                <outlet property="noPicPlaceholder" destination="STv-eb-9JL" id="0ON-ZZ-0nO"/>
                 <outlet property="personAge" destination="Gfk-xV-p6Y" id="zc5-a8-xlz"/>
                 <outlet property="personName" destination="6iK-08-5Zh" id="d2E-Qc-DTJ"/>
                 <outlet property="view" destination="iN0-l3-epB" id="q4u-ED-Kmu"/>
@@ -30,6 +31,12 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="🤷‍♀️" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="STv-eb-9JL">
+                    <rect key="frame" x="182" y="421" width="50" height="54"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="45"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="6iK-08-5Zh">
                     <rect key="frame" x="16" y="44" width="382" height="48"/>
                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="40"/>
@@ -60,8 +67,10 @@
                 <constraint firstItem="ThJ-Ob-qhq" firstAttribute="leading" secondItem="neN-za-Zce" secondAttribute="leading" id="O9E-pp-Gci"/>
                 <constraint firstAttribute="bottom" secondItem="neN-za-Zce" secondAttribute="bottom" id="Tm2-26-1cZ"/>
                 <constraint firstItem="ThJ-Ob-qhq" firstAttribute="bottom" secondItem="neN-za-Zce" secondAttribute="bottom" id="Uj2-sO-6ap"/>
+                <constraint firstItem="STv-eb-9JL" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="X7v-eb-Eu8"/>
                 <constraint firstItem="ThJ-Ob-qhq" firstAttribute="top" secondItem="neN-za-Zce" secondAttribute="top" id="cCf-gs-3wd"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="6SD-l0-0rW" secondAttribute="bottom" constant="12" id="gXI-eQ-Xvc"/>
+                <constraint firstItem="STv-eb-9JL" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="hmr-eI-eoo"/>
                 <constraint firstItem="Gfk-xV-p6Y" firstAttribute="top" secondItem="6iK-08-5Zh" secondAttribute="bottom" constant="14" id="hoQ-RF-FXM"/>
                 <constraint firstItem="ThJ-Ob-qhq" firstAttribute="trailing" secondItem="neN-za-Zce" secondAttribute="trailing" id="k9P-gc-jNc"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="6iK-08-5Zh" secondAttribute="trailing" constant="16" id="ndi-Ey-BE7"/>
