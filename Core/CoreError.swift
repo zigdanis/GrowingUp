@@ -12,11 +12,12 @@ public struct CoreError: Error, Equatable {
 
 	public var localizedDescription: String { return message }
     public var title = ""
-    public var message = ""
+	public var message = ""
 
     public init(title: String = "Error", message: String) {
-        self.title = title
-        self.message = message
+		let bundle = Bundle(identifier: Constants.bundleIdentifier)!
+		self.title = NSLocalizedString(title, bundle: bundle, comment: "Error Title")
+		self.message = NSLocalizedString(message, bundle: bundle, comment: "Error Message")
     }
 
 	public static let noNameValue = CoreError(message: "Can't save person without specified name")

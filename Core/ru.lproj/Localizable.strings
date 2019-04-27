@@ -8,3 +8,17 @@
 
 /* "Title for the button on new person screen" */
 "Add person" = "Добавить";
+
+/* Default Error Title */
+"Error" = "Ошибка";
+
+/* Errors messages */
+"Can't save person without specified name" = "Невозможно добавить человека без указания имени";
+"Can't save person without specified day of birth" = "Невозможно добавить человека без указания дня рождения";
+"Can't save person without specified time of birth" = "Невозможно добавить человека без указания времени рождения";
+"Failed adding entity to the data base" = "Не удалось добавить запись";
+"Failed retrieving entities from the data base" = "Не удалось найти запись";
+"Failed saving the context" = "Не удалось сохранить запись";
+"Asyncronous work were not finished before final notification called" = "Не удалось завершить операцию";
+"Missing value" = "Отсутствует параметр";
+"Unknown error occured" = "Неизвестная ошибка";

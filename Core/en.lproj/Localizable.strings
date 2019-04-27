@@ -8,3 +8,17 @@
 
 /* "Title for the button on new person screen" */
 "Add person" = "Add person";
+
+/* Default Error Title */
+"Error" = "Error";
+
+/* Errors messages */
+"Can't save person without specified name" = "Can't save person without specified name";
+"Can't save person without specified day of birth" = "Can't save person without specified day of birth";
+"Can't save person without specified time of birth" = "Can't save person without specified time of birth";
+"Failed adding entity to the data base" = "Failed adding entity to the data base";
+"Failed retrieving entities from the data base" = "Failed retrieving entities from the data base";
+"Failed saving the context" = "Failed saving the context";
+"Asyncronous work were not finished before final notification called" = "Asyncronous work were not finished before final notification called";
+"Missing value" = "Missing value";
+"Unknown error occured" = "Unknown error occured";
