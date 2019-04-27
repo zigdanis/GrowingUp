@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PersonOverviewViewController" customModule="GrowingUp" customModuleProvider="target">
             <connections>
                 <outlet property="appImage" destination="neN-za-Zce" id="VXo-A0-7Hz"/>
+                <outlet property="darkHoverView" destination="ThJ-Ob-qhq" id="jed-9a-Znw"/>
                 <outlet property="noPicPlaceholder" destination="STv-eb-9JL" id="0ON-ZZ-0nO"/>
                 <outlet property="personAge" destination="Gfk-xV-p6Y" id="zc5-a8-xlz"/>
                 <outlet property="personName" destination="6iK-08-5Zh" id="d2E-Qc-DTJ"/>

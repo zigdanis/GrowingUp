@@ -89,7 +89,7 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	}
 
 	private func updateStatusBarAppearence(forIndex index: Int) {
-		if (index == presenter.numberOfPages() - 1) && (index != 2) {
+		if index == presenter.emptyPageIndex() {
 			currentStatusBarStyle = .default
 		} else {
 			currentStatusBarStyle = .lightContent

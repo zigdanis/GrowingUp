@@ -12,6 +12,7 @@ import Core
 protocol PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable?
 	func numberOfPages() -> Int
+	func emptyPageIndex() -> Int
 }
 
 final class PersonsListPresenterImplementation: PersonsListPresenter {
@@ -58,6 +59,10 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 
 	func numberOfPages() -> Int {
 		return min(persons.count + 1, 3)
+	}
+
+	func emptyPageIndex() -> Int {
+		return persons.count
 	}
 
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable? {
