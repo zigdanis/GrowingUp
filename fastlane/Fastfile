@@ -27,10 +27,6 @@ platform :ios do
       beta_app_description: change_log,
       beta_app_feedback_email: "zigdanis@gmail.com"
     )
-    download_dsyms(
-      version: "latest"
-    )
-    upload_symbols_to_crashlytics
     commit_version_bump(
       force: true,
       xcodeproj: "GrowingUp.xcodeproj",
