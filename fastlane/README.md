@@ -16,11 +16,11 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
-### ios telega
+### ios app_store
 ```
-fastlane ios telega
+fastlane ios app_store
 ```
-Description of what the lane does
+
 
 ----
 

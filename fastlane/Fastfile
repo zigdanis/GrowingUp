@@ -10,7 +10,8 @@ platform :ios do
     match(
       type: appstore,
       readonly: false,
-      force_for_new_devices: true
+      force_for_new_devices: true,
+      app_identifier: ["pro.ziganshin.GrowingUp", "pro.ziganshin.GrowingUp.Widget"]
     )
     version_number = get_version_number(target: "GrowingUp")
     build_number = increment_build_number
