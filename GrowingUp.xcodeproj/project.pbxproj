@@ -1741,7 +1741,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
-				INFOPLIST_FILE = "$PRODUCT_NAME/Supporting Files//Info.plist";
+				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1766,7 +1766,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
-				INFOPLIST_FILE = "$PRODUCT_NAME/Supporting Files//Info.plist";
+				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

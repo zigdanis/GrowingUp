@@ -8,9 +8,8 @@ platform :ios do
   lane :app_store do
     ensure_git_status_clean
     match(
-      type: appstore,
+      type: "appstore",
       readonly: false,
-      force_for_new_devices: true,
       app_identifier: ["pro.ziganshin.GrowingUp", "pro.ziganshin.GrowingUp.Widget"]
     )
     version_number = get_version_number(target: "GrowingUp")

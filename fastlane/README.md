@@ -16,6 +16,11 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
+### ios telega
+```
+fastlane ios telega
+```
+
 ### ios app_store
 ```
 fastlane ios app_store
