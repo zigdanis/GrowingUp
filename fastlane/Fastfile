@@ -1,15 +1,82 @@
-update_fastlane
-
-default_platform(:ios)
+default_platform :ios
+fastlane_require 'dotenv'
 
 platform :ios do
-  desc "Description of what the lane does"
-  lane :telega do
+
+	# Public
+
+  lane :app_store do
+    ensure_git_status_clean
+    match(
+      type: appstore,
+      readonly: false,
+      force_for_new_devices: true
+    )
+    version_number = get_version_number(target: "GrowingUp")
+    build_number = increment_build_number
+    complete_version_number = version_string(version_number, build_number)
+    change_log = change_log_since_last_tag
+    gym(
+      scheme: "GrowingUp",
+      export_method: "app-store",
+      include_bitcode: true
+    )
+    pilot(
+      itc_provider: "XMSU8WJG5R",
+      beta_app_description: change_log,
+      beta_app_feedback_email: "zigdanis@gmail.com"
+    )
+    download_dsyms(
+      version: "latest"
+    )
+    upload_symbols_to_crashlytics
+    commit_version_bump(
+      force: true,
+      xcodeproj: "GrowingUp.xcodeproj",
+      message: "Version Bump to #{complete_version_number}")
+    tagName = version_tag(version_number, build_number)
+    add_git_tag(tag:tagName)
+    push_to_git_remote
+    begin
+      telegram(
+        token: ENV['TELEGRAM_BOT_TOKEN'],
+        chat_id: ENV['TELEGRAM_CHAT_ID'],
+        text: notification_app_store(complete_version_number),
+        proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
+      )
+    rescue => ex
+      UI.error("Telegram couldnt send message: #{ex}")
+    end
+    clean_build_artifacts
+  end
+
+  def change_log_since_last_tag
+    return changelog_from_git_commits(
+      pretty: '- %s',
+      merge_commit_filtering: "exclude_merges"
+    )
+  end
+
+  def notification_app_store(complete_version_number)
+    <<~HEREDOC
+      Build #{complete_version_number} готов к отправке на ревью в App Store
+    HEREDOC
+  end
+
+  def version_string(version_number, build_number)
+    "#{version_number} (#{build_number})"
+  end
+
+  def version_tag(version_number, build_number)
+    "#{version_number}.#{build_number}"
+  end
+
+  error do |lane, exception, options|
     telegram(
-      token: "443495039:AAGtuG2C8j_4pEaadDAUsvCOTsSW4xBMgSw",
+      token: ENV['TELEGRAM_BOT_TOKEN'],
       chat_id: "-284033451",
-      text: "Testing Telegram build",
-      proxy: "https://localhost:9050"
+      text: "Failed to execute fastlane for GrowingUp Build",
+      proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
     )
   end
 end
