@@ -8,8 +8,7 @@
 
 import Foundation
 import SwiftyBeaver
-
-let log = SwiftyBeaver.self
+import Mixpanel
 
 public enum Logging {
 
@@ -24,20 +23,28 @@ public enum Logging {
 		#if DEBUG
 		file.logFileURL = URL(fileURLWithPath: "/tmp/swiftybeaver.log")
 		#endif
-		log.addDestination(console)
-		log.addDestination(file)
-		log.addDestination(platform)
+		SwiftyBeaver.addDestination(console)
+		SwiftyBeaver.addDestination(file)
+		SwiftyBeaver.addDestination(platform)
+
+		Mixpanel.sharedInstance(withToken: obfuscator.reveal(key: Constants.obfusMPToken))
 	}
 
 	public static func logError(_ error: CoreError) {
-		log.error("❌ \(error.title)\n\(error.message)")
+		let value = "❌ \(error.title)\n\(error.message)"
+		SwiftyBeaver.error(value)
+		Mixpanel.sharedInstance()?.track(value)
 	}
 
 	public static func logMessage(_ message: String) {
-		log.debug("✍️ \(message)")
+		let value = "✍️ \(message)"
+		SwiftyBeaver.debug(value)
+		Mixpanel.sharedInstance()?.track(value)
 	}
 
 	public static func logWarning(_ warning: String) {
-		log.warning("⚠️ \(warning)")
+		let value = "⚠️ \(warning)"
+		SwiftyBeaver.warning(value)
+		Mixpanel.sharedInstance()?.track(value)
 	}
 }

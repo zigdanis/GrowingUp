@@ -1,5 +1,6 @@
 github "mac-cain13/R.swift.Library"
 github "saoudrizwan/Disk"
 github "SwiftyBeaver/SwiftyBeaver"
+github "mixpanel/mixpanel-iphone"
 
 # carthage update --platform iOS --cache-builds --new-resolver
