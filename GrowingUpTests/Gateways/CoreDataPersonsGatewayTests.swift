@@ -89,7 +89,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		cdPerson.id = UUID()
+		cdPerson.id = UUID().uuidString
 		inMemoryCoreDataStack.saveContext()
 		var editParams = AddPersonParameters.createParameters()
 		let expectedName = "John Snow"
@@ -126,7 +126,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 	func test_SUT_RemovePerson_ShouldSucceed() {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		cdPerson.id = UUID()
+		cdPerson.id = UUID().uuidString
 		inMemoryCoreDataStack.saveContext()
 		// When
 		let result = inMemoryCoreDataGateway.remove(person: cdPerson.person, with: inMemoryCoreDataStack.persistentContainer.viewContext)

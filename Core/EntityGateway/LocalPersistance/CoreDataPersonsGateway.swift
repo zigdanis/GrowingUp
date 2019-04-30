@@ -45,7 +45,7 @@ public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway 
 	public func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError> {
 		var coreDataPerson: CoreDataPerson?
 		do {
-			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id as CVarArg)
+			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
 			coreDataPerson = try context.allEntities(withType: CoreDataPerson.self, predicate: predicate).first
 		} catch let error as CoreError {
 			return .failure(error)
@@ -83,7 +83,7 @@ public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway 
 	public func remove(person: Person, with context: NSManagedObjectContextProtocol) -> Result<Void, CoreError> {
 		var coreDataPerson: CoreDataPerson?
 		do {
-			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id as CVarArg)
+			let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
 			coreDataPerson = try context.allEntities(withType: CoreDataPerson.self, predicate: predicate).first
 		} catch let error as CoreError {
 			return .failure(error)
