@@ -134,6 +134,7 @@
 		09D69785225C961C00EFFEAC /* PersonOverviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
+		09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E75943227735E9005025AD /* UUID+Extensions.swift */; };
 		09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CB9225BD2E600D9C985 /* WDImageError.swift */; };
 		09EC1CBD225BDB9C00D9C985 /* PersonsListConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */; };
 		09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */; };
@@ -328,6 +329,7 @@
 		09E6F55922569DBB0059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		09E7339021C453CF00BA4157 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ru; path = ru.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		09E7339221C453D200BA4157 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		09E75943227735E9005025AD /* UUID+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UUID+Extensions.swift"; sourceTree = "<group>"; };
 		09EC1CB9225BD2E600D9C985 /* WDImageError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WDImageError.swift; sourceTree = "<group>"; };
 		09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListConfigurator.swift; sourceTree = "<group>"; };
 		09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewController.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 			children = (
 				095000D1226DD3C100789BED /* Constants.swift */,
 				092C32CC226129310067B2DB /* Logging.swift */,
+				09E75943227735E9005025AD /* UUID+Extensions.swift */,
 				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
@@ -1266,6 +1269,7 @@
 				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
 				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
+				09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
 				097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */,
 			);
@@ -1457,7 +1461,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1480,7 +1484,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1742,7 +1746,7 @@
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1767,7 +1771,7 @@
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/Carthage/Build/iOS";
 				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

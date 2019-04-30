@@ -11,31 +11,31 @@ import CoreData
 
 @objc(CoreDataPerson)
 public class CoreDataPerson: NSManagedObject {
-	@NSManaged public var appPicId: UUID?
+	@NSManaged public var appPicId: String?
 	@NSManaged public var birthdate: NSDate?
-	@NSManaged public var id: UUID?
+	@NSManaged public var id: String?
 	@NSManaged public var name: String?
-	@NSManaged public var widgetPicId: UUID?
+	@NSManaged public var widgetPicId: String?
 }
 
 extension CoreDataPerson {
 
     public var person: Person {
-		return Person(id: id ?? UUID(),
+		return Person(id: UUID(string: id) ?? UUID(),
 					  name: name ?? "",
 					  birthday: birthdate as Date? ?? Date(),
-					  appPicId: appPicId,
-					  widgetPicId: widgetPicId)
+					  appPicId: UUID(string: appPicId),
+					  widgetPicId: UUID(string: widgetPicId))
     }
 
     public func populate(with parameters: AddPersonParameters) {
 		if id == nil {
-			id = UUID()
+			id = UUID().uuidString
 		}
         name = parameters.name
 		birthdate = parameters.combinedDate() as NSDate?
-		appPicId = parameters.appImage?.id
-		widgetPicId = parameters.widgetImage?.id
+		appPicId = parameters.appImage?.id.uuidString
+		widgetPicId = parameters.widgetImage?.id.uuidString
     }
 
 }

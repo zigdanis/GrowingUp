@@ -64,11 +64,8 @@ final class DatePickerView: UIView {
 			paddingView.leadingAnchor.constraint(equalTo: leadingAnchor),
 			trailingAnchor.constraint(equalTo: paddingView.trailingAnchor)
 		]
-		let top = paddingView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
 		let bottom = bottomAnchor.constraint(equalTo: paddingView.bottomAnchor)
-		top.priority = .defaultHigh
 		bottom.priority = .defaultHigh
-		consts.append(top)
 		consts.append(bottom)
 		NSLayoutConstraint.activate(consts)
 	}
@@ -123,6 +120,12 @@ final class DatePickerView: UIView {
 			self.layoutSubviews()
 			self.hoverView.alpha = 1
 		}, completion: nil)
+	}
+
+	func clipPaddingViewTopTo(safeAreaBottomLength length: CGFloat) {
+		let top = bottomAnchor.constraint(equalTo: paddingView.topAnchor, constant: length)
+		top.priority = .defaultHigh
+		top.isActive = true
 	}
 
 	// MARK: - Actions

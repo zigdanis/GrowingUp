@@ -81,9 +81,10 @@ class WDImageCropViewController: UIViewController {
 		let consts = [
 			toolbar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
 			view.trailingAnchor.constraint(equalTo: toolbar.trailingAnchor),
-			view.safeAreaLayoutGuide.bottomAnchor.constraint(equalTo: toolbar.bottomAnchor)
+			bottomLayoutGuide.topAnchor.constraint(equalTo: toolbar.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
 		toolbar.setContentCompressionResistancePriority(.init(900), for: .vertical)
 	}
+
 }

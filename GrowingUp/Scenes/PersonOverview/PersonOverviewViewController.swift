@@ -42,6 +42,21 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		configurator.configure(personOverviewController: self)
 		presenter.loadPerson()
 		setupTapGesture()
+		setupPersonNameTopConstraint()
+		setupNoPicPlaceholder()
+	}
+
+	private func setupPersonNameTopConstraint() {
+		let top = personName.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
+		top.isActive = true
+	}
+
+	private func setupNoPicPlaceholder() {
+		if #available(iOS 11.0, *) {
+			noPicPlaceholder.text = "🤷"
+		} else {
+			noPicPlaceholder.text = "¯\\_(ツ)_/¯"
+		}
 	}
 
 	private func setupTapGesture() {

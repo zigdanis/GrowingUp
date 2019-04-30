@@ -92,6 +92,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 			parentView.bottomAnchor.constraint(equalTo: picker.bottomAnchor)
 		]
 		NSLayoutConstraint.activate(consts)
+		picker.clipPaddingViewTopTo(safeAreaBottomLength: bottomLayoutGuide.length)
 		return picker
 	}
 

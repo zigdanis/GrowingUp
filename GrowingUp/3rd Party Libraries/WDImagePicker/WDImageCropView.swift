@@ -51,7 +51,6 @@ class WDImageCropView: UIView {
 	}
 
 	private func setupScrollView() {
-		scrollView.contentInsetAdjustmentBehavior = .never
 		scrollView.showsHorizontalScrollIndicator = false
 		scrollView.showsVerticalScrollIndicator = false
 		scrollView.delegate = self
