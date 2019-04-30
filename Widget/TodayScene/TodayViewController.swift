@@ -23,6 +23,7 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 
     override func viewDidLoad() {
         super.viewDidLoad()
+		Logging.logMessage("Open up Today Widget")
 		presenter.view = self
 		setupTableView()
 		setupMaxWidgetSize()
