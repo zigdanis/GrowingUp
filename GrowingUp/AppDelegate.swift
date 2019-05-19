@@ -61,7 +61,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			.first(where: { $0.name == Constants.widgetPersonIndexKey })
 		let personIndexStr = indexComponent?.value ?? ""
 		let personIndex = Int(personIndexStr) ?? 0
-		Logging.logMessage("Open URL with personIndex = \(personIndex)")
+		Logging.logMessage("Open URL from Widget",
+						   params: ["index": "\(personIndex)"])
 		NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
 	}
 

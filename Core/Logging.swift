@@ -36,10 +36,10 @@ public enum Logging {
 		Mixpanel.sharedInstance()?.track(value)
 	}
 
-	public static func logMessage(_ message: String) {
+	public static func logMessage(_ message: String, params: [String: String]? = nil) {
 		let value = "✍️ \(message)"
 		SwiftyBeaver.debug(value)
-		Mixpanel.sharedInstance()?.track(value)
+		Mixpanel.sharedInstance()?.track(value, properties: params)
 	}
 
 	public static func logWarning(_ warning: String) {

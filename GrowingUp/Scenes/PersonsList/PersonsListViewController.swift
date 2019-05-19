@@ -75,7 +75,6 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 	// MARK: - PersonsListView
 
 	func updateListOfScreens(defaultPage index: Int) {
-		Logging.logMessage("Calling updateListOfScreens(defaultPage: \(index))")
 		let total = presenter.numberOfPages()
 		pageIndicator.numberOfPages = total
 		pageIndicator.currentPage = index

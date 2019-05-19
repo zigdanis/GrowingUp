@@ -52,7 +52,6 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private func openPersonNotificationSent(notif: Notification) {
 		let key = Constants.widgetPersonIndexKey
 		guard let personIndex = notif.userInfo?[key] as? Int else { return }
-		Logging.logMessage("Open person page Notification received for index \(personIndex)")
 		self.defaultPage = personIndex
 		self.view?.updateListOfScreens(defaultPage: defaultPage)
 	}
@@ -94,7 +93,6 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 		cachedScreens[persons.count] = nil
 		persons.append(person)
 		let scrollTo = persons.count - 1
-		Logging.logMessage("Did Add a new Person. Scrolling to the \(scrollTo) index")
 		view?.updateListOfScreens(defaultPage: scrollTo)
 		presenter.router.dismiss()
 	}
