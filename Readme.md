@@ -4,7 +4,7 @@
 
 iOS app for viewing current age in time components format.
 
-Project build with MVP + Clean architecture.
+Project built using MVP + Clean architecture patterns.
 
 It has Unit Tests.
 

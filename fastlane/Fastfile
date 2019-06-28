@@ -30,8 +30,6 @@ platform :ios do
       force: true,
       xcodeproj: "GrowingUp.xcodeproj",
       message: "Version Bump to #{complete_version_number}")
-    tagName = version_tag(version_number, build_number)
-    add_git_tag(tag:tagName)
     push_to_git_remote
     begin
       telegram(
