@@ -16,6 +16,7 @@ public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var id: String?
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
+	@NSManaged public var isOnWidget: Bool
 }
 
 extension CoreDataPerson {
