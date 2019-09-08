@@ -38,3 +38,6 @@
 
 /* Title for Button (that deletes Person) on Edit Person Page */
 "Remove" = "Удалить";
+
+/* Info Label for Cell with Toggle on Person settings screen */
+"Add to Widget" = "Добавить в Виджет";

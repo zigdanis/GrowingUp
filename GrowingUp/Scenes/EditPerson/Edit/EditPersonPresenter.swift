@@ -18,7 +18,9 @@ protocol EditPersonPresenter: TextFieldObserver {
 	func configure(cell: ImagesCellView, forRow row: Int)
     func configure(cell: TextFieldCellView, forRow row: Int)
     func configure(cell: DateCellView, forRow row: Int)
+	func configure(cell: ToggleCellView, forRow row: Int)
 	func dateFor(row: Int, didUpdateTo date: Date)
+	func onWidgetStateFor(row: Int, didUpdateTo state: Bool)
 	func appImagePicked(image: PersonImage)
 	func widgetImagePicked(image: PersonImage)
 	func dateForDayPicker() -> Date
@@ -44,6 +46,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
+	private let toggleCellPresenter: ToggleCellPresenter
 
 	init(person: Person,
 		 view: EditPersonView,
@@ -53,7 +56,8 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter) {
+		 dateCellsPresenter: DateCellPresenter,
+		 toggleCellPresenter: ToggleCellPresenter) {
 		self.person = person
 		self.view = view
 		self.editPersonUseCase = editPersonUseCase
@@ -63,6 +67,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.imagesCellPresenter = imagesCellPresenter
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
+		self.toggleCellPresenter = toggleCellPresenter
 	}
 
     // MARK: - EditPersonPresenter
@@ -137,8 +142,16 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
        	dateCellsPresenter.configure(cell: cell, forRow: row)
     }
 
+	func configure(cell: ToggleCellView, forRow row: Int) {
+		toggleCellPresenter.configure(cell: cell, forRow: row)
+	}
+
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
+	}
+
+	func onWidgetStateFor(row: Int, didUpdateTo state: Bool) {
+		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
 	}
 
 	func appImagePicked(image: PersonImage) {

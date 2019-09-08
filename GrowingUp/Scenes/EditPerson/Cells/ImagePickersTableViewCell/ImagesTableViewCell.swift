@@ -20,7 +20,7 @@ protocol ImagesCellViewDelegate: class {
 	func showWidgetPicImagePickerFor(row: Int)
 }
 
-class ImagesTableViewCell: UITableViewCell, ImagesCellView {
+final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	@IBOutlet weak var appPicButton: ImagePickerButton!
 	@IBOutlet weak var widgetPicButton: ImagePickerButton!
 	@IBOutlet weak var appPicLabel: UILabel!

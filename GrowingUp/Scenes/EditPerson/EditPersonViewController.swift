@@ -31,6 +31,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	static let nameFieldRow = 1
 	static let dayPickerRow = 2
 	static let timePickerRow = 3
+	static let addToWidgetRow = 4
 
     var presenter: EditPersonPresenter!
     private let configurator: EditPersonConfigurator
@@ -65,6 +66,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
         tableView.register(R.nib.textFieldTableVIewCell)
         tableView.register(R.nib.dateTableViewCell)
 		tableView.register(R.nib.imagesTableViewCell)
+		tableView.register(R.nib.toggleTableViewCell)
 		tableView.keyboardDismissMode = .onDrag
     }
 
@@ -164,7 +166,7 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -181,6 +183,11 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 			return cell
 		case EPC.dayPickerRow, EPC.timePickerRow:
 			let identifier = R.reuseIdentifier.dateTableViewCell
+			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			presenter.configure(cell: cell, forRow: indexPath.row)
+			return cell
+		case EPC.addToWidgetRow:
+			let identifier = R.reuseIdentifier.toggleTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell

@@ -26,7 +26,8 @@ extension CoreDataPerson {
 					  name: name ?? "",
 					  birthday: birthdate as Date? ?? Date(),
 					  appPicId: UUID(string: appPicId),
-					  widgetPicId: UUID(string: widgetPicId))
+					  widgetPicId: UUID(string: widgetPicId),
+					  isOnWidget: isOnWidget)
     }
 
     public func populate(with parameters: AddPersonParameters) {
@@ -37,6 +38,7 @@ extension CoreDataPerson {
 		birthdate = parameters.combinedDate() as NSDate?
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
+		isOnWidget = parameters.isOnWidget
     }
 
 }

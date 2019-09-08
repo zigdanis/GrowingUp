@@ -19,7 +19,7 @@ protocol TextFieldObserver: class {
 	func textDidChange(forView: TextFieldCellView, text: String)
 }
 
-class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
+final class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var valueField: UITextField!

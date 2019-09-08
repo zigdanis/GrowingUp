@@ -21,6 +21,7 @@ final class EditPersonPresenterTests: XCTestCase {
 	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
+	let toggleCellStub = ToggleCellPresenterStub()
 
     var sut: EditPersonPresenterImplementation!
 
@@ -37,7 +38,8 @@ final class EditPersonPresenterTests: XCTestCase {
 												delegate: addPersonPresenterDelegateSpy,
 												imagesCellPresenter: imagesCellStub,
 												nameCellPresenter: nameCellStub,
-												dateCellsPresenter: dateCellsStub)
+												dateCellsPresenter: dateCellsStub,
+												toggleCellPresenter: toggleCellStub)
     }
 
     func test_SUT_ClosePressed_CalledCancelOnDelegate() {
@@ -158,6 +160,15 @@ final class EditPersonPresenterTests: XCTestCase {
 		let widgetPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.widgetPic
 		XCTAssertEqual(appPic, personAppPic, "Value for the person App pic doesn't match to expected")
 		XCTAssertEqual(widgetPic, personWidgetPic, "Value for the person Widget pic doesn't match to expected")
+	}
+
+	func test_SUT_WhenSettingIsOnWidgetState_ValuePassedToToggleCellsPresenter() {
+		// Given
+		let expectedState = true
+		// When
+		sut.onWidgetStateFor(row: 1, didUpdateTo: true)
+		// Then
+		XCTAssertEqual(toggleCellStub.valueFor(row: 1), expectedState, "Expected value doesn't match")
 	}
 
 	func test_SUT_WhenConfiguringCells_ShouldCallTheirPresenters() {

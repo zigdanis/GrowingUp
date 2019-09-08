@@ -20,6 +20,7 @@ final class AddPersonPresenterTests: XCTestCase {
 	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
+	let toggleCellStub = ToggleCellPresenterStub()
 
     var sut: AddPersonPresenter!
 
@@ -33,7 +34,8 @@ final class AddPersonPresenterTests: XCTestCase {
 								 delegate: addPersonPresenterDelegateSpy,
 								 imagesCellPresenter: imagesCellStub,
 								 nameCellPresenter: nameCellStub,
-								 dateCellsPresenter: dateCellsStub)
+								 dateCellsPresenter: dateCellsStub,
+								 toggleCellPresenter: toggleCellStub)
     }
 
     func test_SUT_CancelPressed_CalledCancelOnDelegate() {
@@ -140,6 +142,15 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(dateCellsStub.valueFor(row: 2), expectedTime, "Expected value doesn't match")
 	}
 
+	func test_SUT_WhenSettingIsOnWidgetState_ValuePassedToToggleCellsPresenter() {
+		// Given
+		let expectedState = true
+		// When
+		sut.onWidgetStateFor(row: 1, didUpdateTo: true)
+		// Then
+		XCTAssertEqual(toggleCellStub.valueFor(row: 1), expectedState, "Expected value doesn't match")
+	}
+
 	func test_SUT_WhenCalledWithNewPersonPic_ReplaceItOnImagesCellPresenter() {
 		// Given
 		let expectedAppPic = UIImage()
@@ -161,15 +172,18 @@ final class AddPersonPresenterTests: XCTestCase {
 		let imgSpy = ImagesCellViewSpy()
 		let tfSpy = TextFieldCellViewSpy()
 		let dateSpy = DateCellViewSpy()
+		let toggleSpy = ToggleCellViewSpy()
 		// When
 		sut.configure(cell: imgSpy, forRow: 0)
 		sut.configure(cell: tfSpy, forRow: 0)
 		sut.configure(cell: dateSpy, forRow: 0)
+		sut.configure(cell: toggleSpy, forRow: 0)
 		// Then
 		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
 		XCTAssertTrue(nameCellStub.didCallConfigure, "Expected to call child presenter")
 		XCTAssertTrue(dateCellsStub.didCallConfigure, "Expected to call child presenter")
 		XCTAssertTrue(imagesCellStub.didCallConfigure, "Expected to call child presenter")
+		XCTAssertTrue(toggleCellStub.didCallConfigure, "Expected to call child presenter")
 	}
 
 	func test_WhenTextFieldObserverUpdateText_SUT_CallingViewToUpdateTitle() {

@@ -18,6 +18,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
+	private let toggleCellPresenter: ToggleCellPresenter
 
 	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
@@ -25,7 +26,8 @@ final class AddPersonPresenter: EditPersonPresenter {
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
 		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter) {
+		 dateCellsPresenter: DateCellPresenter,
+		 toggleCellPresenter: ToggleCellPresenter) {
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
 		self.router = router
@@ -33,6 +35,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		self.imagesCellPresenter = imagesCellPresenter
 		self.nameCellPresenter = nameCellPresenter
 		self.dateCellsPresenter = dateCellsPresenter
+		self.toggleCellPresenter = toggleCellPresenter
 	}
 
 	// MARK: - EditPersonPresenter
@@ -93,8 +96,16 @@ final class AddPersonPresenter: EditPersonPresenter {
 		dateCellsPresenter.configure(cell: cell, forRow: row)
 	}
 
+	func configure(cell: ToggleCellView, forRow row: Int) {
+		toggleCellPresenter.configure(cell: cell, forRow: row)
+	}
+
 	func dateFor(row: Int, didUpdateTo date: Date) {
 		dateCellsPresenter.valueFor(row: row, didChangeTo: date)
+	}
+
+	func onWidgetStateFor(row: Int, didUpdateTo state: Bool) {
+		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
 	}
 
 	func appImagePicked(image: PersonImage) {
