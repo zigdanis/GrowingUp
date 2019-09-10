@@ -80,6 +80,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		nameCellPresenter.valueFor(row: EPC.nameFieldRow, didChangeTo: person.name)
 		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: person.dayOfBirth)
 		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: person.timeOfBirth)
+		toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: person.isOnWidget)
 
 		loadAndShowPersonPics()
 	}
@@ -213,11 +214,13 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		let personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow)
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
+		let isOnWidget = toggleCellPresenter.valueFor(row: EPC.addToWidgetRow)
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
 								   appImage: appPic,
-								   widgetImage: widgetPic)
+								   widgetImage: widgetPic,
+								   isOnWidget: isOnWidget)
 	}
 }
 

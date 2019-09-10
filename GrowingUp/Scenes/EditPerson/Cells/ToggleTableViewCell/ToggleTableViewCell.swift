@@ -11,22 +11,19 @@ import UIKit
 protocol ToggleCellView {
 	func display(title: String)
 	func display(isOn: Bool)
-	func setup(with delegate: ToggleCellViewDelegate?, forRow row: Int)
-}
-
-protocol ToggleCellViewDelegate: class {
-	func toggleFor(row: Int)
+	func setup(with presenter: ToggleCellPresenter?, forRow row: Int)
 }
 
 final class ToggleTableViewCell: UITableViewCell, ToggleCellView {
 	@IBOutlet weak var titleLabel: UILabel!
 	@IBOutlet weak var toggle: UISwitch!
-	private weak var delegate: ToggleCellViewDelegate?
+	private weak var presenter: ToggleCellPresenter?
 	private var row: Int?
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		selectionStyle = .none
+		toggle.addTarget(self, action: #selector(toggleDidChange(sender:)), for: .valueChanged)
 	}
 
 	// MARK: - ToggleCellView
@@ -39,9 +36,17 @@ final class ToggleTableViewCell: UITableViewCell, ToggleCellView {
 		toggle.isOn = isOn
 	}
 
-	func setup(with delegate: ToggleCellViewDelegate?, forRow row: Int) {
-		self.delegate = delegate
+	func setup(with presenter: ToggleCellPresenter?, forRow row: Int) {
+		self.presenter = presenter
 		self.row = row
+	}
+
+	// MARK: - Actions
+
+	@objc
+	private func toggleDidChange(sender: UISwitch) {
+		guard let row = row else { return }
+		presenter?.valueFor(row: row, didChangeTo: sender.isOn)
 	}
 
 }

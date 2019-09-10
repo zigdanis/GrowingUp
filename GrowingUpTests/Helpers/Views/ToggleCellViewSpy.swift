@@ -14,7 +14,7 @@ final class ToggleCellViewSpy: ToggleCellView {
 
 	var displayedTitle: String?
 	var displayedValue: Bool?
-	weak var providedDelegate: ToggleCellViewDelegate?
+	weak var providedPresenter: ToggleCellPresenter?
 	var providedRow: Int?
 
 	func display(title: String) {
@@ -25,8 +25,8 @@ final class ToggleCellViewSpy: ToggleCellView {
 		displayedValue = isOn
 	}
 
-	func setup(with delegate: ToggleCellViewDelegate?, forRow row: Int) {
-		providedDelegate = delegate
+	func setup(with presenter: ToggleCellPresenter?, forRow row: Int) {
+		providedPresenter = presenter
 		providedRow = row
 	}
 }

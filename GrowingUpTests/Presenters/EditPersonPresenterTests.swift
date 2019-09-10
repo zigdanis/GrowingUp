@@ -229,6 +229,8 @@ final class EditPersonPresenterTests: XCTestCase {
 		let widgetPic = PersonImage(id: UUID(), uiImage: UIImage())
 		let pics = PersonImages(appPic: appPic, widgetPic: widgetPic)
 		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic)
+		let isOnWidget = false
+		toggleCellStub.valueFor(row: EPC.addToWidgetRow, didChangeTo: isOnWidget)
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic, isOnWidget: isOnWidget)
 	}
 }

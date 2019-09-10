@@ -162,11 +162,13 @@ final class AddPersonPresenter: EditPersonPresenter {
 		let personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow)
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
+		let isOnWidget = toggleCellPresenter.valueFor(row: EPC.addToWidgetRow)
 		return AddPersonParameters(name: name,
 								   dayOfBirth: dayOfBirth,
 								   timeOfBirth: timeOfBirth,
 								   appImage: appPic,
-								   widgetImage: widgetPic)
+								   widgetImage: widgetPic,
+								   isOnWidget: isOnWidget)
 	}
 }
 

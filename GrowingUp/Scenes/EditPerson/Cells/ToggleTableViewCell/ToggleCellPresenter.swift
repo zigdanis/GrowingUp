@@ -16,10 +16,9 @@ protocol ToggleCellPresenter: class {
 
 final class ToggleCellPresenterImplementation: ToggleCellPresenter {
 	private var storage = [Int: Bool]()
-	weak var toggleDelegate: ToggleCellViewDelegate?
 
 	func configure(cell: ToggleCellView, forRow row: Int) {
-		cell.setup(with: toggleDelegate, forRow: row)
+		cell.setup(with: self, forRow: row)
 		cell.display(title: R.string.localizable.addToWidget())
 		guard let value = storage[row] else { return }
 		cell.display(isOn: value)
