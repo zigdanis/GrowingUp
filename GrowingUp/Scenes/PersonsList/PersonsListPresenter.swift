@@ -9,6 +9,8 @@
 import Foundation
 import Core
 
+private let maxNumberOfPersons = 20
+
 protocol PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable?
 	func numberOfPages() -> Int
@@ -57,7 +59,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 
 	func numberOfPages() -> Int {
-		return min(persons.count + 1, 3)
+		return min(persons.count + 1, maxNumberOfPersons)
 	}
 
 	func emptyPageIndex() -> Int {
@@ -66,7 +68,7 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable? {
 		guard index >= 0 else { return nil }
-		guard index < 3 else { return nil }
+		guard index < maxNumberOfPersons else { return nil }
 		guard index <= persons.count else { return nil }
 		if let cached = cachedScreens[index] {
 			return cached

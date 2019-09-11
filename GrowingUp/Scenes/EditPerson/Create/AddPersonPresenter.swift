@@ -50,6 +50,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		components.day = 1
 		let zeroHour = Calendar.current.date(from: components) ?? Date()
 		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
+		toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: true)
 
 		#if DEBUG
 		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())

@@ -146,7 +146,6 @@
 		09EC1CBD225BDB9C00D9C985 /* PersonsListConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */; };
 		09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */; };
 		09EC1CC1225BDBB500D9C985 /* PersonsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */; };
-		09EC1CC3225BDBE100D9C985 /* PersonsListViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CC2225BDBE100D9C985 /* PersonsListViewRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -347,7 +346,6 @@
 		09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListConfigurator.swift; sourceTree = "<group>"; };
 		09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewController.swift; sourceTree = "<group>"; };
 		09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListPresenter.swift; sourceTree = "<group>"; };
-		09EC1CC2225BDBE100D9C985 /* PersonsListViewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewRouter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -949,7 +947,6 @@
 				09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */,
 				09D69779225C865C00EFFEAC /* PersonsListViewController.xib */,
 				09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */,
-				09EC1CC2225BDBE100D9C985 /* PersonsListViewRouter.swift */,
 			);
 			path = PersonsList;
 			sourceTree = "<group>";
@@ -1380,7 +1377,6 @@
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
 				09165356223ECBC40081FB10 /* EditPersonPresenter.swift in Sources */,
 				09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */,
-				09EC1CC3225BDBE100D9C985 /* PersonsListViewRouter.swift in Sources */,
 				09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */,
 				09165350223ECBC40081FB10 /* DateTableViewCell.swift in Sources */,
 				09EC1CBD225BDB9C00D9C985 /* PersonsListConfigurator.swift in Sources */,
