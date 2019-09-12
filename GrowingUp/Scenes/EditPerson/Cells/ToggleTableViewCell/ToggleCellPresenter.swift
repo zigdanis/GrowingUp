@@ -12,6 +12,7 @@ protocol ToggleCellPresenter: class {
 	func configure(cell: ToggleCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: Bool)
 	func valueFor(row: Int) -> Bool
+	func toggleValueFor(row: Int, didChangeTo state: Bool)
 }
 
 final class ToggleCellPresenterImplementation: ToggleCellPresenter {
@@ -21,7 +22,7 @@ final class ToggleCellPresenterImplementation: ToggleCellPresenter {
 		cell.setup(with: self, forRow: row)
 		cell.display(title: R.string.localizable.addToWidget())
 		guard let value = storage[row] else { return }
-		cell.display(isOn: value)
+		cell.display(isOn: value, animated: false)
 	}
 
 	func valueFor(row: Int, didChangeTo value: Bool) {
@@ -30,5 +31,9 @@ final class ToggleCellPresenterImplementation: ToggleCellPresenter {
 
 	func valueFor(row: Int) -> Bool {
 		return storage[row] ?? false
+	}
+
+	func toggleValueFor(row: Int, didChangeTo state: Bool) {
+		storage[row] = state
 	}
 }

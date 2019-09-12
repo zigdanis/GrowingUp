@@ -21,7 +21,7 @@ final class ToggleCellViewSpy: ToggleCellView {
 		displayedTitle = title
 	}
 
-	func display(isOn: Bool) {
+	func display(isOn: Bool, animated: Bool) {
 		displayedValue = isOn
 	}
 

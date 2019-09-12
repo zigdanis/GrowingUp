@@ -10,7 +10,7 @@ import UIKit
 
 protocol ToggleCellView {
 	func display(title: String)
-	func display(isOn: Bool)
+	func display(isOn: Bool, animated: Bool)
 	func setup(with presenter: ToggleCellPresenter?, forRow row: Int)
 }
 
@@ -32,8 +32,8 @@ final class ToggleTableViewCell: UITableViewCell, ToggleCellView {
 		titleLabel.text = title
 	}
 
-	func display(isOn: Bool) {
-		toggle.isOn = isOn
+	func display(isOn: Bool, animated: Bool) {
+		toggle.setOn(isOn, animated: animated)
 	}
 
 	func setup(with presenter: ToggleCellPresenter?, forRow row: Int) {
@@ -46,7 +46,7 @@ final class ToggleTableViewCell: UITableViewCell, ToggleCellView {
 	@objc
 	private func toggleDidChange(sender: UISwitch) {
 		guard let row = row else { return }
-		presenter?.valueFor(row: row, didChangeTo: sender.isOn)
+		presenter?.toggleValueFor(row: row, didChangeTo: sender.isOn)
 	}
 
 }

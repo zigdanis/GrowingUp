@@ -26,4 +26,8 @@ final class ToggleCellPresenterStub: ToggleCellPresenter {
 	func configure(cell: ToggleCellView, forRow row: Int) {
 		didCallConfigure = true
 	}
+
+	func toggleValueFor(row: Int, didChangeTo state: Bool) {
+		storage[row] = state
+	}
 }
