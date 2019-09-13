@@ -179,3 +179,10 @@ extension AddPersonPresenter: TextFieldObserver {
 		view?.displayScreenTitle(title: text)
 	}
 }
+
+extension AddPersonPresenter: ToggleCellDelegate {
+
+	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
+		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
+	}
+}

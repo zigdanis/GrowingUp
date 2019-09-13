@@ -9,7 +9,7 @@
 import Foundation
 import Core
 
-protocol EditPersonPresenter: TextFieldObserver {
+protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
     var router: EditPersonViewRouter { get }
 	func viewDidLoad()
     func rightBarButtonPressed()
@@ -228,5 +228,12 @@ extension EditPersonPresenterImplementation: TextFieldObserver {
 
 	func textDidChange(forView: TextFieldCellView, text: String) {
 		view?.displayScreenTitle(title: text)
+	}
+}
+
+extension EditPersonPresenterImplementation: ToggleCellDelegate {
+
+	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
+		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
 	}
 }
