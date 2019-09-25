@@ -7,15 +7,17 @@
 //
 
 import Foundation
+import CoreData
 
 public protocol CoreDataPersonsGateway: PersonsGateway {
 	func add(parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func edit(person: Person, with parameters: AddPersonParameters, with context: NSManagedObjectContextProtocol) -> Result<Person, CoreError>
 	func fetchPersons(with context: NSManagedObjectContextProtocol) -> Result<[Person], CoreError>
 	func remove(person: Person, with context: NSManagedObjectContextProtocol) -> Result<Void, CoreError>
+	func fetchWidgetPersons(with context: NSManagedObjectContext) -> Result<[Person], CoreError>
 }
 
-public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway {
+public final class CoreDataPersonsGatewayImplementation: NSObject, CoreDataPersonsGateway {
 
 	let viewContext: NSManagedObjectContextProtocol
 
@@ -126,4 +128,28 @@ public final class CoreDataPersonsGatewayImplementation: CoreDataPersonsGateway 
 		completionHandler(result)
 	}
 
+	public func fetchWidgetPersons(with context: NSManagedObjectContext) -> Result<[Person], CoreError> {
+		let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
+		fetchRequest.predicate = NSPredicate(format: "%K == YES", #keyPath(CoreDataPerson.isOnWidget))
+		fetchRequest.sortDescriptors = [NSSortDescriptor(key: "order", ascending: true)]
+		let context = viewContext as! NSManagedObjectContext
+		let controller = NSFetchedResultsController<CoreDataPerson>(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: "onWidgetPersons")
+		controller.delegate = self
+		do {
+			try controller.performFetch()
+			let persons = controller.fetchedObjects?.map({ $0.person }) ?? []
+			return .success(persons)
+		} catch {
+			let coreError = CoreError(message: error.localizedDescription)
+			Logging.logError(coreError)
+			return .failure(coreError)
+		}
+	}
+}
+
+extension CoreDataPersonsGatewayImplementation: NSFetchedResultsControllerDelegate {
+
+	public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+
+	}
 }

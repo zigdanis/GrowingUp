@@ -15,19 +15,22 @@ public struct AddPersonParameters: Equatable {
 	public var appImage: PersonImage?
 	public var widgetImage: PersonImage?
 	public var isOnWidget: Bool
+	public var order: Int
 
 	public init(name: String,
 				dayOfBirth: Date,
 				timeOfBirth: Date,
 				appImage: PersonImage?,
 				widgetImage: PersonImage?,
-				isOnWidget: Bool) {
+				isOnWidget: Bool,
+				order: Int) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
 		self.timeOfBirth = timeOfBirth
 		self.appImage = appImage
 		self.widgetImage = widgetImage
 		self.isOnWidget = isOnWidget
+		self.order = order
 	}
 }
 

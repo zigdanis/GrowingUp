@@ -127,6 +127,7 @@
 		09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */; };
 		09BAB0BB2246B64B00A22220 /* ImagesCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BA2246B64B00A22220 /* ImagesCellPresenterTests.swift */; };
 		09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0BC2246B81300A22220 /* ImagesCellViewSpy.swift */; };
+		09BF2CC223324E92005E2957 /* FavoritePersonsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09269145232C28B4008A876A /* FavoritePersonsUseCase.swift */; };
 		09CD01E02325758E0075B3FA /* ToggleCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CD01DF2325758E0075B3FA /* ToggleCellPresenterStub.swift */; };
 		09CD01E22325773F0075B3FA /* ToggleCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CD01E12325773F0075B3FA /* ToggleCellViewSpy.swift */; };
 		09CFE6B02270290D007AB456 /* RemovePersonUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */; };
@@ -249,6 +250,7 @@
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
+		09269145232C28B4008A876A /* FavoritePersonsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePersonsUseCase.swift; sourceTree = "<group>"; };
 		0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerTests.swift; sourceTree = "<group>"; };
 		0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGatewayTests.swift; sourceTree = "<group>"; };
 		0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewaySpy.swift; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				096E61F022666DC9000181D4 /* EditPersonUseCase.swift */,
 				099C9157225E9871005C963C /* FetchPersonsUseCase.swift */,
 				09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */,
+				09269145232C28B4008A876A /* FavoritePersonsUseCase.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -1289,6 +1292,7 @@
 				0983E767226D9658007EC8D2 /* Person.swift in Sources */,
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				095000E3226DEDB600789BED /* TaskManager.swift in Sources */,
+				09BF2CC223324E92005E2957 /* FavoritePersonsUseCase.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,

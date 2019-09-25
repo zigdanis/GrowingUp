@@ -15,20 +15,23 @@ public struct Person: Equatable, Hashable {
     public var birthday: Date
 	public var appPicId: UUID?
 	public var widgetPicId: UUID?
-	public var isOnWidget: Bool = false
+	public var isOnWidget: Bool
+	public var order: Int
 
 	public init(id: UUID,
 				name: String,
 				birthday: Date,
 				appPicId: UUID?,
 				widgetPicId: UUID?,
-				isOnWidget: Bool = false) {
+				isOnWidget: Bool,
+				order: Int) {
 		self.id = id
 		self.name = name
 		self.birthday = birthday
 		self.appPicId = appPicId
 		self.widgetPicId = widgetPicId
 		self.isOnWidget = isOnWidget
+		self.order = order
 	}
 
 	public var dateComponents: DateComponents {

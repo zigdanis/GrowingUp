@@ -17,9 +17,14 @@ public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
 	@NSManaged public var isOnWidget: Bool
+	@NSManaged public var order: Int
 }
 
 extension CoreDataPerson {
+
+	@nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataPerson> {
+		return NSFetchRequest<CoreDataPerson>(entityName: "CoreDataPerson");
+	}
 
     public var person: Person {
 		return Person(id: UUID(string: id) ?? UUID(),
@@ -27,7 +32,8 @@ extension CoreDataPerson {
 					  birthday: birthdate as Date? ?? Date(),
 					  appPicId: UUID(string: appPicId),
 					  widgetPicId: UUID(string: widgetPicId),
-					  isOnWidget: isOnWidget)
+					  isOnWidget: isOnWidget,
+					  order: order)
     }
 
     public func populate(with parameters: AddPersonParameters) {
@@ -39,6 +45,7 @@ extension CoreDataPerson {
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
 		isOnWidget = parameters.isOnWidget
+		order = parameters.order
     }
 
 }
