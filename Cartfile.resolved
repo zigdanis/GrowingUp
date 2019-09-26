@@ -1,4 +1,2 @@
-github "SwiftyBeaver/SwiftyBeaver" "1.7.1"
 github "mac-cain13/R.swift.Library" "v5.0.1"
-github "mixpanel/mixpanel-iphone" "v3.4.9"
-github "saoudrizwan/Disk" "0.6.3"
+github "saoudrizwan/Disk" "0.6.4"
