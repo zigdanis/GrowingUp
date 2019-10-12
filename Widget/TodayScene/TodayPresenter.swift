@@ -24,8 +24,7 @@ final class TodayPresenterImplementation: TodayPresenter {
 	private let fetchUseCase: FetchPersonsUseCase
 
 	init() {
-		let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
-		let personsGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+		let personsGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
 		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
 	}
 

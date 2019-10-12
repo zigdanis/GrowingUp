@@ -20,10 +20,10 @@ class CoreDataPersonsGatewayTests: XCTestCase {
     var inMemoryCoreDataStack = InMemoryCoreDataStack()
     var managedObjectContextSpy = NSManagedObjectContextSpy()
     var inMemoryCoreDataGateway: CoreDataPersonsGateway {
-        return CoreDataPersonsGatewayImplementation(viewContext: inMemoryCoreDataStack.persistentContainer.viewContext)
+        return CoreDataPersonsGateway(viewContext: inMemoryCoreDataStack.persistentContainer.viewContext)
     }
     var errorPathCoreDataGateway: CoreDataPersonsGateway {
-        return CoreDataPersonsGatewayImplementation(viewContext: managedObjectContextSpy)
+        return CoreDataPersonsGateway(viewContext: managedObjectContextSpy)
     }
 
     func test_SUT_AddPersonWithParameters_Succeed() {

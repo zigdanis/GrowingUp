@@ -12,28 +12,29 @@ import CoreData
 @objc(CoreDataPerson)
 public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var appPicId: String?
-	@NSManaged public var birthdate: NSDate?
+	@NSManaged public var birthdate: Date
 	@NSManaged public var id: String?
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
 	@NSManaged public var isOnWidget: Bool
-	@NSManaged public var order: Int
+	@NSManaged public var createdDate: Date
 }
 
 extension CoreDataPerson {
 
-	@nonobjc public class func fetchRequest() -> NSFetchRequest<CoreDataPerson> {
-		return NSFetchRequest<CoreDataPerson>(entityName: "CoreDataPerson");
+	@nonobjc
+	public class func fetchRequest() -> NSFetchRequest<CoreDataPerson> {
+		return NSFetchRequest<CoreDataPerson>(entityName: "CoreDataPerson")
 	}
 
     public var person: Person {
 		return Person(id: UUID(string: id) ?? UUID(),
 					  name: name ?? "",
-					  birthday: birthdate as Date? ?? Date(),
+					  birthday: birthdate,
 					  appPicId: UUID(string: appPicId),
 					  widgetPicId: UUID(string: widgetPicId),
 					  isOnWidget: isOnWidget,
-					  order: order)
+					  createdDate: createdDate)
     }
 
     public func populate(with parameters: AddPersonParameters) {
@@ -41,11 +42,13 @@ extension CoreDataPerson {
 			id = UUID().uuidString
 		}
         name = parameters.name
-		birthdate = parameters.combinedDate() as NSDate?
+		birthdate = parameters.combinedDate()
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
 		isOnWidget = parameters.isOnWidget
-		order = parameters.order
+		if let date = parameters.createdDate {
+			createdDate = date
+		}
     }
 
 }

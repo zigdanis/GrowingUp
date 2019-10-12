@@ -15,7 +15,7 @@ public struct AddPersonParameters: Equatable {
 	public var appImage: PersonImage?
 	public var widgetImage: PersonImage?
 	public var isOnWidget: Bool
-	public var order: Int
+	public var createdDate: Date?
 
 	public init(name: String,
 				dayOfBirth: Date,
@@ -23,14 +23,14 @@ public struct AddPersonParameters: Equatable {
 				appImage: PersonImage?,
 				widgetImage: PersonImage?,
 				isOnWidget: Bool,
-				order: Int) {
+				createdDate: Date?) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
 		self.timeOfBirth = timeOfBirth
 		self.appImage = appImage
 		self.widgetImage = widgetImage
 		self.isOnWidget = isOnWidget
-		self.order = order
+		self.createdDate = createdDate
 	}
 }
 
@@ -49,8 +49,12 @@ public extension AddPersonParameters {
 		return components
 	}
 
-	func combinedDate() -> Date? {
+	func combinedDate() -> Date {
 		let components = dateComponents()
-		return Calendar.current.date(from: components)
+		guard let combined = Calendar.current.date(from: components) else {
+			Logging.logError(CoreError.failedToCreateDate)
+			return Date()
+		}
+		return combined
 	}
 }

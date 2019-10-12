@@ -18,8 +18,7 @@ class AddPersonConfigurator: EditPersonConfigurator {
 	}
 
 	func configure(editPersonViewController: EditPersonViewController) {
-		let viewContext = CoreDataStackImplementation.sharedInstance.persistentContainer.viewContext
-		let coreDataGateway = CoreDataPersonsGatewayImplementation(viewContext: viewContext)
+		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
 		let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)

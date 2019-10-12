@@ -11,10 +11,9 @@ import CoreData
 
 public protocol CoreDataStack {
     var persistentContainer: NSPersistentContainer { get }
-    func saveContext()
 }
 
-public final class CoreDataStackImplementation {
+public final class CoreDataStackImplementation: CoreDataStack {
 
     public static let sharedInstance = CoreDataStackImplementation()
 
@@ -25,7 +24,11 @@ public final class CoreDataStackImplementation {
 			.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId)?
 			.appendingPathComponent("Application Support/GrowingUp.sqlite")
 		guard let appGroupURL = fileURL else {
-			fatalError("Failed to get App Group URL")
+			let message = "Failed to get App Group URL"
+			Logging.logError(CoreError(message: message))
+			#if DEBUG
+			fatalError(message)
+			#endif
 		}
 		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
 		let description = NSPersistentStoreDescription(url: appGroupURL)
@@ -37,28 +40,15 @@ public final class CoreDataStackImplementation {
 					self.deleteSQLiteStore(for: description.url!)
 					_ = self.recreatePersistanContainer()
 				} else {
+					Logging.logError(CoreError.coreDataInit)
+					#if DEBUG
 					fatalError("Unresolved error \(error), \(error.userInfo)")
+					#endif
 				}
 			}
 		})
 		return container
 	}
-
-    // MARK: - Core Data Saving support
-
-    public func saveContext () {
-        let context = persistentContainer.viewContext
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nserror = error as NSError
-                fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
-            }
-        }
-    }
 
 	// MARk: - Helpers
 
@@ -66,7 +56,10 @@ public final class CoreDataStackImplementation {
 		do {
 			try FileManager.default.removeItem(at: url)
 		} catch let error as NSError {
+			Logging.logError(CoreError(title: "\(error.code)", message: error.userInfo.description))
+			#if DEBUG
 			fatalError("Unresolved error \(error), \(error.userInfo)")
+			#endif
 		}
 	}
 
@@ -75,7 +68,11 @@ public final class CoreDataStackImplementation {
 		do {
 			try FileManager.default.createDirectory(at: directoryPath, withIntermediateDirectories: true, attributes: nil)
 		} catch {
-			fatalError("Failed to create directory in App Group folder for .sqlite file at \(directoryPath)")
+			let message = "Failed to create directory in App Group folder for .sqlite file at \(directoryPath)"
+			Logging.logError(CoreError(message: message))
+			#if DEBUG
+			fatalError(message)
+			#endif
 		}
 	}
 }

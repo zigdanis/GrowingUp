@@ -16,7 +16,7 @@ public struct Person: Equatable, Hashable {
 	public var appPicId: UUID?
 	public var widgetPicId: UUID?
 	public var isOnWidget: Bool
-	public var order: Int
+	public var createdDate: Date
 
 	public init(id: UUID,
 				name: String,
@@ -24,14 +24,14 @@ public struct Person: Equatable, Hashable {
 				appPicId: UUID?,
 				widgetPicId: UUID?,
 				isOnWidget: Bool,
-				order: Int) {
+				createdDate: Date) {
 		self.id = id
 		self.name = name
 		self.birthday = birthday
 		self.appPicId = appPicId
 		self.widgetPicId = widgetPicId
 		self.isOnWidget = isOnWidget
-		self.order = order
+		self.createdDate = createdDate
 	}
 
 	public var dateComponents: DateComponents {

@@ -8,9 +8,9 @@
 
 import Foundation
 
-public typealias AddPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
-public typealias EditPersonEntityGatewayCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
-public typealias FetchPersonsEntityGatewayCompletionHandler = (_ books: Result<[Person], CoreError>) -> Void
+public typealias AddPersonEntityGatewayCompletionHandler = (_ result: Result<Person, CoreError>) -> Void
+public typealias EditPersonEntityGatewayCompletionHandler = (_ result: Result<Person, CoreError>) -> Void
+public typealias FetchPersonsEntityGatewayCompletionHandler = (_ result: Result<[Person], CoreError>) -> Void
 public typealias RemovePersonEntityGatewayCompletionHandler = (_ result: Result<Void, CoreError>) -> Void
 
 public protocol PersonsGateway {

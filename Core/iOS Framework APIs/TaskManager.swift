@@ -8,43 +8,37 @@
 
 import Foundation
 
-public typealias Task<T> = () -> (Result<T?, CoreError>)
-public typealias TasksCompletion<T> = (_ result: Result<T, CoreError>) -> Void
+public typealias Task = () throws -> Void
+public typealias TasksCompletion = (_ result: CoreError?) -> Void
 
 public protocol TaskManager {
-	func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>)
+	func process(tasks: [Task], withCompletion completion: TasksCompletion?)
 }
 
 public final class TaskManagerOnGCD: TaskManager {
 
 	public init() { }
 
-	public func process<T>(tasks: [Task<T>], withCompletion completion: @escaping TasksCompletion<T>) {
-		let queue = DispatchQueue.global(qos: .userInitiated)
+	public func process(tasks: [Task], withCompletion completion: TasksCompletion? = nil) {
+		// TODO: - Guard return, call callback if tasks.isEmpty
+		let queue = DispatchQueue.global(qos: .utility)
 		let group = DispatchGroup()
-		var finalValue: T?
 		var finalError: CoreError?
 		for task in tasks {
 			let workItem = DispatchWorkItem {
-				let result = task()
-				switch result {
-				case .success(let value):
-					guard let value = value else { return }
-					finalValue = value
-				case .failure(let error):
+				do {
+					try task()
+				} catch let error as CoreError {
 					finalError = error
+				} catch {
+					let err = CoreError(error: error)
+					finalError = err
 				}
 			}
 			queue.async(group: group, execute: workItem)
 		}
 		group.notify(queue: DispatchQueue.main) {
-			if let error = finalError {
-				completion(.failure(error))
-			} else if let value = finalValue {
-				completion(.success(value))
-			} else {
-				completion(.failure(.missingValue))
-			}
+			completion?(finalError)
 		}
 	}
 
