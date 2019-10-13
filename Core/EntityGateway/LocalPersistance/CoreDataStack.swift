@@ -26,9 +26,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		guard let appGroupURL = fileURL else {
 			let message = "Failed to get App Group URL"
 			Logging.logError(CoreError(message: message))
-			#if DEBUG
 			fatalError(message)
-			#endif
 		}
 		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
 		let description = NSPersistentStoreDescription(url: appGroupURL)
@@ -41,9 +39,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 					_ = self.recreatePersistanContainer()
 				} else {
 					Logging.logError(CoreError.coreDataInit)
-					#if DEBUG
 					fatalError("Unresolved error \(error), \(error.userInfo)")
-					#endif
 				}
 			}
 		})
@@ -57,9 +53,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 			try FileManager.default.removeItem(at: url)
 		} catch let error as NSError {
 			Logging.logError(CoreError(title: "\(error.code)", message: error.userInfo.description))
-			#if DEBUG
 			fatalError("Unresolved error \(error), \(error.userInfo)")
-			#endif
 		}
 	}
 
@@ -70,9 +64,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		} catch {
 			let message = "Failed to create directory in App Group folder for .sqlite file at \(directoryPath)"
 			Logging.logError(CoreError(message: message))
-			#if DEBUG
 			fatalError(message)
-			#endif
 		}
 	}
 }
