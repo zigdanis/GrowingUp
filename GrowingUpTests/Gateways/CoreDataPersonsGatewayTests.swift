@@ -10,28 +10,19 @@ import XCTest
 @testable import GrowingUp
 @testable import Core
 
-// Discussion:
-// Happy path is tested using an in memory core data stack while the error paths are "simulated" using a stub NSManagedObjectContextStub
-// Probably you could use NSManagedObjectContextStub for happy path testing as well, however you might not be able to instantiate a NSManagedObject subclass
-// without a valid context
 class CoreDataPersonsGatewayTests: XCTestCase {
 
     // https://www.martinfowler.com/bliki/TestDouble.html
     var inMemoryCoreDataStack = InMemoryCoreDataStack()
     var managedObjectContextSpy = NSManagedObjectContextSpy()
-    var inMemoryCoreDataGateway: CoreDataPersonsGateway {
-        return CoreDataPersonsGateway(viewContext: inMemoryCoreDataStack.persistentContainer.viewContext)
-    }
-    var errorPathCoreDataGateway: CoreDataPersonsGateway {
-        return CoreDataPersonsGateway(viewContext: managedObjectContextSpy)
-    }
+	var inMemoryCoreDataGateway: CoreDataPersonsGateway {
+		return CoreDataPersonsGateway(coreDataStack: inMemoryCoreDataStack)
+	}
 
     func test_SUT_AddPersonWithParameters_Succeed() {
-
         // Given
         let addPersonParameters = AddPersonParameters.createParameters()
         let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-
         // When
         inMemoryCoreDataGateway.add(parameters: addPersonParameters) { (result) in
             // Then
@@ -41,47 +32,6 @@ class CoreDataPersonsGatewayTests: XCTestCase {
             assert(person: person, builtFromParameters: addPersonParameters)
             addPersonCompletionHandlerExpectation.fulfill()
         }
-
-        // Exit
-        waitForExpectations(timeout: 1, handler: nil)
-    }
-
-    func test_SUT_AddPersonWithParameters_FailsWhenSaving() {
-
-        // Given
-		let expectedErrorToThrow = CoreError(message: "Some core data error")
-        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(expectedErrorToThrow)
-        let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-        managedObjectContextSpy.addEntityToReturn = addedCoreDataPerson
-        managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
-        let addPersonCompletionHandlerExpectation = expectation(description: "Add Person completion handler expectation")
-
-        // When
-        errorPathCoreDataGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
-            // Then
-            XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
-            XCTAssertTrue(self.managedObjectContextSpy.deletedObject! === addedCoreDataPerson, "The inserted entity should've been deleted")
-            addPersonCompletionHandlerExpectation.fulfill()
-        }
-
-        // Exit
-        waitForExpectations(timeout: 1, handler: nil)
-    }
-
-    func test_SUT_AddWithParameters_FailsWithoutReachingSave() {
-
-        // Given
-        let expectedResultToBeReturned: Result<Person, CoreError> = .failure(CoreError.coreDataAddFailed)
-        managedObjectContextSpy.addEntityToReturn = nil
-        let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-
-        // When
-        errorPathCoreDataGateway.add(parameters: AddPersonParameters.createParameters()) { (result) in
-            // Then
-            XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
-            addPersonCompletionHandlerExpectation.fulfill()
-        }
-
         // Exit
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -90,74 +40,46 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
+		cdPerson.createdDate = Date()
+		cdPerson.birthdate = Date()
 		inMemoryCoreDataStack.saveContext()
 		var editParams = AddPersonParameters.createParameters()
-		let expectedName = "John Snow"
-		editParams.name = expectedName
+		editParams.name = "John Snow"
+		editParams.isOnWidget = true
+		editParams.dayOfBirth = Date().addingTimeInterval(-60*60*24*365*10)
+		editParams.timeOfBirth = Date().addingTimeInterval(-60)
+		let expect = expectation(description: "Edit")
 		// When
-		let result = inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams, with: inMemoryCoreDataStack.persistentContainer.viewContext)
-		// Then
-		switch result {
-		case .success(let person):
-			assert(person: person, builtFromParameters: editParams)
-		case .failure(let error):
-			XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
-		}
-	}
-
-	func test_SUT_EditPersonWithParameters_FailsWhenSaving() {
-		// Given
-		let expectedErrorToThrow = CoreError(message: "Some core data error")
-		let expectedResultToBeReturned: Result<Person, CoreError> = .failure(expectedErrorToThrow)
-		let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		managedObjectContextSpy.entitiesToReturn = [addedCoreDataPerson]
-		managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
-		let editPersonCompletionHandlerExpectation = expectation(description: "Edit Person completion handler expectation")
-		// When
-		errorPathCoreDataGateway.edit(person: addedCoreDataPerson.person, with: AddPersonParameters.createParameters()) { (result) in
+		inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams) { result in
 			// Then
-			XCTAssertEqual(expectedResultToBeReturned, result, "Failure error wasn't returned")
-			editPersonCompletionHandlerExpectation.fulfill()
+			switch result {
+			case .success(let person):
+				assert(person: person, builtFromParameters: editParams)
+			case .failure(let error):
+				XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
+			}
+			expect.fulfill()
 		}
 		// Exit
-		waitForExpectations(timeout: 1, handler: nil)
+		waitForExpectations(timeout: 1)
 	}
 
 	func test_SUT_RemovePerson_ShouldSucceed() {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
+		cdPerson.createdDate = Date()
+		cdPerson.birthdate = Date()
 		inMemoryCoreDataStack.saveContext()
+		let expect = expectation(description: "Remove")
 		// When
-		let result = inMemoryCoreDataGateway.remove(person: cdPerson.person, with: inMemoryCoreDataStack.persistentContainer.viewContext)
-		// Then
-		switch result {
-		case .success: ()
-		case .failure(let error):
-			XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
-		}
-	}
-
-	func test_SUT_RemovePerson_FailsWhenSaving() {
-		// Given
-		let expectedErrorToThrow = CoreError(message: "Some core data error")
-		let addedCoreDataPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		managedObjectContextSpy.entitiesToReturn = [addedCoreDataPerson]
-		managedObjectContextSpy.saveErrorToReturn = expectedErrorToThrow
-		let removePersonCompletionHandlerExpectation = expectation(description: "Remove Person completion handler expectation")
-		// When
-		errorPathCoreDataGateway.remove(person: addedCoreDataPerson.person) { (result) in
+		inMemoryCoreDataGateway.remove(person: cdPerson.person) { result in
 			// Then
-			switch result {
-			case .success:
-				XCTFail("Expected to throw an Error")
-			case .failure(let error):
-				XCTAssertEqual(error, expectedErrorToThrow, "Expected to throw an Error")
-			}
-			removePersonCompletionHandlerExpectation.fulfill()
+			assertOk(result, "Expected to successfully edit person, but received error")
+			expect.fulfill()
 		}
 		// Exit
-		waitForExpectations(timeout: 1, handler: nil)
+		waitForExpectations(timeout: 1)
 	}
 
 	func test_SUT_FetchPersons_ShouldSucceed() {
@@ -176,26 +98,12 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		waitForExpectations(timeout: 0.1, handler: nil)
 	}
 
-	func test_SUT_FetchPersons_FailsWhenSaving() {
-		// Given
-		let errorToThrow = CoreError(message: "Some core data error")
-		let expectedResult: Result<[Person], CoreError> = .failure(errorToThrow)
-		managedObjectContextSpy.fetchErrorToThrow = errorToThrow
-		let workIsDone = expectation(description: "Fetch Persons completion handler expectation")
-		// When
-		errorPathCoreDataGateway.fetchPersons { result in
-			XCTAssertEqual(result, expectedResult, "Failure error wasn't returned")
-			workIsDone.fulfill()
-		}
-		// Exit
-		waitForExpectations(timeout: 0.1, handler: nil)
-	}
-
 }
 
 private func assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
     XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
-    XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate()?.timeIntervalSince1970, "birthday mismatch", file: file, line: line)
+	XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate().timeIntervalSince1970, "birthday mismatch", file: file, line: line)
 	XCTAssertEqual(person.appPicId, parameters.appImage?.id, "app pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.widgetPicId, parameters.widgetImage?.id, "widget pic mismatch", file: file, line: line)
+	XCTAssertEqual(person.isOnWidget, parameters.isOnWidget, "fav state mismatch", file: file, line: line)
 }

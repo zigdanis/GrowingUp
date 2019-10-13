@@ -13,7 +13,7 @@ import XCTest
 class CachePersonsGatewayTests: XCTestCase {
 
 	var sut: CachePersonsGateway!
-	let coreDataGatewaySpy = CoreDataPersonsGatewaySpy()
+	let coreDataGatewaySpy = PersonsGatewaySpy()
 	let taskManagerSpy = TaskManagerSpy()
 
     override func setUp() {
@@ -25,6 +25,8 @@ class CachePersonsGatewayTests: XCTestCase {
 		let params = AddPersonParameters.createParameters()
 		let expectedValue = Person.createPerson()
 		taskManagerSpy.expectedResultValue = expectedValue
+		let addPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
+		coreDataGatewaySpy.addPersonResultToBeReturned = addPersonCallback
 		let savedPerson = expectation(description: "Expecting to save Person")
 		// When
 		sut.add(parameters: params) { result in
@@ -41,11 +43,13 @@ class CachePersonsGatewayTests: XCTestCase {
 		let taskManager = TaskManagerOnGCD()
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
 		let params = AddPersonParameters.createParameters()
+		let addPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
+		coreDataGatewaySpy.addPersonResultToBeReturned = addPersonCallback
 		let savedPerson = expectation(description: "Expecting to save Person")
 		// When
 		sut.add(parameters: params) { _ in
 			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.addWithContextCalled, "Epected to call saving person to CoreData with specified managed object context in background")
+			XCTAssertTrue(self.coreDataGatewaySpy.addPersonCalled, "Epected to call saving person to CoreData with specified managed object context in background")
 			savedPerson.fulfill()
 		}
 		waitForExpectations(timeout: 0.1)
@@ -56,6 +60,8 @@ class CachePersonsGatewayTests: XCTestCase {
 		let expectedPerson = Person.createPerson()
 		let params = AddPersonParameters.createParameters()
 		taskManagerSpy.expectedResultValue = expectedPerson
+		let editPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
+		coreDataGatewaySpy.editPersonResultToBeReturned = editPersonCallback
 		let workIsDone = expectation(description: "Expecting to edit Person")
 		// When
 		sut.edit(person: Person.createPerson(), with: params) { result in
@@ -71,11 +77,13 @@ class CachePersonsGatewayTests: XCTestCase {
 		// Given
 		let taskManager = TaskManagerOnGCD()
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		let editPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
+		coreDataGatewaySpy.editPersonResultToBeReturned = editPersonCallback
 		let workIsDone = expectation(description: "Expecting to finish editing")
 		// When
 		sut.edit(person: Person.createPerson(), with: AddPersonParameters.createParameters(), completionHandler: { _ in
 			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.editWithContextCalled, "Epected to call Edit Person from CoreData")
+			XCTAssertTrue(self.coreDataGatewaySpy.editPersonCalled, "Epected to call Edit Person from CoreData")
 			workIsDone.fulfill()
 		})
 		waitForExpectations(timeout: 0.1)
@@ -84,6 +92,7 @@ class CachePersonsGatewayTests: XCTestCase {
 	func test_SUT_WhenRemovingPersons_CallingTaskManagerWithExpectedResult() {
 		// Given
 		taskManagerSpy.expectedResultValue = ()
+		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
 		let workIsDone = expectation(description: "Expecting to Remove Person")
 		// When
 		sut.remove(person: Person.createPerson()) { result in
@@ -103,11 +112,12 @@ class CachePersonsGatewayTests: XCTestCase {
 		// Given
 		let taskManager = TaskManagerOnGCD()
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
 		let workIsDone = expectation(description: "Expecting to finish removing")
 		// When
 		sut.remove(person: Person.createPerson(), completionHandler: { _ in
 			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.removeWithContextCalled, "Epected to call Remove Person from CoreData")
+			XCTAssertTrue(self.coreDataGatewaySpy.removePersonCalled, "Epected to call Remove Person from CoreData")
 			workIsDone.fulfill()
 		})
 		waitForExpectations(timeout: 0.1)
@@ -117,6 +127,7 @@ class CachePersonsGatewayTests: XCTestCase {
 		// Given
 		let expectedValue = [Person.createPerson()]
 		taskManagerSpy.expectedResultValue = expectedValue
+		coreDataGatewaySpy.fetchPersonsResultToBeReturned = .success([])
 		let workIsDone = expectation(description: "Expecting to fetch Persons")
 		// When
 		sut.fetchPersons { result in
@@ -132,11 +143,12 @@ class CachePersonsGatewayTests: XCTestCase {
 		// Given
 		let taskManager = TaskManagerOnGCD()
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+		coreDataGatewaySpy.fetchPersonsResultToBeReturned = .success([])
 		let workIsDone = expectation(description: "Expecting to finish fetching")
 		// When
 		sut.fetchPersons { _ in
 			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.fetchWithContextCalled, "Epected to call fetching persons from CoreData")
+			XCTAssertTrue(self.coreDataGatewaySpy.fetchPersonsCalled, "Epected to call fetching persons from CoreData")
 			workIsDone.fulfill()
 		}
 		waitForExpectations(timeout: 0.1)

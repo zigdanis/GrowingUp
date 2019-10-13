@@ -42,9 +42,7 @@
 		0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
-		0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */; };
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
-		0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */; };
 		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
 		092C32CF22612A0E0067B2DB /* PersonsListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CE22612A0E0067B2DB /* PersonsListPresenterTests.swift */; };
 		092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D022612A6C0067B2DB /* PersonsListViewSpy.swift */; };
@@ -248,9 +246,7 @@
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
 		09269145232C28B4008A876A /* FavoritePersonsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritePersonsUseCase.swift; sourceTree = "<group>"; };
-		0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerTests.swift; sourceTree = "<group>"; };
 		0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGatewayTests.swift; sourceTree = "<group>"; };
-		0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		0929F1EF2259190000212F29 /* TaskManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSpy.swift; sourceTree = "<group>"; };
 		092AA35D2257C79D002EAEE8 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		092C32CC226129310067B2DB /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
@@ -600,7 +596,6 @@
 			isa = PBXGroup;
 			children = (
 				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
-				0929F1EC2259148500212F29 /* CoreDataPersonsGatewaySpy.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -642,7 +637,6 @@
 		0929F1E52258CA7100212F29 /* iOS Framework APIs */ = {
 			isa = PBXGroup;
 			children = (
-				0929F1E62258CA9B00212F29 /* TaskManagerTests.swift */,
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -1312,7 +1306,6 @@
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				098054FF223C328C00E24D40 /* EditPersonViewRouterSpy.swift in Sources */,
 				092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */,
-				0929F1ED2259148500212F29 /* CoreDataPersonsGatewaySpy.swift in Sources */,
 				09BAB0BD2246B81300A22220 /* ImagesCellViewSpy.swift in Sources */,
 				09CFE6B822709FAB007AB456 /* RemovePersonUseCaseSpy.swift in Sources */,
 				09DCD211232AD0A900A2E73F /* ToggleCellPresenterTests.swift in Sources */,
@@ -1331,7 +1324,6 @@
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */,
 				092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */,
-				0929F1E72258CA9B00212F29 /* TaskManagerTests.swift in Sources */,
 				0987985B2242B4C000A15D90 /* DateCellPresenterStub.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,

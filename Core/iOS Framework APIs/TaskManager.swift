@@ -9,36 +9,26 @@
 import Foundation
 
 public typealias Task = () throws -> Void
-public typealias TasksCompletion = (_ result: CoreError?) -> Void
 
 public protocol TaskManager {
-	func process(tasks: [Task], withCompletion completion: TasksCompletion?)
+	func process(tasks: [Task])
 }
 
 public final class TaskManagerOnGCD: TaskManager {
 
 	public init() { }
 
-	public func process(tasks: [Task], withCompletion completion: TasksCompletion? = nil) {
-		// TODO: - Guard return, call callback if tasks.isEmpty
+	public func process(tasks: [Task]) {
+		guard !tasks.isEmpty else { return }
 		let queue = DispatchQueue.global(qos: .utility)
 		let group = DispatchGroup()
-		var finalError: CoreError?
 		for task in tasks {
 			let workItem = DispatchWorkItem {
 				do {
 					try task()
-				} catch let error as CoreError {
-					finalError = error
-				} catch {
-					let err = CoreError(error: error)
-					finalError = err
-				}
+				} catch { }
 			}
 			queue.async(group: group, execute: workItem)
-		}
-		group.notify(queue: DispatchQueue.main) {
-			completion?(finalError)
 		}
 	}
 

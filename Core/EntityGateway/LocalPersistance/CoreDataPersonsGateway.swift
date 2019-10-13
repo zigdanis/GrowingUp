@@ -12,7 +12,7 @@ import CoreData
 public typealias FetchedPersonsCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
 public typealias FetchedPersonCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
 
-public final class CoreDataPersonsGateway: PersonsGateway {
+public class CoreDataPersonsGateway: PersonsGateway {
 
 	let coreDataStack: CoreDataStack
 
@@ -43,7 +43,7 @@ public final class CoreDataPersonsGateway: PersonsGateway {
 	}
 
 	public func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
+		coreDataStack.persistentContainer.performBackgroundTask { _ in
 			var result: Result<[Person], CoreError> = .failure(.unknownError)
 			let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
@@ -72,7 +72,7 @@ public final class CoreDataPersonsGateway: PersonsGateway {
 					throw CoreError.coreDataFetchFailed
 				}
 				cdPerson.populate(with: parameters)
-				try context.save()				
+				try context.save()
 				result = .success(cdPerson.person)
 			} catch let coreError as CoreError {
 				result = .failure(coreError)
@@ -113,7 +113,7 @@ public final class CoreDataPersonsGateway: PersonsGateway {
 	}
 
 	public func fetchWidgetPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
+		coreDataStack.persistentContainer.performBackgroundTask { _ in
 			var result: Result<[Person], CoreError> = .failure(.unknownError)
 			let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 			fetchRequest.predicate = NSPredicate(format: "%K == YES", #keyPath(CoreDataPerson.isOnWidget))
