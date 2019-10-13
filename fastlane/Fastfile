@@ -23,7 +23,7 @@ platform :ios do
     )
     pilot(
       itc_provider: "XMSU8WJG5R",
-      beta_app_description: change_log,
+      changelog: change_log,
       beta_app_feedback_email: "zigdanis@gmail.com"
     )
     commit_version_bump(
