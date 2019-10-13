@@ -144,6 +144,7 @@
 		09EC1CBD225BDB9C00D9C985 /* PersonsListConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */; };
 		09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */; };
 		09EC1CC1225BDBB500D9C985 /* PersonsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */; };
+		09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6B52523535E26003A1A01 /* MemoryCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -344,6 +345,7 @@
 		09EC1CBC225BDB9C00D9C985 /* PersonsListConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListConfigurator.swift; sourceTree = "<group>"; };
 		09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewController.swift; sourceTree = "<group>"; };
 		09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListPresenter.swift; sourceTree = "<group>"; };
+		09F6B52523535E26003A1A01 /* MemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCache.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -659,6 +661,7 @@
 			children = (
 				09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */,
 				095DEC492267B4D100E74C13 /* ImagesCache.swift */,
+				09F6B52523535E26003A1A01 /* MemoryCache.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -1289,6 +1292,7 @@
 				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
 				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
+				09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */,
 				09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
 				097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */,

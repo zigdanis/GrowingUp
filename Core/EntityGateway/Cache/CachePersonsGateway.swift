@@ -70,6 +70,7 @@ public final class CachePersonsGateway: PersonsGateway {
 	private func appPicSavingTask(for parameters: AddPersonParameters) -> Task? {
 		guard let appPic = parameters.appImage?.uiImage else { return nil }
 		guard let appPicKey = parameters.appImage?.cachingKey else { return nil }
+		ImagesCache.memoryCache.setValue(appPic, forKey: appPicKey, expires: Date().addingTimeInterval(200))
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			try Disk.save(appPic, to: directory, as: appPicKey)
@@ -79,6 +80,7 @@ public final class CachePersonsGateway: PersonsGateway {
 	private func widgetPicSavingTask(for parameters: AddPersonParameters) -> Task? {
 		guard let widgetPic = parameters.widgetImage?.uiImage else { return nil }
 		guard let widgetPicKey = parameters.widgetImage?.cachingKey else { return nil }
+		ImagesCache.memoryCache.setValue(widgetPic, forKey: widgetPicKey, expires: Date().addingTimeInterval(200))
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			try Disk.save(widgetPic, to: directory, as: widgetPicKey)
@@ -87,6 +89,7 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	private func appPicDeleteTask(for person: Person) -> Task? {
 		guard let appPic = PersonImage(id: person.appPicId) else { return nil }
+		ImagesCache.memoryCache.removeValue(forKey: appPic.cachingKey)
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			try Disk.remove(appPic.cachingKey, from: directory)
@@ -95,6 +98,7 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	private func widgetPicDeleteTask(for person: Person) -> Task? {
 		guard let widgetPic = PersonImage(id: person.widgetPicId) else { return nil }
+		ImagesCache.memoryCache.removeValue(forKey: widgetPic.cachingKey)
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		return {
 			try Disk.remove(widgetPic.cachingKey, from: directory)

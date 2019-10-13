@@ -72,7 +72,7 @@ public final class CoreDataPersonsGateway: PersonsGateway {
 					throw CoreError.coreDataFetchFailed
 				}
 				cdPerson.populate(with: parameters)
-				try context.save()
+				try context.save()				
 				result = .success(cdPerson.person)
 			} catch let coreError as CoreError {
 				result = .failure(coreError)

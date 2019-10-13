@@ -83,7 +83,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		noPicPlaceholder.isHidden = image != nil
 		darkHoverView.alpha = image != nil ? 0.15 : 0.5
 		guard let image = image else { return }
-		ImagesCache.loadImageFromDisk(image: image) { result in
+		ImagesCache.loadImageFromDiskOrMemory(image: image) { result in
 			switch result {
 			case.success(let img):
 				self.appImage.image = img

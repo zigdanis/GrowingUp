@@ -55,7 +55,7 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = appPic.uiImage {
 			appPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDisk(image: appPic) { result in
+			ImagesCache.loadImageFromDiskOrMemory(image: appPic) { result in
 				switch result {
 				case .success(let img):
 					self.appPicButton.drawImage(img)
@@ -74,7 +74,7 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = widgetPic.uiImage {
 			widgetPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDisk(image: widgetPic) { result in
+			ImagesCache.loadImageFromDiskOrMemory(image: widgetPic) { result in
 				switch result {
 				case .success(let img):
 					self.widgetPicButton.drawImage(img)

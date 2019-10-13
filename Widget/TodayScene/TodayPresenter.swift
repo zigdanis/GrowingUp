@@ -39,7 +39,7 @@ final class TodayPresenterImplementation: TodayPresenter {
 		cell.displayWidgetPic(pic: nil)
 
 		guard let image = PersonImage(id: person.widgetPicId) else { return }
-		ImagesCache.loadImageFromDisk(image: image) { result in
+		ImagesCache.loadImageFromDiskOrMemory(image: image) { result in
 			switch result {
 			case .success(let img):
 				cell.displayWidgetPic(pic: img)
