@@ -220,8 +220,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 								   timeOfBirth: timeOfBirth,
 								   appImage: appPic,
 								   widgetImage: widgetPic,
-								   isOnWidget: isOnWidget,
-								   createdDate: nil)
+								   isOnWidget: isOnWidget)
 	}
 }
 

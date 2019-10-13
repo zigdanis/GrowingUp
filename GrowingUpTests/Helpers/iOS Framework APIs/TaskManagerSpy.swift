@@ -13,9 +13,6 @@ import Foundation
 class TaskManagerSpy: TaskManager {
 
 	var processTasksCalled = false
-	var expectedResultValue: Any!
-	var expectedError: CoreError!
-	var shouldSucceed = true
 
 	func process(tasks: [Task]) {
 		processTasksCalled = true

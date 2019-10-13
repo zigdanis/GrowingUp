@@ -22,6 +22,12 @@ public class CoreDataPerson: NSManagedObject {
 
 extension CoreDataPerson {
 
+	public override func awakeFromInsert() {
+		super.awakeFromInsert()
+		self.createdDate = Date()
+		self.id = UUID().uuidString
+	}
+
 	@nonobjc
 	public class func fetchRequest() -> NSFetchRequest<CoreDataPerson> {
 		return NSFetchRequest<CoreDataPerson>(entityName: "CoreDataPerson")
@@ -38,17 +44,11 @@ extension CoreDataPerson {
     }
 
     public func populate(with parameters: AddPersonParameters) {
-		if id == nil {
-			id = UUID().uuidString
-		}
         name = parameters.name
 		birthdate = parameters.combinedDate()
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
 		isOnWidget = parameters.isOnWidget
-		if let date = parameters.createdDate {
-			createdDate = date
-		}
     }
 
 }

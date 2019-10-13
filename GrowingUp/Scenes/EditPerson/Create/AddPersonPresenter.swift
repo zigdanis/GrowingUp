@@ -169,8 +169,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 								   timeOfBirth: timeOfBirth,
 								   appImage: appPic,
 								   widgetImage: widgetPic,
-								   isOnWidget: isOnWidget,
-								   createdDate: Date())
+								   isOnWidget: isOnWidget )
 	}
 }
 

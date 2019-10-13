@@ -72,7 +72,7 @@ final class AddPersonPresenterTests: XCTestCase {
         // When
         sut.rightBarButtonPressed()
         // Then
-        XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
+        XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters!, parameters, "Should have been called addPerson for AddPersonUseCase")
     }
 
     func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() {
@@ -220,6 +220,6 @@ final class AddPersonPresenterTests: XCTestCase {
 		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
 		let isOnWidget = false
 		toggleCellStub.valueFor(row: EPC.addToWidgetRow, didChangeTo: isOnWidget)
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic, isOnWidget: isOnWidget, createdDate: Date())
+		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic, isOnWidget: isOnWidget)
 	}
 }
