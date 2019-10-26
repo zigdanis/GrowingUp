@@ -32,6 +32,6 @@ final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 	}
 
 	func valueFor(row: Int) -> String? {
-		return storage[row]
+		return storage[row]?.trimmingCharacters(in: .whitespacesAndNewlines)
 	}
 }

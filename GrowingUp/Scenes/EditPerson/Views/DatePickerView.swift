@@ -37,6 +37,12 @@ final class DatePickerView: UIView {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+		super.traitCollectionDidChange(previousTraitCollection)
+		paddingView.backgroundColor = UIColor.bgColor(for: traitCollection)
+		datePicker.backgroundColor = UIColor.bgColor(for: traitCollection)
+	}
+
 	// MARK: - Setup
 
 	private func setupHoverView() {
@@ -57,7 +63,7 @@ final class DatePickerView: UIView {
 	}
 
 	private func setupPaddingView() {
-		paddingView.backgroundColor = .white
+		paddingView.backgroundColor = UIColor.bgColor(for: traitCollection)
 		paddingView.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(paddingView)
 		var consts = [
@@ -73,7 +79,7 @@ final class DatePickerView: UIView {
 	private func setupDatePicker(with mode: UIDatePicker.Mode) {
 		datePicker.maximumDate = Date()
 		datePicker.datePickerMode = mode
-		datePicker.backgroundColor = .white
+		datePicker.backgroundColor = UIColor.bgColor(for: traitCollection)
 		datePicker.translatesAutoresizingMaskIntoConstraints = false
 		addSubview(datePicker)
 		let consts = [
