@@ -96,7 +96,9 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		return preferredContentSize.height / CGFloat(presenter.numberOfPersons())
+		var persons = CGFloat(presenter.numberOfPersons())
+		persons = max(1, persons)
+		return preferredContentSize.height / persons
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

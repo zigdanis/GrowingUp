@@ -102,10 +102,12 @@ class WDImageCropView: UIView {
 	// MARK: - UIScrollView Setup
 
 	private func setupZoomScaleForScrollView() {
+		assert(imageView.bounds.width > 0)
+		assert(imageView.bounds.height > 0)
 		let croppingWidth = croppingSize.width
 		let croppingHeight = croppingSize.height
-		let widthScale = croppingWidth / imageView.bounds.width
-		let heightScale = croppingHeight / imageView.bounds.height
+		let widthScale = croppingWidth / max(imageView.bounds.width, 1)
+		let heightScale = croppingHeight / max(imageView.bounds.height, 1)
 		let minSufficientScale = max(widthScale, heightScale)
 
 		scrollView.minimumZoomScale = minSufficientScale
