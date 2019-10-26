@@ -30,7 +30,10 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		}
 		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
 		let description = NSPersistentStoreDescription(url: appGroupURL)
-		let container = NSPersistentContainer(name: "GrowingUp")
+		let coreBundle = Bundle(identifier: "pro.ziganshin.Core")!
+		let modelURL = coreBundle.url(forResource: "GrowingUp", withExtension: "momd")!
+		let model = NSManagedObjectModel(contentsOf: modelURL)!
+		let container = NSPersistentContainer(name: "GrowingUp", managedObjectModel: model)
 		container.persistentStoreDescriptions = [description]
 		container.loadPersistentStores(completionHandler: { (description, error) in
 			if let error = error as NSError? {

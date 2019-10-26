@@ -39,7 +39,6 @@
 		0916536D223ECBC40081FB10 /* ImagePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533B223ECBC40081FB10 /* ImagePickerButton.swift */; };
 		0916536E223ECBC40081FB10 /* GradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533C223ECBC40081FB10 /* GradientView.swift */; };
 		0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916533D223ECBC40081FB10 /* VerticalButton.swift */; };
-		0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
@@ -67,7 +66,6 @@
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		095000E5226E3F2700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
-		095000E6226E43B700789BED /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
@@ -134,6 +132,7 @@
 		09D69781225C960000EFFEAC /* PersonOverviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D69780225C960000EFFEAC /* PersonOverviewPresenter.swift */; };
 		09D69783225C960C00EFFEAC /* PersonOverviewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */; };
 		09D69785225C961C00EFFEAC /* PersonOverviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */; };
+		09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		09DCD211232AD0A900A2E73F /* ToggleCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DCD210232AD0A900A2E73F /* ToggleCellPresenterTests.swift */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
@@ -430,7 +429,6 @@
 				09165339223ECBC40081FB10 /* AppDelegate.swift */,
 				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165306223ECBC40081FB10 /* Storyboards */,
-				0916533E223ECBC40081FB10 /* EntityGateway */,
 				0916530E223ECBC40081FB10 /* Scenes */,
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
@@ -545,22 +543,6 @@
 				0916533D223ECBC40081FB10 /* VerticalButton.swift */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		0916533E223ECBC40081FB10 /* EntityGateway */ = {
-			isa = PBXGroup;
-			children = (
-				0916533F223ECBC40081FB10 /* LocalPersistance */,
-			);
-			path = EntityGateway;
-			sourceTree = "<group>";
-		};
-		0916533F223ECBC40081FB10 /* LocalPersistance */ = {
-			isa = PBXGroup;
-			children = (
-				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
-			);
-			path = LocalPersistance;
 			sourceTree = "<group>";
 		};
 		09165348223ECBC40081FB10 /* 3rd Party Libraries */ = {
@@ -738,6 +720,7 @@
 		095000D6226DD94700789BED /* LocalPersistance */ = {
 			isa = PBXGroup;
 			children = (
+				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
 				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
 				09165347223ECBC40081FB10 /* CoreDataPerson.swift */,
 				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
@@ -1256,7 +1239,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				095000E6226E43B700789BED /* GrowingUp.xcdatamodeld in Sources */,
 				0983E762226D9420007EC8D2 /* TodayPresenter.swift in Sources */,
 				096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */,
 				09051B4121C558DB008A99C6 /* TodayViewController.swift in Sources */,
@@ -1267,6 +1249,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */,
 				0983E76A226D9677007EC8D2 /* CoreError.swift in Sources */,
 				095000D7226DD95800789BED /* NSManagedObjectContext+Utils.swift in Sources */,
 				0983E768226D9658007EC8D2 /* AddPersonParameters.swift in Sources */,
@@ -1352,7 +1335,6 @@
 				099C9163225F2074005C963C /* EmptyPersonViewRouter.swift in Sources */,
 				099C9161225F2062005C963C /* EmptyPersonPresenter.swift in Sources */,
 				0916535A223ECBC40081FB10 /* EditPersonViewRouter.swift in Sources */,
-				0916537A223ECFD60081FB10 /* GrowingUp.xcdatamodeld in Sources */,
 				09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */,
 				09165353223ECBC40081FB10 /* TextFieldTableViewCell.swift in Sources */,
 				0916536F223ECBC40081FB10 /* VerticalButton.swift in Sources */,
