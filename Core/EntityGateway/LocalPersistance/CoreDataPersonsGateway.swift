@@ -23,16 +23,21 @@ public class CoreDataPersonsGateway: PersonsGateway {
 	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		coreDataStack.persistentContainer.performBackgroundTask { context in
 			var result: Result<Person, CoreError> = .failure(CoreError.coreDataAddFailed)
-			if let coreDataPerson = context.addEntity(withType: CoreDataPerson.self) {
-				coreDataPerson.populate(with: parameters)
+			if let cdPerson = context.addEntity(withType: CoreDataPerson.self) {
+				cdPerson.populate(with: parameters)
 				do {
+					if parameters.isOnWidget {
+						cdPerson.accessToWidget = try AccessToWidget.sharedInstance(in: context)
+					} else {
+						cdPerson.accessToWidget = nil
+					}
 					try context.save()
-					result = .success(coreDataPerson.person)
+					result = .success(cdPerson.person)
 				} catch let error as CoreError {
-					context.delete(coreDataPerson)
+					context.delete(cdPerson)
 					result = .failure(error)
 				} catch {
-					context.delete(coreDataPerson)
+					context.delete(cdPerson)
 					result = .failure(CoreError.coreDataSaveFailed)
 				}
 			}
@@ -72,6 +77,11 @@ public class CoreDataPersonsGateway: PersonsGateway {
 					throw CoreError.coreDataFetchFailed
 				}
 				cdPerson.populate(with: parameters)
+				if parameters.isOnWidget {
+					cdPerson.accessToWidget = try AccessToWidget.sharedInstance(in: context)
+				} else {
+					cdPerson.accessToWidget = nil
+				}
 				try context.save()
 				result = .success(cdPerson.person)
 			} catch let coreError as CoreError {
@@ -115,12 +125,16 @@ public class CoreDataPersonsGateway: PersonsGateway {
 	public func fetchWidgetPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		coreDataStack.persistentContainer.performBackgroundTask { _ in
 			var result: Result<[Person], CoreError> = .failure(.unknownError)
-			let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
-			fetchRequest.predicate = NSPredicate(format: "%K == YES", #keyPath(CoreDataPerson.isOnWidget))
-			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
 			do {
-				let persons = try fetchRequest.execute().map({ $0.person })
-				result = .success(persons)
+				let fetch: NSFetchRequest<AccessToWidget> = AccessToWidget.fetchRequest()
+				let access = try fetch.execute().first
+				guard let persons = access?.widgetPersons else {
+					throw CoreError.missingValue
+				}
+				let cdPersons = Array(persons.map({ $0.person }))
+				result = .success(cdPersons)
+			} catch let error as CoreError {
+				result = .failure(error)
 			} catch {
 				let coreError = CoreError(error: error)
 				result = .failure(coreError)

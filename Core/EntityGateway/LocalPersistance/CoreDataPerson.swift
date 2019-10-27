@@ -16,11 +16,15 @@ public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var id: String?
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
-	@NSManaged public var isOnWidget: Bool
 	@NSManaged public var createdDate: Date
+	@NSManaged public var accessToWidget: AccessToWidget?
 }
 
 extension CoreDataPerson {
+
+	public var isOnWidget: Bool {
+		return accessToWidget != nil
+	}
 
 	public override func awakeFromInsert() {
 		super.awakeFromInsert()
@@ -48,7 +52,6 @@ extension CoreDataPerson {
 		birthdate = parameters.combinedDate()
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
-		isOnWidget = parameters.isOnWidget
     }
 
 }

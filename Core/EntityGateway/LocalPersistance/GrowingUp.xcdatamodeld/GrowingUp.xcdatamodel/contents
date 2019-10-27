@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="AccessToWidget" representedClassName="AccessToWidget" syncable="YES">
+        <relationship name="widgetPersons" toMany="YES" maxCount="3" deletionRule="Nullify" destinationEntity="CoreDataPerson" inverseName="accessToWidget" inverseEntity="CoreDataPerson"/>
+    </entity>
     <entity name="CoreDataPerson" representedClassName="CoreDataPerson" syncable="YES">
         <attribute name="appPicId" optional="YES" attributeType="String"/>
         <attribute name="birthdate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="createdDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
-        <attribute name="isOnWidget" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="widgetPicId" optional="YES" attributeType="String"/>
+        <relationship name="accessToWidget" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccessToWidget" inverseName="widgetPersons" inverseEntity="AccessToWidget"/>
     </entity>
     <elements>
+        <element name="AccessToWidget" positionX="-63" positionY="36" width="128" height="58"/>
         <element name="CoreDataPerson" positionX="-63" positionY="-18" width="128" height="148"/>
     </elements>
 </model>

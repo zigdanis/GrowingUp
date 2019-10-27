@@ -133,6 +133,7 @@
 		09D69783225C960C00EFFEAC /* PersonOverviewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */; };
 		09D69785225C961C00EFFEAC /* PersonOverviewViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */; };
 		09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
+		09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D842892364EB5A008FFD86 /* AccessToWidget.swift */; };
 		09DCD211232AD0A900A2E73F /* ToggleCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DCD210232AD0A900A2E73F /* ToggleCellPresenterTests.swift */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
@@ -328,6 +329,7 @@
 		09D69780225C960000EFFEAC /* PersonOverviewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewPresenter.swift; sourceTree = "<group>"; };
 		09D69782225C960C00EFFEAC /* PersonOverviewRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonOverviewRouter.swift; sourceTree = "<group>"; };
 		09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonOverviewViewController.xib; sourceTree = "<group>"; };
+		09D842892364EB5A008FFD86 /* AccessToWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToWidget.swift; sourceTree = "<group>"; };
 		09DCD210232AD0A900A2E73F /* ToggleCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCellPresenterTests.swift; sourceTree = "<group>"; };
 		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
@@ -723,6 +725,7 @@
 				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
 				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
 				09165347223ECBC40081FB10 /* CoreDataPerson.swift */,
+				09D842892364EB5A008FFD86 /* AccessToWidget.swift */,
 				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
 				09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */,
 			);
@@ -1260,6 +1263,7 @@
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
+				09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */,
 				095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */,
 				095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */,
 				0983E766226D9652007EC8D2 /* FetchPersonsUseCase.swift in Sources */,
