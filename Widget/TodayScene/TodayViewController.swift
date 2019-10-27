@@ -10,6 +10,8 @@ import UIKit
 import NotificationCenter
 import Core
 
+let rowsLimit = 3
+
 protocol TodayView: class {
 	func reloadTableData()
 }
@@ -17,27 +19,24 @@ protocol TodayView: class {
 final class TodayViewController: UIViewController, NCWidgetProviding, TodayView {
 
 	private let identifier = "PersonTableViewCell"
+	private var presentingRowsLimit = 1
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var addPersonButton: UIButton!
 	private let presenter = TodayPresenterImplementation()
+	private var constrainedNumberOfPersons: Int {
+		min(presentingRowsLimit, presenter.numberOfPersons())
+	}
 
     override func viewDidLoad() {
         super.viewDidLoad()
 		Logging.logMessage("Open up Today Widget")
 		presenter.view = self
 		setupTableView()
-		setupMaxWidgetSize()
 		setupAddPersonButton()
 		presenter.loadPersons()
+		tunePresenting()
+		reloadTableData()
     }
-
-	private func setupMaxWidgetSize() {
-		if presenter.numberOfPersons() > 1 {
-			extensionContext?.widgetLargestAvailableDisplayMode = .expanded
-		} else {
-			extensionContext?.widgetLargestAvailableDisplayMode = .compact
-		}
-	}
 
 	private func setupTableView() {
 		tableView.delegate = self
@@ -54,22 +53,38 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 		addPersonButton.setTitle(ttl, for: .normal)
 	}
 
-	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
-		switch activeDisplayMode {
+	private func tunePresenting(forMode mode: NCWidgetDisplayMode? = nil, maxSize: CGSize? = nil) {
+		guard let mode = mode ?? extensionContext?.widgetActiveDisplayMode else { return }
+		guard let maxSize = maxSize ?? extensionContext?.widgetMaximumSize(for: mode) else { return }
+		switch mode {
 		case .compact:
-			presenter.maxRows = 1
+			presentingRowsLimit = 1
 			preferredContentSize = maxSize
 		case .expanded:
-			presenter.maxRows = 3
+			presentingRowsLimit = rowsLimit
 			let height = CGFloat(presenter.numberOfPersons() * 100)
 			preferredContentSize = CGSize(width: maxSize.width, height: height)
 		@unknown default:
 			fatalError("We are not ready for the new DisplayMode")
 		}
-		tableView.reloadData()
+	}
+
+	private func setupMaxWidgetSize() {
+		if presenter.numberOfPersons() > 1 {
+			extensionContext?.widgetLargestAvailableDisplayMode = .expanded
+		} else {
+			extensionContext?.widgetLargestAvailableDisplayMode = .compact
+		}
 	}
 
 	// MARK: - TodayView
+
+	func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
+		tunePresenting(forMode: activeDisplayMode, maxSize: maxSize)
+		reloadTableData()
+	}
+
+    // MARK: - Actions
 
 	func reloadTableData() {
 		setupMaxWidgetSize()
@@ -78,8 +93,6 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 		tableView.isHidden = isHidden
 		addPersonButton.isHidden = !isHidden
 	}
-
-    // MARK: - Actions
 
 	private func widgetTouched(atIndex index: Int) {
 		let str = "growingup-app://?\(Constants.widgetPersonIndexKey)=\(index)"
@@ -96,13 +109,13 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 extension TodayViewController: UITableViewDelegate, UITableViewDataSource {
 
 	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-		var persons = CGFloat(presenter.numberOfPersons())
+		var persons = CGFloat(constrainedNumberOfPersons)
 		persons = max(1, persons)
 		return preferredContentSize.height / persons
 	}
 
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return presenter.numberOfPersons()
+		return constrainedNumberOfPersons
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

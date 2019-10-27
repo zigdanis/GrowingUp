@@ -18,4 +18,5 @@ public protocol PersonsGateway {
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler)
 	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler)
+	func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler)
 }

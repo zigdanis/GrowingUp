@@ -37,6 +37,11 @@ public final class CachePersonsGateway: PersonsGateway {
 		coreDataGateway.fetchPersons(completionHandler: completionHandler)
 	}
 
+
+	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		coreDataGateway.fetchWidgetPersons(completion: completion)
+	}
+
 	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		// Core Data
 		coreDataGateway.edit(person: person, with: parameters, completionHandler: completionHandler)

@@ -122,7 +122,7 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		}
 	}
 
-	public func fetchWidgetPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		coreDataStack.persistentContainer.performBackgroundTask { _ in
 			var result: Result<[Person], CoreError> = .failure(.unknownError)
 			do {
@@ -140,7 +140,7 @@ public class CoreDataPersonsGateway: PersonsGateway {
 				result = .failure(coreError)
 			}
 			DispatchQueue.main.async {
-				completionHandler(result)
+				completion(result)
 			}
 		}
 	}

@@ -12,6 +12,7 @@ public typealias FetchPersonsUseCaseCompletionHandler = (_ persons: Result<[Pers
 
 public protocol FetchPersonsUseCase {
 	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler)
+	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler)
 }
 
 public final class FetchPersonsUseCaseImplementation: FetchPersonsUseCase {
@@ -27,5 +28,9 @@ public final class FetchPersonsUseCaseImplementation: FetchPersonsUseCase {
 		self.personsGateway.fetchPersons { (result) in
 			completionHandler(result)
 		}
+	}
+
+	public func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
+		personsGateway.fetchWidgetPersons(completion: completion)
 	}
 }

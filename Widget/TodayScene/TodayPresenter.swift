@@ -29,7 +29,8 @@ final class TodayPresenterImplementation: TodayPresenter {
 	}
 
 	func numberOfPersons() -> Int {
-		return min(maxRows, persons.count)
+		persons.count
+//		return min(maxRows, persons.count)
 	}
 
 	func configure(cell: PersonCellView, atIndex index: Int) {
@@ -51,15 +52,15 @@ final class TodayPresenterImplementation: TodayPresenter {
 	}
 
 	func loadPersons() {
-		fetchUseCase.fetchPersons { result in
+		fetchUseCase.fetchWidgetPersons { result in
 			switch result {
 			case .success(let persons):
 				self.persons = persons
+				self.view?.reloadTableData()
 			case .failure(let error):
 				Logging.logMessage("Failed to fetch Persons from CoreData")
 				Logging.logError(error)
 			}
-			self.view?.reloadTableData()
 		}
 	}
 }
