@@ -49,4 +49,13 @@ public struct Person: Equatable, Hashable {
 		let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: birthday)
 		return Calendar.current.date(from: timeComponents) ?? Date()
 	}
+
+}
+
+extension Person: Comparable {
+
+	public static func < (lhs: Person, rhs: Person) -> Bool {
+		let comparison = lhs.createdDate.compare(rhs.createdDate)
+		return comparison == .orderedAscending
+	}
 }

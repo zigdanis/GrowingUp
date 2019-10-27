@@ -65,6 +65,29 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		}
 	}
 
+	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		coreDataStack.persistentContainer.performBackgroundTask { _ in
+			var result: Result<[Person], CoreError> = .failure(.unknownError)
+			do {
+				let fetch: NSFetchRequest<AccessToWidget> = AccessToWidget.fetchRequest()
+				let access = try fetch.execute().first
+				guard let persons = access?.widgetPersons else {
+					throw CoreError.missingValue
+				}
+				let cdPersons = Array(persons.map({ $0.person })).sorted()
+				result = .success(cdPersons)
+			} catch let error as CoreError {
+				result = .failure(error)
+			} catch {
+				let coreError = CoreError(error: error)
+				result = .failure(coreError)
+			}
+			DispatchQueue.main.async {
+				completion(result)
+			}
+		}
+	}
+
 	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		coreDataStack.persistentContainer.performBackgroundTask { context in
 			var result: Result<Person, CoreError> = .failure(CoreError.unknownError)
@@ -118,29 +141,6 @@ public class CoreDataPersonsGateway: PersonsGateway {
 			}
 			DispatchQueue.main.async {
 				completionHandler(result)
-			}
-		}
-	}
-
-	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { _ in
-			var result: Result<[Person], CoreError> = .failure(.unknownError)
-			do {
-				let fetch: NSFetchRequest<AccessToWidget> = AccessToWidget.fetchRequest()
-				let access = try fetch.execute().first
-				guard let persons = access?.widgetPersons else {
-					throw CoreError.missingValue
-				}
-				let cdPersons = Array(persons.map({ $0.person }))
-				result = .success(cdPersons)
-			} catch let error as CoreError {
-				result = .failure(error)
-			} catch {
-				let coreError = CoreError(error: error)
-				result = .failure(coreError)
-			}
-			DispatchQueue.main.async {
-				completion(result)
 			}
 		}
 	}
