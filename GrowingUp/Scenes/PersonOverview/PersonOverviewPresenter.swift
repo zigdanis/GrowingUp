@@ -32,6 +32,7 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		view?.displayPersonName(name: person.name)
 		let personAppPic = PersonImage(id: person.appPicId)
 		view?.displayPersonAppImage(image: personAppPic)
+		view?.displayPersonOnWidgetState(onWidget: person.isOnWidget)
 		scheduleAgeTicker()
 	}
 

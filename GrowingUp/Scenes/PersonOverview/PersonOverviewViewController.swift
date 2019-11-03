@@ -13,6 +13,7 @@ protocol PersonOverviewView: PageViewControllerViewable {
 	func displayPersonName(name: String)
 	func displayPersonAppImage(image: PersonImage?)
 	func displayPersonAge(age: String)
+	func displayPersonOnWidgetState(onWidget: Bool)
 }
 
 final class PersonOverviewViewController: UIViewController, PersonOverviewView {
@@ -22,6 +23,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	@IBOutlet weak var personAge: UILabel!
 	@IBOutlet weak var noPicPlaceholder: UILabel!
 	@IBOutlet weak var darkHoverView: UIView!
+	@IBOutlet weak var editPersonButton: UIButton!
 
 	var index: Int = 0
 	var presenter: PersonOverviewPresenter!
@@ -95,5 +97,10 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 
 	func displayPersonAge(age: String) {
 		personAge.text = age
+	}
+
+	func displayPersonOnWidgetState(onWidget: Bool) {
+		let img = onWidget ? R.image.personCrowned() : R.image.personSettings()
+		editPersonButton.setImage(img, for: .normal)
 	}
 }

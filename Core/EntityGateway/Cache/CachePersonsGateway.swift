@@ -37,7 +37,6 @@ public final class CachePersonsGateway: PersonsGateway {
 		coreDataGateway.fetchPersons(completionHandler: completionHandler)
 	}
 
-
 	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		coreDataGateway.fetchWidgetPersons(completion: completion)
 	}

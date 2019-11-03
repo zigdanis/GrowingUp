@@ -49,7 +49,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		return container
 	}
 
-	// MARk: - Helpers
+	// MARK: - Helpers
 
 	private func deleteSQLiteStore(for url: URL) {
 		do {
