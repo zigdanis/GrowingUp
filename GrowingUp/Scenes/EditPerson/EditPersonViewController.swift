@@ -21,6 +21,7 @@ protocol EditPersonView: ImagesCellViewDelegate {
     func displayEditPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
 	func displayBarButton(with style: BarButtonItemStyle)
+	func reloadData()
 }
 
 typealias EPC = EditPersonViewController
@@ -142,6 +143,10 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		case .save:
 			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
 		}
+	}
+
+	func reloadData() {
+		tableView.reloadData()
 	}
 
 	// MARK: - Business Logic

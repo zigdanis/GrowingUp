@@ -66,12 +66,11 @@ public class CoreDataPersonsGateway: PersonsGateway {
 	}
 
 	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { _ in
+		coreDataStack.persistentContainer.performBackgroundTask { context in
 			var result: Result<[Person], CoreError> = .failure(.unknownError)
 			do {
-				let fetch: NSFetchRequest<AccessToWidget> = AccessToWidget.fetchRequest()
-				let access = try fetch.execute().first
-				guard let persons = access?.widgetPersons else {
+				let access = try AccessToWidget.sharedInstance(in: context)
+				guard let persons = access.widgetPersons else {
 					throw CoreError.missingValue
 				}
 				let cdPersons = Array(persons.map({ $0.person })).sorted()

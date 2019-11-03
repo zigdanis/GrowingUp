@@ -13,6 +13,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	private weak var view: EditPersonView?
 	private let addPersonUseCase: AddPersonUseCase
+	private let fetchPersonsUseCase: FetchPersonsUseCase
 	private weak var delegate: EditPersonPresenterDelegate?
 	private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
@@ -22,6 +23,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
+		 fetchPersonsUseCase: FetchPersonsUseCase,
 		 router: EditPersonViewRouter,
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
@@ -30,6 +32,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		 toggleCellPresenter: ToggleCellPresenter) {
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
+		self.fetchPersonsUseCase = fetchPersonsUseCase
 		self.router = router
 		self.delegate = delegate
 		self.imagesCellPresenter = imagesCellPresenter
@@ -43,18 +46,34 @@ final class AddPersonPresenter: EditPersonPresenter {
 	func viewDidLoad() {
 		view?.displayBarButton(with: .cancel)
 		view?.displayBarButton(with: .done)
+		configureInitialStateForDatePickers()
+		configureInitialStateForToggle()
+		#if DEBUG
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
+		#endif
+	}
 
+	private func configureInitialStateForDatePickers() {
 		var components = DateComponents()
 		components.year = 2019
 		components.month = 1
 		components.day = 1
 		let zeroHour = Calendar.current.date(from: components) ?? Date()
 		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
-		toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: true)
+	}
 
-		#if DEBUG
-		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
-		#endif
+	private func configureInitialStateForToggle() {
+		fetchPersonsUseCase.fetchWidgetPersons { result in
+			switch result {
+			case .success(let favs):
+				let maxReached = favs.count >= 3
+				self.toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: !maxReached)
+			case .failure(let error):
+				self.toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: false)
+				Logging.logError(error)
+			}
+			self.view?.reloadData()
+		}
 	}
 
 	func rightBarButtonPressed() {
