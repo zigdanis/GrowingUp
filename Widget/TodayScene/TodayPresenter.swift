@@ -30,7 +30,6 @@ final class TodayPresenterImplementation: TodayPresenter {
 
 	func numberOfPersons() -> Int {
 		persons.count
-//		return min(maxRows, persons.count)
 	}
 
 	func configure(cell: PersonCellView, atIndex index: Int) {

@@ -38,7 +38,7 @@ public class CoreDataPersonsGateway: PersonsGateway {
 					result = .failure(error)
 				} catch {
 					context.delete(cdPerson)
-					result = .failure(CoreError.coreDataSaveFailed)
+					result = .failure(CoreError(error: error))
 				}
 			}
 			DispatchQueue.main.async {

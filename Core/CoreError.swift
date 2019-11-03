@@ -8,6 +8,8 @@
 
 import Foundation
 
+private let bundle = Bundle(identifier: Constants.bundleIdentifier)!
+
 public struct CoreError: Error, Equatable {
 
 	public var localizedDescription: String { return message }
@@ -15,7 +17,6 @@ public struct CoreError: Error, Equatable {
 	public var message = ""
 
     public init(title: String = "Error", message: String) {
-		let bundle = Bundle(identifier: Constants.bundleIdentifier)!
 		self.title = NSLocalizedString(title, bundle: bundle, comment: "Error Title")
 		self.message = NSLocalizedString(message, bundle: bundle, comment: "Error Message")
     }
@@ -23,6 +24,14 @@ public struct CoreError: Error, Equatable {
 	public init(error: Error) {
 		self.title = "Error"
 		self.message = error.localizedDescription
+		checkForSpecificCoreDataError()
+	}
+
+	private mutating func checkForSpecificCoreDataError() {
+		if message.contains("widgetPersons") {
+			let threePersons = "Unable to add more than 3 persons"
+			self.message = NSLocalizedString(threePersons, bundle: bundle, comment: "Error Message")
+		}
 	}
 
 	public static let failedToCreateDate = CoreError(message: "Can't create Date value from specified parameters")
