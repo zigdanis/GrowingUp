@@ -50,8 +50,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 
 	func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
-		guard let appStr = options[.sourceApplication] as? String else { return true }
-		guard appStr == Constants.widgetBundle else { return true }
 		handleOpenURL(url: url)
 		return true
 	}
@@ -61,10 +59,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		let indexComponent = components?.queryItems?
 			.first(where: { $0.name == Constants.widgetPersonIndexKey })
 		let personIndexStr = indexComponent?.value ?? ""
-		let personIndex = Int(personIndexStr) ?? 0
-		Logging.logMessage("Open URL from Widget",
-						   params: ["index": "\(personIndex)"])
-		NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
+		var params: [String: String]?
+		if let personIndex = Int(personIndexStr) {
+			params = ["index": "\(personIndex)"]
+			NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
+		}
+		Logging.logMessage("Open URL from Widget", params: params)
 	}
 
 }

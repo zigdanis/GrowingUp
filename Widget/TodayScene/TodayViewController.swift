@@ -102,7 +102,9 @@ final class TodayViewController: UIViewController, NCWidgetProviding, TodayView 
 
 	@IBAction func addPersonTouched() {
 		Logging.logMessage("User pressed Add Person from within Widget")
-		widgetTouched(atIndex: 0)
+		let str = "growingup-app://add-person"
+		let url = URL(string: str)!
+		extensionContext?.open(url, completionHandler: nil)
 	}
 }
 

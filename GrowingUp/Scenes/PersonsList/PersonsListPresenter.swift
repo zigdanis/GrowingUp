@@ -54,7 +54,17 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private func openPersonNotificationSent(notif: Notification) {
 		let key = Constants.widgetPersonIndexKey
 		guard let personIndex = notif.userInfo?[key] as? Int else { return }
-		self.defaultPage = personIndex
+		let favPersons = persons.filter({ $0.isOnWidget })
+		guard personIndex < favPersons.count else {
+			Logging.logError(CoreError(message: "Failed to find widget person at index \(personIndex)"))
+			return
+		}
+		let favPerson = favPersons[personIndex]
+		guard let indexOfFavPerson = persons.firstIndex(of: favPerson) else {
+			Logging.logError(CoreError(message: "Failed to find widget person at index \(personIndex)"))
+			return
+		}
+		self.defaultPage = indexOfFavPerson
 		self.view?.updateListOfScreens(defaultPage: defaultPage)
 	}
 
