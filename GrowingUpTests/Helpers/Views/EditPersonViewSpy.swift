@@ -18,6 +18,7 @@ class EditPersonViewSpy: EditPersonView {
 	var displayedScreenTitle: String?
 	var showedAppPicImagePicker = false
 	var showedWidgetPicImagePicker = false
+	var didReloadData = false
 	var displayedBarButtons = [BarButtonItemStyle]()
 
 	func updateBarButtonsState(isEnabled enabled: Bool) {
@@ -43,5 +44,9 @@ class EditPersonViewSpy: EditPersonView {
 
 	func displayBarButton(with style: BarButtonItemStyle) {
 		displayedBarButtons.append(style)
+	}
+
+	func reloadData() {
+		didReloadData = true
 	}
 }

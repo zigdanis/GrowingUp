@@ -20,4 +20,7 @@ class DisplayPersonsUseCaseSpy: FetchPersonsUseCase {
 		completionHandler(resultToBeReturned)
 	}
 
+	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
+		completion(resultToBeReturned)
+	}
 }

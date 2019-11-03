@@ -15,6 +15,7 @@ final class AddPersonPresenterTests: XCTestCase {
     // https://www.martinfowler.com/bliki/TestDouble.html
     let addPersonViewSpy = EditPersonViewSpy()
     let addPersonUseCaseSpy = AddPersonUseCaseSpy()
+	let fetchWidgetPersonsUseCaseSpy = FetchPersonsUseCaseSpy()
     let addPersonViewRouterSpy = EditPersonViewRouterSpy()
     let addPersonPresenterDelegateSpy = EditPersonPresenterDelegateSpy()
 	let imagesCellStub = ImagesCellPresenterStub()
@@ -30,6 +31,7 @@ final class AddPersonPresenterTests: XCTestCase {
         super.setUp()
 		sut = AddPersonPresenter(view: addPersonViewSpy,
 								 addPersonUseCase: addPersonUseCaseSpy,
+								 fetchWidgetPersonsUseCase: fetchWidgetPersonsUseCaseSpy,
 								 router: addPersonViewRouterSpy,
 								 delegate: addPersonPresenterDelegateSpy,
 								 imagesCellPresenter: imagesCellStub,
@@ -198,6 +200,7 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	func test_SUT_OnViewDidLoad_SetsBarButtonsWithCancelAndDoneTypes() {
 		// When
+		fetchWidgetPersonsUseCaseSpy.completionResult = .success([])
 		sut.viewDidLoad()
 		// Then
 		XCTAssertTrue(addPersonViewSpy.displayedBarButtons.contains(.cancel), "Expected to display Cancel button")

@@ -21,7 +21,7 @@ class AddPersonConfigurator: EditPersonConfigurator {
 		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
-		let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: coreDataGateway)
+		let fetchWidgetPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: coreDataGateway)
 		let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
 		let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)
 		let imagesCellPresenter = ImagesCellPresenterImplementation()
@@ -31,7 +31,7 @@ class AddPersonConfigurator: EditPersonConfigurator {
 		let presenter = AddPersonPresenter(
 			view: editPersonViewController,
 			addPersonUseCase: addPersonUseCase,
-			fetchPersonsUseCase: fetchPersonsUseCase,
+			fetchWidgetPersonsUseCase: fetchWidgetPersonsUseCase,
 			router: router,
 			delegate: editPersonPresenterDelegate,
 			imagesCellPresenter: imagesCellPresenter,

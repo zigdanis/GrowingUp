@@ -33,7 +33,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
             addPersonCompletionHandlerExpectation.fulfill()
         }
         // Exit
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
     }
 
 	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() {

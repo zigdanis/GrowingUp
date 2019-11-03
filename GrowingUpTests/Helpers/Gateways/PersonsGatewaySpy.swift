@@ -33,6 +33,10 @@ class PersonsGatewaySpy: PersonsGateway {
 		completionHandler(fetchPersonsResultToBeReturned)
 	}
 
+	func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		completion(fetchPersonsResultToBeReturned)
+	}
+
 	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		editPersonCalled = true
 		addPersonParameters = parameters

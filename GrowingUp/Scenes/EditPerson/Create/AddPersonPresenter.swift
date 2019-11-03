@@ -13,7 +13,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	private weak var view: EditPersonView?
 	private let addPersonUseCase: AddPersonUseCase
-	private let fetchPersonsUseCase: FetchPersonsUseCase
+	private let fetchWidgetPersonsUseCase: FetchPersonsUseCase
 	private weak var delegate: EditPersonPresenterDelegate?
 	private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
@@ -23,7 +23,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	init(view: EditPersonView,
 		 addPersonUseCase: AddPersonUseCase,
-		 fetchPersonsUseCase: FetchPersonsUseCase,
+		 fetchWidgetPersonsUseCase: FetchPersonsUseCase,
 		 router: EditPersonViewRouter,
 		 delegate: EditPersonPresenterDelegate?,
 		 imagesCellPresenter: ImagesCellPresenter,
@@ -32,7 +32,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 		 toggleCellPresenter: ToggleCellPresenter) {
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
-		self.fetchPersonsUseCase = fetchPersonsUseCase
+		self.fetchWidgetPersonsUseCase = fetchWidgetPersonsUseCase
 		self.router = router
 		self.delegate = delegate
 		self.imagesCellPresenter = imagesCellPresenter
@@ -63,7 +63,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 	}
 
 	private func configureInitialStateForToggle() {
-		fetchPersonsUseCase.fetchWidgetPersons { result in
+		fetchWidgetPersonsUseCase.fetchWidgetPersons { result in
 			switch result {
 			case .success(let favs):
 				let maxReached = favs.count >= 3

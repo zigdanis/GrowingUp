@@ -134,6 +134,7 @@
 		09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D842892364EB5A008FFD86 /* AccessToWidget.swift */; };
 		09DCD211232AD0A900A2E73F /* ToggleCellPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09DCD210232AD0A900A2E73F /* ToggleCellPresenterTests.swift */; };
+		09E1C316236F487D00FC884B /* FetchPersonsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E1C315236F487D00FC884B /* FetchPersonsUseCaseSpy.swift */; };
 		09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */; };
 		09E32889224103D2002A0A5C /* TextFieldCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */; };
 		09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E75943227735E9005025AD /* UUID+Extensions.swift */; };
@@ -329,6 +330,7 @@
 		09D69784225C961C00EFFEAC /* PersonOverviewViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonOverviewViewController.xib; sourceTree = "<group>"; };
 		09D842892364EB5A008FFD86 /* AccessToWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToWidget.swift; sourceTree = "<group>"; };
 		09DCD210232AD0A900A2E73F /* ToggleCellPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCellPresenterTests.swift; sourceTree = "<group>"; };
+		09E1C315236F487D00FC884B /* FetchPersonsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPersonsUseCaseSpy.swift; sourceTree = "<group>"; };
 		09E328862240D32D002A0A5C /* TextFieldCellViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellViewSpy.swift; sourceTree = "<group>"; };
 		09E32888224103D2002A0A5C /* TextFieldCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCellPresenter.swift; sourceTree = "<group>"; };
 		09E6F55722569D260059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -791,6 +793,7 @@
 				095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */,
 				09CFE6B722709FAB007AB456 /* RemovePersonUseCaseSpy.swift */,
 				092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */,
+				09E1C315236F487D00FC884B /* FetchPersonsUseCaseSpy.swift */,
 			);
 			path = UserCases;
 			sourceTree = "<group>";
@@ -1312,6 +1315,7 @@
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				09CFE6B622703C26007AB456 /* RemovePersonUseCaseTests.swift in Sources */,
 				099C9171225FCB45005C963C /* EmptyPersonViewRouterSpy.swift in Sources */,
+				09E1C316236F487D00FC884B /* FetchPersonsUseCaseSpy.swift in Sources */,
 				09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */,
 				098798672242D26E00A15D90 /* DateCellViewSpy.swift in Sources */,
 				09CD01E22325773F0075B3FA /* ToggleCellViewSpy.swift in Sources */,
