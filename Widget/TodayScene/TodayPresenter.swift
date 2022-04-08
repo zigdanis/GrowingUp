@@ -10,41 +10,38 @@ import Foundation
 import Core
 
 protocol TodayPresenter {
-	func numberOfPersons() -> Int
-	var maxRows: Int { get set }
-	func configure(cell: PersonCellView, atIndex index: Int)
+	var numberOfPersons: Int { get }
+	func configure(panel: PersonView, atIndex index: Int)
 	func loadPersons()
 }
 
 final class TodayPresenterImplementation: TodayPresenter {
 
-	var maxRows: Int = 3
 	private var persons = [Person]()
 	weak var view: TodayView?
 	private let fetchUseCase: FetchPersonsUseCase
+	var numberOfPersons: Int {
+		persons.count
+	}
 
 	init() {
 		let personsGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
 		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
 	}
 
-	func numberOfPersons() -> Int {
-		persons.count
-	}
-
-	func configure(cell: PersonCellView, atIndex index: Int) {
+	func configure(panel: PersonView, atIndex index: Int) {
 		let person = persons[index]
-		cell.displayName(name: person.name)
-		cell.displayAge(for: person)
-		cell.displayWidgetPic(pic: nil)
+		panel.displayName(name: person.name)
+		panel.displayAge(for: person)
+		panel.displayWidgetPic(pic: nil)
 
 		guard let image = PersonImage(id: person.widgetPicId) else { return }
 		ImagesCache.loadImageFromDiskOrMemory(image: image) { result in
 			switch result {
 			case .success(let img):
-				cell.displayWidgetPic(pic: img)
+				panel.displayWidgetPic(pic: img)
 			case .failure(let error):
-				cell.displayWidgetPic(pic: nil)
+				panel.displayWidgetPic(pic: nil)
 				Logging.logError(error)
 			}
 		}
@@ -55,7 +52,7 @@ final class TodayPresenterImplementation: TodayPresenter {
 			switch result {
 			case .success(let persons):
 				self.persons = persons
-				self.view?.reloadTableData()
+				self.view?.updateContent()
 			case .failure(let error):
 				Logging.logMessage("Failed to fetch Persons from CoreData")
 				Logging.logError(error)

@@ -60,6 +60,7 @@ class WDImageCropView: UIView {
 		scrollView.translatesAutoresizingMaskIntoConstraints = false
 		scrollView.alwaysBounceVertical = true
 		scrollView.alwaysBounceHorizontal = true
+		scrollView.contentInsetAdjustmentBehavior = .never
 		addSubview(scrollView)
 		let consts = [
 			scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),

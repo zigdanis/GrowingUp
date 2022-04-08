@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="M4Y-Lb-cyx">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,11 +16,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="4wt-ze-B69">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="AnT-kB-Fla">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <sections/>
-                            </tableView>
+                            </stackView>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="20q-rm-LUK">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
                                 <state key="normal" title="Add person"/>
@@ -32,14 +28,14 @@
                             </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="20q-rm-LUK" secondAttribute="trailing" id="1ni-aU-zUO"/>
-                            <constraint firstItem="4wt-ze-B69" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="9VK-8Q-Jdg"/>
-                            <constraint firstItem="20q-rm-LUK" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="F4H-Cd-HcL"/>
-                            <constraint firstItem="4wt-ze-B69" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" id="cdw-pY-etK"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="4wt-ze-B69" secondAttribute="trailing" id="ecq-Vu-s5z"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="top" secondItem="4wt-ze-B69" secondAttribute="top" id="smx-Fo-a4g"/>
-                            <constraint firstItem="20q-rm-LUK" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="tab-qx-G94"/>
-                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="20q-rm-LUK" secondAttribute="bottom" id="wVt-IV-MxK"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="20q-rm-LUK" secondAttribute="trailing" id="5MJ-TU-wZZ"/>
+                            <constraint firstItem="AnT-kB-Fla" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="KCT-xJ-oHS"/>
+                            <constraint firstItem="20q-rm-LUK" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="Okg-wJ-JIS"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="bottom" secondItem="20q-rm-LUK" secondAttribute="bottom" id="WGL-eT-2DU"/>
+                            <constraint firstItem="AnT-kB-Fla" firstAttribute="leading" secondItem="ssy-KU-ocm" secondAttribute="leading" id="ahJ-re-oWr"/>
+                            <constraint firstItem="AnT-kB-Fla" firstAttribute="bottom" secondItem="ssy-KU-ocm" secondAttribute="bottom" priority="900" id="eKh-hP-MHF"/>
+                            <constraint firstItem="20q-rm-LUK" firstAttribute="top" secondItem="ssy-KU-ocm" secondAttribute="top" id="iuK-tZ-Rvz"/>
+                            <constraint firstItem="ssy-KU-ocm" firstAttribute="trailing" secondItem="AnT-kB-Fla" secondAttribute="trailing" id="kqm-V7-BBc"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ssy-KU-ocm"/>
                     </view>
@@ -48,7 +44,7 @@
                     <size key="freeformSize" width="320" height="92"/>
                     <connections>
                         <outlet property="addPersonButton" destination="20q-rm-LUK" id="yyt-u7-vNz"/>
-                        <outlet property="tableView" destination="4wt-ze-B69" id="I7s-9C-Kha"/>
+                        <outlet property="stackView" destination="AnT-kB-Fla" id="eWJ-Of-Bz5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXp-U4-Rya" userLabel="First Responder" sceneMemberID="firstResponder"/>

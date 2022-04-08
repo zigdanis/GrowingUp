@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import Core
+import MobileCoreServices
 
 enum BarButtonItemStyle {
 	case cancel
@@ -233,6 +234,13 @@ extension EditPersonViewController: DatePickerViewDelegate {
 extension EditPersonViewController: ImagesCellViewDelegate {
 
 	func showAppPicImagePickerFor(row: Int) {
+		#if DEBUG
+		//swiftlint:disable all
+		let docPicker = UIDocumentPickerViewController(documentTypes: [kUTTypeImage as! String], in: .import)
+		//swiftlint:enable all
+		present(docPicker, animated: true)
+			return
+		#endif
 		appPicImagePicker.delegate = self
 		present(appPicImagePicker.imagePickerController, animated: true)
 	}
@@ -263,5 +271,11 @@ extension EditPersonViewController: WDImagePickerDelegate {
 extension EditPersonViewController: RemoveButtonDelegate {
 	func removeTouched() {
 		presenter.removePersonPressed()
+	}
+}
+
+extension EditPersonViewController: UIDocumentMenuDelegate {
+	func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
+
 	}
 }

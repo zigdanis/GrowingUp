@@ -66,13 +66,13 @@
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		095000E5226E3F2700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
+		0954DEA323788EAE0093FBBB /* PersonViewPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0954DEA223788EAE0093FBBB /* PersonViewPanel.xib */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
 		096E61ED226667F6000181D4 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */; };
 		096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EE22666D46000181D4 /* AddPersonPresenter.swift */; };
-		096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F9D6C226CE4B100DBB8D9 /* PersonTableViewCell.swift */; };
-		096F9D6F226CE4DE00DBB8D9 /* PersonTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 096F9D6E226CE4DE00DBB8D9 /* PersonTableViewCell.xib */; };
+		096F9D6D226CE4B100DBB8D9 /* PersonViewPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F9D6C226CE4B100DBB8D9 /* PersonViewPanel.swift */; };
 		0978FDE7227256ED00487BC2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0978FDE9227256ED00487BC2 /* Localizable.strings */; };
 		097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097E1AED22739175003D4FB4 /* Obfuscator.swift */; };
 		097E1AF82274D620003D4FB4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 097E1AF62274D620003D4FB4 /* Localizable.strings */; };
@@ -264,6 +264,7 @@
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		095000D1226DD3C100789BED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		0954DEA223788EAE0093FBBB /* PersonViewPanel.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonViewPanel.xib; sourceTree = "<group>"; };
 		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonPresenterTests.swift; sourceTree = "<group>"; };
 		095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseSpy.swift; sourceTree = "<group>"; };
@@ -271,8 +272,7 @@
 		096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonConfigurator.swift; sourceTree = "<group>"; };
 		096E61EE22666D46000181D4 /* AddPersonPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenter.swift; sourceTree = "<group>"; };
 		096E61F022666DC9000181D4 /* EditPersonUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonUseCase.swift; sourceTree = "<group>"; };
-		096F9D6C226CE4B100DBB8D9 /* PersonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTableViewCell.swift; sourceTree = "<group>"; };
-		096F9D6E226CE4DE00DBB8D9 /* PersonTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonTableViewCell.xib; sourceTree = "<group>"; };
+		096F9D6C226CE4B100DBB8D9 /* PersonViewPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewPanel.swift; sourceTree = "<group>"; };
 		0978FDE8227256ED00487BC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0978FDEA227256FF00487BC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		097E1AED22739175003D4FB4 /* Obfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obfuscator.swift; sourceTree = "<group>"; };
@@ -829,8 +829,8 @@
 		0983E760226D9407007EC8D2 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				096F9D6C226CE4B100DBB8D9 /* PersonTableViewCell.swift */,
-				096F9D6E226CE4DE00DBB8D9 /* PersonTableViewCell.xib */,
+				096F9D6C226CE4B100DBB8D9 /* PersonViewPanel.swift */,
+				0954DEA223788EAE0093FBBB /* PersonViewPanel.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -1114,7 +1114,7 @@
 			files = (
 				09051B4E21C55A13008A99C6 /* WidgetAssets.xcassets in Resources */,
 				09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */,
-				096F9D6F226CE4DE00DBB8D9 /* PersonTableViewCell.xib in Resources */,
+				0954DEA323788EAE0093FBBB /* PersonViewPanel.xib in Resources */,
 				09051B4421C558DB008A99C6 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1243,7 +1243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0983E762226D9420007EC8D2 /* TodayPresenter.swift in Sources */,
-				096F9D6D226CE4B100DBB8D9 /* PersonTableViewCell.swift in Sources */,
+				096F9D6D226CE4B100DBB8D9 /* PersonViewPanel.swift in Sources */,
 				09051B4121C558DB008A99C6 /* TodayViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
