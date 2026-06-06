@@ -1,6 +1,4 @@
-# Quizzee
-
-[![Build Status](https://app.bitrise.io/app/dbd2e1cb1d0e08d6/status.svg?token=k8U3b9hQcd8M9RAmYsbPYg)](https://app.bitrise.io/app/dbd2e1cb1d0e08d6)
+# GrowingUp
 
 iOS app for viewing current age in time components format.
 
@@ -8,12 +6,31 @@ Project built using MVP + Clean architecture patterns.
 
 It has Unit Tests.
 
-It has CI.
+## Requirements
 
-## Installing
+* Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK)
+* iOS 12.0+ deployment target
+
+## Building & Running
+
+Dependencies are managed with Swift Package Manager and resolved
+automatically by Xcode — no Carthage/CocoaPods step is needed.
 
 ```
 git clone git@github.com:zigdanis/GrowingUp.git
+cd GrowingUp
+open GrowingUp.xcodeproj
+```
+
+Select the **GrowingUp** scheme and run on any iOS Simulator. Debug builds
+use automatic ("Sign to Run Locally") code signing, so no provisioning
+profile is required for the simulator.
+
+From the command line:
+
+```
+xcodebuild -project GrowingUp.xcodeproj -scheme GrowingUp \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 ```
 
 ## Authors
