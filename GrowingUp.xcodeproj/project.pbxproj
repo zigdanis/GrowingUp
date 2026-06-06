@@ -61,11 +61,9 @@
 		095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
 		095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165341223ECBC40081FB10 /* CoreDataStack.swift */; };
 		095000DF226DEBA800789BED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
-		095000E0226DECD700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
 		095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
-		095000E5226E3F2700789BED /* Disk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091AE0DA2253F9030041DBCE /* Disk.framework */; };
 		0954DEA323788EAE0093FBBB /* PersonViewPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0954DEA223788EAE0093FBBB /* PersonViewPanel.xib */; };
 		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
@@ -108,7 +106,6 @@
 		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09A5B5262268C4E900E5F72F /* WDImageCropOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A5B5252268C4E900E5F72F /* WDImageCropOverlayView.swift */; };
-		09A69E57223E331000291044 /* Rswift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 091BEEFE223E30BB00A3D057 /* Rswift.framework */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
 		09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */; };
 		09B4E952224DEEC500F4E3F2 /* WDImageCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B4E94C224DEEC500F4E3F2 /* WDImageCropView.swift */; };
@@ -143,6 +140,8 @@
 		09EC1CBF225BDBA800D9C985 /* PersonsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */; };
 		09EC1CC1225BDBB500D9C985 /* PersonsListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */; };
 		09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6B52523535E26003A1A01 /* MemoryCache.swift */; };
+		129A9F67A2B571F6C4B045AB /* Rswift in Frameworks */ = {isa = PBXBuildFile; productRef = 036B187B5311AF8BC67379B4 /* Rswift */; };
+		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -241,10 +240,8 @@
 		0916534B223ECBC40081FB10 /* License */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License; sourceTree = "<group>"; };
 		09165377223ECE5D0081FB10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUp.xcdatamodel; sourceTree = "<group>"; };
-		091AE0DA2253F9030041DBCE /* Disk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Disk.framework; sourceTree = "<group>"; };
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
-		091BEEFE223E30BB00A3D057 /* Rswift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Rswift.framework; sourceTree = "<group>"; };
 		0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGatewayTests.swift; sourceTree = "<group>"; };
 		0929F1EF2259190000212F29 /* TaskManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSpy.swift; sourceTree = "<group>"; };
 		092AA35D2257C79D002EAEE8 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
@@ -359,7 +356,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				095000E0226DECD700789BED /* Disk.framework in Frameworks */,
+				F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,8 +372,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
-				09A69E57223E331000291044 /* Rswift.framework in Frameworks */,
-				095000E5226E3F2700789BED /* Disk.framework in Frameworks */,
+				129A9F67A2B571F6C4B045AB /* Rswift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -583,27 +579,9 @@
 			path = Gateways;
 			sourceTree = "<group>";
 		};
-		091BEEC6223E30BB00A3D057 /* Carthage */ = {
-			isa = PBXGroup;
-			children = (
-				091BEEFA223E30BB00A3D057 /* Build */,
-			);
-			path = Carthage;
-			sourceTree = "<group>";
-		};
-		091BEEFA223E30BB00A3D057 /* Build */ = {
-			isa = PBXGroup;
-			children = (
-				091BEEFC223E30BB00A3D057 /* iOS */,
-			);
-			path = Build;
-			sourceTree = "<group>";
-		};
 		091BEEFC223E30BB00A3D057 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				091AE0DA2253F9030041DBCE /* Disk.framework */,
-				091BEEFE223E30BB00A3D057 /* Rswift.framework */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -855,7 +833,6 @@
 				094DF9C1223AB35D00C331EC /* GrowingUpTests */,
 				09051B3C21C558DB008A99C6 /* Frameworks */,
 				098E560A21C409E300E4CA1E /* Products */,
-				091BEEC6223E30BB00A3D057 /* Carthage */,
 			);
 			sourceTree = "<group>";
 		};
@@ -993,6 +970,9 @@
 			dependencies = (
 			);
 			name = Core;
+			packageProductDependencies = (
+				EE1D6EEE2702E7B0FB6F0B1F /* Disk */,
+			);
 			productName = Core;
 			productReference = 09051B5621C55EB6008A99C6 /* Core.framework */;
 			productType = "com.apple.product-type.framework";
@@ -1025,8 +1005,6 @@
 				098E560721C409E300E4CA1E /* Resources */,
 				09051B4C21C558DB008A99C6 /* Embed App Extensions */,
 				09051B6221C55EB6008A99C6 /* Embed Frameworks */,
-				09A69E58223E332500291044 /* Carthage Copy Frameworks */,
-				09A69E59223E43B400291044 /* Carthage Outdated Warnings */,
 				09AC10CD22457FB500AC12D5 /* Swift Lint */,
 			);
 			buildRules = (
@@ -1036,6 +1014,9 @@
 				09051B5C21C55EB6008A99C6 /* PBXTargetDependency */,
 			);
 			name = GrowingUp;
+			packageProductDependencies = (
+				036B187B5311AF8BC67379B4 /* Rswift */,
+			);
 			productName = Aging;
 			productReference = 098E560921C409E300E4CA1E /* GrowingUp.app */;
 			productType = "com.apple.product-type.application";
@@ -1095,6 +1076,10 @@
 				Base,
 			);
 			mainGroup = 098E560021C409E300E4CA1E;
+			packageReferences = (
+				B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */,
+				BA382037B5FDFE4CDF6D3BC6 /* XCRemoteSwiftPackageReference "R.swift.Library" */,
+			);
 			productRefGroup = 098E560A21C409E300E4CA1E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1176,46 +1161,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"$SRCROOT/$PRODUCT_NAME/3rd Party Libraries/rswift/rswift\" generate \"$SRCROOT/$PRODUCT_NAME/Supporting Files/R.generated.swift\"\n";
-		};
-		09A69E58223E332500291044 /* Carthage Copy Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/Rswift.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Disk.framework",
-			);
-			name = "Carthage Copy Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Rswift.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Disk.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks\n";
-		};
-		09A69E59223E43B400291044 /* Carthage Outdated Warnings */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Carthage Outdated Warnings";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage outdated --xcode-warnings\n";
 		};
 		09AC10CD22457FB500AC12D5 /* Swift Lint */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1847,6 +1792,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/saoudrizwan/Disk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.4;
+			};
+		};
+		BA382037B5FDFE4CDF6D3BC6 /* XCRemoteSwiftPackageReference "R.swift.Library" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mac-cain13/R.swift.Library.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.4.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		036B187B5311AF8BC67379B4 /* Rswift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BA382037B5FDFE4CDF6D3BC6 /* XCRemoteSwiftPackageReference "R.swift.Library" */;
+			productName = Rswift;
+		};
+		EE1D6EEE2702E7B0FB6F0B1F /* Disk */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */;
+			productName = Disk;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */ = {
