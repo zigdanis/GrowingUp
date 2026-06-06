@@ -1,20 +1,59 @@
 # GrowingUp
 
-iOS app for viewing current age in time components format.
+iOS app for tracking people and viewing their current age broken down into
+time components — years, months, days, hours, minutes and seconds — updating
+live.
 
-Project built using MVP + Clean architecture patterns.
+Current version: **2.0.0**.
 
-It has Unit Tests.
+## Features
+
+* Keep a list of people, each with a name, birth date and photo.
+* Add or edit a person, including picking and cropping a photo.
+* Person overview with the age counting up in real time.
+* A **Today widget** that surfaces up to three pinned people at a glance.
+* Data is shared between the app and the widget through a shared App Group.
+* Localized in English and Russian.
+
+## Architecture
+
+The project follows **MVP + Clean Architecture**.
+
+* **`Core`** — a framework holding the business logic, free of UIKit scene code:
+  * `Entities` — `Person`, `PersonImage`, `AddPersonParameters`.
+  * `UseCases` — `Add`/`Edit`/`Remove`/`FetchPersons` use cases.
+  * `Gateways` / `EntityGateway` — persistence and caching behind protocols.
+  * `AgeCalculator` — converts a birth date into time components.
+* **`GrowingUp`** — the app target. Each feature under `Scenes/`
+  (`PersonsList`, `PersonOverview`, `EditPerson`, `EmptyPerson`) is wired as a
+  View ↔ Presenter ↔ Configurator triple.
+* **`Widget`** — the Today extension, reusing `Core` for its data.
+
+### Persistence
+
+* **Core Data** (`GrowingUp.xcdatamodeld`) is the source of truth, stored in a
+  shared **App Group** container (`group.pro.ziganshin.aging`) so the app and
+  the widget read and write the same data.
+* **[Disk](https://github.com/saoudrizwan/Disk)** caches person images in the
+  shared container.
+
+## Dependencies
+
+Managed with **Swift Package Manager** and resolved automatically by Xcode —
+no Carthage or CocoaPods step is required:
+
+* [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
+* [R.swift.Library](https://github.com/mac-cain13/R.swift.Library) — the
+  `Rswift` runtime for type-safe resources. The `rswift` generator is vendored
+  under `GrowingUp/3rd Party Libraries/rswift/` and runs as a build phase to
+  produce `R.generated.swift`.
 
 ## Requirements
 
-* Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK)
-* iOS 12.0+ deployment target
+* Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK).
+* iOS 12.0+ deployment target.
 
 ## Building & Running
-
-Dependencies are managed with Swift Package Manager and resolved
-automatically by Xcode — no Carthage/CocoaPods step is needed.
 
 ```
 git clone git@github.com:zigdanis/GrowingUp.git
@@ -22,9 +61,9 @@ cd GrowingUp
 open GrowingUp.xcodeproj
 ```
 
-Select the **GrowingUp** scheme and run on any iOS Simulator. Debug builds
-use automatic ("Sign to Run Locally") code signing, so no provisioning
-profile is required for the simulator.
+Select the **GrowingUp** scheme and run on any iOS Simulator. Xcode resolves
+the Swift packages on first open. Debug builds use automatic ("Sign to Run
+Locally") code signing, so no provisioning profile is needed for the simulator.
 
 From the command line:
 
@@ -33,10 +72,33 @@ xcodebuild -project GrowingUp.xcodeproj -scheme GrowingUp \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
 ```
 
+## Tests
+
+Unit tests live in `GrowingUpTests/` (covering gateways, presenters and use
+cases) and run via the **GrowingUp** scheme (⌘U) or:
+
+```
+xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro'
+```
+
+## Tooling
+
+* **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
+  phase (skipped with a warning if not installed); see `.swiftlint.yml`.
+* **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
+  TestFlight distribution and `match`-based signing for release builds.
+
+## Notes
+
+* The widget is an older Today extension (`com.apple.widget-extension`). It
+  still builds, but Today extensions were removed from the OS in iOS 14, so it
+  is a candidate for a future WidgetKit rewrite.
+
 ## Authors
 
-* **Danis Ziganshin** - *Initial work* - [zigdanis](https://github.com/zigdanis)
+* **Danis Ziganshin** — *Initial work* — [zigdanis](https://github.com/zigdanis)
 
 ## License
 
-This project is not yet licensed
+This project is not yet licensed.
