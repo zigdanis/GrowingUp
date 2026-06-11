@@ -8,6 +8,7 @@
 
 import Foundation
 import Core
+import WidgetKit
 
 private let maxNumberOfPersons = 20
 
@@ -107,6 +108,7 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 		let scrollTo = persons.count - 1
 		view?.updateListOfScreens(defaultPage: scrollTo)
 		presenter.router.dismiss()
+		WidgetCenter.shared.reloadAllTimelines()
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
@@ -114,6 +116,7 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 			persons.remove(at: index)
 			persons.insert(person, at: index)
 		}
+		WidgetCenter.shared.reloadAllTimelines()
 	}
 
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
@@ -126,6 +129,7 @@ extension PersonsListPresenterImplementation: EditPersonPresenterDelegate {
 			Logging.logError(CoreError(message: "Couldn't find person in persons array when removed him/her"))
 		}
 		presenter.router.dismiss()
+		WidgetCenter.shared.reloadAllTimelines()
 	}
 
 	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
