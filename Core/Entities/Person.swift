@@ -35,9 +35,13 @@ public struct Person: Equatable, Hashable {
 	}
 
 	public var dateComponents: DateComponents {
-		let then = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: birthday)
-		let now = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: Date())
-		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: then, to: now)
+		return dateComponents(at: Date())
+	}
+
+	/// Age, broken into time components, computed from `birthday` up to `date`.
+	/// Used by the widget to render age at each timeline entry's date.
+	public func dateComponents(at date: Date) -> DateComponents {
+		return AgeCalculator.ageComponents(from: birthday, to: date)
 	}
 
 	public var dayOfBirth: Date {
