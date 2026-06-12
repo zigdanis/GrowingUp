@@ -18,8 +18,7 @@ platform :ios do
     change_log = change_log_since_last_tag
     gym(
       scheme: "GrowingUp",
-      export_method: "app-store",
-      include_bitcode: true
+      export_method: "app-store"
     )
     pilot(
       itc_provider: "XMSU8WJG5R",
