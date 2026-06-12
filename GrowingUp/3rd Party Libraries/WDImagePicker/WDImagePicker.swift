@@ -13,7 +13,7 @@ enum CropSize {
 	case circle
 }
 
-protocol WDImagePickerDelegate: class {
+protocol WDImagePickerDelegate: AnyObject {
     func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage)
     func imagePickerDidCancel(_ imagePicker: WDImagePicker)
 }

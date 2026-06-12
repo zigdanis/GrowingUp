@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol DatePickerViewDelegate: class {
+protocol DatePickerViewDelegate: AnyObject {
 	func datePicker(picker: DatePickerView, selectedDate date: Date)
 	func datePickerDidHide(picker: DatePickerView)
 }

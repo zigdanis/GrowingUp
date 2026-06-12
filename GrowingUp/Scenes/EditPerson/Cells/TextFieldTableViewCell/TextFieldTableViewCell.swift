@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol TextFieldCellView: class {
+protocol TextFieldCellView: AnyObject {
     func display(title: String)
     func display(value: String)
     func display(placeholder: String)
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
-protocol TextFieldObserver: class {
+protocol TextFieldObserver: AnyObject {
 	func textDidChange(forView: TextFieldCellView, text: String)
 }
 

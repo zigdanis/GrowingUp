@@ -28,7 +28,7 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
 	func shouldShowRemoveButton() -> Bool
 }
 
-protocol EditPersonPresenterDelegate: class {
+protocol EditPersonPresenterDelegate: AnyObject {
     func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person)
