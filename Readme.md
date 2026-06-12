@@ -52,7 +52,7 @@ no Carthage or CocoaPods step is required:
 ## Requirements
 
 * Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK).
-* iOS 16.0+ deployment target.
+* iOS 18.0+ deployment target.
 
 ## Building & Running
 

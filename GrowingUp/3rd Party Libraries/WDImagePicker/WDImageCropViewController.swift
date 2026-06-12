@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol WDImageCropControllerDelegate: class {
+protocol WDImageCropControllerDelegate: AnyObject {
     func imageCropController(_ imageCropController: WDImageCropViewController, didFinishWithCroppedImage croppedImage: UIImage)
 	func imageCropControllerFailedCroppingImage(_ imageCropController: WDImageCropViewController)
 }

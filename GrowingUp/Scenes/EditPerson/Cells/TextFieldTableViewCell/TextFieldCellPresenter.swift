@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TextFieldCellPresenter: class {
+protocol TextFieldCellPresenter: AnyObject {
 	func configure(cell: TextFieldCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: String)
 	func valueFor(row: Int) -> String?

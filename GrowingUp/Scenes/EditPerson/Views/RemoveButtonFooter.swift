@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol RemoveButtonDelegate: class {
+protocol RemoveButtonDelegate: AnyObject {
 	func removeTouched()
 }
 

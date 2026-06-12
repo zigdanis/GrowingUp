@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -67,7 +67,6 @@
 		096E61ED226667F6000181D4 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */; };
 		096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EE22666D46000181D4 /* AddPersonPresenter.swift */; };
 		0978FDE7227256ED00487BC2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0978FDE9227256ED00487BC2 /* Localizable.strings */; };
-		097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 097E1AED22739175003D4FB4 /* Obfuscator.swift */; };
 		097E1AF82274D620003D4FB4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 097E1AF62274D620003D4FB4 /* Localizable.strings */; };
 		098054F6223C296600E24D40 /* AddPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */; };
 		098054F9223C2A7900E24D40 /* EditPersonViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098054F8223C2A7900E24D40 /* EditPersonViewSpy.swift */; };
@@ -265,7 +264,6 @@
 		096E61F022666DC9000181D4 /* EditPersonUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonUseCase.swift; sourceTree = "<group>"; };
 		0978FDE8227256ED00487BC2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0978FDEA227256FF00487BC2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		097E1AED22739175003D4FB4 /* Obfuscator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Obfuscator.swift; sourceTree = "<group>"; };
 		097E1AF72274D620003D4FB4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		097E1AF92274D630003D4FB4 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		098054F5223C296600E24D40 /* AddPersonPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonPresenterTests.swift; sourceTree = "<group>"; };
@@ -577,7 +575,6 @@
 			isa = PBXGroup;
 			children = (
 				092AA35D2257C79D002EAEE8 /* TaskManager.swift */,
-				097E1AED22739175003D4FB4 /* Obfuscator.swift */,
 			);
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
@@ -1011,7 +1008,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1010;
-				LastUpgradeCheck = 1010;
+				LastUpgradeCheck = 2600;
 				ORGANIZATIONNAME = zigdanis;
 				TargetAttributes = {
 					09051B3A21C558DB008A99C6 = {
@@ -1201,7 +1198,6 @@
 				09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */,
 				09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
-				097E1AEE22739175003D4FB4 /* Obfuscator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1386,7 +1382,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1409,7 +1405,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = Widget/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1442,7 +1438,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_NO_PIE = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1479,7 +1475,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				INFOPLIST_FILE = Core/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_NO_PIE = NO;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1592,7 +1588,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1648,7 +1644,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1669,7 +1665,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1693,7 +1689,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				INFOPLIST_FILE = "GrowingUp/Supporting Files//Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

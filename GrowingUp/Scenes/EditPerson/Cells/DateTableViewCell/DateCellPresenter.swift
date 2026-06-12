@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol DateCellPresenter: class {
+protocol DateCellPresenter: AnyObject {
 	func configure(cell: DateCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: Date)
 	func valueFor(row: Int) -> Date?
