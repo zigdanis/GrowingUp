@@ -50,3 +50,5 @@ fastlane/test_output
 
 # R.Swift
 *.generated.swift
+# Sweetpad / xcode-build-server (machine-specific absolute paths)
+buildServer.json
