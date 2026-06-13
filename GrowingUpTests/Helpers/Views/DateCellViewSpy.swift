@@ -1,5 +1,5 @@
 //
-//  LabelCellViewSpy.swift
+//  DateCellViewSpy.swift
 //  GrowingUpTests
 //
 //  Created by zigdanis on 20/03/2019.
@@ -13,14 +13,19 @@ import Foundation
 final class DateCellViewSpy: DateCellView {
 
 	var displayedTitle: String?
-	var displayedValue: String?
+	var displayedDate: Date?
+	var didCallSetup = false
 
 	func display(title: String) {
 		displayedTitle = title
 	}
 
-	func display(value: String) {
-		displayedValue = value
+	func display(date: Date?) {
+		displayedDate = date
+	}
+
+	func setup(with delegate: DateCellDelegate?, forRow row: Int) {
+		didCallSetup = true
 	}
 
 }

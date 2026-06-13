@@ -48,18 +48,15 @@ final class AddPersonPresenter: EditPersonPresenter {
 		view?.displayBarButton(with: .done)
 		configureInitialStateForDatePickers()
 		configureInitialStateForToggle()
-		#if DEBUG
-		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
-		#endif
 	}
 
 	private func configureInitialStateForDatePickers() {
-		var components = DateComponents()
-		components.year = 2019
-		components.month = 1
-		components.day = 1
-		let zeroHour = Calendar.current.date(from: components) ?? Date()
-		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
+		// The combined picker is always showing a value, so seed the birthday with the
+		// current date and time. The user adjusts it; both day and time slots stay in
+		// sync because the picker is a single control.
+		let now = Date()
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: now)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: now)
 	}
 
 	private func configureInitialStateForToggle() {
@@ -140,14 +137,6 @@ final class AddPersonPresenter: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForDayPicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.dayPickerRow) ?? Date()
-	}
-
-	func dateForTimePicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
-	}
-
 	func shouldShowRemoveButton() -> Bool {
 		return false
 	}
@@ -203,5 +192,13 @@ extension AddPersonPresenter: ToggleCellDelegate {
 
 	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
 		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
+	}
+}
+
+extension AddPersonPresenter: DateCellDelegate {
+
+	func dateCell(_ cell: DateCellView, didChangeBirthdayTo date: Date) {
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: date)
 	}
 }

@@ -10,6 +10,7 @@ import UIKit
 
 protocol WDImageCropControllerDelegate: AnyObject {
     func imageCropController(_ imageCropController: WDImageCropViewController, didFinishWithCroppedImage croppedImage: UIImage)
+	func imageCropControllerDidCancel(_ imageCropController: WDImageCropViewController)
 	func imageCropControllerFailedCroppingImage(_ imageCropController: WDImageCropViewController)
 }
 
@@ -43,7 +44,7 @@ class WDImageCropViewController: UIViewController {
 
     @objc
 	private func cancelTapped() {
-        self.navigationController?.popViewController(animated: true)
+		delegate?.imageCropControllerDidCancel(self)
     }
 
     @objc

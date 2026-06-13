@@ -61,7 +61,6 @@
 		095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
 		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
-		095716D12243659700EA806C /* DatePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095716D02243659700EA806C /* DatePickerView.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
 		096E61ED226667F6000181D4 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */; };
@@ -255,7 +254,6 @@
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
 		095000D1226DD3C100789BED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		095716D02243659700EA806C /* DatePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerView.swift; sourceTree = "<group>"; };
 		095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonPresenterTests.swift; sourceTree = "<group>"; };
 		095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseSpy.swift; sourceTree = "<group>"; };
 		095DEC492267B4D100E74C13 /* ImagesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCache.swift; sourceTree = "<group>"; };
@@ -696,7 +694,6 @@
 		095716CF2243658500EA806C /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				095716D02243659700EA806C /* DatePickerView.swift */,
 				092F4191226FA31A0049E29E /* RemoveButtonFooter.swift */,
 			);
 			path = Views;
@@ -1252,7 +1249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				095716D12243659700EA806C /* DatePickerView.swift in Sources */,
 				0916536E223ECBC40081FB10 /* GradientView.swift in Sources */,
 				09EC1CBA225BD2E600D9C985 /* WDImageError.swift in Sources */,
 				096E61EF22666D46000181D4 /* AddPersonPresenter.swift in Sources */,

@@ -9,7 +9,7 @@
 import Foundation
 import Core
 
-protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
+protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDelegate {
     var router: EditPersonViewRouter { get }
 	func viewDidLoad()
     func rightBarButtonPressed()
@@ -23,8 +23,6 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
 	func onWidgetStateFor(row: Int, didUpdateTo state: Bool)
 	func appImagePicked(image: PersonImage)
 	func widgetImagePicked(image: PersonImage)
-	func dateForDayPicker() -> Date
-	func dateForTimePicker() -> Date
 	func shouldShowRemoveButton() -> Bool
 }
 
@@ -167,14 +165,6 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForDayPicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.dayPickerRow) ?? Date()
-	}
-
-	func dateForTimePicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
-	}
-
 	func shouldShowRemoveButton() -> Bool {
 		return true
 	}
@@ -235,5 +225,13 @@ extension EditPersonPresenterImplementation: ToggleCellDelegate {
 
 	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
 		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
+	}
+}
+
+extension EditPersonPresenterImplementation: DateCellDelegate {
+
+	func dateCell(_ cell: DateCellView, didChangeBirthdayTo date: Date) {
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: date)
 	}
 }
