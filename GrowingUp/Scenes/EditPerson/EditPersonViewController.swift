@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import Core
-import MobileCoreServices
 
 enum BarButtonItemStyle {
 	case cancel
@@ -29,18 +28,22 @@ typealias EPC = EditPersonViewController
 
 final class EditPersonViewController: UIViewController, EditPersonView {
 
+	// Visible table rows.
 	static let imagePickerRow = 0
 	static let nameFieldRow = 1
-	static let dayPickerRow = 2
-	static let timePickerRow = 3
-	static let addToWidgetRow = 4
+	static let birthdayRow = 2
+	static let addToWidgetRow = 3
+
+	// Logical storage keys for the combined birthday. The picker is a single control,
+	// but the day and time are still stored (and persisted) separately, so a tap on the
+	// combined picker writes the same date into both of these slots.
+	static let dayPickerRow = 10
+	static let timePickerRow = 11
 
     var presenter: EditPersonPresenter!
     private let configurator: EditPersonConfigurator
 
     @IBOutlet weak var tableView: UITableView!
-	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
-	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
 	private lazy var appPicImagePicker = WDImagePicker(cropSize: .screen)
 	private lazy var widgetPicImagePicker = WDImagePicker(cropSize: .circle)
 
@@ -81,23 +84,6 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		} else {
 			tableView.tableFooterView = UIView()
 		}
-	}
-
-	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
-		let picker = DatePickerView(mode: mode)
-		picker.delegate = self
-		picker.translatesAutoresizingMaskIntoConstraints = false
-		let parentView: UIView! = navigationController?.view ?? view
-		parentView.addSubview(picker)
-		let consts = [
-			picker.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
-			picker.topAnchor.constraint(equalTo: parentView.topAnchor),
-			parentView.trailingAnchor.constraint(equalTo: picker.trailingAnchor),
-			parentView.bottomAnchor.constraint(equalTo: picker.bottomAnchor)
-		]
-		NSLayoutConstraint.activate(consts)
-		picker.clipPaddingViewTopTo(safeAreaBottomLength: bottomLayoutGuide.length)
-		return picker
 	}
 
     // MARK: - Actions
@@ -149,30 +135,12 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	func reloadData() {
 		tableView.reloadData()
 	}
-
-	// MARK: - Business Logic
-
-	func showDayPickerView() {
-		let selectedDate = presenter.dateForDayPicker()
-		dayPickerView.layoutIfNeeded()
-		dayPickerView.alpha = 1
-		dayPickerView.showPicker(with: selectedDate)
-		view.endEditing(true)
-	}
-
-	func showTimePickerView() {
-		let selectedDate = presenter.dateForTimePicker()
-		timePickerView.layoutIfNeeded()
-		timePickerView.alpha = 1
-		timePickerView.showPicker(with: selectedDate)
-		view.endEditing(true)
-	}
 }
 
 extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 4
     }
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -187,7 +155,7 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
-		case EPC.dayPickerRow, EPC.timePickerRow:
+		case EPC.birthdayRow:
 			let identifier = R.reuseIdentifier.dateTableViewCell
 			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
 			presenter.configure(cell: cell, forRow: indexPath.row)
@@ -207,47 +175,22 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 		if indexPath.row == EPC.nameFieldRow {
 			let cell = tableView.cellForRow(at: indexPath)
 			cell?.becomeFirstResponder()
-		} else if indexPath.row == EPC.dayPickerRow {
-			showDayPickerView()
-		} else if indexPath.row == EPC.timePickerRow {
-			showTimePickerView()
 		}
  	}
-}
-
-extension EditPersonViewController: DatePickerViewDelegate {
-
-	func datePickerDidHide(picker: DatePickerView) {
-		picker.alpha = 0
-	}
-
-	func datePicker(picker: DatePickerView, selectedDate date: Date) {
-		if picker === dayPickerView {
-			presenter.dateFor(row: EPC.dayPickerRow, didUpdateTo: date)
-		} else if picker === timePickerView {
-			presenter.dateFor(row: EPC.timePickerRow, didUpdateTo: date)
-		}
-		tableView.reloadData()
-	}
 }
 
 extension EditPersonViewController: ImagesCellViewDelegate {
 
 	func showAppPicImagePickerFor(row: Int) {
-		#if DEBUG
-		//swiftlint:disable all
-		let docPicker = UIDocumentPickerViewController(documentTypes: [kUTTypeImage as! String], in: .import)
-		//swiftlint:enable all
-		present(docPicker, animated: true)
-			return
-		#endif
+		view.endEditing(true)
 		appPicImagePicker.delegate = self
-		present(appPicImagePicker.imagePickerController, animated: true)
+		appPicImagePicker.present(from: self)
 	}
 
 	func showWidgetPicImagePickerFor(row: Int) {
+		view.endEditing(true)
 		widgetPicImagePicker.delegate = self
-		present(widgetPicImagePicker.imagePickerController, animated: true)
+		widgetPicImagePicker.present(from: self)
 	}
 }
 
@@ -260,22 +203,13 @@ extension EditPersonViewController: WDImagePickerDelegate {
 			presenter.widgetImagePicked(image: PersonImage(uiImage: pickedImage))
 		}
 		tableView.reloadData()
-		imagePicker.imagePickerController.dismiss(animated: true)
 	}
 
-	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {
-		imagePicker.imagePickerController.dismiss(animated: true)
-	}
+	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {}
 }
 
 extension EditPersonViewController: RemoveButtonDelegate {
 	func removeTouched() {
 		presenter.removePersonPressed()
-	}
-}
-
-extension EditPersonViewController: UIDocumentMenuDelegate {
-	func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
-
 	}
 }

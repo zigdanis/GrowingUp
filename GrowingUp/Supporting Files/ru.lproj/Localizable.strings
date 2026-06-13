@@ -24,6 +24,9 @@
 /* Title for the person's time of birth */
 "Time of birth" = "Время рождения";
 
+/* Title for the person's combined date and time of birth */
+"Birthday" = "Дата рождения";
+
 /* Title for Error Alerts */
 "Alert" = "Внимание";
 

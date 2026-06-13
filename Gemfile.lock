@@ -1,9 +1,3 @@
-GIT
-  remote: https://github.com/zigdanis/fastlane-plugin-telegram
-  revision: a3e365618d5558fc166f66a7bebd8a2e0d62c874
-  specs:
-    fastlane-plugin-telegram (0.1.4)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -244,7 +238,6 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
-  fastlane-plugin-telegram!
 
 BUNDLED WITH
    2.6.5

@@ -24,6 +24,9 @@
 /* Title for the person's time of birth */
 "Time of birth" = "Time of birth";
 
+/* Title for the person's combined date and time of birth */
+"Birthday" = "Birthday";
+
 /* Title for Error Alerts */
 "Alert" = "Alert";
 

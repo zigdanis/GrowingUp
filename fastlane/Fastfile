@@ -36,16 +36,6 @@ platform :ios do
       xcodeproj: "GrowingUp.xcodeproj",
       message: "Version Bump to #{complete_version_number}")
     push_to_git_remote
-    begin
-      telegram(
-        token: ENV['TELEGRAM_BOT_TOKEN'],
-        chat_id: ENV['TELEGRAM_CHAT_ID'],
-        text: notification_app_store(complete_version_number),
-        proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-      )
-    rescue => ex
-      UI.error("Telegram couldnt send message: #{ex}")
-    end
     clean_build_artifacts
   end
 
@@ -56,26 +46,11 @@ platform :ios do
     )
   end
 
-  def notification_app_store(complete_version_number)
-    <<~HEREDOC
-      Build #{complete_version_number} готов к отправке на ревью в App Store
-    HEREDOC
-  end
-
   def version_string(version_number, build_number)
     "#{version_number} (#{build_number})"
   end
 
   def version_tag(version_number, build_number)
     "#{version_number}.#{build_number}"
-  end
-
-  error do |lane, exception, options|
-    telegram(
-      token: ENV['TELEGRAM_BOT_TOKEN'],
-      chat_id: "-284033451",
-      text: "Failed to execute fastlane for GrowingUp Build",
-      proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-    )
   end
 end
