@@ -135,7 +135,7 @@
 		129A9F67A2B571F6C4B045AB /* Rswift in Frameworks */ = {isa = PBXBuildFile; productRef = 036B187B5311AF8BC67379B4 /* Rswift */; };
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
 		C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018955E31694F6F80D6537D /* GrowingUpWidget.swift */; };
-		EAE2963EA11113B78E118398 /* AgeWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetView.swift */; };
+		EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */; };
 		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
 /* End PBXBuildFile section */
 
@@ -327,7 +327,7 @@
 		09EC1CBE225BDBA800D9C985 /* PersonsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewController.swift; sourceTree = "<group>"; };
 		09EC1CC0225BDBB500D9C985 /* PersonsListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListPresenter.swift; sourceTree = "<group>"; };
 		09F6B52523535E26003A1A01 /* MemoryCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCache.swift; sourceTree = "<group>"; };
-		0D0152D8644F410D39D6D67A /* AgeWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetView.swift; sourceTree = "<group>"; };
+		0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetEntryView.swift; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		7018955E31694F6F80D6537D /* GrowingUpWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GrowingUpWidget.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -385,7 +385,7 @@
 				09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */,
 				7018955E31694F6F80D6537D /* GrowingUpWidget.swift */,
 				137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */,
-				0D0152D8644F410D39D6D67A /* AgeWidgetView.swift */,
+				0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -1164,7 +1164,7 @@
 			files = (
 				C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */,
 				BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */,
-				EAE2963EA11113B78E118398 /* AgeWidgetView.swift in Sources */,
+				EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

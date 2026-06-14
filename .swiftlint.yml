@@ -14,17 +14,12 @@ opt_in_rules:
 excluded:
   - GrowingUp/Supporting Files/R.generated.swift
   - Carthage
+  # build/ is gitignored derived output (incl. SwiftPM dependency checkouts),
+  # not project source — the lint build phase must not scan it.
   - build
-  - .build
-  - Pods
-  - "**/SourcePackages"
 line_length: 300
 type_name: 
   max_length: 45
 identifier_name:
   excluded:
     - id
-file_name:
-  # Groups multiple related SwiftUI views; primary type name differs from file name.
-  excluded:
-    - AgeWidgetView.swift

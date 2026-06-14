@@ -1,5 +1,5 @@
 //
-//  AgeWidgetView.swift
+//  AgeWidgetEntryView.swift
 //  Widget
 //
 //  SwiftUI views for the GrowingUp WidgetKit widget. Renders the pinned people
