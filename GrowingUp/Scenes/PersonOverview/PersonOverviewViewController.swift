@@ -96,7 +96,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonOnWidgetState(onWidget: Bool) {
-		let img = onWidget ? R.image.personCrowned() : R.image.personSettings()
+		let img = onWidget ? UIImage(resource: .personCrowned) : UIImage(resource: .personSettings)
 		editPersonButton.setImage(img, for: .normal)
 	}
 }

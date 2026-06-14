@@ -60,7 +60,7 @@ final class DateCellPresenterTests: XCTestCase {
 		// When
 		sut.configure(cell: dateCellSpy, forRow: EPC.birthdayRow)
 		// Then
-		XCTAssertEqual(dateCellSpy.displayedTitle, R.string.localizable.birthday(), "Expected the birthday title")
+		XCTAssertEqual(dateCellSpy.displayedTitle, String(localized: "Birthday"), "Expected the birthday title")
 	}
 
 }

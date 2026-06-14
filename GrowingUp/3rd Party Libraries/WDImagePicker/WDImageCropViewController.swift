@@ -72,9 +72,9 @@ class WDImageCropViewController: UIViewController {
 	private func setupToolbar() {
 		toolbar.isTranslucent = true
 		toolbar.barStyle = .black
-		let cancel = UIBarButtonItem(title: R.string.localizable.cancel(), style: .plain, target: self, action: #selector(cancelTapped))
+		let cancel = UIBarButtonItem(title: String(localized: "Cancel"), style: .plain, target: self, action: #selector(cancelTapped))
 		let flex = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-		let use = UIBarButtonItem(title: R.string.localizable.use(), style: .plain, target: self, action: #selector(useTapped))
+		let use = UIBarButtonItem(title: String(localized: "Use"), style: .plain, target: self, action: #selector(useTapped))
 		toolbar.setItems([cancel, flex, use], animated: false)
 
 		toolbar.translatesAutoresizingMaskIntoConstraints = false

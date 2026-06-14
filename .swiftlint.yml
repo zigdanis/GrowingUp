@@ -12,8 +12,10 @@ opt_in_rules:
   - fatal_error_message
   - file_name
 excluded:
-  - GrowingUp/Supporting Files/R.generated.swift
   - Carthage
+  # build/ is gitignored derived output (incl. SwiftPM dependency checkouts),
+  # not project source — the lint build phase must not scan it.
+  - build
 line_length: 300
 type_name: 
   max_length: 45

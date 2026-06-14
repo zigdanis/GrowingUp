@@ -149,7 +149,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	private func handleAddPersonError(_ error: Error) {
 		let coreError = error as? CoreError
-		let title = coreError?.title ?? R.string.localizable.error()
+		let title = coreError?.title ?? String(localized: "Error")
 		let message = coreError?.message ?? error.localizedDescription
 		view?.displayEditPersonError(title: title, message: message)
 	}

@@ -177,7 +177,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
     private func handleEditPersonError(_ error: Error) {
 		let coreError = error as? CoreError
-		let title = coreError?.title ?? R.string.localizable.error()
+		let title = coreError?.title ?? String(localized: "Error")
 		let message = coreError?.message ?? error.localizedDescription
 		Logging.logError(coreError ?? CoreError(title: title, message: message))
 		view?.displayEditPersonError(title: title, message: message)

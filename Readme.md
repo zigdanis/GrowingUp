@@ -1,5 +1,7 @@
 # GrowingUp
 
+[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml)
+
 iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
@@ -44,10 +46,11 @@ Managed with **Swift Package Manager** and resolved automatically by Xcode —
 no Carthage or CocoaPods step is required:
 
 * [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
-* [R.swift.Library](https://github.com/mac-cain13/R.swift.Library) — the
-  `Rswift` runtime for type-safe resources. The `rswift` generator is vendored
-  under `GrowingUp/3rd Party Libraries/rswift/` and runs as a build phase to
-  produce `R.generated.swift`.
+
+Type-safe resources use **Xcode's generated asset symbols** (e.g.
+`UIImage(resource: .personCrowned)`) for images and `String(localized:)` for
+localized strings — there is no longer a vendored code generator or R.swift
+dependency.
 
 ## Requirements
 
@@ -89,6 +92,9 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   phase (skipped with a warning if not installed); see `.swiftlint.yml`.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
+* **CI** — GitHub Actions (`.github/workflows/ci.yml`) runs SwiftLint and
+  builds + tests on an iOS Simulator on every pull request and on pushes to
+  `master`.
 
 ## Authors
 

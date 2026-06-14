@@ -21,7 +21,7 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 
 	func configure(cell: DateCellView, forRow row: Int) {
 		cell.setup(with: dateDelegate, forRow: row)
-		cell.display(title: R.string.localizable.birthday())
+		cell.display(title: String(localized: "Birthday"))
 		cell.display(date: combinedBirthday)
 	}
 

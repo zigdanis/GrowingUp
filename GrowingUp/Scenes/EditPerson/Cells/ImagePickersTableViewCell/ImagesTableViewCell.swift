@@ -36,8 +36,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	}
 
 	private func setupImagePickerViews() {
-		appPicLabel.text = R.string.localizable.mainPic()
-		widgetPicLabel.text = R.string.localizable.widgetPic()
+		appPicLabel.text = String(localized: "main pic")
+		widgetPicLabel.text = String(localized: "widget pic")
 	}
 
 	private func setupPickerButtons() {
