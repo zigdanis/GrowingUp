@@ -60,11 +60,8 @@ jobs:
         id: sim
         run: |
           UDID=$(xcrun simctl list devices available --json \
-            | python3 -c "import json,sys
-data = json.load(sys.stdin)['devices']
-udids = [d['udid'] for runtime, devices in data.items() if 'iOS' in runtime for d in devices if d.get('isAvailable')]
-assert udids, 'no available iOS simulators on runner'
-print(udids[0])")
+            | jq -r '[.devices | to_entries[] | select(.key | test("iOS")) | .value[] | select(.isAvailable) | .udid] | .[0] // empty')
+          test -n "$UDID" || { echo "No available iOS simulator on runner"; exit 1; }
           echo "Using simulator $UDID"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
