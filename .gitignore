@@ -50,3 +50,12 @@ fastlane/test_output
 
 # R.Swift
 *.generated.swift
+# Sweetpad / xcode-build-server (machine-specific absolute paths)
+buildServer.json
+
+# Secrets — never commit
+.env
+.env.*
+fastlane/.env
+fastlane/.env.*
+*.p8

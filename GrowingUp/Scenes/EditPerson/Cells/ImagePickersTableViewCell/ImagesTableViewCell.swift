@@ -9,13 +9,13 @@
 import UIKit
 import Core
 
-protocol ImagesCellView: class {
+protocol ImagesCellView: AnyObject {
 	func display(appPic: PersonImage?)
 	func display(widgetPic: PersonImage?)
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int)
 }
 
-protocol ImagesCellViewDelegate: class {
+protocol ImagesCellViewDelegate: AnyObject {
 	func showAppPicImagePickerFor(row: Int)
 	func showWidgetPicImagePickerFor(row: Int)
 }

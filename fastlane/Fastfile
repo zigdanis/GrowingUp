@@ -7,9 +7,15 @@ platform :ios do
 
   lane :app_store do
     ensure_git_status_clean
+    api_key = app_store_connect_api_key(
+      key_id: ENV['ASC_KEY_ID'],
+      issuer_id: ENV['ASC_ISSUER_ID'],
+      key_filepath: ENV['ASC_KEY_PATH']
+    )
     match(
       type: "appstore",
       readonly: false,
+      api_key: api_key,
       app_identifier: ["pro.ziganshin.GrowingUp", "pro.ziganshin.GrowingUp.Widget"]
     )
     version_number = get_version_number(target: "GrowingUp")
@@ -18,11 +24,10 @@ platform :ios do
     change_log = change_log_since_last_tag
     gym(
       scheme: "GrowingUp",
-      export_method: "app-store",
-      include_bitcode: true
+      export_method: "app-store"
     )
     pilot(
-      itc_provider: "XMSU8WJG5R",
+      api_key: api_key,
       changelog: change_log,
       beta_app_feedback_email: "zigdanis@gmail.com"
     )
@@ -31,16 +36,6 @@ platform :ios do
       xcodeproj: "GrowingUp.xcodeproj",
       message: "Version Bump to #{complete_version_number}")
     push_to_git_remote
-    begin
-      telegram(
-        token: ENV['TELEGRAM_BOT_TOKEN'],
-        chat_id: ENV['TELEGRAM_CHAT_ID'],
-        text: notification_app_store(complete_version_number),
-        proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-      )
-    rescue => ex
-      UI.error("Telegram couldnt send message: #{ex}")
-    end
     clean_build_artifacts
   end
 
@@ -51,26 +46,11 @@ platform :ios do
     )
   end
 
-  def notification_app_store(complete_version_number)
-    <<~HEREDOC
-      Build #{complete_version_number} готов к отправке на ревью в App Store
-    HEREDOC
-  end
-
   def version_string(version_number, build_number)
     "#{version_number} (#{build_number})"
   end
 
   def version_tag(version_number, build_number)
     "#{version_number}.#{build_number}"
-  end
-
-  error do |lane, exception, options|
-    telegram(
-      token: ENV['TELEGRAM_BOT_TOKEN'],
-      chat_id: "-284033451",
-      text: "Failed to execute fastlane for GrowingUp Build",
-      proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-    )
   end
 end

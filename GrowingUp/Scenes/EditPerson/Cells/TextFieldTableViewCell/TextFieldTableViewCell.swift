@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol TextFieldCellView: class {
+protocol TextFieldCellView: AnyObject {
     func display(title: String)
     func display(value: String)
     func display(placeholder: String)
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
-protocol TextFieldObserver: class {
+protocol TextFieldObserver: AnyObject {
 	func textDidChange(forView: TextFieldCellView, text: String)
 }
 
@@ -30,12 +30,28 @@ final class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		valueField.delegate = self
-		valueField.addTarget(self, action: #selector(textDidChange(sender:)), for: .allEditingEvents)
+		valueField.addTarget(self, action: #selector(textDidChange(sender:)), for: .editingChanged)
+		configureInputTraits()
 	}
 
 	override func becomeFirstResponder() -> Bool {
-		valueField.becomeFirstResponder()
-		return super.becomeFirstResponder()
+		// Forward focus to the text field only. Letting the cell itself become first
+		// responder used to let the system route stray characters (e.g. a phantom "A")
+		// into the field, so we no longer call super.
+		return valueField.becomeFirstResponder()
+	}
+
+	private func configureInputTraits() {
+		valueField.autocapitalizationType = .words
+		valueField.autocorrectionType = .no
+		valueField.spellCheckingType = .no
+		valueField.smartInsertDeleteType = .no
+		valueField.smartDashesType = .no
+		valueField.smartQuotesType = .no
+		// Names entered here are arbitrary (often children), not the device owner, so
+		// Contacts AutoFill only inserts noise. Disabling it removes the source of the
+		// auto-inserted character.
+		valueField.textContentType = .none
 	}
 
 	// MARK: - TextFieldCellView

@@ -1,5 +1,5 @@
 //
-//  LabelCellPresenterTests.swift
+//  DateCellPresenterTests.swift
 //  GrowingUpTests
 //
 //  Created by zigdanis on 20/03/2019.
@@ -19,15 +19,20 @@ final class DateCellPresenterTests: XCTestCase {
 		sut = DateCellPresenterImplementation()
 	}
 
-	func test_SUT_WhenConfiguredWithDate_ShouldDisplayValue() {
+	func test_SUT_WhenConfiguredWithDayAndTime_ShouldDisplayCombinedBirthday() {
 		// Given
-		let date = Date()
-		sut.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
+		let birthday = Date()
+		sut.valueFor(row: EPC.dayPickerRow, didChangeTo: birthday)
+		sut.valueFor(row: EPC.timePickerRow, didChangeTo: birthday)
 		let dateCellSpy = DateCellViewSpy()
 		// When
-		sut.configure(cell: dateCellSpy, forRow: EPC.dayPickerRow)
+		sut.configure(cell: dateCellSpy, forRow: EPC.birthdayRow)
 		// Then
-		XCTAssertEqual(date.dateString(), dateCellSpy.displayedValue, "The value we expected was not displayed")
+		let displayed = try? XCTUnwrap(dateCellSpy.displayedDate)
+		XCTAssertEqual(displayed?.timeIntervalSince1970 ?? 0,
+					   birthday.timeIntervalSince1970,
+					   accuracy: 1,
+					   "The combined birthday we expected was not displayed")
 	}
 
 	func test_SUT_WhenConfiguredWithDate_ShouldReturnThatValue() {
@@ -37,16 +42,25 @@ final class DateCellPresenterTests: XCTestCase {
 		// When
 		let date = sut.valueFor(row: EPC.dayPickerRow)
 		// Then
-		XCTAssertEqual(date, expectedDate, "The value we expected did npt match")
+		XCTAssertEqual(date, expectedDate, "The value we expected did not match")
 	}
 
-	func test_SUT_WhenConfiguredWithoutData_ShouldShowPlaceholders() {
+	func test_SUT_WhenConfiguredWithoutData_ShouldDisplayNoDate() {
 		// Given
 		let dateCellSpy = DateCellViewSpy()
 		// When
-		sut.configure(cell: dateCellSpy, forRow: EPC.dayPickerRow)
+		sut.configure(cell: dateCellSpy, forRow: EPC.birthdayRow)
 		// Then
-		XCTAssertEqual("xx.xx.xxxx", dateCellSpy.displayedValue, "The Value we expected was not displayed")
+		XCTAssertNil(dateCellSpy.displayedDate, "No date should be displayed when nothing was set")
+	}
+
+	func test_SUT_WhenConfigured_ShouldDisplayBirthdayTitle() {
+		// Given
+		let dateCellSpy = DateCellViewSpy()
+		// When
+		sut.configure(cell: dateCellSpy, forRow: EPC.birthdayRow)
+		// Then
+		XCTAssertEqual(dateCellSpy.displayedTitle, R.string.localizable.birthday(), "Expected the birthday title")
 	}
 
 }

@@ -11,7 +11,8 @@ Current version: **2.0.0**.
 * Keep a list of people, each with a name, birth date and photo.
 * Add or edit a person, including picking and cropping a photo.
 * Person overview with the age counting up in real time.
-* A **Today widget** that surfaces up to three pinned people at a glance.
+* A **Home Screen widget** (WidgetKit) that surfaces up to three pinned people
+  at a glance, with their age updating at minute granularity.
 * Data is shared between the app and the widget through a shared App Group.
 * Localized in English and Russian.
 
@@ -27,7 +28,7 @@ The project follows **MVP + Clean Architecture**.
 * **`GrowingUp`** — the app target. Each feature under `Scenes/`
   (`PersonsList`, `PersonOverview`, `EditPerson`, `EmptyPerson`) is wired as a
   View ↔ Presenter ↔ Configurator triple.
-* **`Widget`** — the Today extension, reusing `Core` for its data.
+* **`Widget`** — the WidgetKit extension (SwiftUI), reusing `Core` for its data.
 
 ### Persistence
 
@@ -51,7 +52,7 @@ no Carthage or CocoaPods step is required:
 ## Requirements
 
 * Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK).
-* iOS 12.0+ deployment target.
+* iOS 18.0+ deployment target.
 
 ## Building & Running
 
@@ -88,12 +89,6 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   phase (skipped with a warning if not installed); see `.swiftlint.yml`.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
-
-## Notes
-
-* The widget is an older Today extension (`com.apple.widget-extension`). It
-  still builds, but Today extensions were removed from the OS in iOS 14, so it
-  is a candidate for a future WidgetKit rewrite.
 
 ## Authors
 

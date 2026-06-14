@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ToggleCellPresenter: class {
+protocol ToggleCellPresenter: AnyObject {
 	func configure(cell: ToggleCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: Bool)
 	func valueFor(row: Int) -> Bool

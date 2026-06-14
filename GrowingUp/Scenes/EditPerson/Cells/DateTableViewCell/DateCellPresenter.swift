@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol DateCellPresenter: class {
+protocol DateCellPresenter: AnyObject {
 	func configure(cell: DateCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: Date)
 	func valueFor(row: Int) -> Date?
@@ -17,20 +17,12 @@ protocol DateCellPresenter: class {
 final class DateCellPresenterImplementation: DateCellPresenter {
 
 	private var storage = [Int: Date]()
+	weak var dateDelegate: DateCellDelegate?
 
 	func configure(cell: DateCellView, forRow row: Int) {
-		switch row {
-		case EPC.dayPickerRow:
-			cell.display(title: R.string.localizable.dayOfBirth())
-			let value = storage[row]?.dateString() ?? "xx.xx.xxxx"
-			cell.display(value: value)
-		case EPC.timePickerRow:
-			cell.display(title: R.string.localizable.timeOfBirth())
-			let value = storage[row]?.timeString() ?? "xx:xx"
-			cell.display(value: value)
-		default:
-			assertionFailure("We support LabelCellView only for rows in [APC.dayPickerRow, APC.timePickerRow]")
-		}
+		cell.setup(with: dateDelegate, forRow: row)
+		cell.display(title: R.string.localizable.birthday())
+		cell.display(date: combinedBirthday)
 	}
 
 	func valueFor(row: Int, didChangeTo value: Date) {
@@ -39,5 +31,19 @@ final class DateCellPresenterImplementation: DateCellPresenter {
 
 	func valueFor(row: Int) -> Date? {
 		return storage[row]
+	}
+
+	/// The single birthday shown by the combined date+time picker, rebuilt from the
+	/// separate day and time slots that the rest of the flow (and Core) still expect.
+	private var combinedBirthday: Date? {
+		guard let day = storage[EPC.dayPickerRow] else { return storage[EPC.timePickerRow] }
+		guard let time = storage[EPC.timePickerRow] else { return day }
+		let calendar = Calendar.current
+		var components = calendar.dateComponents([.year, .month, .day], from: day)
+		let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: time)
+		components.hour = timeComponents.hour
+		components.minute = timeComponents.minute
+		components.second = timeComponents.second
+		return calendar.date(from: components) ?? day
 	}
 }

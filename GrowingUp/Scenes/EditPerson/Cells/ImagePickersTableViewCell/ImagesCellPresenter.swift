@@ -9,7 +9,7 @@
 import Foundation
 import Core
 
-protocol ImagesCellPresenter: class {
+protocol ImagesCellPresenter: AnyObject {
 	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate)
 	func valueFor(row: Int, didChangeTo value: PersonImages)
 	func valueFor(row: Int) -> PersonImages?
