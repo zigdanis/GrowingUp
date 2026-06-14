@@ -40,6 +40,14 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	static let dayPickerRow = 10
 	static let timePickerRow = 11
 
+	// Reuse identifiers for the table cells, matching each cell's XIB file name.
+	private enum CellID {
+		static let textField = "TextFieldTableVIewCell"
+		static let date = "DateTableViewCell"
+		static let images = "ImagesTableViewCell"
+		static let toggle = "ToggleTableViewCell"
+	}
+
     var presenter: EditPersonPresenter!
     private let configurator: EditPersonConfigurator
 
@@ -68,10 +76,10 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     private func setupTableView() {
         tableView.dataSource = self
 		tableView.delegate = self
-        tableView.register(R.nib.textFieldTableVIewCell)
-        tableView.register(R.nib.dateTableViewCell)
-		tableView.register(R.nib.imagesTableViewCell)
-		tableView.register(R.nib.toggleTableViewCell)
+        tableView.register(UINib(nibName: CellID.textField, bundle: nil), forCellReuseIdentifier: CellID.textField)
+        tableView.register(UINib(nibName: CellID.date, bundle: nil), forCellReuseIdentifier: CellID.date)
+		tableView.register(UINib(nibName: CellID.images, bundle: nil), forCellReuseIdentifier: CellID.images)
+		tableView.register(UINib(nibName: CellID.toggle, bundle: nil), forCellReuseIdentifier: CellID.toggle)
 		tableView.keyboardDismissMode = .onDrag
     }
 
@@ -146,28 +154,31 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch indexPath.row {
 		case EPC.imagePickerRow:
-			let identifier = R.reuseIdentifier.imagesTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: ImagesTableViewCell = dequeue(CellID.images, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case EPC.nameFieldRow:
-			let identifier = R.reuseIdentifier.textFieldTableVIewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: TextFieldTableViewCell = dequeue(CellID.textField, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case EPC.birthdayRow:
-			let identifier = R.reuseIdentifier.dateTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: DateTableViewCell = dequeue(CellID.date, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case EPC.addToWidgetRow:
-			let identifier = R.reuseIdentifier.toggleTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: ToggleTableViewCell = dequeue(CellID.toggle, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		default:
 			fatalError("This indexPath is not supported")
 		}
+	}
+
+	private func dequeue<Cell: UITableViewCell>(_ identifier: String, at indexPath: IndexPath) -> Cell {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? Cell else {
+			fatalError("Could not dequeue cell with identifier \(identifier)")
+		}
+		return cell
 	}
 
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

@@ -46,10 +46,11 @@ Managed with **Swift Package Manager** and resolved automatically by Xcode —
 no Carthage or CocoaPods step is required:
 
 * [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
-* [R.swift.Library](https://github.com/mac-cain13/R.swift.Library) — the
-  `Rswift` runtime for type-safe resources. The `rswift` generator is vendored
-  under `GrowingUp/3rd Party Libraries/rswift/` and runs as a build phase to
-  produce `R.generated.swift`.
+
+Type-safe resources use **Xcode's generated asset symbols** (e.g.
+`UIImage(resource: .personCrowned)`) for images and `String(localized:)` for
+localized strings — there is no longer a vendored code generator or R.swift
+dependency.
 
 ## Requirements
 
