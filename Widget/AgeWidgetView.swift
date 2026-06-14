@@ -11,7 +11,8 @@ import SwiftUI
 import Core
 
 struct AgeWidgetEntryView: View {
-	@Environment(\.widgetFamily) private var family
+	@Environment(\.widgetFamily)
+	private var family
 	let entry: AgeEntry
 
 	var body: some View {
@@ -76,8 +77,7 @@ private struct PersonCell: View {
 		.padding(.horizontal, 4)
 	}
 
-	@ViewBuilder
-	private var face: some View {
+	@ViewBuilder private var face: some View {
 		if let image = person.image {
 			Image(uiImage: image)
 				.resizable()

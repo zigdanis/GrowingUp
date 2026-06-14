@@ -1,5 +1,7 @@
 # GrowingUp
 
+[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml)
+
 iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
@@ -89,6 +91,9 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   phase (skipped with a warning if not installed); see `.swiftlint.yml`.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
+* **CI** — GitHub Actions (`.github/workflows/ci.yml`) runs SwiftLint and
+  builds + tests on an iOS Simulator on every pull request and on pushes to
+  `master`.
 
 ## Authors
 

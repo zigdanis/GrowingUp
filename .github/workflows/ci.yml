@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: SwiftLint
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SwiftLint
+        run: |
+          if ! command -v swiftlint >/dev/null 2>&1; then
+            brew install swiftlint
+          fi
+          swiftlint version
+
+      - name: Run SwiftLint
+        run: swiftlint lint --strict --reporter github-actions-logging
+
+  build-test:
+    name: Build & Test
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode.app
+
+      - name: Show versions
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Cache SwiftPM
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+            ~/Library/Caches/org.swift.swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Resolve packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project GrowingUp.xcodeproj \
+            -scheme GrowingUp
+
+      - name: Pick iOS Simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available --json \
+            | python3 -c "import json,sys
+data = json.load(sys.stdin)['devices']
+udids = [d['udid'] for runtime, devices in data.items() if 'iOS' in runtime for d in devices if d.get('isAvailable')]
+assert udids, 'no available iOS simulators on runner'
+print(udids[0])")
+          echo "Using simulator $UDID"
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Build & Test
+        env:
+          SIM_UDID: ${{ steps.sim.outputs.udid }}
+        run: |
+          set -o pipefail
+          FORMATTER=cat
+          command -v xcbeautify >/dev/null 2>&1 && FORMATTER=xcbeautify
+          xcodebuild test \
+            -project GrowingUp.xcodeproj \
+            -scheme GrowingUp \
+            -destination "id=$SIM_UDID" \
+            | "$FORMATTER"
