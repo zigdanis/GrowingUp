@@ -21,14 +21,20 @@ platform :ios do
     version_number = get_version_number(target: "GrowingUp")
     build_number = increment_build_number
     complete_version_number = version_string(version_number, build_number)
-    change_log = change_log_since_last_tag
+    # Summarize commits since the last TestFlight publish into EN + RU notes.
+    localized_notes = whats_new_notes(commits_since_last_publish)
     gym(
       scheme: "GrowingUp",
       export_method: "app-store"
     )
     pilot(
       api_key: api_key,
-      changelog: change_log,
+      # Per-locale "What to Test": English + Russian fields.
+      localized_build_info: localized_notes,
+      # Wait for processing, then push the build to the public beta group.
+      distribute_external: true,
+      groups: ["External"],
+      notify_external_testers: true,
       beta_app_feedback_email: "zigdanis@gmail.com"
     )
     commit_version_bump(
@@ -36,6 +42,8 @@ platform :ios do
       xcodeproj: "GrowingUp.xcodeproj",
       message: "Version Bump to #{complete_version_number}")
     push_to_git_remote
+    # Tag the published commit so the next run diffs the changelog from here.
+    mark_published(build_number)
     clean_build_artifacts
   end
 
@@ -44,6 +52,76 @@ platform :ios do
       pretty: '- %s',
       merge_commit_filtering: "exclude_merges"
     )
+  end
+
+  # Raw changelog covering commits since the last TestFlight publish.
+  # Relies on a git tag written after each successful upload; on the first run
+  # (no such tag yet) it falls back to the last `fallback_count` commits.
+  def commits_since_last_publish(fallback_count: 10)
+    opts = { pretty: "- %s", merge_commit_filtering: "exclude_merges" }
+    last_tag = sh(
+      "git describe --tags --abbrev=0 --match 'testflight/*' 2>/dev/null || true",
+      log: false
+    ).strip
+
+    if last_tag.empty?
+      UI.message("No previous TestFlight tag; using last #{fallback_count} commits.")
+      return changelog_from_git_commits(**opts, commits_count: fallback_count)
+    end
+
+    UI.message("Building changelog since #{last_tag}.")
+    raw = changelog_from_git_commits(**opts, between: [last_tag, "HEAD"]).to_s.strip
+    if raw.empty?
+      UI.message("No commits since #{last_tag}; using last #{fallback_count} commits.")
+      raw = changelog_from_git_commits(**opts, commits_count: fallback_count)
+    end
+    raw
+  end
+
+  # Tag the current commit so the next run knows where the last publish ended.
+  def mark_published(build_number)
+    tag = "testflight/#{build_number}"
+    add_git_tag(tag: tag)
+    push_git_tags
+  rescue => e
+    UI.important("Could not create/push tag #{tag} (#{e.message}); continuing.")
+  end
+
+  # Generate localized "What to Test" notes (EN + RU) from a raw changelog
+  # via the local Claude Code CLI. Falls back to the raw text on any error.
+  def whats_new_notes(raw)
+    begin
+      require 'open3'
+      require 'json'
+
+      prompt = <<~PROMPT
+        You are writing TestFlight "What to Test" release notes from raw git commit messages.
+        Summarize the changes into short, user-facing beta tester notes (max 4 bullet points,
+        plain language, no internal jargon, no commit hashes). Then translate that summary to Russian.
+        Respond with ONLY a minified JSON object, no markdown fences, exactly this shape:
+        {"en":"<english>","ru":"<russian>"}
+
+        Git commits:
+        #{raw}
+      PROMPT
+
+      stdout, status = Open3.capture2(
+        "claude", "-p", "--model", "claude-haiku-4-5",
+        stdin_data: prompt
+      )
+      raise "claude CLI exited #{status.exitstatus}" unless status.success?
+
+      text = stdout.strip
+                   .sub(/\A```(?:json)?\s*/m, "")
+                   .sub(/\s*```\z/m, "")
+                   .strip
+      data = JSON.parse(text)
+      UI.success("Generated EN + RU 'What to Test' notes via Claude CLI.")
+      { "en-US" => { whats_new: data.fetch("en") }, "ru" => { whats_new: data.fetch("ru") } }
+    rescue => e
+      UI.important("Claude CLI notes failed (#{e.message}); using raw changelog for both locales.")
+      { "en-US" => { whats_new: raw }, "ru" => { whats_new: raw } }
+    end
   end
 
   def version_string(version_number, build_number)
