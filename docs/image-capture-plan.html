@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GrowingUp — Image Capture Redesign Plan</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --panel: #171a23;
+    --panel-2: #1d2130;
+    --border: #2a2f40;
+    --text: #e6e9ef;
+    --muted: #9aa3b2;
+    --accent: #6ea8fe;
+    --accent-2: #7ee0a8;
+    --warn: #ffcf6e;
+    --danger: #ff8c8c;
+    --chip: #243049;
+    --code-bg: #0b0d13;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f7fb; --panel: #ffffff; --panel-2: #f0f2f8; --border: #dfe3ee;
+      --text: #1b1f2a; --muted: #5a6373; --accent: #2f6fed; --accent-2: #1f9d57;
+      --warn: #9a6b00; --danger: #c0392b; --chip: #e6edff; --code-bg: #0b0d13;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 40px 24px 96px; }
+  header.hero {
+    border: 1px solid var(--border); background: linear-gradient(160deg, var(--panel), var(--panel-2));
+    border-radius: var(--radius); padding: 32px; margin-bottom: 28px;
+  }
+  header.hero h1 { margin: 0 0 6px; font-size: 30px; letter-spacing: -0.02em; }
+  header.hero p.sub { margin: 0; color: var(--muted); font-size: 15px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    background: var(--chip); color: var(--accent); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600;
+    white-space: nowrap;
+  }
+  nav.toc {
+    border: 1px solid var(--border); background: var(--panel); border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 28px;
+  }
+  nav.toc h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 10px; }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 28px; }
+  nav.toc a { color: var(--text); text-decoration: none; }
+  nav.toc a:hover { color: var(--accent); text-decoration: underline; }
+  section {
+    border: 1px solid var(--border); background: var(--panel); border-radius: var(--radius);
+    padding: 26px 28px; margin-bottom: 22px;
+  }
+  section > h2 {
+    margin: 0 0 16px; font-size: 21px; letter-spacing: -0.01em;
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  section > h2 .n {
+    font-size: 13px; color: var(--accent); border: 1px solid var(--border);
+    background: var(--panel-2); border-radius: 8px; padding: 2px 8px; font-weight: 700;
+  }
+  h3 { font-size: 16px; margin: 22px 0 10px; }
+  p { margin: 10px 0; }
+  .muted { color: var(--muted); }
+  code {
+    font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 1px 6px;
+  }
+  pre {
+    background: var(--code-bg); color: #d7dcea; border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-size: 13px;
+    font-family: "SF Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14.5px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.k { color: var(--muted); white-space: nowrap; font-weight: 600; }
+  ul.flow { list-style: none; padding: 0; margin: 12px 0; }
+  ul.flow li { position: relative; padding: 6px 0 6px 26px; }
+  ul.flow li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  /* Q&A cards */
+  .qa { border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 14px 0; background: var(--panel-2); }
+  .qa .qhead { display: flex; gap: 10px; align-items: baseline; }
+  .qa .qtag { font-size: 11.5px; font-weight: 700; color: var(--accent-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 7px; white-space: nowrap; }
+  .qa .q { font-weight: 650; margin: 0; }
+  .qa .answer { margin-top: 10px; display: flex; gap: 9px; align-items: baseline; }
+  .qa .answer .badge { font-size: 12px; font-weight: 700; color: #0b0d13; background: var(--accent-2); border-radius: 6px; padding: 3px 9px; white-space: nowrap; }
+  .qa .why { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+  /* checklists */
+  ul.check { list-style: none; padding: 0; margin: 10px 0; }
+  ul.check li { position: relative; padding: 5px 0 5px 30px; }
+  ul.check li::before {
+    content: "☐"; position: absolute; left: 0; top: 4px; color: var(--accent); font-size: 17px;
+  }
+  ul.check li.done::before { content: "☑"; color: var(--accent-2); }
+  .callout { border-left: 3px solid var(--warn); background: var(--panel-2); border-radius: 8px; padding: 12px 16px; margin: 14px 0; }
+  .callout.danger { border-left-color: var(--danger); }
+  .callout .label { font-weight: 700; color: var(--warn); font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .callout.danger .label { color: var(--danger); }
+  footer { color: var(--muted); font-size: 13px; text-align: center; margin-top: 30px; }
+  .pill { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:999px; border:1px solid var(--border); }
+  .pill.pr1 { color: var(--accent); background: var(--chip); }
+  .pill.pr2 { color: var(--accent-2); background: var(--panel-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>Image Capture Redesign</h1>
+    <p class="sub">ChatGPT-style photo &amp; camera picker for the two fixed person-image slots — replacing the legacy 2015-era WDImagePicker / WDImageCropViewController.</p>
+    <div class="meta">
+      <span class="chip">App: GrowingUp (iOS 18, UIKit + SwiftUI)</span>
+      <span class="chip">Crop engine: SwiftyCrop 2.2.1</span>
+      <span class="chip">Photos: custom PhotoKit grid</span>
+      <span class="chip">Camera: inline AVFoundation card</span>
+      <span class="chip">2 PRs, shipped one-by-one</span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview &amp; scope</a></li>
+      <li><a href="#flow">Flow (both slots)</a></li>
+      <li><a href="#slots">Per-slot specifics</a></li>
+      <li><a href="#decisions">Decisions — every Q&amp;A</a></li>
+      <li><a href="#pr1">PR1 — photos + crop + remove</a></li>
+      <li><a href="#pr2">PR2 — inline camera</a></li>
+      <li><a href="#orphan">Folded-in fix: replace orphan</a></li>
+      <li><a href="#execution">Execution &amp; orchestration</a></li>
+    </ol>
+  </nav>
+
+  <section id="overview">
+    <h2><span class="n">1</span> Overview &amp; scope</h2>
+    <p>Recreate ChatGPT's image-upload feel for the existing <strong>two fixed image slots</strong> in the EditPerson scene:</p>
+    <table>
+      <tbody>
+        <tr><td class="k">Main (app) picture</td><td>Rectangular crop, shown full-screen in PersonOverview.</td></tr>
+        <tr><td class="k">Widget picture</td><td>Circular avatar, shown in the home-screen widget and picker buttons.</td></tr>
+      </tbody>
+    </table>
+    <p>Each slot tap opens <strong>one</strong> full-screen SwiftUI flow (hosted into UIKit via <code>UIHostingController</code>, <code>.fullScreen</code>) that yields exactly one image from <em>either</em> a custom PhotoKit grid (PR1) <em>or</em> an inline in-app camera card (PR2), which is then cropped, downsized, confirmed, and set into the slot. <strong>No multi-image selection.</strong></p>
+    <p class="muted">SwiftUI-first for all new code. The legacy WDImagePicker + WDImageCropViewController stack is ripped out. PR scope is strictly the image-pick flow.</p>
+  </section>
+
+  <section id="flow">
+    <h2><span class="n">2</span> Flow — identical shape for both slots</h2>
+    <ul class="flow">
+      <li>Tap slot → full-screen sheet (<code>UIHostingController</code>, <code>.fullScreen</code>)</li>
+      <li><code>ImageCaptureFlowView</code> → pick one image (custom grid in PR1, <span class="pill pr2">+ camera tile in PR2</span>)</li>
+      <li>Tap a photo → <strong>straight to crop</strong> (no intermediate preview/confirm screen)</li>
+      <li><strong>Use</strong> → <strong>downsize</strong> (per-slot target) → set slot → dismiss</li>
+    </ul>
+    <p>Single-select throughout. The crop seam (<code>CropStep</code>) takes <em>(source image + slot shape)</em> in and returns a cropped image out, so the crop implementation can be swapped without rippling through the flow.</p>
+  </section>
+
+  <section id="slots">
+    <h2><span class="n">3</span> Per-slot specifics</h2>
+    <table>
+      <thead>
+        <tr><th>Aspect</th><th>App picture</th><th>Widget picture</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="k">Crop mask</td><td>rectangle</td><td>circle (visual only)</td></tr>
+        <tr><td class="k">Aspect ratio</td><td>fixed <strong>4:5</strong>, resize handles off</td><td>square</td></tr>
+        <tr><td class="k">cropImageCircular</td><td>n/a</td><td><strong>false</strong> → square output</td></tr>
+        <tr><td class="k">Downsize target</td><td>~<strong>1800px</strong> longest side</td><td>~<strong>480px</strong> square</td></tr>
+        <tr><td class="k">Stored on disk</td><td><code>.jpg</code>, 4:5 opaque</td><td><code>.jpg</code>, square opaque</td></tr>
+        <tr><td class="k">Shown as</td><td>PersonOverview full-screen, <code>scaleAspectFill</code></td><td>Widget 48–56pt, <code>.clipShape(Circle())</code></td></tr>
+      </tbody>
+    </table>
+    <p class="muted">Square widget output (circle as a display-time mask, not a baked transparent PNG) is what kills the transparent-PNG → JPEG black-corner bug: the stored file is a full opaque square, masked to a circle only when displayed.</p>
+  </section>
+
+  <section id="decisions">
+    <h2><span class="n">4</span> Decisions — every question, every answer</h2>
+    <p class="muted">The full design tree, walked one branch at a time. Each card is a question that was asked, the option chosen, and why.</p>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q1</span><p class="q">How should the main (app) picture be cropped and displayed?</p></div>
+      <div class="answer"><span class="badge">aspectFill + fixed 4:5</span></div>
+      <p class="why">Crop to a locked 4:5 portrait and display with <code>scaleAspectFill</code> in PersonOverview. Fills the full-screen frame with no white letterbox (the previous <code>scaleAspectFit</code> + 3:4 combo letterboxed).</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q2</span><p class="q">How should the widget picture be cropped and stored?</p></div>
+      <div class="answer"><span class="badge">Circle mask, square output</span></div>
+      <p class="why">Circular mask during crop for the avatar feel, but persist a square opaque image (<code>cropImageCircular = false</code>). The circle is re-applied at display time, avoiding alpha being flattened to black corners by JPEG encoding.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q3</span><p class="q">Where and how should images be downsized before saving?</p></div>
+      <div class="answer"><span class="badge">Downsize crop in-flow, per slot</span></div>
+      <p class="why">Downsize inside the capture flow, keyed off the slot's <code>CropShape</code> (1800px main / 480px widget), before building <code>PersonImage</code>. Avoids storing full-resolution JPEGs (q=1) for images shown at 56pt.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q4</span><p class="q">After tapping a photo, what happens next?</p></div>
+      <div class="answer"><span class="badge">Tap → straight to crop</span></div>
+      <p class="why">No intermediate "preview / confirm" screen. A tap loads the full-resolution asset and goes directly into the crop step; the crop's own Use/Cancel is the confirmation.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q5</span><p class="q">How should photo-library permission be requested?</p></div>
+      <div class="answer"><span class="badge">Direct system prompt</span></div>
+      <p class="why">Go straight to the OS permission prompt on first entry (no custom pre-ask wall). Graceful degradation handles full → limited; denied/restricted states get the explainer view with a Settings deep-link.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR1 · Q6</span><p class="q">How should full-resolution selection loading behave (iCloud, errors)?</p></div>
+      <div class="answer"><span class="badge">Resilient: error + progress + cancel</span></div>
+      <p class="why">Use <code>progressHandler</code> for a determinate progress UI during iCloud downloads, keep the <code>PHImageRequestID</code> so the load is cancellable, and on nil/error clear the spinner + show "Couldn't load photo" while staying on the grid. (The first build hung forever on iCloud failure.)</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">X-cut</span><p class="q">Should this work add a way to remove / clear a slot's image?</p></div>
+      <div class="answer"><span class="badge">Add remove affordance</span></div>
+      <p class="why">A picker that can set an image but never clear it is incomplete. Add a remove affordance with proper persistence wiring.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">Remove · A</span><p class="q">How should clearing a slot persist? (Gateway <code>edit()</code> currently deletes nothing.)</p></div>
+      <div class="answer"><span class="badge">Nil in-memory, delete on Save</span></div>
+      <p class="why">Tapping ✕ shows the placeholder immediately, but disk/CoreData stay untouched until Save — Cancel/back restores the old image. Needs new delete-task wiring in gateway <code>edit()</code>: when a slot is nil (or replaced) and the person had a stored id, run the delete task. CoreData already nulls the id via <code>populate</code>. Matches how EditPerson defers all persistence to Save; reversible until commit.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">Remove · B</span><p class="q">What does the remove affordance look like on a filled slot?</p></div>
+      <div class="answer"><span class="badge">✕ badge on filled slot</span></div>
+      <p class="why">A small ✕ badge in the top-trailing corner of a filled slot (hidden when empty). Matches ChatGPT attachment + iOS convention; discoverable; the tap target is separate from the re-pick tap on the image body.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">Remove · C</span><p class="q">Which PR carries the remove affordance?</p></div>
+      <div class="answer"><span class="badge">PR1 (photos)</span></div>
+      <p class="why">It touches the same cell / presenter / gateway PR1 already modifies, and a picker that can't undo a wrong pick is an incomplete flow. Ship them together.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR2 · Q1</span><p class="q">How does the user enter the camera?</p></div>
+      <div class="answer"><span class="badge">Camera tile = first grid cell</span></div>
+      <p class="why">The camera is the first cell of the photo grid: a glyph that turns into a live preview once permission is granted. Keeps a single entry surface rather than a separate source chooser.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR2 · Q2</span><p class="q">What camera controls, and which camera by default?</p></div>
+      <div class="answer"><span class="badge">Full set, back default</span></div>
+      <p class="why">Inline card with shutter / flip / flash (off · auto · on) / close. Back camera is the default; front-camera capture is un-mirrored.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR2 · Q3</span><p class="q">After capture, what is the crop flow?</p></div>
+      <div class="answer"><span class="badge">Reuse crop; cancel = retake</span></div>
+      <p class="why">Capture feeds the same <code>CropStep</code> as the photo path. Cancelling the crop returns to the live camera to retake; the camera's own ✕ returns to the grid.</p>
+    </div>
+
+    <div class="qa">
+      <div class="qhead"><span class="qtag">PR2 · Q4</span><p class="q">What is the camera permission-denied UI?</p></div>
+      <div class="answer"><span class="badge">Reuse PermissionExplainerView</span></div>
+      <p class="why">Reuse the same explainer component as photos, with <code>.cameraNeeded</code> / <code>.cameraDenied</code> / <code>.cameraRestricted</code> configs. Only copy, icon, and action differ.</p>
+    </div>
+  </section>
+
+  <section id="pr1">
+    <h2><span class="n">5</span> PR1 — photos + crop + remove <span class="pill pr1">PR1</span></h2>
+    <p>The 8 ImageCapture files + WDImagePicker rip-out already build green, lint clean, 34 tests pass. Remaining decision-changes to apply:</p>
+    <ul class="check">
+      <li>PersonOverview xib <code>appImage</code>: <code>scaleAspectFit</code> → <strong><code>scaleAspectFill</code></strong>.</li>
+      <li><code>CropShape.rectangle</code> 3:4 → <strong>4:5</strong>; set <code>allowAspectRatioResizing = false</code>.</li>
+      <li><code>CropShape.circle</code> <code>cropImageCircular</code> → <strong>false</strong> (square output).</li>
+      <li>Add per-slot <strong>downsize</strong> step (1800 / 480) keyed off <code>CropShape</code>, before <code>PersonImage</code>.</li>
+      <li><code>PhotoGridViewModel.select()</code>: <strong>resilient</strong> rewrite — progress + <code>PHImageRequestID</code> cancel + error clears spinner.</li>
+      <li><strong>Remove affordance:</strong> ✕ badge on a filled slot → new <code>ImagesCellViewDelegate</code> methods → <code>removeAppImage()</code> / <code>removeWidgetImage()</code> on the presenter (nil slot + redisplay).</li>
+      <li><strong>Gateway delete-on-save:</strong> in <code>CachePersonsGateway.edit()</code>, per slot — save the new image, else delete the previously stored file when the slot was cleared or replaced. CoreData already nulls the id via <code>populate</code>.</li>
+      <li>Tests: remove presenter methods + gateway delete-on-clear / delete-on-replace.</li>
+    </ul>
+  </section>
+
+  <section id="pr2">
+    <h2><span class="n">6</span> PR2 — inline camera <span class="pill pr2">PR2</span></h2>
+    <p>Design settled; implementation pending. The flow seam (<code>onComplete(UIImage)</code> / <code>onCancel</code>) stays identical, so the camera slots in ahead of the grid without disturbing PR1.</p>
+    <ul class="check">
+      <li>Add <code>NSCameraUsageDescription</code> (Info.plist + InfoPlist.strings EN/RU).</li>
+      <li>Camera tile as grid cell 0 (glyph → <code>AVCaptureVideoPreviewLayer</code> once permitted).</li>
+      <li>Inline camera card: shutter / flip (back default) / flash off·auto·on / close (✕ → grid). Front capture <strong>un-mirrored</strong>.</li>
+      <li>Capture → reuse <code>CropStep</code> (crop-cancel = retake).</li>
+      <li><code>PermissionExplainerConfig.cameraNeeded</code> / <code>.cameraDenied</code> / <code>.cameraRestricted</code>.</li>
+    </ul>
+  </section>
+
+  <section id="orphan">
+    <h2><span class="n">7</span> Folded-in fix: replace orphan</h2>
+    <div class="callout">
+      <span class="label">Pre-existing bug — now fixed inside PR1</span>
+      <p style="margin:8px 0 0;">Picking a <em>new</em> image for a person who already had one wrote a new-id file and orphaned the old file on disk (new id ≠ old id). This ships in production today. The PR1 delete-on-save reconcile now also covers it: delete the stored file whenever <code>oldId != parameters.image?.id</code> (covers both clear and replace), so an untouched edit never deletes the file it is about to keep.</p>
+    </div>
+    <pre>// CachePersonsGateway.edit() reconcile, per slot
+if let saving = appPicSavingTask(for: parameters)            { tasks.append(saving) }
+if let delete = outdatedAppPicDeleteTask(person, parameters) { tasks.append(delete) }
+// outdated* returns nil when storedId == parameters.appImage?.id  (unchanged → keep)</pre>
+  </section>
+
+  <section id="execution">
+    <h2><span class="n">8</span> Execution &amp; orchestration</h2>
+    <p>The two PRs ship <strong>one-by-one</strong> (PR1 photos, then PR2 camera). Each PR runs through an autonomous build → publish → review → address loop:</p>
+    <ul class="flow">
+      <li><strong>Orchestrator</strong> manages the plan and sequences the PRs.</li>
+      <li><strong>Worker</strong> per PR: finalize code, build + test + lint, branch, push, open the GitHub PR, report back.</li>
+      <li><strong>Reviewer</strong> per PR: code-review the diff, post the review report as comments on the PR page, report back.</li>
+      <li><strong>Address loop</strong>: orchestrator dispatches fixes for raised issues; worker pushes changes; review re-runs.</li>
+      <li><strong>Exit</strong>: loop until the reviewer raises no remaining issues, for every PR.</li>
+    </ul>
+    <p class="muted">Non-negotiables carried from the repo: commit messages end with the <code>Co-Authored-By</code> trailer; PR bodies end with the Claude Code generated-with line; work happens on feature branches, never directly on <code>master</code>.</p>
+  </section>
+
+  <footer>
+    GrowingUp · Image Capture Redesign · plan captured 2026-06-24 · branch <code>feature/image-capture-photos-crop</code>
+  </footer>
+
+</div>
+</body>
+</html>

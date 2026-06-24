@@ -23,6 +23,8 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDel
 	func onWidgetStateFor(row: Int, didUpdateTo state: Bool)
 	func appImagePicked(image: PersonImage)
 	func widgetImagePicked(image: PersonImage)
+	func removeAppImage()
+	func removeWidgetImage()
 	func shouldShowRemoveButton() -> Bool
 }
 
@@ -162,6 +164,18 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 	func widgetImagePicked(image: PersonImage) {
 		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
 		personPics.widgetPic = image
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
+	}
+
+	func removeAppImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.appPic = nil
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
+	}
+
+	func removeWidgetImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.widgetPic = nil
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 

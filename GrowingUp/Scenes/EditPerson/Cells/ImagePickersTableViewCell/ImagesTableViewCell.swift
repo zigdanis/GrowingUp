@@ -18,6 +18,8 @@ protocol ImagesCellView: AnyObject {
 protocol ImagesCellViewDelegate: AnyObject {
 	func showAppPicImagePickerFor(row: Int)
 	func showWidgetPicImagePickerFor(row: Int)
+	func removeAppPic(forRow row: Int)
+	func removeWidgetPic(forRow row: Int)
 }
 
 final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
@@ -27,12 +29,15 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	@IBOutlet weak var widgetPicLabel: UILabel!
 	private weak var delegate: ImagesCellViewDelegate?
 	private var row: Int?
+	private let appPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
+	private let widgetPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
 		selectionStyle = .none
 		setupImagePickerViews()
 		setupPickerButtons()
+		setupRemoveBadges()
 	}
 
 	private func setupImagePickerViews() {
@@ -45,9 +50,43 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		widgetPicButton.addTarget(self, action: #selector(widgetPicTouched), for: .touchUpInside)
 	}
 
+	private func setupRemoveBadges() {
+		addRemoveBadge(appPicRemoveBadge, over: appPicButton, action: #selector(removeAppPicTouched))
+		addRemoveBadge(widgetPicRemoveBadge, over: widgetPicButton, action: #selector(removeWidgetPicTouched))
+	}
+
+	// The badge lives in the content view, not inside the picker button: the
+	// button applies a circular layer mask that would clip any subview of it.
+	private func addRemoveBadge(_ badge: UIButton, over pickerButton: UIButton, action: Selector) {
+		badge.addTarget(self, action: action, for: .touchUpInside)
+		contentView.addSubview(badge)
+		NSLayoutConstraint.activate([
+			badge.widthAnchor.constraint(equalToConstant: 24),
+			badge.heightAnchor.constraint(equalToConstant: 24),
+			badge.topAnchor.constraint(equalTo: pickerButton.topAnchor, constant: 4),
+			badge.trailingAnchor.constraint(equalTo: pickerButton.trailingAnchor, constant: -4)
+		])
+	}
+
+	private static func makeRemoveBadge() -> UIButton {
+		let button = UIButton(type: .system)
+		var config = UIButton.Configuration.plain()
+		let symbol = UIImage.SymbolConfiguration(pointSize: 12, weight: .semibold)
+		config.image = UIImage(systemName: "xmark", withConfiguration: symbol)
+		config.baseForegroundColor = .white
+		config.background.backgroundColor = UIColor.black.withAlphaComponent(0.55)
+		config.background.cornerRadius = 12
+		button.configuration = config
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.isHidden = true
+		button.accessibilityLabel = String(localized: "Remove")
+		return button
+	}
+
 	// MARK: - ImagesCellView
 
 	func display(appPic: PersonImage?) {
+		appPicRemoveBadge.isHidden = (appPic == nil)
 		guard let appPic = appPic else {
 			appPicButton.drawImage(nil)
 			return
@@ -67,6 +106,7 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	}
 
 	func display(widgetPic: PersonImage?) {
+		widgetPicRemoveBadge.isHidden = (widgetPic == nil)
 		guard let widgetPic = widgetPic else {
 			widgetPicButton.drawImage(nil)
 			return
@@ -102,5 +142,17 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private func widgetPicTouched() {
 		guard let row = row else { return }
 		delegate?.showWidgetPicImagePickerFor(row: row)
+	}
+
+	@objc
+	private func removeAppPicTouched() {
+		guard let row = row else { return }
+		delegate?.removeAppPic(forRow: row)
+	}
+
+	@objc
+	private func removeWidgetPicTouched() {
+		guard let row = row else { return }
+		delegate?.removeWidgetPic(forRow: row)
 	}
 }

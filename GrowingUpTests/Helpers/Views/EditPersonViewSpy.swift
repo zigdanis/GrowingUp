@@ -18,6 +18,8 @@ class EditPersonViewSpy: EditPersonView {
 	var displayedScreenTitle: String?
 	var showedAppPicImagePicker = false
 	var showedWidgetPicImagePicker = false
+	var removedAppPic = false
+	var removedWidgetPic = false
 	var didReloadData = false
 	var displayedBarButtons = [BarButtonItemStyle]()
 
@@ -36,6 +38,14 @@ class EditPersonViewSpy: EditPersonView {
 
 	func showWidgetPicImagePickerFor(row: Int) {
 		showedWidgetPicImagePicker = true
+	}
+
+	func removeAppPic(forRow row: Int) {
+		removedAppPic = true
+	}
+
+	func removeWidgetPic(forRow row: Int) {
+		removedWidgetPic = true
 	}
 
 	func displayScreenTitle(title: String) {

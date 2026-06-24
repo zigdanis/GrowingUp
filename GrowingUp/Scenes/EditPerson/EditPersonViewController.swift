@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 import Core
 
 enum BarButtonItemStyle {
@@ -52,8 +53,6 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     private let configurator: EditPersonConfigurator
 
     @IBOutlet weak var tableView: UITableView!
-	private lazy var appPicImagePicker = WDImagePicker(cropSize: .screen)
-	private lazy var widgetPicImagePicker = WDImagePicker(cropSize: .circle)
 
     init(configurator: EditPersonConfigurator) {
         self.configurator = configurator
@@ -193,30 +192,45 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 extension EditPersonViewController: ImagesCellViewDelegate {
 
 	func showAppPicImagePickerFor(row: Int) {
-		view.endEditing(true)
-		appPicImagePicker.delegate = self
-		appPicImagePicker.present(from: self)
+		presentImageFlow(cropShape: .rectangle) { [weak self] image in
+			self?.presenter.appImagePicked(image: PersonImage(uiImage: image))
+			self?.tableView.reloadData()
+		}
 	}
 
 	func showWidgetPicImagePickerFor(row: Int) {
-		view.endEditing(true)
-		widgetPicImagePicker.delegate = self
-		widgetPicImagePicker.present(from: self)
-	}
-}
-
-extension EditPersonViewController: WDImagePickerDelegate {
-
-	func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage) {
-		if imagePicker === appPicImagePicker {
-			presenter.appImagePicked(image: PersonImage(uiImage: pickedImage))
-		} else if imagePicker === widgetPicImagePicker {
-			presenter.widgetImagePicked(image: PersonImage(uiImage: pickedImage))
+		presentImageFlow(cropShape: .circle) { [weak self] image in
+			self?.presenter.widgetImagePicked(image: PersonImage(uiImage: image))
+			self?.tableView.reloadData()
 		}
+	}
+
+	func removeAppPic(forRow row: Int) {
+		presenter.removeAppImage()
 		tableView.reloadData()
 	}
 
-	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {}
+	func removeWidgetPic(forRow row: Int) {
+		presenter.removeWidgetImage()
+		tableView.reloadData()
+	}
+
+	private func presentImageFlow(cropShape: CropShape,
+								  onPicked: @escaping (UIImage) -> Void) {
+		view.endEditing(true)
+		let flow = ImageCaptureFlowView(
+			cropShape: cropShape,
+			onComplete: { [weak self] image in
+				self?.dismiss(animated: true) { onPicked(image) }
+			},
+			onCancel: { [weak self] in
+				self?.dismiss(animated: true)
+			}
+		)
+		let host = UIHostingController(rootView: flow)
+		host.modalPresentationStyle = .fullScreen
+		present(host, animated: true)
+	}
 }
 
 extension EditPersonViewController: RemoveButtonDelegate {

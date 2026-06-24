@@ -162,6 +162,32 @@ final class EditPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(widgetPic, personWidgetPic, "Value for the person Widget pic doesn't match to expected")
 	}
 
+	func test_SUT_WhenRemovingAppPic_ClearsItOnImagesCellPresenter() {
+		// Given an existing app pic and widget pic in the cell presenter.
+		let pics = PersonImages(appPic: PersonImage(uiImage: UIImage()), widgetPic: PersonImage(uiImage: UIImage()))
+		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
+		// When
+		sut.removeAppImage()
+		// Then
+		let appPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.appPic
+		let widgetPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.widgetPic
+		XCTAssertNil(appPic, "Expected the app pic to be cleared")
+		XCTAssertNotNil(widgetPic, "Expected the widget pic to be left intact")
+	}
+
+	func test_SUT_WhenRemovingWidgetPic_ClearsItOnImagesCellPresenter() {
+		// Given an existing app pic and widget pic in the cell presenter.
+		let pics = PersonImages(appPic: PersonImage(uiImage: UIImage()), widgetPic: PersonImage(uiImage: UIImage()))
+		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
+		// When
+		sut.removeWidgetImage()
+		// Then
+		let appPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.appPic
+		let widgetPic = imagesCellStub.valueFor(row: EPC.imagePickerRow)?.widgetPic
+		XCTAssertNil(widgetPic, "Expected the widget pic to be cleared")
+		XCTAssertNotNil(appPic, "Expected the app pic to be left intact")
+	}
+
 	func test_SUT_WhenSettingIsOnWidgetState_ValuePassedToToggleCellsPresenter() {
 		// Given
 		let expectedState = true
