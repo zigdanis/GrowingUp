@@ -36,21 +36,17 @@ struct ImageCaptureFlowView: View {
                     Button("Cancel", action: onCancel)
                 }
             }
-        }
-        .task {
-            // Start the live tile preview if access was already granted.
-            startPreviewIfAuthorized()
-        }
-        .fullScreenCover(isPresented: $showCamera) {
-            // The camera owns its own crop presentation so a crop-cancel can
-            // drop straight back onto the live card to retake, without the
-            // root juggling two sibling full-screen covers.
-            CameraSourceView(
-                cameraModel: cameraModel,
-                cropShape: cropShape,
-                onComplete: finishCamera,
-                onClose: closeCamera
-            )
+            // The camera is pushed (not a full-screen cover) so it stays inside
+            // the host sheet card rather than taking over the whole screen.
+            .navigationDestination(isPresented: $showCamera) {
+                CameraSourceView(
+                    cameraModel: cameraModel,
+                    cropShape: cropShape,
+                    onComplete: finishCamera,
+                    onClose: { showCamera = false }
+                )
+                .toolbar(.hidden, for: .navigationBar)
+            }
         }
         .fullScreenCover(item: $libraryImage) { item in
             CropStep(
@@ -91,21 +87,8 @@ struct ImageCaptureFlowView: View {
         finish(cropped)
     }
 
-    private func closeCamera() {
-        showCamera = false
-        // The card stopped the session on disappear; restart it so the grid's
-        // live camera tile survives a second open instead of going black.
-        startPreviewIfAuthorized()
-    }
-
     private func finish(_ cropped: UIImage) {
         onComplete(cropped.downsized(maxPixelSide: cropShape.maxPixelSize))
-    }
-
-    private func startPreviewIfAuthorized() {
-        if cameraModel.authState.isAuthorized {
-            cameraModel.controller.start()
-        }
     }
 }
 

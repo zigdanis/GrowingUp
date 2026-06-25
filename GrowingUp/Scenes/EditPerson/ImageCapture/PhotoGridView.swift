@@ -74,7 +74,6 @@ struct PhotoGridView: View {
                 LazyVGrid(columns: columns, spacing: 2) {
                     CameraTile(
                         authState: cameraModel.authState,
-                        controller: cameraModel.controller,
                         side: side,
                         onTap: onCameraTapped
                     )

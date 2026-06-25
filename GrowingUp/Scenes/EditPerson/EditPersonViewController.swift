@@ -228,7 +228,12 @@ extension EditPersonViewController: ImagesCellViewDelegate {
 			}
 		)
 		let host = UIHostingController(rootView: flow)
-		host.modalPresentationStyle = .fullScreen
+		host.modalPresentationStyle = .pageSheet
+		if let sheet = host.sheetPresentationController {
+			sheet.detents = [.large()]
+			sheet.prefersGrabberVisible = true
+			sheet.preferredCornerRadius = 20
+		}
 		present(host, animated: true)
 	}
 }
