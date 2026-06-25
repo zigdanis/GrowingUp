@@ -131,7 +131,6 @@
 		338F862E79A839C0EA74BD9F /* PhotoGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE31C219E76B32FEB38B0CC /* PhotoGridView.swift */; };
 		40C689F53DEFCA3DB42BD7B6 /* PhotoThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08484233110DE426675C4EA7 /* PhotoThumbnailCell.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
-		9BDE6529B1904013A31192CB /* SwiftyCrop in Frameworks */ = {isa = PBXBuildFile; productRef = BA649F09003B13EC26987FC5 /* SwiftyCrop */; };
 		A73A55419A5987738B8B2535 /* PermissionExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */; };
 		BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2F72B99E6E5605512A6907 /* CropStep.swift */; };
 		1B5048C3683D6380022AC294 /* CameraAuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* CameraAuthState.swift */; };
@@ -375,7 +374,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
-				9BDE6529B1904013A31192CB /* SwiftyCrop in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1004,7 +1002,6 @@
 			);
 			name = GrowingUp;
 			packageProductDependencies = (
-				BA649F09003B13EC26987FC5 /* SwiftyCrop */,
 			);
 			productName = Aging;
 			productReference = 098E560921C409E300E4CA1E /* GrowingUp.app */;
@@ -1067,7 +1064,6 @@
 			mainGroup = 098E560021C409E300E4CA1E;
 			packageReferences = (
 				B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */,
-				39AC5D70EA1014EFCE74A4C6 /* XCRemoteSwiftPackageReference "SwiftyCrop" */,
 			);
 			productRefGroup = 098E560A21C409E300E4CA1E /* Products */;
 			projectDirPath = "";
@@ -1750,14 +1746,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		39AC5D70EA1014EFCE74A4C6 /* XCRemoteSwiftPackageReference "SwiftyCrop" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/benedom/SwiftyCrop.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/saoudrizwan/Disk.git";
@@ -1769,11 +1757,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BA649F09003B13EC26987FC5 /* SwiftyCrop */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 39AC5D70EA1014EFCE74A4C6 /* XCRemoteSwiftPackageReference "SwiftyCrop" */;
-			productName = SwiftyCrop;
-		};
 		EE1D6EEE2702E7B0FB6F0B1F /* Disk */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */;

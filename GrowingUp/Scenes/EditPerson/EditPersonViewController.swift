@@ -230,7 +230,15 @@ extension EditPersonViewController: ImagesCellViewDelegate {
 		let host = UIHostingController(rootView: flow)
 		host.modalPresentationStyle = .pageSheet
 		if let sheet = host.sheetPresentationController {
-			sheet.detents = [.large()]
+			// A ChatGPT-style floating card (~62% of the screen), draggable up to
+			// full. System `.medium()` sits at ~50%, which reads noticeably shorter
+			// than the reference, so use a custom detent.
+			let cardId = UISheetPresentationController.Detent.Identifier("card")
+			sheet.detents = [
+				.custom(identifier: cardId) { context in 0.62 * context.maximumDetentValue },
+				.large()
+			]
+			sheet.selectedDetentIdentifier = cardId
 			sheet.prefersGrabberVisible = true
 			sheet.preferredCornerRadius = 20
 		}

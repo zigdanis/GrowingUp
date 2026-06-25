@@ -2,12 +2,11 @@
 //  CropShape.swift
 //  GrowingUp
 //
-//  The crop geometry for a person-image slot. Maps the app's two fixed slots
-//  (main picture, widget picture) onto SwiftyCrop's mask model.
+//  The crop geometry for a person-image slot. Describes the two fixed slots
+//  (main picture, widget picture) for the in-app cropper.
 //
 
 import CoreGraphics
-import SwiftyCrop
 
 enum CropShape {
     /// Main app picture — portrait rectangle.
@@ -15,10 +14,13 @@ enum CropShape {
     /// Widget picture — circular avatar.
     case circle
 
-    var maskShape: MaskShape {
+    /// True when the crop window should be drawn as a circular guide. The
+    /// persisted image is still a square (see `cropCircular`); the circle is a
+    /// display-time aid only.
+    var isCircular: Bool {
         switch self {
-        case .rectangle: return .rectangle
-        case .circle:    return .circle
+        case .rectangle: return false
+        case .circle:    return true
         }
     }
 

@@ -8,6 +8,7 @@
 //
 
 import Photos
+import PhotosUI
 import SwiftUI
 
 /// A single photo-library asset, adapted for SwiftUI identity.

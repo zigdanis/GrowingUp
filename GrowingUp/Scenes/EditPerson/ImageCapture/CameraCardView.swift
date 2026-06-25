@@ -22,7 +22,7 @@ struct CameraCardView: View {
             CameraPreview(session: controller.session, isMirrored: controller.isFront)
                 .ignoresSafeArea()
             VStack {
-                topBar
+                flashBar
                 Spacer()
                 controls
             }
@@ -39,16 +39,8 @@ struct CameraCardView: View {
         }
     }
 
-    private var topBar: some View {
+    private var flashBar: some View {
         HStack {
-            Button(action: onClose) {
-                Image(systemName: "xmark")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .padding(12)
-                    .background(.black.opacity(0.35), in: Circle())
-            }
-            .accessibilityLabel(Text("Close camera"))
             Spacer()
             flashButton
         }
@@ -72,16 +64,25 @@ struct CameraCardView: View {
 
     private var controls: some View {
         HStack {
-            // Leading spacer balances the trailing flip button so the shutter
-            // stays centered.
-            Color.clear.frame(width: 64, height: 64)
+            backButton
             Spacer()
             shutterButton
             Spacer()
             flipButton
         }
-        .padding(.horizontal, 28)
+        .padding(.horizontal, 32)
         .padding(.bottom, 28)
+    }
+
+    private var backButton: some View {
+        Button(action: onClose) {
+            Image(systemName: "chevron.left")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 64, height: 64)
+                .background(.black.opacity(0.35), in: Circle())
+        }
+        .accessibilityLabel(Text("Close camera"))
     }
 
     private var shutterButton: some View {
