@@ -21,6 +21,9 @@ final class CameraSourceModel {
     /// AVFoundation prompt. Defaults to the system camera authorization APIs.
     @ObservationIgnored private let currentStatus: () -> AVAuthorizationStatus
     @ObservationIgnored private let requestAccess: () async -> Bool
+    /// Injectable so tests can simulate camera hardware presence/absence (the
+    /// Simulator never has a capture device). Defaults to the real check.
+    @ObservationIgnored private let hasCaptureDevice: () -> Bool
 
     init(
         currentStatus: @escaping () -> AVAuthorizationStatus = {
@@ -28,10 +31,12 @@ final class CameraSourceModel {
         },
         requestAccess: @escaping () async -> Bool = {
             await AVCaptureDevice.requestAccess(for: .video)
-        }
+        },
+        hasCaptureDevice: @escaping () -> Bool = { CameraSessionController.hasCaptureDevice }
     ) {
         self.currentStatus = currentStatus
         self.requestAccess = requestAccess
+        self.hasCaptureDevice = hasCaptureDevice
         self.authState = CameraAuthState(currentStatus())
     }
 
@@ -55,7 +60,7 @@ final class CameraSourceModel {
     /// Whether the live camera card can actually run — authorized *and* the
     /// device has camera hardware (false on the Simulator).
     var canShowLiveCamera: Bool {
-        authState.isAuthorized && CameraSessionController.hasCaptureDevice
+        authState.isAuthorized && hasCaptureDevice()
     }
 
     /// The explainer config for the current state, or nil when the live card can
@@ -63,7 +68,7 @@ final class CameraSourceModel {
     /// rather than a dead black preview.
     var explainerConfig: PermissionExplainerConfig? {
         switch authState {
-        case .authorized:    return CameraSessionController.hasCaptureDevice ? nil : .cameraUnavailable
+        case .authorized:    return hasCaptureDevice() ? nil : .cameraUnavailable
         case .notDetermined: return .cameraNeeded
         case .denied:        return .cameraDenied
         case .restricted:    return .cameraRestricted

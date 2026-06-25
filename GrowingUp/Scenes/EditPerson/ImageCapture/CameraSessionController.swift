@@ -72,7 +72,7 @@ final class CameraSessionController: NSObject {
     /// Whether this device exposes any usable capture camera. Cheap synchronous
     /// discovery — `false` on the Simulator, which has no camera hardware. Use to
     /// gate the live card so we never present a dead preview with a live shutter.
-    static var hasCaptureDevice: Bool {
+    nonisolated static var hasCaptureDevice: Bool {
         !AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInWideAngleCamera],
             mediaType: .video,

@@ -46,7 +46,11 @@ final class CameraSourceTests: XCTestCase {
 	// MARK: - CameraSourceModel
 
 	func test_Model_initialState_reflectsCurrentStatus() {
-		let model = CameraSourceModel(currentStatus: { .authorized }, requestAccess: { true })
+		let model = CameraSourceModel(
+			currentStatus: { .authorized },
+			requestAccess: { true },
+			hasCaptureDevice: { true }
+		)
 		XCTAssertEqual(model.authState, .authorized)
 		XCTAssertNil(model.explainerConfig)
 	}
@@ -92,7 +96,8 @@ final class CameraSourceTests: XCTestCase {
 	}
 
 	func test_Model_explainerConfig_perState() {
-		XCTAssertNil(CameraSourceModel(currentStatus: { .authorized }).explainerConfig)
+		XCTAssertNil(CameraSourceModel(currentStatus: { .authorized }, hasCaptureDevice: { true }).explainerConfig)
+		XCTAssertNotNil(CameraSourceModel(currentStatus: { .authorized }, hasCaptureDevice: { false }).explainerConfig)
 		XCTAssertNotNil(CameraSourceModel(currentStatus: { .notDetermined }).explainerConfig)
 		XCTAssertNotNil(CameraSourceModel(currentStatus: { .denied }).explainerConfig)
 		XCTAssertNotNil(CameraSourceModel(currentStatus: { .restricted }).explainerConfig)
