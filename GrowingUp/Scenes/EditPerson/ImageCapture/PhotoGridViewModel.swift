@@ -78,21 +78,21 @@ final class PhotoGridViewModel: NSObject {
             options.deliveryMode = .opportunistic
             options.resizeMode = .fast
             options.isNetworkAccessAllowed = true
-            nonisolated(unsafe) var finished = false
+            // PHCachingImageManager's opportunistic handler may fire more than
+            // once and, for iCloud assets, off the main thread. The gate is a
+            // @MainActor box so the single-resume invariant is enforced under
+            // actor isolation rather than an unsynchronized unsafe flag.
+            let gate = ContinuationGate()
             imageManager.requestImage(
                 for: asset.asset,
                 targetSize: targetSize,
                 contentMode: .aspectFill,
                 options: options
             ) { image, info in
-                if finished { return }
                 let isFinal = !((info?[PHImageResultIsDegradedKey] as? Bool) ?? false)
-                if let image {
-                    finished = true
+                Task { @MainActor in
+                    guard gate.finish(when: image != nil || isFinal) else { return }
                     continuation.resume(returning: image)
-                } else if isFinal {
-                    finished = true
-                    continuation.resume(returning: nil)
                 }
             }
         }
@@ -176,6 +176,21 @@ final class PhotoGridViewModel: NSObject {
 
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
+    }
+}
+
+/// One-shot, @MainActor-isolated gate guarding a single `continuation.resume`
+/// against PhotoKit's potentially repeated opportunistic callbacks.
+@MainActor
+private final class ContinuationGate {
+    private var finished = false
+
+    /// Returns true exactly once — the first time it is called with `shouldFinish`
+    /// true — and false on every later call, so the caller resumes only once.
+    func finish(when shouldFinish: Bool) -> Bool {
+        guard shouldFinish, !finished else { return false }
+        finished = true
+        return true
     }
 }
 

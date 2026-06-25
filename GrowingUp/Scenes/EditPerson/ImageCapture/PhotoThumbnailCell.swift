@@ -33,6 +33,7 @@ struct PhotoThumbnailCell: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(Text("Photo"))
         .task(id: asset.id) {
             let pixels = side * displayScale
             image = await viewModel.thumbnail(

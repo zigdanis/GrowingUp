@@ -116,6 +116,21 @@ class CachePersonsGatewayTests: XCTestCase {
 		XCTAssertEqual(taskManagerSpy.processedTasks.count, 2, "Expected a save for the new app pic and a delete for the replaced one")
 	}
 
+	func test_SUT_WhenEditingReplacesWidgetPic_EnqueuesSaveAndDelete() {
+		// Given a person whose widget pic is replaced by a freshly picked image,
+		// while the app pic is left untouched (same id, not re-picked).
+		let appId = UUID()
+		let person = Person(id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: UUID(), isOnWidget: false, createdDate: Date())
+		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+										 appImage: PersonImage(id: appId, uiImage: nil),
+										 widgetImage: PersonImage(id: UUID(), uiImage: UIImage()), isOnWidget: false)
+		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
+		// When
+		sut.edit(person: person, with: params) { _ in }
+		// Then
+		XCTAssertEqual(taskManagerSpy.processedTasks.count, 2, "Expected a save for the new widget pic and a delete for the replaced one")
+	}
+
 	func test_SUT_WhenEditingLeavesPicsUnchanged_EnqueuesNoTasks() {
 		// Given a person edited without touching either pic (same ids, not re-picked).
 		let appId = UUID()
