@@ -24,7 +24,9 @@ struct CameraPreview: UIViewRepresentable {
     }
 
     func updateUIView(_ view: PreviewView, context: Context) {
-        view.videoPreviewLayer.session = session
+        if view.videoPreviewLayer.session !== session {
+            view.videoPreviewLayer.session = session
+        }
         let connection = view.videoPreviewLayer.connection
         if connection?.isVideoMirroringSupported == true {
             connection?.automaticallyAdjustsVideoMirroring = false

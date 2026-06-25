@@ -40,8 +40,8 @@ struct PermissionExplainerConfig {
 
     static let cameraDenied = PermissionExplainerConfig(
         icon: "camera.fill",
-        title: "Camera access needed",
-        message: "Allow access to your camera to take a picture.",
+        title: "Camera access blocked",
+        message: "Enable camera access in Settings to take a picture.",
         primaryButtonTitle: "Open Settings"
     )
 

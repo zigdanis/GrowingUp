@@ -21,7 +21,12 @@ struct CameraTile: View {
             ZStack {
                 Color(.secondarySystemBackground)
                 if authState.isAuthorized {
-                    CameraPreview(session: controller.session, isMirrored: controller.isFront)
+                    // Only render the live layer once the session is actually
+                    // running, so an authorized tile never flashes black behind
+                    // the glyph before frames arrive.
+                    if controller.isRunning {
+                        CameraPreview(session: controller.session, isMirrored: controller.isFront)
+                    }
                     glyph(filled: true)
                 } else {
                     glyph(filled: false)
@@ -33,6 +38,14 @@ struct CameraTile: View {
         }
         .buttonStyle(.plain)
         .accessibilityLabel(Text("Camera"))
+        .task(id: authState) {
+            // Re-start the session whenever the tile (re)appears authorized —
+            // e.g. returning to the grid after the camera card stopped it — so
+            // the live tile survives more than the first open.
+            if authState.isAuthorized {
+                controller.start()
+            }
+        }
     }
 
     private func glyph(filled: Bool) -> some View {

@@ -49,7 +49,7 @@ struct ImageCaptureFlowView: View {
                 cameraModel: cameraModel,
                 cropShape: cropShape,
                 onComplete: finishCamera,
-                onClose: { showCamera = false }
+                onClose: closeCamera
             )
         }
         .fullScreenCover(item: $libraryImage) { item in
@@ -89,6 +89,13 @@ struct ImageCaptureFlowView: View {
     private func finishCamera(_ cropped: UIImage) {
         showCamera = false
         finish(cropped)
+    }
+
+    private func closeCamera() {
+        showCamera = false
+        // The card stopped the session on disappear; restart it so the grid's
+        // live camera tile survives a second open instead of going black.
+        startPreviewIfAuthorized()
     }
 
     private func finish(_ cropped: UIImage) {

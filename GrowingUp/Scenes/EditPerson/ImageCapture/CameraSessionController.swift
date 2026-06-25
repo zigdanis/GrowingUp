@@ -58,6 +58,9 @@ final class CameraSessionController: NSObject {
     private(set) var isFront = false
     /// True while a still capture is in flight, so the shutter can be disabled.
     private(set) var isCapturing = false
+    /// True while the session is running, so the tile only renders the live
+    /// preview once frames are actually flowing (no black flash behind the glyph).
+    private(set) var isRunning = false
 
     @ObservationIgnored private let sessionQueue = DispatchQueue(label: "growingup.camera.session")
     @ObservationIgnored private let photoOutput = AVCapturePhotoOutput()
@@ -77,6 +80,8 @@ final class CameraSessionController: NSObject {
             if !self.session.isRunning {
                 self.session.startRunning()
             }
+            let running = self.session.isRunning
+            Task { @MainActor in self.isRunning = running }
         }
     }
 
@@ -86,6 +91,7 @@ final class CameraSessionController: NSObject {
             if self.session.isRunning {
                 self.session.stopRunning()
             }
+            Task { @MainActor in self.isRunning = false }
         }
     }
 
