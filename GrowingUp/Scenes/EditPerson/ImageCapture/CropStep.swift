@@ -2,9 +2,7 @@
 //  CropStep.swift
 //  GrowingUp
 //
-//  Pan/zoom cropper. The image aspect-fills the screen at the minimum zoom that
-//  covers it. Crop frame = full screen for the main picture, a circular guide in
-//  the safe area for the widget. Save maps the frame back to source pixels.
+//  Pan/zoom cropper: image aspect-fills at min zoom; crop frame is full screen (main) or a circular safe-area guide (widget).
 //
 
 import SwiftUI
@@ -52,9 +50,7 @@ struct CropStep: View {
     }
 
     var body: some View {
-        // `.ignoresSafeArea()` makes `proxy.size` the real screen — one coordinate
-        // space for image, clamp and crop. Insets come from the window so they
-        // don't depend on how the ignoring reader reports them.
+        // `.ignoresSafeArea()` → `proxy.size` is the real screen (one coordinate space for image/clamp/crop); insets from the window.
         GeometryReader { proxy in
             ZStack {
                 cropContent
@@ -110,8 +106,7 @@ struct CropStep: View {
             .frame(width: display.width, height: display.height)
             .scaleEffect(scale)
             .offset(offset)
-            // Pin the footprint to the screen and clip overflow so the image stays
-            // centred (offset 0 == aspect-fill, which the clamp assumes).
+            // Pin the footprint to the screen, clip overflow (offset 0 == aspect-fill, which the clamp assumes).
             .frame(width: containerSize.width, height: containerSize.height)
             .clipped()
     }
@@ -165,14 +160,12 @@ struct CropStep: View {
                 .accessibilityLabel(Text("Use photo"))
             }
             .padding(.horizontal, 20)
-            // The ZStack ignores the safe area, so clear the notch manually.
-            .padding(.top, insets.top + 8)
+            .padding(.top, insets.top + 8) // ZStack ignores the safe area; clear the notch manually.
             Spacer()
         }
     }
 
-    /// A circular Liquid Glass icon button. `prominent` is the accent-filled
-    /// affirmative (checkmark); the plain glass (X) reads against its backdrop.
+    /// A circular Liquid Glass icon button; `prominent` is the accent-filled affirmative (checkmark), plain glass is the X.
     private func glassButton(systemImage: String, prominent: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
@@ -229,8 +222,7 @@ struct CropStep: View {
 // MARK: - Geometry & crop math
 
 extension CropStep {
-    /// The region that must stay covered and gets cropped. Rectangle: the full
-    /// screen. Circle: a square (persisted square) centred in the safe area.
+    /// Region that stays covered and gets cropped. Rectangle: full screen. Circle: a square centred in the safe area.
     func frameRect(in container: CGSize, insets: EdgeInsets) -> CGRect {
         guard container.width > 0, container.height > 0 else { return .zero }
         guard shape.isCircular else {
@@ -261,8 +253,7 @@ extension CropStep {
         return CGSize(width: pxW * scaleFactor, height: pxH * scaleFactor)
     }
 
-    /// Smallest zoom that still covers the crop frame (limiting side flush with
-    /// the edge). Below 1 for a sub-screen frame; capped at 1 (never zooms in).
+    /// Smallest zoom that still covers the crop frame (limiting side flush to the edge); capped at 1, never zooms in.
     func minScale(in container: CGSize, insets: EdgeInsets) -> CGFloat {
         let display = displaySize(in: container)
         guard display.width > 0, display.height > 0 else { return 1 }
@@ -334,7 +325,7 @@ extension CropStep {
 
         let cropW = frame.width / pointsPerPixel
         let cropH = frame.height / pointsPerPixel
-        // Image is centred on screen at `offset`; the frame may sit off-centre.
+        // Image centred on screen at `offset`; the frame may sit off-centre, so map the frame centre back to source pixels.
         let centerX = CGFloat(cgImage.width) / 2 + (frame.midX - center.x - offset.width) / pointsPerPixel
         let centerY = CGFloat(cgImage.height) / 2 + (frame.midY - center.y - offset.height) / pointsPerPixel
 
@@ -354,6 +345,8 @@ private struct GlassButtonChrome: ViewModifier {
     let prominent: Bool
 
     func body(content: Content) -> some View {
+        // Glass button styles need the iOS 26 SDK (Xcode 26 / Swift 6.2); older toolchains compile the legacy path so CI builds.
+        #if compiler(>=6.2)
         if #available(iOS 26.0, *) {
             Group {
                 if prominent {
@@ -365,29 +358,36 @@ private struct GlassButtonChrome: ViewModifier {
             .buttonBorderShape(.circle)
             .tint(prominent ? Color.accentColor : nil)
         } else {
-            content
-                .buttonStyle(.plain)
-                .foregroundStyle(.white)
-                .background {
-                    if prominent {
-                        Circle().fill(Color.accentColor)
-                    } else {
-                        // Dark underlay keeps the white glyph legible over photos.
-                        ZStack {
-                            Circle().fill(.black.opacity(0.25))
-                            Circle().fill(.ultraThinMaterial)
-                        }
+            legacyChrome(content)
+        }
+        #else
+        legacyChrome(content)
+        #endif
+    }
+
+    @ViewBuilder
+    private func legacyChrome(_ content: Content) -> some View {
+        content
+            .buttonStyle(.plain)
+            .foregroundStyle(.white)
+            .background {
+                if prominent {
+                    Circle().fill(Color.accentColor)
+                } else {
+                    // Dark underlay keeps the white glyph legible over photos.
+                    ZStack {
+                        Circle().fill(.black.opacity(0.25))
+                        Circle().fill(.ultraThinMaterial)
                     }
                 }
-                .overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 1))
-                .shadow(color: .black.opacity(0.3), radius: 4, y: 1)
-        }
+            }
+            .overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 1))
+            .shadow(color: .black.opacity(0.3), radius: 4, y: 1)
     }
 }
 
 private extension UIImage {
-    /// Bakes any EXIF orientation into the pixels so `cgImage` cropping (which
-    /// ignores orientation) maps screen coordinates onto the right region.
+    /// Bakes EXIF orientation into the pixels so `cgImage` cropping maps screen coordinates onto the right region.
     func normalizedUp() -> UIImage {
         guard imageOrientation != .up else { return self }
         let format = UIGraphicsImageRendererFormat.default()
