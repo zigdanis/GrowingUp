@@ -69,6 +69,17 @@ final class CameraSessionController: NSObject {
     /// Retained until its delegate callback fires, then released.
     @ObservationIgnored private var captureContinuation: ((UIImage?) -> Void)?
 
+    /// Whether this device exposes any usable capture camera. Cheap synchronous
+    /// discovery — `false` on the Simulator, which has no camera hardware. Use to
+    /// gate the live card so we never present a dead preview with a live shutter.
+    static var hasCaptureDevice: Bool {
+        !AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.builtInWideAngleCamera],
+            mediaType: .video,
+            position: .unspecified
+        ).devices.isEmpty
+    }
+
     // MARK: - Lifecycle
 
     /// Builds the session (back camera by default) and starts running. Safe to
@@ -159,6 +170,13 @@ final class CameraSessionController: NSObject {
         let flash = flashMode.avFlashMode
         sessionQueue.async { [weak self] in
             guard let self else { return }
+            // No active video connection (e.g. Simulator / no camera hardware):
+            // calling `capturePhoto` would raise an exception, so fail gracefully.
+            guard let connection = self.photoOutput.connection(with: .video),
+                  connection.isActive, connection.isEnabled else {
+                Task { @MainActor in self.finishCapture(with: nil) }
+                return
+            }
             let settings = AVCapturePhotoSettings()
             if self.photoOutput.supportedFlashModes.contains(flash) {
                 settings.flashMode = flash

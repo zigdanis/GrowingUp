@@ -67,12 +67,14 @@ struct ImageCaptureFlowView: View {
     private func openCamera() {
         switch cameraModel.authState {
         case .authorized:
-            cameraModel.controller.start()
+            if cameraModel.canShowLiveCamera {
+                cameraModel.controller.start()
+            }
             showCamera = true
         case .notDetermined:
             Task {
                 await cameraModel.requestIfNeeded()
-                if cameraModel.authState.isAuthorized {
+                if cameraModel.canShowLiveCamera {
                     cameraModel.controller.start()
                 }
                 showCamera = true
@@ -122,7 +124,7 @@ private struct CameraSourceView: View {
     }
 
     @ViewBuilder private var content: some View {
-        if cameraModel.authState.isAuthorized {
+        if cameraModel.canShowLiveCamera {
             CameraCardView(
                 controller: cameraModel.controller,
                 onCapture: { image in

@@ -52,11 +52,18 @@ final class CameraSourceModel {
         }
     }
 
-    /// The explainer config for the current non-authorized state, or nil when
-    /// authorized (the live card is shown instead).
+    /// Whether the live camera card can actually run — authorized *and* the
+    /// device has camera hardware (false on the Simulator).
+    var canShowLiveCamera: Bool {
+        authState.isAuthorized && CameraSessionController.hasCaptureDevice
+    }
+
+    /// The explainer config for the current state, or nil when the live card can
+    /// be shown. Authorized-but-no-hardware falls back to an "unavailable" state
+    /// rather than a dead black preview.
     var explainerConfig: PermissionExplainerConfig? {
         switch authState {
-        case .authorized:    return nil
+        case .authorized:    return CameraSessionController.hasCaptureDevice ? nil : .cameraUnavailable
         case .notDetermined: return .cameraNeeded
         case .denied:        return .cameraDenied
         case .restricted:    return .cameraRestricted

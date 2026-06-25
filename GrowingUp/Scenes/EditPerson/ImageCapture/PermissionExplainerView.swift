@@ -51,6 +51,13 @@ struct PermissionExplainerConfig {
         message: "Camera access is restricted on this device and can't be changed.",
         primaryButtonTitle: nil
     )
+
+    static let cameraUnavailable = PermissionExplainerConfig(
+        icon: "video.slash.fill",
+        title: "Camera unavailable",
+        message: "No camera is available on this device. Choose a photo from your library instead.",
+        primaryButtonTitle: nil
+    )
 }
 
 struct PermissionExplainerView: View {
