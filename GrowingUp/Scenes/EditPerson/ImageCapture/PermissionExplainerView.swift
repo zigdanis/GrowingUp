@@ -30,10 +30,35 @@ struct PermissionExplainerConfig {
         message: "Photo access is restricted on this device and can't be changed.",
         primaryButtonTitle: nil
     )
+
+    static let cameraNeeded = PermissionExplainerConfig(
+        icon: "camera.fill",
+        title: "Camera access needed",
+        message: "Allow access to your camera to take a picture.",
+        primaryButtonTitle: "Allow Camera"
+    )
+
+    static let cameraDenied = PermissionExplainerConfig(
+        icon: "camera.fill",
+        title: "Camera access needed",
+        message: "Allow access to your camera to take a picture.",
+        primaryButtonTitle: "Open Settings"
+    )
+
+    static let cameraRestricted = PermissionExplainerConfig(
+        icon: "lock.fill",
+        title: "Camera access restricted",
+        message: "Camera access is restricted on this device and can't be changed.",
+        primaryButtonTitle: nil
+    )
 }
 
 struct PermissionExplainerView: View {
     let config: PermissionExplainerConfig
+    /// Custom primary-button action. When nil the button opens Settings —
+    /// the right move for a denied state. The camera-needed (not-determined)
+    /// state passes a closure that triggers the system permission prompt.
+    var primaryAction: (() -> Void)?
 
     @Environment(\.openURL)
     private var openURL
@@ -51,9 +76,15 @@ struct PermissionExplainerView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             if let buttonTitle = config.primaryButtonTitle {
-                Button(buttonTitle, action: openSettings)
-                    .buttonStyle(.borderedProminent)
-                    .padding(.top, 4)
+                Button(buttonTitle) {
+                    if let primaryAction {
+                        primaryAction()
+                    } else {
+                        openSettings()
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .padding(.top, 4)
             }
         }
         .padding(32)

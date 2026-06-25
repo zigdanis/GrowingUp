@@ -33,6 +33,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app takes photos to set images for the added persons</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app sets images for the added persons</string>
 	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>
