@@ -76,13 +76,14 @@ final class PhotoGridViewModel: NSObject {
     func thumbnail(for asset: PhotoAsset, targetSize: CGSize) async -> UIImage? {
         await withCheckedContinuation { continuation in
             let options = PHImageRequestOptions()
-            options.deliveryMode = .opportunistic
-            options.resizeMode = .fast
+            // High-quality, exactly-sized renditions so the grid never shows a
+            // pixelated degraded placeholder.
+            options.deliveryMode = .highQualityFormat
+            options.resizeMode = .exact
             options.isNetworkAccessAllowed = true
-            // PHCachingImageManager's opportunistic handler may fire more than
-            // once and, for iCloud assets, off the main thread. The gate is a
-            // @MainActor box so the single-resume invariant is enforced under
-            // actor isolation rather than an unsynchronized unsafe flag.
+            // The result handler can fire off the main thread for iCloud assets.
+            // The gate is a @MainActor box so the single-resume invariant is
+            // enforced under actor isolation rather than an unsynchronized flag.
             let gate = ContinuationGate()
             imageManager.requestImage(
                 for: asset.asset,
