@@ -10,6 +10,8 @@ import Photos
 import SwiftUI
 
 struct PhotoGridView: View {
+    let cameraModel: CameraSourceModel
+    let onCameraTapped: () -> Void
     let onPicked: (UIImage) -> Void
 
     @State private var viewModel = PhotoGridViewModel()
@@ -70,6 +72,11 @@ struct PhotoGridView: View {
                     LimitedAccessHeader { showLimitedPicker = true }
                 }
                 LazyVGrid(columns: columns, spacing: 2) {
+                    CameraTile(
+                        authState: cameraModel.authState,
+                        side: side,
+                        onTap: onCameraTapped
+                    )
                     ForEach(viewModel.assets) { asset in
                         PhotoThumbnailCell(
                             asset: asset,

@@ -28,11 +28,13 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>20</string>
+	<string>23</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app takes photos to set images for the added persons</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app sets images for the added persons</string>
 	<key>PHPhotoLibraryPreventAutomaticLimitedAccessAlert</key>

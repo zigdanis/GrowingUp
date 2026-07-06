@@ -97,6 +97,7 @@
 		099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */; };
 		099FB5D02244C84B008F29EE /* ImagesTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
+		49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */; };
 		09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */; };
 		09BAB0B72246AFDD00A22220 /* ImagesCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */; };
 		09BAB0B92246B58A00A22220 /* ImagesCellPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */; };
@@ -132,6 +133,13 @@
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
 		A73A55419A5987738B8B2535 /* PermissionExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */; };
 		BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2F72B99E6E5605512A6907 /* CropStep.swift */; };
+		1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */; };
+		6E98A4F04191EE4F68AA877A /* CameraSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99060B5830237EC7DDBDA31E /* CameraSessionController.swift */; };
+		70A8453F43E1FA07B19B1791 /* CameraSessionWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */; };
+		C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292F8584945007D5945FF00 /* CameraPreview.swift */; };
+		CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */; };
+		AAA7256230096864E80D5276 /* CameraTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80966835B2C6AF20370ECB1A /* CameraTile.swift */; };
+		29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */; };
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
 		C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018955E31694F6F80D6537D /* GrowingUpWidget.swift */; };
 		D3EF4855D8FA50027A872FEA /* PhotoAuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE7546BFE10608147B0CB77 /* PhotoAuthState.swift */; };
@@ -288,6 +296,7 @@
 		099FB5CD2244C827008F29EE /* ImagesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesTableViewCell.swift; sourceTree = "<group>"; };
 		099FB5CF2244C84B008F29EE /* ImagesTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImagesTableViewCell.xib; sourceTree = "<group>"; };
 		09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeCalculatorTests.swift; sourceTree = "<group>"; };
+		109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceTests.swift; sourceTree = "<group>"; };
 		09AE1B2B2263BDD400D6A78B /* TextFieldObserverSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldObserverSpy.swift; sourceTree = "<group>"; };
 		09BAB0B62246AFDD00A22220 /* ImagesCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenter.swift; sourceTree = "<group>"; };
 		09BAB0B82246B58A00A22220 /* ImagesCellPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCellPresenterStub.swift; sourceTree = "<group>"; };
@@ -322,6 +331,13 @@
 		0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetEntryView.swift; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2C1E304222C36896704B86B7 /* CropShape.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CropShape.swift; sourceTree = "<group>"; };
+		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
+		99060B5830237EC7DDBDA31E /* CameraSessionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionController.swift; sourceTree = "<group>"; };
+		701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionWorker.swift; sourceTree = "<group>"; };
+		5292F8584945007D5945FF00 /* CameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+		424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraCardView.swift; sourceTree = "<group>"; };
+		80966835B2C6AF20370ECB1A /* CameraTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraTile.swift; sourceTree = "<group>"; };
+		CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSourceModel.swift; sourceTree = "<group>"; };
 		3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageCaptureFlowView.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
 		7018955E31694F6F80D6537D /* GrowingUpWidget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GrowingUpWidget.swift; sourceTree = "<group>"; };
@@ -599,10 +615,19 @@
 				098054F4223C295400E24D40 /* Presenters */,
 				094DF9CA223ADC3800C331EC /* Gateways */,
 				0929F1E52258CA7100212F29 /* iOS Framework APIs */,
+				4EC8924D144DC798B8A912C8 /* ImageCapture */,
 				094DF9CD223ADCD400C331EC /* Helpers */,
 				094DF9C4223AB35D00C331EC /* Info.plist */,
 			);
 			path = GrowingUpTests;
+			sourceTree = "<group>";
+		};
+		4EC8924D144DC798B8A912C8 /* ImageCapture */ = {
+			isa = PBXGroup;
+			children = (
+				109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */,
+			);
+			path = ImageCapture;
 			sourceTree = "<group>";
 		};
 		094DF9CA223ADC3800C331EC /* Gateways */ = {
@@ -871,6 +896,13 @@
 		69A924640FC494402C57BEA3 /* ImageCapture */ = {
 			isa = PBXGroup;
 			children = (
+				12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */,
+				424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */,
+				5292F8584945007D5945FF00 /* CameraPreview.swift */,
+				99060B5830237EC7DDBDA31E /* CameraSessionController.swift */,
+				701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */,
+				CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */,
+				80966835B2C6AF20370ECB1A /* CameraTile.swift */,
 				2C1E304222C36896704B86B7 /* CropShape.swift */,
 				8C2F72B99E6E5605512A6907 /* CropStep.swift */,
 				3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */,
@@ -1183,6 +1215,7 @@
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
+				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
@@ -1243,6 +1276,13 @@
 				099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */,
 				099C915D225F203F005C963C /* EmptyPersonViewController.swift in Sources */,
 				15D4457235609D2DFCAD162F /* CropShape.swift in Sources */,
+				1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */,
+				6E98A4F04191EE4F68AA877A /* CameraSessionController.swift in Sources */,
+				70A8453F43E1FA07B19B1791 /* CameraSessionWorker.swift in Sources */,
+				C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */,
+				CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */,
+				AAA7256230096864E80D5276 /* CameraTile.swift in Sources */,
+				29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */,
 				BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */,
 				557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */,
 				A73A55419A5987738B8B2535 /* PermissionExplainerView.swift in Sources */,
@@ -1344,7 +1384,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1367,7 +1407,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore pro.ziganshin.GrowingUp.Widget";
@@ -1384,11 +1424,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 20;
+				DYLIB_CURRENT_VERSION = 23;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = Core;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1401,7 +1441,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1421,11 +1461,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 20;
+				CURRENT_PROJECT_VERSION = 23;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = XMSU8WJG5R;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 20;
+				DYLIB_CURRENT_VERSION = 23;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = Core;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1438,7 +1478,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1626,7 +1666,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1650,7 +1690,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore pro.ziganshin.GrowingUp";

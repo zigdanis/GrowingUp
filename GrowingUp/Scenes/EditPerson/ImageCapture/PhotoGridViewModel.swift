@@ -77,7 +77,8 @@ final class PhotoGridViewModel: NSObject {
         await withCheckedContinuation { continuation in
             let options = PHImageRequestOptions()
             // High-quality, exactly-sized renditions so the grid never shows a
-            // pixelated degraded placeholder.
+            // pixelated degraded placeholder (opportunistic delivers a low-res
+            // image first, which the gate would otherwise resolve on and keep).
             options.deliveryMode = .highQualityFormat
             options.resizeMode = .exact
             options.isNetworkAccessAllowed = true
