@@ -16,6 +16,9 @@ struct ImageCaptureFlowView: View {
     let onComplete: (UIImage) -> Void
     let onCancel: () -> Void
 
+    @Environment(\.scenePhase)
+    private var scenePhase
+
     @State private var cameraModel = CameraSourceModel()
     @State private var showCamera = false
     @State private var libraryImage: IdentifiableImage?
@@ -47,6 +50,10 @@ struct ImageCaptureFlowView: View {
                 )
                 .toolbar(.hidden, for: .navigationBar)
             }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else { return }
+            cameraModel.refresh()
         }
         .fullScreenCover(item: $libraryImage) { item in
             CropStep(

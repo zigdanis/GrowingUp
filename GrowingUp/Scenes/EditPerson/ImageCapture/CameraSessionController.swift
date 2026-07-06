@@ -213,7 +213,7 @@ extension CameraSessionController: AVCapturePhotoCaptureDelegate {
         if error == nil,
            let data = photo.fileDataRepresentation(),
            let captured = UIImage(data: data) {
-            image = captured.unmirroredIfNeeded()
+            image = captured.normalizedOrientation()
         } else {
             image = nil
         }
@@ -229,7 +229,7 @@ private extension UIImage {
     /// so the saved still matches the real scene. Normalizing orientation to
     /// `.up` bakes any EXIF rotation into the pixels so downstream crop/encode
     /// steps never re-mirror or rotate it.
-    func unmirroredIfNeeded() -> UIImage {
+    func normalizedOrientation() -> UIImage {
         guard imageOrientation != .up else { return self }
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = scale
