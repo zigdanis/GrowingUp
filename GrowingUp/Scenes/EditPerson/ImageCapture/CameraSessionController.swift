@@ -4,8 +4,8 @@
 //
 //  Owns the AVFoundation capture session for the inline camera card: device
 //  discovery, the live preview layer, front/back flip, flash mode, and photo
-//  capture. Front-camera stills are un-mirrored so the saved image matches the
-//  scene rather than the selfie preview.
+//  capture. Front-camera stills are mirrored so the crop step matches the
+//  selfie preview the user saw when pressing the shutter.
 //
 
 import AVFoundation
@@ -113,14 +113,15 @@ final class CameraSessionController {
 
     // MARK: - Capture
 
-    /// Captures a still. Completion fires on the main actor with the oriented,
-    /// un-mirrored image, or nil on failure.
+    /// Captures a still. Completion fires on the main actor with an image that
+    /// matches the visible preview orientation, or nil on failure.
     func capturePhoto(completion: @escaping (UIImage?) -> Void) {
         guard !isCapturing else { return }
         isCapturing = true
         captureContinuation = completion
         let flash = flashMode.avFlashMode
-        worker.capturePhoto(flash: flash) { [weak self] image in
+        let isFront = isFront
+        worker.capturePhoto(flash: flash, mirrorOutput: isFront) { [weak self] image in
             Task { @MainActor in
                 self?.finishCapture(with: image)
             }
@@ -199,6 +200,7 @@ private final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate
     }
 
     func capturePhoto(flash: AVCaptureDevice.FlashMode,
+                      mirrorOutput: Bool,
                       completion: @escaping @Sendable (UIImage?) -> Void) {
         sessionQueue.async { [weak self] in
             guard let self else { return }
@@ -214,7 +216,9 @@ private final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate
             if self.photoOutput.supportedFlashModes.contains(flash) {
                 settings.flashMode = flash
             }
-            self.captureCompletion = completion
+            self.captureCompletion = { image in
+                completion(mirrorOutput ? image?.horizontallyMirrored() : image)
+            }
             self.photoOutput.capturePhoto(with: settings, delegate: self)
         }
     }
@@ -276,17 +280,28 @@ private final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate
 }
 
 private extension UIImage {
-    /// AVFoundation already delivers un-mirrored pixel data for the front
-    /// camera (unlike the live preview, which is mirrored for the selfie feel),
-    /// so the saved still matches the real scene. Normalizing orientation to
-    /// `.up` bakes any EXIF rotation into the pixels so downstream crop/encode
-    /// steps never re-mirror or rotate it.
+    /// Normalizing orientation to `.up` bakes any EXIF rotation into the pixels
+    /// so downstream crop/encode steps never rotate it.
     func normalizedOrientation() -> UIImage {
         guard imageOrientation != .up else { return self }
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = scale
         let renderer = UIGraphicsImageRenderer(size: size, format: format)
         return renderer.image { _ in
+            draw(in: CGRect(origin: .zero, size: size))
+        }
+    }
+
+    /// Mirrors pixels horizontally so front-camera capture matches the mirrored
+    /// live preview shown at shutter time.
+    func horizontallyMirrored() -> UIImage {
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = scale
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        return renderer.image { context in
+            let cgContext = context.cgContext
+            cgContext.translateBy(x: size.width, y: 0)
+            cgContext.scaleBy(x: -1, y: 1)
             draw(in: CGRect(origin: .zero, size: size))
         }
     }
