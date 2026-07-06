@@ -9,15 +9,6 @@
         "revision" : "b0cb4fdf23e51849cc2460bdc6de795c3bcca99d",
         "version" : "0.6.4"
       }
-    },
-    {
-      "identity" : "swiftycrop",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/benedom/SwiftyCrop.git",
-      "state" : {
-        "revision" : "0374ffb9862ccb1473abeedbc24e6c9f9a8d25e4",
-        "version" : "2.2.0"
-      }
     }
   ],
   "version" : 3
