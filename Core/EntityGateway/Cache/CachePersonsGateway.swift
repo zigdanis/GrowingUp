@@ -44,13 +44,21 @@ public final class CachePersonsGateway: PersonsGateway {
 	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
 		// Core Data
 		coreDataGateway.edit(person: person, with: parameters, completionHandler: completionHandler)
-		// Saving Images
+		// Reconcile stored image files with the edited parameters: save any newly
+		// picked image, and delete the previously stored file whenever its slot was
+		// cleared or replaced (its id no longer matches what is being saved).
 		var tasks = [Task]()
 		if let appPicSaving = appPicSavingTask(for: parameters) {
 			tasks.append(appPicSaving)
 		}
+		if let appPicDelete = outdatedAppPicDeleteTask(person: person, parameters: parameters) {
+			tasks.append(appPicDelete)
+		}
 		if let widgetPicSaving = widgetPicSavingTask(for: parameters) {
 			tasks.append(widgetPicSaving)
+		}
+		if let widgetPicDelete = outdatedWidgetPicDeleteTask(person: person, parameters: parameters) {
+			tasks.append(widgetPicDelete)
 		}
 		taskManager.process(tasks: tasks)
 	}
@@ -107,5 +115,19 @@ public final class CachePersonsGateway: PersonsGateway {
 		return {
 			try Disk.remove(widgetPic.cachingKey, from: directory)
 		}
+	}
+
+	/// Delete task for a previously stored app picture that the edit no longer keeps —
+	/// either the slot was cleared (`appImage == nil`) or replaced with a different
+	/// image. Returns `nil` when the stored picture is unchanged, so an untouched edit
+	/// never deletes the file it is about to keep.
+	private func outdatedAppPicDeleteTask(person: Person, parameters: AddPersonParameters) -> Task? {
+		guard let storedId = person.appPicId, storedId != parameters.appImage?.id else { return nil }
+		return appPicDeleteTask(for: person)
+	}
+
+	private func outdatedWidgetPicDeleteTask(person: Person, parameters: AddPersonParameters) -> Task? {
+		guard let storedId = person.widgetPicId, storedId != parameters.widgetImage?.id else { return nil }
+		return widgetPicDeleteTask(for: person)
 	}
 }

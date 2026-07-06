@@ -1,0 +1,67 @@
+//
+//  PermissionExplainerView.swift
+//  GrowingUp
+//
+//  Reusable denied / restricted permission state. Shared by the photo grid and
+//  (in a later PR) the camera card — only the copy, icon and action differ.
+//
+
+import SwiftUI
+import UIKit
+
+struct PermissionExplainerConfig {
+    let icon: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
+    /// Title for the primary button. `nil` hides the button (e.g. restricted,
+    /// where the user cannot grant access anyway).
+    let primaryButtonTitle: LocalizedStringKey?
+
+    static let photosDenied = PermissionExplainerConfig(
+        icon: "photo.on.rectangle.angled",
+        title: "Photo access needed",
+        message: "Allow access to your photos to choose a picture.",
+        primaryButtonTitle: "Open Settings"
+    )
+
+    static let photosRestricted = PermissionExplainerConfig(
+        icon: "lock.fill",
+        title: "Photo access restricted",
+        message: "Photo access is restricted on this device and can't be changed.",
+        primaryButtonTitle: nil
+    )
+}
+
+struct PermissionExplainerView: View {
+    let config: PermissionExplainerConfig
+
+    @Environment(\.openURL)
+    private var openURL
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: config.icon)
+                .font(.system(size: 48))
+                .foregroundStyle(.secondary)
+            Text(config.title)
+                .font(.title3.weight(.semibold))
+                .multilineTextAlignment(.center)
+            Text(config.message)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            if let buttonTitle = config.primaryButtonTitle {
+                Button(buttonTitle, action: openSettings)
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top, 4)
+            }
+        }
+        .padding(32)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func openSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        openURL(url)
+    }
+}
