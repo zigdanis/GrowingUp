@@ -1,0 +1,6 @@
+[marketplaces.ios-project-plugins]
+source_type = "local"
+source = "/Users/zigdanis/Projects/GrowingUp"
+
+[plugins."build-ios-apps@ios-project-plugins"]
+enabled = true
