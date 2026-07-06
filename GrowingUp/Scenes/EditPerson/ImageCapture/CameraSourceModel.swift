@@ -14,7 +14,7 @@ import SwiftUI
 @Observable
 final class CameraSourceModel {
 
-    private(set) var authState: CameraAuthState
+    private(set) var authState: AVAuthorizationStatus
     let controller = CameraSessionController()
 
     /// Injectable so tests can drive the state machine without the real
@@ -37,12 +37,12 @@ final class CameraSourceModel {
         self.currentStatus = currentStatus
         self.requestAccess = requestAccess
         self.hasCaptureDevice = hasCaptureDevice
-        self.authState = CameraAuthState(currentStatus())
+        self.authState = currentStatus()
     }
 
     /// Re-reads the current status, e.g. after returning from Settings.
     func refresh() {
-        authState = CameraAuthState(currentStatus())
+        authState = currentStatus()
     }
 
     /// Triggers the system prompt when undetermined and applies the result.
@@ -50,7 +50,7 @@ final class CameraSourceModel {
     func requestIfNeeded() async {
         guard authState == .notDetermined else { return }
         let granted = await requestAccess()
-        authState = CameraAuthState(currentStatus())
+        authState = currentStatus()
         // Fall back to a direct mapping if the status hasn't settled yet.
         if authState == .notDetermined {
             authState = granted ? .authorized : .denied
@@ -60,7 +60,7 @@ final class CameraSourceModel {
     /// Whether the live camera card can actually run — authorized *and* the
     /// device has camera hardware (false on the Simulator).
     var canShowLiveCamera: Bool {
-        authState.isAuthorized && hasCaptureDevice()
+        authState.isCameraAuthorized && hasCaptureDevice()
     }
 
     /// The explainer config for the current state, or nil when the live card can
@@ -72,6 +72,7 @@ final class CameraSourceModel {
         case .notDetermined: return .cameraNeeded
         case .denied:        return .cameraDenied
         case .restricted:    return .cameraRestricted
+        @unknown default:    return .cameraDenied
         }
     }
 }

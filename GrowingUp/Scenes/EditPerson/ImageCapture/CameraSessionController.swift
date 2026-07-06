@@ -46,11 +46,10 @@ enum CameraFlashMode: CaseIterable {
 
 @MainActor
 @Observable
-final class CameraSessionController: NSObject {
+final class CameraSessionController {
 
-    /// The live preview session, handed to the preview layer. Configured and
-    /// driven on a private serial queue; mutated only through this controller.
-    @ObservationIgnored let session = AVCaptureSession()
+    /// The live preview session, handed to the preview layer.
+    var session: AVCaptureSession { worker.session }
 
     private(set) var flashMode: CameraFlashMode = .off
     /// True once flip is available (a usable front camera was discovered).
@@ -62,10 +61,7 @@ final class CameraSessionController: NSObject {
     /// preview once frames are actually flowing (no black flash behind the glyph).
     private(set) var isRunning = false
 
-    @ObservationIgnored private let sessionQueue = DispatchQueue(label: "growingup.camera.session")
-    @ObservationIgnored private let photoOutput = AVCapturePhotoOutput()
-    @ObservationIgnored private var videoInput: AVCaptureDeviceInput?
-    @ObservationIgnored private var configured = false
+    @ObservationIgnored private let worker = CameraSessionWorker()
     /// Retained until its delegate callback fires, then released.
     @ObservationIgnored private var captureContinuation: ((UIImage?) -> Void)?
 
@@ -85,24 +81,161 @@ final class CameraSessionController: NSObject {
     /// Builds the session (back camera by default) and starts running. Safe to
     /// call repeatedly; configuration happens once.
     func start() {
+        worker.start { [weak self] state in
+            Task { @MainActor in
+                self?.apply(state)
+            }
+        }
+    }
+
+    func stop() {
+        worker.stop { [weak self] running in
+            Task { @MainActor in
+                self?.isRunning = running
+            }
+        }
+    }
+
+    // MARK: - Controls
+
+    /// Swaps the active camera input between back and front.
+    func flip() {
+        worker.flip { [weak self] isFront in
+            Task { @MainActor in
+                self?.isFront = isFront
+            }
+        }
+    }
+
+    func cycleFlash() {
+        flashMode = flashMode.next
+    }
+
+    // MARK: - Capture
+
+    /// Captures a still. Completion fires on the main actor with the oriented,
+    /// un-mirrored image, or nil on failure.
+    func capturePhoto(completion: @escaping (UIImage?) -> Void) {
+        guard !isCapturing else { return }
+        isCapturing = true
+        captureContinuation = completion
+        let flash = flashMode.avFlashMode
+        worker.capturePhoto(flash: flash) { [weak self] image in
+            Task { @MainActor in
+                self?.finishCapture(with: image)
+            }
+        }
+    }
+
+    private func finishCapture(with image: UIImage?) {
+        let completion = captureContinuation
+        captureContinuation = nil
+        isCapturing = false
+        completion?(image)
+    }
+
+    private func apply(_ state: CameraSessionWorker.State) {
+        canFlip = state.canFlip
+        isFront = state.isFront
+        isRunning = state.isRunning
+    }
+}
+
+private final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unchecked Sendable {
+    struct State: Sendable {
+        let isRunning: Bool
+        let canFlip: Bool
+        let isFront: Bool
+    }
+
+    let session = AVCaptureSession()
+
+    private let sessionQueue = DispatchQueue(label: "growingup.camera.session")
+    private let photoOutput = AVCapturePhotoOutput()
+    private var videoInput: AVCaptureDeviceInput?
+    private var configured = false
+    private var captureCompletion: (@Sendable (UIImage?) -> Void)?
+
+    func start(onStateChange: @escaping @Sendable (State) -> Void) {
         sessionQueue.async { [weak self] in
             guard let self else { return }
             self.configureIfNeeded()
             if !self.session.isRunning {
                 self.session.startRunning()
             }
-            let running = self.session.isRunning
-            Task { @MainActor in self.isRunning = running }
+            onStateChange(self.currentState())
         }
     }
 
-    func stop() {
+    func stop(onRunningChange: @escaping @Sendable (Bool) -> Void) {
         sessionQueue.async { [weak self] in
             guard let self else { return }
             if self.session.isRunning {
                 self.session.stopRunning()
             }
-            Task { @MainActor in self.isRunning = false }
+            onRunningChange(false)
+        }
+    }
+
+    func flip(onPositionChange: @escaping @Sendable (Bool) -> Void) {
+        sessionQueue.async { [weak self] in
+            guard let self, let current = self.videoInput else { return }
+            let newPosition: AVCaptureDevice.Position = current.device.position == .back ? .front : .back
+            guard let device = self.camera(for: newPosition),
+                  let newInput = try? AVCaptureDeviceInput(device: device) else { return }
+
+            self.session.beginConfiguration()
+            self.session.removeInput(current)
+            if self.session.canAddInput(newInput) {
+                self.session.addInput(newInput)
+                self.videoInput = newInput
+            } else if self.session.canAddInput(current) {
+                // Roll back to the previous input if the swap is rejected.
+                self.session.addInput(current)
+            }
+            self.session.commitConfiguration()
+            onPositionChange(self.videoInput?.device.position == .front)
+        }
+    }
+
+    func capturePhoto(flash: AVCaptureDevice.FlashMode,
+                      completion: @escaping @Sendable (UIImage?) -> Void) {
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            // No active video connection (e.g. Simulator / no camera hardware):
+            // calling `capturePhoto` would raise an exception, so fail gracefully.
+            guard let connection = self.photoOutput.connection(with: .video),
+                  connection.isActive, connection.isEnabled else {
+                completion(nil)
+                return
+            }
+
+            let settings = AVCapturePhotoSettings()
+            if self.photoOutput.supportedFlashModes.contains(flash) {
+                settings.flashMode = flash
+            }
+            self.captureCompletion = completion
+            self.photoOutput.capturePhoto(with: settings, delegate: self)
+        }
+    }
+
+    func photoOutput(_ output: AVCapturePhotoOutput,
+                     didFinishProcessingPhoto photo: AVCapturePhoto,
+                     error: Error?) {
+        // Build the still off the main actor, then hop back to deliver it.
+        let image: UIImage?
+        if error == nil,
+           let data = photo.fileDataRepresentation(),
+           let captured = UIImage(data: data) {
+            image = captured.normalizedOrientation()
+        } else {
+            image = nil
+        }
+        sessionQueue.async { [weak self] in
+            guard let self else { return }
+            let completion = self.captureCompletion
+            self.captureCompletion = nil
+            completion?(image)
         }
     }
 
@@ -122,77 +255,15 @@ final class CameraSessionController: NSObject {
             photoOutput.maxPhotoQualityPrioritization = .quality
         }
         session.commitConfiguration()
-
-        let frontAvailable = camera(for: .front) != nil
-        let backIsActive = videoInput?.device.position == .back
-        Task { @MainActor in
-            self.canFlip = frontAvailable
-            self.isFront = !backIsActive
-        }
     }
 
-    // MARK: - Controls
-
-    /// Swaps the active camera input between back and front.
-    func flip() {
-        sessionQueue.async { [weak self] in
-            guard let self, let current = self.videoInput else { return }
-            let newPosition: AVCaptureDevice.Position = current.device.position == .back ? .front : .back
-            guard let device = self.camera(for: newPosition),
-                  let newInput = try? AVCaptureDeviceInput(device: device) else { return }
-            self.session.beginConfiguration()
-            self.session.removeInput(current)
-            if self.session.canAddInput(newInput) {
-                self.session.addInput(newInput)
-                self.videoInput = newInput
-            } else if self.session.canAddInput(current) {
-                // Roll back to the previous input if the swap is rejected.
-                self.session.addInput(current)
-            }
-            self.session.commitConfiguration()
-            let nowFront = self.videoInput?.device.position == .front
-            Task { @MainActor in self.isFront = nowFront }
-        }
+    private func currentState() -> State {
+        State(
+            isRunning: session.isRunning,
+            canFlip: camera(for: .front) != nil,
+            isFront: videoInput?.device.position == .front
+        )
     }
-
-    func cycleFlash() {
-        flashMode = flashMode.next
-    }
-
-    // MARK: - Capture
-
-    /// Captures a still. Completion fires on the main actor with the oriented,
-    /// un-mirrored image, or nil on failure.
-    func capturePhoto(completion: @escaping (UIImage?) -> Void) {
-        guard !isCapturing else { return }
-        isCapturing = true
-        captureContinuation = completion
-        let flash = flashMode.avFlashMode
-        sessionQueue.async { [weak self] in
-            guard let self else { return }
-            // No active video connection (e.g. Simulator / no camera hardware):
-            // calling `capturePhoto` would raise an exception, so fail gracefully.
-            guard let connection = self.photoOutput.connection(with: .video),
-                  connection.isActive, connection.isEnabled else {
-                Task { @MainActor in self.finishCapture(with: nil) }
-                return
-            }
-            let settings = AVCapturePhotoSettings()
-            if self.photoOutput.supportedFlashModes.contains(flash) {
-                settings.flashMode = flash
-            }
-            self.photoOutput.capturePhoto(with: settings, delegate: self)
-        }
-    }
-
-    private func finishCapture(with image: UIImage?) {
-        let completion = captureContinuation
-        captureContinuation = nil
-        isCapturing = false
-        completion?(image)
-    }
-
-    // MARK: - Device discovery
 
     private func camera(for position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         let discovery = AVCaptureDevice.DiscoverySession(
@@ -201,25 +272,6 @@ final class CameraSessionController: NSObject {
             position: position
         )
         return discovery.devices.first
-    }
-}
-
-extension CameraSessionController: AVCapturePhotoCaptureDelegate {
-    nonisolated func photoOutput(_ output: AVCapturePhotoOutput,
-                                 didFinishProcessingPhoto photo: AVCapturePhoto,
-                                 error: Error?) {
-        // Build the still off the main actor, then hop back to deliver it.
-        let image: UIImage?
-        if error == nil,
-           let data = photo.fileDataRepresentation(),
-           let captured = UIImage(data: data) {
-            image = captured.normalizedOrientation()
-        } else {
-            image = nil
-        }
-        Task { @MainActor in
-            self.finishCapture(with: image)
-        }
     }
 }
 

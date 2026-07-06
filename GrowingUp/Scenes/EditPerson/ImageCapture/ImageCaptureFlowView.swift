@@ -88,6 +88,8 @@ struct ImageCaptureFlowView: View {
             }
         case .denied, .restricted:
             showCamera = true
+        @unknown default:
+            showCamera = true
         }
     }
 
@@ -162,7 +164,7 @@ private struct CameraSourceView: View {
     private func requestAccess() {
         Task {
             await cameraModel.requestIfNeeded()
-            if cameraModel.authState.isAuthorized {
+            if cameraModel.authState.isCameraAuthorized {
                 cameraModel.controller.start()
             }
         }

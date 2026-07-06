@@ -133,7 +133,7 @@
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
 		A73A55419A5987738B8B2535 /* PermissionExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */; };
 		BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2F72B99E6E5605512A6907 /* CropStep.swift */; };
-		1B5048C3683D6380022AC294 /* CameraAuthState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* CameraAuthState.swift */; };
+		1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */; };
 		6E98A4F04191EE4F68AA877A /* CameraSessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99060B5830237EC7DDBDA31E /* CameraSessionController.swift */; };
 		C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292F8584945007D5945FF00 /* CameraPreview.swift */; };
 		CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */; };
@@ -330,7 +330,7 @@
 		0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetEntryView.swift; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2C1E304222C36896704B86B7 /* CropShape.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CropShape.swift; sourceTree = "<group>"; };
-		12E7C3C28D10E4DA16EF2EFC /* CameraAuthState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraAuthState.swift; sourceTree = "<group>"; };
+		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
 		99060B5830237EC7DDBDA31E /* CameraSessionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionController.swift; sourceTree = "<group>"; };
 		5292F8584945007D5945FF00 /* CameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraCardView.swift; sourceTree = "<group>"; };
@@ -894,7 +894,7 @@
 		69A924640FC494402C57BEA3 /* ImageCapture */ = {
 			isa = PBXGroup;
 			children = (
-				12E7C3C28D10E4DA16EF2EFC /* CameraAuthState.swift */,
+				12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */,
 				424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */,
 				5292F8584945007D5945FF00 /* CameraPreview.swift */,
 				99060B5830237EC7DDBDA31E /* CameraSessionController.swift */,
@@ -1273,7 +1273,7 @@
 				099FB5CE2244C827008F29EE /* ImagesTableViewCell.swift in Sources */,
 				099C915D225F203F005C963C /* EmptyPersonViewController.swift in Sources */,
 				15D4457235609D2DFCAD162F /* CropShape.swift in Sources */,
-				1B5048C3683D6380022AC294 /* CameraAuthState.swift in Sources */,
+				1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */,
 				6E98A4F04191EE4F68AA877A /* CameraSessionController.swift in Sources */,
 				C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */,
 				CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */,

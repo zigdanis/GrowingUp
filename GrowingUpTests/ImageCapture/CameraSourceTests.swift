@@ -14,20 +14,13 @@ import XCTest
 @MainActor
 final class CameraSourceTests: XCTestCase {
 
-	// MARK: - CameraAuthState
+	// MARK: - AVAuthorizationStatus
 
-	func test_CameraAuthState_mapsAVStatuses() {
-		XCTAssertEqual(CameraAuthState(.authorized), .authorized)
-		XCTAssertEqual(CameraAuthState(.denied), .denied)
-		XCTAssertEqual(CameraAuthState(.restricted), .restricted)
-		XCTAssertEqual(CameraAuthState(.notDetermined), .notDetermined)
-	}
-
-	func test_CameraAuthState_isAuthorizedOnlyWhenAuthorized() {
-		XCTAssertTrue(CameraAuthState.authorized.isAuthorized)
-		XCTAssertFalse(CameraAuthState.notDetermined.isAuthorized)
-		XCTAssertFalse(CameraAuthState.denied.isAuthorized)
-		XCTAssertFalse(CameraAuthState.restricted.isAuthorized)
+	func test_AVAuthorizationStatus_isCameraAuthorizedOnlyWhenAuthorized() {
+		XCTAssertTrue(AVAuthorizationStatus.authorized.isCameraAuthorized)
+		XCTAssertFalse(AVAuthorizationStatus.notDetermined.isCameraAuthorized)
+		XCTAssertFalse(AVAuthorizationStatus.denied.isCameraAuthorized)
+		XCTAssertFalse(AVAuthorizationStatus.restricted.isCameraAuthorized)
 	}
 
 	// MARK: - CameraFlashMode

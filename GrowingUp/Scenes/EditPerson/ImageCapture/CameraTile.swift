@@ -11,9 +11,10 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct CameraTile: View {
-    let authState: CameraAuthState
+    let authState: AVAuthorizationStatus
     let side: CGFloat
     let onTap: () -> Void
 
