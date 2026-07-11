@@ -138,7 +138,6 @@
 		70A8453F43E1FA07B19B1791 /* CameraSessionWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */; };
 		C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292F8584945007D5945FF00 /* CameraPreview.swift */; };
 		CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */; };
-		AAA7256230096864E80D5276 /* CameraTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80966835B2C6AF20370ECB1A /* CameraTile.swift */; };
 		29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */; };
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
 		C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018955E31694F6F80D6537D /* GrowingUpWidget.swift */; };
@@ -336,7 +335,6 @@
 		701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionWorker.swift; sourceTree = "<group>"; };
 		5292F8584945007D5945FF00 /* CameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraCardView.swift; sourceTree = "<group>"; };
-		80966835B2C6AF20370ECB1A /* CameraTile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraTile.swift; sourceTree = "<group>"; };
 		CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSourceModel.swift; sourceTree = "<group>"; };
 		3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageCaptureFlowView.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
@@ -902,7 +900,6 @@
 				99060B5830237EC7DDBDA31E /* CameraSessionController.swift */,
 				701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */,
 				CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */,
-				80966835B2C6AF20370ECB1A /* CameraTile.swift */,
 				2C1E304222C36896704B86B7 /* CropShape.swift */,
 				8C2F72B99E6E5605512A6907 /* CropStep.swift */,
 				3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */,
@@ -1281,7 +1278,6 @@
 				70A8453F43E1FA07B19B1791 /* CameraSessionWorker.swift in Sources */,
 				C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */,
 				CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */,
-				AAA7256230096864E80D5276 /* CameraTile.swift in Sources */,
 				29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */,
 				BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */,
 				557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */,
@@ -1384,7 +1380,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1407,7 +1403,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp.Widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore pro.ziganshin.GrowingUp.Widget";
@@ -1441,7 +1437,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1478,7 +1474,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				OTHER_LDFLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.Core;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -1666,7 +1662,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1690,7 +1686,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = pro.ziganshin.GrowingUp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore pro.ziganshin.GrowingUp";

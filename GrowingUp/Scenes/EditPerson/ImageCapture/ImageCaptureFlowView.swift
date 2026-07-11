@@ -1,15 +1,54 @@
-//
-//  ImageCaptureFlowView.swift
-//  GrowingUp
-//
-//  Root of the image-pick flow hosted into the UIKit EditPerson scene.
-//  Sources: a custom photo-library grid and an inline in-app camera card,
-//  surfaced as the grid's first tile. Either source yields one image that runs
-//  through the shared CropStep. The seam contract (`onComplete(UIImage)` /
-//  `onCancel`) is unchanged, so the host UIKit code is untouched.
-//
-
+import PhotosUI
 import SwiftUI
+
+enum ImageCaptureStage: Equatable {
+    case sourceMenu
+    case camera
+    case photoPreview
+    case systemPhotoPicker
+}
+
+enum ImageCaptureSelectionOrigin: Equatable {
+    case camera
+    case photoPreview
+}
+
+@MainActor
+@Observable
+final class ImageCaptureCoordinator {
+    private(set) var stage: ImageCaptureStage = .sourceMenu
+    private(set) var selectionOrigin: ImageCaptureSelectionOrigin?
+
+    func choseCamera() { stage = .camera }
+    func chosePhotos() { stage = .photoPreview }
+    func choseAllPhotos() { stage = .systemPhotoPicker }
+
+    func wentBack() {
+        switch stage {
+        case .camera, .photoPreview:
+            stage = .sourceMenu
+        case .systemPhotoPicker:
+            stage = .photoPreview
+        case .sourceMenu:
+            break
+        }
+    }
+
+    func pickerFinishedWithoutImage() { stage = .photoPreview }
+
+    func selectedImage(from origin: ImageCaptureSelectionOrigin) {
+        selectionOrigin = origin
+        stage = origin == .camera ? .camera : .photoPreview
+    }
+
+    func cancelledCrop() {
+        guard let selectionOrigin else { return }
+        stage = selectionOrigin == .camera ? .camera : .photoPreview
+        self.selectionOrigin = nil
+    }
+
+    func completedCrop() { selectionOrigin = nil }
+}
 
 struct ImageCaptureFlowView: View {
     let cropShape: CropShape
@@ -18,154 +57,273 @@ struct ImageCaptureFlowView: View {
 
     @Environment(\.scenePhase)
     private var scenePhase
-
+    @State private var coordinator = ImageCaptureCoordinator()
     @State private var cameraModel = CameraSourceModel()
-    @State private var showCamera = false
-    @State private var libraryImage: IdentifiableImage?
+    @State private var selectedImage: IdentifiableImage?
+    @State private var pendingSystemPickerImage: UIImage?
 
     var body: some View {
-        NavigationStack {
-            PhotoGridView(
-                cameraModel: cameraModel,
-                onCameraTapped: openCamera,
-                onPicked: { image in
-                    libraryImage = IdentifiableImage(image: image)
-                }
-            )
-            .navigationTitle("Photos")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel", action: onCancel)
-                }
-            }
-            // The camera is pushed (not a full-screen cover) so it stays inside
-            // the host sheet card rather than taking over the whole screen.
-            .navigationDestination(isPresented: $showCamera) {
+        Group {
+            switch coordinator.stage {
+            case .sourceMenu:
+                ImageSourceMenuView(
+                    onCamera: openCamera,
+                    onPhotos: coordinator.chosePhotos,
+                    onCancel: onCancel
+                )
+            case .camera:
                 CameraSourceView(
                     cameraModel: cameraModel,
-                    cropShape: cropShape,
-                    onComplete: finishCamera,
-                    onClose: { showCamera = false }
+                    onCapture: { select($0, from: .camera) },
+                    onBack: coordinator.wentBack
                 )
-                .toolbar(.hidden, for: .navigationBar)
+            case .photoPreview:
+                LightweightPhotoPreviewView(
+                    onPicked: { select($0, from: .photoPreview) },
+                    onBack: coordinator.wentBack,
+                    onAllPhotos: coordinator.choseAllPhotos
+                )
+            case .systemPhotoPicker:
+                LightweightPhotoPreviewView(
+                    onPicked: { select($0, from: .photoPreview) },
+                    onBack: coordinator.wentBack,
+                    onAllPhotos: coordinator.choseAllPhotos
+                )
             }
         }
         .onChange(of: scenePhase) { _, newPhase in
             guard newPhase == .active else { return }
             cameraModel.refresh()
         }
-        .fullScreenCover(item: $libraryImage) { item in
+        .fullScreenCover(isPresented: systemPickerPresented, onDismiss: finishSystemPickerDismissal) {
+            SystemPhotoPicker(
+                onPicked: { image in
+                    pendingSystemPickerImage = image
+                    coordinator.pickerFinishedWithoutImage()
+                },
+                onCancel: coordinator.pickerFinishedWithoutImage
+            )
+        }
+        .fullScreenCover(item: $selectedImage) { item in
             CropStep(
                 image: item.image,
                 shape: cropShape,
                 onComplete: { cropped in
-                    libraryImage = nil
-                    finish(cropped)
+                    selectedImage = nil
+                    coordinator.completedCrop()
+                    onComplete(cropped.downsized(maxPixelSide: cropShape.maxPixelSize))
                 },
                 onCancel: {
-                    // Back to the grid to choose another photo.
-                    libraryImage = nil
+                    selectedImage = nil
+                    coordinator.cancelledCrop()
                 }
             )
         }
     }
 
     private func openCamera() {
-        switch cameraModel.authState {
-        case .authorized:
-            if cameraModel.canShowLiveCamera {
-                cameraModel.controller.start()
-            }
-            showCamera = true
-        case .notDetermined:
-            Task {
-                await cameraModel.requestIfNeeded()
-                if cameraModel.canShowLiveCamera {
-                    cameraModel.controller.start()
-                }
-                showCamera = true
-            }
-        case .denied, .restricted:
-            showCamera = true
-        @unknown default:
-            showCamera = true
+        Task {
+            await cameraModel.requestIfNeeded()
+            coordinator.choseCamera()
         }
     }
 
-    private func finishCamera(_ cropped: UIImage) {
-        showCamera = false
-        finish(cropped)
+    private func select(_ image: UIImage, from origin: ImageCaptureSelectionOrigin) {
+        coordinator.selectedImage(from: origin)
+        selectedImage = IdentifiableImage(image: image)
     }
 
-    private func finish(_ cropped: UIImage) {
-        onComplete(cropped.downsized(maxPixelSide: cropShape.maxPixelSize))
+    private var systemPickerPresented: Binding<Bool> {
+        Binding(
+            get: { coordinator.stage == .systemPhotoPicker },
+            set: { isPresented in
+                if !isPresented { coordinator.pickerFinishedWithoutImage() }
+            }
+        )
+    }
+
+    private func finishSystemPickerDismissal() {
+        guard let image = pendingSystemPickerImage else { return }
+        pendingSystemPickerImage = nil
+        select(image, from: .photoPreview)
     }
 }
 
-/// The camera leg of the flow: live card (or permission explainer) plus its own
-/// crop step. Keeping the crop cover here means crop-cancel retakes by simply
-/// dismissing back onto the still-presented card.
-private struct CameraSourceView: View {
-    let cameraModel: CameraSourceModel
-    let cropShape: CropShape
-    let onComplete: (UIImage) -> Void
-    let onClose: () -> Void
-
-    @State private var captured: IdentifiableImage?
+private struct ImageSourceMenuView: View {
+    let onCamera: () -> Void
+    let onPhotos: () -> Void
+    let onCancel: () -> Void
 
     var body: some View {
-        content
-            .fullScreenCover(item: $captured) { item in
-                CropStep(
-                    image: item.image,
-                    shape: cropShape,
-                    onComplete: { cropped in
-                        captured = nil
-                        onComplete(cropped)
-                    },
-                    onCancel: {
-                        // Back to the live card to retake.
-                        captured = nil
-                    }
-                )
-            }
-    }
+        ZStack(alignment: .bottom) {
+            Color.black.opacity(0.12)
+                .ignoresSafeArea()
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onCancel)
 
-    @ViewBuilder private var content: some View {
+            VStack(spacing: 0) {
+                SourceMenuRow(title: "Camera", systemImage: "camera.fill", action: onCamera)
+                Divider().padding(.leading, 76)
+                SourceMenuRow(title: "Photos", systemImage: "photo.on.rectangle", action: onPhotos)
+            }
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .stroke(.white.opacity(0.28), lineWidth: 0.5)
+            }
+            .shadow(color: .black.opacity(0.18), radius: 24, y: 8)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 12)
+        }
+    }
+}
+
+private struct SourceMenuRow: View {
+    let title: LocalizedStringKey
+    let systemImage: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 16) {
+                Image(systemName: systemImage)
+                    .font(.title3.weight(.semibold))
+                    .frame(width: 44, height: 44)
+                    .background(.thinMaterial, in: Circle())
+                Text(title)
+                    .font(.title3.weight(.medium))
+                Spacer()
+            }
+            .foregroundStyle(.primary)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct LightweightPhotoPreviewView: View {
+    let onPicked: (UIImage) -> Void
+    let onBack: () -> Void
+    let onAllPhotos: () -> Void
+
+    var body: some View {
+        VStack(spacing: 12) {
+            PhotoPreviewHeader(onBack: onBack, onAllPhotos: onAllPhotos)
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+            PhotoGridView(onPicked: onPicked)
+        }
+        .background(.background)
+    }
+}
+
+private struct PhotoPreviewHeader: View {
+    let onBack: () -> Void
+    let onAllPhotos: () -> Void
+
+    var body: some View {
+        HStack {
+            GlassControl(title: "Back", systemImage: "chevron.left", action: onBack)
+            Spacer()
+            GlassControl(title: "All Photos", systemImage: "photo.stack", action: onAllPhotos)
+        }
+    }
+}
+
+private struct GlassControl: View {
+    let title: LocalizedStringKey
+    let systemImage: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Label(title, systemImage: systemImage)
+                .font(.subheadline.weight(.semibold))
+                .frame(height: 44)
+                .padding(.horizontal, 14)
+                .background(.ultraThinMaterial, in: Capsule())
+                .overlay { Capsule().stroke(.white.opacity(0.35), lineWidth: 0.5) }
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct CameraSourceView: View {
+    let cameraModel: CameraSourceModel
+    let onCapture: (UIImage) -> Void
+    let onBack: () -> Void
+
+    var body: some View {
         if cameraModel.canShowLiveCamera {
             CameraCardView(
                 controller: cameraModel.controller,
-                onCapture: { image in
-                    captured = IdentifiableImage(image: image)
-                },
-                onClose: onClose
+                onCapture: onCapture,
+                onClose: onBack
             )
         } else if let config = cameraModel.explainerConfig {
-            explainer(config)
-        }
-    }
-
-    private func explainer(_ config: PermissionExplainerConfig) -> some View {
-        ZStack(alignment: .topLeading) {
-            PermissionExplainerView(
-                config: config,
-                primaryAction: cameraModel.authState == .notDetermined ? requestAccess : nil
-            )
-            Button(action: onClose) {
-                Image(systemName: "xmark")
-                    .font(.title3.weight(.semibold))
-                    .padding(16)
+            ZStack(alignment: .topLeading) {
+                PermissionExplainerView(
+                    config: config,
+                    primaryAction: cameraModel.authState == .notDetermined ? requestAccess : nil
+                )
+                Button(action: onBack) {
+                    Image(systemName: "chevron.left")
+                        .font(.title3.weight(.semibold))
+                        .padding(16)
+                }
+                .accessibilityLabel(Text("Back"))
             }
-            .accessibilityLabel(Text("Close"))
         }
     }
 
     private func requestAccess() {
-        Task {
-            await cameraModel.requestIfNeeded()
-            if cameraModel.authState.isCameraAuthorized {
-                cameraModel.controller.start()
+        Task { await cameraModel.requestIfNeeded() }
+    }
+}
+
+private struct SystemPhotoPicker: UIViewControllerRepresentable {
+    let onPicked: (UIImage) -> Void
+    let onCancel: () -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onPicked: onPicked, onCancel: onCancel)
+    }
+
+    func makeUIViewController(context: Context) -> PHPickerViewController {
+        var configuration = PHPickerConfiguration(photoLibrary: .shared())
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+
+    final class Coordinator: NSObject, PHPickerViewControllerDelegate {
+        let onPicked: (UIImage) -> Void
+        let onCancel: () -> Void
+
+        init(onPicked: @escaping (UIImage) -> Void, onCancel: @escaping () -> Void) {
+            self.onPicked = onPicked
+            self.onCancel = onCancel
+        }
+
+        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+            guard let provider = results.first?.itemProvider else {
+                onCancel()
+                return
+            }
+            provider.loadObject(ofClass: UIImage.self) { [onPicked, onCancel] object, _ in
+                DispatchQueue.main.async {
+                    if let image = object as? UIImage {
+                        onPicked(image)
+                    } else {
+                        onCancel()
+                    }
+                }
             }
         }
     }

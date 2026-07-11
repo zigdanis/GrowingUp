@@ -50,6 +50,15 @@
 /* Navigation title for the photo library grid */
 "Photos" = "Фото";
 
+/* Source-menu action that opens the camera */
+"Camera" = "Камера";
+
+/* Control that returns to the image source menu */
+"Back" = "Назад";
+
+/* Control that opens the system photo picker */
+"All Photos" = "Все фото";
+
 /* Limited-access banner shown above the grid when the user granted access to a subset of photos */
 "You've allowed access to a limited set of photos." = "Вы разрешили доступ к ограниченному набору фотографий.";
 

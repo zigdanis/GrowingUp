@@ -10,8 +10,6 @@ import Photos
 import SwiftUI
 
 struct PhotoGridView: View {
-    let cameraModel: CameraSourceModel
-    let onCameraTapped: () -> Void
     let onPicked: (UIImage) -> Void
 
     @State private var viewModel = PhotoGridViewModel()
@@ -25,6 +23,7 @@ struct PhotoGridView: View {
     var body: some View {
         content
             .task { await viewModel.onAppear() }
+            .onDisappear { viewModel.cancelSelection() }
             .overlay {
                 if viewModel.isPreparingSelection {
                     SelectionProgressOverlay(progress: viewModel.selectionProgress) {
@@ -72,11 +71,6 @@ struct PhotoGridView: View {
                     LimitedAccessHeader { showLimitedPicker = true }
                 }
                 LazyVGrid(columns: columns, spacing: 2) {
-                    CameraTile(
-                        authState: cameraModel.authState,
-                        side: side,
-                        onTap: onCameraTapped
-                    )
                     ForEach(viewModel.assets) { asset in
                         PhotoThumbnailCell(
                             asset: asset,

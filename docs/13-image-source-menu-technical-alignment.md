@@ -1,6 +1,6 @@
-# PR 13 Technical Alignment: Image Source Menu and Photo Preview Flow
+# PR 13 Technical Design: Image Source Menu and Photo Preview Flow
 
-This document describes how to inspect and align the existing image-capture code before implementation. It is intentionally planning-level, but concrete about the current files and seams.
+This document records implemented image-capture architecture, scope, and acceptance behavior.
 
 ## Current Flow Map
 
@@ -198,17 +198,17 @@ Inspect:
 - Whether camera and photo permission states appear inside the new modal structure cleanly.
 - Whether Back from permission screens should return to source menu.
 
-## New Concepts To Introduce Later
+## Implemented Concepts
 
-These are planning names, not implementation requirements:
+Implementation uses these concepts:
 
-- `ImageSlot`: app/main/poster image vs widget image.
-- `ImageCaptureSource`: camera vs photos.
-- `ImageCaptureStage`: source menu, camera preview, photo preview, system picker, crop.
+- Existing UIKit row and crop-shape mapping continues to distinguish app/main/poster and widget images.
+- `ImageCaptureSelectionOrigin`: camera vs photo preview.
+- `ImageCaptureStage`: source menu, camera preview, photo preview, and system picker.
 - `ImageSourceMenuView`: ChatGPT-style two-option actions menu.
 - `LightweightPhotoPreviewView`: fixed-size photo preview holder.
-- `LiquidGlassControl`: reusable control style for Back and All Photos if the visual direction proves shared.
-- `SystemPhotoPickerAdapter`: wrapper around the native picker API chosen during implementation.
+- `GlassControl`: shared Back and All Photos presentation.
+- `SystemPhotoPicker`: full-screen `PHPickerViewController` adapter with cancel/failure routing.
 
 ## Native Photo Picker Investigation
 
@@ -232,9 +232,9 @@ Reference starting points:
 - Apple `PhotosPicker` documentation: https://developer.apple.com/documentation/PhotosUI/PhotosPicker
 - Apple WWDC "Meet the new Photos picker": https://developer.apple.com/videos/play/wwdc2020/10652/
 
-## Migration Strategy
+## Completed Migration
 
-1. First, introduce a coordinator/root concept for image capture.
+1. Introduce a coordinator/root concept for image capture.
 2. Move the source-choice state out of `PhotoGridView`.
 3. Make Camera and Photos sibling paths.
 4. Split the photo preview grid from camera navigation.
@@ -243,13 +243,13 @@ Reference starting points:
 7. Preserve crop output and presenter updates.
 8. Remove dead Photos-first assumptions and stale names.
 
-## Test And Verification Plan
+## Test And Verification
 
 Unit-level checks:
 
 - Camera source state stays covered by existing `CameraSourceTests`.
-- Add tests for stage transitions if the coordinator has testable logic.
-- Add tests for photo-grid view model cancellation if navigation back can interrupt a selection.
+- Event-driven tests cover Back from both sibling destinations, picker cancel/failure, and crop cancellation to each origin.
+- Photo-grid disappearance invokes `cancelSelection()`, resetting and cancelling any active PhotoKit image request.
 
 Manual checks:
 
@@ -266,4 +266,4 @@ Manual checks:
 
 ## Acceptance Standard
 
-Do not force these requirements into the current Photos-first structure. If the current root flow fights the desired behavior, rewrite the image-capture flow around the new state model. A clean hierarchy is preferred over compatibility patches that preserve the wrong mental model.
+Acceptance requires source-menu-first navigation, correct Back/cancel restoration, localized controls, unchanged crop/save output, and no release-automation changes in feature diff.
