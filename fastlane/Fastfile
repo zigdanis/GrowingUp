@@ -93,11 +93,13 @@ platform :ios do
     begin
       require 'open3'
       require 'json'
+      require 'tmpdir'
 
       prompt = <<~PROMPT
         You are writing TestFlight "What to Test" release notes from raw git commit messages.
         Summarize the changes into short, user-facing beta tester notes (max 4 bullet points,
-        plain language, no internal jargon, no commit hashes). Then translate that summary to Russian.
+        plain language, no internal jargon, no commit hashes). Do not address the reader by name.
+        Then translate that summary to Russian.
         Return one JSON object. Both values must be strings containing newline-separated bullets:
         {"en":"<english>","ru":"<russian>"}
 
@@ -106,9 +108,11 @@ platform :ios do
       PROMPT
 
       schema = File.expand_path("testflight_notes.schema.json", __dir__)
+      model = ENV.fetch("CODEX_RELEASE_NOTES_MODEL", "gpt-5.6-luna")
       command = [
-        "codex", "-a", "never", "-s", "read-only",
-        "exec", "--ephemeral", "--ignore-rules", "--output-schema", schema, "-"
+        "codex", "-m", model, "-a", "never", "-s", "read-only", "-C", Dir.tmpdir,
+        "exec", "--ephemeral", "--ignore-rules", "--skip-git-repo-check",
+        "--output-schema", schema, "-"
       ]
       stdout, stderr, status = Open3.capture3(*command, stdin_data: prompt)
       raise "Codex CLI exited #{status.exitstatus}: #{stderr.lines.last}" unless status.success?
