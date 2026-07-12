@@ -59,6 +59,9 @@
 /* Control that opens the system photo picker */
 "All Photos" = "Все фото";
 
+/* Button that confirms the single selected photo */
+"Select photo" = "Выбрать фото";
+
 /* Limited-access banner shown above the grid when the user granted access to a subset of photos */
 "You've allowed access to a limited set of photos." = "Вы разрешили доступ к ограниченному набору фотографий.";
 

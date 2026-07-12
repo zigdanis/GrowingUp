@@ -16,8 +16,8 @@ protocol ImagesCellView: AnyObject {
 }
 
 protocol ImagesCellViewDelegate: AnyObject {
-	func showAppPicImagePickerFor(row: Int)
-	func showWidgetPicImagePickerFor(row: Int)
+	func showAppPicImagePickerFor(row: Int, source: ImageCaptureSource)
+	func showWidgetPicImagePickerFor(row: Int, source: ImageCaptureSource)
 	func removeAppPic(forRow row: Int)
 	func removeWidgetPic(forRow row: Int)
 }
@@ -31,6 +31,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private var row: Int?
 	private let appPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
 	private let widgetPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
+	private let appPicMenuButton = ImageSourceMenuButton()
+	private let widgetPicMenuButton = ImageSourceMenuButton()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -46,8 +48,21 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	}
 
 	private func setupPickerButtons() {
-		appPicButton.addTarget(self, action: #selector(appPicTouched), for: .touchUpInside)
-		widgetPicButton.addTarget(self, action: #selector(widgetPicTouched), for: .touchUpInside)
+		addMenuButton(appPicMenuButton, over: appPicButton)
+		addMenuButton(widgetPicMenuButton, over: widgetPicButton)
+		appPicButton.isUserInteractionEnabled = false
+		widgetPicButton.isUserInteractionEnabled = false
+	}
+
+	private func addMenuButton(_ menuButton: ImageSourceMenuButton, over pickerButton: UIButton) {
+		menuButton.translatesAutoresizingMaskIntoConstraints = false
+		contentView.addSubview(menuButton)
+		NSLayoutConstraint.activate([
+			menuButton.topAnchor.constraint(equalTo: pickerButton.topAnchor),
+			menuButton.leadingAnchor.constraint(equalTo: pickerButton.leadingAnchor),
+			menuButton.trailingAnchor.constraint(equalTo: pickerButton.trailingAnchor),
+			menuButton.heightAnchor.constraint(equalTo: pickerButton.heightAnchor, constant: 150)
+		])
 	}
 
 	private func setupRemoveBadges() {
@@ -128,20 +143,27 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
 		self.delegate = delegate
 		self.row = row
+		appPicMenuButton.menu = imageSourceMenu { [weak self] source in
+			guard let self, let row = self.row else { return }
+			self.delegate?.showAppPicImagePickerFor(row: row, source: source)
+		}
+		widgetPicMenuButton.menu = imageSourceMenu { [weak self] source in
+			guard let self, let row = self.row else { return }
+			self.delegate?.showWidgetPicImagePickerFor(row: row, source: source)
+		}
 	}
 
 	// MARK: - Actions
 
-	@objc
-	private func appPicTouched() {
-		guard let row = row else { return }
-		delegate?.showAppPicImagePickerFor(row: row)
-	}
-
-	@objc
-	private func widgetPicTouched() {
-		guard let row = row else { return }
-		delegate?.showWidgetPicImagePickerFor(row: row)
+	private func imageSourceMenu(onSelect: @escaping (ImageCaptureSource) -> Void) -> UIMenu {
+		UIMenu(children: [
+			UIAction(title: String(localized: "Camera"), image: UIImage(systemName: "camera")) { _ in
+				onSelect(.camera)
+			},
+			UIAction(title: String(localized: "Photos"), image: UIImage(systemName: "photo")) { _ in
+				onSelect(.photos)
+			}
+		])
 	}
 
 	@objc
@@ -154,5 +176,42 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private func removeWidgetPicTouched() {
 		guard let row = row else { return }
 		delegate?.removeWidgetPic(forRow: row)
+	}
+}
+
+private final class ImageSourceMenuButton: UIButton {
+	private var sourceHitHeight: CGFloat { bounds.height - 150 }
+
+	init() {
+		super.init(frame: .zero)
+		showsMenuAsPrimaryAction = true
+		backgroundColor = .clear
+	}
+
+	@available(*, unavailable)
+	required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+		CGRect(x: 0, y: 0, width: bounds.width, height: sourceHitHeight).contains(point)
+	}
+
+	override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
+		CGPoint(x: bounds.midX, y: sourceHitHeight + 105)
+	}
+
+	override func contextMenuInteraction(
+		_ interaction: UIContextMenuInteraction,
+		previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration
+	) -> UITargetedPreview? {
+		nil
+	}
+
+	override func contextMenuInteraction(
+		_ interaction: UIContextMenuInteraction,
+		previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration
+	) -> UITargetedPreview? {
+		nil
 	}
 }

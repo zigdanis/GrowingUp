@@ -191,15 +191,15 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
 extension EditPersonViewController: ImagesCellViewDelegate {
 
-	func showAppPicImagePickerFor(row: Int) {
-		presentImageFlow(cropShape: .rectangle) { [weak self] image in
+	func showAppPicImagePickerFor(row: Int, source: ImageCaptureSource) {
+		presentImageFlow(source: source, cropShape: .rectangle) { [weak self] image in
 			self?.presenter.appImagePicked(image: PersonImage(uiImage: image))
 			self?.tableView.reloadData()
 		}
 	}
 
-	func showWidgetPicImagePickerFor(row: Int) {
-		presentImageFlow(cropShape: .circle) { [weak self] image in
+	func showWidgetPicImagePickerFor(row: Int, source: ImageCaptureSource) {
+		presentImageFlow(source: source, cropShape: .circle) { [weak self] image in
 			self?.presenter.widgetImagePicked(image: PersonImage(uiImage: image))
 			self?.tableView.reloadData()
 		}
@@ -215,10 +215,12 @@ extension EditPersonViewController: ImagesCellViewDelegate {
 		tableView.reloadData()
 	}
 
-	private func presentImageFlow(cropShape: CropShape,
+	private func presentImageFlow(source: ImageCaptureSource,
+								  cropShape: CropShape,
 								  onPicked: @escaping (UIImage) -> Void) {
 		view.endEditing(true)
 		let flow = ImageCaptureFlowView(
+			source: source,
 			cropShape: cropShape,
 			onComplete: { [weak self] image in
 				self?.dismiss(animated: true) { onPicked(image) }

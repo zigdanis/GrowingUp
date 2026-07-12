@@ -10,9 +10,9 @@ import Photos
 import SwiftUI
 
 struct PhotoGridView: View {
-    let onPicked: (UIImage) -> Void
+    let viewModel: PhotoGridViewModel
+    @Binding var selectedAsset: PhotoAsset?
 
-    @State private var viewModel = PhotoGridViewModel()
     @State private var showLimitedPicker = false
 
     private let columns = Array(
@@ -40,6 +40,7 @@ struct PhotoGridView: View {
                     viewModel.presentLimitedPicker(from: viewController)
                 }
             )
+            .background(Color(.secondarySystemBackground))
     }
 
     private var errorBinding: Binding<Bool> {
@@ -75,14 +76,19 @@ struct PhotoGridView: View {
                         PhotoThumbnailCell(
                             asset: asset,
                             side: side,
-                            viewModel: viewModel
+                            viewModel: viewModel,
+                            isSelected: selectedAsset?.id == asset.id
                         ) {
-                            viewModel.select(asset, completion: onPicked)
+                            toggleSelection(of: asset)
                         }
                     }
                 }
             }
         }
+    }
+
+    private func toggleSelection(of asset: PhotoAsset) {
+        selectedAsset = selectedAsset?.id == asset.id ? nil : asset
     }
 }
 

@@ -1,6 +1,11 @@
 import PhotosUI
 import SwiftUI
 
+enum ImageCaptureSource: Equatable {
+    case camera
+    case photos
+}
+
 enum ImageCaptureStage: Equatable {
     case sourceMenu
     case camera
@@ -16,8 +21,12 @@ enum ImageCaptureSelectionOrigin: Equatable {
 @MainActor
 @Observable
 final class ImageCaptureCoordinator {
-    private(set) var stage: ImageCaptureStage = .sourceMenu
+    private(set) var stage: ImageCaptureStage
     private(set) var selectionOrigin: ImageCaptureSelectionOrigin?
+
+    init(stage: ImageCaptureStage = .sourceMenu) {
+        self.stage = stage
+    }
 
     func choseCamera() { stage = .camera }
     func chosePhotos() { stage = .photoPreview }
@@ -57,10 +66,23 @@ struct ImageCaptureFlowView: View {
 
     @Environment(\.scenePhase)
     private var scenePhase
-    @State private var coordinator = ImageCaptureCoordinator()
+    @State private var coordinator: ImageCaptureCoordinator
     @State private var cameraModel = CameraSourceModel()
     @State private var selectedImage: IdentifiableImage?
     @State private var pendingSystemPickerImage: UIImage?
+
+    init(
+        source: ImageCaptureSource,
+        cropShape: CropShape,
+        onComplete: @escaping (UIImage) -> Void,
+        onCancel: @escaping () -> Void
+    ) {
+        self.cropShape = cropShape
+        self.onComplete = onComplete
+        self.onCancel = onCancel
+        let initialStage: ImageCaptureStage = source == .camera ? .camera : .photoPreview
+        _coordinator = State(initialValue: ImageCaptureCoordinator(stage: initialStage))
+    }
 
     var body: some View {
         Group {
@@ -75,12 +97,12 @@ struct ImageCaptureFlowView: View {
                 CameraSourceView(
                     cameraModel: cameraModel,
                     onCapture: { select($0, from: .camera) },
-                    onBack: coordinator.wentBack
+                    onBack: onCancel
                 )
             case .photoPreview:
                 LightweightPhotoPreviewView(
                     onPicked: { select($0, from: .photoPreview) },
-                    onBack: coordinator.wentBack,
+                    onBack: onCancel,
                     onAllPhotos: coordinator.choseAllPhotos
                 )
             case .systemPhotoPicker:
@@ -150,30 +172,34 @@ struct ImageCaptureFlowView: View {
 }
 
 private struct ImageSourceMenuView: View {
+    private let cornerRadius: CGFloat = 32
+
     let onCamera: () -> Void
     let onPhotos: () -> Void
     let onCancel: () -> Void
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            Color.black.opacity(0.12)
+        ZStack(alignment: .bottomLeading) {
+            Color.black.opacity(0.2)
                 .ignoresSafeArea()
                 .contentShape(Rectangle())
                 .onTapGesture(perform: onCancel)
 
-            VStack(spacing: 0) {
-                SourceMenuRow(title: "Camera", systemImage: "camera.fill", action: onCamera)
-                Divider().padding(.leading, 76)
-                SourceMenuRow(title: "Photos", systemImage: "photo.on.rectangle", action: onPhotos)
+            VStack(spacing: 8) {
+                SourceMenuRow(title: "Camera", systemImage: "camera", action: onCamera)
+                SourceMenuRow(title: "Photos", systemImage: "photo", action: onPhotos)
             }
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .padding(12)
+            .frame(maxWidth: 360)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
             .overlay {
-                RoundedRectangle(cornerRadius: 28, style: .continuous)
-                    .stroke(.white.opacity(0.28), lineWidth: 0.5)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(.white.opacity(0.2), lineWidth: 0.5)
             }
-            .shadow(color: .black.opacity(0.18), radius: 24, y: 8)
-            .padding(.horizontal, 16)
-            .padding(.bottom, 12)
+            .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
+            .padding(.leading, 16)
+            .padding(.trailing, 48)
+            .padding(.bottom, 16)
         }
     }
 }
@@ -185,18 +211,18 @@ private struct SourceMenuRow: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 16) {
+            HStack(spacing: 20) {
                 Image(systemName: systemImage)
-                    .font(.title3.weight(.semibold))
-                    .frame(width: 44, height: 44)
-                    .background(.thinMaterial, in: Circle())
+                    .font(.title2.weight(.medium))
+                    .frame(width: 56, height: 56)
+                    .background(.white.opacity(0.08), in: Circle())
                 Text(title)
-                    .font(.title3.weight(.medium))
+                    .font(.title2)
                 Spacer()
             }
             .foregroundStyle(.primary)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 6)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -208,45 +234,40 @@ private struct LightweightPhotoPreviewView: View {
     let onBack: () -> Void
     let onAllPhotos: () -> Void
 
+    @State private var photoModel = PhotoGridViewModel()
+    @State private var selectedAsset: PhotoAsset?
+
     var body: some View {
-        VStack(spacing: 12) {
-            PhotoPreviewHeader(onBack: onBack, onAllPhotos: onAllPhotos)
-                .padding(.horizontal, 16)
-                .padding(.top, 12)
-            PhotoGridView(onPicked: onPicked)
+        NavigationStack {
+            PhotoGridView(viewModel: photoModel, selectedAsset: $selectedAsset)
+                .background(Color(.secondarySystemBackground))
+                .ignoresSafeArea(.container, edges: .bottom)
+                .toolbar {
+                    ToolbarItemGroup(placement: .bottomBar) {
+                        Button(action: onBack) {
+                            Image(systemName: "chevron.left")
+                        }
+                        .accessibilityLabel(Text("Back"))
+
+                        Spacer()
+
+                        if selectedAsset == nil {
+                            Button("All Photos", action: onAllPhotos)
+                        } else {
+                            Button("Select photo", action: confirmSelection)
+                                .buttonStyle(.borderedProminent)
+                                .tint(.blue)
+                        }
+                    }
+                }
+                .toolbar(.hidden, for: .navigationBar)
+                .toolbarBackgroundVisibility(.hidden, for: .bottomBar)
         }
-        .background(.background)
     }
-}
 
-private struct PhotoPreviewHeader: View {
-    let onBack: () -> Void
-    let onAllPhotos: () -> Void
-
-    var body: some View {
-        HStack {
-            GlassControl(title: "Back", systemImage: "chevron.left", action: onBack)
-            Spacer()
-            GlassControl(title: "All Photos", systemImage: "photo.stack", action: onAllPhotos)
-        }
-    }
-}
-
-private struct GlassControl: View {
-    let title: LocalizedStringKey
-    let systemImage: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label(title, systemImage: systemImage)
-                .font(.subheadline.weight(.semibold))
-                .frame(height: 44)
-                .padding(.horizontal, 14)
-                .background(.ultraThinMaterial, in: Capsule())
-                .overlay { Capsule().stroke(.white.opacity(0.35), lineWidth: 0.5) }
-        }
-        .buttonStyle(.plain)
+    private func confirmSelection() {
+        guard let selectedAsset else { return }
+        photoModel.select(selectedAsset, completion: onPicked)
     }
 }
 
