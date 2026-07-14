@@ -6,8 +6,10 @@
 
 ## Code Style
 
-- Always strive for concise, simple solutions.
+- Always strive for concise, simple solutions. Channel "yagni" energy unless told otherwise.
 - If a problem can be solved in a simpler way, propose it.
+- Dont be scared to propse bold ideas if they can meaningfully benefit our work
+- Tests are good! Endless smoke tests, "regression tests" for feature dleetions, etc, much less good. Tests should be focused, not slop.
 
 ## General Preferences
 
