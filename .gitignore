@@ -56,6 +56,10 @@ buildServer.json
 # Secrets — never commit
 .env
 .env.*
+!.env.example
 fastlane/.env
 fastlane/.env.*
+!fastlane/.env.example
 *.p8
+*.p12
+*.mobileprovision
