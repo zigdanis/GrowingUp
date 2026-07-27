@@ -17,10 +17,7 @@ public struct PersonImage: Equatable {
 	}
 
 	public init(id: UUID? = nil, uiImage: UIImage? = nil) {
-		self.id =
-			id
-			?? UUID()
-
+		self.id = id ?? UUID()
 		self.uiImage = uiImage
 	}
 
