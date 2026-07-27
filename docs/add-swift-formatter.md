@@ -69,12 +69,15 @@ Git hooks are only a convenience because contributors can bypass them with `--no
 CI is the enforcement boundary. Pull requests and pushes to `master` should run:
 
 ```text
-swift-format lint --strict
+scripts/check-formatting.sh
 swiftlint lint --strict
 xcodebuild test
 ```
 
 The formatter check must not rewrite files in CI. It should fail and show actionable diagnostics when committed code is not formatted.
+
+Do not invoke `swift-format lint --strict` without paths: with no paths, the
+tool reads standard input instead of checking the repository.
 
 ## Implementation plan
 
@@ -104,6 +107,14 @@ scripts/install-git-hooks.sh   # Opt in to repository hooks
 ```
 
 Scripts should target application, widget, core, and test source directories explicitly. They should exclude build output, dependency checkouts, generated files, and agent/plugin assets.
+
+The shared formatting scripts should pass the repository configuration and the
+same explicit first-party paths to `swift-format`, for example:
+
+```bash
+xcrun swift-format lint --strict --recursive --parallel \
+  Core GrowingUp GrowingUpTests Widget
+```
 
 Scripts should fail with a clear installation or Xcode-selection message when a required executable is unavailable.
 
