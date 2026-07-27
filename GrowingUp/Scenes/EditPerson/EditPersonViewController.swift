@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 import Core
-import MobileCoreServices
 
 enum BarButtonItemStyle {
 	case cancel
@@ -29,20 +29,30 @@ typealias EPC = EditPersonViewController
 
 final class EditPersonViewController: UIViewController, EditPersonView {
 
+	// Visible table rows.
 	static let imagePickerRow = 0
 	static let nameFieldRow = 1
-	static let dayPickerRow = 2
-	static let timePickerRow = 3
-	static let addToWidgetRow = 4
+	static let birthdayRow = 2
+	static let addToWidgetRow = 3
+
+	// Logical storage keys for the combined birthday. The picker is a single control,
+	// but the day and time are still stored (and persisted) separately, so a tap on the
+	// combined picker writes the same date into both of these slots.
+	static let dayPickerRow = 10
+	static let timePickerRow = 11
+
+	// Reuse identifiers for the table cells, matching each cell's XIB file name.
+	private enum CellID {
+		static let textField = "TextFieldTableVIewCell"
+		static let date = "DateTableViewCell"
+		static let images = "ImagesTableViewCell"
+		static let toggle = "ToggleTableViewCell"
+	}
 
     var presenter: EditPersonPresenter!
     private let configurator: EditPersonConfigurator
 
     @IBOutlet weak var tableView: UITableView!
-	private lazy var dayPickerView: DatePickerView = bdPickerView(for: .date)
-	private lazy var timePickerView: DatePickerView = bdPickerView(for: .time)
-	private lazy var appPicImagePicker = WDImagePicker(cropSize: .screen)
-	private lazy var widgetPicImagePicker = WDImagePicker(cropSize: .circle)
 
     init(configurator: EditPersonConfigurator) {
         self.configurator = configurator
@@ -65,10 +75,10 @@ final class EditPersonViewController: UIViewController, EditPersonView {
     private func setupTableView() {
         tableView.dataSource = self
 		tableView.delegate = self
-        tableView.register(R.nib.textFieldTableVIewCell)
-        tableView.register(R.nib.dateTableViewCell)
-		tableView.register(R.nib.imagesTableViewCell)
-		tableView.register(R.nib.toggleTableViewCell)
+        tableView.register(UINib(nibName: CellID.textField, bundle: nil), forCellReuseIdentifier: CellID.textField)
+        tableView.register(UINib(nibName: CellID.date, bundle: nil), forCellReuseIdentifier: CellID.date)
+		tableView.register(UINib(nibName: CellID.images, bundle: nil), forCellReuseIdentifier: CellID.images)
+		tableView.register(UINib(nibName: CellID.toggle, bundle: nil), forCellReuseIdentifier: CellID.toggle)
 		tableView.keyboardDismissMode = .onDrag
     }
 
@@ -81,23 +91,6 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		} else {
 			tableView.tableFooterView = UIView()
 		}
-	}
-
-	private func bdPickerView(for mode: UIDatePicker.Mode) -> DatePickerView {
-		let picker = DatePickerView(mode: mode)
-		picker.delegate = self
-		picker.translatesAutoresizingMaskIntoConstraints = false
-		let parentView: UIView! = navigationController?.view ?? view
-		parentView.addSubview(picker)
-		let consts = [
-			picker.leadingAnchor.constraint(equalTo: parentView.leadingAnchor),
-			picker.topAnchor.constraint(equalTo: parentView.topAnchor),
-			parentView.trailingAnchor.constraint(equalTo: picker.trailingAnchor),
-			parentView.bottomAnchor.constraint(equalTo: picker.bottomAnchor)
-		]
-		NSLayoutConstraint.activate(consts)
-		picker.clipPaddingViewTopTo(safeAreaBottomLength: bottomLayoutGuide.length)
-		return picker
 	}
 
     // MARK: - Actions
@@ -149,52 +142,30 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 	func reloadData() {
 		tableView.reloadData()
 	}
-
-	// MARK: - Business Logic
-
-	func showDayPickerView() {
-		let selectedDate = presenter.dateForDayPicker()
-		dayPickerView.layoutIfNeeded()
-		dayPickerView.alpha = 1
-		dayPickerView.showPicker(with: selectedDate)
-		view.endEditing(true)
-	}
-
-	func showTimePickerView() {
-		let selectedDate = presenter.dateForTimePicker()
-		timePickerView.layoutIfNeeded()
-		timePickerView.alpha = 1
-		timePickerView.showPicker(with: selectedDate)
-		view.endEditing(true)
-	}
 }
 
 extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        return 4
     }
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch indexPath.row {
 		case EPC.imagePickerRow:
-			let identifier = R.reuseIdentifier.imagesTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: ImagesTableViewCell = dequeue(CellID.images, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case EPC.nameFieldRow:
-			let identifier = R.reuseIdentifier.textFieldTableVIewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: TextFieldTableViewCell = dequeue(CellID.textField, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
-		case EPC.dayPickerRow, EPC.timePickerRow:
-			let identifier = R.reuseIdentifier.dateTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+		case EPC.birthdayRow:
+			let cell: DateTableViewCell = dequeue(CellID.date, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		case EPC.addToWidgetRow:
-			let identifier = R.reuseIdentifier.toggleTableViewCell
-			let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)!
+			let cell: ToggleTableViewCell = dequeue(CellID.toggle, at: indexPath)
 			presenter.configure(cell: cell, forRow: indexPath.row)
 			return cell
 		default:
@@ -202,80 +173,78 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 		}
 	}
 
+	private func dequeue<Cell: UITableViewCell>(_ identifier: String, at indexPath: IndexPath) -> Cell {
+		guard let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath) as? Cell else {
+			fatalError("Could not dequeue cell with identifier \(identifier)")
+		}
+		return cell
+	}
+
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: false)
 		if indexPath.row == EPC.nameFieldRow {
 			let cell = tableView.cellForRow(at: indexPath)
 			cell?.becomeFirstResponder()
-		} else if indexPath.row == EPC.dayPickerRow {
-			showDayPickerView()
-		} else if indexPath.row == EPC.timePickerRow {
-			showTimePickerView()
 		}
  	}
 }
 
-extension EditPersonViewController: DatePickerViewDelegate {
-
-	func datePickerDidHide(picker: DatePickerView) {
-		picker.alpha = 0
-	}
-
-	func datePicker(picker: DatePickerView, selectedDate date: Date) {
-		if picker === dayPickerView {
-			presenter.dateFor(row: EPC.dayPickerRow, didUpdateTo: date)
-		} else if picker === timePickerView {
-			presenter.dateFor(row: EPC.timePickerRow, didUpdateTo: date)
-		}
-		tableView.reloadData()
-	}
-}
-
 extension EditPersonViewController: ImagesCellViewDelegate {
 
-	func showAppPicImagePickerFor(row: Int) {
-		#if DEBUG
-		//swiftlint:disable all
-		let docPicker = UIDocumentPickerViewController(documentTypes: [kUTTypeImage as! String], in: .import)
-		//swiftlint:enable all
-		present(docPicker, animated: true)
-			return
-		#endif
-		appPicImagePicker.delegate = self
-		present(appPicImagePicker.imagePickerController, animated: true)
-	}
-
-	func showWidgetPicImagePickerFor(row: Int) {
-		widgetPicImagePicker.delegate = self
-		present(widgetPicImagePicker.imagePickerController, animated: true)
-	}
-}
-
-extension EditPersonViewController: WDImagePickerDelegate {
-
-	func imagePicker(_ imagePicker: WDImagePicker, pickedImage: UIImage) {
-		if imagePicker === appPicImagePicker {
-			presenter.appImagePicked(image: PersonImage(uiImage: pickedImage))
-		} else if imagePicker === widgetPicImagePicker {
-			presenter.widgetImagePicked(image: PersonImage(uiImage: pickedImage))
+	func showAppPicImagePickerFor(row: Int, source: ImageCaptureSource) {
+		presentImageFlow(source: source, cropShape: .rectangle) { [weak self] image in
+			self?.presenter.appImagePicked(image: PersonImage(uiImage: image))
+			self?.tableView.reloadData()
 		}
-		tableView.reloadData()
-		imagePicker.imagePickerController.dismiss(animated: true)
 	}
 
-	func imagePickerDidCancel(_ imagePicker: WDImagePicker) {
-		imagePicker.imagePickerController.dismiss(animated: true)
+	func showWidgetPicImagePickerFor(row: Int, source: ImageCaptureSource) {
+		presentImageFlow(source: source, cropShape: .circle) { [weak self] image in
+			self?.presenter.widgetImagePicked(image: PersonImage(uiImage: image))
+			self?.tableView.reloadData()
+		}
+	}
+
+	func removeAppPic(forRow row: Int) {
+		presenter.removeAppImage()
+		tableView.reloadData()
+	}
+
+	func removeWidgetPic(forRow row: Int) {
+		presenter.removeWidgetImage()
+		tableView.reloadData()
+	}
+
+	private func presentImageFlow(source: ImageCaptureSource,
+								  cropShape: CropShape,
+								  onPicked: @escaping (UIImage) -> Void) {
+		view.endEditing(true)
+		let flow = ImageCaptureFlowView(
+			source: source,
+			cropShape: cropShape,
+			onComplete: { [weak self] image in
+				self?.dismiss(animated: true) { onPicked(image) }
+			},
+			onCancel: { [weak self] in
+				self?.dismiss(animated: true)
+			}
+		)
+		let host = UIHostingController(rootView: flow)
+		host.modalPresentationStyle = .pageSheet
+		if let sheet = host.sheetPresentationController {
+			// Keep the holder fixed while the photo grid scrolls inside it.
+			let cardId = UISheetPresentationController.Detent.Identifier("card")
+			sheet.detents = [.custom(identifier: cardId) { context in 0.62 * context.maximumDetentValue }]
+			sheet.selectedDetentIdentifier = cardId
+			sheet.prefersGrabberVisible = false
+			sheet.preferredCornerRadius = 20
+		}
+		present(host, animated: true)
 	}
 }
 
 extension EditPersonViewController: RemoveButtonDelegate {
 	func removeTouched() {
 		presenter.removePersonPressed()
-	}
-}
-
-extension EditPersonViewController: UIDocumentMenuDelegate {
-	func documentMenu(_ documentMenu: UIDocumentMenuViewController, didPickDocumentPicker documentPicker: UIDocumentPickerViewController) {
-
 	}
 }

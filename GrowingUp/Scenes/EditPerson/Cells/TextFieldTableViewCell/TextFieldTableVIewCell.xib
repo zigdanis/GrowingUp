@@ -22,7 +22,7 @@
                         <rect key="frame" x="69" y="11.5" width="290" height="21"/>
                         <nil key="textColor"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                        <textInputTraits key="textInputTraits" autocapitalizationType="words" textContentType="name"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" spellCheckingType="no" smartDashesType="no" smartInsertDeleteType="no" smartQuotesType="no"/>
                     </textField>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="300" verticalHuggingPriority="251" horizontalCompressionResistancePriority="800" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFG-vX-nvO">
                         <rect key="frame" x="16" y="12" width="45" height="19.5"/>

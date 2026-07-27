@@ -13,7 +13,7 @@ protocol PageViewControllerViewable: UIViewController {
 	var index: Int { get }
 }
 
-protocol PersonsListView: class {
+protocol PersonsListView: AnyObject {
 	func updateListOfScreens(defaultPage index: Int)
 }
 

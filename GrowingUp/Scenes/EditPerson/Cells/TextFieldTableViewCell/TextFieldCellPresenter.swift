@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol TextFieldCellPresenter: class {
+protocol TextFieldCellPresenter: AnyObject {
 	func configure(cell: TextFieldCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: String)
 	func valueFor(row: Int) -> String?
@@ -21,8 +21,8 @@ final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		cell.setup(with: self, observer: textFieldObserver, forRow: row)
-		cell.display(title: R.string.localizable.name())
-		cell.display(placeholder: R.string.localizable.name())
+		cell.display(title: String(localized: "Name"))
+		cell.display(placeholder: String(localized: "Name"))
 		guard let value = storage[row] else { return }
 		cell.display(value: value)
 	}

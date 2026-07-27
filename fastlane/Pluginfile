@@ -1,1 +1,0 @@
-gem "fastlane-plugin-telegram", git: "https://github.com/zigdanis/fastlane-plugin-telegram"

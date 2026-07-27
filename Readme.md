@@ -1,5 +1,7 @@
 # GrowingUp
 
+[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml)
+
 iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
@@ -11,7 +13,8 @@ Current version: **2.0.0**.
 * Keep a list of people, each with a name, birth date and photo.
 * Add or edit a person, including picking and cropping a photo.
 * Person overview with the age counting up in real time.
-* A **Today widget** that surfaces up to three pinned people at a glance.
+* A **Home Screen widget** (WidgetKit) that surfaces up to three pinned people
+  at a glance, with their age updating at minute granularity.
 * Data is shared between the app and the widget through a shared App Group.
 * Localized in English and Russian.
 
@@ -27,7 +30,7 @@ The project follows **MVP + Clean Architecture**.
 * **`GrowingUp`** — the app target. Each feature under `Scenes/`
   (`PersonsList`, `PersonOverview`, `EditPerson`, `EmptyPerson`) is wired as a
   View ↔ Presenter ↔ Configurator triple.
-* **`Widget`** — the Today extension, reusing `Core` for its data.
+* **`Widget`** — the WidgetKit extension (SwiftUI), reusing `Core` for its data.
 
 ### Persistence
 
@@ -43,15 +46,16 @@ Managed with **Swift Package Manager** and resolved automatically by Xcode —
 no Carthage or CocoaPods step is required:
 
 * [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
-* [R.swift.Library](https://github.com/mac-cain13/R.swift.Library) — the
-  `Rswift` runtime for type-safe resources. The `rswift` generator is vendored
-  under `GrowingUp/3rd Party Libraries/rswift/` and runs as a build phase to
-  produce `R.generated.swift`.
+
+Type-safe resources use **Xcode's generated asset symbols** (e.g.
+`UIImage(resource: .personCrowned)`) for images and `String(localized:)` for
+localized strings — there is no longer a vendored code generator or R.swift
+dependency.
 
 ## Requirements
 
 * Xcode 16 or newer (developed against Xcode 26 / iOS 26 SDK).
-* iOS 12.0+ deployment target.
+* iOS 18.0+ deployment target.
 
 ## Building & Running
 
@@ -88,12 +92,9 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   phase (skipped with a warning if not installed); see `.swiftlint.yml`.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
-
-## Notes
-
-* The widget is an older Today extension (`com.apple.widget-extension`). It
-  still builds, but Today extensions were removed from the OS in iOS 14, so it
-  is a candidate for a future WidgetKit rewrite.
+* **CI** — GitHub Actions (`.github/workflows/ci.yml`) runs SwiftLint and
+  builds + tests on an iOS Simulator on every pull request and on pushes to
+  `master`.
 
 ## Authors
 

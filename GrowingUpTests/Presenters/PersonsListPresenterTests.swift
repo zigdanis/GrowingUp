@@ -23,7 +23,7 @@ class PersonsListPresenterTests: XCTestCase {
     }
 
 	func test_SUT_LoadingPersonsOnInit() {
-		//Then
+		// Then
 		XCTAssertTrue(displayPersonsUseCaseSpy.displayPersonsCalled, "Expected to call loadiing of Persons")
 		XCTAssertTrue(personsListSpy.didCallUpdateListOfScreens, "Expected to call updateListOfScreens after loaded Persons")
 		XCTAssertEqual(sut.numberOfPages(), expectedPersonsToReturn.count + 1, "Expected to return number of pages according to returned Persons array")

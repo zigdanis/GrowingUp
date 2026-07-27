@@ -49,16 +49,12 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	private func setupPersonNameTopConstraint() {
-		let top = personName.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor)
+		let top = personName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
 		top.isActive = true
 	}
 
 	private func setupNoPicPlaceholder() {
-		if #available(iOS 11.0, *) {
-			noPicPlaceholder.text = "🤷"
-		} else {
-			noPicPlaceholder.text = "¯\\_(ツ)_/¯"
-		}
+		noPicPlaceholder.text = "🤷"
 	}
 
 	private func setupTapGesture() {
@@ -100,7 +96,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 	}
 
 	func displayPersonOnWidgetState(onWidget: Bool) {
-		let img = onWidget ? R.image.personCrowned() : R.image.personSettings()
+		let img = onWidget ? UIImage(resource: .personCrowned) : UIImage(resource: .personSettings)
 		editPersonButton.setImage(img, for: .normal)
 	}
 }

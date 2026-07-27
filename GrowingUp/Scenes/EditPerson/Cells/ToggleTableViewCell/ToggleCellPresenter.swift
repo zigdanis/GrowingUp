@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ToggleCellPresenter: class {
+protocol ToggleCellPresenter: AnyObject {
 	func configure(cell: ToggleCellView, forRow row: Int)
 	func valueFor(row: Int, didChangeTo value: Bool)
 	func valueFor(row: Int) -> Bool
@@ -20,7 +20,7 @@ final class ToggleCellPresenterImplementation: ToggleCellPresenter {
 
 	func configure(cell: ToggleCellView, forRow row: Int) {
 		cell.setup(with: toggleDelegate, forRow: row)
-		cell.display(title: R.string.localizable.addToWidget())
+		cell.display(title: String(localized: "Add to Widget"))
 		guard let value = storage[row] else { return }
 		cell.display(isOn: value, animated: false)
 	}

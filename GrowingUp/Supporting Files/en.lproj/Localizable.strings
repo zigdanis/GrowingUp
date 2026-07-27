@@ -12,6 +12,12 @@
 /* "text on label under widget pic rounded button" */
 "widget pic" = "widget pic";
 
+/* Accessibility label for the app picture image-source menu */
+"Change app picture" = "Change app picture";
+
+/* Accessibility label for the widget picture image-source menu */
+"Change widget picture" = "Change widget picture";
+
 /* "Title for the button on new person screen" */
 "Add person" = "Add person";
 
@@ -23,6 +29,9 @@
 
 /* Title for the person's time of birth */
 "Time of birth" = "Time of birth";
+
+/* Title for the person's combined date and time of birth */
+"Birthday" = "Birthday";
 
 /* Title for Error Alerts */
 "Alert" = "Alert";
@@ -41,3 +50,47 @@
 
 /* Info Label for Cell with Toggle on Person settings screen */
 "Add to Widget" = "Add to Widget";
+
+/* MARK: Image capture flow (photo library & permissions) */
+
+/* Navigation title for the photo library grid */
+"Photos" = "Photos";
+
+/* Source-menu action that opens the camera */
+"Camera" = "Camera";
+
+/* Control that returns to the image source menu */
+"Back" = "Back";
+
+/* Control that opens the system photo picker */
+"All Photos" = "All Photos";
+
+/* Button that confirms the single selected photo */
+"Select photo" = "Select photo";
+
+/* Limited-access banner shown above the grid when the user granted access to a subset of photos */
+"You've allowed access to a limited set of photos." = "You've allowed access to a limited set of photos.";
+
+/* Button that opens the system limited-library picker to grant access to more photos */
+"Select More" = "Select More";
+
+/* Title shown when photo access has been denied */
+"Photo access needed" = "Photo access needed";
+
+/* Message shown when photo access has been denied */
+"Allow access to your photos to choose a picture." = "Allow access to your photos to choose a picture.";
+
+/* Button that deep-links to the app's Settings page to grant photo access */
+"Open Settings" = "Open Settings";
+
+/* Title shown when photo access is restricted by a profile/parental controls */
+"Photo access restricted" = "Photo access restricted";
+
+/* Message shown when photo access is restricted and cannot be changed */
+"Photo access is restricted on this device and can't be changed." = "Photo access is restricted on this device and can't be changed.";
+
+/* Title for the alert shown when a tapped photo fails to load (e.g. an iCloud download error) */
+"Couldn't load photo" = "Couldn't load photo";
+
+/* Message for the alert shown when a tapped photo fails to load */
+"The photo couldn't be loaded. Try again or pick another." = "The photo couldn't be loaded. Try again or pick another.";
