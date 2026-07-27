@@ -10,6 +10,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  secrets:
+    name: Secret Patterns
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check tracked files
+        run: scripts/check-secrets.sh
+
   formatting:
     name: Swift Format
     runs-on: macos-15
