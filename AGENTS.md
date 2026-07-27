@@ -1,6 +1,6 @@
 # GrowingUp Agent Notes
 
-### Standing Rules
+## Standing Rules
 
 - Always start replies with `Danis, ...` or `Данис, ...`.
 
@@ -16,9 +16,8 @@
 - If asked to do too much work at once, stop and state that clearly.
 - If `computer use` is helpful for completing or verifying work, use it.
 
-### Mechanics:
+## Mechanics:
 
-- Never bypass repository Git hooks with `--no-verify`. If a hook fails, fix
-  the formatting or lint error before committing.
+- Never bypass repository Git hooks with `--no-verify`. If a hook fails, fix the formatting or lint error before committing.
 - Parallel implementation agents must use isolated worktrees so edits do not collide in the shared checkout.
 - Track real worker, purpose, and rough cost when cost matters, especially when multiple subagents are used.
