@@ -1,5 +1,8 @@
 # Migration: Upgrade fastlane configuration
 
+**Status:** Completed by `5535ec4`, `ccc8a09`, `6dcd16a`, `473c7e4`, and
+`fbd024e`; verified after merging `master` into this branch.
+
 > **Agent prompt — paste this to start the task.**
 >
 > You are upgrading and hardening GrowingUp's fastlane setup. First produce a
@@ -50,3 +53,14 @@
 >
 > **Overlap note:** overlaps PR #4 sub-task D; per decision PR #4 stays as-is and
 > this ticket is the source of truth for the fastlane upgrade.
+
+## Implementation
+
+- Fastlane was upgraded and the obsolete bitcode option was removed.
+- TestFlight and `match` now authenticate with an App Store Connect API key.
+- The tracked `.env`, Telegram plugin, and hardcoded proxy credentials were
+  removed; `fastlane/.env.example` documents the required variable names.
+- GitHub Actions CI and the Fastlane/root documentation were added or refreshed.
+- The exposed Telegram token must still be considered compromised; rotation and
+  any repository-history rewrite are external follow-up actions and cannot be
+  verified from this repository.
