@@ -12,6 +12,12 @@
 /* "text on label under widget pic rounded button" */
 "widget pic" = "widget pic";
 
+/* Accessibility label for the app picture image-source menu */
+"Change app picture" = "Change app picture";
+
+/* Accessibility label for the widget picture image-source menu */
+"Change widget picture" = "Change widget picture";
+
 /* "Title for the button on new person screen" */
 "Add person" = "Add person";
 
@@ -49,6 +55,18 @@
 
 /* Navigation title for the photo library grid */
 "Photos" = "Photos";
+
+/* Source-menu action that opens the camera */
+"Camera" = "Camera";
+
+/* Control that returns to the image source menu */
+"Back" = "Back";
+
+/* Control that opens the system photo picker */
+"All Photos" = "All Photos";
+
+/* Button that confirms the single selected photo */
+"Select photo" = "Select photo";
 
 /* Limited-access banner shown above the grid when the user granted access to a subset of photos */
 "You've allowed access to a limited set of photos." = "You've allowed access to a limited set of photos.";

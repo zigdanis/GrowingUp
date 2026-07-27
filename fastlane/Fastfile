@@ -35,7 +35,7 @@ platform :ios do
       distribute_external: true,
       groups: ["External"],
       notify_external_testers: true,
-      beta_app_feedback_email: "zigdanis@gmail.com"
+      beta_app_feedback_email: ENV['BETA_FEEDBACK_EMAIL']
     )
     commit_version_bump(
       force: true,
@@ -87,39 +87,49 @@ platform :ios do
     UI.important("Could not create/push tag #{tag} (#{e.message}); continuing.")
   end
 
-  # Generate localized "What to Test" notes (EN + RU) from a raw changelog
-  # via the local Claude Code CLI. Falls back to the raw text on any error.
+  # Generate localized "What to Test" notes (EN + RU) through local Codex CLI.
+  # Output is constrained by JSON Schema; any CLI/parse failure uses raw notes.
   def whats_new_notes(raw)
     begin
       require 'open3'
       require 'json'
+      require 'tmpdir'
 
       prompt = <<~PROMPT
         You are writing TestFlight "What to Test" release notes from raw git commit messages.
         Summarize the changes into short, user-facing beta tester notes (max 4 bullet points,
-        plain language, no internal jargon, no commit hashes). Then translate that summary to Russian.
-        Respond with ONLY a minified JSON object, no markdown fences, exactly this shape:
+        plain language, no internal jargon, no commit hashes). Do not address the reader by name.
+        Then translate that summary to Russian.
+        Return one JSON object. Both values must be strings containing newline-separated bullets:
         {"en":"<english>","ru":"<russian>"}
 
         Git commits:
         #{raw}
       PROMPT
 
-      stdout, status = Open3.capture2(
-        "claude", "-p", "--model", "claude-haiku-4-5",
-        stdin_data: prompt
-      )
-      raise "claude CLI exited #{status.exitstatus}" unless status.success?
+      schema = File.expand_path("testflight_notes.schema.json", __dir__)
+      model = ENV.fetch("CODEX_RELEASE_NOTES_MODEL", "gpt-5.6-luna")
+      command = [
+        "codex", "-m", model, "-a", "never", "-s", "read-only", "-C", Dir.tmpdir,
+        "exec", "--ephemeral", "--ignore-rules", "--skip-git-repo-check",
+        "--output-schema", schema, "-"
+      ]
+      stdout, stderr, status = Open3.capture3(*command, stdin_data: prompt)
+      raise "Codex CLI exited #{status.exitstatus}: #{stderr.lines.last}" unless status.success?
 
       text = stdout.strip
                    .sub(/\A```(?:json)?\s*/m, "")
                    .sub(/\s*```\z/m, "")
                    .strip
       data = JSON.parse(text)
-      UI.success("Generated EN + RU 'What to Test' notes via Claude CLI.")
-      { "en-US" => { whats_new: data.fetch("en") }, "ru" => { whats_new: data.fetch("ru") } }
+      english = data.fetch("en")
+      russian = data.fetch("ru")
+      raise "Codex output values must be strings" unless english.is_a?(String) && russian.is_a?(String)
+
+      UI.success("Generated EN + RU 'What to Test' notes via Codex CLI.")
+      { "en-US" => { whats_new: english }, "ru" => { whats_new: russian } }
     rescue => e
-      UI.important("Claude CLI notes failed (#{e.message}); using raw changelog for both locales.")
+      UI.important("Codex CLI notes failed (#{e.message}); using raw changelog for both locales.")
       { "en-US" => { whats_new: raw }, "ru" => { whats_new: raw } }
     end
   end

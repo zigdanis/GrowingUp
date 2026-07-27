@@ -20,6 +20,7 @@ xcuserdata/
 *.moved-aside
 *.xccheckout
 *.xcscmblueprint
+*.sketch
 
 ## Obj-C/Swift specific
 *.hmap
@@ -56,6 +57,10 @@ buildServer.json
 # Secrets — never commit
 .env
 .env.*
+!.env.example
 fastlane/.env
 fastlane/.env.*
+!fastlane/.env.example
 *.p8
+*.p12
+*.mobileprovision

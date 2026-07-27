@@ -1,26 +1,22 @@
 # GrowingUp Agent Notes
 
-## Canary instruction
+### Standing Rules
 
-Always start every reply by addressing me by name: "Danis, ...".
+- Always start replies with `Danis, ...` or `Данис, ...`.
 
-## Cheap Subagent Workflow
+## Code Style
 
-Codex may delegate scoped low-risk work to OpenCode through `codex-cheap`.
+- Always strive for concise, simple solutions. Channel "yagni" energy unless told otherwise.
+- If a problem can be solved in a simpler way, propose it.
+- Dont be scared to propse bold ideas if they can meaningfully benefit our work
+- Tests are good! Endless smoke tests, "regression tests" for feature dleetions, etc, much less good. Tests should be focused, not slop.
 
-Use it for focused implementation from a clear spec, mechanical refactors, simple searches, test runs, and failure summaries.
+## General Preferences
 
-Do not use it for secrets, auth, deployment, destructive commands, broad architecture, or ambiguous product decisions.
+- If asked to do too much work at once, stop and state that clearly.
+- If `computer use` is helpful for completing or verifying work, use it.
 
-Command:
+### Mechanics:
 
-```sh
-codex-cheap "In this repo, inspect X and report Y. Do not edit files."
-codex-cheap "In this repo, implement X exactly as specified, then run focused verification."
-```
-
-Default model is `openrouter/z-ai/glm-4.7-flash`. To try GLM-5.2:
-
-```sh
-CODEX_CHEAP_MODEL=openrouter/z-ai/glm-5.2 codex-cheap "task"
-```
+- Parallel implementation agents must use isolated worktrees so edits do not collide in the shared checkout.
+- Track real worker, purpose, and rough cost when cost matters, especially when multiple subagents are used.

@@ -12,6 +12,12 @@
 /* "text on label under widget pic rounded button" */
 "widget pic" = "в виджете";
 
+/* Accessibility label for the app picture image-source menu */
+"Change app picture" = "Изменить основное фото";
+
+/* Accessibility label for the widget picture image-source menu */
+"Change widget picture" = "Изменить фото для виджета";
+
 /* "Title for the button on new person screen" */
 "Add person" = "Добавить";
 
@@ -49,6 +55,18 @@
 
 /* Navigation title for the photo library grid */
 "Photos" = "Фото";
+
+/* Source-menu action that opens the camera */
+"Camera" = "Камера";
+
+/* Control that returns to the image source menu */
+"Back" = "Назад";
+
+/* Control that opens the system photo picker */
+"All Photos" = "Все фото";
+
+/* Button that confirms the single selected photo */
+"Select photo" = "Выбрать фото";
 
 /* Limited-access banner shown above the grid when the user granted access to a subset of photos */
 "You've allowed access to a limited set of photos." = "Вы разрешили доступ к ограниченному набору фотографий.";
