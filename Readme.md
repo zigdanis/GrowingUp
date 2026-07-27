@@ -88,13 +88,36 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
 
 ## Tooling
 
+* **[swift-format](https://github.com/swiftlang/swift-format)** uses the
+  repository `.swift-format` policy. Run `scripts/format-swift.sh` to format all
+  first-party Swift sources or `scripts/check-formatting.sh` to check without
+  changing files. The formatter bundled with the selected Xcode toolchain is
+  used locally and in CI.
 * **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
-  phase (skipped with a warning if not installed); see `.swiftlint.yml`.
+  phase (skipped with a warning if not installed); run
+  `scripts/lint-swift.sh` for the same strict check used in CI.
+* **Git hooks** are optional. Run `scripts/install-git-hooks.sh` once per clone
+  to check formatting and SwiftLint before each commit. Bypass with
+  `git commit --no-verify` when necessary.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
-* **CI** — GitHub Actions (`.github/workflows/ci.yml`) runs SwiftLint and
-  builds + tests on an iOS Simulator on every pull request and on pushes to
-  `master`.
+* **CI** — GitHub Actions (`.github/workflows/ci.yml`) checks formatting, runs
+  SwiftLint, and builds + tests on an iOS Simulator on every pull request and
+  on pushes to `master`.
+
+### Formatting the current file
+
+The official `swift-format` project does not provide a repository-aware Xcode
+Source Editor Extension. Xcode's **Editor → Structure → Re-Indent** command also
+does not apply `.swift-format`. To format one saved file exactly, run:
+
+```bash
+cd /path/to/GrowingUp
+xcrun swift-format format --configuration .swift-format --in-place path/to/File.swift
+```
+
+An editor automation may wrap this command, but it is optional; the repository
+scripts and CI check remain the source of truth.
 
 ## Authors
 

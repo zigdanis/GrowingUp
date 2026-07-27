@@ -10,6 +10,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  formatting:
+    name: Swift Format
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode.app
+
+      - name: Check formatting
+        run: |
+          xcrun swift-format --version
+          scripts/check-formatting.sh
+
   lint:
     name: SwiftLint
     runs-on: macos-15
@@ -24,7 +38,7 @@ jobs:
           swiftlint version
 
       - name: Run SwiftLint
-        run: swiftlint lint --strict --reporter github-actions-logging
+        run: scripts/lint-swift.sh
 
   build-test:
     name: Build & Test

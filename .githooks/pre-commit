@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -eu
+
+REPOSITORY_ROOT=$(git rev-parse --show-toplevel)
+cd "$REPOSITORY_ROOT"
+
+scripts/check-formatting.sh
+scripts/lint-swift.sh

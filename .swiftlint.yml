@@ -1,5 +1,8 @@
 disabled_rules:
   - vertical_parameter_alignment
+  # swift-format intentionally places the opening brace for some multiline
+  # declarations on its own line. Let the formatter own that whitespace.
+  - opening_brace
 opt_in_rules:
   - attributes
   - closure_end_indentation
@@ -22,6 +25,7 @@ excluded:
   - .codex
   - plugins
 line_length: 300
+file_length: 450
 type_name: 
   max_length: 45
 identifier_name:
