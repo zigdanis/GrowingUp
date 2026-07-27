@@ -13,42 +13,42 @@ import Foundation
 
 class PersonsGatewaySpy: PersonsGateway {
 
-  var addPersonParameters: AddPersonParameters!
-  var addPersonResultToBeReturned: Result<Person, CoreError>!
-  var addPersonCalled = false
-  var fetchPersonsCalled = false
-  var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
-  var editPersonCalled = false
-  var editPersonResultToBeReturned: Result<Person, CoreError>!
-  var removePersonCalled = false
-  var removePersonResultToBeReturned: Result<Void, CoreError>!
+	var addPersonParameters: AddPersonParameters!
+	var addPersonResultToBeReturned: Result<Person, CoreError>!
+	var addPersonCalled = false
+	var fetchPersonsCalled = false
+	var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
+	var editPersonCalled = false
+	var editPersonResultToBeReturned: Result<Person, CoreError>!
+	var removePersonCalled = false
+	var removePersonResultToBeReturned: Result<Void, CoreError>!
 
-  func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-    addPersonCalled = true
-    addPersonParameters = parameters
-    completionHandler(addPersonResultToBeReturned)
-  }
+	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+		addPersonCalled = true
+		addPersonParameters = parameters
+		completionHandler(addPersonResultToBeReturned)
+	}
 
-  func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-    fetchPersonsCalled = true
-    completionHandler(fetchPersonsResultToBeReturned)
-  }
+	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		fetchPersonsCalled = true
+		completionHandler(fetchPersonsResultToBeReturned)
+	}
 
-  func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-    completion(fetchPersonsResultToBeReturned)
-  }
+	func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+		completion(fetchPersonsResultToBeReturned)
+	}
 
-  func edit(
-    person: Person, with parameters: AddPersonParameters,
-    completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
-  ) {
-    editPersonCalled = true
-    addPersonParameters = parameters
-    completionHandler(editPersonResultToBeReturned)
-  }
+	func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
+	) {
+		editPersonCalled = true
+		addPersonParameters = parameters
+		completionHandler(editPersonResultToBeReturned)
+	}
 
-  func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
-    removePersonCalled = true
-    completionHandler(removePersonResultToBeReturned)
-  }
+	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+		removePersonCalled = true
+		completionHandler(removePersonResultToBeReturned)
+	}
 }

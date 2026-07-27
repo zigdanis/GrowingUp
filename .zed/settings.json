@@ -14,9 +14,9 @@
           ]
         }
       },
-      "hard_tabs": false,
+      "hard_tabs": true,
       "preferred_line_length": 160,
-      "tab_size": 2
+      "tab_size": 4
     }
   }
 }

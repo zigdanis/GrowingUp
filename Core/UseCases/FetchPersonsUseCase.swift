@@ -11,26 +11,26 @@ import Foundation
 public typealias FetchPersonsUseCaseCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
 
 public protocol FetchPersonsUseCase {
-  func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler)
-  func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler)
+	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler)
+	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler)
 }
 
 public final class FetchPersonsUseCaseImplementation: FetchPersonsUseCase {
-  let personsGateway: PersonsGateway
+	let personsGateway: PersonsGateway
 
-  public init(personsGateway: PersonsGateway) {
-    self.personsGateway = personsGateway
-  }
+	public init(personsGateway: PersonsGateway) {
+		self.personsGateway = personsGateway
+	}
 
-  // MARK: - DisplayPersonsUseCase
+	// MARK: - DisplayPersonsUseCase
 
-  public func fetchPersons(completionHandler: @escaping (Result<[Person], CoreError>) -> Void) {
-    self.personsGateway.fetchPersons { (result) in
-      completionHandler(result)
-    }
-  }
+	public func fetchPersons(completionHandler: @escaping (Result<[Person], CoreError>) -> Void) {
+		self.personsGateway.fetchPersons { (result) in
+			completionHandler(result)
+		}
+	}
 
-  public func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
-    personsGateway.fetchWidgetPersons(completion: completion)
-  }
+	public func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
+		personsGateway.fetchWidgetPersons(completion: completion)
+	}
 }

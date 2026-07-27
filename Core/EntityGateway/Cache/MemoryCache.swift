@@ -25,161 +25,161 @@
 import Foundation
 
 private final class ValueWrapper<ValueType> {
-  let created: Date
-  var expiration: Date?
-  let value: ValueType
+	let created: Date
+	var expiration: Date?
+	let value: ValueType
 
-  init(value: ValueType, expiration: Date? = nil) {
-    self.created = Date()
-    self.expiration = expiration
-    self.value = value
-  }
+	init(value: ValueType, expiration: Date? = nil) {
+		self.created = Date()
+		self.expiration = expiration
+		self.value = value
+	}
 }
 
 open class MemoryCache<ValueType> {
-  public let name: String
+	public let name: String
 
-  /**
-  NSCache does not support enumeration of the keys and objects it contains. The access queue
-  is used to synchronize access to a set with keys.
-  */
-  private let accessQueue = DispatchQueue(label: "no.nrk.yr.cache.memory")
+	/**
+	NSCache does not support enumeration of the keys and objects it contains. The access queue
+	is used to synchronize access to a set with keys.
+	*/
+	private let accessQueue = DispatchQueue(label: "no.nrk.yr.cache.memory")
 
-  private let cache = NSCache<NSString, ValueWrapper<ValueType>>()
+	private let cache = NSCache<NSString, ValueWrapper<ValueType>>()
 
-  public private(set) var keys = Set<String>()
+	public private(set) var keys = Set<String>()
 
-  public var checkExpiredInterval: TimeInterval = 2 * 60
+	public var checkExpiredInterval: TimeInterval = 2 * 60
 
-  public var shouldCheckExpired: Bool {
-    return (Date().timeIntervalSince1970 - lastRemoveExpired.timeIntervalSince1970) > checkExpiredInterval
-  }
+	public var shouldCheckExpired: Bool {
+		return (Date().timeIntervalSince1970 - lastRemoveExpired.timeIntervalSince1970) > checkExpiredInterval
+	}
 
-  public private(set) var lastRemoveExpired = Date(timeIntervalSince1970: 0)
+	public private(set) var lastRemoveExpired = Date(timeIntervalSince1970: 0)
 
-  public init(name: String = "no.nrk.yr.cache.memory") {
-    self.name = name
-  }
+	public init(name: String = "no.nrk.yr.cache.memory") {
+		self.name = name
+	}
 
-  public func contains(key: String) -> Bool {
-    return accessQueue.sync {
-      return keys.contains(key)
-    }
-  }
+	public func contains(key: String) -> Bool {
+		return accessQueue.sync {
+			return keys.contains(key)
+		}
+	}
 
-  public func value(forKey key: String) -> ValueType? {
-    return accessQueue.sync {
-      removeExpiredAfterInterval()
+	public func value(forKey key: String) -> ValueType? {
+		return accessQueue.sync {
+			removeExpiredAfterInterval()
 
-      guard let wrapper = wrapper(for: key) else {
-        return nil
-      }
+			guard let wrapper = wrapper(for: key) else {
+				return nil
+			}
 
-      if hasExpired(wrapper: wrapper) {
-        removeValueNoSync(for: key)
-        return nil
-      }
+			if hasExpired(wrapper: wrapper) {
+				removeValueNoSync(for: key)
+				return nil
+			}
 
-      return wrapper.value
-    }
-  }
+			return wrapper.value
+		}
+	}
 
-  public func setValue(_ value: ValueType, forKey key: String, expires: Date? = nil) {
-    accessQueue.sync {
-      removeExpiredAfterInterval()
-      addValue(value, for: key, expires: expires)
-    }
-  }
+	public func setValue(_ value: ValueType, forKey key: String, expires: Date? = nil) {
+		accessQueue.sync {
+			removeExpiredAfterInterval()
+			addValue(value, for: key, expires: expires)
+		}
+	}
 
-  public func removeValue(forKey key: String) {
-    accessQueue.sync {
-      removeValueNoSync(for: key)
-    }
-  }
+	public func removeValue(forKey key: String) {
+		accessQueue.sync {
+			removeValueNoSync(for: key)
+		}
+	}
 
-  public func removeAll() {
-    accessQueue.sync {
-      cache.removeAllObjects()
-      keys.removeAll()
-    }
-  }
+	public func removeAll() {
+		accessQueue.sync {
+			cache.removeAllObjects()
+			keys.removeAll()
+		}
+	}
 
-  public func removeExpired() {
-    accessQueue.sync {
-      removeExpiredItems()
-    }
-  }
+	public func removeExpired() {
+		accessQueue.sync {
+			removeExpiredItems()
+		}
+	}
 
-  public func expirationDate(forKey key: String) -> Date? {
-    return accessQueue.sync {
-      if let wrapper = wrapper(for: key) {
-        return wrapper.expiration
-      }
-      return nil
-    }
-  }
+	public func expirationDate(forKey key: String) -> Date? {
+		return accessQueue.sync {
+			if let wrapper = wrapper(for: key) {
+				return wrapper.expiration
+			}
+			return nil
+		}
+	}
 
-  public func setExpirationDate(_ date: Date?, forKey key: String) {
-    accessQueue.sync {
-      if let wrapper = wrapper(for: key) {
-        wrapper.expiration = date
-      }
-    }
-  }
+	public func setExpirationDate(_ date: Date?, forKey key: String) {
+		accessQueue.sync {
+			if let wrapper = wrapper(for: key) {
+				wrapper.expiration = date
+			}
+		}
+	}
 
-  public func removeItems(olderThan date: Date) {
-    accessQueue.sync {
-      for key in keys {
-        guard let wrapper = wrapper(for: key) else {
-          keys.remove(key)
-          continue
-        }
-        if wrapper.created <= date {
-          removeValueNoSync(for: key)
-        }
-      }
-    }
-  }
+	public func removeItems(olderThan date: Date) {
+		accessQueue.sync {
+			for key in keys {
+				guard let wrapper = wrapper(for: key) else {
+					keys.remove(key)
+					continue
+				}
+				if wrapper.created <= date {
+					removeValueNoSync(for: key)
+				}
+			}
+		}
+	}
 
-  private func wrapper(for key: String) -> ValueWrapper<ValueType>? {
-    return cache.object(forKey: key as NSString)
-  }
+	private func wrapper(for key: String) -> ValueWrapper<ValueType>? {
+		return cache.object(forKey: key as NSString)
+	}
 
-  private func addValue(_ value: ValueType, for key: String, expires: Date? = nil) {
-    let wrapper = ValueWrapper(value: value, expiration: expires)
-    cache.setObject(wrapper, forKey: key as NSString)
-    keys.insert(key)
-  }
+	private func addValue(_ value: ValueType, for key: String, expires: Date? = nil) {
+		let wrapper = ValueWrapper(value: value, expiration: expires)
+		cache.setObject(wrapper, forKey: key as NSString)
+		keys.insert(key)
+	}
 
-  private func removeValueNoSync(for key: String) {
-    keys.remove(key)
-    cache.removeObject(forKey: key as NSString)
-  }
+	private func removeValueNoSync(for key: String) {
+		keys.remove(key)
+		cache.removeObject(forKey: key as NSString)
+	}
 
-  private func hasExpired(wrapper: ValueWrapper<ValueType>) -> Bool {
-    guard let expireDate = wrapper.expiration else {
-      return false
-    }
-    return expireDate < Date()
-  }
+	private func hasExpired(wrapper: ValueWrapper<ValueType>) -> Bool {
+		guard let expireDate = wrapper.expiration else {
+			return false
+		}
+		return expireDate < Date()
+	}
 
-  private func removeExpiredItems() {
-    for key in keys {
-      guard let wrapper = wrapper(for: key) else {
-        keys.remove(key)
-        continue
-      }
-      if hasExpired(wrapper: wrapper) {
-        removeValueNoSync(for: key)
-      }
-    }
-    lastRemoveExpired = Date()
-  }
+	private func removeExpiredItems() {
+		for key in keys {
+			guard let wrapper = wrapper(for: key) else {
+				keys.remove(key)
+				continue
+			}
+			if hasExpired(wrapper: wrapper) {
+				removeValueNoSync(for: key)
+			}
+		}
+		lastRemoveExpired = Date()
+	}
 
-  private func removeExpiredAfterInterval() {
-    if !shouldCheckExpired {
-      return
-    }
-    removeExpiredItems()
-  }
+	private func removeExpiredAfterInterval() {
+		if !shouldCheckExpired {
+			return
+		}
+		removeExpiredItems()
+	}
 }

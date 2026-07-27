@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 extension UIColor {
-  static let appColor = #colorLiteral(red: 0.2235294118, green: 0.7411764706, blue: 0.8980392157, alpha: 1)
-  static let lightBg = UIColor.white
-  static let darkBg = UIColor.black
+	static let appColor = #colorLiteral(red: 0.2235294118, green: 0.7411764706, blue: 0.8980392157, alpha: 1)
+	static let lightBg = UIColor.white
+	static let darkBg = UIColor.black
 
-  static func bgColor(for traitCollection: UITraitCollection) -> UIColor {
-    let isLight = traitCollection.userInterfaceStyle == .light
-    return isLight ? .lightBg : .darkBg
-  }
+	static func bgColor(for traitCollection: UITraitCollection) -> UIColor {
+		let isLight = traitCollection.userInterfaceStyle == .light
+		return isLight ? .lightBg : .darkBg
+	}
 }

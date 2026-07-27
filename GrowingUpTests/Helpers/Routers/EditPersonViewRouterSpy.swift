@@ -13,9 +13,9 @@ import Foundation
 
 class EditPersonViewRouterSpy: EditPersonViewRouter {
 
-  var dismissCalled = false
+	var dismissCalled = false
 
-  func dismiss() {
-    dismissCalled = true
-  }
+	func dismiss() {
+		dismissCalled = true
+	}
 }

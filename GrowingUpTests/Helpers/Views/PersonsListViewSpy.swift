@@ -13,10 +13,10 @@ import Foundation
 
 class PersonsListViewSpy: PersonsListView {
 
-  var didCallUpdateListOfScreens = false
+	var didCallUpdateListOfScreens = false
 
-  func updateListOfScreens(defaultPage index: Int) {
-    didCallUpdateListOfScreens = true
-  }
+	func updateListOfScreens(defaultPage index: Int) {
+		didCallUpdateListOfScreens = true
+	}
 
 }

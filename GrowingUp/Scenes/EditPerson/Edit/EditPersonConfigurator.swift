@@ -10,45 +10,45 @@ import Core
 import Foundation
 
 protocol EditPersonConfigurator {
-  func configure(editPersonViewController: EditPersonViewController)
+	func configure(editPersonViewController: EditPersonViewController)
 }
 
 class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 
-  private let person: Person
-  private weak var editPersonPresenterDelegate: EditPersonPresenterDelegate?
+	private let person: Person
+	private weak var editPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-  init(person: Person, editPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-    self.person = person
-    self.editPersonPresenterDelegate = editPersonPresenterDelegate
-  }
+	init(person: Person, editPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+		self.person = person
+		self.editPersonPresenterDelegate = editPersonPresenterDelegate
+	}
 
-  func configure(editPersonViewController: EditPersonViewController) {
-    let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-    let taskManager = TaskManagerOnGCD()
-    let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
-    let editPersonUseCase = EditPersonUseCaseImplementation(personsGateway: personsGateway)
-    let removePersonUseCase = RemovePersonUseCaseImplementation(personsGateway: personsGateway)
-    let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)
-    let imagesCellPresenter = ImagesCellPresenterImplementation()
-    let nameCellPresenter = TextFieldCellPresenterImplementation()
-    let dateCellPresenter = DateCellPresenterImplementation()
-    let toggleCellPresenter = ToggleCellPresenterImplementation()
-    let presenter = EditPersonPresenterImplementation(
-      person: person,
-      view: editPersonViewController,
-      editPersonUseCase: editPersonUseCase,
-      removePersonUseCase: removePersonUseCase,
-      router: router,
-      delegate: editPersonPresenterDelegate,
-      imagesCellPresenter: imagesCellPresenter,
-      nameCellPresenter: nameCellPresenter,
-      dateCellsPresenter: dateCellPresenter,
-      toggleCellPresenter: toggleCellPresenter
-    )
-    nameCellPresenter.textFieldObserver = presenter
-    editPersonViewController.presenter = presenter
-    toggleCellPresenter.toggleDelegate = presenter
-    dateCellPresenter.dateDelegate = presenter
-  }
+	func configure(editPersonViewController: EditPersonViewController) {
+		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
+		let taskManager = TaskManagerOnGCD()
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
+		let editPersonUseCase = EditPersonUseCaseImplementation(personsGateway: personsGateway)
+		let removePersonUseCase = RemovePersonUseCaseImplementation(personsGateway: personsGateway)
+		let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)
+		let imagesCellPresenter = ImagesCellPresenterImplementation()
+		let nameCellPresenter = TextFieldCellPresenterImplementation()
+		let dateCellPresenter = DateCellPresenterImplementation()
+		let toggleCellPresenter = ToggleCellPresenterImplementation()
+		let presenter = EditPersonPresenterImplementation(
+			person: person,
+			view: editPersonViewController,
+			editPersonUseCase: editPersonUseCase,
+			removePersonUseCase: removePersonUseCase,
+			router: router,
+			delegate: editPersonPresenterDelegate,
+			imagesCellPresenter: imagesCellPresenter,
+			nameCellPresenter: nameCellPresenter,
+			dateCellsPresenter: dateCellPresenter,
+			toggleCellPresenter: toggleCellPresenter
+		)
+		nameCellPresenter.textFieldObserver = presenter
+		editPersonViewController.presenter = presenter
+		toggleCellPresenter.toggleDelegate = presenter
+		dateCellPresenter.dateDelegate = presenter
+	}
 }

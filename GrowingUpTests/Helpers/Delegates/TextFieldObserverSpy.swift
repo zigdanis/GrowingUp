@@ -13,9 +13,9 @@ import Foundation
 
 final class TextFieldObserverSpy: TextFieldObserver {
 
-  var didChangeText: String?
+	var didChangeText: String?
 
-  func textDidChange(forView: TextFieldCellView, text: String) {
-    didChangeText = text
-  }
+	func textDidChange(forView: TextFieldCellView, text: String) {
+		didChangeText = text
+	}
 }

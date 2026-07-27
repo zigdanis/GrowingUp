@@ -9,18 +9,18 @@
 import Foundation
 
 protocol EditPersonViewRouter {
-  func dismiss()
+	func dismiss()
 }
 
 class EditPersonViewRouterImplementation: EditPersonViewRouter {
 
-  private weak var editPersonViewController: EditPersonViewController?
+	private weak var editPersonViewController: EditPersonViewController?
 
-  init(editPersonViewController: EditPersonViewController) {
-    self.editPersonViewController = editPersonViewController
-  }
+	init(editPersonViewController: EditPersonViewController) {
+		self.editPersonViewController = editPersonViewController
+	}
 
-  func dismiss() {
-    editPersonViewController?.dismiss(animated: true)
-  }
+	func dismiss() {
+		editPersonViewController?.dismiss(animated: true)
+	}
 }

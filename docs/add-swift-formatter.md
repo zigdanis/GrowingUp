@@ -212,8 +212,10 @@ This order avoids introducing a permanently failing CI check before the existing
 
 ## Decisions
 
-- Use two spaces for indentation.
+- Use tabs for indentation, displayed at four columns.
 - Use the same 160-column limit in swift-format and SwiftLint.
+- Exclude comments from SwiftLint's line-length rule because swift-format does
+  not reflow comments safely.
 - Enable import ordering.
 - Check formatting in CI and the optional pre-commit hook, not during Xcode builds.
 - Use the `swift-format` bundled with the selected Xcode toolchain; CI's

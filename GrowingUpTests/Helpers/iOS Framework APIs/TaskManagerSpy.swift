@@ -13,11 +13,11 @@ import Foundation
 
 class TaskManagerSpy: TaskManager {
 
-  var processTasksCalled = false
-  var processedTasks: [Task] = []
+	var processTasksCalled = false
+	var processedTasks: [Task] = []
 
-  func process(tasks: [Task]) {
-    processTasksCalled = true
-    processedTasks = tasks
-  }
+	func process(tasks: [Task]) {
+		processTasksCalled = true
+		processedTasks = tasks
+	}
 }

@@ -13,22 +13,22 @@ import Foundation
 
 final class ToggleCellPresenterStub: ToggleCellPresenter {
 
-  var storage = [Int: Bool]()
-  var didCallConfigure = false
+	var storage = [Int: Bool]()
+	var didCallConfigure = false
 
-  func valueFor(row: Int) -> Bool {
-    return storage[row] ?? false
-  }
+	func valueFor(row: Int) -> Bool {
+		return storage[row] ?? false
+	}
 
-  func valueFor(row: Int, didChangeTo value: Bool) {
-    storage[row] = value
-  }
+	func valueFor(row: Int, didChangeTo value: Bool) {
+		storage[row] = value
+	}
 
-  func configure(cell: ToggleCellView, forRow row: Int) {
-    didCallConfigure = true
-  }
+	func configure(cell: ToggleCellView, forRow row: Int) {
+		didCallConfigure = true
+	}
 
-  func toggleValueFor(row: Int, didChangeTo state: Bool) {
-    storage[row] = state
-  }
+	func toggleValueFor(row: Int, didChangeTo state: Bool) {
+		storage[row] = state
+	}
 }

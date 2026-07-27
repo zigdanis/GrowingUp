@@ -13,9 +13,9 @@ import Foundation
 
 extension Person {
 
-  static func createPerson() -> Person {
-    return Person(
-      id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: UUID(), isOnWidget: false,
-      createdDate: Date())
-  }
+	static func createPerson() -> Person {
+		return Person(
+			id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: UUID(), isOnWidget: false,
+			createdDate: Date())
+	}
 }

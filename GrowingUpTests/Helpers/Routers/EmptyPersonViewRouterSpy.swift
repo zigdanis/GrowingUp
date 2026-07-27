@@ -13,9 +13,9 @@ import Foundation
 
 final class EmptyPersonViewRouterSpy: EmptyPersonViewRouter {
 
-  var didCallPresentAddPerson = false
+	var didCallPresentAddPerson = false
 
-  func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-    didCallPresentAddPerson = true
-  }
+	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+		didCallPresentAddPerson = true
+	}
 }

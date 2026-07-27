@@ -12,13 +12,13 @@ import Foundation
 
 final class FetchPersonsUseCaseSpy: FetchPersonsUseCase {
 
-  var completionResult: Result<[Person], CoreError>!
+	var completionResult: Result<[Person], CoreError>!
 
-  func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
-    completionHandler(completionResult)
-  }
+	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
+		completionHandler(completionResult)
+	}
 
-  func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
-    completion(completionResult)
-  }
+	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
+		completion(completionResult)
+	}
 }

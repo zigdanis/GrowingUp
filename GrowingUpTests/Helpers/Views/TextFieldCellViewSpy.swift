@@ -11,28 +11,28 @@
 
 class TextFieldCellViewSpy: TextFieldCellView {
 
-  var displayedTitle: String?
-  var displayedValue: String?
-  var displayedPlaceholder: String?
-  var presenter: TextFieldCellPresenter?
-  var observer: TextFieldObserver?
-  var row: Int?
+	var displayedTitle: String?
+	var displayedValue: String?
+	var displayedPlaceholder: String?
+	var presenter: TextFieldCellPresenter?
+	var observer: TextFieldObserver?
+	var row: Int?
 
-  func display(title: String) {
-    displayedTitle = title
-  }
+	func display(title: String) {
+		displayedTitle = title
+	}
 
-  func display(value: String) {
-    displayedValue = value
-  }
+	func display(value: String) {
+		displayedValue = value
+	}
 
-  func display(placeholder: String) {
-    displayedPlaceholder = placeholder
-  }
+	func display(placeholder: String) {
+		displayedPlaceholder = placeholder
+	}
 
-  func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int) {
-    self.presenter = presenter
-    self.observer = observer
-    self.row = row
-  }
+	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int) {
+		self.presenter = presenter
+		self.observer = observer
+		self.row = row
+	}
 }

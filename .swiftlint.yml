@@ -24,7 +24,9 @@ excluded:
   - .agents
   - .codex
   - plugins
-line_length: 160
+line_length:
+  warning: 160
+  ignores_comments: true
 file_length: 450
 type_name: 
   max_length: 45

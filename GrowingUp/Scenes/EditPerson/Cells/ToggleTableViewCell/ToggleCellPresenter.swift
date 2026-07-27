@@ -9,27 +9,27 @@
 import Foundation
 
 protocol ToggleCellPresenter: AnyObject {
-  func configure(cell: ToggleCellView, forRow row: Int)
-  func valueFor(row: Int, didChangeTo value: Bool)
-  func valueFor(row: Int) -> Bool
+	func configure(cell: ToggleCellView, forRow row: Int)
+	func valueFor(row: Int, didChangeTo value: Bool)
+	func valueFor(row: Int) -> Bool
 }
 
 final class ToggleCellPresenterImplementation: ToggleCellPresenter {
-  private var storage = [Int: Bool]()
-  weak var toggleDelegate: ToggleCellDelegate?
+	private var storage = [Int: Bool]()
+	weak var toggleDelegate: ToggleCellDelegate?
 
-  func configure(cell: ToggleCellView, forRow row: Int) {
-    cell.setup(with: toggleDelegate, forRow: row)
-    cell.display(title: String(localized: "Add to Widget"))
-    guard let value = storage[row] else { return }
-    cell.display(isOn: value, animated: false)
-  }
+	func configure(cell: ToggleCellView, forRow row: Int) {
+		cell.setup(with: toggleDelegate, forRow: row)
+		cell.display(title: String(localized: "Add to Widget"))
+		guard let value = storage[row] else { return }
+		cell.display(isOn: value, animated: false)
+	}
 
-  func valueFor(row: Int, didChangeTo value: Bool) {
-    storage[row] = value
-  }
+	func valueFor(row: Int, didChangeTo value: Bool) {
+		storage[row] = value
+	}
 
-  func valueFor(row: Int) -> Bool {
-    return storage[row] ?? false
-  }
+	func valueFor(row: Int) -> Bool {
+		return storage[row] ?? false
+	}
 }

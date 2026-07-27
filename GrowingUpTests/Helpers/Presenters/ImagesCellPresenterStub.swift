@@ -13,20 +13,20 @@ import Foundation
 
 class ImagesCellPresenterStub: ImagesCellPresenter {
 
-  var didCallConfigure = false
+	var didCallConfigure = false
 
-  private var storage = [Int: PersonImages]()
+	private var storage = [Int: PersonImages]()
 
-  func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate) {
-    didCallConfigure = true
-    cell.setup(with: delegate, forRow: row)
-  }
+	func configure(cell: ImagesCellView, forRow row: Int, with delegate: ImagesCellViewDelegate) {
+		didCallConfigure = true
+		cell.setup(with: delegate, forRow: row)
+	}
 
-  func valueFor(row: Int, didChangeTo value: PersonImages) {
-    storage[row] = value
-  }
+	func valueFor(row: Int, didChangeTo value: PersonImages) {
+		storage[row] = value
+	}
 
-  func valueFor(row: Int) -> PersonImages? {
-    return storage[row]
-  }
+	func valueFor(row: Int) -> PersonImages? {
+		return storage[row]
+	}
 }

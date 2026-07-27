@@ -10,8 +10,8 @@ import Foundation
 
 extension UUID {
 
-  init?(string: String?) {
-    guard let string = string else { return nil }
-    self.init(uuidString: string)
-  }
+	init?(string: String?) {
+		guard let string = string else { return nil }
+		self.init(uuidString: string)
+	}
 }

@@ -10,18 +10,18 @@ import Core
 import Foundation
 
 protocol PersonsListConfigurator {
-  func configure(personsListController: PersonsListViewController)
+	func configure(personsListController: PersonsListViewController)
 }
 
 final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 
-  func configure(personsListController: PersonsListViewController) {
-    let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-    let taskManager = TaskManagerOnGCD()
-    let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
-    let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
-    let presenter = PersonsListPresenterImplementation(
-      view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
-    personsListController.presenter = presenter
-  }
+	func configure(personsListController: PersonsListViewController) {
+		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
+		let taskManager = TaskManagerOnGCD()
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
+		let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
+		let presenter = PersonsListPresenterImplementation(
+			view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
+		personsListController.presenter = presenter
+	}
 }

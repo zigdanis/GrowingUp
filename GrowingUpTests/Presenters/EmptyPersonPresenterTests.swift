@@ -13,19 +13,19 @@ import XCTest
 
 class EmptyPersonPresenterTests: XCTestCase {
 
-  var sut: EmptyPersonPresenterImplementation!
-  let routerSpy = EmptyPersonViewRouterSpy()
-  let delegateSpy = EditPersonPresenterDelegateSpy()
+	var sut: EmptyPersonPresenterImplementation!
+	let routerSpy = EmptyPersonViewRouterSpy()
+	let delegateSpy = EditPersonPresenterDelegateSpy()
 
-  override func setUp() {
-    sut = EmptyPersonPresenterImplementation(router: routerSpy, addPersonPresenterDelegate: delegateSpy)
-  }
+	override func setUp() {
+		sut = EmptyPersonPresenterImplementation(router: routerSpy, addPersonPresenterDelegate: delegateSpy)
+	}
 
-  func test_SUT_WhenCalledAddButtonPressed_ShouldCallRouter() {
-    // When
-    sut.addButtonPressed()
-    // Then
-    XCTAssertTrue(routerSpy.didCallPresentAddPerson, "Expected to receive a call in Router")
-  }
+	func test_SUT_WhenCalledAddButtonPressed_ShouldCallRouter() {
+		// When
+		sut.addButtonPressed()
+		// Then
+		XCTAssertTrue(routerSpy.didCallPresentAddPerson, "Expected to receive a call in Router")
+	}
 
 }

@@ -13,21 +13,21 @@ import Foundation
 
 class AddPersonUseCaseSpy: AddPersonUseCase {
 
-  var resultToBeReturned: Result<Person, CoreError>!
-  var callCompletionHandlerImmediate = true
-  var personToAddParameters: AddPersonParameters?
-  private var completionHandler: AddPersonUseCaseCompletionHandler?
+	var resultToBeReturned: Result<Person, CoreError>!
+	var callCompletionHandlerImmediate = true
+	var personToAddParameters: AddPersonParameters?
+	private var completionHandler: AddPersonUseCaseCompletionHandler?
 
-  func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler) {
-    personToAddParameters = parameters
-    self.completionHandler = completionHandler
-    if callCompletionHandlerImmediate {
-      callCompletionHandler()
-    }
-  }
+	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler) {
+		personToAddParameters = parameters
+		self.completionHandler = completionHandler
+		if callCompletionHandlerImmediate {
+			callCompletionHandler()
+		}
+	}
 
-  func callCompletionHandler() {
-    self.completionHandler?(resultToBeReturned)
-  }
+	func callCompletionHandler() {
+		self.completionHandler?(resultToBeReturned)
+	}
 
 }

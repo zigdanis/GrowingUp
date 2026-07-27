@@ -13,11 +13,11 @@ import UIKit
 @testable import GrowingUp
 
 extension AddPersonParameters {
-  static func createParameters() -> AddPersonParameters {
-    let appPic = PersonImage()
-    let widgetPic = PersonImage()
-    return AddPersonParameters(
-      name: "John Snow", dayOfBirth: Date(), timeOfBirth: Date(), appImage: appPic, widgetImage: widgetPic,
-      isOnWidget: true)
-  }
+	static func createParameters() -> AddPersonParameters {
+		let appPic = PersonImage()
+		let widgetPic = PersonImage()
+		return AddPersonParameters(
+			name: "John Snow", dayOfBirth: Date(), timeOfBirth: Date(), appImage: appPic, widgetImage: widgetPic,
+			isOnWidget: true)
+	}
 }
