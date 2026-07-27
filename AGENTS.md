@@ -18,5 +18,7 @@
 
 ### Mechanics:
 
+- Never bypass repository Git hooks with `--no-verify`. If a hook fails, fix
+  the formatting or lint error before committing.
 - Parallel implementation agents must use isolated worktrees so edits do not collide in the shared checkout.
 - Track real worker, purpose, and rough cost when cost matters, especially when multiple subagents are used.

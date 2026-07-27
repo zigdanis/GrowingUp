@@ -62,6 +62,7 @@ dependency.
 ```
 git clone git@github.com:zigdanis/GrowingUp.git
 cd GrowingUp
+scripts/install-git-hooks.sh
 open GrowingUp.xcodeproj
 ```
 
@@ -97,9 +98,9 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
 * **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
   `scripts/lint-swift.sh` for the same strict check used in CI.
-* **Git hooks** are optional. Run `scripts/install-git-hooks.sh` once per clone
-  to check formatting and SwiftLint before each commit. Bypass with
-  `git commit --no-verify` when necessary.
+* **Git hooks** are installed once per clone with
+  `scripts/install-git-hooks.sh`. They check formatting and SwiftLint before
+  every commit. Fix reported violations instead of bypassing the hook.
 * **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
 * **CI** — GitHub Actions (`.github/workflows/ci.yml`) checks formatting, runs
