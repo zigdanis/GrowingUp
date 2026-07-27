@@ -14,9 +14,11 @@ public typealias FetchPersonsEntityGatewayCompletionHandler = (_ result: Result<
 public typealias RemovePersonEntityGatewayCompletionHandler = (_ result: Result<Void, CoreError>) -> Void
 
 public protocol PersonsGateway {
-    func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler)
-	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler)
-	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler)
-	func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler)
+  func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler)
+  func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler)
+  func edit(
+    person: Person, with parameters: AddPersonParameters,
+    completionHandler: @escaping EditPersonEntityGatewayCompletionHandler)
+  func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler)
+  func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler)
 }

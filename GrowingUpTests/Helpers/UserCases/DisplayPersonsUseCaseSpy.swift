@@ -7,20 +7,21 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class DisplayPersonsUseCaseSpy: FetchPersonsUseCase {
 
-	var displayPersonsCalled = false
-	var resultToBeReturned: Result<[Person], CoreError>!
+  var displayPersonsCalled = false
+  var resultToBeReturned: Result<[Person], CoreError>!
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
-		displayPersonsCalled = true
-		completionHandler(resultToBeReturned)
-	}
+  func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
+    displayPersonsCalled = true
+    completionHandler(resultToBeReturned)
+  }
 
-	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
-		completion(resultToBeReturned)
-	}
+  func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
+    completion(resultToBeReturned)
+  }
 }

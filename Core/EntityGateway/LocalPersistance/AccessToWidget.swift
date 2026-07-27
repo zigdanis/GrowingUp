@@ -7,8 +7,8 @@
 //
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 @objc(AccessToWidget)
 public class AccessToWidget: NSManagedObject {
@@ -17,51 +17,51 @@ public class AccessToWidget: NSManagedObject {
 
 extension AccessToWidget {
 
-	@nonobjc
-	public class func fetchRequest() -> NSFetchRequest<AccessToWidget> {
-		return NSFetchRequest<AccessToWidget>(entityName: "AccessToWidget")
-	}
+  @nonobjc
+  public class func fetchRequest() -> NSFetchRequest<AccessToWidget> {
+    return NSFetchRequest<AccessToWidget>(entityName: "AccessToWidget")
+  }
 
-	@NSManaged public var widgetPersons: Set<CoreDataPerson>?
+  @NSManaged public var widgetPersons: Set<CoreDataPerson>?
 
-	public class func sharedInstance(in context: NSManagedObjectContext) throws -> AccessToWidget {
-		let fetch: NSFetchRequest<AccessToWidget> = fetchRequest()
-		var shared: AccessToWidget?
-		var coreError: CoreError?
-		context.performAndWait {
-			do {
-				if let fetched = try context.fetch(fetch).first {
-					shared = fetched
-				} else {
-					shared = context.addEntity(withType: AccessToWidget.self)
-				}
-			} catch {
-				coreError = CoreError(error: error)
-			}
-		}
-		if let error = coreError {
-			throw error
-		}
-		guard let nonOptionalShared = shared else {
-			throw CoreError.missingValue
-		}
-		return nonOptionalShared
-	}
+  public class func sharedInstance(in context: NSManagedObjectContext) throws -> AccessToWidget {
+    let fetch: NSFetchRequest<AccessToWidget> = fetchRequest()
+    var shared: AccessToWidget?
+    var coreError: CoreError?
+    context.performAndWait {
+      do {
+        if let fetched = try context.fetch(fetch).first {
+          shared = fetched
+        } else {
+          shared = context.addEntity(withType: AccessToWidget.self)
+        }
+      } catch {
+        coreError = CoreError(error: error)
+      }
+    }
+    if let error = coreError {
+      throw error
+    }
+    guard let nonOptionalShared = shared else {
+      throw CoreError.missingValue
+    }
+    return nonOptionalShared
+  }
 }
 
 // MARK: Generated accessors for persons
 extension AccessToWidget {
 
-	@objc(addPersonsObject:)
-	@NSManaged public func addToWidgetPersons(_ value: CoreDataPerson)
+  @objc(addPersonsObject:)
+  @NSManaged public func addToWidgetPersons(_ value: CoreDataPerson)
 
-	@objc(removePersonsObject:)
-	@NSManaged public func removeFromWidgetPersons(_ value: CoreDataPerson)
+  @objc(removePersonsObject:)
+  @NSManaged public func removeFromWidgetPersons(_ value: CoreDataPerson)
 
-	@objc(addPersons:)
-	@NSManaged public func addToWidgetPersons(_ values: NSSet)
+  @objc(addPersons:)
+  @NSManaged public func addToWidgetPersons(_ values: NSSet)
 
-	@objc(removePersons:)
-	@NSManaged public func removeFromWidgetPersons(_ values: NSSet)
+  @objc(removePersons:)
+  @NSManaged public func removeFromWidgetPersons(_ values: NSSet)
 
 }

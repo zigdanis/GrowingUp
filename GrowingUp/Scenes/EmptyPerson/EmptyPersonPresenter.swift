@@ -9,20 +9,20 @@
 import Foundation
 
 protocol EmptyPersonPresenter {
-	func addButtonPressed()
+  func addButtonPressed()
 }
 
 final class EmptyPersonPresenterImplementation: EmptyPersonPresenter {
 
-	private let router: EmptyPersonViewRouter
-	private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
+  private let router: EmptyPersonViewRouter
+  private weak var addPersonPresenterDelegate: EditPersonPresenterDelegate?
 
-	init(router: EmptyPersonViewRouter, addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-		self.router = router
-		self.addPersonPresenterDelegate = addPersonPresenterDelegate
-	}
+  init(router: EmptyPersonViewRouter, addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+    self.router = router
+    self.addPersonPresenterDelegate = addPersonPresenterDelegate
+  }
 
-	func addButtonPressed() {
-		router.presentAddPerson(addPersonPresenterDelegate: addPersonPresenterDelegate)
-	}
+  func addButtonPressed() {
+    router.presentAddPerson(addPersonPresenterDelegate: addPersonPresenterDelegate)
+  }
 }

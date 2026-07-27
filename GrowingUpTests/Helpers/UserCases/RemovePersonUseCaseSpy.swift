@@ -7,15 +7,16 @@
 //
 
 import Foundation
+
 @testable import Core
 
 final class RemovePersonUseCaseSpy: RemovePersonUseCase {
 
-	var didCallRemovePerson = false
-	var resultToBeReturned: Result<Void, CoreError>!
+  var didCallRemovePerson = false
+  var resultToBeReturned: Result<Void, CoreError>!
 
-	func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
-		didCallRemovePerson = true
-		completionHandler(resultToBeReturned)
-	}
+  func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
+    didCallRemovePerson = true
+    completionHandler(resultToBeReturned)
+  }
 }

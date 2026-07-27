@@ -7,14 +7,15 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class EmptyPersonViewRouterSpy: EmptyPersonViewRouter {
 
-	var didCallPresentAddPerson = false
+  var didCallPresentAddPerson = false
 
-	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
-		didCallPresentAddPerson = true
-	}
+  func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?) {
+    didCallPresentAddPerson = true
+  }
 }

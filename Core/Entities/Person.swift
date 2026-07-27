@@ -10,56 +10,58 @@ import Foundation
 
 public struct Person: Equatable, Hashable {
 
-	public var id: UUID
-    public var name: String
-    public var birthday: Date
-	public var appPicId: UUID?
-	public var widgetPicId: UUID?
-	public var isOnWidget: Bool
-	public var createdDate: Date
+  public var id: UUID
+  public var name: String
+  public var birthday: Date
+  public var appPicId: UUID?
+  public var widgetPicId: UUID?
+  public var isOnWidget: Bool
+  public var createdDate: Date
 
-	public init(id: UUID,
-				name: String,
-				birthday: Date,
-				appPicId: UUID?,
-				widgetPicId: UUID?,
-				isOnWidget: Bool,
-				createdDate: Date) {
-		self.id = id
-		self.name = name
-		self.birthday = birthday
-		self.appPicId = appPicId
-		self.widgetPicId = widgetPicId
-		self.isOnWidget = isOnWidget
-		self.createdDate = createdDate
-	}
+  public init(
+    id: UUID,
+    name: String,
+    birthday: Date,
+    appPicId: UUID?,
+    widgetPicId: UUID?,
+    isOnWidget: Bool,
+    createdDate: Date
+  ) {
+    self.id = id
+    self.name = name
+    self.birthday = birthday
+    self.appPicId = appPicId
+    self.widgetPicId = widgetPicId
+    self.isOnWidget = isOnWidget
+    self.createdDate = createdDate
+  }
 
-	public var dateComponents: DateComponents {
-		return dateComponents(at: Date())
-	}
+  public var dateComponents: DateComponents {
+    return dateComponents(at: Date())
+  }
 
-	/// Age, broken into time components, computed from `birthday` up to `date`.
-	/// Used by the widget to render age at each timeline entry's date.
-	public func dateComponents(at date: Date) -> DateComponents {
-		return AgeCalculator.ageComponents(from: birthday, to: date)
-	}
+  /// Age, broken into time components, computed from `birthday` up to `date`.
+  /// Used by the widget to render age at each timeline entry's date.
+  public func dateComponents(at date: Date) -> DateComponents {
+    return AgeCalculator.ageComponents(from: birthday, to: date)
+  }
 
-	public var dayOfBirth: Date {
-		let dayComponents = Calendar.current.dateComponents([.year, .month, .day], from: birthday)
-		return Calendar.current.date(from: dayComponents) ?? Date()
-	}
+  public var dayOfBirth: Date {
+    let dayComponents = Calendar.current.dateComponents([.year, .month, .day], from: birthday)
+    return Calendar.current.date(from: dayComponents) ?? Date()
+  }
 
-	public var timeOfBirth: Date {
-		let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: birthday)
-		return Calendar.current.date(from: timeComponents) ?? Date()
-	}
+  public var timeOfBirth: Date {
+    let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: birthday)
+    return Calendar.current.date(from: timeComponents) ?? Date()
+  }
 
 }
 
 extension Person: Comparable {
 
-	public static func < (lhs: Person, rhs: Person) -> Bool {
-		let comparison = lhs.createdDate.compare(rhs.createdDate)
-		return comparison == .orderedAscending
-	}
+  public static func < (lhs: Person, rhs: Person) -> Bool {
+    let comparison = lhs.createdDate.compare(rhs.createdDate)
+    return comparison == .orderedAscending
+  }
 }

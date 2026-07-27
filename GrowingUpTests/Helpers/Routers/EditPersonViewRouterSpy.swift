@@ -7,14 +7,15 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class EditPersonViewRouterSpy: EditPersonViewRouter {
 
-    var dismissCalled = false
+  var dismissCalled = false
 
-    func dismiss() {
-        dismissCalled = true
-    }
+  func dismiss() {
+    dismissCalled = true
+  }
 }

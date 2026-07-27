@@ -7,26 +7,27 @@
 //
 
 import UIKit
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class ImagesCellViewSpy: ImagesCellView {
 
-	var displayedAppPic: PersonImage?
-	var displayedWidgetPic: PersonImage?
-	weak var providedDelegate: ImagesCellViewDelegate?
-	var providedRow: Int?
+  var displayedAppPic: PersonImage?
+  var displayedWidgetPic: PersonImage?
+  weak var providedDelegate: ImagesCellViewDelegate?
+  var providedRow: Int?
 
-	func display(appPic: PersonImage?) {
-		displayedAppPic = appPic
-	}
+  func display(appPic: PersonImage?) {
+    displayedAppPic = appPic
+  }
 
-	func display(widgetPic: PersonImage?) {
-		displayedWidgetPic = widgetPic
-	}
+  func display(widgetPic: PersonImage?) {
+    displayedWidgetPic = widgetPic
+  }
 
-	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
-		providedDelegate = delegate
-		providedRow = row
-	}
+  func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
+    providedDelegate = delegate
+    providedRow = row
+  }
 }

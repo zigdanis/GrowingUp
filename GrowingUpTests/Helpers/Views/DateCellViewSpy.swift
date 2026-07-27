@@ -7,25 +7,26 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class DateCellViewSpy: DateCellView {
 
-	var displayedTitle: String?
-	var displayedDate: Date?
-	var didCallSetup = false
+  var displayedTitle: String?
+  var displayedDate: Date?
+  var didCallSetup = false
 
-	func display(title: String) {
-		displayedTitle = title
-	}
+  func display(title: String) {
+    displayedTitle = title
+  }
 
-	func display(date: Date?) {
-		displayedDate = date
-	}
+  func display(date: Date?) {
+    displayedDate = date
+  }
 
-	func setup(with delegate: DateCellDelegate?, forRow row: Int) {
-		didCallSetup = true
-	}
+  func setup(with delegate: DateCellDelegate?, forRow row: Int) {
+    didCallSetup = true
+  }
 
 }

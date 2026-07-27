@@ -7,24 +7,25 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class DateCellPresenterStub: DateCellPresenter {
 
-	var storage = [Int: Date]()
-	var didCallConfigure = false
+  var storage = [Int: Date]()
+  var didCallConfigure = false
 
-	func valueFor(row: Int, didChangeTo value: Date) {
-		storage[row] = value
-	}
+  func valueFor(row: Int, didChangeTo value: Date) {
+    storage[row] = value
+  }
 
-	func valueFor(row: Int) -> Date? {
-		return storage[row]
-	}
+  func valueFor(row: Int) -> Date? {
+    return storage[row]
+  }
 
-	func configure(cell: DateCellView, forRow row: Int) {
-		didCallConfigure = true
-	}
+  func configure(cell: DateCellView, forRow row: Int) {
+    didCallConfigure = true
+  }
 
 }

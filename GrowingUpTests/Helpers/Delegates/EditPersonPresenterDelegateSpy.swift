@@ -7,36 +7,37 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class EditPersonPresenterDelegateSpy: EditPersonPresenterDelegate {
 
-    var addedPerson: Person?
-	var editedPerson: Person?
-	var removedPerson: Person?
-    var didCalledAddPerson = false
-	var didCalledEditPerson = false
-	var didCalledRemovePerson = false
-    var didCalledCancel = false
+  var addedPerson: Person?
+  var editedPerson: Person?
+  var removedPerson: Person?
+  var didCalledAddPerson = false
+  var didCalledEditPerson = false
+  var didCalledRemovePerson = false
+  var didCalledCancel = false
 
-    func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
-        didCalledAddPerson = true
-        addedPerson = person
-    }
+  func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person) {
+    didCalledAddPerson = true
+    addedPerson = person
+  }
 
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
-		didCalledEditPerson = true
-		editedPerson = person
-	}
+  func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person) {
+    didCalledEditPerson = true
+    editedPerson = person
+  }
 
-	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
-		removedPerson = person
-		didCalledRemovePerson = true
-	}
+  func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person) {
+    removedPerson = person
+    didCalledRemovePerson = true
+  }
 
-	func editPersonPresenterCancel(presenter: EditPersonPresenter) {
-        didCalledCancel = true
-    }
+  func editPersonPresenterCancel(presenter: EditPersonPresenter) {
+    didCalledCancel = true
+  }
 
 }

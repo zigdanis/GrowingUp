@@ -9,29 +9,29 @@
 import Foundation
 
 protocol TextFieldCellPresenter: AnyObject {
-	func configure(cell: TextFieldCellView, forRow row: Int)
-	func valueFor(row: Int, didChangeTo value: String)
-	func valueFor(row: Int) -> String?
+  func configure(cell: TextFieldCellView, forRow row: Int)
+  func valueFor(row: Int, didChangeTo value: String)
+  func valueFor(row: Int) -> String?
 }
 
 final class TextFieldCellPresenterImplementation: TextFieldCellPresenter {
 
-	private var storage = [Int: String]()
-	weak var textFieldObserver: TextFieldObserver?
+  private var storage = [Int: String]()
+  weak var textFieldObserver: TextFieldObserver?
 
-	func configure(cell: TextFieldCellView, forRow row: Int) {
-		cell.setup(with: self, observer: textFieldObserver, forRow: row)
-		cell.display(title: String(localized: "Name"))
-		cell.display(placeholder: String(localized: "Name"))
-		guard let value = storage[row] else { return }
-		cell.display(value: value)
-	}
+  func configure(cell: TextFieldCellView, forRow row: Int) {
+    cell.setup(with: self, observer: textFieldObserver, forRow: row)
+    cell.display(title: String(localized: "Name"))
+    cell.display(placeholder: String(localized: "Name"))
+    guard let value = storage[row] else { return }
+    cell.display(value: value)
+  }
 
-	func valueFor(row: Int, didChangeTo value: String) {
-		storage[row] = value
-	}
+  func valueFor(row: Int, didChangeTo value: String) {
+    storage[row] = value
+  }
 
-	func valueFor(row: Int) -> String? {
-		return storage[row]?.trimmingCharacters(in: .whitespacesAndNewlines)
-	}
+  func valueFor(row: Int) -> String? {
+    return storage[row]?.trimmingCharacters(in: .whitespacesAndNewlines)
+  }
 }

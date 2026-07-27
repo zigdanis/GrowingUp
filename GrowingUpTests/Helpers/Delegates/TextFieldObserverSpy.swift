@@ -7,14 +7,15 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class TextFieldObserverSpy: TextFieldObserver {
 
-	var didChangeText: String?
+  var didChangeText: String?
 
-	func textDidChange(forView: TextFieldCellView, text: String) {
-		didChangeText = text
-	}
+  func textDidChange(forView: TextFieldCellView, text: String) {
+    didChangeText = text
+  }
 }

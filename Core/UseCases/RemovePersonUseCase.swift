@@ -11,17 +11,17 @@ import Foundation
 public typealias RemovePersonUseCaseCompletionHandler = (_ result: Result<Void, CoreError>) -> Void
 
 public protocol RemovePersonUseCase {
-	func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler)
+  func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler)
 }
 
 public final class RemovePersonUseCaseImplementation: RemovePersonUseCase {
-	let personsGateway: PersonsGateway
+  let personsGateway: PersonsGateway
 
-	public init(personsGateway: PersonsGateway) {
-		self.personsGateway = personsGateway
-	}
+  public init(personsGateway: PersonsGateway) {
+    self.personsGateway = personsGateway
+  }
 
-	public func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
-		personsGateway.remove(person: person, completionHandler: completionHandler)
-	}
+  public func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
+    personsGateway.remove(person: person, completionHandler: completionHandler)
+  }
 }

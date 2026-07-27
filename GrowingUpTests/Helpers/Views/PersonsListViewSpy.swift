@@ -7,15 +7,16 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class PersonsListViewSpy: PersonsListView {
 
-	var didCallUpdateListOfScreens = false
+  var didCallUpdateListOfScreens = false
 
-	func updateListOfScreens(defaultPage index: Int) {
-		didCallUpdateListOfScreens = true
-	}
+  func updateListOfScreens(defaultPage index: Int) {
+    didCallUpdateListOfScreens = true
+  }
 
 }

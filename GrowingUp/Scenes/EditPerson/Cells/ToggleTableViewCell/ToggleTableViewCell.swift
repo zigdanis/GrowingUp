@@ -9,48 +9,48 @@
 import UIKit
 
 protocol ToggleCellView {
-	func display(title: String)
-	func display(isOn: Bool, animated: Bool)
-	func setup(with delegate: ToggleCellDelegate?, forRow row: Int)
+  func display(title: String)
+  func display(isOn: Bool, animated: Bool)
+  func setup(with delegate: ToggleCellDelegate?, forRow row: Int)
 }
 
 protocol ToggleCellDelegate: AnyObject {
-	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool)
+  func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool)
 }
 
 final class ToggleTableViewCell: UITableViewCell, ToggleCellView {
-	@IBOutlet weak var titleLabel: UILabel!
-	@IBOutlet weak var toggle: UISwitch!
-	private weak var delegate: ToggleCellDelegate?
-	private var row: Int?
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var toggle: UISwitch!
+  private weak var delegate: ToggleCellDelegate?
+  private var row: Int?
 
-	override func awakeFromNib() {
-		super.awakeFromNib()
-		selectionStyle = .none
-		toggle.addTarget(self, action: #selector(toggleDidChange(sender:)), for: .valueChanged)
-	}
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    selectionStyle = .none
+    toggle.addTarget(self, action: #selector(toggleDidChange(sender:)), for: .valueChanged)
+  }
 
-	// MARK: - ToggleCellView
+  // MARK: - ToggleCellView
 
-	func display(title: String) {
-		titleLabel.text = title
-	}
+  func display(title: String) {
+    titleLabel.text = title
+  }
 
-	func display(isOn: Bool, animated: Bool) {
-		toggle.setOn(isOn, animated: animated)
-	}
+  func display(isOn: Bool, animated: Bool) {
+    toggle.setOn(isOn, animated: animated)
+  }
 
-	func setup(with delegate: ToggleCellDelegate?, forRow row: Int) {
-		self.delegate = delegate
-		self.row = row
-	}
+  func setup(with delegate: ToggleCellDelegate?, forRow row: Int) {
+    self.delegate = delegate
+    self.row = row
+  }
 
-	// MARK: - Actions
+  // MARK: - Actions
 
-	@objc
-	private func toggleDidChange(sender: UISwitch) {
-		guard let row = row else { return }
-		delegate?.toggle(toggle: self, didChangeStateForRow: row, to: sender.isOn)
-	}
+  @objc
+  private func toggleDidChange(sender: UISwitch) {
+    guard let row = row else { return }
+    delegate?.toggle(toggle: self, didChangeStateForRow: row, to: sender.isOn)
+  }
 
 }

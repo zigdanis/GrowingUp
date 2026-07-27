@@ -6,29 +6,30 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 protocol PersonOverviewConfigurator {
-	func configure(personOverviewController: PersonOverviewViewController)
+  func configure(personOverviewController: PersonOverviewViewController)
 }
 
 final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator {
 
-	let index: Int
-	let person: Person
-	weak var editPresenterDelegate: EditPersonPresenterDelegate?
+  let index: Int
+  let person: Person
+  weak var editPresenterDelegate: EditPersonPresenterDelegate?
 
-	init(index: Int, person: Person) {
-		self.index = index
-		self.person = person
-	}
+  init(index: Int, person: Person) {
+    self.index = index
+    self.person = person
+  }
 
-	func configure(personOverviewController: PersonOverviewViewController) {
-		let router = PersonOverviewRouterImplementation(personOverviewViewController: personOverviewController)
-		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController, router: router)
-		presenter.personPresenterDelegate = editPresenterDelegate
-		personOverviewController.presenter = presenter
-		personOverviewController.index = index
-	}
+  func configure(personOverviewController: PersonOverviewViewController) {
+    let router = PersonOverviewRouterImplementation(personOverviewViewController: personOverviewController)
+    let presenter = PersonOverviewPresenterImplementation(
+      person: person, personOverviewView: personOverviewController, router: router)
+    presenter.personPresenterDelegate = editPresenterDelegate
+    personOverviewController.presenter = presenter
+    personOverviewController.index = index
+  }
 }

@@ -14,34 +14,34 @@ protocol EmptyPersonView {
 
 final class EmptyPersonViewController: UIViewController, EmptyPersonView, PageViewControllerViewable {
 
-	var index: Int = 0
-	var presenter: EmptyPersonPresenter!
-	var configurator: EmptyPersonConfigurator!
-	@IBOutlet weak var addPersonButton: VerticalButton!
+  var index: Int = 0
+  var presenter: EmptyPersonPresenter!
+  var configurator: EmptyPersonConfigurator!
+  @IBOutlet weak var addPersonButton: VerticalButton!
 
-	init(configurator: EmptyPersonConfigurator) {
-		self.configurator = configurator
-		super.init(nibName: nil, bundle: nil)
-	}
+  init(configurator: EmptyPersonConfigurator) {
+    self.configurator = configurator
+    super.init(nibName: nil, bundle: nil)
+  }
 
-	@available(iOS, unavailable, message: "Object of this class should use init()")
-	required init?(coder aDecoder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
+  @available(iOS, unavailable, message: "Object of this class should use init()")
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		configurator.configure(emptyPersonController: self)
-		setupButton()
-	}
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    configurator.configure(emptyPersonController: self)
+    setupButton()
+  }
 
-	private func setupButton() {
-		addPersonButton.setTitle(String(localized: "Add person"), for: .normal)
-	}
+  private func setupButton() {
+    addPersonButton.setTitle(String(localized: "Add person"), for: .normal)
+  }
 
-	// MARK: - Actions
+  // MARK: - Actions
 
-	@IBAction func addPersonTouched() {
-		presenter.addButtonPressed()
-	}
+  @IBAction func addPersonTouched() {
+    presenter.addButtonPressed()
+  }
 }
