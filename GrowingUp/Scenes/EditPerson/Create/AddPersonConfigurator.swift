@@ -42,5 +42,6 @@ class AddPersonConfigurator: EditPersonConfigurator {
 		nameCellPresenter.textFieldObserver = presenter
 		editPersonViewController.presenter = presenter
 		toggleCellPresenter.toggleDelegate = presenter
+		dateCellPresenter.dateDelegate = presenter
 	}
 }

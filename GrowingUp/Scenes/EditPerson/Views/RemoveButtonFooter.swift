@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol RemoveButtonDelegate: class {
+protocol RemoveButtonDelegate: AnyObject {
 	func removeTouched()
 }
 
@@ -47,7 +47,7 @@ final class RemoveButtonFooter: UIView {
 
 	private func setupButton() {
 		button.addTarget(self, action: #selector(removeTouched), for: .touchUpInside)
-		button.setTitle(R.string.localizable.remove(), for: .normal)
+		button.setTitle(String(localized: "Remove"), for: .normal)
 		button.titleLabel?.font = .systemFont(ofSize: 24, weight: .light)
 		button.setTitleColor(#colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 1), for: .normal)
 		button.setTitleColor(#colorLiteral(red: 1, green: 0.231372549, blue: 0.1882352941, alpha: 0.5), for: .highlighted)

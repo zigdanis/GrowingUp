@@ -48,18 +48,15 @@ final class AddPersonPresenter: EditPersonPresenter {
 		view?.displayBarButton(with: .done)
 		configureInitialStateForDatePickers()
 		configureInitialStateForToggle()
-		#if DEBUG
-		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
-		#endif
 	}
 
 	private func configureInitialStateForDatePickers() {
-		var components = DateComponents()
-		components.year = 2019
-		components.month = 1
-		components.day = 1
-		let zeroHour = Calendar.current.date(from: components) ?? Date()
-		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: zeroHour)
+		// The combined picker is always showing a value, so seed the birthday with the
+		// current date and time. The user adjusts it; both day and time slots stay in
+		// sync because the picker is a single control.
+		let now = Date()
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: now)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: now)
 	}
 
 	private func configureInitialStateForToggle() {
@@ -140,12 +137,16 @@ final class AddPersonPresenter: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForDayPicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.dayPickerRow) ?? Date()
+	func removeAppImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.appPic = nil
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForTimePicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
+	func removeWidgetImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.widgetPic = nil
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
 	func shouldShowRemoveButton() -> Bool {
@@ -160,7 +161,7 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 	private func handleAddPersonError(_ error: Error) {
 		let coreError = error as? CoreError
-		let title = coreError?.title ?? R.string.localizable.error()
+		let title = coreError?.title ?? String(localized: "Error")
 		let message = coreError?.message ?? error.localizedDescription
 		view?.displayEditPersonError(title: title, message: message)
 	}
@@ -203,5 +204,13 @@ extension AddPersonPresenter: ToggleCellDelegate {
 
 	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
 		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
+	}
+}
+
+extension AddPersonPresenter: DateCellDelegate {
+
+	func dateCell(_ cell: DateCellView, didChangeBirthdayTo date: Date) {
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: date)
 	}
 }

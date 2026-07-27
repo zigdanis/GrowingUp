@@ -15,11 +15,7 @@ extension UIColor {
 	static let darkBg = UIColor.black
 
 	static func bgColor(for traitCollection: UITraitCollection) -> UIColor {
-		if #available(iOS 12.0, *) {
-			let isLight = traitCollection.userInterfaceStyle == .light
-			return isLight ? .lightBg : .darkBg
-		} else {
-			return .white
-		}
+		let isLight = traitCollection.userInterfaceStyle == .light
+		return isLight ? .lightBg : .darkBg
 	}
 }

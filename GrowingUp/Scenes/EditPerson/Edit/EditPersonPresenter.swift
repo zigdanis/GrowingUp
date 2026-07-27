@@ -9,7 +9,7 @@
 import Foundation
 import Core
 
-protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
+protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDelegate {
     var router: EditPersonViewRouter { get }
 	func viewDidLoad()
     func rightBarButtonPressed()
@@ -23,12 +23,12 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate {
 	func onWidgetStateFor(row: Int, didUpdateTo state: Bool)
 	func appImagePicked(image: PersonImage)
 	func widgetImagePicked(image: PersonImage)
-	func dateForDayPicker() -> Date
-	func dateForTimePicker() -> Date
+	func removeAppImage()
+	func removeWidgetImage()
 	func shouldShowRemoveButton() -> Bool
 }
 
-protocol EditPersonPresenterDelegate: class {
+protocol EditPersonPresenterDelegate: AnyObject {
     func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person)
@@ -167,12 +167,16 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForDayPicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.dayPickerRow) ?? Date()
+	func removeAppImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.appPic = nil
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
-	func dateForTimePicker() -> Date {
-		return dateCellsPresenter.valueFor(row: EPC.timePickerRow) ?? Date()
+	func removeWidgetImage() {
+		var personPics = imagesCellPresenter.valueFor(row: EPC.imagePickerRow) ?? PersonImages.emptyImages()
+		personPics.widgetPic = nil
+		imagesCellPresenter.valueFor(row: EPC.imagePickerRow, didChangeTo: personPics)
 	}
 
 	func shouldShowRemoveButton() -> Bool {
@@ -187,7 +191,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
     private func handleEditPersonError(_ error: Error) {
 		let coreError = error as? CoreError
-		let title = coreError?.title ?? R.string.localizable.error()
+		let title = coreError?.title ?? String(localized: "Error")
 		let message = coreError?.message ?? error.localizedDescription
 		Logging.logError(coreError ?? CoreError(title: title, message: message))
 		view?.displayEditPersonError(title: title, message: message)
@@ -235,5 +239,13 @@ extension EditPersonPresenterImplementation: ToggleCellDelegate {
 
 	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool) {
 		toggleCellPresenter.valueFor(row: row, didChangeTo: state)
+	}
+}
+
+extension EditPersonPresenterImplementation: DateCellDelegate {
+
+	func dateCell(_ cell: DateCellView, didChangeBirthdayTo date: Date) {
+		dateCellsPresenter.valueFor(row: EPC.dayPickerRow, didChangeTo: date)
+		dateCellsPresenter.valueFor(row: EPC.timePickerRow, didChangeTo: date)
 	}
 }

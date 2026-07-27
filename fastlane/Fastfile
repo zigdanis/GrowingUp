@@ -7,40 +7,43 @@ platform :ios do
 
   lane :app_store do
     ensure_git_status_clean
+    api_key = app_store_connect_api_key(
+      key_id: ENV['ASC_KEY_ID'],
+      issuer_id: ENV['ASC_ISSUER_ID'],
+      key_filepath: ENV['ASC_KEY_PATH']
+    )
     match(
       type: "appstore",
       readonly: false,
+      api_key: api_key,
       app_identifier: ["pro.ziganshin.GrowingUp", "pro.ziganshin.GrowingUp.Widget"]
     )
     version_number = get_version_number(target: "GrowingUp")
     build_number = increment_build_number
     complete_version_number = version_string(version_number, build_number)
-    change_log = change_log_since_last_tag
+    # Summarize commits since the last TestFlight publish into EN + RU notes.
+    localized_notes = whats_new_notes(commits_since_last_publish)
     gym(
       scheme: "GrowingUp",
-      export_method: "app-store",
-      include_bitcode: true
+      export_method: "app-store"
     )
     pilot(
-      itc_provider: "XMSU8WJG5R",
-      changelog: change_log,
-      beta_app_feedback_email: "zigdanis@gmail.com"
+      api_key: api_key,
+      # Per-locale "What to Test": English + Russian fields.
+      localized_build_info: localized_notes,
+      # Wait for processing, then push the build to the public beta group.
+      distribute_external: true,
+      groups: ["External"],
+      notify_external_testers: true,
+      beta_app_feedback_email: ENV['BETA_FEEDBACK_EMAIL']
     )
     commit_version_bump(
       force: true,
       xcodeproj: "GrowingUp.xcodeproj",
       message: "Version Bump to #{complete_version_number}")
     push_to_git_remote
-    begin
-      telegram(
-        token: ENV['TELEGRAM_BOT_TOKEN'],
-        chat_id: ENV['TELEGRAM_CHAT_ID'],
-        text: notification_app_store(complete_version_number),
-        proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-      )
-    rescue => ex
-      UI.error("Telegram couldnt send message: #{ex}")
-    end
+    # Tag the published commit so the next run diffs the changelog from here.
+    mark_published(build_number)
     clean_build_artifacts
   end
 
@@ -51,10 +54,84 @@ platform :ios do
     )
   end
 
-  def notification_app_store(complete_version_number)
-    <<~HEREDOC
-      Build #{complete_version_number} готов к отправке на ревью в App Store
-    HEREDOC
+  # Raw changelog covering commits since the last TestFlight publish.
+  # Relies on a git tag written after each successful upload; on the first run
+  # (no such tag yet) it falls back to the last `fallback_count` commits.
+  def commits_since_last_publish(fallback_count: 10)
+    opts = { pretty: "- %s", merge_commit_filtering: "exclude_merges" }
+    last_tag = sh(
+      "git describe --tags --abbrev=0 --match 'testflight/*' 2>/dev/null || true",
+      log: false
+    ).strip
+
+    if last_tag.empty?
+      UI.message("No previous TestFlight tag; using last #{fallback_count} commits.")
+      return changelog_from_git_commits(**opts, commits_count: fallback_count)
+    end
+
+    UI.message("Building changelog since #{last_tag}.")
+    raw = changelog_from_git_commits(**opts, between: [last_tag, "HEAD"]).to_s.strip
+    if raw.empty?
+      UI.message("No commits since #{last_tag}; using last #{fallback_count} commits.")
+      raw = changelog_from_git_commits(**opts, commits_count: fallback_count)
+    end
+    raw
+  end
+
+  # Tag the current commit so the next run knows where the last publish ended.
+  def mark_published(build_number)
+    tag = "testflight/#{build_number}"
+    add_git_tag(tag: tag)
+    push_git_tags
+  rescue => e
+    UI.important("Could not create/push tag #{tag} (#{e.message}); continuing.")
+  end
+
+  # Generate localized "What to Test" notes (EN + RU) through local Codex CLI.
+  # Output is constrained by JSON Schema; any CLI/parse failure uses raw notes.
+  def whats_new_notes(raw)
+    begin
+      require 'open3'
+      require 'json'
+      require 'tmpdir'
+
+      prompt = <<~PROMPT
+        You are writing TestFlight "What to Test" release notes from raw git commit messages.
+        Summarize the changes into short, user-facing beta tester notes (max 4 bullet points,
+        plain language, no internal jargon, no commit hashes). Do not address the reader by name.
+        Then translate that summary to Russian.
+        Return one JSON object. Both values must be strings containing newline-separated bullets:
+        {"en":"<english>","ru":"<russian>"}
+
+        Git commits:
+        #{raw}
+      PROMPT
+
+      schema = File.expand_path("testflight_notes.schema.json", __dir__)
+      model = ENV.fetch("CODEX_RELEASE_NOTES_MODEL", "gpt-5.6-luna")
+      command = [
+        "codex", "-m", model, "-a", "never", "-s", "read-only", "-C", Dir.tmpdir,
+        "exec", "--ephemeral", "--ignore-rules", "--skip-git-repo-check",
+        "--output-schema", schema, "-"
+      ]
+      stdout, stderr, status = Open3.capture3(*command, stdin_data: prompt)
+      raise "Codex CLI exited #{status.exitstatus}: #{stderr.lines.last}" unless status.success?
+
+      text = stdout.strip
+                   .sub(/\A```(?:json)?\s*/m, "")
+                   .sub(/\s*```\z/m, "")
+                   .strip
+      data = JSON.parse(text)
+      english = data.fetch("en")
+      russian = data.fetch("ru")
+      raise "Codex output values must be strings" unless english.is_a?(String) && russian.is_a?(String)
+
+      UI.success("Generated EN + RU 'What to Test' notes via Codex CLI.")
+      { "en-US" => { whats_new: english }, "ru" => { whats_new: russian } }
+    rescue => e
+      UI.important("Codex CLI notes failed (#{e.message}); using raw changelog for both locales.")
+      { "en-US" => { whats_new: raw }, "ru" => { whats_new: raw } }
+    end
   end
 
   def version_string(version_number, build_number)
@@ -63,14 +140,5 @@ platform :ios do
 
   def version_tag(version_number, build_number)
     "#{version_number}.#{build_number}"
-  end
-
-  error do |lane, exception, options|
-    telegram(
-      token: ENV['TELEGRAM_BOT_TOKEN'],
-      chat_id: "-284033451",
-      text: "Failed to execute fastlane for GrowingUp Build",
-      proxy: "https://zigdanis:L2j6GzL@181.215.191.249:65233"
-    )
   end
 end

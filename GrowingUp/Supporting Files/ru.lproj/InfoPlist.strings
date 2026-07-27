@@ -8,4 +8,6 @@
 
 "CFBundleDisplayName" = "GrowingUp";
 
+"NSCameraUsageDescription" = "Приложение делает снимки, чтобы установить изображения для добавленных людей";
+
 "NSPhotoLibraryUsageDescription" = "Приложение устанавливает изображения для добавленных людей";

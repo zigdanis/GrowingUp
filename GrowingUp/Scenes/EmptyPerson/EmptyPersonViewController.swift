@@ -36,7 +36,7 @@ final class EmptyPersonViewController: UIViewController, EmptyPersonView, PageVi
 	}
 
 	private func setupButton() {
-		addPersonButton.setTitle(R.string.localizable.addPerson(), for: .normal)
+		addPersonButton.setTitle(String(localized: "Add person"), for: .normal)
 	}
 
 	// MARK: - Actions

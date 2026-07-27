@@ -12,6 +12,12 @@
 /* "text on label under widget pic rounded button" */
 "widget pic" = "в виджете";
 
+/* Accessibility label for the app picture image-source menu */
+"Change app picture" = "Изменить основное фото";
+
+/* Accessibility label for the widget picture image-source menu */
+"Change widget picture" = "Изменить фото для виджета";
+
 /* "Title for the button on new person screen" */
 "Add person" = "Добавить";
 
@@ -24,14 +30,17 @@
 /* Title for the person's time of birth */
 "Time of birth" = "Время рождения";
 
+/* Title for the person's combined date and time of birth */
+"Birthday" = "Дата рождения";
+
 /* Title for Error Alerts */
 "Alert" = "Внимание";
 
 /* Error title */
 "Error" = "Ошибка";
 
-/* Cropping image screen's Cancel button title */
-"Cancel" = "Сбросить";
+/* Cancel button title (image picker navigation) */
+"Cancel" = "Отмена";
 
 /* Cropping image screen's Use button title */
 "Use" = "Готово";
@@ -41,3 +50,47 @@
 
 /* Info Label for Cell with Toggle on Person settings screen */
 "Add to Widget" = "Добавить в Виджет";
+
+/* MARK: Image capture flow (photo library & permissions) */
+
+/* Navigation title for the photo library grid */
+"Photos" = "Фото";
+
+/* Source-menu action that opens the camera */
+"Camera" = "Камера";
+
+/* Control that returns to the image source menu */
+"Back" = "Назад";
+
+/* Control that opens the system photo picker */
+"All Photos" = "Все фото";
+
+/* Button that confirms the single selected photo */
+"Select photo" = "Выбрать фото";
+
+/* Limited-access banner shown above the grid when the user granted access to a subset of photos */
+"You've allowed access to a limited set of photos." = "Вы разрешили доступ к ограниченному набору фотографий.";
+
+/* Button that opens the system limited-library picker to grant access to more photos */
+"Select More" = "Выбрать ещё";
+
+/* Title shown when photo access has been denied */
+"Photo access needed" = "Нужен доступ к фото";
+
+/* Message shown when photo access has been denied */
+"Allow access to your photos to choose a picture." = "Разрешите доступ к фото, чтобы выбрать изображение.";
+
+/* Button that deep-links to the app's Settings page to grant photo access */
+"Open Settings" = "Открыть настройки";
+
+/* Title shown when photo access is restricted by a profile/parental controls */
+"Photo access restricted" = "Доступ к фото ограничен";
+
+/* Message shown when photo access is restricted and cannot be changed */
+"Photo access is restricted on this device and can't be changed." = "Доступ к фото ограничен на этом устройстве и не может быть изменён.";
+
+/* Title for the alert shown when a tapped photo fails to load (e.g. an iCloud download error) */
+"Couldn't load photo" = "Не удалось загрузить фото";
+
+/* Message for the alert shown when a tapped photo fails to load */
+"The photo couldn't be loaded. Try again or pick another." = "Не удалось загрузить фото. Попробуйте ещё раз или выберите другое.";

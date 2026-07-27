@@ -58,4 +58,23 @@ extension UIImage {
 		return UIGraphicsGetImageFromCurrentImageContext()!
 	}
 
+	/// Downscale so the longest side is at most `maxPixelSide` pixels, preserving
+	/// aspect ratio. Never upscales. Renders at scale 1 so the result's pixel
+	/// dimensions equal its point dimensions — a deterministic on-disk size.
+	func downsized(maxPixelSide: CGFloat) -> UIImage {
+		let pixelWidth = size.width * scale
+		let pixelHeight = size.height * scale
+		let longest = max(pixelWidth, pixelHeight)
+		guard longest > maxPixelSide else { return self }
+		let ratio = maxPixelSide / longest
+		let target = CGSize(width: (pixelWidth * ratio).rounded(), height: (pixelHeight * ratio).rounded())
+		let format = UIGraphicsImageRendererFormat.default()
+		format.scale = 1
+		format.opaque = true
+		let renderer = UIGraphicsImageRenderer(size: target, format: format)
+		return renderer.image { _ in
+			draw(in: CGRect(origin: .zero, size: target))
+		}
+	}
+
 }
