@@ -9,9 +9,9 @@
 import UIKit
 
 protocol TextFieldCellView: AnyObject {
-    func display(title: String)
-    func display(value: String)
-    func display(placeholder: String)
+	func display(title: String)
+	func display(value: String)
+	func display(placeholder: String)
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
@@ -21,8 +21,8 @@ protocol TextFieldObserver: AnyObject {
 
 final class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var valueField: UITextField!
+	@IBOutlet weak var titleLabel: UILabel!
+	@IBOutlet weak var valueField: UITextField!
 	private weak var presenter: TextFieldCellPresenter?
 	private weak var observer: TextFieldObserver?
 	private var row: Int?
@@ -56,17 +56,17 @@ final class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
 	// MARK: - TextFieldCellView
 
-    func display(title: String) {
-        titleLabel.text = title
-    }
+	func display(title: String) {
+		titleLabel.text = title
+	}
 
-    func display(placeholder: String) {
-        valueField.placeholder = placeholder
-    }
+	func display(placeholder: String) {
+		valueField.placeholder = placeholder
+	}
 
-    func display(value: String) {
-        valueField.text = value
-    }
+	func display(value: String) {
+		valueField.text = value
+	}
 
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int) {
 		self.presenter = presenter
@@ -88,7 +88,9 @@ final class TextFieldTableViewCell: UITableViewCell, TextFieldCellView {
 
 extension TextFieldTableViewCell: UITextFieldDelegate {
 
-	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+	func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String)
+		-> Bool
+	{
 		guard let text = textField.text else { return true }
 		guard let textRange = Range(range, in: text) else { return true }
 		let updatedText = text.replacingCharacters(in: textRange, with: string)

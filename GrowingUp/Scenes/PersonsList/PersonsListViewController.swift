@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import UIKit
 import Core
+import UIKit
 
 protocol PageViewControllerViewable: UIViewController {
 	var index: Int { get }
@@ -20,9 +20,10 @@ protocol PersonsListView: AnyObject {
 final class PersonsListViewController: UIViewController, PersonsListView {
 
 	@IBOutlet weak var pageIndicator: UIPageControl!
-	private let pageController = UIPageViewController(transitionStyle: .scroll,
-													  navigationOrientation: .horizontal,
-													  options: nil)
+	private let pageController = UIPageViewController(
+		transitionStyle: .scroll,
+		navigationOrientation: .horizontal,
+		options: nil)
 	var presenter: PersonsListPresenter!
 	var configurator: PersonsListConfigurator!
 	var currentStatusBarStyle: UIStatusBarStyle = .lightContent
@@ -63,7 +64,8 @@ final class PersonsListViewController: UIViewController, PersonsListView {
 		]
 		NSLayoutConstraint.activate(consts)
 
-		pageController.view.backgroundColor = #colorLiteral(red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1)
+		pageController.view.backgroundColor = #colorLiteral(
+			red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1)
 	}
 
 	private func setupPageIndicator() {
@@ -104,19 +106,26 @@ extension PersonsListViewController: UIPageViewControllerDataSource, UIPageViewC
 		return (viewController as? PageViewControllerViewable)?.index ?? 0
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+	func pageViewController(
+		_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController
+	) -> UIViewController? {
 		var index = indexFor(viewController: viewController)
 		index += 1
 		return presenter.pageViewControllerScreen(atIndex: index)
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+	func pageViewController(
+		_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController
+	) -> UIViewController? {
 		var index = indexFor(viewController: viewController)
 		index -= 1
 		return presenter.pageViewControllerScreen(atIndex: index)
 	}
 
-	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+	func pageViewController(
+		_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool,
+		previousViewControllers: [UIViewController], transitionCompleted completed: Bool
+	) {
 		let currentVC = pageController.viewControllers?.first
 		let currentIndex = indexFor(viewController: currentVC)
 		pageIndicator.currentPage = currentIndex

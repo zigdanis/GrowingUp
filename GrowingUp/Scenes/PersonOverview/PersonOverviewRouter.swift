@@ -6,9 +6,9 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
+import Core
 import Foundation
 import UIKit
-import Core
 
 protocol PersonOverviewRouter {
 	func showEdit(for person: Person, presenterDelegate: EditPersonPresenterDelegate?)
@@ -23,7 +23,8 @@ final class PersonOverviewRouterImplementation: PersonOverviewRouter {
 	}
 
 	func showEdit(for person: Person, presenterDelegate: EditPersonPresenterDelegate?) {
-		let configurator = EditPersonConfiguratorImplementation(person: person, editPersonPresenterDelegate: presenterDelegate)
+		let configurator = EditPersonConfiguratorImplementation(
+			person: person, editPersonPresenterDelegate: presenterDelegate)
 		let viewController = EditPersonViewController(configurator: configurator)
 		let navigationController = UINavigationController(rootViewController: viewController)
 		personOverviewViewController?.present(navigationController, animated: true)

@@ -7,17 +7,18 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class FetchPersonsUseCaseTests: XCTestCase {
 
 	var sut: FetchPersonsUseCaseImplementation!
 	let gatewaySpy = PersonsGatewaySpy()
 
-    override func setUp() {
+	override func setUp() {
 		sut = FetchPersonsUseCaseImplementation(personsGateway: gatewaySpy)
-    }
+	}
 
 	func test_SUT_WhenFetchPersons_CallingGatewayAndCompletion() {
 		// Given

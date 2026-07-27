@@ -6,9 +6,9 @@
 //  with their age at the entry's date, reusing `AgeCalculator` from Core.
 //
 
-import WidgetKit
-import SwiftUI
 import Core
+import SwiftUI
+import WidgetKit
 
 struct AgeWidgetEntryView: View {
 	@Environment(\.widgetFamily)

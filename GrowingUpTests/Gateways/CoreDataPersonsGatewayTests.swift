@@ -7,34 +7,35 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class CoreDataPersonsGatewayTests: XCTestCase {
 
-    // https://www.martinfowler.com/bliki/TestDouble.html
-    var inMemoryCoreDataStack = InMemoryCoreDataStack()
-    var managedObjectContextSpy = NSManagedObjectContextSpy()
+	// https://www.martinfowler.com/bliki/TestDouble.html
+	var inMemoryCoreDataStack = InMemoryCoreDataStack()
+	var managedObjectContextSpy = NSManagedObjectContextSpy()
 	var inMemoryCoreDataGateway: CoreDataPersonsGateway {
 		return CoreDataPersonsGateway(coreDataStack: inMemoryCoreDataStack)
 	}
 
-    func test_SUT_AddPersonWithParameters_Succeed() {
-        // Given
-        let addPersonParameters = AddPersonParameters.createParameters()
-        let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-        // When
-        inMemoryCoreDataGateway.add(parameters: addPersonParameters) { (result) in
-            // Then
-            guard let person = try? result.get() else {
-                return XCTFail("Should've saved the person with success")
-            }
-            assert(person: person, builtFromParameters: addPersonParameters)
-            addPersonCompletionHandlerExpectation.fulfill()
-        }
-        // Exit
-        waitForExpectations(timeout: 5, handler: nil)
-    }
+	func test_SUT_AddPersonWithParameters_Succeed() {
+		// Given
+		let addPersonParameters = AddPersonParameters.createParameters()
+		let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
+		// When
+		inMemoryCoreDataGateway.add(parameters: addPersonParameters) { (result) in
+			// Then
+			guard let person = try? result.get() else {
+				return XCTFail("Should've saved the person with success")
+			}
+			assert(person: person, builtFromParameters: addPersonParameters)
+			addPersonCompletionHandlerExpectation.fulfill()
+		}
+		// Exit
+		waitForExpectations(timeout: 5, handler: nil)
+	}
 
 	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() {
 		// Given
@@ -46,7 +47,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		var editParams = AddPersonParameters.createParameters()
 		editParams.name = "John Snow"
 		editParams.isOnWidget = true
-		editParams.dayOfBirth = Date().addingTimeInterval(-60*60*24*365*10)
+		editParams.dayOfBirth = Date().addingTimeInterval(-60 * 60 * 24 * 365 * 10)
 		editParams.timeOfBirth = Date().addingTimeInterval(-60)
 		let expect = expectation(description: "Edit")
 		// When
@@ -100,9 +101,13 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 
 }
 
-private func assert(person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line) {
-    XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
-	XCTAssertEqual(person.birthday.timeIntervalSince1970, parameters.combinedDate().timeIntervalSince1970, "birthday mismatch", file: file, line: line)
+private func assert(
+	person: Person, builtFromParameters parameters: AddPersonParameters, file: StaticString = #file, line: UInt = #line
+) {
+	XCTAssertEqual(person.name, parameters.name, "name mismatch", file: file, line: line)
+	XCTAssertEqual(
+		person.birthday.timeIntervalSince1970, parameters.combinedDate().timeIntervalSince1970, "birthday mismatch",
+		file: file, line: line)
 	XCTAssertEqual(person.appPicId, parameters.appImage?.id, "app pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.widgetPicId, parameters.widgetImage?.id, "widget pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.isOnWidget, parameters.isOnWidget, "fav state mismatch", file: file, line: line)

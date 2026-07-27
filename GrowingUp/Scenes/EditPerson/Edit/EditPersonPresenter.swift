@@ -6,18 +6,18 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDelegate {
-    var router: EditPersonViewRouter { get }
+	var router: EditPersonViewRouter { get }
 	func viewDidLoad()
-    func rightBarButtonPressed()
+	func rightBarButtonPressed()
 	func leftBarButtonPressed()
 	func removePersonPressed()
 	func configure(cell: ImagesCellView, forRow row: Int)
-    func configure(cell: TextFieldCellView, forRow row: Int)
-    func configure(cell: DateCellView, forRow row: Int)
+	func configure(cell: TextFieldCellView, forRow row: Int)
+	func configure(cell: DateCellView, forRow row: Int)
 	func configure(cell: ToggleCellView, forRow row: Int)
 	func dateFor(row: Int, didUpdateTo date: Date)
 	func onWidgetStateFor(row: Int, didUpdateTo state: Bool)
@@ -29,35 +29,37 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDel
 }
 
 protocol EditPersonPresenterDelegate: AnyObject {
-    func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
+	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didRemove person: Person)
-    func editPersonPresenterCancel(presenter: EditPersonPresenter)
+	func editPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
 final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	private let person: Person
-    private weak var view: EditPersonView?
-    private let editPersonUseCase: EditPersonUseCase
+	private weak var view: EditPersonView?
+	private let editPersonUseCase: EditPersonUseCase
 	private let removePersonUseCase: RemovePersonUseCase
-    private weak var delegate: EditPersonPresenterDelegate?
-    private(set) var router: EditPersonViewRouter
+	private weak var delegate: EditPersonPresenterDelegate?
+	private(set) var router: EditPersonViewRouter
 	private let imagesCellPresenter: ImagesCellPresenter
 	private let nameCellPresenter: TextFieldCellPresenter
 	private let dateCellsPresenter: DateCellPresenter
 	private let toggleCellPresenter: ToggleCellPresenter
 
-	init(person: Person,
-		 view: EditPersonView,
-		 editPersonUseCase: EditPersonUseCase,
-		 removePersonUseCase: RemovePersonUseCase,
-		 router: EditPersonViewRouter,
-		 delegate: EditPersonPresenterDelegate?,
-		 imagesCellPresenter: ImagesCellPresenter,
-		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter,
-		 toggleCellPresenter: ToggleCellPresenter) {
+	init(
+		person: Person,
+		view: EditPersonView,
+		editPersonUseCase: EditPersonUseCase,
+		removePersonUseCase: RemovePersonUseCase,
+		router: EditPersonViewRouter,
+		delegate: EditPersonPresenterDelegate?,
+		imagesCellPresenter: ImagesCellPresenter,
+		nameCellPresenter: TextFieldCellPresenter,
+		dateCellsPresenter: DateCellPresenter,
+		toggleCellPresenter: ToggleCellPresenter
+	) {
 		self.person = person
 		self.view = view
 		self.editPersonUseCase = editPersonUseCase
@@ -70,7 +72,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		self.toggleCellPresenter = toggleCellPresenter
 	}
 
-    // MARK: - EditPersonPresenter
+	// MARK: - EditPersonPresenter
 
 	func viewDidLoad() {
 		view?.displayBarButton(with: .cancel)
@@ -101,7 +103,7 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		}
 
 		guard let parameters = params else { return }
-        updateNavigationItemsState(isEnabled: false)
+		updateNavigationItemsState(isEnabled: false)
 		editPersonUseCase.edit(person: person, with: parameters) { result in
 			self.updateNavigationItemsState(isEnabled: true)
 			switch result {
@@ -111,11 +113,11 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 				self.handleEditPersonError(error)
 			}
 		}
-    }
+	}
 
 	func leftBarButtonPressed() {
-        delegate?.editPersonPresenterCancel(presenter: self)
-    }
+		delegate?.editPersonPresenterCancel(presenter: self)
+	}
 
 	func removePersonPressed() {
 		updateNavigationItemsState(isEnabled: false)
@@ -137,11 +139,11 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	func configure(cell: TextFieldCellView, forRow row: Int) {
 		nameCellPresenter.configure(cell: cell, forRow: row)
-    }
+	}
 
-    func configure(cell: DateCellView, forRow row: Int) {
-       	dateCellsPresenter.configure(cell: cell, forRow: row)
-    }
+	func configure(cell: DateCellView, forRow row: Int) {
+		dateCellsPresenter.configure(cell: cell, forRow: row)
+	}
 
 	func configure(cell: ToggleCellView, forRow row: Int) {
 		toggleCellPresenter.configure(cell: cell, forRow: row)
@@ -183,27 +185,27 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		return true
 	}
 
-    // MARK: - Private
+	// MARK: - Private
 
-    private func handlePersonEdited(_ person: Person) {
+	private func handlePersonEdited(_ person: Person) {
 		delegate?.editPersonPresenter(self, didEdit: person)
-    }
+	}
 
-    private func handleEditPersonError(_ error: Error) {
+	private func handleEditPersonError(_ error: Error) {
 		let coreError = error as? CoreError
 		let title = coreError?.title ?? String(localized: "Error")
 		let message = coreError?.message ?? error.localizedDescription
 		Logging.logError(coreError ?? CoreError(title: title, message: message))
 		view?.displayEditPersonError(title: title, message: message)
-    }
+	}
 
 	private func handlePersonRemoved() {
 		delegate?.editPersonPresenter(self, didRemove: person)
 	}
 
-    private func updateNavigationItemsState(isEnabled enabled: Bool) {
+	private func updateNavigationItemsState(isEnabled enabled: Bool) {
 		view?.updateBarButtonsState(isEnabled: enabled)
-    }
+	}
 
 	private func collectAddPersonParameters() throws -> AddPersonParameters {
 		guard let name = nameCellPresenter.valueFor(row: EPC.nameFieldRow), !name.isEmpty else {
@@ -219,12 +221,13 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
 		let isOnWidget = toggleCellPresenter.valueFor(row: EPC.addToWidgetRow)
-		return AddPersonParameters(name: name,
-								   dayOfBirth: dayOfBirth,
-								   timeOfBirth: timeOfBirth,
-								   appImage: appPic,
-								   widgetImage: widgetPic,
-								   isOnWidget: isOnWidget)
+		return AddPersonParameters(
+			name: name,
+			dayOfBirth: dayOfBirth,
+			timeOfBirth: timeOfBirth,
+			appImage: appPic,
+			widgetImage: widgetPic,
+			isOnWidget: isOnWidget)
 	}
 }
 

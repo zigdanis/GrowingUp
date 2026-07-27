@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class TextFieldCellPresenterTests: XCTestCase {
 
@@ -38,7 +39,8 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		// When
 		sut.configure(cell: tfCellSpy, forRow: 1)
 		// Then
-		XCTAssertNotEqual(expectedName, tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
+		XCTAssertNotEqual(
+			expectedName, tfCellSpy.displayedValue, "The value displayed should not be same as provided for 0-th row")
 	}
 
 	func test_SUT_WhenConfiguredWithoutData_ChangesValueAfterUserInput() {
@@ -62,7 +64,9 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		sut.configure(cell: tfCellSpy, forRow: 0)
 		tfCellSpy.observer?.textDidChange(forView: tfCellSpy, text: expectedText)
 		// Then
-		XCTAssertEqual(expectedObserver.didChangeText, expectedText, "Expected to pass Observer to the TextFieldCellView and change text accordingly")
+		XCTAssertEqual(
+			expectedObserver.didChangeText, expectedText,
+			"Expected to pass Observer to the TextFieldCellView and change text accordingly")
 	}
 
 }

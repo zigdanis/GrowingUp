@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 final class AddPersonPresenter: EditPersonPresenter {
 
@@ -21,15 +21,17 @@ final class AddPersonPresenter: EditPersonPresenter {
 	private let dateCellsPresenter: DateCellPresenter
 	private let toggleCellPresenter: ToggleCellPresenter
 
-	init(view: EditPersonView,
-		 addPersonUseCase: AddPersonUseCase,
-		 fetchWidgetPersonsUseCase: FetchPersonsUseCase,
-		 router: EditPersonViewRouter,
-		 delegate: EditPersonPresenterDelegate?,
-		 imagesCellPresenter: ImagesCellPresenter,
-		 nameCellPresenter: TextFieldCellPresenter,
-		 dateCellsPresenter: DateCellPresenter,
-		 toggleCellPresenter: ToggleCellPresenter) {
+	init(
+		view: EditPersonView,
+		addPersonUseCase: AddPersonUseCase,
+		fetchWidgetPersonsUseCase: FetchPersonsUseCase,
+		router: EditPersonViewRouter,
+		delegate: EditPersonPresenterDelegate?,
+		imagesCellPresenter: ImagesCellPresenter,
+		nameCellPresenter: TextFieldCellPresenter,
+		dateCellsPresenter: DateCellPresenter,
+		toggleCellPresenter: ToggleCellPresenter
+	) {
 		self.view = view
 		self.addPersonUseCase = addPersonUseCase
 		self.fetchWidgetPersonsUseCase = fetchWidgetPersonsUseCase
@@ -184,12 +186,13 @@ final class AddPersonPresenter: EditPersonPresenter {
 		let appPic = personPics?.appPic
 		let widgetPic = personPics?.widgetPic
 		let isOnWidget = toggleCellPresenter.valueFor(row: EPC.addToWidgetRow)
-		return AddPersonParameters(name: name,
-								   dayOfBirth: dayOfBirth,
-								   timeOfBirth: timeOfBirth,
-								   appImage: appPic,
-								   widgetImage: widgetPic,
-								   isOnWidget: isOnWidget )
+		return AddPersonParameters(
+			name: name,
+			dayOfBirth: dayOfBirth,
+			timeOfBirth: timeOfBirth,
+			appImage: appPic,
+			widgetImage: widgetPic,
+			isOnWidget: isOnWidget)
 	}
 }
 

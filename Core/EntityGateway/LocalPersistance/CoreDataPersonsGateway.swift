@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public typealias FetchedPersonsCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
 public typealias FetchedPersonCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
@@ -87,7 +87,10 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		}
 	}
 
-	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+	public func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
+	) {
 		coreDataStack.persistentContainer.performBackgroundTask { context in
 			var result: Result<Person, CoreError> = .failure(CoreError.unknownError)
 			do {

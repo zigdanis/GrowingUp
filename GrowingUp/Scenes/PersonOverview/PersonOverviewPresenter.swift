@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 protocol PersonOverviewPresenter {
 	func loadPerson()

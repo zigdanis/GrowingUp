@@ -8,8 +8,8 @@
 import AVFoundation
 
 extension AVAuthorizationStatus {
-    /// Whether the live camera preview/capture surface can be shown.
-    var isCameraAuthorized: Bool {
-        self == .authorized
-    }
+	/// Whether the live camera preview/capture surface can be shown.
+	var isCameraAuthorized: Bool {
+		self == .authorized
+	}
 }

@@ -1,0 +1,20 @@
+{
+  "indentation": {
+    "tabs": 1
+  },
+  "lineLength": 160,
+  "maximumBlankLines": 1,
+  "multiElementCollectionTrailingCommas": false,
+  "orderedImports": {
+    "includeConditionalImports": false
+  },
+  "respectsExistingLineBreaks": true,
+  "rules": {
+    "AllPublicDeclarationsHaveDocumentation": false,
+    "FileScopedDeclarationPrivacy": false,
+    "OrderedImports": true,
+    "ValidateDocumentationComments": false
+  },
+  "tabWidth": 4,
+  "version": 1
+}

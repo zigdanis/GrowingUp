@@ -7,108 +7,115 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class AddPersonPresenterTests: XCTestCase {
 
-    // https://www.martinfowler.com/bliki/TestDouble.html
-    let addPersonViewSpy = EditPersonViewSpy()
-    let addPersonUseCaseSpy = AddPersonUseCaseSpy()
+	// https://www.martinfowler.com/bliki/TestDouble.html
+	let addPersonViewSpy = EditPersonViewSpy()
+	let addPersonUseCaseSpy = AddPersonUseCaseSpy()
 	let fetchWidgetPersonsUseCaseSpy = FetchPersonsUseCaseSpy()
-    let addPersonViewRouterSpy = EditPersonViewRouterSpy()
-    let addPersonPresenterDelegateSpy = EditPersonPresenterDelegateSpy()
+	let addPersonViewRouterSpy = EditPersonViewRouterSpy()
+	let addPersonPresenterDelegateSpy = EditPersonPresenterDelegateSpy()
 	let imagesCellStub = ImagesCellPresenterStub()
 	let nameCellStub = TextFieldCellPresenterStub()
 	let dateCellsStub = DateCellPresenterStub()
 	let toggleCellStub = ToggleCellPresenterStub()
 
-    var sut: AddPersonPresenter!
+	var sut: AddPersonPresenter!
 
-    // MARK: - Set up
+	// MARK: - Set up
 
-    override func setUp() {
-        super.setUp()
-		sut = AddPersonPresenter(view: addPersonViewSpy,
-								 addPersonUseCase: addPersonUseCaseSpy,
-								 fetchWidgetPersonsUseCase: fetchWidgetPersonsUseCaseSpy,
-								 router: addPersonViewRouterSpy,
-								 delegate: addPersonPresenterDelegateSpy,
-								 imagesCellPresenter: imagesCellStub,
-								 nameCellPresenter: nameCellStub,
-								 dateCellsPresenter: dateCellsStub,
-								 toggleCellPresenter: toggleCellStub)
-    }
+	override func setUp() {
+		super.setUp()
+		sut = AddPersonPresenter(
+			view: addPersonViewSpy,
+			addPersonUseCase: addPersonUseCaseSpy,
+			fetchWidgetPersonsUseCase: fetchWidgetPersonsUseCaseSpy,
+			router: addPersonViewRouterSpy,
+			delegate: addPersonPresenterDelegateSpy,
+			imagesCellPresenter: imagesCellStub,
+			nameCellPresenter: nameCellStub,
+			dateCellsPresenter: dateCellsStub,
+			toggleCellPresenter: toggleCellStub)
+	}
 
-    func test_SUT_CancelPressed_CalledCancelOnDelegate() {
-        // When
-        sut.leftBarButtonPressed()
-        // Then
-        XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledCancel, "Should have been called cancel on delegate")
-    }
+	func test_SUT_CancelPressed_CalledCancelOnDelegate() {
+		// When
+		sut.leftBarButtonPressed()
+		// Then
+		XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledCancel, "Should have been called cancel on delegate")
+	}
 
-    func test_SUT_AddButtonPressed_AddAndCancelButtonsDisabledBeforeCompletionHandler() {
-        // Given
+	func test_SUT_AddButtonPressed_AddAndCancelButtonsDisabledBeforeCompletionHandler() {
+		// Given
 		setupSUT_WithAddPersonData()
-        addPersonUseCaseSpy.callCompletionHandlerImmediate = false
-        // When
-        sut.rightBarButtonPressed()
-        // Then
-        XCTAssertFalse(addPersonViewSpy.barButtonsEnabledState ?? true, "Bar buttons should've been set to disabled")
-    }
+		addPersonUseCaseSpy.callCompletionHandlerImmediate = false
+		// When
+		sut.rightBarButtonPressed()
+		// Then
+		XCTAssertFalse(addPersonViewSpy.barButtonsEnabledState ?? true, "Bar buttons should've been set to disabled")
+	}
 
-    func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
-        // Given
+	func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
+		// Given
 		setupSUT_WithAddPersonData()
-        addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
-        // When
-        sut.rightBarButtonPressed()
-        // Then
-        XCTAssertTrue(addPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
-    }
+		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
+		// When
+		sut.rightBarButtonPressed()
+		// Then
+		XCTAssertTrue(addPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
+	}
 
-    func test_SUT_AddButtonPressed_ShouldSavePerson() {
-        // Given
+	func test_SUT_AddButtonPressed_ShouldSavePerson() {
+		// Given
 		let parameters = setupSUT_WithAddPersonData()
-        addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
-        // When
-        sut.rightBarButtonPressed()
-        // Then
-        XCTAssertEqual(addPersonUseCaseSpy.personToAddParameters!, parameters, "Should have been called addPerson for AddPersonUseCase")
-    }
+		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
+		// When
+		sut.rightBarButtonPressed()
+		// Then
+		XCTAssertEqual(
+			addPersonUseCaseSpy.personToAddParameters!, parameters, "Should have been called addPerson for AddPersonUseCase")
+	}
 
-    func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() {
-        // Given
+	func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() {
+		// Given
 		setupSUT_WithAddPersonData()
-        let expectedPersonToAdd = Person.createPerson()
-        addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
-        // When
-        sut.rightBarButtonPressed()
-        // Then
-        XCTAssertEqual(addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
-        XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledAddPerson, "Should have been call addPerson on Delegate")
+		let expectedPersonToAdd = Person.createPerson()
+		addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
+		// When
+		sut.rightBarButtonPressed()
+		// Then
+		XCTAssertEqual(
+			addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
+		XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledAddPerson, "Should have been call addPerson on Delegate")
 
-    }
+	}
 
-    func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() {
-        // Given
+	func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() {
+		// Given
 		setupSUT_WithAddPersonData()
-        let expectedErrorTitle = "Error"
-        let expectedErrorMessage = "Some error message"
-        addPersonUseCaseSpy.resultToBeReturned = .failure(CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
-        // When
-        sut.rightBarButtonPressed()
-        // Then
+		let expectedErrorTitle = "Error"
+		let expectedErrorMessage = "Some error message"
+		addPersonUseCaseSpy.resultToBeReturned = .failure(
+			CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
+		// When
+		sut.rightBarButtonPressed()
+		// Then
 		XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
 		XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
-    }
+	}
 
 	func test_SUT_AddButtonPressedWithoutName_ShouldShowError() {
 		// When
 		sut.rightBarButtonPressed()
 		// Then
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noNameValue.title, "Error message doesn't match")
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noNameValue.message, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noNameValue.title, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noNameValue.message, "Error message doesn't match")
 	}
 
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
@@ -117,8 +124,10 @@ final class AddPersonPresenterTests: XCTestCase {
 		// When
 		sut.rightBarButtonPressed()
 		// Then
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noDayValue.title, "Error message doesn't match")
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noDayValue.message, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noDayValue.title, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noDayValue.message, "Error message doesn't match")
 	}
 
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
@@ -128,8 +137,10 @@ final class AddPersonPresenterTests: XCTestCase {
 		// When
 		sut.rightBarButtonPressed()
 		// Then
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noTimeValue.title, "Error message doesn't match")
-		XCTAssertEqual(addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noTimeValue.message, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorTitle, CoreError.noTimeValue.title, "Error message doesn't match")
+		XCTAssertEqual(
+			addPersonViewSpy.displayAddPersonErrorMessage, CoreError.noTimeValue.message, "Error message doesn't match")
 	}
 
 	func test_SUT_WhenSettingDateForRow_PassingItToDateCellsPresenter() {
@@ -223,6 +234,8 @@ final class AddPersonPresenterTests: XCTestCase {
 		imagesCellStub.valueFor(row: EPC.imagePickerRow, didChangeTo: pics)
 		let isOnWidget = false
 		toggleCellStub.valueFor(row: EPC.addToWidgetRow, didChangeTo: isOnWidget)
-		return AddPersonParameters(name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic, isOnWidget: isOnWidget)
+		return AddPersonParameters(
+			name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic,
+			isOnWidget: isOnWidget)
 	}
 }

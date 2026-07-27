@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Disk
+import Foundation
 
 public final class CachePersonsGateway: PersonsGateway {
 
@@ -41,7 +41,10 @@ public final class CachePersonsGateway: PersonsGateway {
 		coreDataGateway.fetchWidgetPersons(completion: completion)
 	}
 
-	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+	public func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
+	) {
 		// Core Data
 		coreDataGateway.edit(person: person, with: parameters, completionHandler: completionHandler)
 		// Reconcile stored image files with the edited parameters: save any newly

@@ -11,20 +11,22 @@ import Foundation
 public struct Person: Equatable, Hashable {
 
 	public var id: UUID
-    public var name: String
-    public var birthday: Date
+	public var name: String
+	public var birthday: Date
 	public var appPicId: UUID?
 	public var widgetPicId: UUID?
 	public var isOnWidget: Bool
 	public var createdDate: Date
 
-	public init(id: UUID,
-				name: String,
-				birthday: Date,
-				appPicId: UUID?,
-				widgetPicId: UUID?,
-				isOnWidget: Bool,
-				createdDate: Date) {
+	public init(
+		id: UUID,
+		name: String,
+		birthday: Date,
+		appPicId: UUID?,
+		widgetPicId: UUID?,
+		isOnWidget: Bool,
+		createdDate: Date
+	) {
 		self.id = id
 		self.name = name
 		self.birthday = birthday

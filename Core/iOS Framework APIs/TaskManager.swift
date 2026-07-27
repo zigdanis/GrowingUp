@@ -16,7 +16,7 @@ public protocol TaskManager {
 
 public final class TaskManagerOnGCD: TaskManager {
 
-	public init() { }
+	public init() {}
 
 	public func process(tasks: [Task]) {
 		guard !tasks.isEmpty else { return }
@@ -26,7 +26,7 @@ public final class TaskManagerOnGCD: TaskManager {
 			let workItem = DispatchWorkItem {
 				do {
 					try task()
-				} catch { }
+				} catch {}
 			}
 			queue.async(group: group, execute: workItem)
 		}

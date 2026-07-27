@@ -24,7 +24,8 @@ final class EmptyPersonConfiguratorImplementation: EmptyPersonConfigurator {
 
 	func configure(emptyPersonController: EmptyPersonViewController) {
 		let router = EmptyPersonViewRouterImplementation(emptyPersonViewController: emptyPersonController)
-		let presenter = EmptyPersonPresenterImplementation(router: router, addPersonPresenterDelegate: addPersonPresenterDelegate)
+		let presenter = EmptyPersonPresenterImplementation(
+			router: router, addPersonPresenterDelegate: addPersonPresenterDelegate)
 		emptyPersonController.presenter = presenter
 		emptyPersonController.index = index
 	}

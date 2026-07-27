@@ -11,7 +11,9 @@ import Foundation
 public typealias EditPersonUseCaseCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
 
 public protocol EditPersonUseCase {
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonUseCaseCompletionHandler)
+	func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping EditPersonUseCaseCompletionHandler)
 }
 
 public final class EditPersonUseCaseImplementation: EditPersonUseCase {
@@ -21,7 +23,10 @@ public final class EditPersonUseCaseImplementation: EditPersonUseCase {
 		self.personsGateway = personsGateway
 	}
 
-	public func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping (Result<Person, CoreError>) -> Void) {
+	public func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping (Result<Person, CoreError>) -> Void
+	) {
 		personsGateway.edit(person: person, with: parameters) { (result) in
 			completionHandler(result)
 		}

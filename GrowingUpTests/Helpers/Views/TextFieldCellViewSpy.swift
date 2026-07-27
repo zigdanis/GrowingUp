@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-@testable import GrowingUp
 @testable import Core
+@testable import GrowingUp
 
 class TextFieldCellViewSpy: TextFieldCellView {
 

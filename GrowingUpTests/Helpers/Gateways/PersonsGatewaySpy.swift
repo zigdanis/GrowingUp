@@ -7,13 +7,14 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class PersonsGatewaySpy: PersonsGateway {
 
-    var addPersonParameters: AddPersonParameters!
-    var addPersonResultToBeReturned: Result<Person, CoreError>!
+	var addPersonParameters: AddPersonParameters!
+	var addPersonResultToBeReturned: Result<Person, CoreError>!
 	var addPersonCalled = false
 	var fetchPersonsCalled = false
 	var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
@@ -22,11 +23,11 @@ class PersonsGatewaySpy: PersonsGateway {
 	var removePersonCalled = false
 	var removePersonResultToBeReturned: Result<Void, CoreError>!
 
-    func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		addPersonCalled = true
-        addPersonParameters = parameters
-        completionHandler(addPersonResultToBeReturned)
-    }
+		addPersonParameters = parameters
+		completionHandler(addPersonResultToBeReturned)
+	}
 
 	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
 		fetchPersonsCalled = true
@@ -37,7 +38,10 @@ class PersonsGatewaySpy: PersonsGateway {
 		completion(fetchPersonsResultToBeReturned)
 	}
 
-	func edit(person: Person, with parameters: AddPersonParameters, completionHandler: @escaping EditPersonEntityGatewayCompletionHandler) {
+	func edit(
+		person: Person, with parameters: AddPersonParameters,
+		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
+	) {
 		editPersonCalled = true
 		addPersonParameters = parameters
 		completionHandler(editPersonResultToBeReturned)

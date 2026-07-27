@@ -6,18 +6,18 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import CoreData
+import Foundation
 
 public protocol CoreDataStack {
-    var persistentContainer: NSPersistentContainer { get }
+	var persistentContainer: NSPersistentContainer { get }
 }
 
 public final class CoreDataStackImplementation: CoreDataStack {
 
-    public static let sharedInstance = CoreDataStackImplementation()
+	public static let sharedInstance = CoreDataStackImplementation()
 
-    public lazy var persistentContainer: NSPersistentContainer = self.recreatePersistanContainer()
+	public lazy var persistentContainer: NSPersistentContainer = self.recreatePersistanContainer()
 
 	private func recreatePersistanContainer() -> NSPersistentContainer {
 		let fileURL = FileManager.default

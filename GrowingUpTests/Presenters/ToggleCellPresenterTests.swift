@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class ToggleCellPresenterTests: XCTestCase {
 

@@ -13,13 +13,13 @@ private let bundle = Bundle(identifier: Constants.bundleIdentifier)!
 public struct CoreError: Error, Equatable {
 
 	public var localizedDescription: String { return message }
-    public var title = ""
+	public var title = ""
 	public var message = ""
 
-    public init(title: String = "Error", message: String) {
+	public init(title: String = "Error", message: String) {
 		self.title = NSLocalizedString(title, bundle: bundle, comment: "Error Title")
 		self.message = NSLocalizedString(message, bundle: bundle, comment: "Error Message")
-    }
+	}
 
 	public init(error: Error) {
 		self.title = "Error"
@@ -42,7 +42,8 @@ public struct CoreError: Error, Equatable {
 	public static let coreDataAddFailed = CoreError(message: "Failed adding entity to the data base")
 	public static let coreDataFetchFailed = CoreError(message: "Failed retrieving entities from the data base")
 	public static let coreDataSaveFailed = CoreError(message: "Failed saving the context")
-	public static let asyncWorkError = CoreError(message: "Asyncronous work were not finished before final notification called")
+	public static let asyncWorkError = CoreError(
+		message: "Asyncronous work were not finished before final notification called")
 	public static let missingValue = CoreError(message: "Missing value")
 	public static let unknownError = CoreError(message: "Unknown error occured")
 }

@@ -7,8 +7,9 @@
 //
 
 import UIKit
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class ImagesCellViewSpy: ImagesCellView {
 

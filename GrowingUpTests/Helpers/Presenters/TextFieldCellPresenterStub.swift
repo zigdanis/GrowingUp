@@ -7,8 +7,9 @@
 //
 
 import Foundation
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class TextFieldCellPresenterStub: TextFieldCellPresenter {
 

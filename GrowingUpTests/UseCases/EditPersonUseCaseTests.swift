@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import Core
 
 class EditPersonUseCaseTests: XCTestCase {
@@ -14,9 +15,9 @@ class EditPersonUseCaseTests: XCTestCase {
 	var sut: EditPersonUseCaseImplementation!
 	let personsGatewaySpy = PersonsGatewaySpy()
 
-    override func setUp() {
+	override func setUp() {
 		sut = EditPersonUseCaseImplementation(personsGateway: personsGatewaySpy)
-    }
+	}
 
 	func test_SUT_EditPersonWithParams_PassingParamsToGatewayAndCallsCompletionHandler() {
 		// Given
@@ -28,7 +29,9 @@ class EditPersonUseCaseTests: XCTestCase {
 		// When
 		sut.edit(person: personToEdit, with: params) { result in
 			// Then
-			XCTAssertEqual(self.personsGatewaySpy.addPersonParameters, params, "Should have been called Edit Person with provided parameters")
+			XCTAssertEqual(
+				self.personsGatewaySpy.addPersonParameters, params,
+				"Should have been called Edit Person with provided parameters")
 			XCTAssertEqual(expectedResultToBeReturned, result, "Expected to receive success edited person result")
 			editPersonExpectation.fulfill()
 		}
@@ -45,7 +48,9 @@ class EditPersonUseCaseTests: XCTestCase {
 		// When
 		sut.edit(person: personToEdit, with: params) { result in
 			// Then
-			XCTAssertEqual(self.personsGatewaySpy.addPersonParameters, params, "Should have been called Edit Person with provided parameters")
+			XCTAssertEqual(
+				self.personsGatewaySpy.addPersonParameters, params,
+				"Should have been called Edit Person with provided parameters")
 			XCTAssertEqual(expectedResultToBeReturned, result, "Expected to receive failure of editing person result")
 			editPersonExpectation.fulfill()
 		}

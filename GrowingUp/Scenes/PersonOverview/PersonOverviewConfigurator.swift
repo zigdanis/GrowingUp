@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 protocol PersonOverviewConfigurator {
 	func configure(personOverviewController: PersonOverviewViewController)
@@ -26,7 +26,8 @@ final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator
 
 	func configure(personOverviewController: PersonOverviewViewController) {
 		let router = PersonOverviewRouterImplementation(personOverviewViewController: personOverviewController)
-		let presenter = PersonOverviewPresenterImplementation(person: person, personOverviewView: personOverviewController, router: router)
+		let presenter = PersonOverviewPresenterImplementation(
+			person: person, personOverviewView: personOverviewController, router: router)
 		presenter.personPresenterDelegate = editPresenterDelegate
 		personOverviewController.presenter = presenter
 		personOverviewController.index = index

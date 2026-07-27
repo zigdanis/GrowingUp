@@ -6,10 +6,11 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import XCTest
 import Foundation
-@testable import GrowingUp
+import XCTest
+
 @testable import Core
+@testable import GrowingUp
 
 class ImagesCellPresenterTests: XCTestCase {
 
@@ -58,8 +59,10 @@ class ImagesCellPresenterTests: XCTestCase {
 		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: expectedPics)
 		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)
 		// Then
-		XCTAssertEqual(imagesCellSpy.displayedAppPic, expectedPics.appPic, "Value displayed on cell doesn't match to expected")
-		XCTAssertEqual(imagesCellSpy.displayedWidgetPic, expectedPics.widgetPic, "Value displayed on cell doesn't match to expected")
+		XCTAssertEqual(
+			imagesCellSpy.displayedAppPic, expectedPics.appPic, "Value displayed on cell doesn't match to expected")
+		XCTAssertEqual(
+			imagesCellSpy.displayedWidgetPic, expectedPics.widgetPic, "Value displayed on cell doesn't match to expected")
 		// When
 		sut.valueFor(row: EPC.imagePickerRow, didChangeTo: emptyPics)
 		sut.configure(cell: imagesCellSpy, forRow: EPC.imagePickerRow, with: addPersonViewSpy)

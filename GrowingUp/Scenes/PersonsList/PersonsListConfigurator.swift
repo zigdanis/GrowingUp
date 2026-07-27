@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 
 protocol PersonsListConfigurator {
 	func configure(personsListController: PersonsListViewController)
@@ -20,7 +20,8 @@ final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 		let taskManager = TaskManagerOnGCD()
 		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
 		let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
-		let presenter = PersonsListPresenterImplementation(view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
+		let presenter = PersonsListPresenterImplementation(
+			view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
 		personsListController.presenter = presenter
 	}
 }

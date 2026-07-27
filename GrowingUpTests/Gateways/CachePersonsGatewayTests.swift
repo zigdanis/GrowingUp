@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class CachePersonsGatewayTests: XCTestCase {
 
@@ -16,9 +17,9 @@ class CachePersonsGatewayTests: XCTestCase {
 	let coreDataGatewaySpy = PersonsGatewaySpy()
 	let taskManagerSpy = TaskManagerSpy()
 
-    override func setUp() {
+	override func setUp() {
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManagerSpy)
-    }
+	}
 
 	func test_SUT_WhenAddingPerson_CallingTaskManager() {
 		// Given
@@ -43,7 +44,9 @@ class CachePersonsGatewayTests: XCTestCase {
 		// When
 		sut.add(parameters: params) { _ in
 			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.addPersonCalled, "Epected to call saving person to CoreData with specified managed object context in background")
+			XCTAssertTrue(
+				self.coreDataGatewaySpy.addPersonCalled,
+				"Epected to call saving person to CoreData with specified managed object context in background")
 			savedPerson.fulfill()
 		}
 		waitForExpectations(timeout: 0.1)
@@ -69,19 +72,22 @@ class CachePersonsGatewayTests: XCTestCase {
 		coreDataGatewaySpy.editPersonResultToBeReturned = editPersonCallback
 		let workIsDone = expectation(description: "Expecting to finish editing")
 		// When
-		sut.edit(person: Person.createPerson(), with: AddPersonParameters.createParameters(), completionHandler: { _ in
-			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.editPersonCalled, "Epected to call Edit Person from CoreData")
-			workIsDone.fulfill()
-		})
+		sut.edit(
+			person: Person.createPerson(), with: AddPersonParameters.createParameters(),
+			completionHandler: { _ in
+				// Then
+				XCTAssertTrue(self.coreDataGatewaySpy.editPersonCalled, "Epected to call Edit Person from CoreData")
+				workIsDone.fulfill()
+			})
 		waitForExpectations(timeout: 0.1)
 	}
 
 	func test_SUT_WhenEditingClearsStoredPics_EnqueuesDeleteForEachClearedSlot() {
 		// Given a person with both pics stored, edited to clear both slots.
 		let person = Person.createPerson()
-		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-										 appImage: nil, widgetImage: nil, isOnWidget: false)
+		let params = AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: nil, widgetImage: nil, isOnWidget: false)
 		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
 		// When
 		sut.edit(person: person, with: params) { _ in }
@@ -91,9 +97,12 @@ class CachePersonsGatewayTests: XCTestCase {
 
 	func test_SUT_WhenEditingPersonWithoutStoredPics_EnqueuesNoTasks() {
 		// Given a person with no stored pics, edited with no images.
-		let person = Person(id: UUID(), name: "name", birthday: Date(), appPicId: nil, widgetPicId: nil, isOnWidget: false, createdDate: Date())
-		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-										 appImage: nil, widgetImage: nil, isOnWidget: false)
+		let person = Person(
+			id: UUID(), name: "name", birthday: Date(), appPicId: nil, widgetPicId: nil, isOnWidget: false,
+			createdDate: Date())
+		let params = AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: nil, widgetImage: nil, isOnWidget: false)
 		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
 		// When
 		sut.edit(person: person, with: params) { _ in }
@@ -105,40 +114,52 @@ class CachePersonsGatewayTests: XCTestCase {
 		// Given a person whose app pic is replaced by a freshly picked image,
 		// while the widget pic is left untouched (same id, not re-picked).
 		let widgetId = UUID()
-		let person = Person(id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: widgetId, isOnWidget: false, createdDate: Date())
-		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-										 appImage: PersonImage(id: UUID(), uiImage: UIImage()),
-										 widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
+		let person = Person(
+			id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: widgetId, isOnWidget: false,
+			createdDate: Date())
+		let params = AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: PersonImage(id: UUID(), uiImage: UIImage()),
+			widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
 		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
 		// When
 		sut.edit(person: person, with: params) { _ in }
 		// Then
-		XCTAssertEqual(taskManagerSpy.processedTasks.count, 2, "Expected a save for the new app pic and a delete for the replaced one")
+		XCTAssertEqual(
+			taskManagerSpy.processedTasks.count, 2, "Expected a save for the new app pic and a delete for the replaced one")
 	}
 
 	func test_SUT_WhenEditingReplacesWidgetPic_EnqueuesSaveAndDelete() {
 		// Given a person whose widget pic is replaced by a freshly picked image,
 		// while the app pic is left untouched (same id, not re-picked).
 		let appId = UUID()
-		let person = Person(id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: UUID(), isOnWidget: false, createdDate: Date())
-		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-										 appImage: PersonImage(id: appId, uiImage: nil),
-										 widgetImage: PersonImage(id: UUID(), uiImage: UIImage()), isOnWidget: false)
+		let person = Person(
+			id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: UUID(), isOnWidget: false,
+			createdDate: Date())
+		let params = AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: PersonImage(id: appId, uiImage: nil),
+			widgetImage: PersonImage(id: UUID(), uiImage: UIImage()), isOnWidget: false)
 		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
 		// When
 		sut.edit(person: person, with: params) { _ in }
 		// Then
-		XCTAssertEqual(taskManagerSpy.processedTasks.count, 2, "Expected a save for the new widget pic and a delete for the replaced one")
+		XCTAssertEqual(
+			taskManagerSpy.processedTasks.count, 2, "Expected a save for the new widget pic and a delete for the replaced one"
+		)
 	}
 
 	func test_SUT_WhenEditingLeavesPicsUnchanged_EnqueuesNoTasks() {
 		// Given a person edited without touching either pic (same ids, not re-picked).
 		let appId = UUID()
 		let widgetId = UUID()
-		let person = Person(id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: widgetId, isOnWidget: false, createdDate: Date())
-		let params = AddPersonParameters(name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-										 appImage: PersonImage(id: appId, uiImage: nil),
-										 widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
+		let person = Person(
+			id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: widgetId, isOnWidget: false,
+			createdDate: Date())
+		let params = AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: PersonImage(id: appId, uiImage: nil),
+			widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
 		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
 		// When
 		sut.edit(person: person, with: params) { _ in }
@@ -171,11 +192,13 @@ class CachePersonsGatewayTests: XCTestCase {
 		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
 		let workIsDone = expectation(description: "Expecting to finish removing")
 		// When
-		sut.remove(person: Person.createPerson(), completionHandler: { _ in
-			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.removePersonCalled, "Epected to call Remove Person from CoreData")
-			workIsDone.fulfill()
-		})
+		sut.remove(
+			person: Person.createPerson(),
+			completionHandler: { _ in
+				// Then
+				XCTAssertTrue(self.coreDataGatewaySpy.removePersonCalled, "Epected to call Remove Person from CoreData")
+				workIsDone.fulfill()
+			})
 		waitForExpectations(timeout: 0.1)
 	}
 

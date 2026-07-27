@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 final class DateCellPresenterTests: XCTestCase {
 
@@ -29,10 +30,11 @@ final class DateCellPresenterTests: XCTestCase {
 		sut.configure(cell: dateCellSpy, forRow: EPC.birthdayRow)
 		// Then
 		let displayed = try? XCTUnwrap(dateCellSpy.displayedDate)
-		XCTAssertEqual(displayed?.timeIntervalSince1970 ?? 0,
-					   birthday.timeIntervalSince1970,
-					   accuracy: 1,
-					   "The combined birthday we expected was not displayed")
+		XCTAssertEqual(
+			displayed?.timeIntervalSince1970 ?? 0,
+			birthday.timeIntervalSince1970,
+			accuracy: 1,
+			"The combined birthday we expected was not displayed")
 	}
 
 	func test_SUT_WhenConfiguredWithDate_ShouldReturnThatValue() {

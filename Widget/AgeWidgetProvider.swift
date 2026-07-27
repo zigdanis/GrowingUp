@@ -7,10 +7,10 @@
 //  shared App Group container.
 //
 
-import WidgetKit
+import Core
 import SwiftUI
 import UIKit
-import Core
+import WidgetKit
 
 /// Max pinned people shown, matching the legacy widget and the app's limit.
 let rowsLimit = 3
@@ -97,11 +97,12 @@ struct AgeWidgetProvider: TimelineProvider {
 
 		for (index, person) in people.enumerated() {
 			func store(_ image: UIImage?) {
-				widgetPersons[index] = WidgetPerson(id: person.id,
-													index: index,
-													name: person.name,
-													birthday: person.birthday,
-													image: image)
+				widgetPersons[index] = WidgetPerson(
+					id: person.id,
+					index: index,
+					name: person.name,
+					birthday: person.birthday,
+					image: image)
 			}
 			guard let personImage = PersonImage(id: person.widgetPicId) else {
 				store(nil)

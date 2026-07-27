@@ -1,0 +1,22 @@
+{
+  "languages": {
+    "Swift": {
+      "format_on_save": "on",
+      "formatter": {
+        "external": {
+          "command": "xcrun",
+          "arguments": [
+            "swift-format",
+            "format",
+            "--assume-filename",
+            "{buffer_path}",
+            "-"
+          ]
+        }
+      },
+      "hard_tabs": true,
+      "preferred_line_length": 160,
+      "tab_size": 4
+    }
+  }
+}

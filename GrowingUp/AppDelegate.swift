@@ -6,33 +6,35 @@
 //  Copyright © 2018 zigdanis. All rights reserved.
 //
 
-import UIKit
 import Core
+import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    var window: UIWindow?
+	var window: UIWindow?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        setupMainViewController()
-        setupNavigationControllerAppearence()
+	func application(
+		_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+	) -> Bool {
+		setupMainViewController()
+		setupNavigationControllerAppearence()
 		setupFileProtectionLevelForSharedContainer()
 		Logging.setup()
 		return true
-    }
+	}
 
-    private func setupMainViewController() {
-        window = UIWindow(frame: UIScreen.main.bounds)
+	private func setupMainViewController() {
+		window = UIWindow(frame: UIScreen.main.bounds)
 		let configurator = PersonsListConfiguratorImplementation()
 		let mainVC = PersonsListViewController(configurator: configurator)
-        window?.rootViewController = mainVC
-        window?.makeKeyAndVisible()
-    }
+		window?.rootViewController = mainVC
+		window?.makeKeyAndVisible()
+	}
 
-    private func setupNavigationControllerAppearence() {
-        window?.tintColor = .appColor
-    }
+	private func setupNavigationControllerAppearence() {
+		window?.tintColor = .appColor
+	}
 
 	private func setupFileProtectionLevelForSharedContainer() {
 		let pathURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId)
@@ -43,7 +45,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 			]
 			try FileManager.default.setAttributes(noneAtts, ofItemAtPath: path)
 		} catch {
-			let error = CoreError(message: "Failed to set attributes for shared container URL. Error = \(error.localizedDescription)")
+			let error = CoreError(
+				message: "Failed to set attributes for shared container URL. Error = \(error.localizedDescription)")
 			Logging.logError(error)
 		}
 	}
@@ -61,7 +64,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		var params: [String: String]?
 		if let personIndex = Int(personIndexStr) {
 			params = ["index": "\(personIndex)"]
-			NotificationCenter.default.post(name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
+			NotificationCenter.default.post(
+				name: Constants.openPersonNotification, object: nil, userInfo: [Constants.widgetPersonIndexKey: personIndex])
 		}
 		Logging.logMessage("Open URL from Widget", params: params)
 	}

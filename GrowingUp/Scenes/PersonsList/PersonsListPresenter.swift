@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
 import Core
+import Foundation
 import WidgetKit
 
 private let maxNumberOfPersons = 20
@@ -48,7 +48,8 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 
 	private func subscribeToOpenPersonWithIdNotifications() {
-		NotificationCenter.default.addObserver(self, selector: #selector(openPersonNotificationSent), name: Constants.openPersonNotification, object: nil)
+		NotificationCenter.default.addObserver(
+			self, selector: #selector(openPersonNotificationSent), name: Constants.openPersonNotification, object: nil)
 	}
 
 	@objc

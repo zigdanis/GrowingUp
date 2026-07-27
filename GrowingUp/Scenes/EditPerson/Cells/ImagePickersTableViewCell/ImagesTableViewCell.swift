@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import UIKit
 import Core
+import UIKit
 
 protocol ImagesCellView: AnyObject {
 	func display(appPic: PersonImage?)

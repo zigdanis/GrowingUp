@@ -6,10 +6,10 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import Foundation
-import UIKit
-import SwiftUI
 import Core
+import Foundation
+import SwiftUI
+import UIKit
 
 enum BarButtonItemStyle {
 	case cancel
@@ -18,8 +18,8 @@ enum BarButtonItemStyle {
 }
 
 protocol EditPersonView: ImagesCellViewDelegate {
-    func updateBarButtonsState(isEnabled enabled: Bool)
-    func displayEditPersonError(title: String, message: String)
+	func updateBarButtonsState(isEnabled enabled: Bool)
+	func displayEditPersonError(title: String, message: String)
 	func displayScreenTitle(title: String)
 	func displayBarButton(with style: BarButtonItemStyle)
 	func reloadData()
@@ -49,38 +49,38 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		static let toggle = "ToggleTableViewCell"
 	}
 
-    var presenter: EditPersonPresenter!
-    private let configurator: EditPersonConfigurator
+	var presenter: EditPersonPresenter!
+	private let configurator: EditPersonConfigurator
 
-    @IBOutlet weak var tableView: UITableView!
+	@IBOutlet weak var tableView: UITableView!
 
-    init(configurator: EditPersonConfigurator) {
-        self.configurator = configurator
-        super.init(nibName: nil, bundle: nil)
-    }
+	init(configurator: EditPersonConfigurator) {
+		self.configurator = configurator
+		super.init(nibName: nil, bundle: nil)
+	}
 
 	@available(iOS, unavailable, message: "init(coder:) not implemented")
-    required init(coder: NSCoder) {
-        fatalError("init(coder:) not implemented")
-    }
+	required init(coder: NSCoder) {
+		fatalError("init(coder:) not implemented")
+	}
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configurator.configure(editPersonViewController: self)
-        setupTableView()
+	override func viewDidLoad() {
+		super.viewDidLoad()
+		configurator.configure(editPersonViewController: self)
+		setupTableView()
 		setupTableFooter()
 		presenter.viewDidLoad()
-    }
+	}
 
-    private func setupTableView() {
-        tableView.dataSource = self
+	private func setupTableView() {
+		tableView.dataSource = self
 		tableView.delegate = self
-        tableView.register(UINib(nibName: CellID.textField, bundle: nil), forCellReuseIdentifier: CellID.textField)
-        tableView.register(UINib(nibName: CellID.date, bundle: nil), forCellReuseIdentifier: CellID.date)
+		tableView.register(UINib(nibName: CellID.textField, bundle: nil), forCellReuseIdentifier: CellID.textField)
+		tableView.register(UINib(nibName: CellID.date, bundle: nil), forCellReuseIdentifier: CellID.date)
 		tableView.register(UINib(nibName: CellID.images, bundle: nil), forCellReuseIdentifier: CellID.images)
 		tableView.register(UINib(nibName: CellID.toggle, bundle: nil), forCellReuseIdentifier: CellID.toggle)
 		tableView.keyboardDismissMode = .onDrag
-    }
+	}
 
 	private func setupTableFooter() {
 		if presenter.shouldShowRemoveButton() {
@@ -93,19 +93,19 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		}
 	}
 
-    // MARK: - Actions
+	// MARK: - Actions
 
 	@objc
 	internal func cancelTapped() {
-        presenter.leftBarButtonPressed()
+		presenter.leftBarButtonPressed()
 		view.endEditing(true)
-    }
+	}
 
-    @objc
+	@objc
 	private func addTapped() {
-        presenter.rightBarButtonPressed()
+		presenter.rightBarButtonPressed()
 		view.endEditing(true)
-    }
+	}
 
 	@objc
 	private func saveTapped() {
@@ -113,29 +113,32 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 		view.endEditing(true)
 	}
 
-    // MARK: - EditPersonView
+	// MARK: - EditPersonView
 
-    func updateBarButtonsState(isEnabled enabled: Bool) {
-        navigationItem.rightBarButtonItem?.isEnabled = enabled
+	func updateBarButtonsState(isEnabled enabled: Bool) {
+		navigationItem.rightBarButtonItem?.isEnabled = enabled
 		navigationItem.leftBarButtonItem?.isEnabled = enabled
-    }
+	}
 
 	func displayScreenTitle(title: String) {
 		self.title = title
 	}
 
 	func displayEditPersonError(title: String, message: String) {
-        showAlert(title: title, message: message)
-    }
+		showAlert(title: title, message: message)
+	}
 
 	func displayBarButton(with style: BarButtonItemStyle) {
 		switch style {
 		case .cancel:
-			navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+			navigationItem.leftBarButtonItem = UIBarButtonItem(
+				barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
 		case .done:
-			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(addTapped))
+			navigationItem.rightBarButtonItem = UIBarButtonItem(
+				barButtonSystemItem: .done, target: self, action: #selector(addTapped))
 		case .save:
-			navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
+			navigationItem.rightBarButtonItem = UIBarButtonItem(
+				barButtonSystemItem: .save, target: self, action: #selector(saveTapped))
 		}
 	}
 
@@ -146,9 +149,9 @@ final class EditPersonViewController: UIViewController, EditPersonView {
 
 extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
-    }
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		return 4
+	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		switch indexPath.row {
@@ -186,7 +189,7 @@ extension EditPersonViewController: UITableViewDataSource, UITableViewDelegate {
 			let cell = tableView.cellForRow(at: indexPath)
 			cell?.becomeFirstResponder()
 		}
- 	}
+	}
 }
 
 extension EditPersonViewController: ImagesCellViewDelegate {
@@ -215,9 +218,11 @@ extension EditPersonViewController: ImagesCellViewDelegate {
 		tableView.reloadData()
 	}
 
-	private func presentImageFlow(source: ImageCaptureSource,
-								  cropShape: CropShape,
-								  onPicked: @escaping (UIImage) -> Void) {
+	private func presentImageFlow(
+		source: ImageCaptureSource,
+		cropShape: CropShape,
+		onPicked: @escaping (UIImage) -> Void
+	) {
 		view.endEditing(true)
 		let flow = ImageCaptureFlowView(
 			source: source,

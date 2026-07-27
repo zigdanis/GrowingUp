@@ -7,6 +7,7 @@
 //
 
 import XCTest
+
 @testable import Core
 
 class RemovePersonUseCaseTests: XCTestCase {
@@ -14,9 +15,9 @@ class RemovePersonUseCaseTests: XCTestCase {
 	var sut: RemovePersonUseCaseImplementation!
 	let personsGatewaySpy = PersonsGatewaySpy()
 
-    override func setUp() {
+	override func setUp() {
 		sut = RemovePersonUseCaseImplementation(personsGateway: personsGatewaySpy)
-    }
+	}
 
 	func test_SUT_WhenRemovingPerson_CallsPersonsGatewayAndCallsCompletion() {
 		// Given

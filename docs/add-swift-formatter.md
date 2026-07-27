@@ -4,7 +4,8 @@
 
 GrowingUp already runs SwiftLint during local Xcode builds and in GitHub Actions, but it does not currently use a source-code formatter. Add the official `swift-format` tool so formatting is consistent locally and enforced in CI.
 
-This document is a future implementation task. It does not enable formatting, change source files, install hooks, or modify CI.
+This plan was implemented in the repository. The configuration, shared scripts,
+formatted baseline, optional hook, and CI gate now form the source of truth.
 
 ## Motivation
 
@@ -12,15 +13,16 @@ The project currently relies on editor settings and manual formatting. This allo
 
 A formatter should provide one deterministic style while SwiftLint continues to enforce code-quality rules that require developer judgment.
 
-## Current state
+## Implemented state
 
 - `.swiftlint.yml` defines project lint rules.
 - The `GrowingUp` target runs SwiftLint during Xcode builds, including `Cmd+R`.
 - GitHub Actions runs `swiftlint lint --strict` for pull requests and pushes to `master`.
 - GitHub Actions builds the app and runs tests with `xcodebuild test`.
-- No `.swift-format` or `.swiftformat` configuration exists.
-- No source formatter runs on save, build, commit, or CI.
-- No project Git hooks are configured.
+- `.swift-format` defines the repository formatting policy.
+- Shared scripts format, check formatting, and run SwiftLint consistently.
+- CI enforces formatting without modifying source files.
+- An optional repository-controlled pre-commit hook checks formatting and lint.
 - The `xcbeautify` command used by CI formats build output only; it does not format Swift source code.
 
 ## Proposed tool
@@ -208,11 +210,15 @@ This order avoids introducing a permanently failing CI check before the existing
 - Do not combine the initial formatting diff with functional changes.
 - Do not require every contributor to install an Xcode editor extension.
 
-## Open decisions
+## Decisions
 
-- Use tabs to preserve the project's historical style, or migrate to spaces?
-- What line length should replace the current permissive SwiftLint limit of 300?
-- Should import ordering be enabled?
-- Should formatter checks run during every Xcode build or only before commit and in CI?
-- Which Xcode version should define the canonical `swift-format` output?
-- Should the pre-commit hook inspect staged files only or all project sources?
+- Use tabs for indentation, displayed at four columns.
+- Use the same 160-column limit in swift-format and SwiftLint.
+- Exclude comments from SwiftLint's line-length rule because swift-format does
+  not reflow comments safely.
+- Enable import ordering.
+- Check formatting in CI and the optional pre-commit hook, not during Xcode builds.
+- Use the `swift-format` bundled with the selected Xcode toolchain; CI's
+  `/Applications/Xcode.app` is canonical and prints the formatter version.
+- Check all first-party source directories in pre-commit for simple, reliable
+  behavior.

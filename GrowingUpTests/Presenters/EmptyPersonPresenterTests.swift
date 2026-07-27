@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class EmptyPersonPresenterTests: XCTestCase {
 
@@ -16,9 +17,9 @@ class EmptyPersonPresenterTests: XCTestCase {
 	let routerSpy = EmptyPersonViewRouterSpy()
 	let delegateSpy = EditPersonPresenterDelegateSpy()
 
-    override func setUp() {
-    	sut = EmptyPersonPresenterImplementation(router: routerSpy, addPersonPresenterDelegate: delegateSpy)
-    }
+	override func setUp() {
+		sut = EmptyPersonPresenterImplementation(router: routerSpy, addPersonPresenterDelegate: delegateSpy)
+	}
 
 	func test_SUT_WhenCalledAddButtonPressed_ShouldCallRouter() {
 		// When

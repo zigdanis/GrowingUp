@@ -6,15 +6,17 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
+import Disk
 import Foundation
 import UIKit
-import Disk
 
 public enum ImagesCache {
 
 	public static let memoryCache = MemoryCache<UIImage>()
 
-	public static func loadImageFromDiskOrMemory(image: PersonImage, completion: @escaping (Result<UIImage, CoreError>) -> Void) {
+	public static func loadImageFromDiskOrMemory(
+		image: PersonImage, completion: @escaping (Result<UIImage, CoreError>) -> Void
+	) {
 		DispatchQueue.global(qos: .userInitiated).async {
 			var result = Result<UIImage, CoreError>.failure(.unknownError)
 			if let memoryImg = memoryCache.value(forKey: image.cachingKey) {

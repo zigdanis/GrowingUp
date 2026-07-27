@@ -16,12 +16,14 @@ public struct AddPersonParameters: Equatable {
 	public var widgetImage: PersonImage?
 	public var isOnWidget: Bool
 
-	public init(name: String,
-				dayOfBirth: Date,
-				timeOfBirth: Date,
-				appImage: PersonImage?,
-				widgetImage: PersonImage?,
-				isOnWidget: Bool) {
+	public init(
+		name: String,
+		dayOfBirth: Date,
+		timeOfBirth: Date,
+		appImage: PersonImage?,
+		widgetImage: PersonImage?,
+		isOnWidget: Bool
+	) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
 		self.timeOfBirth = timeOfBirth

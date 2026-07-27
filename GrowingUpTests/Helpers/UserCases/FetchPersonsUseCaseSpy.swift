@@ -7,6 +7,7 @@
 //
 
 import Foundation
+
 @testable import Core
 
 final class FetchPersonsUseCaseSpy: FetchPersonsUseCase {

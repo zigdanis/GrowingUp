@@ -13,28 +13,30 @@ import UIKit
 class GradientView: UIView {
 
 	@IBInspectable var startColor: UIColor = UIColor.white {
-        didSet { setNeedsDisplay() }
-    }
+		didSet { setNeedsDisplay() }
+	}
 
-	@IBInspectable var endColor: UIColor = #colorLiteral(red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1) {
-        didSet { setNeedsDisplay() }
-    }
+	@IBInspectable var endColor: UIColor = #colorLiteral(
+		red: 0.8470588235, green: 0.8470588235, blue: 0.8470588235, alpha: 1)
+	{
+		didSet { setNeedsDisplay() }
+	}
 
-    private let gradient = CAGradientLayer()
+	private let gradient = CAGradientLayer()
 
-    override func layoutSublayers(of layer: CALayer) {
-        super.layoutSublayers(of: layer)
-        gradient.frame = bounds
-    }
+	override func layoutSublayers(of layer: CALayer) {
+		super.layoutSublayers(of: layer)
+		gradient.frame = bounds
+	}
 
-    override public func draw(_ rect: CGRect) {
-        super.draw(rect)
-        gradient.frame = bounds
-        gradient.colors = [startColor.cgColor, endColor.cgColor]
-        gradient.startPoint = CGPoint.init(x: 0.5, y: 0)
-        gradient.endPoint = CGPoint.init(x: 0.5, y: 1)
-        if gradient.superlayer == nil {
-            layer.insertSublayer(gradient, at: 0)
-        }
-    }
+	override public func draw(_ rect: CGRect) {
+		super.draw(rect)
+		gradient.frame = bounds
+		gradient.colors = [startColor.cgColor, endColor.cgColor]
+		gradient.startPoint = CGPoint.init(x: 0.5, y: 0)
+		gradient.endPoint = CGPoint.init(x: 0.5, y: 1)
+		if gradient.superlayer == nil {
+			layer.insertSublayer(gradient, at: 0)
+		}
+	}
 }

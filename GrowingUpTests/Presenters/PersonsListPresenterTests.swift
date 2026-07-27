@@ -7,8 +7,9 @@
 //
 
 import XCTest
-@testable import GrowingUp
+
 @testable import Core
+@testable import GrowingUp
 
 class PersonsListPresenterTests: XCTestCase {
 
@@ -19,14 +20,17 @@ class PersonsListPresenterTests: XCTestCase {
 
 	override func setUp() {
 		displayPersonsUseCaseSpy.resultToBeReturned = .success(expectedPersonsToReturn)
-    	sut = PersonsListPresenterImplementation(view: personsListSpy, displayPersonsUseCase: displayPersonsUseCaseSpy)
-    }
+		sut = PersonsListPresenterImplementation(view: personsListSpy, displayPersonsUseCase: displayPersonsUseCaseSpy)
+	}
 
 	func test_SUT_LoadingPersonsOnInit() {
 		// Then
 		XCTAssertTrue(displayPersonsUseCaseSpy.displayPersonsCalled, "Expected to call loadiing of Persons")
-		XCTAssertTrue(personsListSpy.didCallUpdateListOfScreens, "Expected to call updateListOfScreens after loaded Persons")
-		XCTAssertEqual(sut.numberOfPages(), expectedPersonsToReturn.count + 1, "Expected to return number of pages according to returned Persons array")
+		XCTAssertTrue(
+			personsListSpy.didCallUpdateListOfScreens, "Expected to call updateListOfScreens after loaded Persons")
+		XCTAssertEqual(
+			sut.numberOfPages(), expectedPersonsToReturn.count + 1,
+			"Expected to return number of pages according to returned Persons array")
 	}
 
 	func test_SUT_ReturningPersonOverviewScreenForPersonAtCorrectIndex() {

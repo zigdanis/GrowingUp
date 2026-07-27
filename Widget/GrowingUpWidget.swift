@@ -5,8 +5,8 @@
 //  Entry point for the GrowingUp WidgetKit extension.
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 struct GrowingUpWidget: Widget {
 	let kind = "pro.ziganshin.GrowingUp.Widget"

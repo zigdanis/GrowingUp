@@ -6,8 +6,8 @@
 //  Copyright © 2019 zigdanis. All rights reserved.
 //
 
-import UIKit
 import Core
+import UIKit
 
 protocol PersonOverviewView: PageViewControllerViewable {
 	func displayPersonName(name: String)
@@ -83,7 +83,7 @@ final class PersonOverviewViewController: UIViewController, PersonOverviewView {
 		guard let image = image else { return }
 		ImagesCache.loadImageFromDiskOrMemory(image: image) { result in
 			switch result {
-			case.success(let img):
+			case .success(let img):
 				self.appImage.image = img
 			case .failure(let error):
 				Logging.logError(error)
