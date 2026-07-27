@@ -10,11 +10,9 @@ import Photos
 import SwiftUI
 
 struct PhotoGridView: View {
-    let cameraModel: CameraSourceModel
-    let onCameraTapped: () -> Void
-    let onPicked: (UIImage) -> Void
+    let viewModel: PhotoGridViewModel
+    @Binding var selectedAsset: PhotoAsset?
 
-    @State private var viewModel = PhotoGridViewModel()
     @State private var showLimitedPicker = false
 
     private let columns = Array(
@@ -25,6 +23,7 @@ struct PhotoGridView: View {
     var body: some View {
         content
             .task { await viewModel.onAppear() }
+            .onDisappear { viewModel.cancelSelection() }
             .overlay {
                 if viewModel.isPreparingSelection {
                     SelectionProgressOverlay(progress: viewModel.selectionProgress) {
@@ -41,6 +40,7 @@ struct PhotoGridView: View {
                     viewModel.presentLimitedPicker(from: viewController)
                 }
             )
+            .background(Color(.secondarySystemBackground))
     }
 
     private var errorBinding: Binding<Bool> {
@@ -72,23 +72,23 @@ struct PhotoGridView: View {
                     LimitedAccessHeader { showLimitedPicker = true }
                 }
                 LazyVGrid(columns: columns, spacing: 2) {
-                    CameraTile(
-                        authState: cameraModel.authState,
-                        side: side,
-                        onTap: onCameraTapped
-                    )
                     ForEach(viewModel.assets) { asset in
                         PhotoThumbnailCell(
                             asset: asset,
                             side: side,
-                            viewModel: viewModel
+                            viewModel: viewModel,
+                            isSelected: selectedAsset?.id == asset.id
                         ) {
-                            viewModel.select(asset, completion: onPicked)
+                            toggleSelection(of: asset)
                         }
                     }
                 }
             }
         }
+    }
+
+    private func toggleSelection(of asset: PhotoAsset) {
+        selectedAsset = selectedAsset?.id == asset.id ? nil : asset
     }
 }
 

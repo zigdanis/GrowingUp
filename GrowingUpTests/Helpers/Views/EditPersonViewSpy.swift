@@ -32,11 +32,11 @@ class EditPersonViewSpy: EditPersonView {
 		displayAddPersonErrorMessage = message
 	}
 
-	func showAppPicImagePickerFor(row: Int) {
+	func showAppPicImagePickerFor(row: Int, source: ImageCaptureSource) {
 		showedAppPicImagePicker = true
 	}
 
-	func showWidgetPicImagePickerFor(row: Int) {
+	func showWidgetPicImagePickerFor(row: Int, source: ImageCaptureSource) {
 		showedWidgetPicImagePicker = true
 	}
 

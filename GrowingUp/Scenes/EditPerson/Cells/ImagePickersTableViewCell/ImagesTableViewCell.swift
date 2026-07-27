@@ -16,8 +16,8 @@ protocol ImagesCellView: AnyObject {
 }
 
 protocol ImagesCellViewDelegate: AnyObject {
-	func showAppPicImagePickerFor(row: Int)
-	func showWidgetPicImagePickerFor(row: Int)
+	func showAppPicImagePickerFor(row: Int, source: ImageCaptureSource)
+	func showWidgetPicImagePickerFor(row: Int, source: ImageCaptureSource)
 	func removeAppPic(forRow row: Int)
 	func removeWidgetPic(forRow row: Int)
 }
@@ -31,6 +31,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private var row: Int?
 	private let appPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
 	private let widgetPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
+	private let appPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
+	private let widgetPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -46,8 +48,23 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	}
 
 	private func setupPickerButtons() {
-		appPicButton.addTarget(self, action: #selector(appPicTouched), for: .touchUpInside)
-		widgetPicButton.addTarget(self, action: #selector(widgetPicTouched), for: .touchUpInside)
+		addMenuButton(appPicMenuButton, over: appPicButton)
+		addMenuButton(widgetPicMenuButton, over: widgetPicButton)
+		appPicMenuButton.accessibilityLabel = String(localized: "Change app picture")
+		widgetPicMenuButton.accessibilityLabel = String(localized: "Change widget picture")
+		appPicButton.isUserInteractionEnabled = false
+		widgetPicButton.isUserInteractionEnabled = false
+	}
+
+	private func addMenuButton(_ menuButton: UIButton, over pickerButton: UIButton) {
+		menuButton.translatesAutoresizingMaskIntoConstraints = false
+		contentView.addSubview(menuButton)
+		NSLayoutConstraint.activate([
+			menuButton.topAnchor.constraint(equalTo: pickerButton.topAnchor),
+			menuButton.leadingAnchor.constraint(equalTo: pickerButton.leadingAnchor),
+			menuButton.trailingAnchor.constraint(equalTo: pickerButton.trailingAnchor),
+			menuButton.bottomAnchor.constraint(equalTo: pickerButton.bottomAnchor)
+		])
 	}
 
 	private func setupRemoveBadges() {
@@ -80,6 +97,13 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.isHidden = true
 		button.accessibilityLabel = String(localized: "Remove")
+		return button
+	}
+
+	private static func makeSourceMenuButton() -> UIButton {
+		let button = UIButton(type: .custom)
+		button.showsMenuAsPrimaryAction = true
+		button.backgroundColor = .clear
 		return button
 	}
 
@@ -128,20 +152,27 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	func setup(with delegate: ImagesCellViewDelegate, forRow row: Int) {
 		self.delegate = delegate
 		self.row = row
+		appPicMenuButton.menu = imageSourceMenu { [weak self] source in
+			guard let self, let row = self.row else { return }
+			self.delegate?.showAppPicImagePickerFor(row: row, source: source)
+		}
+		widgetPicMenuButton.menu = imageSourceMenu { [weak self] source in
+			guard let self, let row = self.row else { return }
+			self.delegate?.showWidgetPicImagePickerFor(row: row, source: source)
+		}
 	}
 
 	// MARK: - Actions
 
-	@objc
-	private func appPicTouched() {
-		guard let row = row else { return }
-		delegate?.showAppPicImagePickerFor(row: row)
-	}
-
-	@objc
-	private func widgetPicTouched() {
-		guard let row = row else { return }
-		delegate?.showWidgetPicImagePickerFor(row: row)
+	private func imageSourceMenu(onSelect: @escaping (ImageCaptureSource) -> Void) -> UIMenu {
+		UIMenu(children: [
+			UIAction(title: String(localized: "Camera"), image: UIImage(systemName: "camera")) { _ in
+				onSelect(.camera)
+			},
+			UIAction(title: String(localized: "Photos"), image: UIImage(systemName: "photo")) { _ in
+				onSelect(.photos)
+			}
+		])
 	}
 
 	@objc
