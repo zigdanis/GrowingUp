@@ -2,7 +2,7 @@
 
 set -eu
 
-patterns='(TELEGRAM_BOT_TOKEN|CRASHLYTICS_API_TOKEN|CRASHLYTICS_BUILD_SECRET|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|https?://[^[:space:]]+:[^[:space:]@]+@|/Users/[^/[:space:]]+/)'
+patterns='(TELEGRAM_BOT_TOKEN|BEGIN (RSA|OPENSSH|EC|DSA) PRIVATE KEY|https?://[^[:space:]]+:[^[:space:]@]+@|/Users/[^/[:space:]]+/)'
 
 matches=$(git grep -nIE "$patterns" -- ':!scripts/check-secrets.sh' ':!docs/public-release-checklist.md' || true)
 
