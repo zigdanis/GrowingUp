@@ -31,8 +31,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private var row: Int?
 	private let appPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
 	private let widgetPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
-	private let appPicMenuButton = ImageSourceMenuButton()
-	private let widgetPicMenuButton = ImageSourceMenuButton()
+	private let appPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
+	private let widgetPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -50,18 +50,20 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private func setupPickerButtons() {
 		addMenuButton(appPicMenuButton, over: appPicButton)
 		addMenuButton(widgetPicMenuButton, over: widgetPicButton)
+		appPicMenuButton.accessibilityLabel = String(localized: "Change app picture")
+		widgetPicMenuButton.accessibilityLabel = String(localized: "Change widget picture")
 		appPicButton.isUserInteractionEnabled = false
 		widgetPicButton.isUserInteractionEnabled = false
 	}
 
-	private func addMenuButton(_ menuButton: ImageSourceMenuButton, over pickerButton: UIButton) {
+	private func addMenuButton(_ menuButton: UIButton, over pickerButton: UIButton) {
 		menuButton.translatesAutoresizingMaskIntoConstraints = false
 		contentView.addSubview(menuButton)
 		NSLayoutConstraint.activate([
 			menuButton.topAnchor.constraint(equalTo: pickerButton.topAnchor),
 			menuButton.leadingAnchor.constraint(equalTo: pickerButton.leadingAnchor),
 			menuButton.trailingAnchor.constraint(equalTo: pickerButton.trailingAnchor),
-			menuButton.heightAnchor.constraint(equalTo: pickerButton.heightAnchor, constant: 150)
+			menuButton.bottomAnchor.constraint(equalTo: pickerButton.bottomAnchor)
 		])
 	}
 
@@ -95,6 +97,13 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		button.translatesAutoresizingMaskIntoConstraints = false
 		button.isHidden = true
 		button.accessibilityLabel = String(localized: "Remove")
+		return button
+	}
+
+	private static func makeSourceMenuButton() -> UIButton {
+		let button = UIButton(type: .custom)
+		button.showsMenuAsPrimaryAction = true
+		button.backgroundColor = .clear
 		return button
 	}
 
@@ -176,42 +185,5 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private func removeWidgetPicTouched() {
 		guard let row = row else { return }
 		delegate?.removeWidgetPic(forRow: row)
-	}
-}
-
-private final class ImageSourceMenuButton: UIButton {
-	private var sourceHitHeight: CGFloat { bounds.height - 150 }
-
-	init() {
-		super.init(frame: .zero)
-		showsMenuAsPrimaryAction = true
-		backgroundColor = .clear
-	}
-
-	@available(*, unavailable)
-	required init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
-	}
-
-	override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-		CGRect(x: 0, y: 0, width: bounds.width, height: sourceHitHeight).contains(point)
-	}
-
-	override func menuAttachmentPoint(for configuration: UIContextMenuConfiguration) -> CGPoint {
-		CGPoint(x: bounds.midX, y: sourceHitHeight + 105)
-	}
-
-	override func contextMenuInteraction(
-		_ interaction: UIContextMenuInteraction,
-		previewForHighlightingMenuWithConfiguration configuration: UIContextMenuConfiguration
-	) -> UITargetedPreview? {
-		nil
-	}
-
-	override func contextMenuInteraction(
-		_ interaction: UIContextMenuInteraction,
-		previewForDismissingMenuWithConfiguration configuration: UIContextMenuConfiguration
-	) -> UITargetedPreview? {
-		nil
 	}
 }

@@ -12,6 +12,12 @@
 /* "text on label under widget pic rounded button" */
 "widget pic" = "в виджете";
 
+/* Accessibility label for the app picture image-source menu */
+"Change app picture" = "Изменить основное фото";
+
+/* Accessibility label for the widget picture image-source menu */
+"Change widget picture" = "Изменить фото для виджета";
+
 /* "Title for the button on new person screen" */
 "Add person" = "Добавить";
 

@@ -88,7 +88,7 @@ struct ImageCaptureFlowView: View {
         Group {
             switch coordinator.stage {
             case .sourceMenu:
-                ImageSourceMenuView(
+                ImageSourceSelectionView(
                     onCamera: openCamera,
                     onPhotos: coordinator.chosePhotos,
                     onCancel: onCancel
@@ -97,12 +97,12 @@ struct ImageCaptureFlowView: View {
                 CameraSourceView(
                     cameraModel: cameraModel,
                     onCapture: { select($0, from: .camera) },
-                    onBack: onCancel
+                    onBack: coordinator.wentBack
                 )
             case .photoPreview:
                 LightweightPhotoPreviewView(
                     onPicked: { select($0, from: .photoPreview) },
-                    onBack: onCancel,
+                    onBack: coordinator.wentBack,
                     onAllPhotos: coordinator.choseAllPhotos
                 )
             case .systemPhotoPicker:
@@ -171,61 +171,24 @@ struct ImageCaptureFlowView: View {
     }
 }
 
-private struct ImageSourceMenuView: View {
-    private let cornerRadius: CGFloat = 32
-
+private struct ImageSourceSelectionView: View {
     let onCamera: () -> Void
     let onPhotos: () -> Void
     let onCancel: () -> Void
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            Color.black.opacity(0.2)
-                .ignoresSafeArea()
-                .contentShape(Rectangle())
-                .onTapGesture(perform: onCancel)
-
-            VStack(spacing: 8) {
-                SourceMenuRow(title: "Camera", systemImage: "camera", action: onCamera)
-                SourceMenuRow(title: "Photos", systemImage: "photo", action: onPhotos)
-            }
-            .padding(12)
-            .frame(maxWidth: 360)
-            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
-            .overlay {
-                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
-                    .stroke(.white.opacity(0.2), lineWidth: 0.5)
-            }
-            .shadow(color: .black.opacity(0.28), radius: 28, y: 12)
-            .padding(.leading, 16)
-            .padding(.trailing, 48)
-            .padding(.bottom, 16)
+        VStack(spacing: 16) {
+            Spacer()
+            Button("Camera", systemImage: "camera", action: onCamera)
+            Button("Photos", systemImage: "photo", action: onPhotos)
+            Spacer()
+            Button("Cancel", role: .cancel, action: onCancel)
         }
-    }
-}
-
-private struct SourceMenuRow: View {
-    let title: LocalizedStringKey
-    let systemImage: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 20) {
-                Image(systemName: systemImage)
-                    .font(.title2.weight(.medium))
-                    .frame(width: 56, height: 56)
-                    .background(.white.opacity(0.08), in: Circle())
-                Text(title)
-                    .font(.title2)
-                Spacer()
-            }
-            .foregroundStyle(.primary)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 6)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
+        .buttonStyle(.bordered)
+        .controlSize(.large)
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.secondarySystemBackground))
     }
 }
 
