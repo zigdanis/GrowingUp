@@ -213,8 +213,7 @@ This order avoids introducing a permanently failing CI check before the existing
 ## Decisions
 
 - Use two spaces for indentation.
-- Use a 160-column formatter limit and keep SwiftLint's more permissive quality
-  limit so the tools do not fight over wrapping.
+- Use the same 160-column limit in swift-format and SwiftLint.
 - Enable import ordering.
 - Check formatting in CI and the optional pre-commit hook, not during Xcode builds.
 - Use the `swift-format` bundled with the selected Xcode toolchain; CI's

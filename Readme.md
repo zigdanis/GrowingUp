@@ -92,7 +92,8 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   repository `.swift-format` policy. Run `scripts/format-swift.sh` to format all
   first-party Swift sources or `scripts/check-formatting.sh` to check without
   changing files. The formatter bundled with the selected Xcode toolchain is
-  used locally and in CI.
+  used locally and in CI. Zed uses the same formatter automatically on save via
+  `.zed/settings.json`.
 * **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
   `scripts/lint-swift.sh` for the same strict check used in CI.
@@ -105,7 +106,11 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
   SwiftLint, and builds + tests on an iOS Simulator on every pull request and
   on pushes to `master`.
 
-### Formatting the current file
+### Editor integration
+
+Zed formats Swift files on save using the project `.zed/settings.json`. It
+passes the unsaved buffer through Xcode's `swift-format` and uses the file path
+to discover the repository `.swift-format` configuration.
 
 The official `swift-format` project does not provide a repository-aware Xcode
 Source Editor Extension. Xcode's **Editor → Structure → Re-Indent** command also

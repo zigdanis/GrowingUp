@@ -24,7 +24,7 @@ excluded:
   - .agents
   - .codex
   - plugins
-line_length: 300
+line_length: 160
 file_length: 450
 type_name: 
   max_length: 45
