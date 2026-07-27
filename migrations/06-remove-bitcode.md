@@ -1,5 +1,7 @@
 # Migration: Remove bitcode
 
+**Status:** Completed by `5535ec4` and verified after merging `master` into this branch.
+
 > **Agent prompt — paste this to start the task.**
 >
 > You are removing all bitcode usage from GrowingUp. First produce a short plan
@@ -10,8 +12,8 @@
 >   longer accepts bitcode; modern Xcode ignores/strips it). Keeping it produces
 >   warnings and dead configuration.
 >
-> **Current state**
-> - `fastlane/Fastfile` calls `gym(... include_bitcode: true)` in the
+> **Original state**
+> - `fastlane/Fastfile` called `gym(... include_bitcode: true)` in the
 >   `app_store` lane.
 > - Check `GrowingUp.xcodeproj/project.pbxproj` for `ENABLE_BITCODE` build
 >   settings on every target/configuration (app, `Core`, `Widget`, tests).
@@ -30,6 +32,11 @@
 > - No `include_bitcode` / `ENABLE_BITCODE` anywhere in the repo.
 > - App + Widget build cleanly with no bitcode-related warnings.
 > - Release lane (`gym`) builds without the deprecated option.
+>
+> **Implementation**
+> - `include_bitcode: true` was removed from the `gym` call.
+> - The Xcode project has no `ENABLE_BITCODE` build settings.
+> - Repository-wide verification found no remaining active bitcode configuration.
 >
 > **Overlap note:** PR #4 sub-task D and the fastlane ticket both touch the
 > Fastfile; this ticket is the source of truth for the bitcode removal
