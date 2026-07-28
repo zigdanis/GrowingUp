@@ -64,3 +64,7 @@ fastlane/.env.*
 *.p8
 *.p12
 *.mobileprovision
+
+# Local Claude configuration
+.claude/
+CLAUDE.md

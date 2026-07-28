@@ -3,7 +3,7 @@
 //  GrowingUpTests
 //
 //  Created by zigdanis on 19/03/2019.
-//  Copyright © 2019 zigdanis. All rights reserved.
+//  Copyright © 2019-2026 Danis Ziganshin.
 //
 
 @testable import Core
