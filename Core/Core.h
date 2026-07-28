@@ -3,7 +3,7 @@
 //  Core
 //
 //  Created by zigdanis on 15/12/2018.
-//  Copyright © 2018 zigdanis. All rights reserved.
+//  Copyright © 2018-2026 Danis Ziganshin.
 //
 
 #import <UIKit/UIKit.h>

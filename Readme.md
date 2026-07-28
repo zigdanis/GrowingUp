@@ -132,7 +132,3 @@ scripts and CI check remain the source of truth.
 ## License
 
 GrowingUp is available under the [MIT License](LICENSE).
-
-## Security
-
-Please report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).

@@ -3,7 +3,7 @@
 //  GrowingUp
 //
 //  Created by zigdanis on 16/03/2019.
-//  Copyright © 2019 zigdanis. All rights reserved.
+//  Copyright © 2019-2026 Danis Ziganshin.
 //
 
 import UIKit
