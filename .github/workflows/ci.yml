@@ -14,57 +14,57 @@ jobs:
     name: Secret Patterns
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Check tracked files
         run: scripts/check-secrets.sh
 
   formatting:
     name: Swift Format
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_26.6.app
 
       - name: Check formatting
         run: |
-          xcrun swift-format --version
+          test "$(xcodebuild -version | head -n 1)" = "Xcode 26.6"
+          test "$(xcodebuild -version | tail -n 1)" = "Build version 17F113"
+          test "$(xcrun swift-format --version)" = "6.3.0"
           scripts/check-formatting.sh
 
   lint:
     name: SwiftLint
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Install SwiftLint
+      - name: Check SwiftLint version
         run: |
-          if ! command -v swiftlint >/dev/null 2>&1; then
-            brew install swiftlint
-          fi
-          swiftlint version
+          test "$(swiftlint version)" = "0.65.0"
 
       - name: Run SwiftLint
         run: scripts/lint-swift.sh
 
   build-test:
     name: Build & Test
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_26.6.app
 
-      - name: Show versions
+      - name: Check Xcode version
         run: |
-          xcodebuild -version
+          test "$(xcodebuild -version | head -n 1)" = "Xcode 26.6"
+          test "$(xcodebuild -version | tail -n 1)" = "Build version 17F113"
           swift --version
 
       - name: Cache SwiftPM
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
@@ -82,21 +82,18 @@ jobs:
       - name: Pick iOS Simulator
         id: sim
         run: |
-          UDID=$(xcrun simctl list devices available --json \
-            | jq -r '[.devices | to_entries[] | select(.key | test("iOS")) | .value[] | select(.isAvailable) | .udid] | .[0] // empty')
-          test -n "$UDID" || { echo "No available iOS simulator on runner"; exit 1; }
-          echo "Using simulator $UDID"
+          DEVICE=$(xcrun simctl list devices available --json \
+            | jq -r '[.devices | to_entries[] | select(.key | test("iOS")) | .value[] | select(.isAvailable and (.name | startswith("iPhone")))] | .[0] // empty')
+          test -n "$DEVICE" || { echo "No available iPhone simulator on runner"; exit 1; }
+          UDID=$(jq -r '.udid' <<< "$DEVICE")
+          echo "Using $(jq -r '.name' <<< "$DEVICE") ($UDID)"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
       - name: Build & Test
         env:
           SIM_UDID: ${{ steps.sim.outputs.udid }}
         run: |
-          set -o pipefail
-          FORMATTER=cat
-          command -v xcbeautify >/dev/null 2>&1 && FORMATTER=xcbeautify
           xcodebuild test \
             -project GrowingUp.xcodeproj \
             -scheme GrowingUp \
-            -destination "id=$SIM_UDID" \
-            | "$FORMATTER"
+            -destination "id=$SIM_UDID"
