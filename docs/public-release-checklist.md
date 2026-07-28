@@ -11,8 +11,9 @@ visibility to public:
   and tags for sensitive data.
 - [ ] Run `scripts/check-secrets.sh` against the exact commit to publish.
 - [ ] Build and test the exact commit to publish.
-- [ ] Enable secret scanning, push protection, Dependabot alerts, private
-  vulnerability reporting, and branch protection after publication.
+- [x] Enable Dependabot alerts and automatic security updates.
+- [ ] Enable secret scanning, push protection, private vulnerability reporting,
+  and branch protection after publication.
 
 Keeping the existing repository and its history is acceptable once every
 historically committed credential has been revoked or rotated. Deleting a
