@@ -6,8 +6,6 @@ iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
 
-Current version: **[2.1.3](https://github.com/zigdanis/GrowingUp/releases/tag/2.1.3)**.
-
 ## Features
 
 * Keep a list of people, each with a name, birth date and photo.
