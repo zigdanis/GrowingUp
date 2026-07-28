@@ -1,12 +1,10 @@
 # GrowingUp
 
-[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml)
+[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 
 iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
-
-Current version: **2.0.0**.
 
 ## Features
 
