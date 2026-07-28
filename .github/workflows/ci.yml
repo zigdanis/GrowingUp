@@ -10,6 +10,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect Changes
+    runs-on: ubuntu-latest
+    outputs:
+      docs_only: ${{ steps.filter.outputs.docs_only }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Check changed files
+        id: filter
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- . \
+            ':(exclude)*.md' \
+            ':(exclude)**/*.md'; then
+            echo "docs_only=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "docs_only=false" >> "$GITHUB_OUTPUT"
+          fi
+
   secrets:
     name: Secret Patterns
     runs-on: ubuntu-latest
@@ -50,6 +74,8 @@ jobs:
 
   build-test:
     name: Build & Test
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v6
