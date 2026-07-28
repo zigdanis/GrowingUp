@@ -5,12 +5,12 @@ visibility to public:
 
 - [ ] Revoke or rotate every credential that has ever been committed, even if
   it is no longer used.
-- [ ] Confirm that the repository owner accepts public access to historical
+- [x] Confirm that the repository owner accepts public access to historical
   source files and images in every retained branch and tag.
 - [ ] Audit pull requests, issues, Actions logs, artifacts, releases, branches,
   and tags for sensitive data.
-- [ ] Run `scripts/check-secrets.sh` against the exact commit to publish.
-- [ ] Build and test the exact commit to publish.
+- [x] Run `scripts/check-secrets.sh` against the exact commit to publish.
+- [x] Build and test the exact commit to publish.
 - [x] Enable Dependabot alerts and automatic security updates.
 - [ ] Enable secret scanning, push protection, and branch protection after
   publication.

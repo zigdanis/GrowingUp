@@ -60,7 +60,7 @@ dependency.
 ## Building & Running
 
 ```
-git clone git@github.com:zigdanis/GrowingUp.git
+git clone https://github.com/zigdanis/GrowingUp.git
 cd GrowingUp
 scripts/install-git-hooks.sh
 open GrowingUp.xcodeproj
