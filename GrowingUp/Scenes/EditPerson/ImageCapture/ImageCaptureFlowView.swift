@@ -228,20 +228,33 @@ private struct LightweightPhotoPreviewView: View {
 				.background(Color(.secondarySystemBackground))
 				.ignoresSafeArea(.container, edges: .bottom)
 				.toolbar {
-					ToolbarItemGroup(placement: .bottomBar) {
-						Button(action: onBack) {
-							Image(systemName: "chevron.left")
+					if #available(iOS 26.0, *) {
+						ToolbarItem(placement: .bottomBar) {
+							backButton
 						}
-						.accessibilityLabel(Text("Back"))
+						ToolbarSpacer(.flexible, placement: .bottomBar)
+						ToolbarItem(placement: .bottomBar) {
+							Button("All Photos", systemImage: "photo.on.rectangle", action: onAllPhotos)
+						}
+					} else {
+						ToolbarItemGroup(placement: .bottomBar) {
+							backButton
+							Spacer()
 
-						Spacer()
-
-						Button("All Photos", action: onAllPhotos)
+							Button("All Photos", action: onAllPhotos)
+						}
 					}
 				}
 				.toolbar(.hidden, for: .navigationBar)
 				.toolbarBackgroundVisibility(.hidden, for: .bottomBar)
 		}
+	}
+
+	private var backButton: some View {
+		Button(action: onBack) {
+			Image(systemName: "chevron.left")
+		}
+		.accessibilityLabel(Text("Back"))
 	}
 
 }
