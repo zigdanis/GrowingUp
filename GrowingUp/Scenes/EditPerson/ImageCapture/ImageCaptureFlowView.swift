@@ -241,8 +241,32 @@ private struct PhotoPreviewControls: View {
 
 	var body: some View {
 		if #available(iOS 26.0, *) {
-			controls
-				.buttonStyle(.glass(.regular.tint(.black.opacity(0.7))))
+			GlassEffectContainer {
+				HStack {
+					Button(action: onBack) {
+						Image(systemName: "chevron.left")
+							.foregroundStyle(.white)
+							.frame(width: 44, height: 44)
+					}
+					.buttonStyle(.plain)
+					.glassEffect(.regular.tint(.black.opacity(0.7)).interactive())
+					.accessibilityLabel(Text("Back"))
+
+					Spacer()
+
+					Button(action: onAllPhotos) {
+						Text("All Photos")
+							.font(.headline)
+							.foregroundStyle(.white)
+							.padding(.horizontal, 20)
+							.frame(height: 44)
+					}
+					.buttonStyle(.plain)
+					.glassEffect(.regular.tint(.black.opacity(0.7)).interactive())
+				}
+				.padding(.horizontal, 16)
+				.padding(.vertical, 8)
+			}
 		} else {
 			controls
 				.buttonStyle(.bordered)
