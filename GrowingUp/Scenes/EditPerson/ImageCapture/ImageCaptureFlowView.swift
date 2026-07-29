@@ -226,7 +226,6 @@ private struct LightweightPhotoPreviewView: View {
 		NavigationStack {
 			PhotoGridView(viewModel: photoModel, onPicked: onPicked)
 				.background(Color(.secondarySystemBackground))
-				.ignoresSafeArea(.container, edges: .bottom)
 				.safeAreaInset(edge: .bottom) {
 					PhotoPreviewControls(onBack: onBack, onAllPhotos: onAllPhotos)
 				}
@@ -249,7 +248,7 @@ private struct PhotoPreviewControls: View {
 							.frame(width: 44, height: 44)
 					}
 					.buttonStyle(.plain)
-					.glassEffect(.regular.tint(.black.opacity(0.7)).interactive())
+					.glassEffect()
 					.accessibilityLabel(Text("Back"))
 
 					Spacer()
@@ -262,7 +261,7 @@ private struct PhotoPreviewControls: View {
 							.frame(height: 44)
 					}
 					.buttonStyle(.plain)
-					.glassEffect(.regular.tint(.black.opacity(0.7)).interactive())
+					.glassEffect()
 				}
 				.padding(.horizontal, 16)
 				.padding(.vertical, 8)
