@@ -242,7 +242,7 @@ private struct PhotoPreviewControls: View {
 	var body: some View {
 		if #available(iOS 26.0, *) {
 			controls
-				.buttonStyle(.glass(.regular.tint(.black)))
+				.buttonStyle(.glass(.regular.tint(.black.opacity(0.7))))
 		} else {
 			controls
 				.buttonStyle(.bordered)
@@ -254,12 +254,17 @@ private struct PhotoPreviewControls: View {
 		HStack {
 			Button(action: onBack) {
 				Image(systemName: "chevron.left")
+					.foregroundStyle(.white)
 			}
 			.accessibilityLabel(Text("Back"))
 
 			Spacer()
 
-			Button("All Photos", systemImage: "photo.on.rectangle", action: onAllPhotos)
+			Button(action: onAllPhotos) {
+				Text("All Photos")
+					.font(.headline)
+					.foregroundStyle(.white)
+			}
 		}
 		.controlSize(.large)
 		.padding(.horizontal, 16)
