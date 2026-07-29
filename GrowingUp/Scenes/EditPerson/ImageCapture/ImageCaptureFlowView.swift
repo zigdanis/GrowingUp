@@ -197,12 +197,34 @@ private struct LightweightPhotoPreviewView: View {
 	let onBack: () -> Void
 	let onAllPhotos: () -> Void
 
-	@State private var photoModel = PhotoGridViewModel()
-	@State private var selectedAsset: PhotoAsset?
+	@State private var photoModel: PhotoGridViewModel
+
+	init(
+		onPicked: @escaping (UIImage) -> Void,
+		onBack: @escaping () -> Void,
+		onAllPhotos: @escaping () -> Void
+	) {
+		_photoModel = State(initialValue: PhotoGridViewModel())
+		self.onPicked = onPicked
+		self.onBack = onBack
+		self.onAllPhotos = onAllPhotos
+	}
+
+	init(
+		photoModel: PhotoGridViewModel,
+		onPicked: @escaping (UIImage) -> Void,
+		onBack: @escaping () -> Void,
+		onAllPhotos: @escaping () -> Void
+	) {
+		_photoModel = State(initialValue: photoModel)
+		self.onPicked = onPicked
+		self.onBack = onBack
+		self.onAllPhotos = onAllPhotos
+	}
 
 	var body: some View {
 		NavigationStack {
-			PhotoGridView(viewModel: photoModel, selectedAsset: $selectedAsset)
+			PhotoGridView(viewModel: photoModel, onPicked: onPicked)
 				.background(Color(.secondarySystemBackground))
 				.ignoresSafeArea(.container, edges: .bottom)
 				.toolbar {
@@ -214,13 +236,7 @@ private struct LightweightPhotoPreviewView: View {
 
 						Spacer()
 
-						if selectedAsset == nil {
-							Button("All Photos", action: onAllPhotos)
-						} else {
-							Button("Select photo", action: confirmSelection)
-								.buttonStyle(.borderedProminent)
-								.tint(.blue)
-						}
+						Button("All Photos", action: onAllPhotos)
 					}
 				}
 				.toolbar(.hidden, for: .navigationBar)
@@ -228,10 +244,6 @@ private struct LightweightPhotoPreviewView: View {
 		}
 	}
 
-	private func confirmSelection() {
-		guard let selectedAsset else { return }
-		photoModel.select(selectedAsset, completion: onPicked)
-	}
 }
 
 private struct CameraSourceView: View {
@@ -316,4 +328,55 @@ private struct SystemPhotoPicker: UIViewControllerRepresentable {
 private struct IdentifiableImage: Identifiable {
 	let id = UUID()
 	let image: UIImage
+}
+
+#Preview("Camera") {
+	ImageCaptureFlowView(
+		source: .camera,
+		cropShape: .rectangle,
+		onComplete: { _ in },
+		onCancel: {}
+	)
+}
+
+#Preview("Photos") {
+	LightweightPhotoPreviewView(
+		photoModel: PhotoGridViewModel(previewImages: PreviewPhotos.images),
+		onPicked: { _ in },
+		onBack: {},
+		onAllPhotos: {}
+	)
+}
+
+private enum PreviewPhotos {
+	static let images = [
+		image(symbol: "figure.2.and.child.holdinghands", colors: [.systemOrange, .systemPink]),
+		image(symbol: "mountain.2.fill", colors: [.systemTeal, .systemBlue]),
+		image(symbol: "sun.max.fill", colors: [.systemYellow, .systemOrange]),
+		image(symbol: "pawprint.fill", colors: [.systemIndigo, .systemPurple]),
+		image(symbol: "balloon.2.fill", colors: [.systemPink, .systemRed]),
+		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal])
+	]
+
+	private static func image(symbol: String, colors: [UIColor]) -> UIImage {
+		let size = CGSize(width: 360, height: 360)
+		return UIGraphicsImageRenderer(size: size).image { context in
+			let gradient = CGGradient(
+				colorsSpace: CGColorSpaceCreateDeviceRGB(),
+				colors: colors.map(\.cgColor) as CFArray,
+				locations: [0, 1]
+			)!
+			context.cgContext.drawLinearGradient(
+				gradient,
+				start: .zero,
+				end: CGPoint(x: size.width, y: size.height),
+				options: []
+			)
+			let configuration = UIImage.SymbolConfiguration(pointSize: 110, weight: .medium)
+			let icon = UIImage(systemName: symbol, withConfiguration: configuration)!
+			icon.withTintColor(.white, renderingMode: .alwaysOriginal).draw(
+				at: CGPoint(x: (size.width - icon.size.width) / 2, y: (size.height - icon.size.height) / 2)
+			)
+		}
+	}
 }

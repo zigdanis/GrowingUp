@@ -12,7 +12,6 @@ struct PhotoThumbnailCell: View {
 	let asset: PhotoAsset
 	let side: CGFloat
 	let viewModel: PhotoGridViewModel
-	let isSelected: Bool
 	let onTap: () -> Void
 
 	@Environment(\.displayScale)
@@ -31,22 +30,10 @@ struct PhotoThumbnailCell: View {
 			}
 			.frame(width: side, height: side)
 			.clipped()
-			.overlay(alignment: .bottomTrailing) {
-				if isSelected {
-					Text("1")
-						.font(.headline.weight(.semibold))
-						.foregroundStyle(.white)
-						.frame(width: 30, height: 30)
-						.background(.blue, in: Circle())
-						.overlay { Circle().stroke(.white, lineWidth: 2) }
-						.padding(6)
-				}
-			}
 			.contentShape(Rectangle())
 		}
 		.buttonStyle(.plain)
 		.accessibilityLabel(Text("Photo"))
-		.accessibilityAddTraits(isSelected ? .isSelected : [])
 		.task(id: asset.id) {
 			let pixels = side * displayScale
 			image = await viewModel.thumbnail(
