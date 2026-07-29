@@ -381,7 +381,19 @@ private enum PreviewPhotos {
 		image(symbol: "sun.max.fill", colors: [.systemYellow, .systemOrange]),
 		image(symbol: "pawprint.fill", colors: [.systemIndigo, .systemPurple]),
 		image(symbol: "balloon.2.fill", colors: [.systemPink, .systemRed]),
-		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal])
+		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal]),
+		image(symbol: "beach.umbrella.fill", colors: [.systemCyan, .systemBlue]),
+		image(symbol: "birthday.cake.fill", colors: [.systemPink, .systemOrange]),
+		image(symbol: "bicycle", colors: [.systemGreen, .systemBlue]),
+		image(symbol: "camera.fill", colors: [.systemPurple, .systemPink]),
+		image(symbol: "car.fill", colors: [.systemRed, .systemOrange]),
+		image(symbol: "cloud.sun.fill", colors: [.systemBlue, .systemYellow]),
+		image(symbol: "figure.hiking", colors: [.systemBrown, .systemGreen]),
+		image(symbol: "fish.fill", colors: [.systemTeal, .systemIndigo]),
+		image(symbol: "gift.fill", colors: [.systemRed, .systemPurple]),
+		image(symbol: "house.fill", colors: [.systemOrange, .systemBrown]),
+		image(symbol: "moon.stars.fill", colors: [.systemIndigo, .black]),
+		image(symbol: "sailboat.fill", colors: [.systemCyan, .systemTeal])
 	]
 
 	private static func image(symbol: String, colors: [UIColor]) -> UIImage {
