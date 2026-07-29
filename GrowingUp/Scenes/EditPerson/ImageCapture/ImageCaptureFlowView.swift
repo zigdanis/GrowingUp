@@ -227,36 +227,44 @@ private struct LightweightPhotoPreviewView: View {
 			PhotoGridView(viewModel: photoModel, onPicked: onPicked)
 				.background(Color(.secondarySystemBackground))
 				.ignoresSafeArea(.container, edges: .bottom)
-				.toolbar {
-					if #available(iOS 26.0, *) {
-						ToolbarItem(placement: .bottomBar) {
-							backButton
-						}
-						ToolbarSpacer(.flexible, placement: .bottomBar)
-						ToolbarItem(placement: .bottomBar) {
-							Button("All Photos", systemImage: "photo.on.rectangle", action: onAllPhotos)
-						}
-					} else {
-						ToolbarItemGroup(placement: .bottomBar) {
-							backButton
-							Spacer()
-
-							Button("All Photos", action: onAllPhotos)
-						}
-					}
+				.safeAreaInset(edge: .bottom) {
+					PhotoPreviewControls(onBack: onBack, onAllPhotos: onAllPhotos)
 				}
 				.toolbar(.hidden, for: .navigationBar)
-				.toolbarBackgroundVisibility(.hidden, for: .bottomBar)
+		}
+	}
+}
+
+private struct PhotoPreviewControls: View {
+	let onBack: () -> Void
+	let onAllPhotos: () -> Void
+
+	var body: some View {
+		if #available(iOS 26.0, *) {
+			controls
+				.buttonStyle(.glass(.regular.tint(.black)))
+		} else {
+			controls
+				.buttonStyle(.bordered)
+				.tint(.black)
 		}
 	}
 
-	private var backButton: some View {
-		Button(action: onBack) {
-			Image(systemName: "chevron.left")
-		}
-		.accessibilityLabel(Text("Back"))
-	}
+	private var controls: some View {
+		HStack {
+			Button(action: onBack) {
+				Image(systemName: "chevron.left")
+			}
+			.accessibilityLabel(Text("Back"))
 
+			Spacer()
+
+			Button("All Photos", systemImage: "photo.on.rectangle", action: onAllPhotos)
+		}
+		.controlSize(.large)
+		.padding(.horizontal, 16)
+		.padding(.vertical, 8)
+	}
 }
 
 private struct CameraSourceView: View {
