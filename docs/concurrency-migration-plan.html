@@ -206,7 +206,7 @@
     </header>
 
     <aside class="tldr" aria-label="Краткий вывод">
-      <p><strong>TLDR:</strong> сохранить PR #8 как документ-решение, а над ним открыть три stacked PR: файловая корректность → async API → миграция call sites и cleanup. Каждый слой обязан собираться и проходить тесты самостоятельно.</p>
+      <p><strong>TLDR:</strong> сохранить PR #8 как документ-решение, а над ним открыть четыре stacked PR: Linux-проверки → файловая корректность → async API → миграция call sites и cleanup. Каждый слой обязан собираться и проходить тесты самостоятельно.</p>
     </aside>
 
     <nav class="toc" aria-label="Содержание">
@@ -227,12 +227,12 @@
     <section aria-labelledby="context">
       <h2 id="context">Контекст</h2>
       <p>Текущий <code>TaskManagerOnGCD</code> запускает операции с изображениями fire-and-forget, проглатывает ошибки и создаёт неиспользуемый <code>DispatchGroup</code>. Core Data может вернуть успех раньше, чем фотография действительно записана.</p>
-      <p>PR #8 пока содержит только discussion document. Его ветка <code>discuss/concurrency-direction</code> отстаёт от актуального <code>master</code> на 128 коммитов, поэтому реализацию нельзя начинать до синхронизации.</p>
+      <p>PR #8 содержит только discussion document и после rebase синхронизирован с актуальным <code>master</code>.</p>
 
       <table class="facts">
-        <tr><th>Локальная готовность</th><td><code>gh 2.96.0</code>, <code>git 2.55.0</code>, GitHub authentication активна.</td></tr>
-        <tr><th>Не хватает</th><td>Расширение <code>github/gh-stack</code> ещё не установлено.</td></tr>
-        <tr><th>GitHub feature</th><td>Stacked PRs находятся в public preview и могут измениться.</td></tr>
+        <tr><th>Локальная готовность</th><td><code>gh 2.97.0</code>, <code>github/gh-stack 0.1.0</code>, GitHub authentication активна.</td></tr>
+        <tr><th>Linux tooling</th><td>Swift установлен через <code>swiftly</code>; repository scripts используют доступный <code>swift-format</code> напрямую или через <code>xcrun</code>.</td></tr>
+        <tr><th>GitHub feature</th><td>Stacked PRs находятся в private preview и могут быть недоступны репозиторию.</td></tr>
         <tr><th>Ограничение</th><td>Все ветки стека должны находиться в одном репозитории; GitHub Desktop пока не поддерживается.</td></tr>
       </table>
     </section>
@@ -268,7 +268,11 @@
         </article>
         <article class="layer">
           <h3>PR 8A — image persistence correctness</h3>
-          <p><code>codex/concurrency-image-store</code> → base: <code>discuss/concurrency-direction</code></p>
+          <p><code>codex/concurrency-image-store</code> → base: <code>codex/linux-swift-format</code></p>
+        </article>
+        <article class="layer">
+          <h3>Prerequisite — Linux Swift checks</h3>
+          <p><code>codex/linux-swift-format</code> → base: <code>discuss/concurrency-direction</code></p>
         </article>
         <article class="layer">
           <h3>Низ · существующий PR #8 — решение и план</h3>
@@ -279,6 +283,10 @@
       <h3>PR #8 — решение и план</h3>
       <p>Обновить ветку от <code>origin/master</code>, сохранить discussion document и эту HTML-страницу. Зафиксировать решение: async/await — конечное состояние; incremental path — только способ доставки.</p>
       <p><strong>Проверка:</strong> документация соответствует актуальным call sites; <code>git diff --check</code>.</p>
+
+      <h3>Prerequisite — Linux Swift checks</h3>
+      <p>Научить formatting scripts выбирать <code>xcrun swift-format</code> в Xcode toolchain или standalone <code>swift-format</code> на Linux. Не пытаться собирать Apple-platform targets без Xcode SDK.</p>
+      <p><strong>Проверка:</strong> formatter запускается с одной и той же <code>.swift-format</code> policy на macOS и Linux.</p>
 
       <h3>PR 8A — image persistence correctness</h3>
       <p>Добавить async <code>ImageStore</code>, заменить <code>TaskManager</code> и spy, но временно сохранить callback API <code>PersonsGateway</code>. <code>CachePersonsGateway</code> должен дожидаться обязательных файловых операций и выдавать completion ровно один раз.</p>
@@ -307,7 +315,10 @@ gh stack init --base master discuss/concurrency-direction</pre>
       <p>Перед rebase рабочее дерево должно быть чистым. Текущий plan commit относится к PR #8; сохранённый отдельно <code>ImageCaptureFlowView.swift</code> не должен попасть в стек.</p>
 
       <h3>3. Добавлять слои только сверху</h3>
-      <pre>gh stack add codex/concurrency-image-store
+      <pre>gh stack add codex/linux-swift-format
+# implement, test, commit
+
+gh stack add codex/concurrency-image-store
 # implement, test, commit
 
 gh stack add codex/concurrency-async-api
@@ -317,8 +328,8 @@ gh stack add codex/concurrency-call-sites-cleanup
 # implement, test, commit</pre>
 
       <h3>4. Опубликовать единый Stack</h3>
-      <pre>gh stack view
-gh stack submit</pre>
+      <pre>gh stack view --json
+gh stack submit --auto</pre>
       <p><code>submit</code> отправляет ветки, создаёт недостающие PR и связывает их в GitHub Stack. Существующий PR #8 должен стать нижним слоем; если GitHub не подхватит его автоматически, использовать <code>gh stack link</code> для связывания существующих PR.</p>
 
       <h3>5. Вносить review fixes в правильный слой</h3>
@@ -328,7 +339,7 @@ gh stack rebase --upstack
 gh stack push</pre>
 
       <h3>6. Merge снизу вверх</h3>
-      <p>Сначала #8, затем 8A, 8B и 8C. После каждого merge убедиться, что GitHub автоматически retargeted следующий PR и его diff не изменился по смыслу.</p>
+      <p>Сначала #8, затем Linux tooling, 8A, 8B и 8C. После каждого merge убедиться, что GitHub автоматически retargeted следующий PR и его diff не изменился по смыслу.</p>
     </section>
 
     <section aria-labelledby="data-semantics">
@@ -360,7 +371,7 @@ gh stack push</pre>
     <section aria-labelledby="verification">
       <h2 id="verification">Проверка</h2>
       <ul>
-        <li><code>gh stack view --json</code> показывает четыре слоя в правильном порядке.</li>
+        <li><code>gh stack view --json</code> показывает пять слоёв в правильном порядке.</li>
         <li>В GitHub UI видна stack map; base каждого PR совпадает с веткой под ним.</li>
         <li>Default-branch Actions запускаются и проходят для каждого слоя.</li>
         <li>Diff каждого PR содержит только свою concern и остаётся быстрым для review.</li>
@@ -370,14 +381,14 @@ gh stack push</pre>
 
       <div class="note">
         <p><strong>Verification Needed:</strong></p>
-        <p>Перед созданием стека установить extension и убедиться, что public preview доступен аккаунту <code>zigdanis</code>. После первого <code>gh stack submit</code> отдельно проверить, что уже существующий PR #8 был включён в stack, а не остался самостоятельным PR.</p>
+        <p>Перед созданием стека убедиться, что private preview доступен аккаунту <code>zigdanis</code>. После первого <code>gh stack submit --auto</code> отдельно проверить, что уже существующий PR #8 был включён в stack, а не остался самостоятельным PR.</p>
       </div>
     </section>
 
     <section aria-labelledby="risks">
       <h2 id="risks">Риски</h2>
       <ul>
-        <li><strong>Public preview:</strong> команды или UI могут измениться; перед исполнением сверить актуальную документацию.</li>
+        <li><strong>Private preview:</strong> feature может быть недоступна репозиторию, а команды или UI могут измениться; перед исполнением сверить актуальную документацию.</li>
         <li><strong>Старый base PR #8:</strong> rebase перепишет историю и потребует безопасного force-with-lease push.</li>
         <li><strong>Неверный слой:</strong> fix, внесённый слишком высоко, загрязнит последующие diff; изменения нужно коммитить в слой, которому они принадлежат.</li>
         <li><strong>Промежуточная компиляция:</strong> каждый слой обязан быть зелёным сам по себе; нельзя удалять callback API раньше миграции всех call sites.</li>
@@ -390,7 +401,7 @@ gh stack push</pre>
       <ol>
         <li>Считать ли cleanup старого orphan-файла best-effort после успешного Core Data commit? Рекомендация: да, с обязательным logging.</li>
         <li>Оставить ли PR #8 отдельным documentation layer? Рекомендация: да — он уже существует и естественно становится корнем стека.</li>
-        <li>Открывать ли 8A–8C сразу? Рекомендация: как drafts через <code>gh stack submit</code>, переводить в ready снизу вверх.</li>
+        <li>Открывать ли 8A–8C сразу? Рекомендация: создать drafts через <code>gh stack submit --auto</code> без <code>--open</code>; использовать <code>--open</code> только при переводе PR в ready снизу вверх.</li>
         <li>Merge всего стека или по одному? Рекомендация: по одному снизу вверх, потому что миграция касается пользовательских фотографий.</li>
       </ol>
     </section>
