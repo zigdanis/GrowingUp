@@ -8,10 +8,12 @@
 
 import UIKit
 
+@MainActor
 protocol EmptyPersonViewRouter {
 	func presentAddPerson(addPersonPresenterDelegate: EditPersonPresenterDelegate?)
 }
 
+@MainActor
 final class EmptyPersonViewRouterImplementation: EmptyPersonViewRouter {
 
 	private weak var emptyPersonViewController: EmptyPersonViewController?
