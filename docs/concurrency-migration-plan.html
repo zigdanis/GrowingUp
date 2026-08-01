@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GrowingUp — async/await через stacked PRs</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --panel: #0f0f0f;
+      --text: #f4f4f1;
+      --muted: #a7a7a0;
+      --line: #2a2a27;
+      --accent: #ffffff;
+      --code: #171717;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.58;
+    }
+
+    main {
+      width: min(860px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 56px 0 88px;
+    }
+
+    header {
+      padding-bottom: 30px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0 0 18px;
+      font-size: clamp(2.35rem, 7vw, 4.8rem);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    h2 {
+      margin: 52px 0 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      font-size: 1.35rem;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    p { margin: 0 0 15px; color: var(--muted); }
+    strong { color: var(--text); }
+    a { color: var(--text); text-underline-offset: 0.2em; }
+
+    ul, ol {
+      margin: 0 0 20px;
+      padding-left: 1.3rem;
+      color: var(--muted);
+    }
+
+    li + li { margin-top: 8px; }
+
+    code {
+      color: var(--text);
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.1rem 0.3rem;
+      font-family: "SF Mono", ui-monospace, Menlo, monospace;
+      font-size: 0.88em;
+    }
+
+    pre {
+      margin: 18px 0 22px;
+      padding: 18px;
+      overflow-x: auto;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      color: var(--text);
+      font: 0.88rem/1.6 "SF Mono", ui-monospace, Menlo, monospace;
+    }
+
+    .lede {
+      max-width: 720px;
+      color: var(--text);
+      font-size: 1.12rem;
+    }
+
+    .tldr {
+      margin: 30px 0;
+      padding: 19px 21px;
+      border-left: 3px solid var(--accent);
+      background: var(--panel);
+    }
+
+    .tldr p { margin: 0; color: var(--text); }
+
+    .toc {
+      margin: 30px 0 12px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .toc p {
+      margin-bottom: 10px;
+      color: var(--text);
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+
+    .toc ul {
+      margin: 0;
+      columns: 2;
+      column-gap: 32px;
+    }
+
+    .stack {
+      margin: 22px 0;
+      padding: 4px 0 4px 20px;
+      border-left: 1px solid var(--line);
+    }
+
+    .layer {
+      position: relative;
+      padding: 0 0 25px 22px;
+    }
+
+    .layer:last-child { padding-bottom: 0; }
+    .layer::before {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      left: -25px;
+      top: 0.45rem;
+      border: 1px solid var(--text);
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    .layer h3 { margin: 0 0 7px; }
+    .layer p { margin: 0; }
+
+    .facts {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .facts th, .facts td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .facts th { width: 32%; color: var(--text); font-weight: 600; }
+
+    .note {
+      margin: 22px 0;
+      padding: 17px 19px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .note p:last-child { margin-bottom: 0; }
+
+    .sources li { overflow-wrap: anywhere; }
+
+    @media (max-width: 640px) {
+      main { width: min(100% - 24px, 860px); padding-top: 32px; }
+      h1 { letter-spacing: -0.03em; }
+      .toc ul { columns: 1; }
+      .facts th, .facts td { display: block; width: 100%; padding-left: 0; }
+      .facts th { border-bottom: 0; padding-bottom: 2px; }
+      .facts td { padding-top: 0; }
+    }
+
+    @media print {
+      :root { color-scheme: light; --bg: #fff; --panel: #f6f6f3; --text: #111; --muted: #555; --line: #ccc; --code: #eee; }
+      main { width: 100%; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Async/await через stacked PRs</h1>
+      <p class="lede">План превращает существующий PR #8 в нижний слой нативного GitHub Stack и раскладывает миграцию concurrency на три небольших, последовательно зависимых изменения.</p>
+    </header>
+
+    <aside class="tldr" aria-label="Краткий вывод">
+      <p><strong>TLDR:</strong> сохранить PR #8 как документ-решение, а над ним открыть три stacked PR: файловая корректность → async API → миграция call sites и cleanup. Каждый слой обязан собираться и проходить тесты самостоятельно.</p>
+    </aside>
+
+    <nav class="toc" aria-label="Содержание">
+      <p>Содержание</p>
+      <ul>
+        <li><a href="#context">Контекст</a></li>
+        <li><a href="#goal">Цель</a></li>
+        <li><a href="#github-stacks">Что даёт GitHub Stack</a></li>
+        <li><a href="#proposed-stack">Предлагаемый стек</a></li>
+        <li><a href="#workflow">Рабочий процесс</a></li>
+        <li><a href="#data-semantics">Семантика данных</a></li>
+        <li><a href="#verification">Проверка</a></li>
+        <li><a href="#risks">Риски</a></li>
+        <li><a href="#questions">Открытые вопросы</a></li>
+      </ul>
+    </nav>
+
+    <section aria-labelledby="context">
+      <h2 id="context">Контекст</h2>
+      <p>Текущий <code>TaskManagerOnGCD</code> запускает операции с изображениями fire-and-forget, проглатывает ошибки и создаёт неиспользуемый <code>DispatchGroup</code>. Core Data может вернуть успех раньше, чем фотография действительно записана.</p>
+      <p>PR #8 пока содержит только discussion document. Его ветка <code>discuss/concurrency-direction</code> отстаёт от актуального <code>master</code> на 128 коммитов, поэтому реализацию нельзя начинать до синхронизации.</p>
+
+      <table class="facts">
+        <tr><th>Локальная готовность</th><td><code>gh 2.96.0</code>, <code>git 2.55.0</code>, GitHub authentication активна.</td></tr>
+        <tr><th>Не хватает</th><td>Расширение <code>github/gh-stack</code> ещё не установлено.</td></tr>
+        <tr><th>GitHub feature</th><td>Stacked PRs находятся в public preview и могут измениться.</td></tr>
+        <tr><th>Ограничение</th><td>Все ветки стека должны находиться в одном репозитории; GitHub Desktop пока не поддерживается.</td></tr>
+      </table>
+    </section>
+
+    <section aria-labelledby="goal">
+      <h2 id="goal">Цель</h2>
+      <p>Перейти на structured concurrency без одного большого PR и без временного сохранения GCD-архитектуры как конечного решения.</p>
+      <ul>
+        <li>Ошибки обязательных операций доходят до UI.</li>
+        <li>Completion или async result выдаётся только после согласованного persistence state.</li>
+        <li>Каждый PR имеет небольшой, понятный diff и собственную проверку.</li>
+        <li>SwiftData, UI-редизайн и общая SwiftUI-миграция остаются вне этой работы.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="github-stacks">
+      <h2 id="github-stacks">Что даёт GitHub Stack</h2>
+      <p>В нативном Stack нижний PR направлен в <code>master</code>, а каждый следующий — в ветку слоя под ним. GitHub показывает карту стека, применяет правила защиты и default-branch CI к каждому слою, а после merge нижнего PR автоматически rebase/retarget оставшиеся.</p>
+      <p>Review и merge идут снизу вверх. При необходимости GitHub позволяет слить часть стека или весь стек одной операцией, но для этой миграции безопаснее принимать слои последовательно после отдельной проверки.</p>
+    </section>
+
+    <section aria-labelledby="proposed-stack">
+      <h2 id="proposed-stack">Предлагаемый стек</h2>
+
+      <div class="stack" aria-label="Стек pull requests от верхнего к нижнему">
+        <article class="layer">
+          <h3>Верх · PR 8C — call sites и cleanup</h3>
+          <p><code>codex/concurrency-call-sites-cleanup</code> → base: <code>codex/concurrency-async-api</code></p>
+        </article>
+        <article class="layer">
+          <h3>PR 8B — async API Core</h3>
+          <p><code>codex/concurrency-async-api</code> → base: <code>codex/concurrency-image-store</code></p>
+        </article>
+        <article class="layer">
+          <h3>PR 8A — image persistence correctness</h3>
+          <p><code>codex/concurrency-image-store</code> → base: <code>discuss/concurrency-direction</code></p>
+        </article>
+        <article class="layer">
+          <h3>Низ · существующий PR #8 — решение и план</h3>
+          <p><code>discuss/concurrency-direction</code> → base: <code>master</code></p>
+        </article>
+      </div>
+
+      <h3>PR #8 — решение и план</h3>
+      <p>Обновить ветку от <code>origin/master</code>, сохранить discussion document и эту HTML-страницу. Зафиксировать решение: async/await — конечное состояние; incremental path — только способ доставки.</p>
+      <p><strong>Проверка:</strong> документация соответствует актуальным call sites; <code>git diff --check</code>.</p>
+
+      <h3>PR 8A — image persistence correctness</h3>
+      <p>Добавить async <code>ImageStore</code>, заменить <code>TaskManager</code> и spy, но временно сохранить callback API <code>PersonsGateway</code>. <code>CachePersonsGateway</code> должен дожидаться обязательных файловых операций и выдавать completion ровно один раз.</p>
+      <p><strong>Проверка:</strong> focused tests на порядок save/edit/delete, rollback частично записанных файлов и отсутствие двойного completion.</p>
+
+      <h3>PR 8B — async API Core</h3>
+      <p>Добавить async throws API в <code>PersonsGateway</code> и use cases рядом с существующим callback API. Реализовать мосты и Core Data mapping так, чтобы проект продолжал собираться до миграции UI.</p>
+      <p><strong>Проверка:</strong> async gateway/use-case tests, error propagation и cancellation boundary; callback call sites пока не меняются.</p>
+
+      <h3>PR 8C — call sites и cleanup</h3>
+      <p>Перевести presenters и widget на <code>Task</code> с явной main-actor изоляцией. После миграции удалить callback typealiases, переходные overloads, <code>TaskManager.swift</code> и <code>TaskManagerSpy.swift</code>.</p>
+      <p><strong>Проверка:</strong> полный build/test/lint, ручные add/replace/clear/remove для обеих фотографий и widget reload.</p>
+    </section>
+
+    <section aria-labelledby="workflow">
+      <h2 id="workflow">Рабочий процесс со стеком</h2>
+
+      <h3>1. Подготовить инструмент</h3>
+      <pre>gh extension install github/gh-stack
+gh stack --help</pre>
+
+      <h3>2. Обновить и принять существующую ветку PR #8</h3>
+      <pre>git fetch origin
+git rebase origin/master
+gh stack init --base master discuss/concurrency-direction</pre>
+      <p>Перед rebase рабочее дерево должно быть чистым. Текущий plan commit относится к PR #8; сохранённый отдельно <code>ImageCaptureFlowView.swift</code> не должен попасть в стек.</p>
+
+      <h3>3. Добавлять слои только сверху</h3>
+      <pre>gh stack add codex/concurrency-image-store
+# implement, test, commit
+
+gh stack add codex/concurrency-async-api
+# implement, test, commit
+
+gh stack add codex/concurrency-call-sites-cleanup
+# implement, test, commit</pre>
+
+      <h3>4. Опубликовать единый Stack</h3>
+      <pre>gh stack view
+gh stack submit</pre>
+      <p><code>submit</code> отправляет ветки, создаёт недостающие PR и связывает их в GitHub Stack. Существующий PR #8 должен стать нижним слоем; если GitHub не подхватит его автоматически, использовать <code>gh stack link</code> для связывания существующих PR.</p>
+
+      <h3>5. Вносить review fixes в правильный слой</h3>
+      <pre>gh stack checkout BRANCH
+# fix, test, commit
+gh stack rebase --upstack
+gh stack push</pre>
+
+      <h3>6. Merge снизу вверх</h3>
+      <p>Сначала #8, затем 8A, 8B и 8C. После каждого merge убедиться, что GitHub автоматически retargeted следующий PR и его diff не изменился по смыслу.</p>
+    </section>
+
+    <section aria-labelledby="data-semantics">
+      <h2 id="data-semantics">Семантика операций с данными</h2>
+
+      <h3>Add</h3>
+      <ol>
+        <li>Записать новые изображения.</li>
+        <li>После успешной записи создать Core Data record.</li>
+        <li>При Core Data failure удалить созданные orphan-файлы.</li>
+      </ol>
+
+      <h3>Edit / replace</h3>
+      <ol>
+        <li>Записать новые файлы.</li>
+        <li>Переключить image IDs в Core Data.</li>
+        <li>Только после commit удалить старые файлы.</li>
+        <li>При Core Data failure сохранить старые файлы и очистить новые.</li>
+      </ol>
+
+      <h3>Remove</h3>
+      <ol>
+        <li>Удалить Core Data record.</li>
+        <li>После успеха удалить файлы и memory-cache entries.</li>
+        <li>Cleanup failure логировать как orphan cleanup; не возвращать ложный failure после уже совершённого удаления Person.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="verification">
+      <h2 id="verification">Проверка</h2>
+      <ul>
+        <li><code>gh stack view --json</code> показывает четыре слоя в правильном порядке.</li>
+        <li>В GitHub UI видна stack map; base каждого PR совпадает с веткой под ним.</li>
+        <li>Default-branch Actions запускаются и проходят для каждого слоя.</li>
+        <li>Diff каждого PR содержит только свою concern и остаётся быстрым для review.</li>
+        <li>После review fix команда <code>gh stack rebase --upstack</code> переносит изменение наверх без посторонних diff.</li>
+        <li>После merge нижнего слоя следующий PR автоматически становится направленным в <code>master</code>.</li>
+      </ul>
+
+      <div class="note">
+        <p><strong>Verification Needed:</strong></p>
+        <p>Перед созданием стека установить extension и убедиться, что public preview доступен аккаунту <code>zigdanis</code>. После первого <code>gh stack submit</code> отдельно проверить, что уже существующий PR #8 был включён в stack, а не остался самостоятельным PR.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="risks">
+      <h2 id="risks">Риски</h2>
+      <ul>
+        <li><strong>Public preview:</strong> команды или UI могут измениться; перед исполнением сверить актуальную документацию.</li>
+        <li><strong>Старый base PR #8:</strong> rebase перепишет историю и потребует безопасного force-with-lease push.</li>
+        <li><strong>Неверный слой:</strong> fix, внесённый слишком высоко, загрязнит последующие diff; изменения нужно коммитить в слой, которому они принадлежат.</li>
+        <li><strong>Промежуточная компиляция:</strong> каждый слой обязан быть зелёным сам по себе; нельзя удалять callback API раньше миграции всех call sites.</li>
+        <li><strong>UIKit и Sendable:</strong> <code>UIImage</code> не должен бесконтрольно пересекать isolation boundaries; формат async <code>ImageStore</code> нужно подтвердить небольшим spike.</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="questions">
+      <h2 id="questions">Открытые вопросы</h2>
+      <ol>
+        <li>Считать ли cleanup старого orphan-файла best-effort после успешного Core Data commit? Рекомендация: да, с обязательным logging.</li>
+        <li>Оставить ли PR #8 отдельным documentation layer? Рекомендация: да — он уже существует и естественно становится корнем стека.</li>
+        <li>Открывать ли 8A–8C сразу? Рекомендация: как drafts через <code>gh stack submit</code>, переводить в ready снизу вверх.</li>
+        <li>Merge всего стека или по одному? Рекомендация: по одному снизу вверх, потому что миграция касается пользовательских фотографий.</li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="sources">
+      <h2 id="sources">Официальные источники</h2>
+      <ul class="sources">
+        <li><a href="https://docs.github.com/en/pull-requests/get-started/about-stacked-prs">GitHub Docs — About stacked pull requests</a></li>
+        <li><a href="https://docs.github.com/en/pull-requests/tutorials/stack-code-changes-in-pull-requests">GitHub Docs — Stack code changes in pull requests</a></li>
+        <li><a href="https://docs.github.com/en/pull-requests/reference/stacked-prs-cli-commands">GitHub Docs — Stacked pull requests CLI commands</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

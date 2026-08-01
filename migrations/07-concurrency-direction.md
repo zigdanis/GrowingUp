@@ -4,6 +4,11 @@
 > Nothing is implemented until a direction is chosen below. The PR thread is the
 > place to debate it.
 
+The current, readable implementation proposal is available as
+[`docs/concurrency-migration-plan.html`](../docs/concurrency-migration-plan.html).
+It recommends async/await as the destination, delivered in three reviewable
+steps so the image-persistence correctness issue is fixed first.
+
 ## Current state
 
 GrowingUp does background work through a small hand-rolled abstraction:
