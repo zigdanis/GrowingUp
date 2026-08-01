@@ -9,11 +9,13 @@
 import Core
 import Foundation
 
+@MainActor
 protocol PersonOverviewPresenter {
 	func loadPerson()
 	func showEditPerson()
 }
 
+@MainActor
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	weak var view: PersonOverviewView?

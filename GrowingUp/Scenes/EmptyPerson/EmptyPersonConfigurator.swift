@@ -8,10 +8,12 @@
 
 import Foundation
 
+@MainActor
 protocol EmptyPersonConfigurator {
 	func configure(emptyPersonController: EmptyPersonViewController)
 }
 
+@MainActor
 final class EmptyPersonConfiguratorImplementation: EmptyPersonConfigurator {
 
 	private let index: Int

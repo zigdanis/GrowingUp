@@ -9,7 +9,6 @@
 import Core
 import Foundation
 
-@MainActor
 class AddPersonConfigurator: EditPersonConfigurator {
 
 	private weak var editPersonPresenterDelegate: EditPersonPresenterDelegate?

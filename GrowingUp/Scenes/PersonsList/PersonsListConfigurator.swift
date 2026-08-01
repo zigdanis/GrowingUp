@@ -9,12 +9,10 @@
 import Core
 import Foundation
 
-@MainActor
 protocol PersonsListConfigurator {
 	func configure(personsListController: PersonsListViewController)
 }
 
-@MainActor
 final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 
 	func configure(personsListController: PersonsListViewController) {

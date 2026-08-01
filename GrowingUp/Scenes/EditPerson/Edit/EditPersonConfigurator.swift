@@ -9,12 +9,10 @@
 import Core
 import Foundation
 
-@MainActor
 protocol EditPersonConfigurator {
 	func configure(editPersonViewController: EditPersonViewController)
 }
 
-@MainActor
 class EditPersonConfiguratorImplementation: EditPersonConfigurator {
 
 	private let person: Person
