@@ -232,7 +232,7 @@
       <table class="facts">
         <tr><th>Локальная готовность</th><td><code>gh 2.97.0</code>, <code>github/gh-stack 0.1.0</code>, GitHub authentication активна.</td></tr>
         <tr><th>Linux tooling</th><td>Swift установлен через <code>swiftly</code>; repository scripts используют доступный <code>swift-format</code> напрямую или через <code>xcrun</code>.</td></tr>
-        <tr><th>GitHub feature</th><td>Stacked PRs находятся в private preview и могут быть недоступны репозиторию.</td></tr>
+        <tr><th>GitHub feature</th><td>Stacked PRs находятся в public preview; доступность функции нужно проверить для репозитория.</td></tr>
         <tr><th>Ограничение</th><td>Все ветки стека должны находиться в одном репозитории; GitHub Desktop пока не поддерживается.</td></tr>
       </table>
     </section>
@@ -381,14 +381,14 @@ gh stack push</pre>
 
       <div class="note">
         <p><strong>Verification Needed:</strong></p>
-        <p>Перед созданием стека убедиться, что private preview доступен аккаунту <code>zigdanis</code>. После первого <code>gh stack submit --auto</code> отдельно проверить, что уже существующий PR #8 был включён в stack, а не остался самостоятельным PR.</p>
+        <p>Перед созданием стека убедиться, что функция доступна репозиторию. После первого <code>gh stack submit --auto</code> отдельно проверить, что уже существующий PR #8 был включён в stack, а не остался самостоятельным PR.</p>
       </div>
     </section>
 
     <section aria-labelledby="risks">
       <h2 id="risks">Риски</h2>
       <ul>
-        <li><strong>Private preview:</strong> feature может быть недоступна репозиторию, а команды или UI могут измениться; перед исполнением сверить актуальную документацию.</li>
+        <li><strong>Public preview:</strong> feature может измениться; перед исполнением сверить актуальную документацию и доступность функции для репозитория.</li>
         <li><strong>Старый base PR #8:</strong> rebase перепишет историю и потребует безопасного force-with-lease push.</li>
         <li><strong>Неверный слой:</strong> fix, внесённый слишком высоко, загрязнит последующие diff; изменения нужно коммитить в слой, которому они принадлежат.</li>
         <li><strong>Промежуточная компиляция:</strong> каждый слой обязан быть зелёным сам по себе; нельзя удалять callback API раньше миграции всех call sites.</li>
