@@ -19,4 +19,9 @@ final class RemovePersonUseCaseSpy: RemovePersonUseCase {
 		didCallRemovePerson = true
 		completionHandler(resultToBeReturned)
 	}
+
+	func remove(person: Person) async throws {
+		didCallRemovePerson = true
+		try resultToBeReturned.get()
+	}
 }

@@ -117,6 +117,23 @@ final class CachePersonsGatewayTests: XCTestCase {
 		XCTAssertEqual(completionCount, 1)
 	}
 
+	func testAsyncAddHonorsCancellationBeforeSideEffects() async {
+		let operation = Task {
+			try await sut.add(parameters: parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: nil))
+		}
+		operation.cancel()
+
+		do {
+			_ = try await operation.value
+			XCTFail("Expected cancellation")
+		} catch is CancellationError {
+			XCTAssertTrue(imageStoreSpy.savedImages.isEmpty)
+			XCTAssertFalse(coreDataGatewaySpy.addPersonCalled)
+		} catch {
+			XCTFail("Expected CancellationError, got \(error)")
+		}
+	}
+
 	private func parameters(appImage: PersonImage?, widgetImage: PersonImage?) -> AddPersonParameters {
 		AddPersonParameters(
 			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),

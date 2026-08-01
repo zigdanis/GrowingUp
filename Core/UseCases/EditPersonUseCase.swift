@@ -14,6 +14,7 @@ public protocol EditPersonUseCase {
 	func edit(
 		person: Person, with parameters: AddPersonParameters,
 		completionHandler: @escaping EditPersonUseCaseCompletionHandler)
+	func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person
 }
 
 public final class EditPersonUseCaseImplementation: EditPersonUseCase {
@@ -30,6 +31,10 @@ public final class EditPersonUseCaseImplementation: EditPersonUseCase {
 		personsGateway.edit(person: person, with: parameters) { (result) in
 			completionHandler(result)
 		}
+	}
+
+	public func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
+		try await personsGateway.edit(person: person, with: parameters)
 	}
 
 }

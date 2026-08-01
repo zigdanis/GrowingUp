@@ -12,6 +12,7 @@ public typealias RemovePersonUseCaseCompletionHandler = (_ result: Result<Void, 
 
 public protocol RemovePersonUseCase {
 	func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler)
+	func remove(person: Person) async throws
 }
 
 public final class RemovePersonUseCaseImplementation: RemovePersonUseCase {
@@ -23,5 +24,9 @@ public final class RemovePersonUseCaseImplementation: RemovePersonUseCase {
 
 	public func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
 		personsGateway.remove(person: person, completionHandler: completionHandler)
+	}
+
+	public func remove(person: Person) async throws {
+		try await personsGateway.remove(person: person)
 	}
 }

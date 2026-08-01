@@ -26,6 +26,12 @@ class AddPersonUseCaseSpy: AddPersonUseCase {
 		}
 	}
 
+	func add(parameters: AddPersonParameters) async throws -> Person {
+		try await withCheckedThrowingContinuation { continuation in
+			add(parameters: parameters) { continuation.resume(with: $0) }
+		}
+	}
+
 	func callCompletionHandler() {
 		self.completionHandler?(resultToBeReturned)
 	}

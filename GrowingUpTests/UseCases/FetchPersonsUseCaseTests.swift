@@ -50,4 +50,15 @@ class FetchPersonsUseCaseTests: XCTestCase {
 		}
 		waitForExpectations(timeout: 0.1)
 	}
+
+	func testAsyncFetchPropagatesError() async {
+		gatewaySpy.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)
+
+		do {
+			_ = try await sut.fetchPersons()
+			XCTFail("Expected fetch failure")
+		} catch {
+			XCTAssertEqual(error as? CoreError, .coreDataFetchFailed)
+		}
+	}
 }

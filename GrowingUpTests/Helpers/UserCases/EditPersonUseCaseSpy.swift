@@ -29,6 +29,12 @@ class EditPersonUseCaseSpy: EditPersonUseCase {
 		}
 	}
 
+	func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
+		try await withCheckedThrowingContinuation { continuation in
+			edit(person: person, with: parameters) { continuation.resume(with: $0) }
+		}
+	}
+
 	func callCompletionHandler() {
 		self.completionHandler?(resultToBeReturned)
 	}

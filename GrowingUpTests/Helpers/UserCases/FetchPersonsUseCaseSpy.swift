@@ -21,4 +21,12 @@ final class FetchPersonsUseCaseSpy: FetchPersonsUseCase {
 	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
 		completion(completionResult)
 	}
+
+	func fetchPersons() async throws -> [Person] {
+		try completionResult.get()
+	}
+
+	func fetchWidgetPersons() async throws -> [Person] {
+		try completionResult.get()
+	}
 }

@@ -12,6 +12,7 @@ public typealias AddPersonUseCaseCompletionHandler = (_ person: Result<Person, C
 
 public protocol AddPersonUseCase {
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler)
+	func add(parameters: AddPersonParameters) async throws -> Person
 }
 
 public final class AddPersonUseCaseImplementation: AddPersonUseCase {
@@ -25,6 +26,10 @@ public final class AddPersonUseCaseImplementation: AddPersonUseCase {
 		personsGateway.add(parameters: parameters) { (result) in
 			completionHandler(result)
 		}
+	}
+
+	public func add(parameters: AddPersonParameters) async throws -> Person {
+		try await personsGateway.add(parameters: parameters)
 	}
 
 }

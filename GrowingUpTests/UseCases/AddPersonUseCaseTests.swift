@@ -57,4 +57,15 @@ class AddPersonUseCaseTests: XCTestCase {
 		}
 		waitForExpectations(timeout: 1, handler: nil)
 	}
+
+	func testAsyncAddReturnsPerson() async throws {
+		let parameters = AddPersonParameters.createParameters()
+		let expectedPerson = Person.createPerson()
+		personsGatewaySpy.addPersonResultToBeReturned = .success(expectedPerson)
+
+		let person = try await sut.add(parameters: parameters)
+
+		XCTAssertEqual(person, expectedPerson)
+		XCTAssertEqual(personsGatewaySpy.addPersonParameters, parameters)
+	}
 }
