@@ -10,7 +10,8 @@ final class FetchPersonsUseCaseTests: XCTestCase {
 		let expectedPersons = [Person.createPerson()]
 		gateway.fetchPersonsResultToBeReturned = .success(expectedPersons)
 
-		XCTAssertEqual(try await sut.fetchPersons(), expectedPersons)
+		let persons = try await sut.fetchPersons()
+		XCTAssertEqual(persons, expectedPersons)
 		XCTAssertTrue(gateway.fetchPersonsCalled)
 	}
 

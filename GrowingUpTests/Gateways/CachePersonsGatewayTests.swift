@@ -29,7 +29,8 @@ final class CachePersonsGatewayTests: XCTestCase {
 		imageStoreSpy.onSave = { events.append("save") }
 		coreDataGatewaySpy.onAdd = { events.append("database") }
 
-		XCTAssertEqual(try await sut.add(parameters: parameters), expectedPerson)
+		let person = try await sut.add(parameters: parameters)
+		XCTAssertEqual(person, expectedPerson)
 		XCTAssertEqual(events, ["save", "save", "database"])
 	}
 

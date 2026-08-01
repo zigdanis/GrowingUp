@@ -11,7 +11,8 @@ final class EditPersonUseCaseTests: XCTestCase {
 		let parameters = AddPersonParameters.createParameters()
 		gateway.editPersonResultToBeReturned = .success(person)
 
-		XCTAssertEqual(try await sut.edit(person: person, with: parameters), person)
+		let editedPerson = try await sut.edit(person: person, with: parameters)
+		XCTAssertEqual(editedPerson, person)
 		XCTAssertEqual(gateway.addPersonParameters, parameters)
 	}
 }
