@@ -36,7 +36,7 @@ final class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningPersonOverviewScreenForPersonAtCorrectIndex() async {
-		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Given
 		let index = 0
 		// When
@@ -46,7 +46,7 @@ final class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningNilForIncorrectPersonIndex() async {
-		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// When
 		let screenAt3 = sut.pageViewControllerScreen(atIndex: 2)
 		let screenAtMinus1 = sut.pageViewControllerScreen(atIndex: -1)
@@ -56,7 +56,7 @@ final class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningEmptyPersonScreenForLastPageIndex() async {
-		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Given
 		let lastIndex = sut.numberOfPages() - 1
 		// When
