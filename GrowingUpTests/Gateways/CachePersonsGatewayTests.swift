@@ -11,223 +11,121 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
-class CachePersonsGatewayTests: XCTestCase {
+final class CachePersonsGatewayTests: XCTestCase {
 
-	var sut: CachePersonsGateway!
-	let coreDataGatewaySpy = PersonsGatewaySpy()
-	let taskManagerSpy = TaskManagerSpy()
+	private var sut: CachePersonsGateway!
+	private let coreDataGatewaySpy = PersonsGatewaySpy()
+	private let imageStoreSpy = ImageStoreSpy()
 
 	override func setUp() {
-		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManagerSpy)
+		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, imageStore: imageStoreSpy)
 	}
 
-	func test_SUT_WhenAddingPerson_CallingTaskManager() {
-		// Given
-		let params = AddPersonParameters.createParameters()
-		let expectedValue = Person.createPerson()
-		let addPersonCallback = Result<Person, CoreError>.success(expectedValue)
-		coreDataGatewaySpy.addPersonResultToBeReturned = addPersonCallback
-		// When
-		sut.add(parameters: params) { _ in }
-		// Then
-		XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
-	}
-
-	func test_SUT_WhenAddingPerson_CallingCoreDataPersonsGateway() {
-		// Given
-		let taskManager = TaskManagerOnGCD()
-		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
-		let params = AddPersonParameters.createParameters()
-		let addPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
-		coreDataGatewaySpy.addPersonResultToBeReturned = addPersonCallback
-		let savedPerson = expectation(description: "Expecting to save Person")
-		// When
-		sut.add(parameters: params) { _ in
-			// Then
-			XCTAssertTrue(
-				self.coreDataGatewaySpy.addPersonCalled,
-				"Epected to call saving person to CoreData with specified managed object context in background")
-			savedPerson.fulfill()
-		}
-		waitForExpectations(timeout: 0.1)
-	}
-
-	func test_SUT_WhenEditingPersons_CallingTaskManagerWithExpectedResult() {
-		// Given
+	func testAddSavesImagesBeforeCoreData() {
+		let parameters = parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()))
 		let expectedPerson = Person.createPerson()
-		let params = AddPersonParameters.createParameters()
-		let editPersonCallback = Result<Person, CoreError>.success(expectedPerson)
-		coreDataGatewaySpy.editPersonResultToBeReturned = editPersonCallback
-		// When
-		sut.edit(person: Person.createPerson(), with: params) { _ in }
-		// Then
-		XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
+		coreDataGatewaySpy.addPersonResultToBeReturned = .success(expectedPerson)
+		var events = [String]()
+		imageStoreSpy.onSave = { events.append("save") }
+		coreDataGatewaySpy.onAdd = { events.append("database") }
+		let completed = expectation(description: "add completes")
+
+		sut.add(parameters: parameters) { result in
+			XCTAssertEqual(result, .success(expectedPerson))
+			XCTAssertEqual(events, ["save", "save", "database"])
+			completed.fulfill()
+		}
+
+		waitForExpectations(timeout: 1)
 	}
 
-	func test_SUT_WhenEditingPersons_CallingCoreDataPersonsGateway() {
-		// Given
-		let taskManager = TaskManagerOnGCD()
-		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
-		let editPersonCallback = Result<Person, CoreError>.success(Person.createPerson())
-		coreDataGatewaySpy.editPersonResultToBeReturned = editPersonCallback
-		let workIsDone = expectation(description: "Expecting to finish editing")
-		// When
-		sut.edit(
-			person: Person.createPerson(), with: AddPersonParameters.createParameters(),
-			completionHandler: { _ in
-				// Then
-				XCTAssertTrue(self.coreDataGatewaySpy.editPersonCalled, "Epected to call Edit Person from CoreData")
-				workIsDone.fulfill()
-			})
-		waitForExpectations(timeout: 0.1)
-	}
+	func testAddRollsBackPartialImageSaveAndSkipsCoreData() {
+		let parameters = parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()))
+		imageStoreSpy.saveErrorAtCall = 2
+		let completed = expectation(description: "add fails")
 
-	func test_SUT_WhenEditingClearsStoredPics_EnqueuesDeleteForEachClearedSlot() {
-		// Given a person with both pics stored, edited to clear both slots.
-		let person = Person.createPerson()
-		let params = AddPersonParameters(
-			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: nil, widgetImage: nil, isOnWidget: false)
-		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
-		// When
-		sut.edit(person: person, with: params) { _ in }
-		// Then
-		XCTAssertEqual(taskManagerSpy.processedTasks.count, 2, "Expected a delete task for each cleared slot")
-	}
-
-	func test_SUT_WhenEditingPersonWithoutStoredPics_EnqueuesNoTasks() {
-		// Given a person with no stored pics, edited with no images.
-		let person = Person(
-			id: UUID(), name: "name", birthday: Date(), appPicId: nil, widgetPicId: nil, isOnWidget: false,
-			createdDate: Date())
-		let params = AddPersonParameters(
-			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: nil, widgetImage: nil, isOnWidget: false)
-		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
-		// When
-		sut.edit(person: person, with: params) { _ in }
-		// Then
-		XCTAssertEqual(taskManagerSpy.processedTasks.count, 0, "Expected no tasks when nothing was stored or picked")
-	}
-
-	func test_SUT_WhenEditingReplacesAppPic_EnqueuesSaveAndDelete() {
-		// Given a person whose app pic is replaced by a freshly picked image,
-		// while the widget pic is left untouched (same id, not re-picked).
-		let widgetId = UUID()
-		let person = Person(
-			id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: widgetId, isOnWidget: false,
-			createdDate: Date())
-		let params = AddPersonParameters(
-			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: PersonImage(id: UUID(), uiImage: UIImage()),
-			widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
-		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
-		// When
-		sut.edit(person: person, with: params) { _ in }
-		// Then
-		XCTAssertEqual(
-			taskManagerSpy.processedTasks.count, 2, "Expected a save for the new app pic and a delete for the replaced one")
-	}
-
-	func test_SUT_WhenEditingReplacesWidgetPic_EnqueuesSaveAndDelete() {
-		// Given a person whose widget pic is replaced by a freshly picked image,
-		// while the app pic is left untouched (same id, not re-picked).
-		let appId = UUID()
-		let person = Person(
-			id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: UUID(), isOnWidget: false,
-			createdDate: Date())
-		let params = AddPersonParameters(
-			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: PersonImage(id: appId, uiImage: nil),
-			widgetImage: PersonImage(id: UUID(), uiImage: UIImage()), isOnWidget: false)
-		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
-		// When
-		sut.edit(person: person, with: params) { _ in }
-		// Then
-		XCTAssertEqual(
-			taskManagerSpy.processedTasks.count, 2, "Expected a save for the new widget pic and a delete for the replaced one"
-		)
-	}
-
-	func test_SUT_WhenEditingLeavesPicsUnchanged_EnqueuesNoTasks() {
-		// Given a person edited without touching either pic (same ids, not re-picked).
-		let appId = UUID()
-		let widgetId = UUID()
-		let person = Person(
-			id: UUID(), name: "name", birthday: Date(), appPicId: appId, widgetPicId: widgetId, isOnWidget: false,
-			createdDate: Date())
-		let params = AddPersonParameters(
-			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: PersonImage(id: appId, uiImage: nil),
-			widgetImage: PersonImage(id: widgetId, uiImage: nil), isOnWidget: false)
-		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
-		// When
-		sut.edit(person: person, with: params) { _ in }
-		// Then
-		XCTAssertEqual(taskManagerSpy.processedTasks.count, 0, "Expected no tasks when both pics are unchanged")
-	}
-
-	func test_SUT_WhenRemovingPersons_CallingTaskManagerWithExpectedResult() {
-		// Given
-		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
-		let workIsDone = expectation(description: "Expecting to Remove Person")
-		// When
-		sut.remove(person: Person.createPerson()) { result in
-			// Then
-			switch result {
-			case .success: ()
-			case .failure(let error):
-				XCTFail("Expected to Remove Person but got error = \(error.localizedDescription)")
+		sut.add(parameters: parameters) { result in
+			guard case .failure = result else {
+				return XCTFail("Expected image save failure")
 			}
-			workIsDone.fulfill()
+			XCTAssertFalse(self.coreDataGatewaySpy.addPersonCalled)
+			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), self.imageStoreSpy.savedImages.map(\.id))
+			completed.fulfill()
 		}
-		XCTAssertTrue(self.taskManagerSpy.processTasksCalled, "Expected to call TaskManager")
-		waitForExpectations(timeout: 0.1)
+
+		waitForExpectations(timeout: 1)
 	}
 
-	func test_SUT_WhenRemovingPersons_CallingCoreDataPersonsGateway() {
-		// Given
-		let taskManager = TaskManagerOnGCD()
-		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
+	func testEditCommitsNewImageBeforeDeletingReplacedImage() {
+		let oldAppID = UUID()
+		let person = person(appPicID: oldAppID, widgetPicID: nil)
+		let newAppImage = PersonImage(uiImage: UIImage())
+		let parameters = parameters(appImage: newAppImage, widgetImage: nil)
+		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
+		var events = [String]()
+		imageStoreSpy.onSave = { events.append("save") }
+		coreDataGatewaySpy.onEdit = { events.append("database") }
+		imageStoreSpy.onDelete = { events.append("delete") }
+		let completed = expectation(description: "edit completes")
+
+		sut.edit(person: person, with: parameters) { _ in
+			XCTAssertEqual(events, ["save", "database", "delete"])
+			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), [oldAppID])
+			completed.fulfill()
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
+	func testEditRollsBackNewImageWhenCoreDataFails() {
+		let oldAppID = UUID()
+		let person = person(appPicID: oldAppID, widgetPicID: nil)
+		let newAppImage = PersonImage(uiImage: UIImage())
+		coreDataGatewaySpy.editPersonResultToBeReturned = .failure(.coreDataSaveFailed)
+		let completed = expectation(description: "edit fails")
+
+		sut.edit(person: person, with: parameters(appImage: newAppImage, widgetImage: nil)) { result in
+			XCTAssertEqual(result, .failure(.coreDataSaveFailed))
+			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), [newAppImage.id])
+			XCTAssertFalse(self.imageStoreSpy.deletedImages.map(\.id).contains(oldAppID))
+			completed.fulfill()
+		}
+
+		waitForExpectations(timeout: 1)
+	}
+
+	func testRemoveReportsCoreDataSuccessAfterBestEffortImageCleanup() {
+		let person = Person.createPerson()
 		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
-		let workIsDone = expectation(description: "Expecting to finish removing")
-		// When
-		sut.remove(
-			person: Person.createPerson(),
-			completionHandler: { _ in
-				// Then
-				XCTAssertTrue(self.coreDataGatewaySpy.removePersonCalled, "Epected to call Remove Person from CoreData")
-				workIsDone.fulfill()
-			})
-		waitForExpectations(timeout: 0.1)
+		imageStoreSpy.deleteError = CoreError.unknownError
+		var events = [String]()
+		coreDataGatewaySpy.onRemove = { events.append("database") }
+		imageStoreSpy.onDelete = { events.append("delete") }
+		var completionCount = 0
+		let completed = expectation(description: "remove completes")
+
+		sut.remove(person: person) { result in
+			completionCount += 1
+			if case .failure(let error) = result {
+				XCTFail("Expected success, got \(error)")
+			}
+			XCTAssertEqual(events, ["database", "delete", "delete"])
+			completed.fulfill()
+		}
+
+		waitForExpectations(timeout: 1)
+		XCTAssertEqual(completionCount, 1)
 	}
 
-	func test_SUT_WhenFetchingPersons_CallingTaskManagerWithExpectedResult() {
-		// Given
-		let expectedValue = [Person.createPerson()]
-		coreDataGatewaySpy.fetchPersonsResultToBeReturned = .success(expectedValue)
-		let workIsDone = expectation(description: "Expecting to fetch Persons")
-		// When
-		sut.fetchPersons { result in
-			// Then
-			XCTAssertEqual(result, .success(expectedValue), "Expected to receive array of Persons")
-			workIsDone.fulfill()
-		}
-		waitForExpectations(timeout: 0.1)
+	private func parameters(appImage: PersonImage?, widgetImage: PersonImage?) -> AddPersonParameters {
+		AddPersonParameters(
+			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
+			appImage: appImage, widgetImage: widgetImage, isOnWidget: false)
 	}
 
-	func test_SUT_WhenFetchingPersons_CallingCoreDataPersonsGateway() {
-		// Given
-		let taskManager = TaskManagerOnGCD()
-		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, taskManager: taskManager)
-		coreDataGatewaySpy.fetchPersonsResultToBeReturned = .success([])
-		let workIsDone = expectation(description: "Expecting to finish fetching")
-		// When
-		sut.fetchPersons { _ in
-			// Then
-			XCTAssertTrue(self.coreDataGatewaySpy.fetchPersonsCalled, "Epected to call fetching persons from CoreData")
-			workIsDone.fulfill()
-		}
-		waitForExpectations(timeout: 0.1)
+	private func person(appPicID: UUID?, widgetPicID: UUID?) -> Person {
+		Person(
+			id: UUID(), name: "John", birthday: Date(), appPicId: appPicID, widgetPicId: widgetPicID,
+			isOnWidget: false, createdDate: Date())
 	}
 }

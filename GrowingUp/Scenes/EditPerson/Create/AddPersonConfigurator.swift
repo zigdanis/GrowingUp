@@ -19,8 +19,7 @@ class AddPersonConfigurator: EditPersonConfigurator {
 
 	func configure(editPersonViewController: EditPersonViewController) {
 		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		let taskManager = TaskManagerOnGCD()
-		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, imageStore: DiskImageStore())
 		let fetchWidgetPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: coreDataGateway)
 		let addPersonUseCase = AddPersonUseCaseImplementation(personsGateway: personsGateway)
 		let router = EditPersonViewRouterImplementation(editPersonViewController: editPersonViewController)

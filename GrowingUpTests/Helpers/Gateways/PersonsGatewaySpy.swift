@@ -22,10 +22,14 @@ class PersonsGatewaySpy: PersonsGateway {
 	var editPersonResultToBeReturned: Result<Person, CoreError>!
 	var removePersonCalled = false
 	var removePersonResultToBeReturned: Result<Void, CoreError>!
+	var onAdd: (() -> Void)?
+	var onEdit: (() -> Void)?
+	var onRemove: (() -> Void)?
 
 	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
 		addPersonCalled = true
 		addPersonParameters = parameters
+		onAdd?()
 		completionHandler(addPersonResultToBeReturned)
 	}
 
@@ -44,11 +48,13 @@ class PersonsGatewaySpy: PersonsGateway {
 	) {
 		editPersonCalled = true
 		addPersonParameters = parameters
+		onEdit?()
 		completionHandler(editPersonResultToBeReturned)
 	}
 
 	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
 		removePersonCalled = true
+		onRemove?()
 		completionHandler(removePersonResultToBeReturned)
 	}
 }

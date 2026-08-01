@@ -17,8 +17,7 @@ final class PersonsListConfiguratorImplementation: PersonsListConfigurator {
 
 	func configure(personsListController: PersonsListViewController) {
 		let coreDataGateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		let taskManager = TaskManagerOnGCD()
-		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, taskManager: taskManager)
+		let personsGateway = CachePersonsGateway(coreDataGateway: coreDataGateway, imageStore: DiskImageStore())
 		let fetchPersonsUseCase = FetchPersonsUseCaseImplementation(personsGateway: personsGateway)
 		let presenter = PersonsListPresenterImplementation(
 			view: personsListController, displayPersonsUseCase: fetchPersonsUseCase)
