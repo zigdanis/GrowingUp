@@ -118,12 +118,11 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = appPic.uiImage {
 			appPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDiskOrMemory(image: appPic) { result in
-				switch result {
-				case .success(let img):
-					self.appPicButton.drawImage(img)
-				case .failure(let error):
-					Logging.logError(error)
+			Task { @MainActor [weak self] in
+				do {
+					self?.appPicButton.drawImage(try await ImagesCache.loadImageFromDiskOrMemory(image: appPic))
+				} catch {
+					Logging.logError(CoreError(error: error))
 				}
 			}
 		}
@@ -138,12 +137,11 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = widgetPic.uiImage {
 			widgetPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDiskOrMemory(image: widgetPic) { result in
-				switch result {
-				case .success(let img):
-					self.widgetPicButton.drawImage(img)
-				case .failure(let error):
-					Logging.logError(error)
+			Task { @MainActor [weak self] in
+				do {
+					self?.widgetPicButton.drawImage(try await ImagesCache.loadImageFromDiskOrMemory(image: widgetPic))
+				} catch {
+					Logging.logError(CoreError(error: error))
 				}
 			}
 		}

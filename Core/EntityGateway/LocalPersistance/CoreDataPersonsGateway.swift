@@ -9,9 +9,6 @@
 import CoreData
 import Foundation
 
-public typealias FetchedPersonsCompletionHandler = (_ persons: Result<[Person], CoreError>) -> Void
-public typealias FetchedPersonCompletionHandler = (_ person: Result<Person, CoreError>) -> Void
-
 public class CoreDataPersonsGateway: PersonsGateway {
 
 	let coreDataStack: CoreDataStack
@@ -20,129 +17,114 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		self.coreDataStack = coreDataStack
 	}
 
-	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
-			var result: Result<Person, CoreError> = .failure(CoreError.coreDataAddFailed)
-			if let cdPerson = context.addEntity(withType: CoreDataPerson.self) {
-				cdPerson.populate(with: parameters)
+	public func add(parameters: AddPersonParameters) async throws -> Person {
+		try Task.checkCancellation()
+		return try await withCheckedThrowingContinuation { continuation in
+			coreDataStack.persistentContainer.performBackgroundTask { context in
+				guard let person = context.addEntity(withType: CoreDataPerson.self) else {
+					continuation.resume(throwing: CoreError.coreDataAddFailed)
+					return
+				}
 				do {
-					if parameters.isOnWidget {
-						cdPerson.accessToWidget = try AccessToWidget.sharedInstance(in: context)
-					} else {
-						cdPerson.accessToWidget = nil
-					}
+					person.populate(with: parameters)
+					person.accessToWidget =
+						parameters.isOnWidget
+						? try AccessToWidget.sharedInstance(in: context) : nil
 					try context.save()
-					result = .success(cdPerson.person)
+					continuation.resume(returning: person.person)
 				} catch let error as CoreError {
-					context.delete(cdPerson)
-					result = .failure(error)
+					context.delete(person)
+					continuation.resume(throwing: error)
 				} catch {
-					context.delete(cdPerson)
-					result = .failure(CoreError(error: error))
+					context.delete(person)
+					continuation.resume(throwing: CoreError(error: error))
 				}
-			}
-			DispatchQueue.main.async {
-				completionHandler(result)
 			}
 		}
 	}
 
-	public func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { _ in
-			var result: Result<[Person], CoreError> = .failure(.unknownError)
-			let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
-			fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
-			do {
-				let persons = try fetchRequest.execute().map({ $0.person })
-				result = .success(persons)
-			} catch {
-				let coreError = CoreError(error: error)
-				result = .failure(coreError)
+	public func fetchPersons() async throws -> [Person] {
+		try Task.checkCancellation()
+		let persons = try await withCheckedThrowingContinuation { continuation in
+			coreDataStack.persistentContainer.performBackgroundTask { context in
+				let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
+				request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+				do {
+					continuation.resume(returning: try context.fetch(request).map(\.person))
+				} catch {
+					continuation.resume(throwing: CoreError(error: error))
+				}
 			}
-			DispatchQueue.main.async {
-				completionHandler(result)
+		}
+		try Task.checkCancellation()
+		return persons
+	}
+
+	public func fetchWidgetPersons() async throws -> [Person] {
+		try Task.checkCancellation()
+		let persons = try await withCheckedThrowingContinuation { continuation in
+			coreDataStack.persistentContainer.performBackgroundTask { context in
+				do {
+					guard let persons = try AccessToWidget.sharedInstance(in: context).widgetPersons else {
+						throw CoreError.missingValue
+					}
+					continuation.resume(returning: persons.map(\.person).sorted())
+				} catch let error as CoreError {
+					continuation.resume(throwing: error)
+				} catch {
+					continuation.resume(throwing: CoreError(error: error))
+				}
+			}
+		}
+		try Task.checkCancellation()
+		return persons
+	}
+
+	public func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
+		try Task.checkCancellation()
+		return try await withCheckedThrowingContinuation { continuation in
+			coreDataStack.persistentContainer.performBackgroundTask { context in
+				do {
+					let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
+					request.predicate = NSPredicate(
+						format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
+					guard let storedPerson = try context.fetch(request).first else {
+						throw CoreError.coreDataFetchFailed
+					}
+					storedPerson.populate(with: parameters)
+					storedPerson.accessToWidget =
+						parameters.isOnWidget
+						? try AccessToWidget.sharedInstance(in: context) : nil
+					try context.save()
+					continuation.resume(returning: storedPerson.person)
+				} catch let error as CoreError {
+					continuation.resume(throwing: error)
+				} catch {
+					continuation.resume(throwing: CoreError(error: error))
+				}
 			}
 		}
 	}
 
-	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
-			var result: Result<[Person], CoreError> = .failure(.unknownError)
-			do {
-				let access = try AccessToWidget.sharedInstance(in: context)
-				guard let persons = access.widgetPersons else {
-					throw CoreError.missingValue
+	public func remove(person: Person) async throws {
+		try Task.checkCancellation()
+		try await withCheckedThrowingContinuation { continuation in
+			coreDataStack.persistentContainer.performBackgroundTask { context in
+				do {
+					let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
+					request.predicate = NSPredicate(
+						format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
+					guard let storedPerson = try context.fetch(request).first else {
+						throw CoreError.coreDataFetchFailed
+					}
+					context.delete(storedPerson)
+					try context.save()
+					continuation.resume(returning: ())
+				} catch let error as CoreError {
+					continuation.resume(throwing: error)
+				} catch {
+					continuation.resume(throwing: CoreError(error: error))
 				}
-				let cdPersons = Array(persons.map({ $0.person })).sorted()
-				result = .success(cdPersons)
-			} catch let error as CoreError {
-				result = .failure(error)
-			} catch {
-				let coreError = CoreError(error: error)
-				result = .failure(coreError)
-			}
-			DispatchQueue.main.async {
-				completion(result)
-			}
-		}
-	}
-
-	public func edit(
-		person: Person, with parameters: AddPersonParameters,
-		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
-	) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
-			var result: Result<Person, CoreError> = .failure(CoreError.unknownError)
-			do {
-				let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
-				let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
-				fetchRequest.predicate = predicate
-				let coreDataPerson = try fetchRequest.execute().first
-				guard let cdPerson = coreDataPerson else {
-					throw CoreError.coreDataFetchFailed
-				}
-				cdPerson.populate(with: parameters)
-				if parameters.isOnWidget {
-					cdPerson.accessToWidget = try AccessToWidget.sharedInstance(in: context)
-				} else {
-					cdPerson.accessToWidget = nil
-				}
-				try context.save()
-				result = .success(cdPerson.person)
-			} catch let coreError as CoreError {
-				result = .failure(coreError)
-			} catch {
-				let coreError = CoreError(error: error)
-				result = .failure(coreError)
-			}
-			DispatchQueue.main.async {
-				completionHandler(result)
-			}
-		}
-	}
-
-	public func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
-		coreDataStack.persistentContainer.performBackgroundTask { context in
-			var result: Result<Void, CoreError> = .failure(.unknownError)
-			do {
-				let predicate = NSPredicate(format: "%K == %@", #keyPath(CoreDataPerson.id), person.id.uuidString)
-				let fetchRequest: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
-				fetchRequest.predicate = predicate
-				let coreDataPerson = try fetchRequest.execute().first
-				guard let cdPerson = coreDataPerson else {
-					throw CoreError.coreDataFetchFailed
-				}
-				context.delete(cdPerson)
-				try context.save()
-				result = .success(())
-			} catch let error as CoreError {
-				result = .failure(error)
-			} catch {
-				let coreError = CoreError(error: error)
-				result = .failure(coreError)
-			}
-			DispatchQueue.main.async {
-				completionHandler(result)
 			}
 		}
 	}

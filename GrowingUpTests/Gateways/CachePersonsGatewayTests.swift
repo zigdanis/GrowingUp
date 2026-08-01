@@ -21,42 +21,32 @@ final class CachePersonsGatewayTests: XCTestCase {
 		sut = CachePersonsGateway(coreDataGateway: coreDataGatewaySpy, imageStore: imageStoreSpy)
 	}
 
-	func testAddSavesImagesBeforeCoreData() {
+	func testAddSavesImagesBeforeCoreData() async throws {
 		let parameters = parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()))
 		let expectedPerson = Person.createPerson()
 		coreDataGatewaySpy.addPersonResultToBeReturned = .success(expectedPerson)
 		var events = [String]()
 		imageStoreSpy.onSave = { events.append("save") }
 		coreDataGatewaySpy.onAdd = { events.append("database") }
-		let completed = expectation(description: "add completes")
 
-		sut.add(parameters: parameters) { result in
-			XCTAssertEqual(result, .success(expectedPerson))
-			XCTAssertEqual(events, ["save", "save", "database"])
-			completed.fulfill()
-		}
-
-		waitForExpectations(timeout: 1)
+		XCTAssertEqual(try await sut.add(parameters: parameters), expectedPerson)
+		XCTAssertEqual(events, ["save", "save", "database"])
 	}
 
-	func testAddRollsBackPartialImageSaveAndSkipsCoreData() {
+	func testAddRollsBackPartialImageSaveAndSkipsCoreData() async {
 		let parameters = parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()))
 		imageStoreSpy.saveErrorAtCall = 2
-		let completed = expectation(description: "add fails")
 
-		sut.add(parameters: parameters) { result in
-			guard case .failure = result else {
-				return XCTFail("Expected image save failure")
-			}
-			XCTAssertFalse(self.coreDataGatewaySpy.addPersonCalled)
-			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), self.imageStoreSpy.savedImages.map(\.id))
-			completed.fulfill()
+		do {
+			_ = try await sut.add(parameters: parameters)
+			XCTFail("Expected image save failure")
+		} catch {
+			XCTAssertFalse(coreDataGatewaySpy.addPersonCalled)
+			XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), imageStoreSpy.savedImages.map(\.id))
 		}
-
-		waitForExpectations(timeout: 1)
 	}
 
-	func testEditCommitsNewImageBeforeDeletingReplacedImage() {
+	func testEditCommitsNewImageBeforeDeletingReplacedImage() async throws {
 		let oldAppID = UUID()
 		let person = person(appPicID: oldAppID, widgetPicID: nil)
 		let newAppImage = PersonImage(uiImage: UIImage())
@@ -66,55 +56,38 @@ final class CachePersonsGatewayTests: XCTestCase {
 		imageStoreSpy.onSave = { events.append("save") }
 		coreDataGatewaySpy.onEdit = { events.append("database") }
 		imageStoreSpy.onDelete = { events.append("delete") }
-		let completed = expectation(description: "edit completes")
 
-		sut.edit(person: person, with: parameters) { _ in
-			XCTAssertEqual(events, ["save", "database", "delete"])
-			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), [oldAppID])
-			completed.fulfill()
-		}
-
-		waitForExpectations(timeout: 1)
+		_ = try await sut.edit(person: person, with: parameters)
+		XCTAssertEqual(events, ["save", "database", "delete"])
+		XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), [oldAppID])
 	}
 
-	func testEditRollsBackNewImageWhenCoreDataFails() {
+	func testEditRollsBackNewImageWhenCoreDataFails() async {
 		let oldAppID = UUID()
 		let person = person(appPicID: oldAppID, widgetPicID: nil)
 		let newAppImage = PersonImage(uiImage: UIImage())
 		coreDataGatewaySpy.editPersonResultToBeReturned = .failure(.coreDataSaveFailed)
-		let completed = expectation(description: "edit fails")
 
-		sut.edit(person: person, with: parameters(appImage: newAppImage, widgetImage: nil)) { result in
-			XCTAssertEqual(result, .failure(.coreDataSaveFailed))
-			XCTAssertEqual(self.imageStoreSpy.deletedImages.map(\.id), [newAppImage.id])
-			XCTAssertFalse(self.imageStoreSpy.deletedImages.map(\.id).contains(oldAppID))
-			completed.fulfill()
+		do {
+			_ = try await sut.edit(person: person, with: parameters(appImage: newAppImage, widgetImage: nil))
+			XCTFail("Expected Core Data failure")
+		} catch {
+			XCTAssertEqual(error as? CoreError, .coreDataSaveFailed)
+			XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), [newAppImage.id])
+			XCTAssertFalse(imageStoreSpy.deletedImages.map(\.id).contains(oldAppID))
 		}
-
-		waitForExpectations(timeout: 1)
 	}
 
-	func testRemoveReportsCoreDataSuccessAfterBestEffortImageCleanup() async {
+	func testRemoveReportsCoreDataSuccessAfterBestEffortImageCleanup() async throws {
 		let person = Person.createPerson()
 		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
 		imageStoreSpy.deleteError = CoreError.unknownError
 		var events = [String]()
 		coreDataGatewaySpy.onRemove = { events.append("database") }
 		imageStoreSpy.onDelete = { events.append("delete") }
-		var completionCount = 0
-		let completed = expectation(description: "remove completes")
 
-		sut.remove(person: person) { result in
-			completionCount += 1
-			if case .failure(let error) = result {
-				XCTFail("Expected success, got \(error)")
-			}
-			XCTAssertEqual(events, ["database", "delete", "delete"])
-			completed.fulfill()
-		}
-
-		await fulfillment(of: [completed], timeout: 1)
-		XCTAssertEqual(completionCount, 1)
+		try await sut.remove(person: person)
+		XCTAssertEqual(events, ["database", "delete", "delete"])
 	}
 
 	func testAsyncAddHonorsCancellationBeforeSideEffects() async {

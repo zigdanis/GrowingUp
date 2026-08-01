@@ -26,35 +26,32 @@ class PersonsGatewaySpy: PersonsGateway {
 	var onEdit: (() -> Void)?
 	var onRemove: (() -> Void)?
 
-	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
+	func add(parameters: AddPersonParameters) async throws -> Person {
 		addPersonCalled = true
 		addPersonParameters = parameters
 		onAdd?()
-		completionHandler(addPersonResultToBeReturned)
+		return try addPersonResultToBeReturned.get()
 	}
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
+	func fetchPersons() async throws -> [Person] {
 		fetchPersonsCalled = true
-		completionHandler(fetchPersonsResultToBeReturned)
+		return try fetchPersonsResultToBeReturned.get()
 	}
 
-	func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		completion(fetchPersonsResultToBeReturned)
+	func fetchWidgetPersons() async throws -> [Person] {
+		try fetchPersonsResultToBeReturned.get()
 	}
 
-	func edit(
-		person: Person, with parameters: AddPersonParameters,
-		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
-	) {
+	func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
 		editPersonCalled = true
 		addPersonParameters = parameters
 		onEdit?()
-		completionHandler(editPersonResultToBeReturned)
+		return try editPersonResultToBeReturned.get()
 	}
 
-	func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
+	func remove(person: Person) async throws {
 		removePersonCalled = true
 		onRemove?()
-		completionHandler(removePersonResultToBeReturned)
+		try removePersonResultToBeReturned.get()
 	}
 }

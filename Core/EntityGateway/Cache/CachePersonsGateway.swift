@@ -18,18 +18,6 @@ public final class CachePersonsGateway: PersonsGateway {
 		self.imageStore = imageStore
 	}
 
-	public func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonEntityGatewayCompletionHandler) {
-		Task {
-			do {
-				await complete(.success(try await add(parameters: parameters)), using: completionHandler)
-			} catch let error as CoreError {
-				await complete(.failure(error), using: completionHandler)
-			} catch {
-				await complete(.failure(CoreError(error: error)), using: completionHandler)
-			}
-		}
-	}
-
 	public func add(parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
 		let savedImages = try await save(newImages(in: parameters))
@@ -42,35 +30,12 @@ public final class CachePersonsGateway: PersonsGateway {
 		}
 	}
 
-	public func fetchPersons(completionHandler: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataGateway.fetchPersons(completionHandler: completionHandler)
-	}
-
 	public func fetchPersons() async throws -> [Person] {
 		try await coreDataGateway.fetchPersons()
 	}
 
-	public func fetchWidgetPersons(completion: @escaping FetchPersonsEntityGatewayCompletionHandler) {
-		coreDataGateway.fetchWidgetPersons(completion: completion)
-	}
-
 	public func fetchWidgetPersons() async throws -> [Person] {
 		try await coreDataGateway.fetchWidgetPersons()
-	}
-
-	public func edit(
-		person: Person, with parameters: AddPersonParameters,
-		completionHandler: @escaping EditPersonEntityGatewayCompletionHandler
-	) {
-		Task {
-			do {
-				await complete(.success(try await edit(person: person, with: parameters)), using: completionHandler)
-			} catch let error as CoreError {
-				await complete(.failure(error), using: completionHandler)
-			} catch {
-				await complete(.failure(CoreError(error: error)), using: completionHandler)
-			}
-		}
 	}
 
 	public func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
@@ -84,19 +49,6 @@ public final class CachePersonsGateway: PersonsGateway {
 		} catch {
 			await deleteBestEffort(savedImages)
 			throw error
-		}
-	}
-
-	public func remove(person: Person, completionHandler: @escaping RemovePersonEntityGatewayCompletionHandler) {
-		Task {
-			do {
-				try await remove(person: person)
-				await complete(.success(()), using: completionHandler)
-			} catch let error as CoreError {
-				await complete(.failure(error), using: completionHandler)
-			} catch {
-				await complete(.failure(CoreError(error: error)), using: completionHandler)
-			}
 		}
 	}
 
@@ -153,11 +105,5 @@ public final class CachePersonsGateway: PersonsGateway {
 				Logging.logError(CoreError(error: error))
 			}
 		}
-	}
-
-	private func complete<Value>(
-		_ result: Result<Value, CoreError>, using completion: @escaping (Result<Value, CoreError>) -> Void
-	) async {
-		await MainActor.run { completion(result) }
 	}
 }

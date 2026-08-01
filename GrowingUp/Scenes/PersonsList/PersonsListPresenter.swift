@@ -37,13 +37,15 @@ final class PersonsListPresenterImplementation: PersonsListPresenter {
 	}
 
 	private func loadListOfPersons() {
-		fetchPersonsUseCase.fetchPersons { result in
-			switch result {
-			case .success(let value): self.persons = value
-			case .failure(let error): Logging.logError(error)
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			do {
+				persons = try await fetchPersonsUseCase.fetchPersons()
+			} catch {
+				Logging.logError(CoreError(error: error))
 			}
-			self.cachedScreens.removeAll()
-			self.view?.updateListOfScreens(defaultPage: self.defaultPage)
+			cachedScreens.removeAll()
+			view?.updateListOfScreens(defaultPage: defaultPage)
 		}
 	}
 

@@ -14,14 +14,6 @@ final class FetchPersonsUseCaseSpy: FetchPersonsUseCase {
 
 	var completionResult: Result<[Person], CoreError>!
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
-		completionHandler(completionResult)
-	}
-
-	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
-		completion(completionResult)
-	}
-
 	func fetchPersons() async throws -> [Person] {
 		try completionResult.get()
 	}

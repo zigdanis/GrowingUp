@@ -61,34 +61,37 @@ final class EditPersonPresenterTests: XCTestCase {
 		XCTAssertFalse(editPersonViewSpy.barButtonsEnabledState ?? true, "Bar buttons should've been set to disabled")
 	}
 
-	func test_SUT_SaveButtonPressed_BarButtonsEnabledAfterCompletionHandlerCalled() {
+	func test_SUT_SaveButtonPressed_BarButtonsEnabledAfterCompletionHandlerCalled() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		editPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertTrue(editPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
 	}
 
-	func test_SUT_SaveButtonPressed_ShouldStartEditingPerson() {
+	func test_SUT_SaveButtonPressed_ShouldStartEditingPerson() async {
 		// Given
 		let parameters = setupSUT_WithAddPersonData()
 		editPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(
 			editPersonUseCaseSpy.personToEditParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
 	}
 
-	func test_SUT_SaveButtonPressed_CallingEditPersonDelegateMethod() {
+	func test_SUT_SaveButtonPressed_CallingEditPersonDelegateMethod() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		let expectedPersonToEdit = Person.createPerson()
 		editPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToEdit)
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(
 			addPersonPresenterDelegateSpy.editedPerson, expectedPersonToEdit, "Should have been edit expected person")
@@ -96,7 +99,7 @@ final class EditPersonPresenterTests: XCTestCase {
 
 	}
 
-	func test_SUT_SaveButtonPressedWithError_ShouldDisplayErrorOnView() {
+	func test_SUT_SaveButtonPressedWithError_ShouldDisplayErrorOnView() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		let expectedErrorTitle = "Error"
@@ -105,6 +108,7 @@ final class EditPersonPresenterTests: XCTestCase {
 			CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(expectedErrorTitle, editPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
 		XCTAssertEqual(expectedErrorMessage, editPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
@@ -243,11 +247,12 @@ final class EditPersonPresenterTests: XCTestCase {
 		XCTAssertEqual(editPersonViewSpy.displayedBarButtons.count, 2, "Expected to display only 2 type of buttons")
 	}
 
-	func test_SUT_WhenCalledToRemovePerson_CallingRemovePersonUseCaseAndEditPresenterDelegate() {
+	func test_SUT_WhenCalledToRemovePerson_CallingRemovePersonUseCaseAndEditPresenterDelegate() async {
 		// Given
 		removePersonUseCaseSpy.resultToBeReturned = .success(())
 		// When
 		sut.removePersonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertTrue(removePersonUseCaseSpy.didCallRemovePerson, "Expected to call remove person use case")
 		XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledRemovePerson, "Expected to call remove Person")
@@ -271,5 +276,9 @@ final class EditPersonPresenterTests: XCTestCase {
 		return AddPersonParameters(
 			name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic,
 			isOnWidget: isOnWidget)
+	}
+
+	private func finishTasks() async {
+		for _ in 0..<3 { await Task.yield() }
 	}
 }

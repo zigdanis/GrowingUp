@@ -16,15 +16,6 @@ class DisplayPersonsUseCaseSpy: FetchPersonsUseCase {
 	var displayPersonsCalled = false
 	var resultToBeReturned: Result<[Person], CoreError>!
 
-	func fetchPersons(completionHandler: @escaping FetchPersonsUseCaseCompletionHandler) {
-		displayPersonsCalled = true
-		completionHandler(resultToBeReturned)
-	}
-
-	func fetchWidgetPersons(completion: @escaping FetchPersonsUseCaseCompletionHandler) {
-		completion(resultToBeReturned)
-	}
-
 	func fetchPersons() async throws -> [Person] {
 		displayPersonsCalled = true
 		return try resultToBeReturned.get()

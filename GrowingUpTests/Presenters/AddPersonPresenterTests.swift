@@ -59,34 +59,37 @@ final class AddPersonPresenterTests: XCTestCase {
 		XCTAssertFalse(addPersonViewSpy.barButtonsEnabledState ?? true, "Bar buttons should've been set to disabled")
 	}
 
-	func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() {
+	func test_SUT_AddButtonPressed_AddAndCancelButtonsEnabledAfterCompletionHandlerCalled() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertTrue(addPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
 	}
 
-	func test_SUT_AddButtonPressed_ShouldSavePerson() {
+	func test_SUT_AddButtonPressed_ShouldSavePerson() async {
 		// Given
 		let parameters = setupSUT_WithAddPersonData()
 		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(
 			addPersonUseCaseSpy.personToAddParameters!, parameters, "Should have been called addPerson for AddPersonUseCase")
 	}
 
-	func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() {
+	func test_SUT_AddButtonPressed_CallingEditPersonDelegateMethod() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		let expectedPersonToAdd = Person.createPerson()
 		addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(
 			addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
@@ -94,7 +97,7 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	}
 
-	func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() {
+	func test_SUT_AddButtonPressedWithError_ShouldDisplayErrorOnView() async {
 		// Given
 		setupSUT_WithAddPersonData()
 		let expectedErrorTitle = "Error"
@@ -103,6 +106,7 @@ final class AddPersonPresenterTests: XCTestCase {
 			CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
 		// When
 		sut.rightBarButtonPressed()
+		await finishTasks()
 		// Then
 		XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
 		XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
@@ -237,5 +241,9 @@ final class AddPersonPresenterTests: XCTestCase {
 		return AddPersonParameters(
 			name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic,
 			isOnWidget: isOnWidget)
+	}
+
+	private func finishTasks() async {
+		for _ in 0..<3 { await Task.yield() }
 	}
 }
