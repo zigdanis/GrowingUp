@@ -11,6 +11,7 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
+@MainActor
 final class AddPersonPresenterTests: XCTestCase {
 
 	// https://www.martinfowler.com/bliki/TestDouble.html
@@ -65,7 +66,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonViewSpy.barButtonsEnabledState == true }
 		// Then
 		XCTAssertTrue(addPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
 	}
@@ -76,7 +77,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		addPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonUseCaseSpy.personToAddParameters != nil }
 		// Then
 		XCTAssertEqual(
 			addPersonUseCaseSpy.personToAddParameters!, parameters, "Should have been called addPerson for AddPersonUseCase")
@@ -89,7 +90,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		addPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToAdd)
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonPresenterDelegateSpy.didCalledAddPerson }
 		// Then
 		XCTAssertEqual(
 			addPersonPresenterDelegateSpy.addedPerson, expectedPersonToAdd, "Should have been add expected person")
@@ -106,7 +107,7 @@ final class AddPersonPresenterTests: XCTestCase {
 			CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonViewSpy.displayAddPersonErrorTitle != nil }
 		// Then
 		XCTAssertEqual(expectedErrorTitle, addPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
 		XCTAssertEqual(expectedErrorMessage, addPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
@@ -243,7 +244,11 @@ final class AddPersonPresenterTests: XCTestCase {
 			isOnWidget: isOnWidget)
 	}
 
-	private func finishTasks() async {
-		for _ in 0..<3 { await Task.yield() }
+	private func waitUntil(_ condition: @escaping () -> Bool) async {
+		for _ in 0..<1_000 {
+			if condition() { return }
+			await Task.yield()
+		}
+		XCTFail("Timed out waiting for async presenter work")
 	}
 }

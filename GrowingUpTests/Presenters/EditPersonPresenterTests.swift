@@ -11,6 +11,7 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
+@MainActor
 final class EditPersonPresenterTests: XCTestCase {
 
 	// https://www.martinfowler.com/bliki/TestDouble.html
@@ -67,7 +68,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		editPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.editPersonViewSpy.barButtonsEnabledState == true }
 		// Then
 		XCTAssertTrue(editPersonViewSpy.barButtonsEnabledState ?? false, "Bar buttons should've been set to enabled")
 	}
@@ -78,7 +79,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		editPersonUseCaseSpy.resultToBeReturned = .success(Person.createPerson())
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.editPersonUseCaseSpy.personToEditParameters != nil }
 		// Then
 		XCTAssertEqual(
 			editPersonUseCaseSpy.personToEditParameters, parameters, "Should have been called addPerson for AddPersonUseCase")
@@ -91,7 +92,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		editPersonUseCaseSpy.resultToBeReturned = .success(expectedPersonToEdit)
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonPresenterDelegateSpy.didCalledEditPerson }
 		// Then
 		XCTAssertEqual(
 			addPersonPresenterDelegateSpy.editedPerson, expectedPersonToEdit, "Should have been edit expected person")
@@ -108,7 +109,7 @@ final class EditPersonPresenterTests: XCTestCase {
 			CoreError(title: expectedErrorTitle, message: expectedErrorMessage))
 		// When
 		sut.rightBarButtonPressed()
-		await finishTasks()
+		await waitUntil { self.editPersonViewSpy.displayAddPersonErrorTitle != nil }
 		// Then
 		XCTAssertEqual(expectedErrorTitle, editPersonViewSpy.displayAddPersonErrorTitle, "Error title doesn't match")
 		XCTAssertEqual(expectedErrorMessage, editPersonViewSpy.displayAddPersonErrorMessage, "Error message doesn't match")
@@ -252,7 +253,7 @@ final class EditPersonPresenterTests: XCTestCase {
 		removePersonUseCaseSpy.resultToBeReturned = .success(())
 		// When
 		sut.removePersonPressed()
-		await finishTasks()
+		await waitUntil { self.addPersonPresenterDelegateSpy.didCalledRemovePerson }
 		// Then
 		XCTAssertTrue(removePersonUseCaseSpy.didCallRemovePerson, "Expected to call remove person use case")
 		XCTAssertTrue(addPersonPresenterDelegateSpy.didCalledRemovePerson, "Expected to call remove Person")
@@ -278,7 +279,11 @@ final class EditPersonPresenterTests: XCTestCase {
 			isOnWidget: isOnWidget)
 	}
 
-	private func finishTasks() async {
-		for _ in 0..<3 { await Task.yield() }
+	private func waitUntil(_ condition: @escaping () -> Bool) async {
+		for _ in 0..<1_000 {
+			if condition() { return }
+			await Task.yield()
+		}
+		XCTFail("Timed out waiting for async presenter work")
 	}
 }

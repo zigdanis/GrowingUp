@@ -11,7 +11,8 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
-class PersonsListPresenterTests: XCTestCase {
+@MainActor
+final class PersonsListPresenterTests: XCTestCase {
 
 	var sut: PersonsListPresenterImplementation!
 	let personsListSpy = PersonsListViewSpy()
@@ -24,7 +25,7 @@ class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_LoadingPersonsOnInit() async {
-		await finishTasks()
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Then
 		XCTAssertTrue(displayPersonsUseCaseSpy.displayPersonsCalled, "Expected to call loadiing of Persons")
 		XCTAssertTrue(
@@ -35,7 +36,7 @@ class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningPersonOverviewScreenForPersonAtCorrectIndex() async {
-		await finishTasks()
+		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
 		// Given
 		let index = 0
 		// When
@@ -45,7 +46,7 @@ class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningNilForIncorrectPersonIndex() async {
-		await finishTasks()
+		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
 		// When
 		let screenAt3 = sut.pageViewControllerScreen(atIndex: 2)
 		let screenAtMinus1 = sut.pageViewControllerScreen(atIndex: -1)
@@ -55,7 +56,7 @@ class PersonsListPresenterTests: XCTestCase {
 	}
 
 	func test_SUT_ReturningEmptyPersonScreenForLastPageIndex() async {
-		await finishTasks()
+		await waitUntil { self.displayPersonsUseCaseSpy.displayPersonsCalled }
 		// Given
 		let lastIndex = sut.numberOfPages() - 1
 		// When
@@ -64,7 +65,11 @@ class PersonsListPresenterTests: XCTestCase {
 		XCTAssertTrue(screen is EmptyPersonView, "Expected to return EmptyPerson Screen")
 	}
 
-	private func finishTasks() async {
-		for _ in 0..<3 { await Task.yield() }
+	private func waitUntil(_ condition: @escaping () -> Bool) async {
+		for _ in 0..<1_000 {
+			if condition() { return }
+			await Task.yield()
+		}
+		XCTFail("Timed out waiting for async presenter work")
 	}
 }
