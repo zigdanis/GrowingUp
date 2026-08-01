@@ -12,14 +12,12 @@ import WidgetKit
 
 private let maxNumberOfPersons = 20
 
-@MainActor
 protocol PersonsListPresenter {
 	func pageViewControllerScreen(atIndex index: Int) -> PageViewControllerViewable?
 	func numberOfPages() -> Int
 	func emptyPageIndex() -> Int
 }
 
-@MainActor
 final class PersonsListPresenterImplementation: PersonsListPresenter {
 	private var cachedScreens = [Int: PageViewControllerViewable]()
 	private var persons = [Person]()

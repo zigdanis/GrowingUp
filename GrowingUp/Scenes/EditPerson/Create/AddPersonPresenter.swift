@@ -9,7 +9,6 @@
 import Core
 import Foundation
 
-@MainActor
 final class AddPersonPresenter: EditPersonPresenter {
 
 	private weak var view: EditPersonView?

@@ -9,7 +9,6 @@
 import Core
 import Foundation
 
-@MainActor
 protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDelegate {
 	var router: EditPersonViewRouter { get }
 	func viewDidLoad()
@@ -29,7 +28,6 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDel
 	func shouldShowRemoveButton() -> Bool
 }
 
-@MainActor
 protocol EditPersonPresenterDelegate: AnyObject {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
@@ -37,7 +35,6 @@ protocol EditPersonPresenterDelegate: AnyObject {
 	func editPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
-@MainActor
 final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	private let person: Person
