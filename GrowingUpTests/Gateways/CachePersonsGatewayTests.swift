@@ -94,7 +94,7 @@ final class CachePersonsGatewayTests: XCTestCase {
 		waitForExpectations(timeout: 1)
 	}
 
-	func testRemoveReportsCoreDataSuccessAfterBestEffortImageCleanup() {
+	func testRemoveReportsCoreDataSuccessAfterBestEffortImageCleanup() async {
 		let person = Person.createPerson()
 		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
 		imageStoreSpy.deleteError = CoreError.unknownError
@@ -113,7 +113,7 @@ final class CachePersonsGatewayTests: XCTestCase {
 			completed.fulfill()
 		}
 
-		waitForExpectations(timeout: 1)
+		await fulfillment(of: [completed], timeout: 1)
 		XCTAssertEqual(completionCount, 1)
 	}
 
