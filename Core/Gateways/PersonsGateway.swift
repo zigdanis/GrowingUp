@@ -32,11 +32,9 @@ public extension PersonsGateway {
 
 	func add(parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
-		let person = try await withCheckedThrowingContinuation { continuation in
+		return try await withCheckedThrowingContinuation { continuation in
 			add(parameters: parameters) { continuation.resume(with: $0) }
 		}
-		try Task.checkCancellation()
-		return person
 	}
 
 	func fetchPersons() async throws -> [Person] {
@@ -50,11 +48,9 @@ public extension PersonsGateway {
 
 	func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
-		let person = try await withCheckedThrowingContinuation { continuation in
+		return try await withCheckedThrowingContinuation { continuation in
 			edit(person: person, with: parameters) { continuation.resume(with: $0) }
 		}
-		try Task.checkCancellation()
-		return person
 	}
 
 	func remove(person: Person) async throws {
