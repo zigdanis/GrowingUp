@@ -14,26 +14,24 @@ public enum ImagesCache {
 
 	public static let memoryCache = MemoryCache<UIImage>()
 
-	public static func loadImageFromDiskOrMemory(
-		image: PersonImage, completion: @escaping (Result<UIImage, CoreError>) -> Void
-	) {
-		DispatchQueue.global(qos: .userInitiated).async {
-			var result = Result<UIImage, CoreError>.failure(.unknownError)
-			if let memoryImg = memoryCache.value(forKey: image.cachingKey) {
-				result = .success(memoryImg)
-			} else {
-				let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
-				do {
-					let image = try Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self)
-					result = .success(image)
-				} catch {
-					let coreError = CoreError(error: error)
-					result = .failure(coreError)
+	public static func loadImageFromDiskOrMemory(image: PersonImage) async throws -> UIImage {
+		try Task.checkCancellation()
+		let loadedImage = try await withCheckedThrowingContinuation { continuation in
+			DispatchQueue.global(qos: .userInitiated).async {
+				if let memoryImg = memoryCache.value(forKey: image.cachingKey) {
+					continuation.resume(returning: memoryImg)
+				} else {
+					let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
+					do {
+						continuation.resume(
+							returning: try Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self))
+					} catch {
+						continuation.resume(throwing: CoreError(error: error))
+					}
 				}
 			}
-			DispatchQueue.main.async {
-				completion(result)
-			}
 		}
+		try Task.checkCancellation()
+		return loadedImage
 	}
 }

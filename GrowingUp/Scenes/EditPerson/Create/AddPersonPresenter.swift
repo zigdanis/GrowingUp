@@ -9,6 +9,7 @@
 import Core
 import Foundation
 
+@MainActor
 final class AddPersonPresenter: EditPersonPresenter {
 
 	private weak var view: EditPersonView?
@@ -62,16 +63,16 @@ final class AddPersonPresenter: EditPersonPresenter {
 	}
 
 	private func configureInitialStateForToggle() {
-		fetchWidgetPersonsUseCase.fetchWidgetPersons { result in
-			switch result {
-			case .success(let favs):
-				let maxReached = favs.count >= 3
-				self.toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: !maxReached)
-			case .failure(let error):
-				self.toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: false)
-				Logging.logError(error)
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			do {
+				let maxReached = try await fetchWidgetPersonsUseCase.fetchWidgetPersons().count >= 3
+				toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: !maxReached)
+			} catch {
+				toggleCellPresenter.valueFor(row: EPC.addToWidgetRow, didChangeTo: false)
+				Logging.logError(CoreError(error: error))
 			}
-			self.view?.reloadData()
+			view?.reloadData()
 		}
 	}
 
@@ -85,13 +86,13 @@ final class AddPersonPresenter: EditPersonPresenter {
 
 		guard let parameters = params else { return }
 		updateNavigationItemsState(isEnabled: false)
-		addPersonUseCase.add(parameters: parameters) { result in
-			self.updateNavigationItemsState(isEnabled: true)
-			switch result {
-			case let .success(person):
-				self.handlePersonAdded(person)
-			case let .failure(error):
-				self.handleAddPersonError(error)
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			defer { updateNavigationItemsState(isEnabled: true) }
+			do {
+				handlePersonAdded(try await addPersonUseCase.add(parameters: parameters))
+			} catch {
+				handleAddPersonError(error)
 			}
 		}
 	}

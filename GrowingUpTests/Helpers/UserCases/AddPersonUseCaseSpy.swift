@@ -16,18 +16,18 @@ class AddPersonUseCaseSpy: AddPersonUseCase {
 	var resultToBeReturned: Result<Person, CoreError>!
 	var callCompletionHandlerImmediate = true
 	var personToAddParameters: AddPersonParameters?
-	private var completionHandler: AddPersonUseCaseCompletionHandler?
+	private var continuation: CheckedContinuation<Person, Error>?
 
-	func add(parameters: AddPersonParameters, completionHandler: @escaping AddPersonUseCaseCompletionHandler) {
+	func add(parameters: AddPersonParameters) async throws -> Person {
 		personToAddParameters = parameters
-		self.completionHandler = completionHandler
-		if callCompletionHandlerImmediate {
-			callCompletionHandler()
+		if callCompletionHandlerImmediate { return try resultToBeReturned.get() }
+		return try await withCheckedThrowingContinuation { continuation in
+			self.continuation = continuation
 		}
 	}
 
 	func callCompletionHandler() {
-		self.completionHandler?(resultToBeReturned)
+		continuation?.resume(with: resultToBeReturned.mapError { $0 as Error })
+		continuation = nil
 	}
-
 }

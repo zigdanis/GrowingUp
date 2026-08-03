@@ -14,6 +14,7 @@ protocol DateCellView: AnyObject {
 	func setup(with delegate: DateCellDelegate?, forRow row: Int)
 }
 
+@MainActor
 protocol DateCellDelegate: AnyObject {
 	func dateCell(_ cell: DateCellView, didChangeBirthdayTo date: Date)
 }

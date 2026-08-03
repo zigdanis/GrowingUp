@@ -56,13 +56,14 @@ struct AgeWidgetProvider: TimelineProvider {
 			completion(AgeEntry(date: Date(), persons: Self.samplePersons()))
 			return
 		}
-		loadPersons { persons in
-			completion(AgeEntry(date: Date(), persons: persons))
+		Task {
+			completion(AgeEntry(date: Date(), persons: await loadPersons()))
 		}
 	}
 
 	func getTimeline(in context: Context, completion: @escaping (Timeline<AgeEntry>) -> Void) {
-		loadPersons { persons in
+		Task {
+			let persons = await loadPersons()
 			let start = Date()
 			var entries: [AgeEntry] = []
 			for offset in 0..<entriesPerTimeline {
@@ -78,49 +79,32 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	/// Fetches the pinned people (sorted by `createdDate`, matching the app's
 	/// deep-link indexing) and loads their widget images from the shared cache.
-	private func loadPersons(completion: @escaping ([WidgetPerson]) -> Void) {
-		fetchUseCase.fetchWidgetPersons { result in
-			switch result {
-			case .success(let people):
-				let limited = Array(people.prefix(rowsLimit))
-				resolveImages(for: limited, completion: completion)
-			case .failure(let error):
-				Logging.logError(error)
-				completion([])
-			}
+	private func loadPersons() async -> [WidgetPerson] {
+		do {
+			let people = try await fetchUseCase.fetchWidgetPersons()
+			return await resolveImages(for: Array(people.prefix(rowsLimit)))
+		} catch {
+			Logging.logError(CoreError(error: error))
+			return []
 		}
 	}
 
-	private func resolveImages(for people: [Person], completion: @escaping ([WidgetPerson]) -> Void) {
-		var widgetPersons = [WidgetPerson?](repeating: nil, count: people.count)
-		let group = DispatchGroup()
-
+	private func resolveImages(for people: [Person]) async -> [WidgetPerson] {
+		var resolved = [WidgetPerson]()
 		for (index, person) in people.enumerated() {
-			func store(_ image: UIImage?) {
-				widgetPersons[index] = WidgetPerson(
+			var image: UIImage?
+			if let personImage = PersonImage(id: person.widgetPicId) {
+				image = try? await ImagesCache.loadImageFromDiskOrMemory(image: personImage)
+			}
+			resolved.append(
+				WidgetPerson(
 					id: person.id,
 					index: index,
 					name: person.name,
 					birthday: person.birthday,
-					image: image)
-			}
-			guard let personImage = PersonImage(id: person.widgetPicId) else {
-				store(nil)
-				continue
-			}
-			group.enter()
-			ImagesCache.loadImageFromDiskOrMemory(image: personImage) { imageResult in
-				switch imageResult {
-				case .success(let image): store(image)
-				case .failure: store(nil)
-				}
-				group.leave()
-			}
+					image: image))
 		}
-
-		group.notify(queue: .main) {
-			completion(widgetPersons.compactMap { $0 })
-		}
+		return resolved
 	}
 
 	// MARK: - Previews / placeholder

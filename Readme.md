@@ -90,9 +90,10 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
 * **[swift-format](https://github.com/swiftlang/swift-format)** uses the
   repository `.swift-format` policy. Run `scripts/format-swift.sh` to format all
   first-party Swift sources or `scripts/check-formatting.sh` to check without
-  changing files. The formatter bundled with the selected Xcode toolchain is
-  used locally and in CI. Zed uses the same formatter automatically on save via
-  `.zed/settings.json`.
+  changing files. The scripts use the formatter from the selected Xcode
+  toolchain on macOS and a standalone `swift-format` on Linux. On Linux,
+  install the pinned toolchain with `swiftly install`. CI uses Xcode's formatter.
+  Zed uses the same formatter automatically on save via `.zed/settings.json`.
 * **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
   `scripts/lint-swift.sh` for the same strict check used in CI.

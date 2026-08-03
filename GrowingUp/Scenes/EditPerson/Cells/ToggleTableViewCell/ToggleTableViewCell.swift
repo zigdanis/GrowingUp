@@ -14,6 +14,7 @@ protocol ToggleCellView {
 	func setup(with delegate: ToggleCellDelegate?, forRow row: Int)
 }
 
+@MainActor
 protocol ToggleCellDelegate: AnyObject {
 	func toggle(toggle: ToggleCellView, didChangeStateForRow row: Int, to state: Bool)
 }

@@ -8,10 +8,12 @@
 
 import Foundation
 
+@MainActor
 protocol EmptyPersonPresenter {
 	func addButtonPressed()
 }
 
+@MainActor
 final class EmptyPersonPresenterImplementation: EmptyPersonPresenter {
 
 	private let router: EmptyPersonViewRouter

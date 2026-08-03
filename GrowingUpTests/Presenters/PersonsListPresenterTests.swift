@@ -11,7 +11,8 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
-class PersonsListPresenterTests: XCTestCase {
+@MainActor
+final class PersonsListPresenterTests: XCTestCase {
 
 	var sut: PersonsListPresenterImplementation!
 	let personsListSpy = PersonsListViewSpy()
@@ -23,7 +24,8 @@ class PersonsListPresenterTests: XCTestCase {
 		sut = PersonsListPresenterImplementation(view: personsListSpy, displayPersonsUseCase: displayPersonsUseCaseSpy)
 	}
 
-	func test_SUT_LoadingPersonsOnInit() {
+	func test_SUT_LoadingPersonsOnInit() async {
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Then
 		XCTAssertTrue(displayPersonsUseCaseSpy.displayPersonsCalled, "Expected to call loadiing of Persons")
 		XCTAssertTrue(
@@ -33,7 +35,8 @@ class PersonsListPresenterTests: XCTestCase {
 			"Expected to return number of pages according to returned Persons array")
 	}
 
-	func test_SUT_ReturningPersonOverviewScreenForPersonAtCorrectIndex() {
+	func test_SUT_ReturningPersonOverviewScreenForPersonAtCorrectIndex() async {
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Given
 		let index = 0
 		// When
@@ -42,7 +45,8 @@ class PersonsListPresenterTests: XCTestCase {
 		XCTAssertTrue(screen is PersonOverviewView, "Expected to return PersonOverview Screen")
 	}
 
-	func test_SUT_ReturningNilForIncorrectPersonIndex() {
+	func test_SUT_ReturningNilForIncorrectPersonIndex() async {
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// When
 		let screenAt3 = sut.pageViewControllerScreen(atIndex: 2)
 		let screenAtMinus1 = sut.pageViewControllerScreen(atIndex: -1)
@@ -51,12 +55,21 @@ class PersonsListPresenterTests: XCTestCase {
 		XCTAssertNil(screenAtMinus1, "Expected to return nil Screen for incorrect index")
 	}
 
-	func test_SUT_ReturningEmptyPersonScreenForLastPageIndex() {
+	func test_SUT_ReturningEmptyPersonScreenForLastPageIndex() async {
+		await waitUntil { self.personsListSpy.didCallUpdateListOfScreens }
 		// Given
 		let lastIndex = sut.numberOfPages() - 1
 		// When
 		let screen = sut.pageViewControllerScreen(atIndex: lastIndex)
 		// Then
 		XCTAssertTrue(screen is EmptyPersonView, "Expected to return EmptyPerson Screen")
+	}
+
+	private func waitUntil(_ condition: @escaping () -> Bool) async {
+		for _ in 0..<1_000 {
+			if condition() { return }
+			await Task.yield()
+		}
+		XCTFail("Timed out waiting for async presenter work")
 	}
 }

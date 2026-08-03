@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A10000000000000000000002 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ImageStore.swift */; };
+		A10000000000000000000004 /* ImageStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* ImageStoreSpy.swift */; };
 		09051B4821C558DB008A99C6 /* Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 09051B3B21C558DB008A99C6 /* Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		09051B4E21C55A13008A99C6 /* WidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */; };
 		09051B5A21C55EB6008A99C6 /* Core.h in Headers */ = {isa = PBXBuildFile; fileRef = 09051B5821C55EB6008A99C6 /* Core.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,7 +40,6 @@
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
-		0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EF2259190000212F29 /* TaskManagerSpy.swift */; };
 		092C32CF22612A0E0067B2DB /* PersonsListPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CE22612A0E0067B2DB /* PersonsListPresenterTests.swift */; };
 		092C32D122612A6C0067B2DB /* PersonsListViewSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D022612A6C0067B2DB /* PersonsListViewSpy.swift */; };
 		092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */; };
@@ -59,7 +60,6 @@
 		095000DF226DEBA800789BED /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095000D1226DD3C100789BED /* Constants.swift */; };
 		095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */; };
 		095000E2226DED6200789BED /* ImagesCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC492267B4D100E74C13 /* ImagesCache.swift */; };
-		095000E3226DEDB600789BED /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092AA35D2257C79D002EAEE8 /* TaskManager.swift */; };
 		095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC432267722300E74C13 /* EditPersonPresenterTests.swift */; };
 		095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */; };
 		096E61ED226667F6000181D4 /* AddPersonConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096E61EC226667F6000181D4 /* AddPersonConfigurator.swift */; };
@@ -241,14 +241,14 @@
 		091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsGatewaySpy.swift; sourceTree = "<group>"; };
 		0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGatewayTests.swift; sourceTree = "<group>"; };
-		0929F1EF2259190000212F29 /* TaskManagerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManagerSpy.swift; sourceTree = "<group>"; };
-		092AA35D2257C79D002EAEE8 /* TaskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskManager.swift; sourceTree = "<group>"; };
 		092C32CC226129310067B2DB /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		092C32CE22612A0E0067B2DB /* PersonsListPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListPresenterTests.swift; sourceTree = "<group>"; };
 		092C32D022612A6C0067B2DB /* PersonsListViewSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonsListViewSpy.swift; sourceTree = "<group>"; };
 		092C32D222612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPersonsUseCaseSpy.swift; sourceTree = "<group>"; };
 		092F4191226FA31A0049E29E /* RemoveButtonFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveButtonFooter.swift; sourceTree = "<group>"; };
 		09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePersonsGateway.swift; sourceTree = "<group>"; };
+		A10000000000000000000001 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* ImageStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStoreSpy.swift; sourceTree = "<group>"; };
 		0949E15B22C6962B00980B85 /* ToggleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTableViewCell.swift; sourceTree = "<group>"; };
 		0949E15D22C697D500980B85 /* ToggleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToggleTableViewCell.xib; sourceTree = "<group>"; };
 		0949E15F22C698B000980B85 /* ToggleCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCellPresenter.swift; sourceTree = "<group>"; };
@@ -557,6 +557,7 @@
 		091BEEB3223D61E800A3D057 /* Gateways */ = {
 			isa = PBXGroup;
 			children = (
+				A10000000000000000000003 /* ImageStoreSpy.swift */,
 				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
 			);
 			path = Gateways;
@@ -565,7 +566,6 @@
 		0929F1E42258C5D600212F29 /* iOS Framework APIs */ = {
 			isa = PBXGroup;
 			children = (
-				092AA35D2257C79D002EAEE8 /* TaskManager.swift */,
 			);
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
@@ -581,7 +581,6 @@
 		0929F1EE225918EA00212F29 /* iOS Framework APIs */ = {
 			isa = PBXGroup;
 			children = (
-				0929F1EF2259190000212F29 /* TaskManagerSpy.swift */,
 			);
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
@@ -590,6 +589,7 @@
 			isa = PBXGroup;
 			children = (
 				09410BCE2253DAEC006D672F /* CachePersonsGateway.swift */,
+				A10000000000000000000001 /* ImageStore.swift */,
 				095DEC492267B4D100E74C13 /* ImagesCache.swift */,
 				09F6B52523535E26003A1A01 /* MemoryCache.swift */,
 			);
@@ -1127,6 +1127,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		09AC10CD22457FB500AC12D5 /* Swift Lint */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1141,7 +1142,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\nif command -v swiftlint >/dev/null 2>&1; then\n    \"$SRCROOT/scripts/lint-swift.sh\"\nelse\n    echo \"note: SwiftLint is unavailable; lint is enforced by the dedicated CI job\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1166,13 +1167,13 @@
 				0983E768226D9658007EC8D2 /* AddPersonParameters.swift in Sources */,
 				0983E767226D9658007EC8D2 /* Person.swift in Sources */,
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
-				095000E3226DEDB600789BED /* TaskManager.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */,
 				095000DE226DEB7100789BED /* CoreDataStack.swift in Sources */,
 				095000E1226DED5E00789BED /* CachePersonsGateway.swift in Sources */,
+				A10000000000000000000002 /* ImageStore.swift in Sources */,
 				0983E766226D9652007EC8D2 /* FetchPersonsUseCase.swift in Sources */,
 				09CFE6B02270290D007AB456 /* RemovePersonUseCase.swift in Sources */,
 				095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */,
@@ -1207,13 +1208,13 @@
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
 				095DEC442267722300E74C13 /* EditPersonPresenterTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
+				A10000000000000000000004 /* ImageStoreSpy.swift in Sources */,
 				09CD01E02325758E0075B3FA /* ToggleCellPresenterStub.swift in Sources */,
 				09E328872240D32D002A0A5C /* TextFieldCellViewSpy.swift in Sources */,
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
-				0929F1F02259190000212F29 /* TaskManagerSpy.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				09AE1B2C2263BDD400D6A78B /* TextFieldObserverSpy.swift in Sources */,
