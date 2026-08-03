@@ -111,6 +111,18 @@ Zed formats Swift files on save using the project `.zed/settings.json`. It
 passes the unsaved buffer through Xcode's `swift-format` and uses the file path
 to discover the repository `.swift-format` configuration.
 
+For build diagnostics and code completion, install
+[`xcode-build-server`](https://github.com/SolaWing/xcode-build-server) and
+generate its machine-specific configuration from the repository root:
+
+```bash
+brew install xcode-build-server
+xcode-build-server config -project GrowingUp.xcodeproj -scheme GrowingUp
+```
+
+The generated `buildServer.json` contains absolute local paths and is ignored
+by Git.
+
 The official `swift-format` project does not provide a repository-aware Xcode
 Source Editor Extension. Xcode's **Editor → Structure → Re-Indent** command also
 does not apply `.swift-format`. To format one saved file exactly, run:
