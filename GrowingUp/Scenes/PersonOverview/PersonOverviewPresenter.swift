@@ -30,6 +30,10 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		self.router = router
 	}
 
+	deinit {
+		timer?.invalidate()
+	}
+
 	func loadPerson() {
 		view?.displayPersonName(name: person.name)
 		let personAppPic = PersonImage(id: person.appPicId)
