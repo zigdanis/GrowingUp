@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct AddPersonParameters: Equatable {
+public struct AddPersonParameters: Equatable, Sendable {
 	public var name: String
 	public var dayOfBirth: Date
 	public var timeOfBirth: Date

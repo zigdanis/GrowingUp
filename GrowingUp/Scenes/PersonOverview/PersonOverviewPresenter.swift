@@ -45,8 +45,10 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 	private func scheduleAgeTicker() {
 		timer?.invalidate()
 		showAge()
-		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-			self.showAge()
+		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+			Task { @MainActor in
+				self?.showAge()
+			}
 		}
 	}
 
