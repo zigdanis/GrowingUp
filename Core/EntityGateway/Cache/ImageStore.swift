@@ -13,7 +13,7 @@ public protocol ImageStore {
 	func delete(_ image: PersonImage) async throws
 }
 
-public final class DiskImageStore: ImageStore {
+public final class DiskImageStore: @unchecked Sendable, ImageStore {
 
 	private static let queue = DispatchQueue(label: "com.zigdanis.GrowingUp.image-store", qos: .utility)
 	private let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
