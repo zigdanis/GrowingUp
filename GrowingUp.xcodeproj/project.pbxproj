@@ -1142,7 +1142,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\nif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint\nelse\n    echo \"error: SwiftLint is unavailable; install it with 'brew install swiftlint'\" >&2\n    exit 1\nfi\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\nif command -v swiftlint >/dev/null 2>&1; then\n    swiftlint\nelse\n    echo \"note: SwiftLint is unavailable; lint is enforced by the dedicated CI job\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
