@@ -197,40 +197,101 @@ private struct LightweightPhotoPreviewView: View {
 	let onBack: () -> Void
 	let onAllPhotos: () -> Void
 
-	@State private var photoModel = PhotoGridViewModel()
-	@State private var selectedAsset: PhotoAsset?
+	@State private var photoModel: PhotoGridViewModel
+
+	init(
+		onPicked: @escaping (UIImage) -> Void,
+		onBack: @escaping () -> Void,
+		onAllPhotos: @escaping () -> Void
+	) {
+		_photoModel = State(initialValue: PhotoGridViewModel())
+		self.onPicked = onPicked
+		self.onBack = onBack
+		self.onAllPhotos = onAllPhotos
+	}
+
+	init(
+		photoModel: PhotoGridViewModel,
+		onPicked: @escaping (UIImage) -> Void,
+		onBack: @escaping () -> Void,
+		onAllPhotos: @escaping () -> Void
+	) {
+		_photoModel = State(initialValue: photoModel)
+		self.onPicked = onPicked
+		self.onBack = onBack
+		self.onAllPhotos = onAllPhotos
+	}
 
 	var body: some View {
 		NavigationStack {
-			PhotoGridView(viewModel: photoModel, selectedAsset: $selectedAsset)
+			PhotoGridView(viewModel: photoModel, onPicked: onPicked)
 				.background(Color(.secondarySystemBackground))
-				.ignoresSafeArea(.container, edges: .bottom)
-				.toolbar {
-					ToolbarItemGroup(placement: .bottomBar) {
-						Button(action: onBack) {
-							Image(systemName: "chevron.left")
-						}
-						.accessibilityLabel(Text("Back"))
-
-						Spacer()
-
-						if selectedAsset == nil {
-							Button("All Photos", action: onAllPhotos)
-						} else {
-							Button("Select photo", action: confirmSelection)
-								.buttonStyle(.borderedProminent)
-								.tint(.blue)
-						}
-					}
+				.safeAreaInset(edge: .bottom) {
+					PhotoPreviewControls(onBack: onBack, onAllPhotos: onAllPhotos)
 				}
 				.toolbar(.hidden, for: .navigationBar)
-				.toolbarBackgroundVisibility(.hidden, for: .bottomBar)
+		}
+	}
+}
+
+private struct PhotoPreviewControls: View {
+	let onBack: () -> Void
+	let onAllPhotos: () -> Void
+
+	var body: some View {
+		if #available(iOS 26.0, *) {
+			GlassEffectContainer {
+				HStack {
+					Button(action: onBack) {
+						Image(systemName: "chevron.left")
+							.foregroundStyle(.white)
+							.frame(width: 44, height: 44)
+					}
+					.buttonStyle(.plain)
+					.glassEffect()
+					.accessibilityLabel(Text("Back"))
+
+					Spacer()
+
+					Button(action: onAllPhotos) {
+						Text("All Photos")
+							.font(.headline)
+							.foregroundStyle(.white)
+							.padding(.horizontal, 20)
+							.frame(height: 44)
+					}
+					.buttonStyle(.plain)
+					.glassEffect()
+				}
+				.padding(.horizontal, 16)
+				.padding(.vertical, 8)
+			}
+		} else {
+			controls
+				.buttonStyle(.bordered)
+				.tint(.black)
 		}
 	}
 
-	private func confirmSelection() {
-		guard let selectedAsset else { return }
-		photoModel.select(selectedAsset, completion: onPicked)
+	private var controls: some View {
+		HStack {
+			Button(action: onBack) {
+				Image(systemName: "chevron.left")
+					.foregroundStyle(.white)
+			}
+			.accessibilityLabel(Text("Back"))
+
+			Spacer()
+
+			Button(action: onAllPhotos) {
+				Text("All Photos")
+					.font(.headline)
+					.foregroundStyle(.white)
+			}
+		}
+		.controlSize(.large)
+		.padding(.horizontal, 16)
+		.padding(.vertical, 8)
 	}
 }
 
@@ -316,4 +377,67 @@ private struct SystemPhotoPicker: UIViewControllerRepresentable {
 private struct IdentifiableImage: Identifiable {
 	let id = UUID()
 	let image: UIImage
+}
+
+#Preview("Camera") {
+	ImageCaptureFlowView(
+		source: .camera,
+		cropShape: .rectangle,
+		onComplete: { _ in },
+		onCancel: {}
+	)
+}
+
+#Preview("Photos") {
+	LightweightPhotoPreviewView(
+		photoModel: PhotoGridViewModel(previewImages: PreviewPhotos.images),
+		onPicked: { _ in },
+		onBack: {},
+		onAllPhotos: {}
+	)
+}
+
+private enum PreviewPhotos {
+	static let images = [
+		image(symbol: "figure.2.and.child.holdinghands", colors: [.systemOrange, .systemPink]),
+		image(symbol: "mountain.2.fill", colors: [.systemTeal, .systemBlue]),
+		image(symbol: "sun.max.fill", colors: [.systemYellow, .systemOrange]),
+		image(symbol: "pawprint.fill", colors: [.systemIndigo, .systemPurple]),
+		image(symbol: "balloon.2.fill", colors: [.systemPink, .systemRed]),
+		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal]),
+		image(symbol: "beach.umbrella.fill", colors: [.systemCyan, .systemBlue]),
+		image(symbol: "birthday.cake.fill", colors: [.systemPink, .systemOrange]),
+		image(symbol: "bicycle", colors: [.systemGreen, .systemBlue]),
+		image(symbol: "camera.fill", colors: [.systemPurple, .systemPink]),
+		image(symbol: "car.fill", colors: [.systemRed, .systemOrange]),
+		image(symbol: "cloud.sun.fill", colors: [.systemBlue, .systemYellow]),
+		image(symbol: "figure.hiking", colors: [.systemBrown, .systemGreen]),
+		image(symbol: "fish.fill", colors: [.systemTeal, .systemIndigo]),
+		image(symbol: "gift.fill", colors: [.systemRed, .systemPurple]),
+		image(symbol: "house.fill", colors: [.systemOrange, .systemBrown]),
+		image(symbol: "moon.stars.fill", colors: [.systemIndigo, .black]),
+		image(symbol: "sailboat.fill", colors: [.systemCyan, .systemTeal])
+	]
+
+	private static func image(symbol: String, colors: [UIColor]) -> UIImage {
+		let size = CGSize(width: 360, height: 360)
+		return UIGraphicsImageRenderer(size: size).image { context in
+			let gradient = CGGradient(
+				colorsSpace: CGColorSpaceCreateDeviceRGB(),
+				colors: colors.map(\.cgColor) as CFArray,
+				locations: [0, 1]
+			)!
+			context.cgContext.drawLinearGradient(
+				gradient,
+				start: .zero,
+				end: CGPoint(x: size.width, y: size.height),
+				options: []
+			)
+			let configuration = UIImage.SymbolConfiguration(pointSize: 110, weight: .medium)
+			let icon = UIImage(systemName: symbol, withConfiguration: configuration)!
+			icon.withTintColor(.white, renderingMode: .alwaysOriginal).draw(
+				at: CGPoint(x: (size.width - icon.size.width) / 2, y: (size.height - icon.size.height) / 2)
+			)
+		}
+	}
 }

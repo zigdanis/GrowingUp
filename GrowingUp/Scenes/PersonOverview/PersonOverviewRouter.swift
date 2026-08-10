@@ -10,10 +10,12 @@ import Core
 import Foundation
 import UIKit
 
+@MainActor
 protocol PersonOverviewRouter {
 	func showEdit(for person: Person, presenterDelegate: EditPersonPresenterDelegate?)
 }
 
+@MainActor
 final class PersonOverviewRouterImplementation: PersonOverviewRouter {
 
 	private weak var personOverviewViewController: PersonOverviewViewController?

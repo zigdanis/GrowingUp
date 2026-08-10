@@ -1,6 +1,0 @@
-[marketplaces.ios-project-plugins]
-source_type = "local"
-source = "."
-
-[plugins."build-ios-apps@ios-project-plugins"]
-enabled = true

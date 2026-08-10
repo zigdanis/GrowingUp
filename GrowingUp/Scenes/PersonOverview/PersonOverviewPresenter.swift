@@ -9,11 +9,13 @@
 import Core
 import Foundation
 
+@MainActor
 protocol PersonOverviewPresenter {
 	func loadPerson()
 	func showEditPerson()
 }
 
+@MainActor
 final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 
 	weak var view: PersonOverviewView?
@@ -26,6 +28,10 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 		self.person = person
 		self.view = personOverviewView
 		self.router = router
+	}
+
+	deinit {
+		timer?.invalidate()
 	}
 
 	func loadPerson() {
@@ -43,8 +49,10 @@ final class PersonOverviewPresenterImplementation: PersonOverviewPresenter {
 	private func scheduleAgeTicker() {
 		timer?.invalidate()
 		showAge()
-		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-			self.showAge()
+		timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+			Task { @MainActor in
+				self?.showAge()
+			}
 		}
 	}
 

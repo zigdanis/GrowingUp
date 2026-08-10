@@ -20,24 +20,15 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		return CoreDataPersonsGateway(coreDataStack: inMemoryCoreDataStack)
 	}
 
-	func test_SUT_AddPersonWithParameters_Succeed() {
-		// Given
+	func test_SUT_AddPersonWithParameters_Succeed() async throws {
 		let addPersonParameters = AddPersonParameters.createParameters()
-		let addPersonCompletionHandlerExpectation = expectation(description: "Add person completion handler expectation")
-		// When
-		inMemoryCoreDataGateway.add(parameters: addPersonParameters) { (result) in
-			// Then
-			guard let person = try? result.get() else {
-				return XCTFail("Should've saved the person with success")
-			}
-			assert(person: person, builtFromParameters: addPersonParameters)
-			addPersonCompletionHandlerExpectation.fulfill()
-		}
-		// Exit
-		waitForExpectations(timeout: 5, handler: nil)
+
+		let person = try await inMemoryCoreDataGateway.add(parameters: addPersonParameters)
+
+		assert(person: person, builtFromParameters: addPersonParameters)
 	}
 
-	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() {
+	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() async throws {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
@@ -49,54 +40,25 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		editParams.isOnWidget = true
 		editParams.dayOfBirth = Date().addingTimeInterval(-60 * 60 * 24 * 365 * 10)
 		editParams.timeOfBirth = Date().addingTimeInterval(-60)
-		let expect = expectation(description: "Edit")
-		// When
-		inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams) { result in
-			// Then
-			switch result {
-			case .success(let person):
-				assert(person: person, builtFromParameters: editParams)
-			case .failure(let error):
-				XCTFail("Expected to successfully edit person, but received error = \(error.localizedDescription)")
-			}
-			expect.fulfill()
-		}
-		// Exit
-		waitForExpectations(timeout: 1)
+
+		let person = try await inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams)
+
+		assert(person: person, builtFromParameters: editParams)
 	}
 
-	func test_SUT_RemovePerson_ShouldSucceed() {
+	func test_SUT_RemovePerson_ShouldSucceed() async throws {
 		// Given
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
 		cdPerson.createdDate = Date()
 		cdPerson.birthdate = Date()
 		inMemoryCoreDataStack.saveContext()
-		let expect = expectation(description: "Remove")
-		// When
-		inMemoryCoreDataGateway.remove(person: cdPerson.person) { result in
-			// Then
-			assertOk(result, "Expected to successfully edit person, but received error")
-			expect.fulfill()
-		}
-		// Exit
-		waitForExpectations(timeout: 1)
+
+		try await inMemoryCoreDataGateway.remove(person: cdPerson.person)
 	}
 
-	func test_SUT_FetchPersons_ShouldSucceed() {
-		// Given
-		let workIsDone = expectation(description: "Fetch persons completion handler expectation")
-		// When
-		inMemoryCoreDataGateway.fetchPersons { result in
-			// Then
-			switch result {
-			case .failure: XCTFail("Should've fetched persons with success")
-			default: ()
-			}
-			workIsDone.fulfill()
-		}
-		// Exit
-		waitForExpectations(timeout: 0.1, handler: nil)
+	func test_SUT_FetchPersons_ShouldSucceed() async throws {
+		_ = try await inMemoryCoreDataGateway.fetchPersons()
 	}
 
 }

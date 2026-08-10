@@ -33,6 +33,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	private let widgetPicRemoveBadge = ImagesTableViewCell.makeRemoveBadge()
 	private let appPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
 	private let widgetPicMenuButton = ImagesTableViewCell.makeSourceMenuButton()
+	private var appPicRequestID = UUID()
+	private var widgetPicRequestID = UUID()
 
 	override func awakeFromNib() {
 		super.awakeFromNib()
@@ -110,6 +112,8 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 	// MARK: - ImagesCellView
 
 	func display(appPic: PersonImage?) {
+		appPicRequestID = UUID()
+		let requestID = appPicRequestID
 		appPicRemoveBadge.isHidden = (appPic == nil)
 		guard let appPic = appPic else {
 			appPicButton.drawImage(nil)
@@ -118,18 +122,21 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = appPic.uiImage {
 			appPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDiskOrMemory(image: appPic) { result in
-				switch result {
-				case .success(let img):
-					self.appPicButton.drawImage(img)
-				case .failure(let error):
-					Logging.logError(error)
+			Task { @MainActor [weak self] in
+				do {
+					let image = try await ImagesCache.loadImageFromDiskOrMemory(image: appPic)
+					guard self?.appPicRequestID == requestID else { return }
+					self?.appPicButton.drawImage(image)
+				} catch {
+					Logging.logError(CoreError(error: error))
 				}
 			}
 		}
 	}
 
 	func display(widgetPic: PersonImage?) {
+		widgetPicRequestID = UUID()
+		let requestID = widgetPicRequestID
 		widgetPicRemoveBadge.isHidden = (widgetPic == nil)
 		guard let widgetPic = widgetPic else {
 			widgetPicButton.drawImage(nil)
@@ -138,12 +145,13 @@ final class ImagesTableViewCell: UITableViewCell, ImagesCellView {
 		if let uiImage = widgetPic.uiImage {
 			widgetPicButton.drawImage(uiImage)
 		} else {
-			ImagesCache.loadImageFromDiskOrMemory(image: widgetPic) { result in
-				switch result {
-				case .success(let img):
-					self.widgetPicButton.drawImage(img)
-				case .failure(let error):
-					Logging.logError(error)
+			Task { @MainActor [weak self] in
+				do {
+					let image = try await ImagesCache.loadImageFromDiskOrMemory(image: widgetPic)
+					guard self?.widgetPicRequestID == requestID else { return }
+					self?.widgetPicButton.drawImage(image)
+				} catch {
+					Logging.logError(CoreError(error: error))
 				}
 			}
 		}

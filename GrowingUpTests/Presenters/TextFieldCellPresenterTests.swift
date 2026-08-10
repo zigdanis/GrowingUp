@@ -54,6 +54,7 @@ final class TextFieldCellPresenterTests: XCTestCase {
 		XCTAssertEqual(expectedName, sut.valueFor(row: 0), "The model value in presenter didn't updated after user input")
 	}
 
+	@MainActor
 	func test_SUT_WhenConfiguringCell_PassingObserverToIt() {
 		// Given
 		let tfCellSpy = TextFieldCellViewSpy()

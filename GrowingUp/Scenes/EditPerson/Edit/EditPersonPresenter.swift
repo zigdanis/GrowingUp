@@ -9,6 +9,7 @@
 import Core
 import Foundation
 
+@MainActor
 protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDelegate {
 	var router: EditPersonViewRouter { get }
 	func viewDidLoad()
@@ -28,6 +29,7 @@ protocol EditPersonPresenter: TextFieldObserver, ToggleCellDelegate, DateCellDel
 	func shouldShowRemoveButton() -> Bool
 }
 
+@MainActor
 protocol EditPersonPresenterDelegate: AnyObject {
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didAdd person: Person)
 	func editPersonPresenter(_ presenter: EditPersonPresenter, didEdit person: Person)
@@ -35,6 +37,7 @@ protocol EditPersonPresenterDelegate: AnyObject {
 	func editPersonPresenterCancel(presenter: EditPersonPresenter)
 }
 
+@MainActor
 final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	private let person: Person
@@ -104,13 +107,13 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 		guard let parameters = params else { return }
 		updateNavigationItemsState(isEnabled: false)
-		editPersonUseCase.edit(person: person, with: parameters) { result in
-			self.updateNavigationItemsState(isEnabled: true)
-			switch result {
-			case let .success(person):
-				self.handlePersonEdited(person)
-			case let .failure(error):
-				self.handleEditPersonError(error)
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			defer { updateNavigationItemsState(isEnabled: true) }
+			do {
+				handlePersonEdited(try await editPersonUseCase.edit(person: person, with: parameters))
+			} catch {
+				handleEditPersonError(error)
 			}
 		}
 	}
@@ -121,13 +124,14 @@ final class EditPersonPresenterImplementation: EditPersonPresenter {
 
 	func removePersonPressed() {
 		updateNavigationItemsState(isEnabled: false)
-		removePersonUseCase.remove(person: person) { result in
-			self.updateNavigationItemsState(isEnabled: true)
-			switch result {
-			case .success:
-				self.handlePersonRemoved()
-			case .failure(let error):
-				self.handleEditPersonError(error)
+		Task { @MainActor [weak self] in
+			guard let self else { return }
+			defer { updateNavigationItemsState(isEnabled: true) }
+			do {
+				try await removePersonUseCase.remove(person: person)
+				handlePersonRemoved()
+			} catch {
+				handleEditPersonError(error)
 			}
 		}
 	}

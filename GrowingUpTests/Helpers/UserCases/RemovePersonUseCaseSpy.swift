@@ -15,8 +15,8 @@ final class RemovePersonUseCaseSpy: RemovePersonUseCase {
 	var didCallRemovePerson = false
 	var resultToBeReturned: Result<Void, CoreError>!
 
-	func remove(person: Person, completionHandler: @escaping RemovePersonUseCaseCompletionHandler) {
+	func remove(person: Person) async throws {
 		didCallRemovePerson = true
-		completionHandler(resultToBeReturned)
+		try resultToBeReturned.get()
 	}
 }

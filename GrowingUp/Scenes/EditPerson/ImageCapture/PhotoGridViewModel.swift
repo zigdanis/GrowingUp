@@ -13,9 +13,25 @@ import SwiftUI
 
 /// A single photo-library asset, adapted for SwiftUI identity.
 struct PhotoAsset: Identifiable, Equatable {
-	let asset: PHAsset
-	var id: String { asset.localIdentifier }
-	init(_ asset: PHAsset) { self.asset = asset }
+	let id: String
+	let asset: PHAsset?
+	let previewImage: UIImage?
+
+	init(_ asset: PHAsset) {
+		id = asset.localIdentifier
+		self.asset = asset
+		previewImage = nil
+	}
+
+	init(previewImage: UIImage) {
+		id = UUID().uuidString
+		asset = nil
+		self.previewImage = previewImage
+	}
+
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.id == rhs.id
+	}
 }
 
 @MainActor
@@ -35,10 +51,24 @@ final class PhotoGridViewModel: NSObject {
 	@ObservationIgnored private var fetchResult: PHFetchResult<PHAsset>?
 	@ObservationIgnored private var registered = false
 	@ObservationIgnored private var selectionRequestID: PHImageRequestID?
+	@ObservationIgnored private let isPreview: Bool
+
+	override init() {
+		isPreview = false
+		super.init()
+	}
+
+	init(previewImages: [UIImage]) {
+		authState = .full
+		assets = previewImages.map(PhotoAsset.init(previewImage:))
+		isPreview = true
+		super.init()
+	}
 
 	// MARK: - Lifecycle
 
 	func onAppear() async {
+		guard !isPreview else { return }
 		let status = PHPhotoLibrary.authorizationStatus(for: .readWrite)
 		if status == .notDetermined {
 			let granted = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
@@ -74,7 +104,9 @@ final class PhotoGridViewModel: NSObject {
 	/// Requests a grid thumbnail. Resolves on the first available image so the
 	/// grid paints quickly; PHCachingImageManager dedupes repeated requests.
 	func thumbnail(for asset: PhotoAsset, targetSize: CGSize) async -> UIImage? {
-		await withCheckedContinuation { continuation in
+		if let previewImage = asset.previewImage { return previewImage }
+		guard let photoAsset = asset.asset else { return nil }
+		return await withCheckedContinuation { continuation in
 			let options = PHImageRequestOptions()
 			// High-quality, exactly-sized renditions so the grid never shows a
 			// pixelated degraded placeholder (opportunistic delivers a low-res
@@ -87,7 +119,7 @@ final class PhotoGridViewModel: NSObject {
 			// enforced under actor isolation rather than an unsynchronized flag.
 			let gate = ContinuationGate()
 			imageManager.requestImage(
-				for: asset.asset,
+				for: photoAsset,
 				targetSize: targetSize,
 				contentMode: .aspectFill,
 				options: options
@@ -104,6 +136,12 @@ final class PhotoGridViewModel: NSObject {
 	// MARK: - Single selection -> full resolution
 
 	func select(_ asset: PhotoAsset, completion: @escaping (UIImage) -> Void) {
+		guard !isPreparingSelection else { return }
+		if let previewImage = asset.previewImage {
+			completion(previewImage)
+			return
+		}
+		guard let photoAsset = asset.asset else { return }
 		isPreparingSelection = true
 		selectionProgress = 0
 		selectionFailed = false
@@ -120,7 +158,7 @@ final class PhotoGridViewModel: NSObject {
 			}
 		}
 		selectionRequestID = imageManager.requestImage(
-			for: asset.asset,
+			for: photoAsset,
 			targetSize: PHImageManagerMaximumSize,
 			contentMode: .default,
 			options: options
@@ -178,7 +216,9 @@ final class PhotoGridViewModel: NSObject {
 	}
 
 	deinit {
-		PHPhotoLibrary.shared().unregisterChangeObserver(self)
+		if registered {
+			PHPhotoLibrary.shared().unregisterChangeObserver(self)
+		}
 	}
 }
 

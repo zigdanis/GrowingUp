@@ -1,12 +1,10 @@
 # GrowingUp
 
-[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml)
+[![CI](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml/badge.svg?branch=master&event=push)](https://github.com/zigdanis/GrowingUp/actions/workflows/ci.yml?query=branch%3Amaster+event%3Apush)
 
 iOS app for tracking people and viewing their current age broken down into
 time components — years, months, days, hours, minutes and seconds — updating
 live.
-
-Current version: **2.0.0**.
 
 ## Features
 
@@ -92,9 +90,10 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
 * **[swift-format](https://github.com/swiftlang/swift-format)** uses the
   repository `.swift-format` policy. Run `scripts/format-swift.sh` to format all
   first-party Swift sources or `scripts/check-formatting.sh` to check without
-  changing files. The formatter bundled with the selected Xcode toolchain is
-  used locally and in CI. Zed uses the same formatter automatically on save via
-  `.zed/settings.json`.
+  changing files. The scripts use the formatter from the selected Xcode
+  toolchain on macOS and a standalone `swift-format` on Linux. On Linux,
+  install the pinned toolchain with `swiftly install`. CI uses Xcode's formatter.
+  Zed uses the same formatter automatically on save via `.zed/settings.json`.
 * **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
   `scripts/lint-swift.sh` for the same strict check used in CI.
@@ -112,6 +111,18 @@ xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUp \
 Zed formats Swift files on save using the project `.zed/settings.json`. It
 passes the unsaved buffer through Xcode's `swift-format` and uses the file path
 to discover the repository `.swift-format` configuration.
+
+For build diagnostics and code completion, install
+[`xcode-build-server`](https://github.com/SolaWing/xcode-build-server) and
+generate its machine-specific configuration from the repository root:
+
+```bash
+brew install xcode-build-server
+xcode-build-server config -project GrowingUp.xcodeproj -scheme GrowingUp
+```
+
+The generated `buildServer.json` contains absolute local paths and is ignored
+by Git.
 
 The official `swift-format` project does not provide a repository-aware Xcode
 Source Editor Extension. Xcode's **Editor → Structure → Re-Indent** command also

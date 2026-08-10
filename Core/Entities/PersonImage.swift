@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public struct PersonImage: Equatable {
+public struct PersonImage: @unchecked Sendable, Equatable {
 	public var id: UUID
 	public var uiImage: UIImage?
 	public var cachingKey: String {
@@ -28,7 +28,7 @@ public struct PersonImage: Equatable {
 	}
 }
 
-public struct PersonImages {
+public struct PersonImages: Sendable {
 	public var appPic: PersonImage?
 	public var widgetPic: PersonImage?
 

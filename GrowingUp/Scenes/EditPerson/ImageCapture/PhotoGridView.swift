@@ -11,7 +11,7 @@ import SwiftUI
 
 struct PhotoGridView: View {
 	let viewModel: PhotoGridViewModel
-	@Binding var selectedAsset: PhotoAsset?
+	let onPicked: (UIImage) -> Void
 
 	@State private var showLimitedPicker = false
 
@@ -76,10 +76,9 @@ struct PhotoGridView: View {
 						PhotoThumbnailCell(
 							asset: asset,
 							side: side,
-							viewModel: viewModel,
-							isSelected: selectedAsset?.id == asset.id
+							viewModel: viewModel
 						) {
-							toggleSelection(of: asset)
+							viewModel.select(asset, completion: onPicked)
 						}
 					}
 				}
@@ -87,9 +86,6 @@ struct PhotoGridView: View {
 		}
 	}
 
-	private func toggleSelection(of asset: PhotoAsset) {
-		selectedAsset = selectedAsset?.id == asset.id ? nil : asset
-	}
 }
 
 /// Blocking overlay shown while a tapped photo's full-resolution image loads.

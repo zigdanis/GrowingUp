@@ -11,7 +11,8 @@ import XCTest
 @testable import Core
 @testable import GrowingUp
 
-class EmptyPersonPresenterTests: XCTestCase {
+@MainActor
+final class EmptyPersonPresenterTests: XCTestCase {
 
 	var sut: EmptyPersonPresenterImplementation!
 	let routerSpy = EmptyPersonViewRouterSpy()

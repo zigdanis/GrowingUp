@@ -15,6 +15,7 @@ protocol TextFieldCellView: AnyObject {
 	func setup(with presenter: TextFieldCellPresenter, observer: TextFieldObserver?, forRow row: Int)
 }
 
+@MainActor
 protocol TextFieldObserver: AnyObject {
 	func textDidChange(forView: TextFieldCellView, text: String)
 }

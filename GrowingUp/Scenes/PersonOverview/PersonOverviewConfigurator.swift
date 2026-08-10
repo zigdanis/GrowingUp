@@ -9,10 +9,12 @@
 import Core
 import Foundation
 
+@MainActor
 protocol PersonOverviewConfigurator {
 	func configure(personOverviewController: PersonOverviewViewController)
 }
 
+@MainActor
 final class PersonOverviewConfiguratorImplementation: PersonOverviewConfigurator {
 
 	let index: Int
