@@ -2,7 +2,6 @@
 
 reviews:
   auto_review:
-    enabled: true
-    drafts: true
-    base_branches:
-      - ".*"
+    enabled: false
+    auto_incremental_review: false
+    drafts: false
