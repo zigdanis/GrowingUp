@@ -1,0 +1,12 @@
+{
+  "files": [
+    {
+      "path": ".macroscope/correctness/correctness.md",
+      "description": "Authoritative repository-specific code review policy"
+    },
+    {
+      "path": "Readme.md",
+      "description": "Product behavior, architecture, persistence, targets, dependencies, and validation commands"
+    }
+  ]
+}

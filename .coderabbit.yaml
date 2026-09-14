@@ -5,3 +5,9 @@ reviews:
     enabled: false
     auto_incremental_review: false
     drafts: false
+
+knowledge_base:
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - ".macroscope/correctness/correctness.md"
