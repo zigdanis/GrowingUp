@@ -5,9 +5,16 @@ include:
   - "**/*.entitlements"
   - "**/*.plist"
   - "**/*.xcdatamodeld/**"
+  - "**/*.storyboard"
+  - "**/*.xib"
+  - "**/*.xcassets/**"
+  - "**/*.xcscheme"
+  - "**/Package.resolved"
   - "GrowingUp.xcodeproj/project.pbxproj"
   - ".github/workflows/**"
   - "scripts/**"
+  - "Gemfile"
+  - "Gemfile.lock"
 exclude:
   - "GrowingUp.xcodeproj/xcuserdata/**"
 ---

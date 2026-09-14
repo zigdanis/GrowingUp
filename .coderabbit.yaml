@@ -10,4 +10,5 @@ knowledge_base:
   code_guidelines:
     enabled: true
     filePatterns:
-      - ".macroscope/correctness/correctness.md"
+      - files: ".macroscope/correctness/correctness.md"
+        applyTo: "**/*"
