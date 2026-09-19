@@ -1,6 +1,6 @@
 ---
 name: growingup-simulator-run
-description: Build, test, install, or launch the GrowingUp iOS project on an iOS Simulator. Use only when working in /Users/zigdanis/Projects/GrowingUp or one of its Git worktrees and a task requires xcodebuild, simulator tests, simctl installation, app launch, or simulator smoke testing.
+description: Build, test, install, or launch the GrowingUp iOS project on an iOS Simulator. Use only when working in the GrowingUp repository or one of its Git worktrees and a task requires xcodebuild, simulator tests, simctl installation, app launch, or simulator smoke testing.
 ---
 
 # GrowingUp Simulator Run
