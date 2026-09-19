@@ -116,6 +116,7 @@ struct ImageCaptureFlowView: View {
 				)
 			}
 		}
+		.presentationDetents(coordinator.stage == .camera ? [.large] : [.medium, .large])
 		.onChange(of: scenePhase) { _, newPhase in
 			guard newPhase == .active else { return }
 			cameraModel.refresh()
