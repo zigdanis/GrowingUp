@@ -1,4 +1,0 @@
-interface:
-  display_name: "GrowingUp Simulator Run"
-  short_description: "Run GrowingUp safely on an iOS Simulator"
-  default_prompt: "Build, test, install, and launch GrowingUp on an iOS Simulator with signing and App Group entitlements enabled."
