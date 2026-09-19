@@ -41,7 +41,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 struct GrowingUpApp: App {
 	@UIApplicationDelegateAdaptor(AppDelegate.self)
 	private var appDelegate
-	@State private var presenter = PeoplePresenter(configurator: .live())
+	@State private var presenter: PeoplePresenter
+
+	init() {
+		let configurator: SceneConfigurator
+		#if DEBUG
+			do { configurator = try UITestComposition.make() ?? .live() } catch { fatalError("UI test store failed: \(error)") }
+		#else
+			configurator = .live()
+		#endif
+		_presenter = State(initialValue: PeoplePresenter(configurator: configurator))
+	}
 
 	var body: some Scene {
 		WindowGroup {

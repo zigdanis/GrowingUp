@@ -10,7 +10,7 @@ struct PeopleScene: View {
 			} else {
 				TabView(selection: $presenter.selectedID) {
 					ForEach(presenter.persons, id: \.id) { person in
-						PersonOverviewScene(person: person, onEdit: { presenter.edit(person) })
+						PersonOverviewScene(person: person, configurator: presenter.configurator, onEdit: { presenter.edit(person) })
 							.tag(Optional(person.id))
 					}
 					if presenter.canAdd {

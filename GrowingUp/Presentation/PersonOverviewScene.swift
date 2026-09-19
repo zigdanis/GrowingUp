@@ -35,7 +35,15 @@ final class OverviewPresenter {
 struct PersonOverviewScene: View {
 	let person: Person
 	let onEdit: () -> Void
-	@State private var presenter = OverviewPresenter()
+	let now: () -> Date
+	@State private var presenter: OverviewPresenter
+
+	init(person: Person, configurator: SceneConfigurator, onEdit: @escaping () -> Void) {
+		self.person = person
+		self.onEdit = onEdit
+		now = configurator.now
+		_presenter = State(initialValue: OverviewPresenter(loadImage: configurator.loadImage))
+	}
 
 	var body: some View {
 		ZStack {
@@ -74,7 +82,7 @@ struct PersonOverviewScene: View {
 		.task(id: person.appPicId) { await presenter.load(person: person) }
 		.task(id: person.birthday) {
 			while !Task.isCancelled {
-				presenter.tick(person: person, now: Date())
+				presenter.tick(person: person, now: now())
 				do { try await Task.sleep(for: .seconds(1)) } catch { break }
 			}
 		}

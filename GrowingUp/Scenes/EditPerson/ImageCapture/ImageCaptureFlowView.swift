@@ -61,6 +61,7 @@ final class ImageCaptureCoordinator {
 
 struct ImageCaptureFlowView: View {
 	let cropShape: CropShape
+	let previewImages: [UIImage]?
 	let onComplete: (UIImage) -> Void
 	let onCancel: () -> Void
 
@@ -73,11 +74,13 @@ struct ImageCaptureFlowView: View {
 
 	init(
 		source: ImageCaptureSource,
+		previewImages: [UIImage]? = nil,
 		cropShape: CropShape,
 		onComplete: @escaping (UIImage) -> Void,
 		onCancel: @escaping () -> Void
 	) {
 		self.cropShape = cropShape
+		self.previewImages = previewImages
 		self.onComplete = onComplete
 		self.onCancel = onCancel
 		let initialStage: ImageCaptureStage = source == .camera ? .camera : .photoPreview
@@ -101,13 +104,13 @@ struct ImageCaptureFlowView: View {
 				)
 			case .photoPreview:
 				LightweightPhotoPreviewView(
-					onPicked: { select($0, from: .photoPreview) },
+					previewImages: previewImages, onPicked: { select($0, from: .photoPreview) },
 					onBack: coordinator.wentBack,
 					onAllPhotos: coordinator.choseAllPhotos
 				)
 			case .systemPhotoPicker:
 				LightweightPhotoPreviewView(
-					onPicked: { select($0, from: .photoPreview) },
+					previewImages: previewImages, onPicked: { select($0, from: .photoPreview) },
 					onBack: coordinator.wentBack,
 					onAllPhotos: coordinator.choseAllPhotos
 				)
@@ -200,11 +203,11 @@ private struct LightweightPhotoPreviewView: View {
 	@State private var photoModel: PhotoGridViewModel
 
 	init(
-		onPicked: @escaping (UIImage) -> Void,
+		previewImages: [UIImage]? = nil, onPicked: @escaping (UIImage) -> Void,
 		onBack: @escaping () -> Void,
 		onAllPhotos: @escaping () -> Void
 	) {
-		_photoModel = State(initialValue: PhotoGridViewModel())
+		_photoModel = State(initialValue: previewImages.map { PhotoGridViewModel(previewImages: $0) } ?? PhotoGridViewModel())
 		self.onPicked = onPicked
 		self.onBack = onBack
 		self.onAllPhotos = onAllPhotos
@@ -226,8 +229,9 @@ private struct LightweightPhotoPreviewView: View {
 		NavigationStack {
 			PhotoGridView(viewModel: photoModel, onPicked: onPicked)
 				.background(Color(.secondarySystemBackground))
-				.safeAreaInset(edge: .bottom) {
+				.overlay(alignment: .bottom) {
 					PhotoPreviewControls(onBack: onBack, onAllPhotos: onAllPhotos)
+						.background { Color.clear.contentShape(Rectangle()).onTapGesture {} }
 				}
 				.toolbar(.hidden, for: .navigationBar)
 		}
@@ -244,11 +248,11 @@ private struct PhotoPreviewControls: View {
 				HStack {
 					Button(action: onBack) {
 						Image(systemName: "chevron.left")
-							.foregroundStyle(.white)
+							.foregroundStyle(.primary)
 							.frame(width: 44, height: 44)
 					}
 					.buttonStyle(.plain)
-					.glassEffect()
+					.glassEffect(.clear.interactive())
 					.accessibilityLabel(Text("Back"))
 
 					Spacer()
@@ -256,12 +260,12 @@ private struct PhotoPreviewControls: View {
 					Button(action: onAllPhotos) {
 						Text("All Photos")
 							.font(.headline)
-							.foregroundStyle(.white)
+							.foregroundStyle(.primary)
 							.padding(.horizontal, 20)
 							.frame(height: 44)
 					}
 					.buttonStyle(.plain)
-					.glassEffect()
+					.glassEffect(.clear.interactive())
 				}
 				.padding(.horizontal, 16)
 				.padding(.vertical, 8)
@@ -269,7 +273,7 @@ private struct PhotoPreviewControls: View {
 		} else {
 			controls
 				.buttonStyle(.bordered)
-				.tint(.black)
+				.tint(.primary)
 		}
 	}
 
@@ -277,7 +281,7 @@ private struct PhotoPreviewControls: View {
 		HStack {
 			Button(action: onBack) {
 				Image(systemName: "chevron.left")
-					.foregroundStyle(.white)
+					.foregroundStyle(.primary)
 			}
 			.accessibilityLabel(Text("Back"))
 
@@ -286,7 +290,7 @@ private struct PhotoPreviewControls: View {
 			Button(action: onAllPhotos) {
 				Text("All Photos")
 					.font(.headline)
-					.foregroundStyle(.white)
+					.foregroundStyle(.primary)
 			}
 		}
 		.controlSize(.large)

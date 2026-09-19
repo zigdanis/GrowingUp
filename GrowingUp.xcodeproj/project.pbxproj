@@ -65,6 +65,7 @@
 		09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6B52523535E26003A1A01 /* MemoryCache.swift */; };
 		15D4457235609D2DFCAD162F /* CropShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E304222C36896704B86B7 /* CropShape.swift */; };
 		1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */; };
+		24409618EE10220459E7C0D8 /* UITestComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */; };
 		28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */; };
 		29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */; };
 		2D92EEB991446F6AE28F8073 /* PhotoGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E541473D019C9A291795B2 /* PhotoGridViewModel.swift */; };
@@ -233,6 +234,7 @@
 		A10000000000000000000003 /* ImageStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStoreSpy.swift; sourceTree = "<group>"; };
 		B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersonEditorScene.swift; sourceTree = "<group>"; };
 		CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSourceModel.swift; sourceTree = "<group>"; };
+		E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UITestComposition.swift; sourceTree = "<group>"; };
 		EDE7546BFE10608147B0CB77 /* PhotoAuthState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoAuthState.swift; sourceTree = "<group>"; };
 		F7E541473D019C9A291795B2 /* PhotoGridViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoGridViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -326,6 +328,7 @@
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				0916533A223ECBC40081FB10 /* Views */,
 				499D6EF315D5CC57361D1497 /* Presentation */,
+				6EAF7AFE19C3D2DCA662652E /* Testing */,
 			);
 			path = GrowingUp;
 			sourceTree = "<group>";
@@ -760,6 +763,15 @@
 			path = ImageCapture;
 			sourceTree = "<group>";
 		};
+		6EAF7AFE19C3D2DCA662652E /* Testing */ = {
+			isa = PBXGroup;
+			children = (
+				E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */,
+			);
+			name = Testing;
+			path = Testing;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -1078,6 +1090,7 @@
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
+				24409618EE10220459E7C0D8 /* UITestComposition.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

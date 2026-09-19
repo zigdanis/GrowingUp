@@ -153,11 +153,13 @@ struct CropStep: View {
 			HStack {
 				glassButton(systemImage: "xmark", prominent: false, action: onCancel)
 					.accessibilityLabel(Text("Cancel"))
+					.accessibilityIdentifier("crop.cancel")
 				Spacer()
 				glassButton(systemImage: "checkmark", prominent: true) {
 					onComplete(cropImage())
 				}
 				.accessibilityLabel(Text("Use photo"))
+				.accessibilityIdentifier("crop.use")
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, insets.top + 8)  // ZStack ignores the safe area; clear the notch manually.

@@ -24,6 +24,9 @@ enum PersonMutation {
 final class PersonEditorPresenter: Identifiable {
 	let id = UUID()
 	let person: Person?
+	let maximumBirthday: Date
+	let loadImage: (PersonImage) async throws -> UIImage
+	let photoFixtures: [UIImage]?
 	var name: String
 	var birthday: Date
 	var isOnWidget: Bool
@@ -42,9 +45,13 @@ final class PersonEditorPresenter: Identifiable {
 	init(
 		person: Person?, addUseCase: AddPersonUseCase, editUseCase: EditPersonUseCase,
 		removeUseCase: RemovePersonUseCase, fetchUseCase: FetchPersonsUseCase,
-		now: Date = Date(), onMutation: @escaping (PersonMutation) -> Void, onCancel: @escaping () -> Void
+		now: Date = Date(), loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
+		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void, onCancel: @escaping () -> Void
 	) {
 		self.person = person
+		maximumBirthday = now
+		self.loadImage = loadImage
+		self.photoFixtures = photoFixtures
 		name = person?.name ?? ""
 		birthday = person?.birthday ?? now
 		isOnWidget = person?.isOnWidget ?? false

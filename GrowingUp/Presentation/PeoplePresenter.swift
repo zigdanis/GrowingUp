@@ -1,5 +1,6 @@
 import Core
 import Observation
+import UIKit
 import WidgetKit
 
 @MainActor
@@ -11,7 +12,7 @@ final class PeoplePresenter {
 	var error: SceneError?
 	private(set) var isLoading = true
 	private var pendingWidgetIndex: Int?
-	private let configurator: SceneConfigurator
+	let configurator: SceneConfigurator
 	private let reloadWidgets: () -> Void
 
 	init(
@@ -96,8 +97,17 @@ struct SceneConfigurator {
 	let addUseCase: AddPersonUseCase
 	let editUseCase: EditPersonUseCase
 	let removeUseCase: RemovePersonUseCase
+	let loadImage: (PersonImage) async throws -> UIImage
+	let now: () -> Date
+	let photoFixtures: [UIImage]?
 
-	init(gateway: PersonsGateway) {
+	init(
+		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
+		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil
+	) {
+		self.loadImage = loadImage
+		self.now = now
+		self.photoFixtures = photoFixtures
 		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: gateway)
 		addUseCase = AddPersonUseCaseImplementation(personsGateway: gateway)
 		editUseCase = EditPersonUseCaseImplementation(personsGateway: gateway)
@@ -110,7 +120,7 @@ struct SceneConfigurator {
 		PersonEditorPresenter(
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
-			onMutation: onMutation, onCancel: onCancel)
+			now: now(), loadImage: loadImage, photoFixtures: photoFixtures, onMutation: onMutation, onCancel: onCancel)
 	}
 
 	static func live() -> SceneConfigurator {

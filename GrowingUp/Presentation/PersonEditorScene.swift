@@ -17,7 +17,7 @@ struct PersonEditorScene: View {
 			Form {
 				Section {
 					TextField("Name", text: $presenter.name).accessibilityIdentifier("editor.name")
-					DatePicker("Birthday", selection: $presenter.birthday, in: ...Date())
+					DatePicker("Birthday", selection: $presenter.birthday, in: ...presenter.maximumBirthday)
 						.accessibilityIdentifier("editor.birthday")
 					Toggle("Add to Widget", isOn: $presenter.isOnWidget)
 						.accessibilityIdentifier("editor.pin")
@@ -61,7 +61,7 @@ struct PersonEditorScene: View {
 		.sceneError($presenter.error)
 		.sheet(item: $photoRequest) { request in
 			ImageCaptureFlowView(
-				source: request.source, cropShape: request.isWidget ? .circle : .rectangle,
+				source: request.source, previewImages: presenter.photoFixtures, cropShape: request.isWidget ? .circle : .rectangle,
 				onComplete: { image in
 					let picture = PersonImage(uiImage: image)
 					if request.isWidget { presenter.widgetImage = picture } else { presenter.appImage = picture }
@@ -85,7 +85,7 @@ struct PersonEditorScene: View {
 			}
 		} label: {
 			VStack {
-				PersonPicture(image: isWidget ? presenter.widgetImage : presenter.appImage)
+				PersonPicture(image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage)
 				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
 			}
 		}
@@ -96,6 +96,7 @@ struct PersonEditorScene: View {
 
 private struct PersonPicture: View {
 	let image: PersonImage?
+	let loadImage: (PersonImage) async throws -> UIImage
 	@State private var loaded: UIImage?
 
 	var body: some View {
@@ -112,7 +113,7 @@ private struct PersonPicture: View {
 		.task(id: image?.id) {
 			loaded = image?.uiImage
 			guard let image, loaded == nil else { return }
-			loaded = try? await ImagesCache.loadImageFromDiskOrMemory(image: image)
+			loaded = try? await loadImage(image)
 		}
 	}
 }
