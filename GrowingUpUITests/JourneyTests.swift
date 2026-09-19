@@ -97,7 +97,11 @@ final class JourneyTests: XCTestCase {
 		let name = app.textFields["editor.name"]
 		name.tap()
 		name.typeText("Fourth")
-		app.switches["editor.pin"].tap()
+		let pin = app.switches["editor.pin"]
+		XCTAssertEqual(pin.value as? String, "0")
+		// The identifier belongs to the full form row; the native switch occupies its trailing edge.
+		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		XCTAssertEqual(pin.value as? String, "1")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
 		app.alerts.buttons.firstMatch.tap()
