@@ -60,6 +60,10 @@ struct GrowingUpApp: App {
 	var body: some Scene {
 		WindowGroup {
 			PeopleScene(presenter: presenter).tint(Color(uiColor: .appColor))
+				#if DEBUG
+					.overlay(alignment: .topLeading) { UITestAppearanceProbe() }
+					.preferredColorScheme(UITestComposition.colorScheme)
+				#endif
 		}
 	}
 }

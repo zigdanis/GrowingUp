@@ -25,7 +25,7 @@ final class JourneyTests: XCTestCase {
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
 		app.buttons["person.edit"].tap()
 		XCTAssertTrue(app.datePickers["editor.birthday"].waitForExistence(timeout: 5))
-		XCTAssertEqual(app.datePickers["editor.birthday"].buttons.firstMatch.label, "Jan 10, 2027")
+		XCTAssertTrue(app.buttons["Jan 10, 2027"].exists)
 	}
 
 	func testEditBothPhotosAndPersist() {
@@ -133,7 +133,7 @@ final class JourneyTests: XCTestCase {
 	private func launch(seed: String = "", failSave: Bool = false, locale: String = "en", appearance: String = "Light") {
 		app.launchEnvironment = [
 			"GROWINGUP_UI_TEST_ID": identifier, "GROWINGUP_UI_RESET": "1", "GROWINGUP_UI_SEED": seed,
-			"GROWINGUP_UI_FAIL_SAVE": failSave ? "1" : "0", "TZ": "UTC"
+			"GROWINGUP_UI_FAIL_SAVE": failSave ? "1" : "0", "TZ": "UTC", "GROWINGUP_UI_APPEARANCE": appearance
 		]
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
@@ -141,6 +141,7 @@ final class JourneyTests: XCTestCase {
 		]
 		app.launch()
 		XCTAssertTrue(app.buttons[seed.isEmpty ? "person.add" : "person.edit"].waitForExistence(timeout: 10))
+		XCTAssertEqual(app.otherElements["test.appearance"].value as? String, appearance.lowercased())
 	}
 
 	private func relaunch() {

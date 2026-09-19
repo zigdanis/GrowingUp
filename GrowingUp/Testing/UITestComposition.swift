@@ -2,6 +2,7 @@
 	import Core
 	import CoreData
 	import UIKit
+	import SwiftUI
 
 	/// Explicit opt-in composition: every UI test gets its own SQLite and image directory.
 	/// The normal App Group is never opened or reset by this path.
@@ -10,6 +11,11 @@
 		static var isEnabled: Bool {
 			guard let value = ProcessInfo.processInfo.environment["GROWINGUP_UI_TEST_ID"] else { return false }
 			return UUID(uuidString: value) != nil
+		}
+
+		static var colorScheme: ColorScheme? {
+			guard isEnabled else { return nil }
+			return ProcessInfo.processInfo.environment["GROWINGUP_UI_APPEARANCE"] == "Dark" ? .dark : .light
 		}
 
 		static let fixedDate = Date(timeIntervalSince1970: 1_800_000_000)
@@ -144,5 +150,21 @@
 		func remove(person: Person) async throws { try await base.remove(person: person) }
 		func fetchPersons() async throws -> [Person] { try await base.fetchPersons() }
 		func fetchWidgetPersons() async throws -> [Person] { try await base.fetchWidgetPersons() }
+	}
+
+	struct UITestAppearanceProbe: View {
+		@Environment(\.colorScheme)
+		private var colorScheme
+
+		var body: some View {
+			if UITestComposition.isEnabled {
+				Color.clear.frame(width: 1, height: 1)
+					.accessibilityElement()
+					.accessibilityLabel("Effective appearance")
+					.accessibilityIdentifier("test.appearance")
+					.accessibilityValue(colorScheme == .dark ? "dark" : "light")
+					.allowsHitTesting(false)
+			}
+		}
 	}
 #endif
