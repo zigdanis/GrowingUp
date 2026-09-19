@@ -48,16 +48,6 @@
                ReferencedContainer = "container:GrowingUp.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "B0E2B5553E254308180B8CD1"
-               BuildableName = "GrowingUpUITests.xctest"
-               BlueprintName = "GrowingUpUITests"
-               ReferencedContainer = "container:GrowingUp.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
