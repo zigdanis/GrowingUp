@@ -125,7 +125,7 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	func test_SUT_AddButtonPressedWithoutBirthDay_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "Alex")
 		// When
 		sut.rightBarButtonPressed()
 		// Then
@@ -137,7 +137,7 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	func test_SUT_AddButtonPressedWithoutBirthTime_ShouldShowError() {
 		// Given
-		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "Alex")
 		dateCellsStub.valueFor(row: EPC.dayPickerRow, didChangeTo: Date())
 		// When
 		sut.rightBarButtonPressed()
@@ -228,7 +228,7 @@ final class AddPersonPresenterTests: XCTestCase {
 
 	@discardableResult
 	private func setupSUT_WithAddPersonData() -> AddPersonParameters {
-		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "John")
+		nameCellStub.valueFor(row: EPC.nameFieldRow, didChangeTo: "Alex")
 		let bDate = Date()
 		let tDate = Date().addingTimeInterval(1)
 		dateCellsStub.valueFor(row: EPC.dayPickerRow, didChangeTo: bDate)
@@ -240,7 +240,7 @@ final class AddPersonPresenterTests: XCTestCase {
 		let isOnWidget = false
 		toggleCellStub.valueFor(row: EPC.addToWidgetRow, didChangeTo: isOnWidget)
 		return AddPersonParameters(
-			name: "John", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic,
+			name: "Alex", dayOfBirth: bDate, timeOfBirth: tDate, appImage: appPic, widgetImage: widgetPic,
 			isOnWidget: isOnWidget)
 	}
 
