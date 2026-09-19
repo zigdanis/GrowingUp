@@ -160,7 +160,7 @@ final class JourneyTests: XCTestCase {
 		let date = app.datePickers["editor.birthday"]
 		date.buttons.firstMatch.tap()
 		app.buttons["Sunday, January 10"].tap()
-		app.tap()
+		name.tap()
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
