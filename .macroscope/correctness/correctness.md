@@ -27,8 +27,8 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 
 ## Architecture
 
-- This is an iOS 18+ app with three targets: the UIKit `GrowingUp` app, the `Core` framework, and the SwiftUI/WidgetKit `Widget` extension. Business entities, use cases, persistence, caching, and age calculations belong in `Core`; scene presentation and navigation belong in `GrowingUp`; widget rendering and timelines belong in `Widget`.
-- App scenes use MVP + Clean Architecture. Preserve the View-Presenter-Configurator boundaries and protocol-based gateway/use-case injection. Flag business or persistence logic moved directly into view controllers or SwiftUI views.
+- This is an iOS 18+ app with production targets: the SwiftUI `GrowingUp` app, the `Core` framework, and the SwiftUI/WidgetKit `Widget` extension, plus `GrowingUpTests` and `GrowingUpUITests` test targets. Business entities, use cases, persistence, caching, and age calculations belong in `Core`; scene presentation and navigation belong in `GrowingUp`; widget rendering and timelines belong in `Widget`.
+- App scenes use MVP + Clean Architecture. Presenters expose main-actor observable scene state. Preserve the View-Presenter-Configurator boundaries and protocol-based gateway/use-case injection. Flag business or persistence logic moved directly into SwiftUI views.
 - When files, resources, entitlements, build settings, or dependencies change, verify all intended target memberships and both Debug and Release configurations in `GrowingUp.xcodeproj/project.pbxproj`.
 
 ## Persistence and widget invariants
@@ -40,7 +40,7 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 
 ## Concurrency and UI behavior
 
-- Presenters and other UIKit-facing code run on `@MainActor`. UI updates, navigation, and delegate callbacks must remain on the main actor. Background Core Data work must stay inside the context's queue and must not pass managed objects across concurrency boundaries.
+- Presenters and other UI-facing code run on `@MainActor`. UI updates, navigation, and delegate callbacks must remain on the main actor. Background Core Data work must stay inside the context's queue and must not pass managed objects across concurrency boundaries.
 - Async persistence and image operations must propagate errors and cancellation, resume continuations exactly once, and preserve cleanup on partial failure. Do not flag deliberate best-effort cleanup when its error is logged and the primary data mutation has already succeeded.
 - Add, edit, and remove actions disable navigation buttons while work is in flight and re-enable them on every success or failure path. Errors must be surfaced to the user rather than only logged.
 - Widget timelines update age at minute granularity. Avoid assumptions that WidgetKit can refresh every second.
@@ -50,3 +50,5 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 - User-visible text is localized in English and Russian. When a localization key or Info.plist display string changes, verify the corresponding resources in both locales and the correct bundle/target.
 - Require focused tests for changed gateway transaction behavior, use-case contracts, presenter state/error handling, age/date calculations, or widget data mapping. Do not demand tests that merely duplicate formatting, compiler, or framework behavior.
 - Repository validation is defined by `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. Treat those scripts and `.github/workflows/ci.yml` as the source of truth for proposed validation changes.
+
+- UI journeys run through the `GrowingUpUI` scheme with isolated DEBUG-only SQLite/image fixtures. Glass screenshot baselines are pinned to iOS 26.5 / iPhone 17 Pro / arm64; CI must never auto-record missing baselines. Keep the focused controls-region comparison and expected/actual/difference attachments on failures.

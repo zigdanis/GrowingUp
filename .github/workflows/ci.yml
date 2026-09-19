@@ -121,4 +121,64 @@ jobs:
           xcodebuild test \
             -project GrowingUp.xcodeproj \
             -scheme GrowingUp \
+            -only-testing:GrowingUpTests \
             -destination "id=$SIM_UDID"
+
+  ui-tests:
+    name: UI Tests — ${{ matrix.name }}
+    needs: changes
+    if: needs.changes.outputs.docs_only != 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Glass
+            runner: macos-26
+            xcode: '26.6'
+            runtime: '26-5'
+            device: iPhone-17-Pro
+            visual: '1'
+          - name: iOS 18
+            runner: macos-15
+            xcode: '26.3'
+            runtime: '18-5'
+            device: iPhone-16
+            visual: '0'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - name: Select pinned Xcode
+        run: |
+          test -d "/Applications/Xcode_${{ matrix.xcode }}.app"
+          sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode }}.app"
+          xcodebuild -version
+      - name: Create deterministic simulator
+        id: simulator
+        run: |
+          RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-${{ matrix.runtime }}"
+          xcrun simctl list runtimes --json | jq -e --arg runtime "$RUNTIME" '.runtimes[] | select(.identifier == $runtime and .isAvailable)'
+          UDID=$(xcrun simctl create GrowingUpUI "com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}" "$RUNTIME")
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+      - name: Run UI journeys and appearance comparisons
+        run: |
+          mkdir -p build/ui-artifacts
+          set -o pipefail
+          xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUpUI \
+            -destination "id=${{ steps.simulator.outputs.udid }}" \
+            -parallel-testing-enabled NO -resultBundlePath build/ui-artifacts/UI.xcresult \
+            GROWINGUP_VISUAL_CHECKS=${{ matrix.visual }} GROWINGUP_RECORD_SNAPSHOTS=0 \
+            CODE_SIGNING_ALLOWED=NO | tee build/ui-artifacts/xcodebuild.log
+      - name: Retain screenshots, differences and test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-${{ matrix.device }}-${{ matrix.runtime }}
+          path: build/ui-artifacts
+          retention-days: 14
+      - name: Remove test simulator
+        if: always() && steps.simulator.outputs.udid != ''
+        run: xcrun simctl delete "${{ steps.simulator.outputs.udid }}"
