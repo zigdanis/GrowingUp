@@ -25,7 +25,7 @@ final class JourneyTests: XCTestCase {
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
 		app.buttons["person.edit"].tap()
 		XCTAssertTrue(app.datePickers["editor.birthday"].waitForExistence(timeout: 5))
-		XCTAssertTrue(app.datePickers["editor.birthday"].buttons.firstMatch.label.contains("10"))
+		XCTAssertEqual(app.datePickers["editor.birthday"].buttons.firstMatch.label, "Jan 10, 2027")
 	}
 
 	func testEditBothPhotosAndPersist() {
@@ -160,7 +160,7 @@ final class JourneyTests: XCTestCase {
 		let date = app.datePickers["editor.birthday"]
 		date.buttons.firstMatch.tap()
 		app.buttons["Sunday, January 10"].tap()
-		name.tap()
+		app.buttons["PopoverDismissRegion"].tap()
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
