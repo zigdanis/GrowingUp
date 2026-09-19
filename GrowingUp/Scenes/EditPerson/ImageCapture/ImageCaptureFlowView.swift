@@ -292,7 +292,7 @@ private struct PhotoPreviewControls: View {
 		HStack {
 			Button(action: onBack) {
 				Image(systemName: "chevron.left")
-					.foregroundStyle(.primary)
+					.foregroundStyle(Color.primary)
 			}
 			.accessibilityLabel(Text("Back"))
 
@@ -301,7 +301,7 @@ private struct PhotoPreviewControls: View {
 			Button(action: onAllPhotos) {
 				Text("All Photos")
 					.font(.headline)
-					.foregroundStyle(.primary)
+					.foregroundStyle(Color.primary)
 			}
 		}
 		.controlSize(.large)
