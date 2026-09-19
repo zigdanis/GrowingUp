@@ -137,6 +137,32 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertNil(presenter.error)
 	}
 
+	func testExistingUnpinnedPersonCannotBecomeFourthPin() async {
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success((0..<3).map { _ in Person.createPerson() })
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: .createPerson(), onMutation: { _ in XCTFail("Pin limit") }, onCancel: {})
+		await presenter.load()
+		presenter.isOnWidget = true
+		await presenter.save()
+		XCTAssertFalse(gateway.editPersonCalled)
+		XCTAssertFalse(presenter.isBusy)
+		XCTAssertNotNil(presenter.error)
+	}
+
+	func testUnpinDoesNotRequireCapacityFetch() async {
+		let gateway = PersonsGatewaySpy()
+		var person = Person.createPerson()
+		person.isOnWidget = true
+		gateway.editPersonResultToBeReturned = .success(person)
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in }, onCancel: {})
+		await presenter.load()
+		presenter.isOnWidget = false
+		await presenter.save()
+		XCTAssertTrue(gateway.editPersonCalled)
+		XCTAssertFalse(gateway.addPersonParameters.isOnWidget)
+		XCTAssertNil(presenter.error)
+	}
+
 	func testCancellationRestoresActionsWithoutErrorOrMutation() async {
 		let gateway = CancelledSaveGateway()
 		gateway.fetchPersonsResultToBeReturned = .success([])
