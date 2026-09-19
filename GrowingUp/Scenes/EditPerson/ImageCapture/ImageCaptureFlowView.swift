@@ -71,6 +71,7 @@ struct ImageCaptureFlowView: View {
 	@State private var cameraModel = CameraSourceModel()
 	@State private var selectedImage: IdentifiableImage?
 	@State private var pendingSystemPickerImage: UIImage?
+	@State private var pendingCroppedImage: UIImage?
 
 	init(
 		source: ImageCaptureSource,
@@ -130,14 +131,14 @@ struct ImageCaptureFlowView: View {
 				onCancel: coordinator.pickerFinishedWithoutImage
 			)
 		}
-		.fullScreenCover(item: $selectedImage) { item in
+		.fullScreenCover(item: $selectedImage, onDismiss: finishCropDismissal) { item in
 			CropStep(
 				image: item.image,
 				shape: cropShape,
 				onComplete: { cropped in
+					pendingCroppedImage = cropped.downsized(maxPixelSide: cropShape.maxPixelSize)
 					selectedImage = nil
 					coordinator.completedCrop()
-					onComplete(cropped.downsized(maxPixelSide: cropShape.maxPixelSize))
 				},
 				onCancel: {
 					selectedImage = nil
@@ -145,6 +146,13 @@ struct ImageCaptureFlowView: View {
 				}
 			)
 		}
+	}
+
+	private func finishCropDismissal() {
+		guard let image = pendingCroppedImage else { return }
+		pendingCroppedImage = nil
+		// Finish the full-screen dismissal before the owner dismisses this sheet.
+		onComplete(image)
 	}
 
 	private func openCamera() {
@@ -407,22 +415,14 @@ private struct IdentifiableImage: Identifiable {
 private enum PreviewPhotos {
 	static let images = [
 		image(symbol: "figure.2.and.child.holdinghands", colors: [.systemOrange, .systemPink]),
-		image(symbol: "mountain.2.fill", colors: [.systemTeal, .systemBlue]),
-		image(symbol: "sun.max.fill", colors: [.systemYellow, .systemOrange]),
-		image(symbol: "pawprint.fill", colors: [.systemIndigo, .systemPurple]),
-		image(symbol: "balloon.2.fill", colors: [.systemPink, .systemRed]),
-		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal]),
-		image(symbol: "beach.umbrella.fill", colors: [.systemCyan, .systemBlue]),
-		image(symbol: "birthday.cake.fill", colors: [.systemPink, .systemOrange]),
-		image(symbol: "bicycle", colors: [.systemGreen, .systemBlue]),
-		image(symbol: "camera.fill", colors: [.systemPurple, .systemPink]),
-		image(symbol: "car.fill", colors: [.systemRed, .systemOrange]),
-		image(symbol: "cloud.sun.fill", colors: [.systemBlue, .systemYellow]),
-		image(symbol: "figure.hiking", colors: [.systemBrown, .systemGreen]),
-		image(symbol: "fish.fill", colors: [.systemTeal, .systemIndigo]),
-		image(symbol: "gift.fill", colors: [.systemRed, .systemPurple]),
-		image(symbol: "house.fill", colors: [.systemOrange, .systemBrown]),
-		image(symbol: "moon.stars.fill", colors: [.systemIndigo, .black]),
+		image(symbol: "mountain.2.fill", colors: [.systemTeal, .systemBlue]), image(symbol: "sun.max.fill", colors: [.systemYellow, .systemOrange]),
+		image(symbol: "pawprint.fill", colors: [.systemIndigo, .systemPurple]), image(symbol: "balloon.2.fill", colors: [.systemPink, .systemRed]),
+		image(symbol: "tree.fill", colors: [.systemGreen, .systemTeal]), image(symbol: "beach.umbrella.fill", colors: [.systemCyan, .systemBlue]),
+		image(symbol: "birthday.cake.fill", colors: [.systemPink, .systemOrange]), image(symbol: "bicycle", colors: [.systemGreen, .systemBlue]),
+		image(symbol: "camera.fill", colors: [.systemPurple, .systemPink]), image(symbol: "car.fill", colors: [.systemRed, .systemOrange]),
+		image(symbol: "cloud.sun.fill", colors: [.systemBlue, .systemYellow]), image(symbol: "figure.hiking", colors: [.systemBrown, .systemGreen]),
+		image(symbol: "fish.fill", colors: [.systemTeal, .systemIndigo]), image(symbol: "gift.fill", colors: [.systemRed, .systemPurple]),
+		image(symbol: "house.fill", colors: [.systemOrange, .systemBrown]), image(symbol: "moon.stars.fill", colors: [.systemIndigo, .black]),
 		image(symbol: "sailboat.fill", colors: [.systemCyan, .systemTeal])
 	]
 
