@@ -17,7 +17,7 @@ struct PersonEditorScene: View {
 			Form {
 				Section {
 					TextField("Name", text: $presenter.name).accessibilityIdentifier("editor.name")
-					DatePicker("Birthday", selection: $presenter.birthday)
+					DatePicker("Birthday", selection: $presenter.birthday, in: ...Date())
 						.accessibilityIdentifier("editor.birthday")
 					Toggle("Add to Widget", isOn: $presenter.isOnWidget)
 						.accessibilityIdentifier("editor.pin")
@@ -86,7 +86,7 @@ struct PersonEditorScene: View {
 		} label: {
 			VStack {
 				PersonPicture(image: isWidget ? presenter.widgetImage : presenter.appImage)
-				Text(isWidget ? "widget pic" : "main pic")
+				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
 			}
 		}
 		.accessibilityLabel(isWidget ? Text("Change widget picture") : Text("Change app picture"))
