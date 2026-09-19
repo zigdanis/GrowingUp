@@ -31,7 +31,7 @@
 			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: environment["GROWINGUP_UI_FAIL_SAVE"] == "1")
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
 			return SceneConfigurator(
-				gateway: gateway, loadImage: images.load, now: { fixedDate }, photoFixtures: (0..<12).map(fixture))
+				gateway: gateway, loadImage: images.load, now: { fixedDate }, photoFixtures: (0..<18).map(fixture))
 		}
 
 		/// Original deterministic landscape artwork; no device photo-library dependency.

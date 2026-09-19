@@ -248,7 +248,8 @@ private struct PhotoPreviewControls: View {
 				HStack {
 					Button(action: onBack) {
 						Image(systemName: "chevron.left")
-							.foregroundStyle(.primary)
+							.foregroundStyle(.white)
+							.shadow(color: .black.opacity(0.6), radius: 2)
 							.frame(width: 44, height: 44)
 					}
 					.buttonStyle(.plain)
@@ -260,7 +261,8 @@ private struct PhotoPreviewControls: View {
 					Button(action: onAllPhotos) {
 						Text("All Photos")
 							.font(.headline)
-							.foregroundStyle(.primary)
+							.foregroundStyle(.white)
+							.shadow(color: .black.opacity(0.6), radius: 2)
 							.padding(.horizontal, 20)
 							.frame(height: 44)
 					}
@@ -272,8 +274,8 @@ private struct PhotoPreviewControls: View {
 			}
 		} else {
 			controls
-				.buttonStyle(.bordered)
-				.tint(.primary)
+				.buttonStyle(.borderedProminent)
+				.tint(Color(.systemBackground))
 		}
 	}
 

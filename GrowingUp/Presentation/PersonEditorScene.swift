@@ -68,7 +68,7 @@ struct PersonEditorScene: View {
 					photoRequest = nil
 				}, onCancel: { photoRequest = nil }
 			)
-			.presentationDetents([.large])
+			.presentationDetents(request.source == .photos ? [.medium, .large] : [.large])
 		}
 	}
 
