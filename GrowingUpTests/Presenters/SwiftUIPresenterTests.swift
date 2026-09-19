@@ -109,6 +109,34 @@ final class SwiftUIPresenterTests: XCTestCase {
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
 	}
+	func testFourthPinIsRejectedBeforeSavingAndRestoresActions() async {
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success((0..<3).map { _ in Person.createPerson() })
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in XCTFail("Pin limit") }, onCancel: {})
+		await presenter.load()
+		presenter.name = "Fourth"
+		presenter.isOnWidget = true
+		await presenter.save()
+		XCTAssertFalse(gateway.addPersonCalled)
+		XCTAssertFalse(presenter.isBusy)
+		XCTAssertEqual(presenter.error?.message, CoreError(message: "Unable to add more than 3 persons").message)
+	}
+
+	func testExistingPinnedPersonCanBeEditedAtPinLimit() async {
+		let gateway = PersonsGatewaySpy()
+		var person = Person.createPerson()
+		person.isOnWidget = true
+		gateway.fetchPersonsResultToBeReturned = .success([person, .createPerson(), .createPerson()])
+		gateway.editPersonResultToBeReturned = .success(person)
+		var saved = false
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in saved = true }, onCancel: {})
+		await presenter.load()
+		await presenter.save()
+		XCTAssertTrue(saved)
+		XCTAssertTrue(gateway.editPersonCalled)
+		XCTAssertNil(presenter.error)
+	}
+
 	func testCancellationRestoresActionsWithoutErrorOrMutation() async {
 		let gateway = CancelledSaveGateway()
 		gateway.fetchPersonsResultToBeReturned = .success([])

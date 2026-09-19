@@ -86,6 +86,12 @@ final class PersonEditorPresenter: Identifiable {
 		isBusy = true
 		defer { isBusy = false }
 		do {
+			if isOnWidget {
+				let pinned = try await fetchUseCase.fetchWidgetPersons()
+				guard pinned.filter({ $0.id != person?.id }).count < 3 else {
+					throw CoreError(message: "Unable to add more than 3 persons")
+				}
+			}
 			let parameters = AddPersonParameters(
 				name: name, dayOfBirth: birthday, timeOfBirth: birthday,
 				appImage: appImage, widgetImage: widgetImage, isOnWidget: isOnWidget)
