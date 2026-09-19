@@ -7,6 +7,11 @@
 	/// The normal App Group is never opened or reset by this path.
 	@MainActor
 	enum UITestComposition {
+		static var isEnabled: Bool {
+			guard let value = ProcessInfo.processInfo.environment["GROWINGUP_UI_TEST_ID"] else { return false }
+			return UUID(uuidString: value) != nil
+		}
+
 		static let fixedDate = Date(timeIntervalSince1970: 1_800_000_000)
 
 		static func make() throws -> SceneConfigurator? {

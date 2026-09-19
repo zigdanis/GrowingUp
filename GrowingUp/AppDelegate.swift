@@ -15,7 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	func application(
 		_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
 	) -> Bool {
-		setupFileProtectionLevelForSharedContainer()
+		#if DEBUG
+			if !UITestComposition.isEnabled { setupFileProtectionLevelForSharedContainer() }
+		#else
+			setupFileProtectionLevelForSharedContainer()
+		#endif
 		Logging.setup()
 		return true
 	}

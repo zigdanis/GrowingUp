@@ -88,7 +88,7 @@ struct PersonEditorScene: View {
 			VStack {
 				PersonPicture(
 					image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage,
-					identifier: isWidget ? "widgetPhoto" : "appPhoto")
+					identifier: isWidget ? "widgetPhoto" : "appPhoto", onError: { presenter.error = SceneError($0) })
 				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
 			}
 		}
@@ -101,6 +101,7 @@ private struct PersonPicture: View {
 	let image: PersonImage?
 	let loadImage: (PersonImage) async throws -> UIImage
 	let identifier: String
+	let onError: (Error) -> Void
 	@State private var loaded: UIImage?
 
 	var body: some View {
@@ -119,7 +120,14 @@ private struct PersonPicture: View {
 		.task(id: image?.id) {
 			loaded = image?.uiImage
 			guard let image, loaded == nil else { return }
-			loaded = try? await loadImage(image)
+			do {
+				let picture = try await loadImage(image)
+				try Task.checkCancellation()
+				loaded = picture
+			} catch is CancellationError {
+			} catch {
+				onError(error)
+			}
 		}
 	}
 }
