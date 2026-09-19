@@ -9,7 +9,9 @@ final class JourneyTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		continueAfterFailure = false
+		// SnapshotTesting reports each deliberate recording as a failure after writing the image.
+		// Continue only in explicit recording runs so all checkpoints are generated; functional failures remain reported.
+		continueAfterFailure = ProcessInfo.processInfo.environment["GROWINGUP_RECORD_SNAPSHOTS"] == "1"
 		app = XCUIApplication()
 		identifier = UUID().uuidString
 	}
