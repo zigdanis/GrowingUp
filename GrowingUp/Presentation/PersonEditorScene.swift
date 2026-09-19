@@ -77,6 +77,7 @@ struct PersonEditorScene: View {
 			Button("Photos", systemImage: "photo") {
 				photoRequest = PhotoRequest(isWidget: isWidget, source: .photos)
 			}
+			.accessibilityIdentifier("photo.source.photos")
 			Button("Camera", systemImage: "camera") {
 				photoRequest = PhotoRequest(isWidget: isWidget, source: .camera)
 			}

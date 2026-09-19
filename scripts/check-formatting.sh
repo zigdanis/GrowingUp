@@ -10,7 +10,7 @@ if ! scripts/run-swift-format.sh lint \
   --strict \
   --recursive \
   --parallel \
-  Core GrowingUp GrowingUpTests Widget; then
+  Core GrowingUp GrowingUpTests GrowingUpUITests Widget; then
   echo "error: Swift formatting check failed; run scripts/format-swift.sh" >&2
   exit 1
 fi
