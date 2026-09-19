@@ -86,7 +86,9 @@ struct PersonEditorScene: View {
 			}
 		} label: {
 			VStack {
-				PersonPicture(image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage)
+				PersonPicture(
+					image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage,
+					identifier: isWidget ? "widgetPhoto" : "appPhoto")
 				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
 			}
 		}
@@ -98,6 +100,7 @@ struct PersonEditorScene: View {
 private struct PersonPicture: View {
 	let image: PersonImage?
 	let loadImage: (PersonImage) async throws -> UIImage
+	let identifier: String
 	@State private var loaded: UIImage?
 
 	var body: some View {
@@ -105,6 +108,8 @@ private struct PersonPicture: View {
 			Circle().fill(.quaternary)
 			if let loaded {
 				Image(uiImage: loaded).resizable().scaledToFill()
+					.accessibilityLabel(Text("Selected photo"))
+					.accessibilityIdentifier("editor.\(identifier).loaded")
 			} else {
 				Image(systemName: "photo.badge.plus").font(.largeTitle)
 			}

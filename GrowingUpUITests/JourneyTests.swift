@@ -20,6 +20,9 @@ final class JourneyTests: XCTestCase {
 		checkpoint("overview")
 		relaunch()
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
+		app.buttons["person.edit"].tap()
+		XCTAssertTrue(app.datePickers["editor.birthday"].waitForExistence(timeout: 5))
+		XCTAssertTrue(app.datePickers["editor.birthday"].buttons.firstMatch.label.contains("10"))
 	}
 
 	func testEditBothPhotosAndPersist() {
@@ -43,6 +46,8 @@ final class JourneyTests: XCTestCase {
 		relaunch()
 		checkpoint("saved-photo")
 		app.buttons["person.edit"].tap()
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
 		checkpoint("saved-photos-form")
 	}
 
@@ -59,6 +64,9 @@ final class JourneyTests: XCTestCase {
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5))
 		app.buttons["person.edit"].tap()
+		let draftName = app.textFields["editor.name"]
+		draftName.tap()
+		draftName.typeText(" Unsaved")
 		choosePhoto(slot: "appPhoto")
 		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
 		XCTAssertTrue(app.buttons["crop.cancel"].waitForExistence(timeout: 5))
@@ -146,6 +154,10 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
 		name.typeText("Ada")
+		let date = app.datePickers["editor.birthday"]
+		date.buttons.firstMatch.tap()
+		app.buttons["10"].tap()
+		app.tap()
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
@@ -170,5 +182,18 @@ final class JourneyTests: XCTestCase {
 			of: screenshot.image, as: .image(precision: 0.995, perceptualPrecision: 0.98), named: name,
 			record: recording ? .all : .never, file: file, testName: "iOS26_5-iPhone17Pro-arm64", line: line)
 		if let failure { XCTFail(failure, file: file, line: line) }
+		if name.hasPrefix("photo-") {
+			// Compare the controls separately so a small opaque button cannot hide in a full-screen tolerance.
+			let image = screenshot.image
+			let pixels = image.cgImage!
+			let height = min(pixels.height, Int(120 * image.scale))
+			let region = pixels.cropping(to: CGRect(x: 0, y: pixels.height - height, width: pixels.width, height: height))!
+			let controls = UIImage(cgImage: region, scale: image.scale, orientation: .up)
+			let failure = verifySnapshot(
+				of: controls, as: .image(precision: 0.995, perceptualPrecision: 0.98), named: "\(name)-controls-region",
+				record: recording ? .all : .never, file: file, testName: "iOS26_5-iPhone17Pro-arm64", line: line)
+			if let failure { XCTFail(failure, file: file, line: line) }
+		}
+
 	}
 }
