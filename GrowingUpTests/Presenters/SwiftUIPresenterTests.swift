@@ -109,4 +109,19 @@ final class SwiftUIPresenterTests: XCTestCase {
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
 	}
+	func testCancellationRestoresActionsWithoutErrorOrMutation() async {
+		let gateway = CancelledSaveGateway()
+		gateway.fetchPersonsResultToBeReturned = .success([])
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in XCTFail("Cancelled") }, onCancel: {})
+		await presenter.load()
+		presenter.name = "Ada"
+		await presenter.save()
+		XCTAssertFalse(presenter.isBusy)
+		XCTAssertNil(presenter.error)
+	}
+
+}
+
+private final class CancelledSaveGateway: PersonsGatewaySpy {
+	override func add(parameters: AddPersonParameters) async throws -> Person { throw CancellationError() }
 }

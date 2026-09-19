@@ -143,3 +143,14 @@ scripts and CI check remain the source of truth.
 ## License
 
 GrowingUp is available under the [MIT License](LICENSE).
+
+
+### SwiftUI scenes and validation
+
+The iOS 18+ app uses SwiftUI with MVP + Clean Architecture: scene views send intents to observable main-actor presenters; `SceneConfigurator` injects Core use cases. Core Data and shared App Group image transactions remain in Core. SwiftUI owns paging and sheet navigation; the remaining UIKit adapters are limited to camera/photo platform APIs and startup file protection.
+
+Run `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. `GrowingUpUI` runs five XCUI journeys (add/persist, both photo slots/crop, cancel/error recovery, pin/deep link, delete/persist) plus focused EN/RU and light/dark screenshots. Each test uses a UUID-scoped SQLite/image directory and original deterministic landscape fixtures; normal app/widget storage is not reset.
+
+Visual comparisons use SnapshotTesting pinned at revision `98ba2e1a302c405dd8752e9fcacef0d5f500cac9`. The Glass CI job compares full checkpoints and photo-control regions on iOS 26.5 / iPhone 17 Pro / arm64. The iOS 18.5 / iPhone 16 job checks behavior and retains screenshots. Both upload `.xcresult` bundles, including expected/actual/difference attachments for failed image comparisons.
+
+For deliberate baseline recording on the pinned simulator, set its status bar to 09:41, then run `xcodebuild test -scheme GrowingUpUI -destination 'id=SIMULATOR_UUID' -parallel-testing-enabled NO GROWINGUP_VISUAL_CHECKS=1 GROWINGUP_RECORD_SNAPSHOTS=1`. Inspect every image in `GrowingUpUITests/__Snapshots__/JourneyTests` before committing. Normal comparisons use `GROWINGUP_VISUAL_CHECKS=1 GROWINGUP_RECORD_SNAPSHOTS=0`; missing images fail. Toolchain or appearance changes require reviewed baselines. Camera hardware capture and animated glass refraction still require a device check.

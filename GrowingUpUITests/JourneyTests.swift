@@ -1,4 +1,5 @@
 import SnapshotTesting
+import UIKit
 import XCTest
 
 @MainActor
@@ -106,7 +107,7 @@ final class JourneyTests: XCTestCase {
 		addPerson()
 		app.buttons["person.edit"].tap()
 		app.buttons["editor.remove"].tap()
-		app.buttons["Remove"].lastMatch.tap()
+		app.sheets.buttons["Remove"].tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		relaunch()
 		XCTAssertTrue(app.buttons["person.add"].exists)
