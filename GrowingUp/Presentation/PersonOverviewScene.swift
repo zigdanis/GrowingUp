@@ -1,36 +1,5 @@
 import Core
-import Observation
 import SwiftUI
-
-@MainActor
-@Observable
-final class OverviewPresenter {
-	private(set) var image: UIImage?
-	private(set) var age = ""
-	var error: SceneError?
-	private let loadImage: (PersonImage) async throws -> UIImage
-
-	init(loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory) {
-		self.loadImage = loadImage
-	}
-
-	func load(person: Person) async {
-		image = nil
-		guard let picture = PersonImage(id: person.appPicId) else { return }
-		do {
-			let loaded = try await loadImage(picture)
-			try Task.checkCancellation()
-			image = loaded
-		} catch is CancellationError {
-		} catch {
-			self.error = SceneError(error)
-		}
-	}
-
-	func tick(person: Person, now: Date) {
-		age = AgeCalculator.ageString(for: person.dateComponents(at: now))
-	}
-}
 
 struct PersonOverviewScene: View {
 	let person: Person
@@ -87,36 +56,5 @@ struct PersonOverviewScene: View {
 			}
 		}
 		.sceneError($presenter.error)
-	}
-}
-
-struct EmptyPersonScene: View {
-	let onAdd: () -> Void
-
-	var body: some View {
-		VStack(spacing: 24) {
-			Image(systemName: "person.crop.circle.badge.plus").font(.system(size: 72)).foregroundStyle(.tint)
-			Button("Add person", systemImage: "plus", action: onAdd)
-				.buttonStyle(.borderedProminent)
-				.controlSize(.large)
-				.accessibilityIdentifier("person.add")
-		}
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.background(Color(.systemBackground))
-	}
-}
-
-extension View {
-	func sceneError(_ error: Binding<SceneError?>) -> some View {
-		alert(
-			error.wrappedValue?.title ?? "",
-			isPresented: Binding(
-				get: { error.wrappedValue != nil }, set: { if !$0 { error.wrappedValue = nil } }
-			)
-		) {
-			Button("OK", role: .cancel) { error.wrappedValue = nil }
-		} message: {
-			Text(error.wrappedValue?.message ?? "")
-		}
 	}
 }

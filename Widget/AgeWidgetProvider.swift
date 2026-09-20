@@ -21,25 +21,6 @@ private let entryCadence: TimeInterval = 60
 /// How many minute-entries to publish before asking WidgetKit to reload.
 private let entriesPerTimeline = 60
 
-/// A single pinned person captured for rendering, with its deep-link index.
-struct WidgetPerson: Identifiable {
-	let id: UUID
-	let index: Int
-	let name: String
-	let birthday: Date
-	let image: UIImage?
-
-	/// Custom-scheme URL the app already handles in `application(_:open:)`.
-	var deepLinkURL: URL {
-		URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=\(index)")!
-	}
-}
-
-struct AgeEntry: TimelineEntry {
-	let date: Date
-	let persons: [WidgetPerson]
-}
-
 struct AgeWidgetProvider: TimelineProvider {
 
 	private var fetchUseCase: FetchPersonsUseCase {

@@ -2,23 +2,6 @@ import Core
 import Observation
 import UIKit
 
-struct SceneError: Identifiable, Equatable {
-	let id = UUID()
-	let title: String
-	let message: String
-
-	init(_ error: Error) {
-		let coreError = error as? CoreError
-		title = coreError?.title ?? String(localized: "Error")
-		message = coreError?.message ?? error.localizedDescription
-	}
-}
-
-enum PersonMutation {
-	case saved(Person)
-	case removed(Person)
-}
-
 @MainActor
 @Observable
 final class PersonEditorPresenter: Identifiable {

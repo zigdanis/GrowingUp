@@ -175,7 +175,3 @@ final class SwiftUIPresenterTests: XCTestCase {
 	}
 
 }
-
-private final class CancelledSaveGateway: PersonsGatewaySpy {
-	override func add(parameters: AddPersonParameters) async throws -> Person { throw CancellationError() }
-}

@@ -24,18 +24,6 @@
 
 import Foundation
 
-private final class ValueWrapper<ValueType> {
-	let created: Date
-	var expiration: Date?
-	let value: ValueType
-
-	init(value: ValueType, expiration: Date? = nil) {
-		self.created = Date()
-		self.expiration = expiration
-		self.value = value
-	}
-}
-
 open class MemoryCache<ValueType> {
 	public let name: String
 

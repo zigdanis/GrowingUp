@@ -9,12 +9,6 @@ import AVFoundation
 import UIKit
 
 final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unchecked Sendable {
-	struct State: Sendable {
-		let isRunning: Bool
-		let canFlip: Bool
-		let isFront: Bool
-	}
-
 	let session = AVCaptureSession()
 
 	private let sessionQueue = DispatchQueue(label: "growingup.camera.session")
@@ -23,7 +17,7 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 	private var configured = false
 	private var captureCompletion: (@Sendable (UIImage?) -> Void)?
 
-	func start(onStateChange: @escaping @Sendable (State) -> Void) {
+	func start(onStateChange: @escaping @Sendable (CameraSessionState) -> Void) {
 		sessionQueue.async { [weak self] in
 			guard let self else { return }
 			self.configureIfNeeded()
@@ -135,8 +129,8 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 		session.commitConfiguration()
 	}
 
-	private func currentState() -> State {
-		State(
+	private func currentState() -> CameraSessionState {
+		CameraSessionState(
 			isRunning: session.isRunning,
 			canFlip: camera(for: .front) != nil,
 			isFront: videoInput?.device.position == .front
@@ -150,33 +144,5 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 			position: position
 		)
 		return discovery.devices.first
-	}
-}
-
-private extension UIImage {
-	/// Normalizing orientation to `.up` bakes any EXIF rotation into the pixels
-	/// so downstream crop/encode steps never rotate it.
-	func normalizedOrientation() -> UIImage {
-		guard imageOrientation != .up else { return self }
-		let format = UIGraphicsImageRendererFormat.default()
-		format.scale = scale
-		let renderer = UIGraphicsImageRenderer(size: size, format: format)
-		return renderer.image { _ in
-			draw(in: CGRect(origin: .zero, size: size))
-		}
-	}
-
-	/// Mirrors pixels horizontally so front-camera capture matches the mirrored
-	/// live preview shown at shutter time.
-	func horizontallyMirrored() -> UIImage {
-		let format = UIGraphicsImageRendererFormat.default()
-		format.scale = scale
-		let renderer = UIGraphicsImageRenderer(size: size, format: format)
-		return renderer.image { context in
-			let cgContext = context.cgContext
-			cgContext.translateBy(x: size.width, y: 0)
-			cgContext.scaleBy(x: -1, y: 1)
-			draw(in: CGRect(origin: .zero, size: size))
-		}
 	}
 }
