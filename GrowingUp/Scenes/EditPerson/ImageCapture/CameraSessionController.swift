@@ -11,39 +11,6 @@
 import AVFoundation
 import UIKit
 
-/// Flash mode exposed to the camera card. Mirrors AVCaptureDevice.FlashMode but
-/// keeps the UI decoupled from AVFoundation and cyclable for the toggle button.
-enum CameraFlashMode: CaseIterable {
-	case off
-	case auto
-	// swiftlint:disable:next identifier_name
-	case on
-
-	var next: CameraFlashMode {
-		switch self {
-		case .off: return .auto
-		case .auto: return .on
-		case .on: return .off
-		}
-	}
-
-	var systemImage: String {
-		switch self {
-		case .off: return "bolt.slash.fill"
-		case .auto: return "bolt.badge.a.fill"
-		case .on: return "bolt.fill"
-		}
-	}
-
-	fileprivate var avFlashMode: AVCaptureDevice.FlashMode {
-		switch self {
-		case .off: return .off
-		case .auto: return .auto
-		case .on: return .on
-		}
-	}
-}
-
 @MainActor
 @Observable
 final class CameraSessionController {
@@ -135,7 +102,7 @@ final class CameraSessionController {
 		completion?(image)
 	}
 
-	private func apply(_ state: CameraSessionWorker.State) {
+	private func apply(_ state: CameraSessionState) {
 		canFlip = state.canFlip
 		isFront = state.isFront
 		isRunning = state.isRunning

@@ -1,4 +1,14 @@
 {
+  "lsp": {
+    "sourcekit-lsp": {
+      "binary": {
+        "path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/sourcekit-lsp",
+        "env": {
+          "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+        }
+      }
+    }
+  },
   "languages": {
     "Swift": {
       "format_on_save": "on",

@@ -153,11 +153,13 @@ struct CropStep: View {
 			HStack {
 				glassButton(systemImage: "xmark", prominent: false, action: onCancel)
 					.accessibilityLabel(Text("Cancel"))
+					.accessibilityIdentifier("crop.cancel")
 				Spacer()
 				glassButton(systemImage: "checkmark", prominent: true) {
 					onComplete(cropImage())
 				}
 				.accessibilityLabel(Text("Use photo"))
+				.accessibilityIdentifier("crop.use")
 			}
 			.padding(.horizontal, 20)
 			.padding(.top, insets.top + 8)  // ZStack ignores the safe area; clear the notch manually.
@@ -339,65 +341,5 @@ extension CropStep {
 
 		guard let cropped = cgImage.cropping(to: rect) else { return source }
 		return UIImage(cgImage: cropped, scale: 1, orientation: .up)
-	}
-}
-
-/// Applies the Liquid Glass button chrome, gated on availability. Prominent is
-/// accent-filled (always legible); plain is regular glass.
-private struct GlassButtonChrome: ViewModifier {
-	let prominent: Bool
-
-	func body(content: Content) -> some View {
-		// Glass button styles need the iOS 26 SDK (Xcode 26 / Swift 6.2); older toolchains compile the legacy path so CI builds.
-		#if compiler(>=6.2)
-			if #available(iOS 26.0, *) {
-				Group {
-					if prominent {
-						content.buttonStyle(.glassProminent)
-					} else {
-						content.buttonStyle(.glass)
-					}
-				}
-				.buttonBorderShape(.circle)
-				.tint(prominent ? Color.accentColor : nil)
-			} else {
-				legacyChrome(content)
-			}
-		#else
-			legacyChrome(content)
-		#endif
-	}
-
-	@ViewBuilder
-	private func legacyChrome(_ content: Content) -> some View {
-		content
-			.buttonStyle(.plain)
-			.foregroundStyle(.white)
-			.background {
-				if prominent {
-					Circle().fill(Color.accentColor)
-				} else {
-					// Dark underlay keeps the white glyph legible over photos.
-					ZStack {
-						Circle().fill(.black.opacity(0.25))
-						Circle().fill(.ultraThinMaterial)
-					}
-				}
-			}
-			.overlay(Circle().stroke(.white.opacity(0.5), lineWidth: 1))
-			.shadow(color: .black.opacity(0.3), radius: 4, y: 1)
-	}
-}
-
-private extension UIImage {
-	/// Bakes EXIF orientation into the pixels so `cgImage` cropping maps screen coordinates onto the right region.
-	func normalizedUp() -> UIImage {
-		guard imageOrientation != .up else { return self }
-		let format = UIGraphicsImageRendererFormat.default()
-		format.scale = scale
-		let renderer = UIGraphicsImageRenderer(size: size, format: format)
-		return renderer.image { _ in
-			draw(in: CGRect(origin: .zero, size: size))
-		}
 	}
 }

@@ -21,10 +21,3 @@ struct GrowingUpWidget: Widget {
 		.supportedFamilies([.systemSmall, .systemMedium])
 	}
 }
-
-@main
-struct GrowingUpWidgetBundle: WidgetBundle {
-	var body: some Widget {
-		GrowingUpWidget()
-	}
-}

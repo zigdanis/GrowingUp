@@ -16,14 +16,14 @@ struct CameraPreview: UIViewRepresentable {
 	/// When true (front camera), the preview is horizontally mirrored.
 	var isMirrored: Bool = false
 
-	func makeUIView(context: Context) -> PreviewView {
-		let view = PreviewView()
+	func makeUIView(context: Context) -> CameraPreviewView {
+		let view = CameraPreviewView()
 		view.videoPreviewLayer.session = session
 		view.videoPreviewLayer.videoGravity = .resizeAspectFill
 		return view
 	}
 
-	func updateUIView(_ view: PreviewView, context: Context) {
+	func updateUIView(_ view: CameraPreviewView, context: Context) {
 		if view.videoPreviewLayer.session !== session {
 			view.videoPreviewLayer.session = session
 		}
@@ -31,20 +31,6 @@ struct CameraPreview: UIViewRepresentable {
 		if connection?.isVideoMirroringSupported == true {
 			connection?.automaticallyAdjustsVideoMirroring = false
 			connection?.isVideoMirrored = isMirrored
-		}
-	}
-
-	/// A UIView backed by an AVCaptureVideoPreviewLayer so layout drives the
-	/// layer's frame for free.
-	final class PreviewView: UIView {
-		// `layerClass` is a UIKit override point, not an instance-independent
-		// constant — it must stay a `class` property.
-		// swiftlint:disable:next static_over_final_class
-		override class var layerClass: AnyClass { AVCaptureVideoPreviewLayer.self }
-
-		var videoPreviewLayer: AVCaptureVideoPreviewLayer {
-			// swiftlint:disable:next force_cast
-			layer as! AVCaptureVideoPreviewLayer
 		}
 	}
 }

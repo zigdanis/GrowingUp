@@ -10,9 +10,6 @@ import Foundation
 
 public enum Logging {
 
-	public static func setup() {
-	}
-
 	public static func logError(_ error: CoreError) {
 		let value = "❌ \(error.title)\n\(error.message)"
 		print(value)

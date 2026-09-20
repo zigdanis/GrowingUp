@@ -10,4 +10,4 @@ exec scripts/run-swift-format.sh format \
   --in-place \
   --recursive \
   --parallel \
-  Core GrowingUp GrowingUpTests Widget
+  Core GrowingUp GrowingUpTests GrowingUpUITests Widget

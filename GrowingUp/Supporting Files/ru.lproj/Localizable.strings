@@ -94,3 +94,17 @@
 
 /* Message for the alert shown when a tapped photo fails to load */
 "The photo couldn't be loaded. Try again or pick another." = "Не удалось загрузить фото. Попробуйте ещё раз или выберите другое.";
+
+"Save" = "Сохранить";
+
+"Remove person?" = "Удалить человека?";
+
+"Edit person" = "Редактировать";
+
+"OK" = "ОК";
+
+"Photo" = "Фото";
+
+"Use photo" = "Использовать фото";
+
+"Selected photo" = "Выбранное фото";
