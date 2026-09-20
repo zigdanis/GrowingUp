@@ -21,7 +21,7 @@
 		09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */; };
 		09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916532D223ECBC40081FB10 /* Date+Extensions.swift */; };
 		09165367223ECBC40081FB10 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0916532F223ECBC40081FB10 /* InfoPlist.strings */; };
-		0916536C223ECBC40081FB10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165339223ECBC40081FB10 /* AppDelegate.swift */; };
+		0916536C223ECBC40081FB10 /* GrowingUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165339223ECBC40081FB10 /* GrowingUpApp.swift */; };
 		091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB1223D614E00A3D057 /* AddPersonUseCaseTests.swift */; };
 		091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */; };
 		0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */; };
@@ -175,7 +175,7 @@
 		09165335223ECBC40081FB10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		09165336223ECBC40081FB10 /* GrowingUp.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = GrowingUp.entitlements; sourceTree = "<group>"; };
 		09165338223ECBC40081FB10 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		09165339223ECBC40081FB10 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		09165339223ECBC40081FB10 /* GrowingUpApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrowingUpApp.swift; sourceTree = "<group>"; };
 		09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Utils.swift"; sourceTree = "<group>"; };
 		09165341223ECBC40081FB10 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGateway.swift; sourceTree = "<group>"; };
@@ -343,7 +343,7 @@
 		09165305223ECBC40081FB10 /* GrowingUp */ = {
 			isa = PBXGroup;
 			children = (
-				09165339223ECBC40081FB10 /* AppDelegate.swift */,
+				09165339223ECBC40081FB10 /* GrowingUpApp.swift */,
 				09165323223ECBC40081FB10 /* Assets.xcassets */,
 				09165306223ECBC40081FB10 /* Storyboards */,
 				0916530E223ECBC40081FB10 /* Scenes */,
@@ -1043,7 +1043,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0916536C223ECBC40081FB10 /* AppDelegate.swift in Sources */,
+				0916536C223ECBC40081FB10 /* GrowingUpApp.swift in Sources */,
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
 				09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,
