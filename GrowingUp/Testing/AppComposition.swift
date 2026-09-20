@@ -1,37 +1,38 @@
-#if DEBUG
-	import Core
-	import SwiftUI
-	import UIKit
+import Core
+import Foundation
+import UIKit
 
-	/// Explicit opt-in composition: every UI test gets its own SQLite and image directory.
-	@MainActor
-	enum UITestComposition {
-		static var isEnabled: Bool {
-			guard let value = ProcessInfo.processInfo.environment["GROWINGUP_UI_TEST_ID"] else { return false }
-			return UUID(uuidString: value) != nil
+@MainActor
+enum AppComposition {
+	static func make(for launchMode: AppLaunchMode) -> SceneConfigurator {
+		switch launchMode {
+		case .live:
+			return .live()
+		#if DEBUG
+			case let .uiTest(configuration):
+				do {
+					return try makeUITestComposition(configuration)
+				} catch {
+					fatalError("UI test store failed: \(error)")
+				}
+		#endif
 		}
+	}
 
-		static var colorScheme: ColorScheme? {
-			guard isEnabled else { return nil }
-			return ProcessInfo.processInfo.environment["GROWINGUP_UI_APPEARANCE"] == "Dark" ? .dark : .light
-		}
+	#if DEBUG
+		private static let fixedDate = Date(timeIntervalSince1970: 1_800_000_000)
 
-		static let fixedDate = Date(timeIntervalSince1970: 1_800_000_000)
-
-		static func make() throws -> SceneConfigurator? {
-			let environment = ProcessInfo.processInfo.environment
-			guard let identifier = environment["GROWINGUP_UI_TEST_ID"], UUID(uuidString: identifier) != nil else { return nil }
-			let root = URL.applicationSupportDirectory.appendingPathComponent("UITests/\(identifier)")
-			if environment["GROWINGUP_UI_RESET"] == "1", FileManager.default.fileExists(atPath: root.path) {
+		private static func makeUITestComposition(_ configuration: UITestConfiguration) throws -> SceneConfigurator {
+			let root = URL.applicationSupportDirectory.appendingPathComponent("UITests/\(configuration.identifier)")
+			if configuration.resetStore, FileManager.default.fileExists(atPath: root.path) {
 				try FileManager.default.removeItem(at: root)
 			}
 			try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 			let stack = try UITestStore(url: root.appendingPathComponent("people.sqlite"))
-			if environment["GROWINGUP_UI_RESET"] == "1", environment["GROWINGUP_UI_SEED"] == "pinned" { try stack.seed() }
+			if configuration.resetStore, configuration.seed == .pinned { try stack.seed() }
 			let images = UITestImageStore(root: root)
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
-			let failureGateway = UITestFailureGateway(
-				base: persistentGateway, failNextSave: environment["GROWINGUP_UI_FAIL_SAVE"] == "1")
+			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: configuration.failNextSave)
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
 			return SceneConfigurator(
 				gateway: gateway, loadImage: images.load, now: { fixedDate }, photoFixtures: (0..<18).map(fixture))
@@ -66,5 +67,5 @@
 				}
 			}
 		}
-	}
-#endif
+	#endif
+}

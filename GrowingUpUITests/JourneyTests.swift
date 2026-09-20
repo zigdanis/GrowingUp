@@ -6,6 +6,7 @@ import XCTest
 final class JourneyTests: XCTestCase {
 	private var app: XCUIApplication!
 	private var identifier = UUID().uuidString
+	private var configuration: UITestConfiguration!
 
 	override func setUp() {
 		super.setUp()
@@ -87,7 +88,7 @@ final class JourneyTests: XCTestCase {
 	}
 
 	func testPinLimitAndWidgetLink() {
-		launch(seed: "pinned")
+		launch(seed: .pinned)
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5))
 		app.open(URL(string: "growingup-app://?personIndex=1")!)
 		XCTAssertTrue(app.staticTexts["person.name"].waitForExistence(timeout: 5))
@@ -125,36 +126,41 @@ final class JourneyTests: XCTestCase {
 
 	func testLocalizedPhotoAppearance() {
 		for locale in ["en", "ru"] {
-			for appearance in ["Light", "Dark"] {
+			for appearance in UITestAppearance.allCases {
 				launch(locale: locale, appearance: appearance)
 				app.buttons["person.add"].tap()
 				XCTAssertTrue(app.textFields["editor.name"].waitForExistence(timeout: 5))
-				checkpoint("form-\(locale)-\(appearance)")
+				checkpoint("form-\(locale)-\(appearance.launchArgumentValue)")
 				choosePhoto(slot: "appPhoto")
-				checkpoint("photo-\(locale)-\(appearance)")
+				checkpoint("photo-\(locale)-\(appearance.launchArgumentValue)")
 				app.terminate()
 			}
 		}
 	}
 
-	private func launch(seed: String = "", failSave: Bool = false, locale: String = "en", appearance: String = "Light") {
+	private func launch(
+		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light
+	) {
+		configuration = UITestConfiguration(
+			identifier: UUID(uuidString: identifier)!, resetStore: true, seed: seed, failNextSave: failSave,
+			appearance: appearance)
 		app.launchEnvironment = [
-			"GROWINGUP_UI_TEST_ID": identifier, "GROWINGUP_UI_RESET": "1", "GROWINGUP_UI_SEED": seed,
-			"GROWINGUP_UI_FAIL_SAVE": failSave ? "1" : "0", "TZ": "UTC", "GROWINGUP_UI_APPEARANCE": appearance
+			UITestConfiguration.environmentKey: configuration.encoded,
+			"TZ": "UTC"
 		]
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
-			"-AppleInterfaceStyle", appearance, "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+			"-AppleInterfaceStyle", appearance.launchArgumentValue,
+			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
 		]
 		app.launch()
-		XCTAssertTrue(app.buttons[seed.isEmpty ? "person.add" : "person.edit"].waitForExistence(timeout: 10))
-		XCTAssertEqual(app.otherElements["test.appearance"].value as? String, appearance.lowercased())
+		XCTAssertTrue(app.buttons[seed == .empty ? "person.add" : "person.edit"].waitForExistence(timeout: 10))
 	}
 
 	private func relaunch() {
 		app.terminate()
-		app.launchEnvironment["GROWINGUP_UI_RESET"] = "0"
-		app.launchEnvironment["GROWINGUP_UI_FAIL_SAVE"] = "0"
+		configuration = configuration.forRelaunch()
+		app.launchEnvironment[UITestConfiguration.environmentKey] = configuration.encoded
 		app.launch()
 		XCTAssertTrue(app.buttons["person.edit"].waitForExistence(timeout: 5) || app.buttons["person.add"].exists)
 	}

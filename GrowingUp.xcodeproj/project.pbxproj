@@ -65,7 +65,7 @@
 		09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6B52523535E26003A1A01 /* MemoryCache.swift */; };
 		15D4457235609D2DFCAD162F /* CropShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E304222C36896704B86B7 /* CropShape.swift */; };
 		1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */; };
-		24409618EE10220459E7C0D8 /* UITestComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */; };
+		24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76A20096A409E8AA71BA5C6 /* AppComposition.swift */; };
 		28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */; };
 		29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */; };
 		2D92EEB991446F6AE28F8073 /* PhotoGridViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7E541473D019C9A291795B2 /* PhotoGridViewModel.swift */; };
@@ -132,7 +132,13 @@
 		2C508734FF7E86FE8E0A5DB4 /* SelectionProgressOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8886045F47F9DA2385E8F28 /* SelectionProgressOverlay.swift */; };
 		AEF0820E4E60DE4F7326FF1C /* SystemPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */; };
 		739A5DDA2FD811EDB0B7E468 /* SystemPhotoPickerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2791A25502BBBE7477684966 /* SystemPhotoPickerCoordinator.swift */; };
-		28239BC170652870856A0011 /* UITestAppearanceProbe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBB2FEEC51DA642BC75A89D /* UITestAppearanceProbe.swift */; };
+		28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */; };
+		A20000000000000000000001 /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* UITestConfiguration.swift */; };
+		A20000000000000000000002 /* UITestAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* UITestAppearance.swift */; };
+		A20000000000000000000003 /* UITestSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* UITestSeed.swift */; };
+		A20000000000000000000004 /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* UITestConfiguration.swift */; };
+		A20000000000000000000005 /* UITestAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* UITestAppearance.swift */; };
+		A20000000000000000000006 /* UITestSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* UITestSeed.swift */; };
 		00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */; };
 		2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334C6E14DD2C5C18B135667 /* UITestImageStore.swift */; };
 		23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */; };
@@ -295,7 +301,7 @@
 		B62D8CD10322D514FB6D9A92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersonEditorScene.swift; sourceTree = "<group>"; };
 		CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSourceModel.swift; sourceTree = "<group>"; };
-		E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UITestComposition.swift; sourceTree = "<group>"; };
+		E76A20096A409E8AA71BA5C6 /* AppComposition.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppComposition.swift; sourceTree = "<group>"; };
 		EDE7546BFE10608147B0CB77 /* PhotoAuthState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoAuthState.swift; sourceTree = "<group>"; };
 		F7E541473D019C9A291795B2 /* PhotoGridViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoGridViewModel.swift; sourceTree = "<group>"; };
 		2352944A067948DFD24D8DFB /* PersonImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImages.swift; sourceTree = "<group>"; };
@@ -336,7 +342,10 @@
 		C8886045F47F9DA2385E8F28 /* SelectionProgressOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionProgressOverlay.swift; sourceTree = "<group>"; };
 		A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPhotoPicker.swift; sourceTree = "<group>"; };
 		2791A25502BBBE7477684966 /* SystemPhotoPickerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPhotoPickerCoordinator.swift; sourceTree = "<group>"; };
-		CDBB2FEEC51DA642BC75A89D /* UITestAppearanceProbe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestAppearanceProbe.swift; sourceTree = "<group>"; };
+		CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLaunchMode.swift; sourceTree = "<group>"; };
+		A20000000000000000000007 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
+		A20000000000000000000008 /* UITestAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestAppearance.swift; sourceTree = "<group>"; };
+		A20000000000000000000009 /* UITestSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSeed.swift; sourceTree = "<group>"; };
 		41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestFailureGateway.swift; sourceTree = "<group>"; };
 		6334C6E14DD2C5C18B135667 /* UITestImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestImageStore.swift; sourceTree = "<group>"; };
 		C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestStore.swift; sourceTree = "<group>"; };
@@ -843,8 +852,11 @@
 		6EAF7AFE19C3D2DCA662652E /* Testing */ = {
 			isa = PBXGroup;
 			children = (
-				E76A20096A409E8AA71BA5C6 /* UITestComposition.swift */,
-				CDBB2FEEC51DA642BC75A89D /* UITestAppearanceProbe.swift */,
+				E76A20096A409E8AA71BA5C6 /* AppComposition.swift */,
+				CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */,
+				A20000000000000000000007 /* UITestConfiguration.swift */,
+				A20000000000000000000008 /* UITestAppearance.swift */,
+				A20000000000000000000009 /* UITestSeed.swift */,
 				41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */,
 				6334C6E14DD2C5C18B135667 /* UITestImageStore.swift */,
 				C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */,
@@ -1224,7 +1236,7 @@
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
-				24409618EE10220459E7C0D8 /* UITestComposition.swift in Sources */,
+				24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */,
 				5BCFB8E0FDB9C17A4E153C3B /* EmptyPersonScene.swift in Sources */,
 				0A0DB22A0E8EF87D2EF77F6C /* OverviewPresenter.swift in Sources */,
 				E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */,
@@ -1255,7 +1267,10 @@
 				2C508734FF7E86FE8E0A5DB4 /* SelectionProgressOverlay.swift in Sources */,
 				AEF0820E4E60DE4F7326FF1C /* SystemPhotoPicker.swift in Sources */,
 				739A5DDA2FD811EDB0B7E468 /* SystemPhotoPickerCoordinator.swift in Sources */,
-				28239BC170652870856A0011 /* UITestAppearanceProbe.swift in Sources */,
+				28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */,
+				A20000000000000000000001 /* UITestConfiguration.swift in Sources */,
+				A20000000000000000000002 /* UITestAppearance.swift in Sources */,
+				A20000000000000000000003 /* UITestSeed.swift in Sources */,
 				00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */,
 				2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */,
 				23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */,
@@ -1267,6 +1282,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
+				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
+				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
+				A20000000000000000000006 /* UITestSeed.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

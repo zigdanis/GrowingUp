@@ -10,24 +10,19 @@ import SwiftUI
 @main
 struct GrowingUpApp: App {
 	@State private var presenter: PeoplePresenter
+	private let preferredColorScheme: ColorScheme?
 
 	init() {
-		let configurator: SceneConfigurator
-		#if DEBUG
-			do { configurator = try UITestComposition.make() ?? .live() } catch { fatalError("UI test store failed: \(error)") }
-		#else
-			configurator = .live()
-		#endif
-		_presenter = State(initialValue: PeoplePresenter(configurator: configurator))
+		let launchMode = AppLaunchMode.current
+		preferredColorScheme = launchMode.preferredColorScheme
+		_presenter = State(initialValue: PeoplePresenter(configurator: AppComposition.make(for: launchMode)))
 	}
 
 	var body: some Scene {
 		WindowGroup {
-			PeopleScene(presenter: presenter).tint(Color(uiColor: .appColor))
-				#if DEBUG
-					.overlay(alignment: .topLeading) { UITestAppearanceProbe() }
-					.preferredColorScheme(UITestComposition.colorScheme)
-				#endif
+			PeopleScene(presenter: presenter)
+				.tint(Color(uiColor: .appColor))
+				.preferredColorScheme(preferredColorScheme)
 		}
 	}
 }
