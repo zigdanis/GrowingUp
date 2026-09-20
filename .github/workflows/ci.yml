@@ -159,12 +159,18 @@ jobs:
           test -d "/Applications/Xcode_${{ matrix.xcode }}.app"
           sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode }}.app"
           xcodebuild -version
-      - name: Create deterministic simulator
+      - name: Prepare existing simulator
         id: simulator
         run: |
           RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-${{ matrix.runtime }}"
-          xcrun simctl list runtimes --json | jq -e --arg runtime "$RUNTIME" '.runtimes[] | select(.identifier == $runtime and .isAvailable)'
-          UDID=$(xcrun simctl create GrowingUpUI "com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}" "$RUNTIME")
+          DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}"
+          UDID=$(xcrun simctl list devices available --json \
+            | jq -r --arg runtime "$RUNTIME" --arg deviceType "$DEVICE_TYPE" \
+              '.devices[$runtime][]? | select(.isAvailable and .deviceTypeIdentifier == $deviceType) | .udid' \
+            | head -n 1)
+          test -n "$UDID" || { echo "No existing ${{ matrix.device }} simulator for $RUNTIME"; exit 1; }
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
@@ -185,6 +191,6 @@ jobs:
           name: ui-${{ matrix.device }}-${{ matrix.runtime }}
           path: build/ui-artifacts
           retention-days: 14
-      - name: Remove test simulator
+      - name: Shut down test simulator
         if: always() && steps.simulator.outputs.udid != ''
-        run: xcrun simctl delete "${{ steps.simulator.outputs.udid }}"
+        run: xcrun simctl shutdown "${{ steps.simulator.outputs.udid }}" 2>/dev/null || true
