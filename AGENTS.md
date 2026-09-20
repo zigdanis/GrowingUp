@@ -1,6 +1,7 @@
 ## Standing Rules
 
 - Always start replies with `Danis, ...` or `Данис, ...`.
+- Never place DerivedData, `.xcresult` bundles, downloaded CI artifacts, or other reproducible validation output inside the repository. Use Xcode's default DerivedData location or a `mktemp` directory, and remove temporary validation artifacts when the run is complete.
 
 ## Code Style
 
