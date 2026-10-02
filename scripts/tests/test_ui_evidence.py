@@ -42,13 +42,13 @@ import sys
 from pathlib import Path
 
 arguments = sys.argv[1:]
-if arguments[:2] == ["repo", "view"]:
+if arguments[:2] == ["api", "repos/{owner}/{repo}"]:
     print("owner/repository")
-elif arguments[:2] == ["pr", "view"]:
-    if arguments[-1] == ".headRefOid":
+elif arguments[:2] == ["api", "repos/owner/repository/pulls/42"]:
+    if arguments[-1] == ".head.sha":
         print("new-head" if os.environ.get("MOCK_STALE") == "1" else "abc123")
     else:
-        print(json.dumps({"number": 42, "headRefOid": "abc123"}))
+        print(json.dumps({"number": 42, "head": {"sha": "abc123"}}))
 elif arguments[:2] == ["run", "list"]:
     print(json.dumps([{"databaseId": 123, "url": "https://example.com/run/123"}]))
 elif arguments[:2] == ["run", "watch"]:
