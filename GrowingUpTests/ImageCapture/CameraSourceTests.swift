@@ -15,6 +15,21 @@ import XCTest
 @MainActor
 final class CameraSourceTests: XCTestCase {
 
+	func testSystemPickerStartsCropOnlyAfterDismissal() {
+		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
+		let image = UIImage()
+		coordinator.choseAllPhotos()
+		coordinator.pickerFinished(with: image)
+		XCTAssertFalse(coordinator.isSystemPickerPresented)
+		XCTAssertNil(coordinator.imageToCrop)
+
+		coordinator.isSystemPickerPresented = false
+		coordinator.pickerDismissed()
+		XCTAssertTrue(coordinator.imageToCrop?.image === image)
+		coordinator.pickerDismissed()
+		XCTAssertTrue(coordinator.imageToCrop?.image === image)
+	}
+
 	func test_ImageCaptureCoordinator_routesBackFromCameraToSourceMenu() {
 		let coordinator = ImageCaptureCoordinator()
 		XCTAssertEqual(coordinator.stage, .sourceMenu)
