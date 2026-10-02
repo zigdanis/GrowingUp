@@ -182,9 +182,10 @@ class TestflightRelease
     end
     raise 'No recorded release for RESUME_RUN_ID' unless @env['RESUME_RUN_ID'].to_s.empty?
     requested = @env.fetch('MARKETING_VERSION')
-    version = requested == 'next' ? self.class.next_version(@versions) : requested
+    versions = @versions + previous.map { |r| r.fetch('version') }
+    version = requested == 'next' ? self.class.next_version(versions) : requested
     raise 'Marketing version must be numeric (one to three components)' unless version.match?(/\A\d+(?:\.\d+){0,2}\z/)
-    raise 'Each new deployment must advance the marketing version' unless Gem::Version.new(version) > @versions.map { |v| Gem::Version.new(v) }.max
+    raise 'Each new deployment must advance the marketing version' unless Gem::Version.new(version) > versions.map { |v| Gem::Version.new(v) }.max
     pending = previous.find { |r| r['source_sha'] == @env['SOURCE_SHA'] && !%w[available processing_failed distribution_failed].include?(r['phase']) }
     raise "This source already has a pending release; resume run #{pending['release_id']}" if pending
     notes = { 'en-US' => @env.fetch('NOTES_EN'), 'ru' => @env.fetch('NOTES_RU') }

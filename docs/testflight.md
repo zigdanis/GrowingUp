@@ -73,7 +73,7 @@ python3 scripts/testflight.py resume ORIGINAL_RUN_ID
 
 The notes file contains nonempty `en` and `ru` strings, at most 4000 UTF-8 bytes
 each. It contains tester instructions, never credentials. `next` advances the
-patch version above all Apple versions and the selected source's project version;
+patch version above all Apple versions, reserved receipts and the selected source's project version;
 an explicit version must also exceed every existing version. Several builds per
 marketing version are supported by Apple, but this project's new deployments
 deliberately advance both version and build. The source ref resolves to a recorded

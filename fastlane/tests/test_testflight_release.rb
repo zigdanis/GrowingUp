@@ -34,10 +34,10 @@ class TestflightReleaseTest < Minitest::Test
       'notes' => { 'en-US' => 'Original notes', 'ru' => 'Исходные заметки' } }
   end
 
-  def test_allocates_above_processed_uploading_and_reserved_builds
+  def test_allocates_above_processed_uploading_and_reserved_versions_and_builds
     reserve([prior_record.merge('release_id' => '90', 'source_sha' => 'b' * 40, 'build_number' => '35')])
     assert_equal '36', @saved['build_number']
-    assert_equal '2.1.11', @saved['version']
+    assert_equal '2.1.12', @saved['version']
     assert_equal 'reserved', @saved['phase']
   end
 
@@ -82,6 +82,8 @@ class TestflightReleaseTest < Minitest::Test
   def test_explicit_marketing_version_must_advance
     @env['MARKETING_VERSION'] = '2.1.10'
     assert_raises(RuntimeError) { reserve }
+    @env['MARKETING_VERSION'] = '2.1.11'
+    assert_raises(RuntimeError) { reserve([prior_record.merge('release_id' => '90', 'source_sha' => 'b' * 40)]) }
     @env['MARKETING_VERSION'] = '2.2.0'
     reserve
     assert_equal '2.2.0', @saved['version']
