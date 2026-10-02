@@ -46,6 +46,28 @@ final class CameraSourceTests: XCTestCase {
 		XCTAssertNil(coordinator.cropDismissed())
 	}
 
+	func testCancelledCropReturnsToItsSourceAndCanSelectAgain() {
+		let sources: [(ImageCaptureSelectionOrigin, ImageCaptureStage)] = [(.camera, .camera), (.photoPreview, .photoPreview)]
+		for (origin, stage) in sources {
+			let coordinator = ImageCaptureCoordinator(stage: stage)
+			let firstImage = UIImage()
+			let nextImage = UIImage()
+			coordinator.selectedImage(firstImage, from: origin)
+			XCTAssertTrue(coordinator.imageToCrop?.image === firstImage)
+			coordinator.cancelledCrop()
+			coordinator.imageToCrop = nil
+			XCTAssertEqual(coordinator.stage, stage)
+			XCTAssertNil(coordinator.imageToCrop)
+			XCTAssertNil(coordinator.cropDismissed())
+
+			coordinator.selectedImage(nextImage, from: origin)
+			XCTAssertTrue(coordinator.imageToCrop?.image === nextImage)
+			coordinator.imageToCrop = nil
+			XCTAssertEqual(coordinator.stage, stage)
+			XCTAssertNil(coordinator.cropDismissed())
+		}
+	}
+
 	func test_ImageCaptureCoordinator_routesBackFromCameraToSourceMenu() {
 		let coordinator = ImageCaptureCoordinator()
 		XCTAssertEqual(coordinator.stage, .sourceMenu)
