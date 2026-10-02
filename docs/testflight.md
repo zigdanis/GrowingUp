@@ -18,8 +18,15 @@ Add environment secrets `ASC_PRIVATE_KEY` (downloaded `.p8` contents),
 `ASC_KEY_ID`, `ASC_ISSUER_ID`, and the existing signing repository's `MATCH_PASSWORD`.
 Use an App Store Connect **team** API key with Admin access: individual keys cannot
 use provisioning endpoints, and signing renewal needs certificate permissions.
-GitHub signing access uses `MATCH_GIT_PRIVATE_KEY`, a dedicated write deploy key
-limited to the private `zigdanis/zigdanis-certificates` repository. Never use an
+The fifth required environment secret is `MATCH_GIT_PRIVATE_KEY`. It is already
+configured for this repository by the deployment setup: a generated write deploy
+key limited to the private `zigdanis/zigdanis-certificates` repository. The four-value
+importer deliberately preserves this signing-access secret; Danis does not need
+to supply another SSH key. Verify it with `python3 scripts/testflight.py ready`
+before entering the four Apple/match credentials. If it is missing or revoked,
+the deployment thread must generate a new signing-only deploy key, register its
+public half on the private signing repository, save its private half as this
+environment secret over stdin, and remove the temporary key files. Never use an
 Apple account password or paste credentials into T3 conversation messages.
 
 For a file-based transfer, put temporary input copies outside every checkout,
