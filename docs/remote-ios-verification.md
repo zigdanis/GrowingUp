@@ -14,7 +14,7 @@ fail; CI never records new baselines.
 
 ## Review a pull request from Linux
 
-Push the PR branch, then run from the repository with authenticated `gh` and `jq`:
+Push the PR branch, then run from the repository with authenticated `gh`, `jq` and `python3`:
 
 ```bash
 scripts/pr-evidence.sh PR_NUMBER
@@ -25,6 +25,7 @@ The command finds CI for the current PR head, waits for completion and downloads
 the artifact's source commit/run and rechecks the PR head after waiting and after
 downloading. It exits nonzero when CI fails, while retaining available evidence
 for diagnosis. A missing run/artifact is an error, not a successful validation.
+Downloads rejected by source validation and partial downloads are removed automatically.
 Documentation-only PRs skip simulator jobs and have no UI evidence to download.
 
 Each simulator artifact contains:

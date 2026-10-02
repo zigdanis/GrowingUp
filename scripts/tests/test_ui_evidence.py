@@ -56,7 +56,9 @@ elif arguments[:2] == ["run", "watch"]:
 elif arguments[:2] == ["run", "download"]:
     directory = Path(arguments[arguments.index("--dir") + 1]) / "ui-device-runtime"
     directory.mkdir()
-    (directory / "metadata.json").write_text(json.dumps({"head_sha": "abc123", "run_id": "123"}))
+    (directory / "metadata.json").write_text(json.dumps({
+        "head_sha": os.environ.get("MOCK_METADATA_SHA", "abc123"), "run_id": "123",
+    }))
     (directory / "index.html").write_text("report")
 else:
     sys.exit(99)
@@ -64,7 +66,7 @@ else:
 
 
 class EvidenceTests(unittest.TestCase):
-    def run_pr_evidence(self, directory, stale=False, ci_status=0):
+    def run_pr_evidence(self, directory, stale=False, ci_status=0, metadata_sha="abc123"):
         gh = directory / "gh"
         gh.write_text(GH_STUB)
         gh.chmod(0o755)
@@ -76,6 +78,7 @@ class EvidenceTests(unittest.TestCase):
                 TMPDIR=str(directory),
                 MOCK_STALE="1" if stale else "0",
                 MOCK_CI_STATUS=str(ci_status),
+                MOCK_METADATA_SHA=metadata_sha,
             ),
             capture_output=True, timeout=10,
         )
@@ -95,6 +98,13 @@ class EvidenceTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1, result.stderr)
             self.assertIn(b"Report:", result.stdout)
             self.assertEqual(len(list(directory.glob("growingup-pr-*/ui-*/index.html"))), 1)
+
+    def test_rejected_artifact_is_removed(self):
+        with tempfile.TemporaryDirectory(prefix="growingup-pr-test-") as temporary:
+            directory = Path(temporary)
+            result = self.run_pr_evidence(directory, metadata_sha="wrong-commit")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(list(directory.glob("growingup-pr-*")), [])
 
     def run_journeys(self, build_status=0, test_status=0, record_status=0):
         with tempfile.TemporaryDirectory(prefix="growingup-evidence-test-") as temporary:

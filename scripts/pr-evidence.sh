@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-# gh authentication, jq and an existing PR are the only Linux requirements.
+# Requires authenticated gh, jq, python3 and an existing PR.
 : "${1:?Usage: scripts/pr-evidence.sh PR_NUMBER}"
 REPO=$(gh api 'repos/{owner}/{repo}' --jq .full_name)
 PR=$(gh api "repos/$REPO/pulls/$1")
@@ -20,6 +20,7 @@ CURRENT_HEAD=$(gh api "repos/$REPO/pulls/$NUMBER" --jq .head.sha)
 test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed; rerun for the new commit.' >&2; exit 1; }
 
 EVIDENCE_DIR=$(mktemp -d "${TMPDIR:-/tmp}/growingup-pr-$NUMBER.XXXXXX")
+trap 'python3 -c "import shutil, sys; shutil.rmtree(sys.argv[1])" "$EVIDENCE_DIR"' EXIT
 echo "Downloading evidence to $EVIDENCE_DIR"
 gh run download "$RUN_ID" --repo "$REPO" --pattern 'ui-*' --dir "$EVIDENCE_DIR"
 for DIRECTORY in "$EVIDENCE_DIR"/ui-*; do
@@ -30,6 +31,7 @@ done
 
 CURRENT_HEAD=$(gh api "repos/$REPO/pulls/$NUMBER" --jq .head.sha)
 test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed during download; rerun for the new commit.' >&2; exit 1; }
+trap - EXIT
 echo "Inspect attachments/*.png, attachments/manifest.json, test-summary.json and journeys.mp4."
 echo "For video review on Linux: ffmpeg -i PATH/journeys.mp4 -vf fps=1/2 PATH/frame-%04d.png"
 echo "Remove $EVIDENCE_DIR after review. CI exit status: $CI_STATUS"
