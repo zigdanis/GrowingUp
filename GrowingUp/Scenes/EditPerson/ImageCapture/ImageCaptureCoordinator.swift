@@ -5,8 +5,8 @@ import UIKit
 @Observable
 final class ImageCaptureCoordinator {
 	private(set) var stage: ImageCaptureStage
-	private(set) var selectionOrigin: ImageCaptureSelectionOrigin?
 	private var cropImage: IdentifiableImage?
+	@ObservationIgnored private var selectionOrigin: ImageCaptureSelectionOrigin?
 	@ObservationIgnored private var pendingSystemPickerImage: UIImage?
 	@ObservationIgnored private var pendingCroppedImage: UIImage?
 
@@ -33,8 +33,6 @@ final class ImageCaptureCoordinator {
 		}
 	}
 
-	func pickerFinishedWithoutImage() { stage = .photoPreview }
-
 	func pickerFinished(with image: UIImage?) {
 		guard stage == .systemPhotoPicker else { return }
 		pendingSystemPickerImage = image
@@ -44,17 +42,12 @@ final class ImageCaptureCoordinator {
 	func pickerDismissed() {
 		guard let image = pendingSystemPickerImage else { return }
 		pendingSystemPickerImage = nil
-		selectedImage(from: .photoPreview)
-		cropImage = IdentifiableImage(image: image)
-	}
-
-	func selectedImage(from origin: ImageCaptureSelectionOrigin) {
-		selectionOrigin = origin
-		stage = origin == .camera ? .camera : .photoPreview
+		selectedImage(image, from: .photoPreview)
 	}
 
 	func selectedImage(_ image: UIImage, from origin: ImageCaptureSelectionOrigin) {
-		selectedImage(from: origin)
+		selectionOrigin = origin
+		stage = origin == .camera ? .camera : .photoPreview
 		cropImage = IdentifiableImage(image: image)
 	}
 
@@ -64,8 +57,6 @@ final class ImageCaptureCoordinator {
 		stage = selectionOrigin == .camera ? .camera : .photoPreview
 		self.selectionOrigin = nil
 	}
-
-	func completedCrop() { selectionOrigin = nil }
 
 	func completedCrop(with image: UIImage) {
 		guard cropImage != nil else { return }

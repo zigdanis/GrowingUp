@@ -9,9 +9,6 @@ struct ImageCaptureFlowView: View {
 	private var scenePhase
 	@State private var coordinator: ImageCaptureCoordinator
 	@State private var cameraModel = CameraSourceModel()
-	@State private var selectedImage: IdentifiableImage?
-	@State private var pendingSystemPickerImage: UIImage?
-	@State private var pendingCroppedImage: UIImage?
 
 	init(
 		source: ImageCaptureSource, previewImages: [UIImage]? = nil, cropShape: CropShape,
@@ -26,15 +23,17 @@ struct ImageCaptureFlowView: View {
 	}
 
 	var body: some View {
+		@Bindable var coordinator = self.coordinator
 		Group {
 			switch coordinator.stage {
 			case .sourceMenu:
 				ImageSourceSelectionView(onCamera: openCamera, onPhotos: coordinator.chosePhotos, onCancel: onCancel)
 			case .camera:
-				CameraSourceView(cameraModel: cameraModel, onCapture: { select($0, from: .camera) }, onBack: coordinator.wentBack)
+				CameraSourceView(
+					cameraModel: cameraModel, onCapture: { coordinator.selectedImage($0, from: .camera) }, onBack: coordinator.wentBack)
 			case .photoPreview, .systemPhotoPicker:
 				LightweightPhotoPreviewView(
-					previewImages: previewImages, onPicked: { select($0, from: .photoPreview) },
+					previewImages: previewImages, onPicked: { coordinator.selectedImage($0, from: .photoPreview) },
 					onBack: coordinator.wentBack, onAllPhotos: coordinator.choseAllPhotos)
 			}
 		}
@@ -43,32 +42,22 @@ struct ImageCaptureFlowView: View {
 			guard newPhase == .active else { return }
 			cameraModel.refresh()
 		}
-		.fullScreenCover(isPresented: systemPickerPresented, onDismiss: finishSystemPickerDismissal) {
+		.fullScreenCover(isPresented: $coordinator.isSystemPickerPresented, onDismiss: coordinator.pickerDismissed) {
 			SystemPhotoPicker(
-				onPicked: {
-					pendingSystemPickerImage = $0
-					coordinator.pickerFinishedWithoutImage()
-				}, onCancel: coordinator.pickerFinishedWithoutImage)
+				onPicked: { coordinator.pickerFinished(with: $0) },
+				onCancel: { coordinator.pickerFinished(with: nil) })
 		}
-		.fullScreenCover(item: $selectedImage, onDismiss: finishCropDismissal) { item in
+		.fullScreenCover(
+			item: $coordinator.imageToCrop,
+			onDismiss: { if let image = coordinator.cropDismissed() { onComplete(image) } }
+		) { item in
 			CropStep(
 				image: item.image, shape: cropShape,
 				onComplete: {
-					pendingCroppedImage = $0.downsized(maxPixelSide: cropShape.maxPixelSize)
-					selectedImage = nil
-					coordinator.completedCrop()
+					coordinator.completedCrop(with: $0.downsized(maxPixelSide: cropShape.maxPixelSize))
 				},
-				onCancel: {
-					selectedImage = nil
-					coordinator.cancelledCrop()
-				})
+				onCancel: coordinator.cancelledCrop)
 		}
-	}
-
-	private func finishCropDismissal() {
-		guard let image = pendingCroppedImage else { return }
-		pendingCroppedImage = nil
-		onComplete(image)
 	}
 
 	private func openCamera() {
@@ -76,21 +65,6 @@ struct ImageCaptureFlowView: View {
 			await cameraModel.requestIfNeeded()
 			coordinator.choseCamera()
 		}
-	}
-
-	private func select(_ image: UIImage, from origin: ImageCaptureSelectionOrigin) {
-		coordinator.selectedImage(from: origin)
-		selectedImage = IdentifiableImage(image: image)
-	}
-
-	private var systemPickerPresented: Binding<Bool> {
-		Binding(get: { coordinator.stage == .systemPhotoPicker }, set: { if !$0 { coordinator.pickerFinishedWithoutImage() } })
-	}
-
-	private func finishSystemPickerDismissal() {
-		guard let image = pendingSystemPickerImage else { return }
-		pendingSystemPickerImage = nil
-		select(image, from: .photoPreview)
 	}
 }
 
