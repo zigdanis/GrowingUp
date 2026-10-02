@@ -44,7 +44,9 @@ Environment/repository variables: `APPLE_TEAM_ID=XMSU8WJG5R`,
 `MATCH_GIT_URL=git@github.com:zigdanis/zigdanis-certificates.git`. Cloud preflight
 discovers the App Store Connect app, groups, testers, versions and build numbers.
 It prefers the existing `External` group and identifies Danis by tester name.
-If ambiguous, set `BETA_GROUP_ID` / `BETA_TESTER_ID` to IDs from its inventory.
+If the group is ambiguous, set `BETA_GROUP_ID` from its inventory. If Danis is
+ambiguous, supply his known `BETA_TESTER_ID` or `BETA_TESTER_EMAIL` (an environment
+secret). Reports omit the private tester roster.
 An existing tester can be added to the intended group through the API. If Danis
 has no tester record, the deployment thread needs his TestFlight email to invite
 him; it must not guess an email or create another Apple account.
@@ -87,11 +89,12 @@ never run `match nuke` or revoke a working certificate to make a retry pass.
 
 Build numbers exceed all Apple builds/uploads and all reserved release receipts.
 App/widget versions are overridden together and verified in the archive before
-upload. Release receipts are annotated `testflight/releases/BUILD-RUN` tags
-pointing to the source commit, plus nonsecret JSON artifacts and Actions summaries.
+upload. Release receipts are private draft GitHub releases named
+`testflight/receipts/RUN`, plus nonsecret JSON artifacts and Actions summaries.
+Each receipt update is one API mutation; no orphan tag-object/ref window exists.
 They record source SHA, version/build, workflow URL, group/tester IDs and actual
-processing/distribution state. The release lane does not commit a version bump
-or push a branch.
+processing/distribution state. Draft receipts are never published and do not
+create release tags. The release lane does not commit a version bump or push a branch.
 
 An upload intent is recorded before Transporter starts. After interruption, a
 retry polls that exact build rather than uploading another binary. If Apple has

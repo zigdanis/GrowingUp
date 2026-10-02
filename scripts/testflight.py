@@ -11,11 +11,12 @@ REQUIRED_SECRETS = {'ASC_PRIVATE_KEY', 'ASC_KEY_ID', 'ASC_ISSUER_ID', 'MATCH_PAS
 
 
 def gh(*args, data=None):
-    result = subprocess.run(['gh', *args], input=json.dumps(data) if data is not None else None,
-                            text=True, capture_output=True)
-    if result.returncode:
-        raise RuntimeError(result.stderr.strip())
-    return result.stdout
+    for _ in range(3 if data is None else 1):
+        result = subprocess.run(['gh', *args], input=json.dumps(data) if data is not None else None,
+                                text=True, capture_output=True)
+        if result.returncode == 0:
+            return result.stdout
+    raise RuntimeError(result.stderr.strip())
 
 
 def api(path):
@@ -38,11 +39,11 @@ def readiness():
 
 
 def receipt(run_id):
-    refs = api('git/matching-refs/tags/testflight/releases/')
-    matches = [r for r in refs if r['ref'].endswith('-' + run_id)]
+    pages = json.loads(gh('api', f'repos/{REPO}/releases?per_page=100', '--paginate', '--slurp'))
+    matches = [r for page in pages for r in page if r['draft'] and r['tag_name'] == 'testflight/receipts/' + run_id]
     if len(matches) != 1:
         raise RuntimeError('No unique release receipt for that original run ID')
-    return json.loads(api('git/tags/' + matches[0]['object']['sha'])['message'])
+    return json.loads(matches[0]['body'])
 
 
 def main():

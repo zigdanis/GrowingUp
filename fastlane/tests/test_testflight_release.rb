@@ -93,4 +93,47 @@ class TestflightReleaseTest < Minitest::Test
     assert_raises(RuntimeError) { reserve }
     assert_nil @saved
   end
+
+  def test_receipt_creation_and_updates_are_single_private_mutations
+    reserve
+    calls = []
+    @release.stub(:github, ->(path, **options) { calls << [path, options]; { 'id' => 42 } }) do
+      @release.save!
+      @release.begin_upload!
+    end
+    assert_equal ['releases', 'releases/42'], calls.map(&:first)
+    assert_equal %w[POST PATCH], calls.map { |call| call.last[:method] }
+    assert calls.all? { |call| call.last[:data][:draft] }
+    assert_equal 'uploading', JSON.parse(calls.last.last[:data][:body])['phase']
+  end
+
+  def test_retry_recovers_receipt_after_lost_creation_response
+    stored = { 'id' => 42, 'draft' => true, 'tag_name' => 'testflight/receipts/100', 'body' => JSON.generate(prior_record) }
+    @release.stub(:github, [[stored]]) { @release.prepare! }
+    assert_equal 42, @release.record['receipt_id']
+    @release.stub(:exact_build, nil) { refute @release.upload_needed? }
+  end
+
+  def test_ungrouped_app_tester_is_assigned_without_reporting_the_roster
+    assigned = []
+    api = Module.new
+    api.define_singleton_method(:add_beta_tester_to_group) { |**args| assigned << args }
+    namespace = Module.new
+    namespace.const_set(:ConnectAPI, api)
+    Object.const_set(:Spaceship, namespace)
+    tester = { 'id' => 'danis', 'attributes' => { 'firstName' => 'Danis', 'email' => 'private-danis@example.test' } }
+    another = { 'id' => 'private-alex-id', 'attributes' => { 'firstName' => 'Private Alex', 'email' => 'private-alex@example.test' } }
+    group = { 'id' => 'group', 'attributes' => { 'name' => 'Internal', 'isInternalGroup' => true } }
+    responses = { '/v1/apps' => [{ 'id' => 'app' }], '/v1/apps/app/betaGroups' => [group],
+                  '/v1/betaTesters' => [tester, another], '/v1/betaGroups/group/betaTesters' => [] }
+    @release.stub(:asc, ->(path, _params = {}) { [responses.fetch(path, []), []] }) { @release.preflight! }
+    assert_equal [{ beta_group_id: 'group', beta_tester_ids: ['danis'] }], assigned
+    report = File.read(@env['RELEASE_RECEIPT'])
+    refute_includes report, 'Private Alex'
+    refute_includes report, 'private-alex-id'
+    refute_includes report, 'private-alex@example.test'
+    refute_includes report, 'private-danis@example.test'
+  ensure
+    Object.send(:remove_const, :Spaceship) if Object.const_defined?(:Spaceship)
+  end
 end

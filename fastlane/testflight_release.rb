@@ -4,11 +4,11 @@ require 'open3'
 require 'uri'
 require 'rubygems/version'
 
-# The annotated release tag is the durable receipt across runner failures/retries.
+# A private draft release stores each receipt in one durable API mutation.
 class TestflightRelease
   APP_ID = 'pro.ziganshin.GrowingUp'
   WIDGET_ID = "#{APP_ID}.Widget"
-  PREFIX = 'tags/testflight/releases/'
+  PREFIX = 'testflight/receipts/'
   attr_reader :record, :group, :app, :inventory
 
   def initialize(env = ENV)
@@ -31,12 +31,15 @@ class TestflightRelease
     numbers.map { |n| Integer(n.to_s.split('.').first, 10) }.max.to_i + 1
   end
 
-  def github(path, method: 'GET', data: nil)
+  def github(path, method: 'GET', data: nil, paginate: false)
     command = ['gh', 'api', "repos/#{@repo}/#{path}", '--method', method]
     command += ['--input', '-'] if data
-    output, _error, status = Open3.capture3(*command, stdin_data: data ? JSON.generate(data) : '')
-    raise "GitHub #{method} #{path} failed; inspect authentication/network and retry the same release" unless status.success?
-    output.empty? ? nil : JSON.parse(output)
+    command += ['--paginate', '--slurp'] if paginate
+    (method == 'GET' ? 3 : 1).times do
+      output, _error, status = Open3.capture3(*command, stdin_data: data ? JSON.generate(data) : '')
+      return output.empty? ? nil : JSON.parse(output) if status.success?
+    end
+    raise "GitHub #{method} #{path} failed; inspect authentication/network and retry the same release"
   end
 
   def asc(path, params = {})
@@ -71,12 +74,9 @@ class TestflightRelease
     groups, = asc("/v1/apps/#{app['id']}/betaGroups")
     @inventory = { 'app_id' => app['id'], 'groups' => [] }
     groups.each do |candidate|
-      testers, = asc("/v1/betaGroups/#{candidate['id']}/betaTesters", 'limit' => 200)
-      candidate['testers'] = testers
       inventory['groups'] << {
         'id' => candidate['id'], 'name' => candidate.dig('attributes', 'name'),
-        'internal' => candidate.dig('attributes', 'isInternalGroup'),
-        'testers' => testers.map { |t| { 'id' => t['id'], 'name' => [t.dig('attributes', 'firstName'), t.dig('attributes', 'lastName')].compact.join(' ') } }
+        'internal' => candidate.dig('attributes', 'isInternalGroup')
       }
     end
     @group = groups.find { |g| g['id'] == @env['BETA_GROUP_ID'] }
@@ -84,16 +84,9 @@ class TestflightRelease
     @group ||= groups.first if groups.length == 1 && @env['BETA_GROUP_ID'].to_s.empty?
     write_report
     raise 'Set BETA_GROUP_ID to an existing group from the preflight inventory' unless group
-    matches = groups.flat_map { |g| g['testers'] }.uniq { |t| t['id'] }.select do |t|
-      if @env['BETA_TESTER_ID'].to_s.empty?
-        %w[danis данис].include?(t.dig('attributes', 'firstName').to_s.downcase)
-      else
-        t['id'] == @env['BETA_TESTER_ID']
-      end
-    end
-    raise 'Set BETA_TESTER_ID to Danis from the preflight inventory' unless matches.length == 1
-    @tester_id = matches.first['id']
-    if configure && !group['testers'].any? { |t| t['id'] == @tester_id }
+    resolve_tester!
+    members, = asc("/v1/betaGroups/#{group['id']}/betaTesters", 'limit' => 200)
+    if configure && !members.any? { |t| t['id'] == @tester_id }
       Spaceship::ConnectAPI.add_beta_tester_to_group(beta_group_id: group['id'], beta_tester_ids: [@tester_id])
     end
     unless internal?
@@ -127,9 +120,30 @@ class TestflightRelease
     group.dig('attributes', 'isInternalGroup')
   end
 
+  def resolve_tester!
+    if !@env['BETA_TESTER_ID'].to_s.empty?
+      testers, = asc("/v1/betaTesters/#{@env['BETA_TESTER_ID']}")
+    elsif !@env['BETA_TESTER_EMAIL'].to_s.empty?
+      testers, = asc('/v1/betaTesters', 'filter[email]' => @env['BETA_TESTER_EMAIL'], 'limit' => 200)
+    else
+      testers, = asc('/v1/betaTesters', 'filter[apps]' => app['id'], 'limit' => 200)
+    end
+    matches = testers.select do |tester|
+      if !@env['BETA_TESTER_ID'].to_s.empty?
+        tester['id'] == @env['BETA_TESTER_ID']
+      elsif !@env['BETA_TESTER_EMAIL'].to_s.empty?
+        tester.dig('attributes', 'email').to_s.downcase == @env['BETA_TESTER_EMAIL'].downcase
+      else
+        %w[danis данис].include?(tester.dig('attributes', 'firstName').to_s.downcase)
+      end
+    end
+    raise 'Cannot identify Danis uniquely; supply his BETA_TESTER_ID or an encrypted BETA_TESTER_EMAIL secret' unless matches.length == 1
+    @tester_id = matches.first['id']
+  end
+
   def records
-    github("git/matching-refs/#{PREFIX}").map do |ref|
-      JSON.parse(github("git/tags/#{ref.dig('object', 'sha')}").fetch('message'))
+    github('releases?per_page=100', paginate: true).flatten.select { |r| r['draft'] && r['tag_name'].start_with?(PREFIX) }.map do |release|
+      JSON.parse(release.fetch('body')).merge('receipt_id' => release.fetch('id'))
     end
   end
 
@@ -164,14 +178,12 @@ class TestflightRelease
   end
 
   def save!
-    name = "testflight/releases/#{record.fetch('build_number')}-#{@release_id}"
-    tag = github('git/tags', method: 'POST', data: { tag: name, message: JSON.generate(record), object: record.fetch('source_sha'), type: 'commit' })
-    refs = github("git/matching-refs/tags/#{name}")
-    if refs.any? { |ref| ref['ref'] == "refs/tags/#{name}" }
-      github("git/refs/tags/#{name}", method: 'PATCH', data: { sha: tag.fetch('sha'), force: true })
-    else
-      github('git/refs', method: 'POST', data: { ref: "refs/tags/#{name}", sha: tag.fetch('sha') })
-    end
+    data = { tag_name: "#{PREFIX}#{@release_id}", target_commitish: 'master',
+             name: "TestFlight receipt: #{record.fetch('version')} (#{record.fetch('build_number')})",
+             body: JSON.generate(record), draft: true, prerelease: true }
+    path = record['receipt_id'] ? "releases/#{record['receipt_id']}" : 'releases'
+    saved = github(path, method: record['receipt_id'] ? 'PATCH' : 'POST', data: data)
+    record['receipt_id'] = saved.fetch('id')
     write_report
   end
 

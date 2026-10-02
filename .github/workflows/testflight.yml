@@ -41,7 +41,7 @@ jobs:
     timeout-minutes: 75
     environment: testflight
     permissions:
-      contents: write # Only release receipt tags; never commits or branch pushes.
+      contents: write # Private draft receipts; never publish releases or push branches.
       actions: read
     env:
       SOURCE_SHA: ${{ inputs.source_sha }}
@@ -124,6 +124,7 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           BETA_REVIEW_INFO: ${{ secrets.BETA_REVIEW_INFO }}
           BETA_FEEDBACK_EMAIL: ${{ secrets.BETA_FEEDBACK_EMAIL }}
+          BETA_TESTER_EMAIL: ${{ secrets.BETA_TESTER_EMAIL }}
         run: |
           case "$OPERATION" in
             preflight) bundle exec fastlane ios release_preflight ;;
