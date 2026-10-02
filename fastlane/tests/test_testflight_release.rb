@@ -147,4 +147,24 @@ class TestflightReleaseTest < Minitest::Test
     refute_includes error.message, 'sensitive-invalid-value'
     assert_nil error.cause
   end
+
+  def test_non_json_apple_failure_preserves_status_and_path_without_body
+    token = Struct.new(:text) do
+      def expired? = false
+    end.new('test-token')
+    api = Module.new
+    api.define_singleton_method(:token) { token }
+    namespace = Module.new
+    namespace.const_set(:ConnectAPI, api)
+    Object.const_set(:Spaceship, namespace)
+    response = Net::HTTPBadGateway.new('1.1', '502', 'Bad Gateway')
+    response.define_singleton_method(:body) { '<html>upstream error details</html>' }
+    Net::HTTP.stub(:start, ->(*) { response }) do
+      error = assert_raises(RuntimeError) { @release.asc('/v1/apps') }
+      assert_includes error.message, 'Apple API /v1/apps returned HTTP 502'
+      refute_includes error.message, 'upstream error details'
+    end
+  ensure
+    Object.send(:remove_const, :Spaceship) if Object.const_defined?(:Spaceship)
+  end
 end

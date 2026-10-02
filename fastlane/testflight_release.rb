@@ -55,7 +55,11 @@ class TestflightRelease
       request['Authorization'] = "Bearer #{token.text}"
       response = Net::HTTP.start(url.host, url.port, use_ssl: true, open_timeout: 30, read_timeout: 60) { |http| http.request(request) }
       unless response.is_a?(Net::HTTPSuccess)
-        errors = JSON.parse(response.body).fetch('errors', []).map { |e| [e['code'], e['title'], e['detail']].compact.join(': ') }
+        errors = begin
+          JSON.parse(response.body.to_s).fetch('errors', []).map { |e| [e['code'], e['title'], e['detail']].compact.join(': ') }
+        rescue JSON::ParserError
+          []
+        end
         raise "Apple API #{path} returned HTTP #{response.code}: #{errors.join('; ')}"
       end
       body = JSON.parse(response.body)
