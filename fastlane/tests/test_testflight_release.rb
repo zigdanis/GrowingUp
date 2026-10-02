@@ -143,5 +143,6 @@ class TestflightReleaseTest < Minitest::Test
     @env['BETA_REVIEW_INFO'] = 'sensitive-invalid-value'
     error = assert_raises(RuntimeError) { @release.review_info }
     refute_includes error.message, 'sensitive-invalid-value'
+    assert_nil error.cause
   end
 end

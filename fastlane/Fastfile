@@ -33,10 +33,13 @@ platform :ios do
     ENV['PROJECT_VERSION'] = settings.fetch('MARKETING_VERSION')
     ENV['PROJECT_BUILD'] = settings.fetch('CURRENT_PROJECT_VERSION')
     release = TestflightRelease.new
-    api_key = app_store_connect_api_key(key_id: ENV.fetch('ASC_KEY_ID'), issuer_id: ENV.fetch('ASC_ISSUER_ID'),
-                                        key_filepath: ENV.fetch('ASC_KEY_PATH'), duration: 1200)
-    # Fastlane prints lane context on failures. Keep the private-key hash local.
-    lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
+    begin
+      api_key = app_store_connect_api_key(key_id: ENV.fetch('ASC_KEY_ID'), issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+                                          key_filepath: ENV.fetch('ASC_KEY_PATH'), duration: 1200)
+    ensure
+      # Clear even when token creation fails, before Fastlane prints lane context.
+      lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
+    end
     release.preflight!(configure: !status_only)
     release.prepare! if upload
     return release.status! if status_only

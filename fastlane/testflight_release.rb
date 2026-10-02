@@ -125,10 +125,20 @@ class TestflightRelease
     return {} if raw.strip.empty?
     info = JSON.parse(raw)
     allowed = %w[contact_first_name contact_last_name contact_email contact_phone notes]
-    raise 'BETA_REVIEW_INFO needs a JSON object with beta review contact fields' unless info.is_a?(Hash) && (info.keys - allowed).empty?
+    unless info.is_a?(Hash) && (info.keys - allowed).empty? && info.values.all? { |value| value.is_a?(String) }
+      raise 'BETA_REVIEW_INFO needs a JSON object with beta review contact fields'
+    end
+    if @env['GITHUB_ACTIONS'] == 'true'
+      info.values.reject(&:empty?).each do |value|
+        # Register each scalar with the runner: whole-JSON secret masking does
+        # not protect individual values in Apple's validation messages.
+        escaped = value.gsub('%', '%25').gsub("\r", '%0D').gsub("\n", '%0A')
+        puts "::add-mask::#{escaped}"
+      end
+    end
     info
   rescue JSON::ParserError
-    raise 'BETA_REVIEW_INFO contains invalid JSON; no credential values are shown'
+    raise 'BETA_REVIEW_INFO contains invalid JSON; no credential values are shown', cause: nil
   end
 
   def resolve_tester!
