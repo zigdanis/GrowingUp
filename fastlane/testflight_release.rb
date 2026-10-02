@@ -91,7 +91,7 @@ class TestflightRelease
     end
     unless internal?
       details, = asc("/v1/apps/#{app['id']}/betaAppReviewDetail")
-      override = JSON.parse(@env.fetch('BETA_REVIEW_INFO', '{}'))
+      override = review_info
       missing = %w[contactFirstName contactLastName contactPhone contactEmail].reject do |key|
         snake = key.gsub(/[A-Z]/) { |c| "_#{c.downcase}" }
         !override.fetch(snake, details.first&.dig('attributes', key)).to_s.empty?
@@ -118,6 +118,17 @@ class TestflightRelease
 
   def internal?
     group.dig('attributes', 'isInternalGroup')
+  end
+
+  def review_info
+    raw = @env['BETA_REVIEW_INFO'].to_s
+    return {} if raw.strip.empty?
+    info = JSON.parse(raw)
+    allowed = %w[contact_first_name contact_last_name contact_email contact_phone notes]
+    raise 'BETA_REVIEW_INFO needs a JSON object with beta review contact fields' unless info.is_a?(Hash) && (info.keys - allowed).empty?
+    info
+  rescue JSON::ParserError
+    raise 'BETA_REVIEW_INFO contains invalid JSON; no credential values are shown'
   end
 
   def resolve_tester!
@@ -265,7 +276,7 @@ class TestflightRelease
         'en-US' => { feedback_email: @feedback_email, description: 'Track the ages of people you care about, with photos and a Home Screen widget.' },
         'ru' => { feedback_email: @feedback_email, description: 'Следите за возрастом близких: фотографии и виджет на главном экране.' }
       }
-      override = JSON.parse(@env.fetch('BETA_REVIEW_INFO', '{}'))
+      override = review_info
       unless override.empty?
         attributes = override.transform_keys { |key| key.gsub(/_([a-z])/) { Regexp.last_match(1).upcase } }
         Spaceship::ConnectAPI.patch_beta_app_review_detail(app_id: app['id'], attributes: attributes)

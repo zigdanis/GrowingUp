@@ -55,7 +55,7 @@ platform :ios do
           directory = ENV.fetch('RELEASE_TEMP')
           archive = File.join(directory, 'GrowingUp.xcarchive')
           gym(project: project, scheme: 'GrowingUp', configuration: 'Release',
-              export_method: 'app-store-connect', output_directory: directory, output_name: 'GrowingUp.ipa',
+              export_method: 'app-store', output_directory: directory, output_name: 'GrowingUp.ipa',
               archive_path: archive, derived_data_path: File.join(directory, 'DerivedData'),
               buildlog_path: File.join(directory, 'logs'),
               xcargs: "MARKETING_VERSION=#{release.record.fetch('version')} CURRENT_PROJECT_VERSION=#{release.record.fetch('build_number')}",

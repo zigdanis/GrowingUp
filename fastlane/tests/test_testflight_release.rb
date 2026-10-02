@@ -136,4 +136,12 @@ class TestflightReleaseTest < Minitest::Test
   ensure
     Object.send(:remove_const, :Spaceship) if Object.const_defined?(:Spaceship)
   end
+
+  def test_absent_optional_review_secret_and_invalid_json_are_safe
+    @env['BETA_REVIEW_INFO'] = ''
+    assert_equal({}, @release.review_info)
+    @env['BETA_REVIEW_INFO'] = 'sensitive-invalid-value'
+    error = assert_raises(RuntimeError) { @release.review_info }
+    refute_includes error.message, 'sensitive-invalid-value'
+  end
 end
