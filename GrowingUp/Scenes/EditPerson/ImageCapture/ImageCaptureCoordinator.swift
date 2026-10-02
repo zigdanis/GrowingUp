@@ -53,6 +53,11 @@ final class ImageCaptureCoordinator {
 		stage = origin == .camera ? .camera : .photoPreview
 	}
 
+	func selectedImage(_ image: UIImage, from origin: ImageCaptureSelectionOrigin) {
+		selectedImage(from: origin)
+		cropImage = IdentifiableImage(image: image)
+	}
+
 	func cancelledCrop() {
 		guard let selectionOrigin else { return }
 		cropImage = nil
