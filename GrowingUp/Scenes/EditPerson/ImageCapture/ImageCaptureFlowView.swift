@@ -49,15 +49,15 @@ struct ImageCaptureFlowView: View {
 		}
 		.fullScreenCover(
 			item: $coordinator.imageToCrop,
-			onDismiss: { if let image = coordinator.cropDismissed() { onComplete(image) } }
-		) { item in
-			CropStep(
-				image: item.image, shape: cropShape,
-				onComplete: {
-					coordinator.completedCrop(with: $0.downsized(maxPixelSide: cropShape.maxPixelSize))
-				},
-				onCancel: coordinator.cancelledCrop)
-		}
+			onDismiss: { if let image = coordinator.cropDismissed() { onComplete(image) } },
+			content: { item in
+				CropStep(
+					image: item.image, shape: cropShape,
+					onComplete: {
+						coordinator.completedCrop(with: $0.downsized(maxPixelSide: cropShape.maxPixelSize))
+					},
+					onCancel: coordinator.cancelledCrop)
+			})
 	}
 
 	private func openCamera() {
