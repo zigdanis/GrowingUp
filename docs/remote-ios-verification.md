@@ -79,7 +79,8 @@ fastlane lanes. Simulator evidence does not upload or distribute a build.
 ## Maintain the evidence tools
 
 ```bash
-bash -n scripts/run-ui-journeys.sh scripts/pr-evidence.sh
+bash -n scripts/run-ui-journeys.sh
+bash -n scripts/pr-evidence.sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
 ```
 

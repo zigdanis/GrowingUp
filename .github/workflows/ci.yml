@@ -21,7 +21,8 @@ jobs:
       - uses: actions/checkout@v7
       - name: Check evidence scripts
         run: |
-          bash -n scripts/run-ui-journeys.sh scripts/pr-evidence.sh
+          bash -n scripts/run-ui-journeys.sh
+          bash -n scripts/pr-evidence.sh
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
 
   changes:
