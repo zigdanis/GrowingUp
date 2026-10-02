@@ -1,5 +1,8 @@
 name: CI
 
+permissions:
+  contents: read
+
 on:
   push:
     branches: [master]
@@ -11,6 +14,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  evidence-tools:
+    name: Evidence Tools
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check evidence scripts
+        run: |
+          bash -n scripts/run-ui-journeys.sh scripts/pr-evidence.sh
+          PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
+
   changes:
     name: Detect Changes
     runs-on: ubuntu-latest
@@ -154,6 +167,24 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v7
+      - name: Prepare evidence directory
+        id: evidence
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          DEVICE: ${{ matrix.device }}
+          RUNTIME: ${{ matrix.runtime }}
+          XCODE: ${{ matrix.xcode }}
+          VISUAL_CHECKS: ${{ matrix.visual }}
+        run: |
+          ARTIFACT_DIR=$(mktemp -d "$RUNNER_TEMP/ui-evidence.XXXXXX")
+          echo "directory=$ARTIFACT_DIR" >> "$GITHUB_OUTPUT"
+          jq -n --arg head "$HEAD_SHA" --arg checkout "$(git rev-parse HEAD)" \
+            --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            --arg device "$DEVICE" --arg runtime "$RUNTIME" --arg xcode "$XCODE" \
+            --arg visual "$VISUAL_CHECKS" \
+            '{head_sha: $head, checkout_sha: $checkout, run_id: $run, run_attempt: $attempt,
+              device: $device, runtime: $runtime, xcode: $xcode, visual_checks: $visual}' \
+            > "$ARTIFACT_DIR/metadata.json"
       - name: Select pinned Xcode
         run: |
           test -d "/Applications/Xcode_${{ matrix.xcode }}.app"
@@ -176,21 +207,70 @@ jobs:
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Run UI journeys and appearance comparisons
+        id: journeys
+        env:
+          SIM_UDID: ${{ steps.simulator.outputs.udid }}
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+          GROWINGUP_VISUAL_CHECKS: ${{ matrix.visual }}
+        run: scripts/run-ui-journeys.sh
+      - name: Export evidence for Linux review
+        id: export
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
         run: |
-          mkdir -p build/ui-artifacts
-          set -o pipefail
-          xcodebuild test -project GrowingUp.xcodeproj -scheme GrowingUpUI \
-            -destination "id=${{ steps.simulator.outputs.udid }}" \
-            -parallel-testing-enabled NO -resultBundlePath build/ui-artifacts/UI.xcresult \
-            GROWINGUP_VISUAL_CHECKS=${{ matrix.visual }} GROWINGUP_RECORD_SNAPSHOTS=0 \
-            CODE_SIGNING_ALLOWED=NO | tee build/ui-artifacts/xcodebuild.log
-      - name: Retain screenshots, differences and test results
-        if: always()
+          if [ -d "$ARTIFACT_DIR/UI.xcresult" ]; then
+            xcrun xcresulttool export attachments --path "$ARTIFACT_DIR/UI.xcresult" \
+              --output-path "$ARTIFACT_DIR/attachments"
+            xcrun xcresulttool get test-results summary --path "$ARTIFACT_DIR/UI.xcresult" \
+              > "$ARTIFACT_DIR/test-summary.json.tmp"
+            mv "$ARTIFACT_DIR/test-summary.json.tmp" "$ARTIFACT_DIR/test-summary.json"
+            xcrun xcresulttool get test-results tests --path "$ARTIFACT_DIR/UI.xcresult" \
+              > "$ARTIFACT_DIR/tests.json"
+          fi
+      - name: Create portable evidence report
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+          JOURNEY_OUTCOME: ${{ steps.journeys.outcome }}
+          EXPORT_OUTCOME: ${{ steps.export.outcome }}
+        run: |
+          jq --arg journeys "$JOURNEY_OUTCOME" --arg export "$EXPORT_OUTCOME" \
+            '. + {journey_outcome: $journeys, export_outcome: $export}' \
+            "$ARTIFACT_DIR/metadata.json" > "$ARTIFACT_DIR/metadata-next.json"
+          mv "$ARTIFACT_DIR/metadata-next.json" "$ARTIFACT_DIR/metadata.json"
+          python3 scripts/ui-evidence-report.py "$ARTIFACT_DIR"
+      - name: Retain video, screenshots, differences and test results
+        id: upload
+        if: always() && steps.evidence.outputs.directory != ''
         uses: actions/upload-artifact@v7
         with:
           name: ui-${{ matrix.device }}-${{ matrix.runtime }}
-          path: build/ui-artifacts
+          path: ${{ steps.evidence.outputs.directory }}
+          if-no-files-found: error
           retention-days: 14
+      - name: Link evidence in job summary
+        if: always() && steps.upload.outputs.artifact-url != ''
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          DEVICE: ${{ matrix.device }}
+          RUNTIME: ${{ matrix.runtime }}
+        run: |
+          {
+            echo "### Simulator evidence: $DEVICE / iOS $RUNTIME"
+            echo
+            echo "PR head: \`$HEAD_SHA\`"
+            echo
+            echo "[Download screenshots, video and test report]($ARTIFACT_URL)"
+            echo
+            echo 'Extract the artifact and open index.html. On Linux, run scripts/pr-evidence.sh PR_NUMBER.'
+          } >> "$GITHUB_STEP_SUMMARY"
       - name: Shut down test simulator
         if: always() && steps.simulator.outputs.udid != ''
         run: xcrun simctl shutdown "${{ steps.simulator.outputs.udid }}" 2>/dev/null || true
+      - name: Remove temporary evidence
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+        run: rm -rf "$ARTIFACT_DIR"

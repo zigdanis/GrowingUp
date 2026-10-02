@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -euo pipefail
+
+# gh authentication, jq and an existing PR are the only Linux requirements.
+: "${1:?Usage: scripts/pr-evidence.sh PR_NUMBER}"
+REPO=$(gh repo view --json nameWithOwner --jq .nameWithOwner)
+PR=$(gh pr view "$1" --repo "$REPO" --json number,headRefOid)
+NUMBER=$(jq -r .number <<< "$PR")
+HEAD_SHA=$(jq -r .headRefOid <<< "$PR")
+RUN=$(gh run list --repo "$REPO" --workflow ci.yml --event pull_request \
+  --commit "$HEAD_SHA" --limit 1 --json databaseId,url | jq -c '.[0] // empty')
+test -n "$RUN" || { echo "No PR CI run for $HEAD_SHA yet; retry after GitHub starts CI." >&2; exit 1; }
+RUN_ID=$(jq -r .databaseId <<< "$RUN")
+echo "PR #$NUMBER at $HEAD_SHA: $(jq -r .url <<< "$RUN")"
+
+CI_STATUS=0
+gh run watch "$RUN_ID" --repo "$REPO" --exit-status || CI_STATUS=$?
+CURRENT_HEAD=$(gh pr view "$NUMBER" --repo "$REPO" --json headRefOid --jq .headRefOid)
+test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed; rerun for the new commit.' >&2; exit 1; }
+
+EVIDENCE_DIR=$(mktemp -d "${TMPDIR:-/tmp}/growingup-pr-$NUMBER.XXXXXX")
+echo "Downloading evidence to $EVIDENCE_DIR"
+gh run download "$RUN_ID" --repo "$REPO" --pattern 'ui-*' --dir "$EVIDENCE_DIR"
+for DIRECTORY in "$EVIDENCE_DIR"/ui-*; do
+  jq -e --arg sha "$HEAD_SHA" --arg run "$RUN_ID" \
+    '.head_sha == $sha and .run_id == $run' "$DIRECTORY/metadata.json" > /dev/null
+  echo "Report: $DIRECTORY/index.html"
+done
+
+CURRENT_HEAD=$(gh pr view "$NUMBER" --repo "$REPO" --json headRefOid --jq .headRefOid)
+test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed during download; rerun for the new commit.' >&2; exit 1; }
+echo "Inspect attachments/*.png, attachments/manifest.json, test-summary.json and journeys.mp4."
+echo "For video review on Linux: ffmpeg -i PATH/journeys.mp4 -vf fps=1/2 PATH/frame-%04d.png"
+echo "Remove $EVIDENCE_DIR after review. CI exit status: $CI_STATUS"
+exit "$CI_STATUS"
