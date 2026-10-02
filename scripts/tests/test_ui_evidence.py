@@ -18,19 +18,19 @@ directory = Path(os.environ["ARTIFACT_DIR"])
 if Path(sys.argv[0]).name == "xcodebuild":
     if sys.argv[1] == "build-for-testing":
         sys.exit(int(os.environ.get("MOCK_BUILD_STATUS", "0")))
-    for _ in range(500):
-        if (directory / "recording-started").exists():
-            break
-        time.sleep(0.01)
-    else:
+    if not (directory / "recording-started").exists():
         sys.exit(99)
     sys.exit(int(os.environ.get("MOCK_TEST_STATUS", "0")))
 else:
+    if os.environ.get("MOCK_RECORD_STATUS") == "1":
+        sys.exit(1)
     def finish(signum, frame):
         Path(sys.argv[-1]).write_bytes(b"finalized-mp4")
         sys.exit(0)
     signal.signal(signal.SIGINT, finish)
+    time.sleep(0.1)
     (directory / "recording-started").touch()
+    print("Recording started", flush=True)
     while True:
         time.sleep(0.01)
 '''
@@ -96,7 +96,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertIn(b"Report:", result.stdout)
             self.assertEqual(len(list(directory.glob("growingup-pr-*/ui-*/index.html"))), 1)
 
-    def run_journeys(self, build_status=0, test_status=0):
+    def run_journeys(self, build_status=0, test_status=0, record_status=0):
         with tempfile.TemporaryDirectory(prefix="growingup-evidence-test-") as temporary:
             directory = Path(temporary)
             for command in ["xcodebuild", "xcrun"]:
@@ -111,6 +111,7 @@ class EvidenceTests(unittest.TestCase):
                 GROWINGUP_VISUAL_CHECKS="1",
                 MOCK_BUILD_STATUS=str(build_status),
                 MOCK_TEST_STATUS=str(test_status),
+                MOCK_RECORD_STATUS=str(record_status),
             )
             result = subprocess.run(
                 ["bash", str(SCRIPTS / "run-ui-journeys.sh")],
@@ -127,6 +128,9 @@ class EvidenceTests(unittest.TestCase):
 
     def test_failed_build_does_not_record(self):
         self.assertEqual(self.run_journeys(build_status=65), (65, None))
+
+    def test_failed_recorder_does_not_start_journeys(self):
+        self.assertEqual(self.run_journeys(record_status=1), (1, None))
 
     def test_report_links_exported_images_and_escapes_labels(self):
         with tempfile.TemporaryDirectory(prefix="growingup-report-test-") as temporary:

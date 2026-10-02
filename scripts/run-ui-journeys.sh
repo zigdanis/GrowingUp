@@ -28,6 +28,15 @@ xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 "$ARTIFACT_DIR/journeys.mp4
   > "$ARTIFACT_DIR/recording.log" 2>&1 &
 RECORDER_PID=$!
 
+# Wait for simctl to attach before allowing the first app interaction.
+for ATTEMPT in {1..30}; do
+  grep -q 'Recording started' "$ARTIFACT_DIR/recording.log" && break
+  kill -0 "$RECORDER_PID" 2>/dev/null || { cat "$ARTIFACT_DIR/recording.log" >&2; exit 1; }
+  sleep 1
+done
+grep -q 'Recording started' "$ARTIFACT_DIR/recording.log" \
+  || { echo 'Simulator video recording did not start within 30 seconds.' >&2; exit 1; }
+
 TEST_STATUS=0
 xcodebuild test-without-building -project GrowingUp.xcodeproj -scheme GrowingUpUI \
   -destination "id=$SIM_UDID" -parallel-testing-enabled NO \
