@@ -15,7 +15,7 @@ People able to modify the trusted master workflow can still access its secrets;
 review release workflow changes before merging them.
 
 Add environment secrets `ASC_PRIVATE_KEY` (downloaded `.p8` contents),
-`ASC_KEY_ID`, `ASC_ISSUER_ID`, and the existing signing repository's `MATCH_PASSWORD`.
+`ASC_KEY_ID`, `ASC_ISSUER_ID`, and `MATCH_PASSWORD` for GrowingUp's signing branch.
 Use an App Store Connect **team** API key with Admin access: individual keys cannot
 use provisioning endpoints, and signing renewal needs certificate permissions.
 The fifth required environment secret is `MATCH_GIT_PRIVATE_KEY`. It is already
@@ -48,7 +48,17 @@ only after all four secrets are saved; keep the original downloaded key in your
 own secure storage. Direct GitHub secret entry needs no local input files.
 
 Environment/repository variables: `APPLE_TEAM_ID=XMSU8WJG5R`,
-`MATCH_GIT_URL=git@github.com:zigdanis/zigdanis-certificates.git`. Cloud preflight
+`MATCH_GIT_URL=git@github.com:zigdanis/zigdanis-certificates.git`, and
+`MATCH_GIT_BRANCH=growingup-ci`. This isolated branch contains only GrowingUp's
+distribution identity and app/widget profiles, encrypted with its own password.
+The original shared signing branch and its encrypted history remain unchanged;
+other applications continue using their existing signing configuration. The
+GrowingUp password is backed up in the Mac login Keychain as service
+`pro.ziganshin.GrowingUp.match`, account `growingup-ci-20261004`. Retrieve it locally
+without printing it or passing it in command arguments. Changing an Actions secret
+alone cannot decrypt files encrypted with a different password.
+
+Cloud preflight
 discovers the App Store Connect app, groups, testers, versions and build numbers.
 It prefers the existing `External` group and identifies Danis by tester name.
 If the group is ambiguous, set `BETA_GROUP_ID` from its inventory. If Danis is

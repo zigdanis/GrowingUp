@@ -51,6 +51,7 @@ jobs:
       RESUME_RUN_ID: ${{ inputs.resume_run_id }}
       OPERATION: ${{ inputs.operation }}
       MATCH_GIT_URL: ${{ vars.MATCH_GIT_URL }}
+      MATCH_GIT_BRANCH: ${{ vars.MATCH_GIT_BRANCH }}
       APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
       BETA_GROUP_ID: ${{ vars.BETA_GROUP_ID }}
       BETA_TESTER_ID: ${{ vars.BETA_TESTER_ID }}

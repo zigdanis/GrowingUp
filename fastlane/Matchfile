@@ -1,3 +1,4 @@
 git_url(ENV.fetch("MATCH_GIT_URL"))
+git_branch(ENV.fetch("MATCH_GIT_BRANCH"))
 storage_mode("git")
 type("appstore")
