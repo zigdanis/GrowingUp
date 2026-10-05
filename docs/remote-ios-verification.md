@@ -22,11 +22,15 @@ scripts/pr-evidence.sh PR_NUMBER
 
 The command finds CI for the current PR head, waits for completion and downloads
 `ui-*` artifacts into a new temporary directory outside the repository. It checks
-the artifact's source commit/run and rechecks the PR head after waiting and after
+the artifact's source commit/run/attempt and rechecks the PR head after waiting and after
 downloading. It exits nonzero when CI fails, while retaining available evidence
 for diagnosis. A missing run/artifact is an error, not a successful validation.
 Downloads rejected by source validation and partial downloads are removed automatically.
 Documentation-only PRs skip simulator jobs and have no UI evidence to download.
+Artifact names include the CI attempt, so a rerun cannot accidentally download
+first-attempt evidence with the same name. To refresh evidence, rerun the full
+workflow with `gh run rerun RUN_ID`; rerunning only individual jobs can leave the
+current attempt without UI artifacts. A new attempt during download is rejected.
 
 Each simulator artifact contains:
 
@@ -123,10 +127,16 @@ Either `--image` or `--video` suffices; repeat the flags for additional relevant
 media. The helper checks the PR head, latest successful CI run and attempt, and
 artifact outcomes before uploading. It replaces only the marked visual acceptance
 section, preserving the rest of the PR description, and records the full commit,
-run link, simulator, and agent's review. Read back the PR and check that screenshots
-display and videos play. A partial upload can modify the body despite a nonzero
-exit; inspect that body before retrying. A concurrent push makes the evidence stale;
-retrieve and review evidence again before handoff. Upload errors are blockers,
+run link, simulator, and agent's review. Media is uploaded first through `gh api`
+using the same native attachment endpoint as `gh --attach`; the helper then reads
+the latest description before replacing its evidence section. Upload failures
+leave the description untouched. GitHub does not support conditional PR writes,
+so an edit arriving between the final read and update can still race; coordinate
+description edits during that final update. Read back the PR and check that
+screenshots display and videos play. Inspect a failed PR-update request before
+retrying. A concurrent push aborts publication or invalidates the helper's exact
+section after publication, preserving fresh surrounding text. Retrieve and review
+evidence again before handoff. Upload errors are blockers,
 not a reason to substitute artifact download links for visible feature evidence.
 
 Infrastructure or documentation work with no visible app effect should explain
@@ -138,6 +148,8 @@ release. Follow [the TestFlight workflow](testflight.md) after deployment approv
 
 References: [GitHub CLI attachments](https://docs.github.com/en/github-cli/github-cli/attaching-files-with-github-cli),
 [supported media and limits](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+The upload request follows the [GitHub CLI implementation](https://github.com/cli/cli/blob/v2.102.0/internal/attachments/client.go);
+conditional-write limits are documented in [GitHub REST best practices](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api#use-conditional-requests).
 
 ## Maintain the evidence tools
 

@@ -270,7 +270,7 @@ jobs:
         if: always() && steps.evidence.outputs.directory != ''
         uses: actions/upload-artifact@v7
         with:
-          name: ui-${{ matrix.device }}-${{ matrix.runtime }}
+          name: ui-${{ matrix.device }}-${{ matrix.runtime }}-attempt-${{ github.run_attempt }}
           path: ${{ steps.evidence.outputs.directory }}
           if-no-files-found: error
           retention-days: 14

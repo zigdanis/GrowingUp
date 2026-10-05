@@ -6,6 +6,7 @@ import json
 import subprocess
 import tempfile
 from pathlib import Path
+from urllib.parse import urlencode
 
 
 START = "<!-- visual-evidence:start -->"
@@ -35,31 +36,10 @@ def media_file(directory, relative, suffix):
         raise ValueError(f"Expected a {suffix} file inside the evidence directory: {relative}")
     if not path.is_file() or not 0 < path.stat().st_size <= MAX_BYTES:
         raise ValueError(f"Media must be nonempty and at most 10 MiB: {relative}")
-    if any(character in str(path) for character in "\n\r#()<>"):
-        raise ValueError(f"Rename the media file without Markdown delimiters: {relative}")
     return path
 
 
-def publish(number, directory, summary, images, videos):
-    directory = directory.resolve()
-    metadata = json.loads((directory / "metadata.json").read_text())
-    if metadata.get("journey_outcome") != "success" or metadata.get("export_outcome") != "success":
-        raise ValueError("Only successful, exported UI journeys can be published as acceptance evidence.")
-    if not summary.strip():
-        raise ValueError("Describe the behavior inspected and any limits in the summary file.")
-    media = [media_file(directory, name, ".png") for name in images]
-    media += [media_file(directory, name, ".mp4") for name in videos]
-    if not 1 <= len(media) <= 50 or len(set(media)) != len(media):
-        raise ValueError("Select 1–50 distinct screenshots or short videos.")
-    if "--attach" not in gh("pr", "edit", "--help"):
-        raise ValueError("Update GitHub CLI to 2.99.0 or newer for native --attach support.")
-
-    repo = gh("repo", "view", "--json", "nameWithOwner", "--jq", ".nameWithOwner").strip()
-    endpoint = f"repos/{repo}/pulls/{number}"
-    pr = json.loads(gh("api", endpoint))
-    sha = pr["head"]["sha"]
-    if pr["state"] != "open" or metadata["head_sha"] != sha:
-        raise ValueError("Evidence does not match the open PR's current head; retrieve fresh evidence.")
+def checked_run(repo, sha, metadata):
     runs = json.loads(gh(
         "run", "list", "--repo", repo, "--workflow", "ci.yml", "--event", "pull_request",
         "--commit", sha, "--limit", "1", "--json", "databaseId",
@@ -70,6 +50,64 @@ def publish(number, directory, summary, images, videos):
     if (run["status"] != "completed" or run["conclusion"] != "success"
             or str(run["run_attempt"]) != str(metadata["run_attempt"])):
         raise ValueError("The latest CI attempt must pass and match the downloaded evidence.")
+    return run
+
+
+def update_body(endpoint, body):
+    with tempfile.TemporaryDirectory(prefix="growingup-pr-body-") as temporary:
+        payload = Path(temporary) / "body.json"
+        payload.write_text(json.dumps({"body": body}))
+        gh("api", endpoint, "--method", "PATCH", "--input", str(payload))
+
+
+def invalidate(endpoint, evidence):
+    current = json.loads(gh("api", endpoint))
+    body = current["body"] or ""
+    block = START + body.partition(START)[2].partition(END)[0] + END
+    # Replace only our exact section, preserving fresh surrounding text and other publishers' evidence.
+    if block == evidence:
+        pending = f"{START}\n## Visual acceptance\n\nEvidence is stale. Retrieve and review current-head CI before acceptance.\n{END}"
+        update_body(endpoint, section(body, pending))
+
+
+def publish(number, directory, summary, images, videos):
+    directory = directory.resolve()
+    metadata = json.loads((directory / "metadata.json").read_text())
+    if metadata.get("journey_outcome") != "success" or metadata.get("export_outcome") != "success":
+        raise ValueError("Only successful, exported UI journeys can be published as acceptance evidence.")
+    if not summary.strip():
+        raise ValueError("Describe the behavior inspected and any limits in the summary file.")
+    if START in summary or END in summary:
+        raise ValueError("Summary must not contain visual evidence markers.")
+    media = [media_file(directory, name, ".png") for name in images]
+    media += [media_file(directory, name, ".mp4") for name in videos]
+    if not 1 <= len(media) <= 50 or len(set(media)) != len(media):
+        raise ValueError("Select 1–50 distinct screenshots or short videos.")
+    repository = json.loads(gh("api", "repos/{owner}/{repo}"))
+    repo = repository["full_name"]
+    endpoint = f"repos/{repo}/pulls/{number}"
+    pr = json.loads(gh("api", endpoint))
+    sha = pr["head"]["sha"]
+    if pr["state"] != "open" or metadata["head_sha"] != sha:
+        raise ValueError("Evidence does not match the open PR's current head; retrieve fresh evidence.")
+    checked_run(repo, sha, metadata)
+    section(pr["body"] or "", "")  # Reject malformed existing markers before uploading.
+
+    # Same native attachment endpoint used by gh --attach, without editing the PR during uploads.
+    attachments = []
+    for path in media:
+        content_type = "video/mp4" if path.suffix.lower() == ".mp4" else "image/png"
+        query = urlencode({"repository_id": repository["id"], "name": path.name, "content_type": content_type})
+        asset = json.loads(gh(
+            "api", f"https://uploads.github.com/user-attachments/assets?{query}",
+            "--method", "POST", "--header", "Content-Type: application/octet-stream", "--input", str(path),
+        ))
+        url = asset.get("url", "")
+        if not url.startswith("https://github.com/user-attachments/assets/"):
+            raise ValueError("GitHub did not return a native attachment URL.")
+        attachments.append((path, url))
+
+    run = checked_run(repo, sha, metadata)
 
     evidence = (
         f"{START}\n## Visual acceptance\n\n"
@@ -77,31 +115,21 @@ def publish(number, directory, summary, images, videos):
         f"{metadata['device']} / iOS {metadata['runtime']} / Xcode {metadata['xcode']}\n\n"
         f"{summary.strip()}\n\n"
     )
-    for path in media:
-        label = "" if path.suffix.lower() == ".mp4" else "Simulator checkpoint"
-        evidence += f"![{label}](<{path}>)\n\n"
+    for path, url in attachments:
+        evidence += url + "\n\n" if path.suffix.lower() == ".mp4" else f"![Simulator checkpoint]({url})\n\n"
     evidence += "TestFlight deployment awaits Danis's explicit approval.\n" + END
-    body = section(pr["body"] or "", evidence)
-
+    # GitHub does not support conditional PR writes. Re-read after the slow uploads, immediately before PATCH.
     current = json.loads(gh("api", endpoint))
-    if current["head"]["sha"] != sha or current["body"] != pr["body"]:
-        raise ValueError("PR changed before publication; rerun to preserve the current description.")
-    with tempfile.TemporaryDirectory(prefix="growingup-pr-body-") as temporary:
-        body_file = Path(temporary) / "body.md"
-        body_file.write_text(body)
-        arguments = ["pr", "edit", str(number), "--repo", repo, "--body-file", str(body_file)]
-        for path in media:
-            arguments += ["--attach", str(path)]
-        # gh can update the body even after a partial upload; inspect it before retrying a failure.
-        subprocess.run(["gh", *arguments], check=True)
+    if current["state"] != "open" or current["head"]["sha"] != sha:
+        raise ValueError("PR changed during upload; retrieve fresh evidence before publication.")
+    update_body(endpoint, section(current["body"] or "", evidence))
     updated = json.loads(gh("api", endpoint))
     if updated["head"]["sha"] != sha:
-        raise ValueError("PR head changed during upload; the published evidence is stale. Retrieve fresh evidence.")
-    published = (updated["body"] or "").partition(START)[2].partition(END)[0]
-    if (f"Reviewed commit: `{sha}`" not in published
-            or published.count("https://github.com/user-attachments/assets/") < len(media)
-            or any(str(path) in updated["body"] for path in media)):
-        raise ValueError("Some media references were not uploaded; inspect the PR before retrying.")
+        invalidate(endpoint, evidence)
+        raise ValueError("PR head changed during publication; retrieve fresh evidence. Inspect the PR before retrying.")
+    body = updated["body"] or ""
+    if START + body.partition(START)[2].partition(END)[0] + END != evidence:
+        raise ValueError("Published evidence was changed; inspect the PR before retrying.")
     print(f"Visual evidence published: {updated['html_url']}")
 
 

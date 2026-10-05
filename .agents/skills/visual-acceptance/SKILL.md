@@ -27,7 +27,8 @@ for retrieval, inspection, publication commands, and simulator limits.
    it embeds native GitHub images/video in the PR body and preserves other sections.
 4. Read back the PR description and confirm the media renders. After a new push or
    CI rerun, replace evidence with reviewed media for the latest head/attempt before
-   handoff. On partial upload failure, inspect the body before retrying. Remove
+   handoff. Media upload failures leave the description untouched; inspect a failed
+   PR-update request before retrying. Remove
    temporary downloads and clips after publication and review.
 
 Finish when the PR body contains current, inspected evidence covering the requested
