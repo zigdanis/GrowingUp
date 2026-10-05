@@ -53,11 +53,16 @@ elif arguments[:2] == ["run", "list"]:
     print(json.dumps([{"databaseId": 123, "url": "https://example.com/run/123"}]))
 elif arguments[:2] == ["run", "watch"]:
     sys.exit(int(os.environ.get("MOCK_CI_STATUS", "0")))
+elif arguments[:2] == ["api", "repos/owner/repository/actions/runs/123"]:
+    print("2")
 elif arguments[:2] == ["run", "download"]:
+    if arguments[arguments.index("--pattern") + 1] != "ui-*-attempt-2":
+        sys.exit(98)
     directory = Path(arguments[arguments.index("--dir") + 1]) / "ui-device-runtime"
     directory.mkdir()
     (directory / "metadata.json").write_text(json.dumps({
         "head_sha": os.environ.get("MOCK_METADATA_SHA", "abc123"), "run_id": "123",
+        "run_attempt": os.environ.get("MOCK_METADATA_ATTEMPT", "2"),
     }))
     (directory / "index.html").write_text("report")
 else:
@@ -66,7 +71,7 @@ else:
 
 
 class EvidenceTests(unittest.TestCase):
-    def run_pr_evidence(self, directory, stale=False, ci_status=0, metadata_sha="abc123"):
+    def run_pr_evidence(self, directory, stale=False, ci_status=0, metadata_sha="abc123", metadata_attempt="2"):
         gh = directory / "gh"
         gh.write_text(GH_STUB)
         gh.chmod(0o755)
@@ -79,6 +84,7 @@ class EvidenceTests(unittest.TestCase):
                 MOCK_STALE="1" if stale else "0",
                 MOCK_CI_STATUS=str(ci_status),
                 MOCK_METADATA_SHA=metadata_sha,
+                MOCK_METADATA_ATTEMPT=metadata_attempt,
             ),
             capture_output=True, timeout=10,
         )
@@ -103,6 +109,13 @@ class EvidenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix="growingup-pr-test-") as temporary:
             directory = Path(temporary)
             result = self.run_pr_evidence(directory, metadata_sha="wrong-commit")
+            self.assertNotEqual(result.returncode, 0)
+            self.assertEqual(list(directory.glob("growingup-pr-*")), [])
+
+    def test_old_attempt_artifact_is_rejected_and_removed(self):
+        with tempfile.TemporaryDirectory(prefix="growingup-pr-test-") as temporary:
+            directory = Path(temporary)
+            result = self.run_pr_evidence(directory, metadata_attempt="1")
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(list(directory.glob("growingup-pr-*")), [])
 
