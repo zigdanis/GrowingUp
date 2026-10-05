@@ -21,7 +21,7 @@ exclude:
 
 # Shared GrowingUp review policy
 
-This file is the authoritative repository-specific review policy shared by Macroscope, CodeRabbit, Greptile, and Codex.
+This file is the authoritative repository-specific review policy shared by Macroscope, CodeRabbit, and Codex.
 
 Review for concrete correctness, data-loss, concurrency, localization, target-configuration, and user-visible regressions. Do not report formatting or lint findings that `swift-format` and SwiftLint already cover. Do not request compatibility layers or speculative abstractions. If a rule below is unrelated to the changed code, ignore it. If there is no concrete issue, report no findings.
 
