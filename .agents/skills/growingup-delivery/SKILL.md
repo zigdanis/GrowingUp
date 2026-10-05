@@ -21,8 +21,11 @@ building another orchestration layer.
    unrelated changes and continue an existing task PR where appropriate. Register
    each PR worked on with T3 `link_pull_request` when available, immediately after
    finding/creating it; verify the thread's PR list before handoff.
-3. Read applicable repository rules. Use `diagnosing-bugs` for diagnosis and the
-   relevant SwiftUI skills for SwiftUI changes. For UI work, read
+3. Read applicable repository rules. For bugs, use `diagnosing-bugs` when available.
+   Otherwise define an observable failing check, reproduce when the environment
+   permits, identify the cause, apply the smallest fix, and rerun relevant checks
+   and visual verification. Distinguish observations from unverified hypotheses.
+   Use the relevant SwiftUI skills for SwiftUI changes. For UI work, read
    [visual-acceptance](../visual-acceptance/SKILL.md) and
    [remote iOS verification](../../../docs/remote-ios-verification.md) before
    planning validation. If previous-thread context is requested and accessible,
