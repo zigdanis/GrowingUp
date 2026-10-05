@@ -239,6 +239,7 @@ final class JourneyTests: XCTestCase {
 		let start = navigationBar.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
 		let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
 		start.press(forDuration: 0.1, thenDragTo: end)
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
 	private func choosePhoto(slot: String) {
