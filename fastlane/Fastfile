@@ -1,5 +1,6 @@
 default_platform :ios
 require 'securerandom'
+require 'cfpropertylist'
 require_relative 'testflight_release'
 
 platform :ios do
@@ -100,7 +101,7 @@ platform :ios do
     UI.user_error!('Archive must contain GrowingUp and its widget') unless paths.length == 2
     expected_ids = [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID]
     paths.each do |path|
-      info = Xcodeproj::Plist.read_from_path(path)
+      info = CFPropertyList.native_types(CFPropertyList::List.new(file: path).value)
       UI.user_error!('Unexpected archived bundle identifier') unless expected_ids.delete(info['CFBundleIdentifier'])
       unless info['CFBundleShortVersionString'] == record.fetch('version') && info['CFBundleVersion'] == record.fetch('build_number')
         UI.user_error!('Archived app/widget version or build number differs from release receipt')
