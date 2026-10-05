@@ -1,144 +1,101 @@
 default_platform :ios
-fastlane_require 'dotenv'
+require 'securerandom'
+require_relative 'testflight_release'
 
 platform :ios do
+  desc 'Check Apple account, tester access and app/widget signing without uploading'
+  lane :release_preflight do
+    run_release(upload: false)
+  end
 
-	# Public
-
+  desc 'Archive, upload or resume the exact recorded GrowingUp TestFlight release'
   lane :app_store do
-    ensure_git_status_clean
-    api_key = app_store_connect_api_key(
-      key_id: ENV['ASC_KEY_ID'],
-      issuer_id: ENV['ASC_ISSUER_ID'],
-      key_filepath: ENV['ASC_KEY_PATH']
-    )
-    match(
-      type: "appstore",
-      readonly: false,
-      api_key: api_key,
-      app_identifier: ["pro.ziganshin.GrowingUp", "pro.ziganshin.GrowingUp.Widget"]
-    )
-    version_number = get_version_number(target: "GrowingUp")
-    build_number = increment_build_number
-    complete_version_number = version_string(version_number, build_number)
-    # Summarize commits since the last TestFlight publish into EN + RU notes.
-    localized_notes = whats_new_notes(commits_since_last_publish)
-    gym(
-      scheme: "GrowingUp",
-      export_method: "app-store"
-    )
-    pilot(
-      api_key: api_key,
-      # Per-locale "What to Test": English + Russian fields.
-      localized_build_info: localized_notes,
-      # Wait for processing, then push the build to the public beta group.
-      distribute_external: true,
-      groups: ["External"],
-      notify_external_testers: true,
-      beta_app_feedback_email: ENV['BETA_FEEDBACK_EMAIL']
-    )
-    commit_version_bump(
-      force: true,
-      xcodeproj: "GrowingUp.xcodeproj",
-      message: "Version Bump to #{complete_version_number}")
-    push_to_git_remote
-    # Tag the published commit so the next run diffs the changelog from here.
-    mark_published(build_number)
-    clean_build_artifacts
+    run_release(upload: true)
   end
 
-  def change_log_since_last_tag
-    return changelog_from_git_commits(
-      pretty: '- %s',
-      merge_commit_filtering: "exclude_merges"
-    )
+  desc 'Read Apple processing/distribution status without archiving or uploading'
+  lane :release_status do
+    run_release(upload: true, status_only: true)
   end
 
-  # Raw changelog covering commits since the last TestFlight publish.
-  # Relies on a git tag written after each successful upload; on the first run
-  # (no such tag yet) it falls back to the last `fallback_count` commits.
-  def commits_since_last_publish(fallback_count: 10)
-    opts = { pretty: "- %s", merge_commit_filtering: "exclude_merges" }
-    last_tag = sh(
-      "git describe --tags --abbrev=0 --match 'testflight/*' 2>/dev/null || true",
-      log: false
-    ).strip
-
-    if last_tag.empty?
-      UI.message("No previous TestFlight tag; using last #{fallback_count} commits.")
-      return changelog_from_git_commits(**opts, commits_count: fallback_count)
+  def run_release(upload:, status_only: false)
+    UI.user_error!('Use the manually dispatched TestFlight workflow') unless ENV['GITHUB_ACTIONS'] == 'true'
+    source = ENV.fetch('RELEASE_SOURCE_DIR')
+    project = File.join(source, 'GrowingUp.xcodeproj')
+    ['GrowingUp/Supporting Files/Info.plist', 'Widget/Info.plist'].each do |path|
+      info = Xcodeproj::Plist.read_from_path(File.join(source, path))
+      UI.user_error!('Source app/widget must use CURRENT_PROJECT_VERSION') unless info['CFBundleVersion'] == '$(CURRENT_PROJECT_VERSION)'
     end
-
-    UI.message("Building changelog since #{last_tag}.")
-    raw = changelog_from_git_commits(**opts, between: [last_tag, "HEAD"]).to_s.strip
-    if raw.empty?
-      UI.message("No commits since #{last_tag}; using last #{fallback_count} commits.")
-      raw = changelog_from_git_commits(**opts, commits_count: fallback_count)
-    end
-    raw
-  end
-
-  # Tag the current commit so the next run knows where the last publish ended.
-  def mark_published(build_number)
-    tag = "testflight/#{build_number}"
-    add_git_tag(tag: tag)
-    push_git_tags
-  rescue => e
-    UI.important("Could not create/push tag #{tag} (#{e.message}); continuing.")
-  end
-
-  # Generate localized "What to Test" notes (EN + RU) through local Codex CLI.
-  # Output is constrained by JSON Schema; any CLI/parse failure uses raw notes.
-  def whats_new_notes(raw)
+    info = Xcodeproj::Plist.read_from_path(File.join(source, 'GrowingUp/Supporting Files/Info.plist'))
+    UI.user_error!('Encryption declaration needs review before release') unless info['ITSAppUsesNonExemptEncryption'] == false
+    target = Xcodeproj::Project.open(project).targets.find { |t| t.name == 'GrowingUp' }
+    settings = target.build_configurations.find { |c| c.name == 'Release' }.build_settings
+    ENV['PROJECT_VERSION'] = settings.fetch('MARKETING_VERSION')
+    ENV['PROJECT_BUILD'] = settings.fetch('CURRENT_PROJECT_VERSION')
+    release = TestflightRelease.new
     begin
-      require 'open3'
-      require 'json'
-      require 'tmpdir'
-
-      prompt = <<~PROMPT
-        You are writing TestFlight "What to Test" release notes from raw git commit messages.
-        Summarize the changes into short, user-facing beta tester notes (max 4 bullet points,
-        plain language, no internal jargon, no commit hashes). Do not address the reader by name.
-        Then translate that summary to Russian.
-        Return one JSON object. Both values must be strings containing newline-separated bullets:
-        {"en":"<english>","ru":"<russian>"}
-
-        Git commits:
-        #{raw}
-      PROMPT
-
-      schema = File.expand_path("testflight_notes.schema.json", __dir__)
-      model = ENV.fetch("CODEX_RELEASE_NOTES_MODEL", "gpt-5.6-luna")
-      command = [
-        "codex", "-m", model, "-a", "never", "-s", "read-only", "-C", Dir.tmpdir,
-        "exec", "--ephemeral", "--ignore-rules", "--skip-git-repo-check",
-        "--output-schema", schema, "-"
-      ]
-      stdout, stderr, status = Open3.capture3(*command, stdin_data: prompt)
-      raise "Codex CLI exited #{status.exitstatus}: #{stderr.lines.last}" unless status.success?
-
-      text = stdout.strip
-                   .sub(/\A```(?:json)?\s*/m, "")
-                   .sub(/\s*```\z/m, "")
-                   .strip
-      data = JSON.parse(text)
-      english = data.fetch("en")
-      russian = data.fetch("ru")
-      raise "Codex output values must be strings" unless english.is_a?(String) && russian.is_a?(String)
-
-      UI.success("Generated EN + RU 'What to Test' notes via Codex CLI.")
-      { "en-US" => { whats_new: english }, "ru" => { whats_new: russian } }
-    rescue => e
-      UI.important("Codex CLI notes failed (#{e.message}); using raw changelog for both locales.")
-      { "en-US" => { whats_new: raw }, "ru" => { whats_new: raw } }
+      api_key = app_store_connect_api_key(key_id: ENV.fetch('ASC_KEY_ID'), issuer_id: ENV.fetch('ASC_ISSUER_ID'),
+                                          key_filepath: ENV.fetch('ASC_KEY_PATH'), duration: 1200)
+    ensure
+      # Clear even when token creation fails, before Fastlane prints lane context.
+      lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
     end
+    release.preflight!(configure: !status_only)
+    release.prepare! if upload
+    return release.status! if status_only
+    if !upload || release.upload_needed?
+      keychain = File.join(ENV.fetch('RELEASE_TEMP'), 'signing.keychain')
+      keychain_password = SecureRandom.hex(32)
+      begin
+        create_keychain(path: keychain, password: keychain_password, default_keychain: false, unlock: true, timeout: 3600)
+        match(type: 'appstore', readonly: false, api_key: api_key,
+              app_identifier: [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID],
+              team_id: ENV.fetch('APPLE_TEAM_ID'), keychain_name: keychain, keychain_password: keychain_password,
+              generate_apple_certs: true, renew_expired_certs: true,
+              git_private_key: ENV.fetch('MATCH_GIT_PRIVATE_KEY_PATH'),
+              git_full_name: 'GrowingUp Release', git_user_email: 'release@users.noreply.github.com')
+        if upload
+          directory = ENV.fetch('RELEASE_TEMP')
+          archive = File.join(directory, 'GrowingUp.xcarchive')
+          gym(project: project, scheme: 'GrowingUp', configuration: 'Release',
+              export_method: 'app-store', output_directory: directory, output_name: 'GrowingUp.ipa',
+              archive_path: archive, derived_data_path: File.join(directory, 'DerivedData'),
+              buildlog_path: File.join(directory, 'logs'),
+              xcargs: "MARKETING_VERSION=#{release.record.fetch('version')} CURRENT_PROJECT_VERSION=#{release.record.fetch('build_number')}",
+              export_options: { signingStyle: 'manual', teamID: ENV.fetch('APPLE_TEAM_ID'),
+                                provisioningProfiles: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING] })
+          verify_release_archive(archive, release.record)
+          release.begin_upload!
+          pilot(api_key: api_key, app_identifier: TestflightRelease::APP_ID, apple_id: release.app['id'],
+                ipa: File.join(directory, 'GrowingUp.ipa'), skip_submission: true, skip_waiting_for_build_processing: true)
+          release.uploaded!
+        end
+      ensure
+        actual_keychain = File.exist?("#{keychain}-db") ? "#{keychain}-db" : keychain
+        delete_keychain(keychain_path: actual_keychain) if File.exist?(actual_keychain)
+      end
+    end
+    if upload
+      release.wait_for_processing!
+      pilot(**release.pilot_options, api_key: api_key)
+      release.verify_distribution!
+      UI.success("TestFlight #{release.record['version']} (#{release.record['build_number']}): #{release.record['phase']}. Await Danis's device confirmation.")
+    end
+  ensure
+    release&.write_report
   end
 
-  def version_string(version_number, build_number)
-    "#{version_number} (#{build_number})"
-  end
-
-  def version_tag(version_number, build_number)
-    "#{version_number}.#{build_number}"
+  def verify_release_archive(archive, record)
+    app = File.join(archive, 'Products/Applications/GrowingUp.app')
+    paths = [File.join(app, 'Info.plist')] + Dir[File.join(app, 'PlugIns/*.appex/Info.plist')]
+    UI.user_error!('Archive must contain GrowingUp and its widget') unless paths.length == 2
+    expected_ids = [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID]
+    paths.each do |path|
+      info = Xcodeproj::Plist.read_from_path(path)
+      UI.user_error!('Unexpected archived bundle identifier') unless expected_ids.delete(info['CFBundleIdentifier'])
+      unless info['CFBundleShortVersionString'] == record.fetch('version') && info['CFBundleVersion'] == record.fetch('build_number')
+        UI.user_error!('Archived app/widget version or build number differs from release receipt')
+      end
+    end
   end
 end

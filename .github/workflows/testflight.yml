@@ -1,0 +1,162 @@
+name: TestFlight
+run-name: TestFlight ${{ inputs.operation }} — ${{ inputs.marketing_version || inputs.resume_run_id || 'account preflight' }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        type: choice
+        options: [preflight, deploy, resume, status]
+        default: preflight
+        required: true
+      source_sha:
+        description: Exact source commit (must belong to master)
+        type: string
+        required: true
+      marketing_version:
+        description: next, or a version greater than every existing Apple version
+        type: string
+        default: next
+      notes_en:
+        description: English What to Test (required for a new deployment)
+        type: string
+      notes_ru:
+        description: Russian What to Test (required for a new deployment)
+        type: string
+      resume_run_id:
+        description: Original run ID; reuse its version/build without repeating an attempted upload
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: growingup-testflight
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.ref == 'refs/heads/master'
+    runs-on: macos-26
+    timeout-minutes: 75
+    environment: testflight
+    permissions:
+      contents: write # Private draft receipts; never publish releases or push branches.
+      actions: read
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      MARKETING_VERSION: ${{ inputs.marketing_version }}
+      NOTES_EN: ${{ inputs.notes_en }}
+      NOTES_RU: ${{ inputs.notes_ru }}
+      RESUME_RUN_ID: ${{ inputs.resume_run_id }}
+      OPERATION: ${{ inputs.operation }}
+      MATCH_GIT_URL: ${{ vars.MATCH_GIT_URL }}
+      MATCH_GIT_BRANCH: ${{ vars.MATCH_GIT_BRANCH }}
+      APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+      BETA_GROUP_ID: ${{ vars.BETA_GROUP_ID }}
+      BETA_TESTER_ID: ${{ vars.BETA_TESTER_ID }}
+      FASTLANE_SKIP_UPDATE_CHECK: 'true'
+      FASTLANE_HIDE_CHANGELOG: 'true'
+      FASTLANE_SKIP_DOCS: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select Xcode
+        run: |
+          sudo xcode-select -switch /Applications/Xcode.app
+          xcodebuild -version
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Validate source and prepare isolated release directory
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'source_sha must be a full commit SHA'; exit 1; }
+          git merge-base --is-ancestor "$SOURCE_SHA" origin/master
+          case "$OPERATION" in
+            deploy)
+              test -z "$RESUME_RUN_ID"
+              CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SOURCE_SHA" --limit 1 --json status,conclusion)
+              jq -e '.[0].status == "completed" and .[0].conclusion == "success"' <<< "$CI" >/dev/null
+              ;;
+            resume|status) [[ "$RESUME_RUN_ID" =~ ^[0-9]+$ ]] ;;
+            preflight) test -z "$RESUME_RUN_ID" ;;
+            *) exit 1 ;;
+          esac
+          DIRECTORY=$(mktemp -d "$RUNNER_TEMP/growingup-release.XXXXXX")
+          chmod 700 "$DIRECTORY"
+          echo "RELEASE_TEMP=$DIRECTORY" >> "$GITHUB_ENV"
+          echo "RELEASE_SOURCE_DIR=$DIRECTORY/source" >> "$GITHUB_ENV"
+          echo "RELEASE_RECEIPT=$DIRECTORY/release.json" >> "$GITHUB_ENV"
+          echo "FL_REPORT_PATH=$DIRECTORY" >> "$GITHUB_ENV"
+          git worktree add --detach "$DIRECTORY/source" "$SOURCE_SHA"
+      - name: Retrieve private keys
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          MATCH_GIT_PRIVATE_KEY: ${{ secrets.MATCH_GIT_PRIVATE_KEY }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          directory = Path(os.environ['RELEASE_TEMP'])
+          for variable, filename in [('ASC_PRIVATE_KEY', 'AuthKey.p8'), ('MATCH_GIT_PRIVATE_KEY', 'match-key')]:
+              value = os.environ.get(variable, '')
+              if not value.strip():
+                  raise SystemExit('Missing environment secret: ' + variable)
+              path = directory / filename
+              path.write_text(value + '\n')
+              path.chmod(0o600)
+          PY
+          echo "ASC_KEY_PATH=$RELEASE_TEMP/AuthKey.p8" >> "$GITHUB_ENV"
+          echo "MATCH_GIT_PRIVATE_KEY_PATH=$RELEASE_TEMP/match-key" >> "$GITHUB_ENV"
+          mkdir -p ~/.ssh
+          gh api meta --jq '.ssh_keys[] | "github.com " + .' >> ~/.ssh/known_hosts
+        # Only public GitHub host keys are read by gh here.
+      - name: Run release operation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          BETA_REVIEW_INFO: ${{ secrets.BETA_REVIEW_INFO }}
+          BETA_FEEDBACK_EMAIL: ${{ secrets.BETA_FEEDBACK_EMAIL }}
+          BETA_TESTER_EMAIL: ${{ secrets.BETA_TESTER_EMAIL }}
+        run: |
+          case "$OPERATION" in
+            preflight) bundle exec fastlane ios release_preflight ;;
+            status) bundle exec fastlane ios release_status ;;
+            deploy|resume) bundle exec fastlane ios app_store ;;
+          esac
+      - name: Keep nonsecret release receipt
+        if: always() && env.RELEASE_TEMP != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: testflight-receipt-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.RELEASE_RECEIPT }}
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Remove keys, keychain, archive and build output
+        if: always()
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+        run: |
+          if [ -n "${RELEASE_TEMP:-}" ]; then
+            security delete-keychain "$RELEASE_TEMP/signing.keychain-db" 2>/dev/null || true
+          fi
+          python3 - <<'PY'
+          import os, shutil
+          from pathlib import Path
+          key_id = os.environ.get('ASC_KEY_ID', '')
+          if key_id and key_id.isalnum():
+              key = Path.home() / '.appstoreconnect/private_keys' / ('AuthKey_' + key_id + '.p8')
+              key.unlink(missing_ok=True)
+          path = os.environ.get('RELEASE_TEMP')
+          if path:
+              shutil.rmtree(path)
+          PY
+          git worktree prune

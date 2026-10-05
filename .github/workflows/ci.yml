@@ -14,6 +14,27 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  release-tools:
+    name: Release Tools
+    runs-on: macos-26
+    env:
+      MATCH_GIT_URL: git@github.com:zigdanis/zigdanis-certificates.git
+      FASTLANE_SKIP_UPDATE_CHECK: 'true'
+      FASTLANE_SKIP_DOCS: 'true'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Check release state and fastlane configuration
+        env:
+          FL_REPORT_PATH: ${{ runner.temp }}
+        run: |
+          ruby fastlane/tests/test_testflight_release.rb
+          bundle exec fastlane lanes
+          bundle exec fastlane action match | ruby -e 'abort "Pinned match lacks safe expired-certificate renewal" unless STDIN.read.include?("renew_expired_certs")'
+
   evidence-tools:
     name: Evidence Tools
     runs-on: ubuntu-latest
