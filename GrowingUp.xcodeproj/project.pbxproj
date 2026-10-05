@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* RemovalConfirmationTests.swift */; };
 		00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */; };
 		0858960C48C00017CB65127B /* ContinuationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99981D3EA4AC347D5BE6E6BC /* ContinuationGate.swift */; };
 		09051B4821C558DB008A99C6 /* Widget.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 09051B3B21C558DB008A99C6 /* Widget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -209,6 +210,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A40000000000000000000002 /* RemovalConfirmationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RemovalConfirmationTests.swift; sourceTree = "<group>"; };
 		08484233110DE426675C4EA7 /* PhotoThumbnailCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoThumbnailCell.swift; sourceTree = "<group>"; };
 		09051B3B21C558DB008A99C6 /* Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		09051B4521C558DB008A99C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -872,6 +874,7 @@
 			isa = PBXGroup;
 			children = (
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
+				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 			);
 			path = GrowingUpUITests;
 			sourceTree = "<group>";
@@ -1286,6 +1289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
+				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,
 				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
 				A20000000000000000000006 /* UITestSeed.swift in Sources */,
