@@ -1,6 +1,7 @@
 default_platform :ios
 require 'securerandom'
 require 'cfpropertylist'
+require 'pilot'
 require_relative 'testflight_release'
 
 platform :ios do
@@ -46,10 +47,14 @@ platform :ios do
       # Clear even when token creation fails, before Fastlane prints lane context.
       lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
     end
+    if upload && !status_only && (notes_only || ENV['RESUME_RUN_ID'].to_s.empty?)
+      validate_release_notes(release.requested_notes)
+    end
     release.preflight!(configure: !status_only && !notes_only)
     release.prepare! if upload
     return release.status! if status_only
     return release.update_notes! if notes_only
+    validate_release_notes(release.record.fetch('notes')) if upload
     if !upload || release.upload_needed?
       keychain = File.join(ENV.fetch('RELEASE_TEMP'), 'signing.keychain')
       keychain_password = SecureRandom.hex(32)
@@ -92,6 +97,14 @@ platform :ios do
     end
   ensure
     release&.write_report
+  end
+
+  def validate_release_notes(notes)
+    notes.each do |locale, text|
+      unless Pilot::BuildManager.sanitize_changelog(text) == text
+        UI.user_error!("#{locale} notes must be plain text without emoji or <, at most 4000 UTF-8 bytes; Fastlane would alter them")
+      end
+    end
   end
 
   def configure_release_signing(project, profiles)

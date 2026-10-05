@@ -95,6 +95,9 @@ reviewed JSON and its source comparison in `docs/releases/` so another agent can
 reuse the exact text. Never generate notes from a guessed recent-commit count or
 silently substitute untranslated git messages. The deployment workflow carries
 this prepared text; it does not invoke a model or translation service.
+Use plain text without emoji or `<`; release validation rejects text that pinned
+Fastlane would silently sanitize, so the stored wording must match the prepared
+wording exactly.
 
 `next` advances the
 patch version above all Apple versions, reserved receipts and the selected source's project version;
