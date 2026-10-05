@@ -1,6 +1,7 @@
 ## Standing Rules
 
 - Always start replies with `Danis, ...` or `Данис, ...`.
+- For GrowingUp fixes from screenshots or text, feature work, improvements, and requests for a new build, always read and apply [growingup-delivery](.agents/skills/growingup-delivery/SKILL.md). It owns the workflow through implementation, independent review, visual feedback, and verified PR handoff; TestFlight follows its deployment authorization gate. General discussion and read-only questions do not trigger delivery.
 - Never place DerivedData, `.xcresult` bundles, downloaded CI artifacts, or other reproducible validation output inside the repository. Use Xcode's default DerivedData location or a `mktemp` directory, and remove temporary validation artifacts when the run is complete.
 - Reuse an existing compatible simulator for local builds and tests. Never create a local simulator unless Danis explicitly asks for one; if temporary simulator creation is explicitly approved, delete it as soon as the run completes.
 - On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Follow `docs/remote-ios-verification.md`: inspect relevant exported screenshots and recording frames for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review. A green build alone does not verify UI behavior.

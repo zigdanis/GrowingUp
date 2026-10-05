@@ -39,6 +39,9 @@ struct PersonEditorScene: View {
 							Text("Remove").frame(maxWidth: .infinity)
 						}
 						.accessibilityIdentifier("editor.remove")
+						.confirmationDialog("Remove person?", isPresented: $confirmingRemoval, titleVisibility: .visible) {
+							Button("Remove", role: .destructive) { Task { await presenter.remove() } }
+						}
 					}
 				}
 			}
@@ -54,9 +57,6 @@ struct PersonEditorScene: View {
 				}
 			}
 			.overlay { if presenter.isBusy { ProgressView() } }
-			.confirmationDialog("Remove person?", isPresented: $confirmingRemoval, titleVisibility: .visible) {
-				Button("Remove", role: .destructive) { Task { await presenter.remove() } }
-			}
 		}
 		.interactiveDismissDisabled(presenter.isBusy)
 		.task { await presenter.load() }
