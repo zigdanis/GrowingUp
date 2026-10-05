@@ -234,7 +234,9 @@ final class JourneyTests: XCTestCase {
 
 	private func dismissEditor() {
 		// Drag from the sheet's navigation area, avoiding scrolling the form or dismissing only the keyboard.
-		let start = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.08))
+		let navigationBar = app.navigationBars.firstMatch
+		XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))
+		let start = navigationBar.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
 		let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
 		start.press(forDuration: 0.1, thenDragTo: end)
 	}
