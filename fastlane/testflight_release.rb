@@ -280,7 +280,7 @@ class TestflightRelease
   end
 
   def pilot_options
-    options = { app_identifier: APP_ID, apple_id: app['id'], app_version: record.fetch('version'),
+    options = { app_identifier: APP_ID, app_platform: 'ios', apple_id: app['id'], app_version: record.fetch('version'),
                 build_number: record.fetch('build_number'), distribute_only: true, distribute_external: !internal?,
                 groups: internal? && group.dig('attributes', 'hasAccessToAllBuilds') ? nil : [group['id']],
                 submit_beta_review: !internal?, notify_external_testers: !internal?,
