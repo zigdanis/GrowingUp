@@ -128,6 +128,33 @@ final class JourneyTests: XCTestCase {
 		checkpoint("deleted")
 	}
 
+	func testRemovalConfirmationStaysNearButton() {
+		for (locale, appearance) in [("en", UITestAppearance.light), ("ru", .dark)] {
+			launch(seed: .pinned, locale: locale, appearance: appearance)
+			overview.tap()
+			let remove = app.buttons["editor.remove"]
+			XCTAssertTrue(remove.waitForExistence(timeout: 5))
+			let sourceFrame = remove.frame
+			remove.tap()
+			let confirmation = app.buttons[locale == "ru" ? "Удалить" : "Remove"].matching(
+				NSPredicate(format: "identifier != %@", "editor.remove")
+			).firstMatch
+			XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
+			let screenshot = app.screenshot()
+			let attachment = XCTAttachment(screenshot: screenshot)
+			attachment.name = "remove-confirmation-\(locale)-\(appearance.launchArgumentValue)"
+			attachment.lifetime = .keepAlways
+			add(attachment)
+			if #available(iOS 26.0, *) {
+				let actionFrame = confirmation.frame
+				let verticalGap = max(0, max(sourceFrame.minY - actionFrame.maxY, actionFrame.minY - sourceFrame.maxY))
+				XCTAssertLessThan(verticalGap, 100, "Removal confirmation must stay beside its source button")
+				XCTAssertTrue(sourceFrame.minX...sourceFrame.maxX ~= actionFrame.midX)
+			}
+			app.terminate()
+		}
+	}
+
 	func testPhotoRemovalMenuTracksEachImage() {
 		launch()
 		app.buttons["person.add"].tap()
