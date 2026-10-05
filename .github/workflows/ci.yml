@@ -32,6 +32,7 @@ jobs:
           FL_REPORT_PATH: ${{ runner.temp }}
         run: |
           ruby fastlane/tests/test_testflight_release.rb
+          bundle exec ruby fastlane/tests/test_release_signing.rb
           bundle exec fastlane lanes
           bundle exec fastlane action match | ruby -e 'abort "Pinned match lacks safe expired-certificate renewal" unless STDIN.read.include?("renew_expired_certs")'
 

@@ -55,6 +55,7 @@ platform :ios do
               git_private_key: ENV.fetch('MATCH_GIT_PRIVATE_KEY_PATH'),
               git_full_name: 'GrowingUp Release', git_user_email: 'release@users.noreply.github.com')
         if upload
+          configure_release_signing(project, lane_context.fetch(SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING))
           directory = ENV.fetch('RELEASE_TEMP')
           archive = File.join(directory, 'GrowingUp.xcarchive')
           gym(project: project, scheme: 'GrowingUp', configuration: 'Release',
@@ -83,6 +84,14 @@ platform :ios do
     end
   ensure
     release&.write_report
+  end
+
+  def configure_release_signing(project, profiles)
+    { 'GrowingUp' => TestflightRelease::APP_ID, 'Widget' => TestflightRelease::WIDGET_ID }.each do |target, identifier|
+      update_code_signing_settings(path: project, use_automatic_signing: false,
+                                  targets: [target], build_configurations: ['Release'],
+                                  profile_name: profiles.fetch(identifier))
+    end
   end
 
   def verify_release_archive(archive, record)
