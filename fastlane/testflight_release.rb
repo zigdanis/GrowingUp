@@ -192,8 +192,7 @@ class TestflightRelease
     raise 'Each new deployment must advance the marketing version' unless Gem::Version.new(version) > versions.map { |v| Gem::Version.new(v) }.max
     pending = previous.find { |r| r['source_sha'] == @env['SOURCE_SHA'] && !%w[available processing_failed distribution_failed].include?(r['phase']) }
     raise "This source already has a pending release; resume run #{pending['release_id']}" if pending
-    notes = { 'en-US' => @env.fetch('NOTES_EN'), 'ru' => @env.fetch('NOTES_RU') }
-    raise 'Provide nonempty EN/RU notes, each at most 4000 UTF-8 bytes' unless notes.values.all? { |n| !n.strip.empty? && n.bytesize <= 4000 }
+    notes = requested_notes
     numbers = @builds.map { |b| b.dig('attributes', 'version') } + @uploads.map { |u| u.dig('attributes', 'cfBundleVersion') }
     numbers += previous.map { |r| r.fetch('build_number') } + [@env.fetch('PROJECT_BUILD')]
     @record.merge!('release_id' => @release_id, 'source_sha' => @env.fetch('SOURCE_SHA'),
@@ -300,6 +299,40 @@ class TestflightRelease
     options
   end
 
+  def requested_notes
+    notes = { 'en-US' => @env.fetch('NOTES_EN'), 'ru' => @env.fetch('NOTES_RU') }
+    raise 'Provide nonempty EN/RU notes, each at most 4000 UTF-8 bytes' unless notes.values.all? { |n| !n.strip.empty? && n.bytesize <= 4000 }
+    notes
+  end
+
+  def update_notes!
+    raise 'Notes updates require an existing release receipt' if @env['RESUME_RUN_ID'].to_s.empty?
+    build = exact_build
+    raise 'Notes updates require the exact processed build' unless build&.dig('attributes', 'processingState') == 'VALID'
+    record.merge!('notes' => requested_notes, 'notes_status' => 'pending')
+    save!
+    localizations, = asc("/v1/builds/#{build['id']}/betaBuildLocalizations")
+    record.fetch('notes').each do |locale, text|
+      localization = localizations.find { |l| l.dig('attributes', 'locale') == locale }
+      if localization
+        Spaceship::ConnectAPI.patch_beta_build_localizations(localization_id: localization['id'], attributes: { whatsNew: text })
+      else
+        Spaceship::ConnectAPI.post_beta_build_localizations(build_id: build['id'], attributes: { locale: locale, whatsNew: text })
+      end
+    end
+    verify_notes!(build)
+  end
+
+  def verify_notes!(build = exact_build)
+    raise 'Exact uploaded build disappeared' unless build
+    localizations, = asc("/v1/builds/#{build['id']}/betaBuildLocalizations")
+    record['apple_notes'] = localizations.to_h { |l| [l.dig('attributes', 'locale'), l.dig('attributes', 'whatsNew')] }
+    mismatches = record.fetch('notes').keys.select { |locale| record['apple_notes'][locale] != record['notes'][locale] }
+    record['notes_status'] = mismatches.empty? ? 'verified' : 'mismatch'
+    save!
+    raise "Apple build notes missing or different for: #{mismatches.join(', ')}; update notes on this release" unless mismatches.empty?
+  end
+
   def verify_distribution!
     build = exact_build
     raise 'Exact uploaded build disappeared' unless build
@@ -325,6 +358,7 @@ class TestflightRelease
     record['processing_status'] = build ? build.dig('attributes', 'processingState') : 'NOT_VISIBLE'
     if record['processing_status'] == 'VALID'
       verify_distribution!
+      verify_notes!(build)
     else
       save!
     end

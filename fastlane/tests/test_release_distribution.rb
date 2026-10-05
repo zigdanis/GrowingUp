@@ -1,5 +1,18 @@
 require 'pilot'
+require 'fastlane'
 require_relative '../testflight_release'
+
+Fastlane.load_actions
+fastfile = Fastlane::FastFile.new(File.expand_path('../Fastfile', __dir__))
+fastfile.validate_release_notes('en-US' => "What's New\n• Photo saving fixed.", 'ru' => 'Что нового: сохранение фото исправлено.')
+['New photo controls 🌱', 'Test children < 3'].each do |text|
+  begin
+    fastfile.validate_release_notes('en-US' => text)
+    raise 'Notes accepted text that pinned Pilot silently changes'
+  rescue FastlaneCore::Interface::FastlaneError => error
+    raise unless error.message.include?('Fastlane would alter them')
+  end
+end
 
 release = TestflightRelease.new('GITHUB_REPOSITORY' => 'example/GrowingUp', 'GITHUB_RUN_ID' => '100')
 release.instance_variable_set(:@app, { 'id' => 'app' })

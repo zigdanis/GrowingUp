@@ -83,10 +83,27 @@ python3 scripts/testflight.py preflight
 python3 scripts/testflight.py deploy next master /tmp/growingup-notes.json
 python3 scripts/testflight.py status ORIGINAL_RUN_ID
 python3 scripts/testflight.py resume ORIGINAL_RUN_ID
+python3 scripts/testflight.py notes ORIGINAL_RUN_ID docs/releases/testflight-2.1.4-26.json
 ```
 
 The notes file contains nonempty `en` and `ru` strings, at most 4000 UTF-8 bytes
-each. It contains tester instructions, never credentials. `next` advances the
+each. Agents prepare this file before deployment: inspect the selected source's
+diff from the last verified published source (a durable receipt or historic
+`testflight/BUILD` tag), and check release records for intervening shipped builds.
+If a build has no known source, state that gap rather than inventing its changes.
+Summarize actual user-facing changes in both languages; omit internal tooling
+and signing work. Put changes under **What's New / Что нового** and separate
+testing instructions under **What to Test / Что проверить**. Existing features
+belong in the testing section unless the source actually changed them. Save the
+reviewed JSON and its source comparison in `docs/releases/` so another agent can
+reuse the exact text. Never generate notes from a guessed recent-commit count or
+silently substitute untranslated git messages. The deployment workflow carries
+this prepared text; it does not invoke a model or translation service.
+Use plain text without emoji or `<`; release validation rejects text that pinned
+Fastlane would silently sanitize, so the stored wording must match the prepared
+wording exactly.
+
+`next` advances the
 patch version above all Apple versions, reserved receipts and the selected source's project version;
 an explicit version must also exceed every existing version. Several builds per
 marketing version are supported by Apple, but this project's new deployments
@@ -100,6 +117,22 @@ without uploading. `status` only reads Apple state; `resume` finishes processing
 metadata or distribution for the recorded build, without repeating an attempted
 upload. If the first run stopped before attempting upload, resume can still
 archive and perform that release's first upload.
+
+`notes` requires an existing receipt and its exact processed Apple build. It
+updates or creates the EN/RU build localizations without archiving, uploading,
+changing tester membership, or resubmitting beta review. The receipt retains
+the version, build and app source. A failed locale write can be retried on the
+same receipt. `status` does not publish notes; it reads them back alongside
+distribution state. Deploy, resume and notes operations also read Apple's
+stored text back, and fail if either locale is absent or differs. Receipts
+include `apple_notes` and `notes_status` so a saved draft cannot be mistaken for
+successful Apple metadata publication.
+
+Apple's build-level `whatsNew` is the localized TestFlight **What to Test** field;
+it can contain both labelled sections. It is separate from App Store version
+release notes. After updating metadata, ask Danis to reopen the build details in
+TestFlight and confirm the notes are visible on his phone. Device visibility
+requires that confirmation even when both Apple locale read-backs match.
 
 ## Release and recovery
 

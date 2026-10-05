@@ -6,7 +6,7 @@ on:
     inputs:
       operation:
         type: choice
-        options: [preflight, deploy, resume, status]
+        options: [preflight, deploy, resume, status, notes]
         default: preflight
         required: true
       source_sha:
@@ -18,10 +18,10 @@ on:
         type: string
         default: next
       notes_en:
-        description: English What to Test (required for a new deployment)
+        description: English changes and testing instructions (required for deploy/notes)
         type: string
       notes_ru:
-        description: Russian What to Test (required for a new deployment)
+        description: Russian changes and testing instructions (required for deploy/notes)
         type: string
       resume_run_id:
         description: Original run ID; reuse its version/build without repeating an attempted upload
@@ -83,7 +83,7 @@ jobs:
               CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SOURCE_SHA" --limit 1 --json status,conclusion)
               jq -e '.[0].status == "completed" and .[0].conclusion == "success"' <<< "$CI" >/dev/null
               ;;
-            resume|status) [[ "$RESUME_RUN_ID" =~ ^[0-9]+$ ]] ;;
+            resume|status|notes) [[ "$RESUME_RUN_ID" =~ ^[0-9]+$ ]] ;;
             preflight) test -z "$RESUME_RUN_ID" ;;
             *) exit 1 ;;
           esac
@@ -130,6 +130,7 @@ jobs:
           case "$OPERATION" in
             preflight) bundle exec fastlane ios release_preflight ;;
             status) bundle exec fastlane ios release_status ;;
+            notes) bundle exec fastlane ios release_notes ;;
             deploy|resume) bundle exec fastlane ios app_store ;;
           esac
       - name: Keep nonsecret release receipt
