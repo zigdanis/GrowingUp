@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
+	let preferredColorScheme: ColorScheme?
 
 	var body: some View {
 		Group {
@@ -28,7 +29,10 @@ struct PeopleScene: View {
 		}
 		.task { await presenter.load() }
 		.onOpenURL(perform: presenter.open)
-		.sheet(item: $presenter.editor) { editor in PersonEditorScene(presenter: editor) }
+		.preferredColorScheme(presenter.selectedID == nil ? preferredColorScheme : .dark)
+		.sheet(item: $presenter.editor) { editor in
+			PersonEditorScene(presenter: editor).preferredColorScheme(preferredColorScheme)
+		}
 		.sceneError($presenter.error)
 	}
 }

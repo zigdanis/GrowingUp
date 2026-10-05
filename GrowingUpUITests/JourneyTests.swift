@@ -8,9 +8,7 @@ final class JourneyTests: XCTestCase {
 	private var identifier = UUID().uuidString
 	private var configuration: UITestConfiguration!
 
-	private var overview: XCUIElement {
-		app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch
-	}
+	private var overview: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch }
 
 	override func setUp() {
 		super.setUp()
