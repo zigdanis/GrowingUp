@@ -18,6 +18,7 @@ struct PeopleScene: View {
 					}
 				}
 				.tabViewStyle(.page(indexDisplayMode: .always))
+				.ignoresSafeArea()
 			}
 		}
 		.task { await presenter.load() }
