@@ -55,6 +55,73 @@ class TestflightReleaseTest < Minitest::Test
     assert_nil @saved
   end
 
+  def test_notes_verification_reads_both_apple_locales_and_rejects_missing_or_stale_text
+    reserve([prior_record])
+    build = { 'id' => 'apple-build' }
+    localizations = @release.record['notes'].map do |locale, text|
+      { 'attributes' => { 'locale' => locale, 'whatsNew' => text } }
+    end
+    @release.stub(:asc, ->(path) { assert_equal '/v1/builds/apple-build/betaBuildLocalizations', path; [localizations, []] }) do
+      @release.stub(:save!, nil) do
+        @release.verify_notes!(build)
+        assert_equal 'verified', @release.record['notes_status']
+        localizations.last['attributes']['whatsNew'] = 'Stale instructions'
+        assert_raises(RuntimeError) { @release.verify_notes!(build) }
+        assert_equal 'mismatch', @release.record['notes_status']
+        localizations.clear
+        assert_raises(RuntimeError) { @release.verify_notes!(build) }
+        assert_equal({}, @release.record['apple_notes'])
+      end
+    end
+  end
+
+  def test_notes_update_reuses_build_and_updates_or_creates_locales_before_readback
+    @env['RESUME_RUN_ID'] = '100'
+    reserve([prior_record(phase: 'available')])
+    identity = @release.record.values_at('release_id', 'source_sha', 'version', 'build_number', 'phase')
+    localizations = [{ 'id' => 'english', 'attributes' => { 'locale' => 'en-US', 'whatsNew' => 'Old notes' } }]
+    calls = []
+    api = Module.new
+    api.define_singleton_method(:patch_beta_build_localizations) do |**args|
+      calls << [:patch, args]
+      localizations.first['attributes']['whatsNew'] = args[:attributes][:whatsNew]
+    end
+    api.define_singleton_method(:post_beta_build_localizations) do |**args|
+      calls << [:post, args]
+      localizations << { 'attributes' => { 'locale' => args[:attributes][:locale], 'whatsNew' => args[:attributes][:whatsNew] } }
+    end
+    namespace = Module.new
+    namespace.const_set(:ConnectAPI, api)
+    Object.const_set(:Spaceship, namespace)
+    build = { 'id' => 'apple-build', 'attributes' => { 'processingState' => 'VALID' } }
+    @release.stub(:exact_build, build) do
+      @release.stub(:asc, ->(*) { [localizations, []] }) do
+        @release.stub(:save!, nil) { @release.update_notes! }
+      end
+    end
+    assert_equal identity, @release.record.values_at('release_id', 'source_sha', 'version', 'build_number', 'phase')
+    assert_equal [:patch, :post], calls.map(&:first)
+    assert_equal 'english', calls.first.last[:localization_id]
+    assert_equal 'apple-build', calls.last.last[:build_id]
+    assert_equal @env['NOTES_RU'], @release.record.dig('apple_notes', 'ru')
+    assert_equal 'verified', @release.record['notes_status']
+  ensure
+    Object.send(:remove_const, :Spaceship) if Object.const_defined?(:Spaceship)
+  end
+
+  def test_notes_update_refuses_unrecorded_or_unprocessed_builds
+    reserve
+    assert_raises(RuntimeError) { @release.update_notes! }
+    @env['RESUME_RUN_ID'] = '100'
+    [nil, { 'attributes' => { 'processingState' => 'PROCESSING' } }].each do |build|
+      @release.stub(:exact_build, build) { assert_raises(RuntimeError) { @release.update_notes! } }
+    end
+    @env['NOTES_RU'] = ' '
+    @release.stub(:exact_build, { 'attributes' => { 'processingState' => 'VALID' } }) do
+      assert_raises(RuntimeError) { @release.update_notes! }
+    end
+  end
+
   def test_retry_refuses_different_source_or_recipient
     assert_raises(RuntimeError) { reserve([prior_record(source: 'b' * 40)]) }
     assert_raises(RuntimeError) { reserve([prior_record.merge('tester_id' => 'someone-else')]) }
