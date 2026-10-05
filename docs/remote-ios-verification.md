@@ -77,6 +77,68 @@ the current widget journey verifies the app's deep link and pin rules.
 TestFlight distribution is a separate release operation using the existing
 fastlane lanes. Simulator evidence does not upload or distribute a build.
 
+## Feature evidence in the PR description
+
+For user-visible feature work and UI fixes, use the repository's
+[`visual-acceptance` skill](../.agents/skills/visual-acceptance/SKILL.md). The agent
+defines acceptance criteria, exercises the feature through an XCUI journey, and
+inspects the evidence before publishing. A screenshot is sufficient for a static
+result; a short video shows interactions, navigation, persistence, or animation.
+Cover the requested feature rather than attaching the entire suite recording.
+
+Use GitHub CLI **2.99.0 or newer** with native `gh pr edit --attach` support and
+an authenticated user with push access. The installed CLI must support `--attach`;
+update it from [official GitHub CLI releases](https://github.com/cli/cli/releases)
+if it does not. Native attachments render directly in the PR description, outside
+the source tree and the 14-day Actions artifact lifecycle. No extra hosting service,
+published release, or model API key is needed. CI retains read-only repository
+permissions; the working agent chooses and uploads reviewed evidence using its
+existing GitHub login. GitHub App installation tokens, including Actions'
+`GITHUB_TOKEN`, cannot upload these attachments.
+
+After downloading current-head evidence, work within one simulator's artifact
+directory. For a video, locate the relevant segment in `journeys.mp4` and trim it
+on Linux (replace the example start and duration with the inspected segment):
+
+```bash
+ffmpeg -ss 00:00:30 -i /tmp/EVIDENCE/ui-DEVICE-RUNTIME/journeys.mp4 -t 15 \
+  -vf 'scale=720:-2' -c:v libx264 -crf 28 -preset fast -an -movflags +faststart \
+  /tmp/EVIDENCE/ui-DEVICE-RUNTIME/feature-demo.mp4
+```
+
+Inspect the resulting clip too. Keep each selected file below 10 MiB so it works
+with GitHub's free-plan upload limit. Use screenshots from this run's exported
+attachments, not checked-in comparison baselines. Write a temporary review summary
+that names the acceptance criteria demonstrated, the checkpoints/journey inspected,
+and any limits. Then publish, using real exported filenames:
+
+```bash
+python3 scripts/pr-visual-evidence.py PR_NUMBER /tmp/EVIDENCE/ui-DEVICE-RUNTIME \
+  --summary-file /tmp/EVIDENCE/review.md \
+  --image attachments/CHECKPOINT.png \
+  --video feature-demo.mp4
+```
+
+Either `--image` or `--video` suffices; repeat the flags for additional relevant
+media. The helper checks the PR head, latest successful CI run and attempt, and
+artifact outcomes before uploading. It replaces only the marked visual acceptance
+section, preserving the rest of the PR description, and records the full commit,
+run link, simulator, and agent's review. Read back the PR and check that screenshots
+display and videos play. A partial upload can modify the body despite a nonzero
+exit; inspect that body before retrying. A concurrent push makes the evidence stale;
+retrieve and review evidence again before handoff. Upload errors are blockers,
+not a reason to substitute artifact download links for visible feature evidence.
+
+Infrastructure or documentation work with no visible app effect should explain
+why app screenshots do not apply and include its actual functional verification.
+After publication, remove the temporary summary, clips, and downloaded evidence.
+Danis reviews the PR media and gives a separate, explicit instruction to deploy
+to TestFlight. PR approval, passing CI, and visual acceptance do not dispatch a
+release. Follow [the TestFlight workflow](testflight.md) after deployment approval.
+
+References: [GitHub CLI attachments](https://docs.github.com/en/github-cli/github-cli/attaching-files-with-github-cli),
+[supported media and limits](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+
 ## Maintain the evidence tools
 
 ```bash
