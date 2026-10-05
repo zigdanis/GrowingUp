@@ -5,29 +5,40 @@ struct PersonEditorScene: View {
 	@Bindable var presenter: PersonEditorPresenter
 	@State private var photoRequest: PhotoRequest?
 	@State private var confirmingRemoval = false
+	@FocusState private var isNameFocused: Bool
 
 	var body: some View {
 		NavigationStack {
 			Form {
 				Section {
-					TextField("Name", text: $presenter.name).accessibilityIdentifier("editor.name")
-					DatePicker("Birthday", selection: $presenter.birthday, in: ...presenter.maximumBirthday)
-						.accessibilityIdentifier("editor.birthday")
+					TextField("Name", text: $presenter.name)
+						.textContentType(.givenName)
+						.focused($isNameFocused)
+						.multilineTextAlignment(.center)
+						.accessibilityIdentifier("editor.name")
+				}
+				Section {
+					PersonBirthdayFields(presenter: presenter, onExpand: { isNameFocused = false })
 					Toggle("Add to Widget", isOn: $presenter.isOnWidget)
 						.accessibilityIdentifier("editor.pin")
 				}
 				Section {
-					HStack(spacing: 32) {
-						pictureMenu(isWidget: false)
-						pictureMenu(isWidget: true)
+					HStack(spacing: 24) {
+						PersonPhotoMenu(presenter: presenter, isWidget: false, photoRequest: $photoRequest)
+						PersonPhotoMenu(presenter: presenter, isWidget: true, photoRequest: $photoRequest)
 					}
 					.frame(maxWidth: .infinity)
-					.padding(.vertical)
+					.padding(.vertical, 16)
+					.padding(.horizontal, 8)
 				}
 				if presenter.person != nil {
 					Section {
-						Button("Remove", role: .destructive) { confirmingRemoval = true }
-							.accessibilityIdentifier("editor.remove")
+						Button(role: .destructive) {
+							confirmingRemoval = true
+						} label: {
+							Text("Remove").frame(maxWidth: .infinity)
+						}
+						.accessibilityIdentifier("editor.remove")
 					}
 				}
 			}
@@ -35,12 +46,9 @@ struct PersonEditorScene: View {
 			.navigationTitle(presenter.name.isEmpty ? String(localized: "Add person") : presenter.name)
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
-				ToolbarItem(placement: .cancellationAction) {
-					Button("Cancel", action: presenter.cancel).disabled(presenter.isBusy)
-						.accessibilityIdentifier("editor.cancel")
-				}
 				ToolbarItem(placement: .confirmationAction) {
-					Button("Save") { Task { await presenter.save() } }
+					Button("Save", systemImage: "checkmark") { Task { await presenter.save() } }
+						.labelStyle(.iconOnly)
 						.disabled(presenter.isBusy || presenter.isLoading)
 						.accessibilityIdentifier("editor.save")
 				}
@@ -65,27 +73,4 @@ struct PersonEditorScene: View {
 		}
 	}
 
-	private func pictureMenu(isWidget: Bool) -> some View {
-		Menu {
-			Button("Photos", systemImage: "photo") {
-				photoRequest = PhotoRequest(isWidget: isWidget, source: .photos)
-			}
-			.accessibilityIdentifier("photo.source.photos")
-			Button("Camera", systemImage: "camera") {
-				photoRequest = PhotoRequest(isWidget: isWidget, source: .camera)
-			}
-			Button("Remove", systemImage: "trash", role: .destructive) {
-				if isWidget { presenter.widgetImage = nil } else { presenter.appImage = nil }
-			}
-		} label: {
-			VStack {
-				PersonPicture(
-					image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage,
-					identifier: isWidget ? "widgetPhoto" : "appPhoto", onError: { presenter.error = SceneError($0) })
-				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
-			}
-		}
-		.accessibilityLabel(isWidget ? Text("Change widget picture") : Text("Change app picture"))
-		.accessibilityIdentifier(isWidget ? "editor.widgetPhoto" : "editor.appPhoto")
-	}
 }

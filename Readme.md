@@ -55,7 +55,9 @@ dependency.
 ## Requirements
 
 * Xcode 26 or newer (CI pins Xcode 26.6 and 26.3).
-* iOS 18.0+ deployment target.
+* iOS 18.1+ deployment target.
+
+iOS 18.1 is required to restore the system theme after leaving a person page; Apple fixed this `preferredColorScheme(nil)` behavior in the [iOS 18.1 release notes](https://developer.apple.com/documentation/ios-ipados-release-notes/ios-ipados-18_1-release-notes/).
 
 ## Building & Running
 
@@ -149,9 +151,9 @@ GrowingUp is available under the [MIT License](LICENSE).
 
 ### SwiftUI scenes and validation
 
-The iOS 18+ app uses SwiftUI with MVP + Clean Architecture: scene views send intents to observable main-actor presenters; `SceneConfigurator` injects Core use cases. Core Data and shared App Group image transactions remain in Core. SwiftUI owns paging and sheet navigation; the remaining UIKit adapters are limited to camera/photo platform APIs and startup file protection.
+The iOS 18.1+ app uses SwiftUI with MVP + Clean Architecture: scene views send intents to observable main-actor presenters; `SceneConfigurator` injects Core use cases. Core Data and shared App Group image transactions remain in Core. SwiftUI owns paging and sheet navigation; the remaining UIKit adapters are limited to camera/photo platform APIs and startup file protection.
 
-Run `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. `GrowingUpUI` runs five XCUI journeys (add/persist, both photo slots/crop, cancel/error recovery, pin/deep link, delete/persist) plus focused EN/RU and light/dark screenshots. Each test uses a UUID-scoped SQLite/image directory and original deterministic landscape fixtures; normal app/widget storage is not reset.
+Run `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. `GrowingUpUI` covers add/persist, both photo slots/crop, swipe cancel/error recovery, pin/deep link, delete/persist, image-menu state, and EN/RU light/dark appearance. Each test uses a UUID-scoped SQLite/image directory and original deterministic landscape fixtures; normal app/widget storage is not reset.
 
 Visual comparisons use SnapshotTesting pinned at revision `98ba2e1a302c405dd8752e9fcacef0d5f500cac9`. The Glass CI job compares full checkpoints and photo-control regions on iOS 26.5 / iPhone 17 Pro / arm64. The iOS 18.5 / iPhone 16 job checks behavior and retains screenshots. Both upload `.xcresult` bundles, exported screenshots/differences, MP4 journey recordings and an offline HTML report. Run `scripts/pr-evidence.sh PR_NUMBER` on Linux to retrieve current-commit evidence; see [remote iOS verification](docs/remote-ios-verification.md) for the agent review loop.
 

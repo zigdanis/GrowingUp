@@ -20,9 +20,8 @@ struct GrowingUpApp: App {
 
 	var body: some Scene {
 		WindowGroup {
-			PeopleScene(presenter: presenter)
+			PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
 				.tint(Color(uiColor: .appColor))
-				.preferredColorScheme(preferredColorScheme)
 		}
 	}
 }

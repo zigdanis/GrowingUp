@@ -23,13 +23,12 @@ final class PersonEditorPresenter: Identifiable {
 	private let removeUseCase: RemovePersonUseCase
 	private let fetchUseCase: FetchPersonsUseCase
 	private let onMutation: (PersonMutation) -> Void
-	private let onCancel: () -> Void
 
 	init(
 		person: Person?, addUseCase: AddPersonUseCase, editUseCase: EditPersonUseCase,
 		removeUseCase: RemovePersonUseCase, fetchUseCase: FetchPersonsUseCase,
 		now: Date = Date(), loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
-		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void, onCancel: @escaping () -> Void
+		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void
 	) {
 		self.person = person
 		maximumBirthday = now
@@ -45,7 +44,27 @@ final class PersonEditorPresenter: Identifiable {
 		self.removeUseCase = removeUseCase
 		self.fetchUseCase = fetchUseCase
 		self.onMutation = onMutation
-		self.onCancel = onCancel
+	}
+
+	var dayOfBirth: Date {
+		get { birthday }
+		set { updateBirthday(day: newValue, time: birthday) }
+	}
+
+	var timeOfBirth: Date {
+		get { birthday }
+		set { updateBirthday(day: birthday, time: newValue) }
+	}
+
+	private func updateBirthday(day: Date, time: Date) {
+		let calendar = Calendar.current
+		guard
+			let date = calendar.date(
+				bySettingHour: calendar.component(.hour, from: time),
+				minute: calendar.component(.minute, from: time),
+				second: calendar.component(.second, from: time), of: day)
+		else { return }
+		birthday = min(date, maximumBirthday)
 	}
 
 	func load() async {
@@ -104,8 +123,4 @@ final class PersonEditorPresenter: Identifiable {
 		}
 	}
 
-	func cancel() {
-		guard !isBusy else { return }
-		onCancel()
-	}
 }
