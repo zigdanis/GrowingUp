@@ -8,16 +8,22 @@ struct PeopleScene: View {
 			if presenter.isLoading {
 				ProgressView()
 			} else {
-				TabView(selection: $presenter.selectedID) {
-					ForEach(presenter.persons, id: \.id) { person in
-						PersonOverviewScene(person: person, configurator: presenter.configurator, onEdit: { presenter.edit(person) })
+				GeometryReader { geometry in
+					TabView(selection: $presenter.selectedID) {
+						ForEach(presenter.persons, id: \.id) { person in
+							PersonOverviewScene(
+								person: person, configurator: presenter.configurator, safeAreaInsets: geometry.safeAreaInsets,
+								onEdit: { presenter.edit(person) }
+							)
 							.tag(Optional(person.id))
+						}
+						if presenter.canAdd {
+							EmptyPersonScene(onAdd: presenter.add).tag(UUID?.none)
+						}
 					}
-					if presenter.canAdd {
-						EmptyPersonScene(onAdd: presenter.add).tag(UUID?.none)
-					}
+					.tabViewStyle(.page(indexDisplayMode: .always))
+					.ignoresSafeArea(.container)
 				}
-				.tabViewStyle(.page(indexDisplayMode: .always))
 			}
 		}
 		.task { await presenter.load() }

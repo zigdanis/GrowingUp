@@ -25,12 +25,12 @@ struct SceneConfigurator {
 	}
 
 	func editor(
-		person: Person?, onMutation: @escaping (PersonMutation) -> Void, onCancel: @escaping () -> Void
+		person: Person?, onMutation: @escaping (PersonMutation) -> Void
 	) -> PersonEditorPresenter {
 		PersonEditorPresenter(
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
-			now: now(), loadImage: loadImage, photoFixtures: photoFixtures, onMutation: onMutation, onCancel: onCancel)
+			now: now(), loadImage: loadImage, photoFixtures: photoFixtures, onMutation: onMutation)
 	}
 
 	static func live() -> SceneConfigurator {

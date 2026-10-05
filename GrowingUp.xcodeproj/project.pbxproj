@@ -148,6 +148,8 @@
 		EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */; };
 		EC7FA6FB044CF631B4550369 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E1DD9433A99F1E976CD643 /* PersonCell.swift */; };
 		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
+		F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */; };
+		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -355,6 +357,8 @@
 		F5081903312CD073F9BEAE09 /* CameraSessionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSessionState.swift; sourceTree = "<group>"; };
 		F7E541473D019C9A291795B2 /* PhotoGridViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoGridViewModel.swift; sourceTree = "<group>"; };
 		FE5B8EE370E7A268E9474FD2 /* PhotoPreviewControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewControls.swift; sourceTree = "<group>"; };
+		3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonBirthdayFields.swift; sourceTree = "<group>"; };
+		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -788,6 +792,8 @@
 				E848E5E4B3C416E656E4810F /* OverviewPresenter.swift */,
 				9B95C666900961A68BBCB3C5 /* PersonMutation.swift */,
 				84F24E7EAB2550741D76E62D /* PersonPicture.swift */,
+				B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */,
+				3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */,
 				898315CCC5CACED1D6D6CB1D /* PhotoRequest.swift */,
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
@@ -1237,6 +1243,8 @@
 				0A0DB22A0E8EF87D2EF77F6C /* OverviewPresenter.swift in Sources */,
 				E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */,
 				A9D71F8C6AE60DB48F7D554B /* PersonPicture.swift in Sources */,
+				A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */,
+				F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */,
 				AD9C29AA3E3817E33857FC69 /* PhotoRequest.swift in Sources */,
 				4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */,
 				9125CA94453C916124E5FBD9 /* SceneError.swift in Sources */,
