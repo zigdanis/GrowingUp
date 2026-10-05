@@ -47,7 +47,7 @@ def receipt(run_id):
 
 
 def read_notes(path):
-    with open(path) as notes_file:
+    with open(path, encoding='utf-8') as notes_file:
         notes = json.load(notes_file)
     if (not isinstance(notes, dict) or set(notes) != {'en', 'ru'} or
             not all(isinstance(v, str) and v.strip() and len(v.encode()) <= 4000 for v in notes.values())):

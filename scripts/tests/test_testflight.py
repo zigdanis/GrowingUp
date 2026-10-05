@@ -27,7 +27,8 @@ class TestflightNotesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             notes = Path(directory) / 'notes.json'
             notes.write_text(json.dumps({'en': "What's New\nPhoto saving fixed.\n\nWhat to Test\nEdit a photo.",
-                                         'ru': 'Что нового\nИсправлено сохранение фото.\n\nЧто проверить\nИзмените фото.'}))
+                                         'ru': 'Что нового\nИсправлено сохранение фото.\n\nЧто проверить\nИзмените фото.'},
+                                        ensure_ascii=False), encoding='utf-8')
             with (patch.object(sys, 'argv', ['testflight.py', 'notes', '100', str(notes)]),
                   patch.object(testflight, 'readiness'), patch.object(testflight, 'receipt', return_value=recorded),
                   patch.object(testflight, 'gh', side_effect=gh), contextlib.redirect_stdout(io.StringIO())):
@@ -44,6 +45,6 @@ class TestflightNotesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / 'notes.json'
             for value in [[], {'en': 'Only English'}, {'en': 'Text', 'ru': ' '}, {'en': 'Text', 'ru': 'я' * 2001}]:
-                path.write_text(json.dumps(value))
+                path.write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
                 with self.assertRaises(ValueError):
                     testflight.read_notes(path)
