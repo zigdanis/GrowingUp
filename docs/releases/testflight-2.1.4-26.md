@@ -6,13 +6,15 @@ in run `37296774987`; distribution stopped before metadata at the platform promp
 Run `37297758324` was a **status** operation, so it did not submit the receipt's
 EN/RU testing instructions. Those instructions contained no changes summary.
 
-The last recorded published source is tag `testflight/24`, version 2.1.3 (24),
-commit `7e5114bda9c59101e7f9ee9019d4572b5cb3f4e4`. There is no source tag or durable
-receipt for build 25; do not assume its changes. The notes use the verifiable
-published-source range `testflight/24..b916f38`, rather than claiming a build-25
-comparison.
+The last TestFlight source tag is `testflight/24`, version 2.1.3 (24), commit
+`7e5114bda9c59101e7f9ee9019d4572b5cb3f4e4`. Apple also has 2.1.3 (25), but there
+is no source tag or durable receipt tying build 25 to a commit. The subsequent
+[public 2.1.3 source release](https://github.com/zigdanis/GrowingUp/releases/tag/2.1.3)
+points to `07b5d967cf35c989a384ee17b06043cbb5606788` and has no binary assets.
+The notes use that version's verifiable published-source range `2.1.3..b916f38`,
+without assuming it is the exact source of build 25.
 
-User-facing changes supported by that range:
+User-facing changes supported by that range (also present after `testflight/24`):
 
 | Note | Source evidence |
 | --- | --- |
