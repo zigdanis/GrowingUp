@@ -4,6 +4,10 @@ Tell the deployment thread **“Deploy GrowingUp to TestFlight”**. Each new re
 advances the marketing version; retries retain the exact version/build. No MacBook
 steps or routine App Store Connect edits are required. Deployments are explicit:
 the release workflow has only `workflow_dispatch`, never push/merge triggers.
+For user-visible feature releases, first present current, inspected screenshots or
+a short demo in the PR description using [visual acceptance](remote-ios-verification.md#feature-evidence-in-the-pr-description).
+Wait for Danis's explicit deployment instruction after he can review that evidence;
+passing CI or approving a PR does not authorize TestFlight distribution.
 
 ## One-time credentials
 
