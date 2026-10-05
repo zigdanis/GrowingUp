@@ -48,6 +48,7 @@ struct PersonOverviewScene: View {
 			}
 			.contentShape(Rectangle())
 		}
+		.ignoresSafeArea(.container)
 		.buttonStyle(.plain)
 		.accessibilityElement(children: .contain)
 		.accessibilityLabel(Text("Edit person"))

@@ -12,7 +12,7 @@ struct PersonBirthdayFields: View {
 				withAnimation { expandedField = expandedField == "date" ? nil : "date" }
 			} label: {
 				HStack {
-					Text("Day of birth").foregroundStyle(.primary)
+					Text("Day of birth").foregroundStyle(Color.primary)
 					Spacer()
 					Text(presenter.birthday, format: .dateTime.day().month().year())
 						.foregroundStyle(.tint)
@@ -30,7 +30,7 @@ struct PersonBirthdayFields: View {
 				withAnimation { expandedField = expandedField == "time" ? nil : "time" }
 			} label: {
 				HStack {
-					Text("Time of birth").foregroundStyle(.primary)
+					Text("Time of birth").foregroundStyle(Color.primary)
 					Spacer()
 					Text(presenter.birthday, format: .dateTime.hour().minute())
 						.foregroundStyle(.tint)
