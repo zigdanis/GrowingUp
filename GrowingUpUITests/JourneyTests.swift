@@ -228,6 +228,9 @@ final class JourneyTests: XCTestCase {
 		}
 	}
 
+}
+
+extension JourneyTests {
 	private func launch(
 		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light,
 		widgetFamily: String? = nil
