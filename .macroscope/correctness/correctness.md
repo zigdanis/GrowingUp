@@ -35,7 +35,7 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 
 - Core Data is the source of truth. App and widget data and image files share the App Group `group.pro.ziganshin.aging`; flag any identifier, entitlement, container, model, or target change that makes the two targets read different storage.
 - `CachePersonsGateway` coordinates Core Data records with image files. New images are saved before the Core Data mutation and must be deleted if that mutation fails. Replaced images are deleted only after a successful edit. Person removal deletes the Core Data record before best-effort image cleanup. Flag changes that can leave a record pointing at an unsaved/deleted image or that delete the previous image before the record update succeeds.
-- Only three people may be pinned to the widget. Pinned people are ordered by `createdDate`; the widget's deep-link index depends on that same stable ordering. Flag changes that break the three-person limit or make the widget and app disagree about ordering/indexing.
+- Up to six people may be pinned to the widget. Small widgets show the first person, medium widgets the first three, and large widgets all six. Pinned people are ordered by `createdDate`; the widget's deep-link index depends on that same stable ordering. Flag changes that break the shared pin limit or make the widget and app disagree about ordering/indexing.
 - Successful add, edit, and remove flows that affect displayed people must keep the app's in-memory list and WidgetKit timelines up to date.
 
 ## Concurrency and UI behavior

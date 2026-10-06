@@ -72,7 +72,7 @@ final class PersonEditorPresenter: Identifiable {
 		defer { isLoading = false }
 		guard person == nil else { return }
 		do {
-			isOnWidget = try await fetchUseCase.fetchWidgetPersons().count < 3
+			isOnWidget = try await fetchUseCase.fetchWidgetPersons().count < Constants.widgetPeopleLimit
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
@@ -90,8 +90,8 @@ final class PersonEditorPresenter: Identifiable {
 		do {
 			if isOnWidget {
 				let pinned = try await fetchUseCase.fetchWidgetPersons()
-				guard pinned.filter({ $0.id != person?.id }).count < 3 else {
-					throw CoreError(message: "Unable to add more than 3 persons")
+				guard pinned.filter({ $0.id != person?.id }).count < Constants.widgetPeopleLimit else {
+					throw CoreError.widgetPeopleLimitReached
 				}
 			}
 			let parameters = AddPersonParameters(

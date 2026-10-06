@@ -8,6 +8,7 @@
 
 import Disk
 import Foundation
+import ImageIO
 import UIKit
 
 public enum ImagesCache {
@@ -34,4 +35,37 @@ public enum ImagesCache {
 		try Task.checkCancellation()
 		return loadedImage
 	}
+
+	/// Decodes only the thumbnail needed by a widget, leaving the original and app cache untouched.
+	public static func loadWidgetImage(image: PersonImage) async throws -> UIImage {
+		try Task.checkCancellation()
+		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
+		let url = try Disk.url(for: image.cachingKey, in: directory)
+		return try await loadWidgetImage(at: url)
+	}
+
+	static func loadWidgetImage(at url: URL) async throws -> UIImage {
+		try Task.checkCancellation()
+		let thumbnail: UIImage = try await withCheckedThrowingContinuation { continuation in
+			DispatchQueue.global(qos: .utility).async {
+				let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+				let thumbnailOptions: [CFString: Any] = [
+					kCGImageSourceCreateThumbnailFromImageAlways: true,
+					kCGImageSourceCreateThumbnailWithTransform: true,
+					kCGImageSourceShouldCacheImmediately: true,
+					kCGImageSourceThumbnailMaxPixelSize: 256
+				]
+				guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions),
+					let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary)
+				else {
+					continuation.resume(throwing: CoreError.missingValue)
+					return
+				}
+				continuation.resume(returning: UIImage(cgImage: image))
+			}
+		}
+		try Task.checkCancellation()
+		return thumbnail
+	}
+
 }
