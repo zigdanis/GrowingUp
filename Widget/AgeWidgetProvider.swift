@@ -12,9 +12,6 @@ import SwiftUI
 import UIKit
 import WidgetKit
 
-/// Max pinned people shown, matching the legacy widget and the app's limit.
-let rowsLimit = 3
-
 /// Age "ticks" at minute granularity (per-second refresh is not allowed for
 /// home-screen widgets), so we publish one entry per minute.
 private let entryCadence: TimeInterval = 60
@@ -63,7 +60,7 @@ struct AgeWidgetProvider: TimelineProvider {
 	private func loadPersons() async -> [WidgetPerson] {
 		do {
 			let people = try await fetchUseCase.fetchWidgetPersons()
-			return await resolveImages(for: Array(people.prefix(rowsLimit)))
+			return await resolveImages(for: Array(people.prefix(Constants.widgetPeopleLimit)))
 		} catch {
 			Logging.logError(CoreError(error: error))
 			return []
@@ -92,7 +89,7 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	private static func samplePersons() -> [WidgetPerson] {
 		let calendar = Calendar.current
-		return (0..<2).map { index in
+		return (0..<Constants.widgetPeopleLimit).map { index in
 			let birthday = calendar.date(byAdding: .year, value: -(index + 1) * 3, to: Date()) ?? Date()
 			return WidgetPerson(id: UUID(), index: index, name: "—", birthday: birthday, image: nil)
 		}

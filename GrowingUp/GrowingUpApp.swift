@@ -20,8 +20,20 @@ struct GrowingUpApp: App {
 
 	var body: some Scene {
 		WindowGroup {
-			PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
-				.tint(Color(uiColor: .appColor))
+			#if DEBUG
+				if case .uiTest = AppLaunchMode.current,
+					let family = ProcessInfo.processInfo.environment["GROWINGUP_WIDGET_PREVIEW"]
+				{
+					UITestWidgetPreview(configurator: presenter.configurator, familyName: family)
+						.preferredColorScheme(preferredColorScheme)
+				} else {
+					PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
+						.tint(Color(uiColor: .appColor))
+				}
+			#else
+				PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
+					.tint(Color(uiColor: .appColor))
+			#endif
 		}
 	}
 }

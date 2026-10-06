@@ -17,7 +17,7 @@ struct GrowingUpWidget: Widget {
 				.containerBackground(.fill.tertiary, for: .widget)
 		}
 		.configurationDisplayName("GrowingUp")
-		.description("See your pinned people and their live age.")
-		.supportedFamilies([.systemSmall, .systemMedium])
+		.description("See up to six pinned people and their live age.")
+		.supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
 	}
 }

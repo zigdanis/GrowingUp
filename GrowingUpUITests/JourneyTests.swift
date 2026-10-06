@@ -91,20 +91,74 @@ final class JourneyTests: XCTestCase {
 		checkpoint("cancelled-photo")
 	}
 
-	func testPinLimitAndWidgetLink() {
+	func testSixPinsPersistAndWidgetLinkSelectsSixthPerson() {
 		launch(seed: .pinned)
-		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		app.open(URL(string: "growingup-app://?personIndex=1")!)
 		XCTAssertTrue(app.staticTexts["person.name"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Boris")
 		checkpoint("widget-link")
-		app.swipeLeft()
+		app.open(URL(string: "growingup-app://?personIndex=2")!)
+		XCTAssertEqual(app.staticTexts["person.name"].label, "Clara")
+		for name in ["Fourth", "Fifth", "Sixth"] {
+			app.swipeLeft()
+			XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
+			app.buttons["person.add"].tap()
+			let field = app.textFields["editor.name"]
+			XCTAssertTrue(field.waitForExistence(timeout: 5))
+			field.tap()
+			field.typeText(name)
+			XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+			app.buttons["editor.save"].tap()
+			XCTAssertTrue(overview.waitForExistence(timeout: 5))
+			XCTAssertEqual(app.staticTexts["person.name"].label, name)
+		}
+		relaunch()
+		app.open(URL(string: "growingup-app://?personIndex=5")!)
+		XCTAssertEqual(app.staticTexts["person.name"].label, "Sixth")
+		checkpoint("widget-sixth-link", compareBaseline: false)
+		// Editing an already pinned person still works when all six slots are occupied.
+		overview.tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
+		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(overview.waitForExistence(timeout: 5))
+		assertSeventhPinRejected(message: "You can pin up to 6 people to the widget.", checkpoint: "widget-limit-en")
+	}
+
+	func testSeventhPinErrorIsLocalizedInRussian() {
+		launch(seed: .sixPinned, locale: "ru")
+		app.open(URL(string: "growingup-app://?personIndex=5")!)
+		XCTAssertEqual(app.staticTexts["person.name"].label, "Farah")
+		assertSeventhPinRejected(message: "В виджет можно добавить не больше 6 человек.", checkpoint: "widget-limit-ru")
+	}
+
+	func testWidgetSizesRenderPinnedPeopleInBothLanguages() {
+		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
+		for locale in ["en", "ru"] {
+			for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
+				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
+				for (index, name) in names.enumerated() {
+					let person = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+					if index < count {
+						XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
+					} else {
+						XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
+					}
+				}
+				checkpoint("widget-\(family)-\(locale)", compareBaseline: false)
+				app.terminate()
+			}
+		}
+	}
+
+	private func assertSeventhPinRejected(message: String, checkpoint name: String) {
 		app.swipeLeft()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
-		let name = app.textFields["editor.name"]
-		name.tap()
-		name.typeText("Fourth")
+		let field = app.textFields["editor.name"]
+		XCTAssertTrue(field.waitForExistence(timeout: 5))
+		field.tap()
+		field.typeText("Seventh")
 		let pin = app.switches["editor.pin"]
 		XCTAssertEqual(pin.value as? String, "0")
 		// The identifier belongs to the full form row; the native switch occupies its trailing edge.
@@ -112,6 +166,8 @@ final class JourneyTests: XCTestCase {
 		XCTAssertEqual(pin.value as? String, "1")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
+		XCTAssertTrue(app.alerts.staticTexts[message].exists)
+		checkpoint(name, compareBaseline: false)
 		app.alerts.buttons.firstMatch.tap()
 		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
 	}
@@ -173,7 +229,8 @@ final class JourneyTests: XCTestCase {
 	}
 
 	private func launch(
-		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light
+		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light,
+		widgetFamily: String? = nil
 	) {
 		configuration = UITestConfiguration(
 			identifier: UUID(uuidString: identifier)!, resetStore: true, seed: seed, failNextSave: failSave,
@@ -182,13 +239,18 @@ final class JourneyTests: XCTestCase {
 			UITestConfiguration.environmentKey: configuration.encoded,
 			"TZ": "UTC"
 		]
+		if let widgetFamily { app.launchEnvironment["GROWINGUP_WIDGET_PREVIEW"] = widgetFamily }
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
 			"-AppleInterfaceStyle", appearance.launchArgumentValue,
 			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
 		]
 		app.launch()
-		XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		if widgetFamily != nil {
+			XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch.waitForExistence(timeout: 10))
+		} else {
+			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		}
 	}
 
 	private func relaunch() {
@@ -246,14 +308,14 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 	}
 
-	private func checkpoint(_ name: String, file: StaticString = #filePath, line: UInt = #line) {
+	private func checkpoint(_ name: String, compareBaseline: Bool = true, file: StaticString = #filePath, line: UInt = #line) {
 		let screenshot = app.screenshot()
 		let attachment = XCTAttachment(screenshot: screenshot)
 		attachment.name = name
 		attachment.lifetime = .keepAlways
 		add(attachment)
 		// Compatibility runs assert behavior; exact visual baselines are scoped to the pinned glass runtime.
-		guard ProcessInfo.processInfo.environment["GROWINGUP_VISUAL_CHECKS"] == "1" else { return }
+		guard compareBaseline, ProcessInfo.processInfo.environment["GROWINGUP_VISUAL_CHECKS"] == "1" else { return }
 		let recording = ProcessInfo.processInfo.environment["GROWINGUP_RECORD_SNAPSHOTS"] == "1"
 		let failure = verifySnapshot(
 			of: screenshot.image, as: .image(precision: 0.995, perceptualPrecision: 0.98), named: name,

@@ -18,11 +18,12 @@
 			if let loadError { throw loadError }
 		}
 
-		func seed() throws {
+		func seed(_ seed: UITestSeed = .pinned) throws {
 			let context = persistentContainer.viewContext
 			try context.performAndWait {
 				let access = try AccessToWidget.sharedInstance(in: context)
-				for (index, name) in ["Alice", "Boris", "Clara"].enumerated() {
+				let names = seed == .sixPinned ? ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"] : ["Alice", "Boris", "Clara"]
+				for (index, name) in names.enumerated() {
 					let person = CoreDataPerson(context: context)
 					person.id = String(format: "00000000-0000-0000-0000-%012d", index + 1)
 					person.name = name

@@ -29,7 +29,7 @@ enum AppComposition {
 			}
 			try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 			let stack = try UITestStore(url: root.appendingPathComponent("people.sqlite"))
-			if configuration.resetStore, configuration.seed == .pinned { try stack.seed() }
+			if configuration.resetStore, configuration.seed != .empty { try stack.seed(configuration.seed) }
 			let images = UITestImageStore(root: root)
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
 			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: configuration.failNextSave)

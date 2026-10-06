@@ -5,21 +5,19 @@ import XCTest
 
 @MainActor
 final class SwiftUIPresenterTests: XCTestCase {
-	func testColdWidgetLinkWaitsForLoadAndUsesPinnedCreationOrder() async {
+	func testColdWidgetLinkWaitsForLoadAndUsesSixthPinnedCreationOrder() async {
 		let gateway = PersonsGatewaySpy()
-		var first = Person.createPerson()
-		first.createdDate = Date(timeIntervalSince1970: 1)
-		first.isOnWidget = true
-		var second = Person.createPerson()
-		second.createdDate = Date(timeIntervalSince1970: 2)
-		second.isOnWidget = true
-		gateway.fetchPersonsResultToBeReturned = .success([second, first])
+		let pinned = pinnedPeople(count: Constants.widgetPeopleLimit)
+		var unpinned = Person.createPerson()
+		unpinned.createdDate = Date(timeIntervalSince1970: -1)
+		unpinned.isOnWidget = false
+		gateway.fetchPersonsResultToBeReturned = .success([unpinned] + pinned.reversed())
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
-		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=1")!)
+		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=5")!)
 		await presenter.load()
-		XCTAssertEqual(presenter.selectedID, second.id)
+		XCTAssertEqual(presenter.selectedID, pinned[5].id)
 		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=-1")!)
-		XCTAssertEqual(presenter.selectedID, second.id)
+		XCTAssertEqual(presenter.selectedID, pinned[5].id)
 	}
 
 	func testLoadErrorIsVisibleAndEndsLoading() async {
@@ -132,24 +130,43 @@ final class SwiftUIPresenterTests: XCTestCase {
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
 	}
-	func testFourthPinIsRejectedBeforeSavingAndRestoresActions() async {
+	func testFourthAndSixthPinsSaveWithAvailableCapacity() async {
+		for count in [3, 5] {
+			let gateway = PersonsGatewaySpy()
+			gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: count))
+			gateway.addPersonResultToBeReturned = .success(.createPerson())
+			var saved = false
+			let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in saved = true })
+			await presenter.load()
+			XCTAssertTrue(presenter.isOnWidget)
+			presenter.name = "Person \(count + 1)"
+			await presenter.save()
+			XCTAssertTrue(saved)
+			XCTAssertTrue(gateway.addPersonCalled)
+			XCTAssertTrue(gateway.addPersonParameters.isOnWidget)
+			XCTAssertNil(presenter.error)
+		}
+	}
+
+	func testSeventhPinIsRejectedBeforeSavingAndRestoresActions() async {
 		let gateway = PersonsGatewaySpy()
-		gateway.fetchPersonsResultToBeReturned = .success((0..<3).map { _ in Person.createPerson() })
+		gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: Constants.widgetPeopleLimit))
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in XCTFail("Pin limit") })
 		await presenter.load()
-		presenter.name = "Fourth"
+		XCTAssertFalse(presenter.isOnWidget)
+		presenter.name = "Seventh"
 		presenter.isOnWidget = true
 		await presenter.save()
 		XCTAssertFalse(gateway.addPersonCalled)
 		XCTAssertFalse(presenter.isBusy)
-		XCTAssertEqual(presenter.error?.message, CoreError(message: "Unable to add more than 3 persons").message)
+		XCTAssertEqual(presenter.error?.message, CoreError.widgetPeopleLimitReached.message)
 	}
 
 	func testExistingPinnedPersonCanBeEditedAtPinLimit() async {
 		let gateway = PersonsGatewaySpy()
 		var person = Person.createPerson()
 		person.isOnWidget = true
-		gateway.fetchPersonsResultToBeReturned = .success([person, .createPerson(), .createPerson()])
+		gateway.fetchPersonsResultToBeReturned = .success([person] + pinnedPeople(count: Constants.widgetPeopleLimit - 1))
 		gateway.editPersonResultToBeReturned = .success(person)
 		var saved = false
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in saved = true })
@@ -160,9 +177,9 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertNil(presenter.error)
 	}
 
-	func testExistingUnpinnedPersonCannotBecomeFourthPin() async {
+	func testExistingUnpinnedPersonCannotBecomeSeventhPin() async {
 		let gateway = PersonsGatewaySpy()
-		gateway.fetchPersonsResultToBeReturned = .success((0..<3).map { _ in Person.createPerson() })
+		gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: Constants.widgetPeopleLimit))
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: .createPerson(), onMutation: { _ in XCTFail("Pin limit") })
 		await presenter.load()
 		presenter.isOnWidget = true
@@ -184,6 +201,15 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertTrue(gateway.editPersonCalled)
 		XCTAssertFalse(gateway.addPersonParameters.isOnWidget)
 		XCTAssertNil(presenter.error)
+	}
+
+	private func pinnedPeople(count: Int) -> [Person] {
+		(0..<count).map { index in
+			var person = Person.createPerson()
+			person.isOnWidget = true
+			person.createdDate = Date(timeIntervalSince1970: Double(index))
+			return person
+		}
 	}
 
 	func testCancellationRestoresActionsWithoutErrorOrMutation() async {

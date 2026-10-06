@@ -22,4 +22,4 @@
 "Asyncronous work were not finished before final notification called" = "Asyncronous work were not finished before final notification called";
 "Missing value" = "Missing value";
 "Unknown error occured" = "Unknown error occured";
-"Unable to add more than 3 persons" = "Unable to add more than 3 persons to the Widget. They won't fit 🤷‍♀️";
+"Unable to add more than 6 persons" = "You can pin up to 6 people to the widget.";
