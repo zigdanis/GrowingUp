@@ -69,8 +69,8 @@ expire after 14 days. Keep the extracted directory together when opening
 4. Validate failures against the requested behavior, fix concrete issues and
    repeat on the same PR. Recheck all required checks and review conversations
    after each push. Report the run URL, reviewed checkpoints and remaining limits.
-5. Remove downloaded artifacts and extracted frames after review. Leave merging
-   to Danis.
+5. Remove downloaded artifacts and extracted frames after review. Complete PR
+   convergence and merge under the [AGENTS.md policy](../AGENTS.md#merge-and-approval-policy).
 
 This makes evidence available to the agent already working on the PR. Visual
 inspection is part of that agent's work; CI does not make an additional model call
@@ -142,9 +142,10 @@ not a reason to substitute artifact download links for visible feature evidence.
 Infrastructure or documentation work with no visible app effect should explain
 why app screenshots do not apply and include its actual functional verification.
 After publication, remove the temporary summary, clips, and downloaded evidence.
-Danis reviews the PR media and gives a separate, explicit instruction to deploy
-to TestFlight. PR approval, passing CI, and visual acceptance do not dispatch a
-release. Follow [the TestFlight workflow](testflight.md) after deployment approval.
+Present the PR media before deployment and honor Danis's explicit TestFlight
+instruction, including valid authorization already given in the session. PR
+approval, passing CI, and visual acceptance do not dispatch a release. Follow
+[the TestFlight workflow](testflight.md) for the authorized deployment.
 
 References: [GitHub CLI attachments](https://docs.github.com/en/github-cli/github-cli/attaching-files-with-github-cli),
 [supported media and limits](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
