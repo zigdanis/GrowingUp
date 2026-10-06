@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */; };
 		A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000002 /* AgeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0C37505B97098594764C3 /* AgeEntry.swift */; };
@@ -219,6 +220,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCacheTests.swift; sourceTree = "<group>"; };
 		A5000000000000000000000E /* AgeWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetContentView.swift; sourceTree = "<group>"; };
 		A50000000000000000000008 /* UITestWidgetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestWidgetPreview.swift; sourceTree = "<group>"; };
 		A5000000000000000000000B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -640,6 +642,7 @@
 			children = (
 				094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */,
 				0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */,
+				CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -1218,6 +1221,7 @@
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				A10000000000000000000004 /* ImageStoreSpy.swift in Sources */,
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
+				CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
