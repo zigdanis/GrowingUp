@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A50000000000000000000001 /* AgeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */; };
+		A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
+		A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000002 /* AgeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0C37505B97098594764C3 /* AgeEntry.swift */; };
 		A50000000000000000000003 /* EmptyWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DBBC2301D979FD19D3228A /* EmptyWidgetView.swift */; };
 		A50000000000000000000004 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E1DD9433A99F1E976CD643 /* PersonCell.swift */; };
@@ -218,6 +219,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A5000000000000000000000E /* AgeWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetContentView.swift; sourceTree = "<group>"; };
 		A50000000000000000000008 /* UITestWidgetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestWidgetPreview.swift; sourceTree = "<group>"; };
 		A5000000000000000000000B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A5000000000000000000000C /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -438,6 +440,7 @@
 				7018955E31694F6F80D6537D /* GrowingUpWidget.swift */,
 				137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */,
 				A5000000000000000000000A /* Localizable.strings */,
+				A5000000000000000000000E /* AgeWidgetContentView.swift */,
 				0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */,
 				62F0C37505B97098594764C3 /* AgeEntry.swift */,
 				D0DBBC2301D979FD19D3228A /* EmptyWidgetView.swift */,
@@ -1155,6 +1158,7 @@
 			files = (
 				C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */,
 				BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */,
+				A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */,
 				EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */,
 				CD07596BD66BA84904B5B14F /* AgeEntry.swift in Sources */,
 				D8394461090803E7C9C8C51E /* EmptyWidgetView.swift in Sources */,
@@ -1234,7 +1238,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A50000000000000000000001 /* AgeWidgetEntryView.swift in Sources */,
+				A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */,
 				A50000000000000000000002 /* AgeEntry.swift in Sources */,
 				A50000000000000000000003 /* EmptyWidgetView.swift in Sources */,
 				A50000000000000000000004 /* PersonCell.swift in Sources */,
@@ -1721,7 +1725,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetEntryView.swift AgeEntry.swift EmptyWidgetView.swift PersonCell.swift WidgetPerson.swift UITestWidgetPreview.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift PersonCell.swift WidgetPerson.swift UITestWidgetPreview.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

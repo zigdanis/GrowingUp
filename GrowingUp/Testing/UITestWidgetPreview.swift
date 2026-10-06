@@ -23,8 +23,7 @@
 			ZStack {
 				Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
 				if let entry {
-					AgeWidgetEntryView(entry: entry)
-						.environment(\.widgetFamily, family)
+					AgeWidgetContentView(entry: entry, family: family)
 						.padding(16)
 						.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
 						.background(.background, in: RoundedRectangle(cornerRadius: 24))
