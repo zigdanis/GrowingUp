@@ -1,6 +1,6 @@
 ---
 name: visual-acceptance
-description: Capture, inspect, and attach feature-specific iOS simulator screenshots or videos to GrowingUp PR descriptions. Use for user-visible feature work and UI fixes, including work from Linux or Raspberry Pi, before handing a PR to Danis or requesting TestFlight approval.
+description: Capture, inspect, and attach feature-specific iOS simulator screenshots or videos to GrowingUp PR descriptions. Use for user-visible feature work and UI fixes, including work from Linux or Raspberry Pi, before merging a PR or deploying to TestFlight.
 ---
 
 # Visual acceptance
@@ -37,6 +37,8 @@ visible app effect, explain that in the PR and report its functional verificatio
 do not attach an unrelated app screenshot. If CI, uploads, or device coverage block
 acceptance, state the concrete gap and keep the work unverified.
 
-Visual acceptance supports Danis's release decision. Wait for his explicit
-TestFlight deployment instruction after presenting the evidence; then follow
-`docs/testflight.md`. Never merge or enable auto-merge.
+Visual acceptance completes the evidence gate. Follow the authoritative
+[merge and approval policy](../../../AGENTS.md#merge-and-approval-policy) and
+[TestFlight workflow](../../../docs/testflight.md). Publish inspected evidence
+before deployment; honor an explicit deployment instruction already given in
+the session without asking again for the same authorized release.

@@ -19,6 +19,10 @@ check receipts for intervening shipped builds, and adjust these notes only
 for actual additional user-facing changes. The workflow chooses the next
 version/build; this filename does not reserve either.
 
-Authorization: Danis requested this feature through a new TestFlight build
-in this thread. Present inspected current-head PR evidence first. Deployment
-requires Danis to merge the reviewed PR; agents cannot merge or enable auto-merge.
+Authorization: Danis explicitly instructed the agent to merge PR #51 and deploy
+this feature to TestFlight after the inspected PR evidence was presented in this
+thread. This authorization remains valid; another routine confirmation is not
+required. Merge under the [AGENTS.md policy](../../AGENTS.md#merge-and-approval-policy),
+then select the reviewed master source and wait for that source's CI before
+dispatching the [TestFlight workflow](../testflight.md). Version/build and Apple
+availability remain unconfirmed until the release receipt records them.

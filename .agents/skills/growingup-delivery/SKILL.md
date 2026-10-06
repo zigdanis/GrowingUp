@@ -1,6 +1,6 @@
 ---
 name: growingup-delivery
-description: Deliver GrowingUp fixes from screenshots or text, features, improvements, and new-build requests through implementation agents, independent review, visual feedback, and a verified PR. Use automatically for these action requests in GrowingUp; read-only questions and general discussion do not start delivery.
+description: Deliver GrowingUp fixes from screenshots or text, features, improvements, and new-build requests through implementation agents, independent review, visual feedback, and verified delivery. Use automatically for these action requests in GrowingUp; read-only questions and general discussion do not start delivery.
 ---
 
 # GrowingUp delivery
@@ -88,7 +88,7 @@ visual inspection. Missing evidence or a partial CI artifact leaves it unverifie
    to nonvisual work and report its relevant functional checks. Once implementation,
    required checks, independent review, and current evidence pass, mark a draft
    ready and trigger/await bot reviews. Bots may skip drafts; this transition
-   starts external review and is not the final handoff to Danis.
+   starts external review; delivery continues until the merge gates pass.
 3. Validate each local or bot finding before changing code. Fix actionable problems,
    run the checks covering the fixes, and respond with evidence before resolving
    review conversations. Use `babysit-pr` when available for PR monitoring.
@@ -97,10 +97,10 @@ visual inspection. Missing evidence or a partial CI artifact leaves it unverifie
    evidence invalidated by a push or CI rerun. Wait for reviewers to reach a
    terminal state. Repeat only for a new change, failed check, or concrete concern.
 
-Hand off only when the latest head has green required checks, independent and bot
-reviews have no remaining actionable findings, review conversations are accounted
-for, and the PR contains current inspected feature evidence where applicable.
-Leave merging and final review to Danis; never merge or enable auto-merge.
+Finish PR convergence when the latest head has green required checks, independent
+and bot reviews have no remaining actionable findings, review conversations are
+accounted for, and the PR contains current inspected feature evidence where applicable.
+Then follow the authoritative [merge and approval policy](../../../AGENTS.md#merge-and-approval-policy).
 
 Report the PR, head/CI, criteria demonstrated, and material limits concisely. If
 tools, CI, review, uploads, or device-only coverage block the result, name the exact
@@ -110,19 +110,19 @@ continue every independent authorized part before yielding for required input.
 ## New build and TestFlight
 
 A request for a new build activates this workflow, including preparing a reviewable
-change and build verification. Publishing to TestFlight is a separate release gate:
-present current inspected PR evidence first, then require Danis's explicit
-deployment authorization as specified in [docs/testflight.md](../../../docs/testflight.md).
-An ordinary fix/feature request, green CI, or PR approval does not authorize release.
-Honor valid explicit authorization already given in the session; do not ask again
-for the same approved deployment. If authorization predates new unseen UI work,
-present its evidence and satisfy the documented release gate before dispatch.
+change and build verification. Publishing to TestFlight requires current inspected
+PR evidence and Danis's explicit deployment instruction under
+[docs/testflight.md](../../../docs/testflight.md). An ordinary fix/feature request,
+green CI, or PR approval alone does not authorize release. Honor explicit deployment
+authorization already given in the session. Present evidence for new UI work and
+satisfy the release gates without asking again for the same authorized deployment.
 
 For a deployment-only request, inspect the selected existing change and its evidence
 instead of manufacturing another code change or implementation task. Follow
 `docs/testflight.md` for source/CI checks, EN/RU notes, dispatch, receipts, and recovery.
-Release only its permitted reviewed master source; waiting for Danis to merge is a
-concrete blocker, not permission for the agent to merge. Monitor the same recorded
-release and report the actual version/build and Apple state. Distinguish workflow
-success, Apple availability, and delivery on Danis's device; keep any required
-device confirmation pending instead of uploading another build.
+Follow [AGENTS.md](../../../AGENTS.md#merge-and-approval-policy) to merge the verified
+change, then release only its permitted reviewed master source after that source's
+CI passes. Monitor the same recorded release and report the actual version/build
+and Apple state. Distinguish workflow success, Apple availability, and delivery
+on Danis's device; keep any required device confirmation pending instead of
+uploading another build.
