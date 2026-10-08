@@ -170,7 +170,7 @@ jobs:
 
   ui-tests:
     name: UI Tests — ${{ matrix.name }}
-    needs: [changes, release-tools, formatting, lint]
+    needs: [changes, build-test]
     if: needs.changes.outputs.docs_only != 'true'
     strategy:
       fail-fast: false
