@@ -62,7 +62,7 @@ struct PersonOverviewScene: View {
 			.accessibilityLabel(Text("Edit person"))
 			.accessibilityIdentifier("person.edit")
 			if let status = presenter.birthdayStatus, status.isUpcoming {
-				Button("Birthday", systemImage: "birthday.cake.fill") { showingBirthday = true }
+				Button("Birthday celebration", systemImage: "birthday.cake.fill") { showingBirthday = true }
 					.labelStyle(.iconOnly)
 					.font(.title2)
 					.foregroundStyle(.white)
