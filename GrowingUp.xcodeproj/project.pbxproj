@@ -161,6 +161,11 @@
 		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
 		F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */; };
 		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
+		BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303536429A34F2CB9827E7E /* BirthdayStatus.swift */; };
+		A4D69EDE58CD4F5AA4E0B6DC /* BirthdayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7E048F32F84582898290EC /* BirthdayInfoView.swift */; };
+		57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */; };
+		3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17FB22584FC46369370216E /* BirthdayStatusTests.swift */; };
+		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -377,6 +382,11 @@
 		FE5B8EE370E7A268E9474FD2 /* PhotoPreviewControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewControls.swift; sourceTree = "<group>"; };
 		3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonBirthdayFields.swift; sourceTree = "<group>"; };
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
+		1303536429A34F2CB9827E7E /* BirthdayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatus.swift; sourceTree = "<group>"; };
+		2C7E048F32F84582898290EC /* BirthdayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayInfoView.swift; sourceTree = "<group>"; };
+		7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayConfettiView.swift; sourceTree = "<group>"; };
+		D17FB22584FC46369370216E /* BirthdayStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatusTests.swift; sourceTree = "<group>"; };
+		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -462,6 +472,7 @@
 				0929F1E42258C5D600212F29 /* iOS Framework APIs */,
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
+				1303536429A34F2CB9827E7E /* BirthdayStatus.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
 				0916531D223ECBC40081FB10 /* Gateways */,
 				0916531F223ECBC40081FB10 /* UseCases */,
@@ -599,6 +610,7 @@
 			isa = PBXGroup;
 			children = (
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
+				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
 			sourceTree = "<group>";
@@ -809,6 +821,8 @@
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
 				B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */,
 				433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */,
+				7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */,
+				2C7E048F32F84582898290EC /* BirthdayInfoView.swift */,
 				4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */,
 				E848E5E4B3C416E656E4810F /* OverviewPresenter.swift */,
 				9B95C666900961A68BBCB3C5 /* PersonMutation.swift */,
@@ -894,6 +908,7 @@
 			isa = PBXGroup;
 			children = (
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
+				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 			);
 			path = GrowingUpUITests;
@@ -1182,6 +1197,7 @@
 				0983E767226D9658007EC8D2 /* Person.swift in Sources */,
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
+				BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */,
@@ -1224,6 +1240,7 @@
 				CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
+				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
@@ -1271,6 +1288,8 @@
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
+				57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */,
+				A4D69EDE58CD4F5AA4E0B6DC /* BirthdayInfoView.swift in Sources */,
 				24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */,
 				5BCFB8E0FDB9C17A4E153C3B /* EmptyPersonScene.swift in Sources */,
 				0A0DB22A0E8EF87D2EF77F6C /* OverviewPresenter.swift in Sources */,
@@ -1319,6 +1338,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
+				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,
 				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,
 				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,

@@ -118,7 +118,7 @@ jobs:
 
   build-test:
     name: Build & Test
-    needs: changes
+    needs: [changes, release-tools, formatting, lint]
     if: needs.changes.outputs.docs_only != 'true'
     runs-on: macos-26
     steps:
@@ -170,7 +170,7 @@ jobs:
 
   ui-tests:
     name: UI Tests — ${{ matrix.name }}
-    needs: changes
+    needs: [changes, build-test]
     if: needs.changes.outputs.docs_only != 'true'
     strategy:
       fail-fast: false

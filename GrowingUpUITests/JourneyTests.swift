@@ -120,6 +120,10 @@ final class JourneyTests: XCTestCase {
 		overview.tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
+		let sixthName = app.textFields["editor.name"]
+		sixthName.tap()
+		sixthName.typeText(" Updated")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		assertSeventhPinRejected(message: "You can pin up to 6 people to the widget.", checkpoint: "widget-limit-en")
