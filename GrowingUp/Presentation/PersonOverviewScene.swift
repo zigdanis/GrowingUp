@@ -10,7 +10,8 @@ struct PersonOverviewScene: View {
 	@State private var presenter: OverviewPresenter
 	@State private var showingBirthday = false
 	@State private var burstStarted: Date?
-	@Environment(\.accessibilityReduceMotion) private var reduceMotion
+	@Environment(\.accessibilityReduceMotion)
+	private var reduceMotion
 
 	init(
 		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, onEdit: @escaping () -> Void

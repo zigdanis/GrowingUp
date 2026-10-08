@@ -224,6 +224,9 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertNil(presenter.error)
 	}
 
+}
+
+extension SwiftUIPresenterTests {
 	func testExistingEditorTracksEveryFieldAndRevertedDraft() async {
 		let gateway = PersonsGatewaySpy()
 		let person = Person.createPerson()

@@ -3,8 +3,10 @@ import SwiftUI
 
 struct BirthdayInfoView: View {
 	let status: BirthdayStatus
-	@Environment(\.locale) private var locale
-	@Environment(\.calendar) private var calendar
+	@Environment(\.locale)
+	private var locale
+	@Environment(\.calendar)
+	private var calendar
 
 	var body: some View {
 		VStack(spacing: 8) {
