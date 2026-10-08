@@ -140,6 +140,23 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertFalse(save.isEnabled)
 	}
 
+	func testSavedBirthdayEditKeepsTheUpdatedCelebrationAfterTimerTicks() {
+		launch(clock: "2027-01-15T08:00:00Z")
+		overview.tap()
+		app.buttons["editor.birthDate"].tap()
+		let picker = app.datePickers["editor.birthDate.picker"]
+		XCTAssertTrue(picker.waitForExistence(timeout: 5))
+		picker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "15")
+		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
+		app.buttons["person.birthday"].tap()
+		XCTAssertTrue(app.staticTexts["Happy birthday!"].waitForExistence(timeout: 5))
+		XCTAssertFalse(app.staticTexts["birthday.countdown"].exists)
+		checkpoint("birthday-edited-date-stays-current")
+	}
+
 	private func launch(clock: String, runningClock: Bool = false, locale: String = "en") {
 		configuration = UITestConfiguration(
 			identifier: UUID(), resetStore: true, seed: .birthdays, failNextSave: false, appearance: .dark)
