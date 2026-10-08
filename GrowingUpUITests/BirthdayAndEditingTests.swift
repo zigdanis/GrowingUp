@@ -80,14 +80,19 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("editor-save-enabled")
 		name.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 6))
 		XCTAssertFalse(save.isEnabled)
+		dismissNameKeyboard()
 		let pin = app.switches["editor.pin"]
 		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		XCTAssertEqual(pin.value as? String, "0")
 		XCTAssertTrue(save.isEnabled)
 		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		XCTAssertEqual(pin.value as? String, "1")
 		XCTAssertFalse(save.isEnabled)
 		name.tap()
 		name.typeText(" Unsaved")
+		dismissNameKeyboard()
 		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		XCTAssertEqual(pin.value as? String, "0")
 		for slot in ["appPhoto", "widgetPhoto"] { choosePhoto(slot) }
 		XCTAssertTrue(save.isEnabled)
 		dismissEditor()
@@ -193,6 +198,14 @@ final class BirthdayAndEditingTests: XCTestCase {
 		let start = navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
 		start.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+	}
+
+	private func dismissNameKeyboard() {
+		// Expanding a birthday field clears the editor's name focus.
+		let birthday = app.buttons["editor.birthDate"]
+		birthday.tap()
+		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
+		birthday.tap()
 	}
 
 	private func waitFor(_ element: XCUIElement, predicate: NSPredicate, timeout: TimeInterval) -> Bool {

@@ -18,7 +18,6 @@ struct BirthdayInfoView: View {
 			}
 		}
 		.padding(20)
-		.accessibilityIdentifier("birthday.info")
 	}
 
 	private var countdown: String {
