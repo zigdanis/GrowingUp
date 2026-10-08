@@ -171,6 +171,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		var saved = false
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in saved = true })
 		await presenter.load()
+		presenter.name += " Updated"
 		await presenter.save()
 		XCTAssertTrue(saved)
 		XCTAssertTrue(gateway.editPersonCalled)
@@ -221,6 +222,82 @@ final class SwiftUIPresenterTests: XCTestCase {
 		await presenter.save()
 		XCTAssertFalse(presenter.isBusy)
 		XCTAssertNil(presenter.error)
+	}
+
+	func testExistingEditorTracksEveryFieldAndRevertedDraft() async {
+		let gateway = PersonsGatewaySpy()
+		let person = Person.createPerson()
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in XCTFail("Unsaved") })
+		await presenter.load()
+		XCTAssertFalse(presenter.canSave)
+		await presenter.save()
+		XCTAssertFalse(gateway.editPersonCalled)
+		presenter.name += " draft"
+		XCTAssertTrue(presenter.canSave)
+		presenter.name = person.name
+		XCTAssertFalse(presenter.hasChanges)
+		presenter.birthday = person.birthday.addingTimeInterval(60)
+		XCTAssertTrue(presenter.canSave)
+		presenter.birthday = person.birthday
+		XCTAssertFalse(presenter.hasChanges)
+		presenter.isOnWidget.toggle()
+		XCTAssertTrue(presenter.canSave)
+		presenter.isOnWidget = person.isOnWidget
+		XCTAssertFalse(presenter.hasChanges)
+		presenter.appImage = PersonImage(uiImage: UIImage())
+		XCTAssertTrue(presenter.canSave)
+		presenter.appImage = PersonImage(id: person.appPicId)
+		XCTAssertFalse(presenter.hasChanges)
+		presenter.widgetImage = PersonImage(uiImage: UIImage())
+		XCTAssertTrue(presenter.canSave)
+		presenter.widgetImage = PersonImage(id: person.widgetPicId)
+		XCTAssertFalse(presenter.hasChanges)
+	}
+
+	func testRemovingEitherStoredPhotoIsDirtyAndUnsavedDraftDoesNotPersist() async {
+		let gateway = PersonsGatewaySpy()
+		var person = Person.createPerson()
+		person.appPicId = UUID()
+		person.widgetPicId = UUID()
+		let configurator = SceneConfigurator(gateway: gateway)
+		let editor = configurator.editor(person: person, onMutation: { _ in XCTFail("Unsaved") })
+		await editor.load()
+		editor.appImage = nil
+		XCTAssertTrue(editor.canSave)
+		editor.appImage = PersonImage(id: person.appPicId)
+		XCTAssertFalse(editor.canSave)
+		editor.widgetImage = nil
+		XCTAssertTrue(editor.canSave)
+		editor.name = "Unsaved"
+		let reopened = configurator.editor(person: person, onMutation: { _ in })
+		await reopened.load()
+		XCTAssertEqual(reopened.name, person.name)
+		XCTAssertEqual(reopened.appImage?.id, person.appPicId)
+		XCTAssertEqual(reopened.widgetImage?.id, person.widgetPicId)
+		XCTAssertFalse(reopened.canSave)
+		XCTAssertFalse(gateway.editPersonCalled)
+	}
+
+	func testBirthdayCelebratesVisibleMidnightAndEveryPageArrivalOnly() {
+		let calendar = Calendar.current
+		var person = Person.createPerson()
+		person.birthday = calendar.date(from: DateComponents(year: 2020, month: 1, day: 16, hour: 6))!
+		let midnight = calendar.date(from: DateComponents(year: 2027, month: 1, day: 16))!
+		let presenter = OverviewPresenter()
+		presenter.tick(person: person, now: midnight.addingTimeInterval(-1), isSelected: true)
+		XCTAssertEqual(presenter.celebrationID, 0)
+		presenter.tick(person: person, now: midnight, isSelected: true)
+		XCTAssertEqual(presenter.celebrationID, 1)
+		presenter.tick(person: person, now: midnight.addingTimeInterval(60), isSelected: true)
+		XCTAssertEqual(presenter.celebrationID, 1)
+		presenter.tick(person: person, now: midnight.addingTimeInterval(120), isSelected: false)
+		XCTAssertEqual(presenter.celebrationID, 1)
+		presenter.tick(person: person, now: midnight.addingTimeInterval(180), isSelected: true)
+		XCTAssertEqual(presenter.celebrationID, 2)
+		let offscreen = OverviewPresenter()
+		offscreen.tick(person: person, now: midnight.addingTimeInterval(-1), isSelected: false)
+		offscreen.tick(person: person, now: midnight, isSelected: false)
+		XCTAssertEqual(offscreen.celebrationID, 0)
 	}
 
 }

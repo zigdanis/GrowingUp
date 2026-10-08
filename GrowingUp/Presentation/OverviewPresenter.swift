@@ -7,6 +7,9 @@ import UIKit
 final class OverviewPresenter {
 	private(set) var image: UIImage?
 	private(set) var age = ""
+	private(set) var birthdayStatus: BirthdayStatus?
+	private(set) var celebrationID = 0
+	private var wasSelected = false
 	var error: SceneError?
 	private let loadImage: (PersonImage) async throws -> UIImage
 
@@ -27,7 +30,13 @@ final class OverviewPresenter {
 		}
 	}
 
-	func tick(person: Person, now: Date) {
+	func tick(person: Person, now: Date, isSelected: Bool = false) {
+		let status = BirthdayStatus(birthday: person.birthday, now: now)
+		if isSelected, status.isToday, !wasSelected || birthdayStatus?.isToday != true {
+			celebrationID += 1
+		}
+		wasSelected = isSelected
+		birthdayStatus = status
 		age = AgeCalculator.ageString(for: person.dateComponents(at: now))
 	}
 }

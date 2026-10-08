@@ -34,8 +34,14 @@ enum AppComposition {
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
 			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: configuration.failNextSave)
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
+			let environment = ProcessInfo.processInfo.environment
+			let clockDate = environment["GROWINGUP_BIRTHDAY_NOW"].flatMap(ISO8601DateFormatter().date(from:)) ?? fixedDate
+			let clockStarted = Date()
+			let clockRuns = environment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] == "1"
 			return SceneConfigurator(
-				gateway: gateway, loadImage: images.load, now: { fixedDate }, photoFixtures: (0..<18).map(fixture))
+				gateway: gateway, loadImage: images.load,
+				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
+				photoFixtures: (0..<18).map(fixture))
 		}
 
 		private static func fixture(_ index: Int) -> UIImage {

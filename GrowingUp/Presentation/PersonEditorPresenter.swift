@@ -56,6 +56,14 @@ final class PersonEditorPresenter: Identifiable {
 		set { updateBirthday(day: birthday, time: newValue) }
 	}
 
+	var hasChanges: Bool {
+		guard let person else { return true }
+		return name != person.name || birthday != person.birthday || isOnWidget != person.isOnWidget
+			|| appImage != PersonImage(id: person.appPicId) || widgetImage != PersonImage(id: person.widgetPicId)
+	}
+
+	var canSave: Bool { hasChanges && !isBusy && !isLoading }
+
 	private func updateBirthday(day: Date, time: Date) {
 		let calendar = Calendar.current
 		guard
@@ -80,7 +88,7 @@ final class PersonEditorPresenter: Identifiable {
 	}
 
 	func save() async {
-		guard !isBusy, !isLoading else { return }
+		guard canSave else { return }
 		guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
 			error = SceneError(CoreError.noNameValue)
 			return

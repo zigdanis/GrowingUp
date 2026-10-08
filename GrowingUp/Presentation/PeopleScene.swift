@@ -13,7 +13,8 @@ struct PeopleScene: View {
 					TabView(selection: $presenter.selectedID) {
 						ForEach(presenter.persons, id: \.id) { person in
 							PersonOverviewScene(
-								person: person, configurator: presenter.configurator, safeAreaInsets: geometry.safeAreaInsets,
+								person: person, isSelected: presenter.selectedID == person.id, configurator: presenter.configurator,
+								safeAreaInsets: geometry.safeAreaInsets,
 								onEdit: { presenter.edit(person) }
 							)
 							.tag(Optional(person.id))

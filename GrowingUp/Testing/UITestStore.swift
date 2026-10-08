@@ -28,6 +28,11 @@
 					person.id = String(format: "00000000-0000-0000-0000-%012d", index + 1)
 					person.name = name
 					person.birthdate = Date(timeIntervalSince1970: 1_600_000_000)
+					if seed == .birthdays {
+						let month = index == 2 ? 2 : 1
+						let day = index == 0 ? 16 : 15
+						person.birthdate = Calendar.current.date(from: DateComponents(year: 2020, month: month, day: day, hour: 6, minute: 30))!
+					}
 					person.createdDate = Date(timeIntervalSince1970: Double(index))
 					person.accessToWidget = access
 				}

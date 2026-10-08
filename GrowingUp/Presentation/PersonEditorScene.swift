@@ -52,7 +52,7 @@ struct PersonEditorScene: View {
 				ToolbarItem(placement: .confirmationAction) {
 					Button("Save", systemImage: "checkmark") { Task { await presenter.save() } }
 						.labelStyle(.iconOnly)
-						.disabled(presenter.isBusy || presenter.isLoading)
+						.disabled(!presenter.canSave)
 						.accessibilityIdentifier("editor.save")
 				}
 			}
