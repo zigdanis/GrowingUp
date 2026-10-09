@@ -41,7 +41,18 @@ enum AppComposition {
 			return SceneConfigurator(
 				gateway: gateway, loadImage: images.load,
 				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
-				photoFixtures: (0..<18).map(fixture))
+				photoFixtures: try photoFixtures(environment: environment))
+		}
+
+		private static func photoFixtures(environment: [String: String]) throws -> [UIImage] {
+			guard environment["GROWINGUP_APP_STORE_CAPTURE"] == "1" else { return (0..<18).map(fixture) }
+			guard let directory = environment["GROWINGUP_APP_STORE_PHOTOS"] else { throw CocoaError(.fileNoSuchFile) }
+			return try ["baby-girl", "young-boy", "cat", "dog"].map { name in
+				let url = URL(fileURLWithPath: directory).appendingPathComponent("\(name).png")
+				let data = try Data(contentsOf: url)
+				guard let image = UIImage(data: data) else { throw CocoaError(.fileReadCorruptFile) }
+				return image
+			}
 		}
 
 		private static func fixture(_ index: Int) -> UIImage {

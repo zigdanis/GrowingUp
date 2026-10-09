@@ -38,11 +38,13 @@ class PublicationTests(unittest.TestCase):
         )
         self.edits = []
         self.uploads = []
+        self.queried_workflows = []
 
     def gh(self, *args):
         if args == ("api", "repos/{owner}/{repo}"):
             return json.dumps({"full_name": "owner/repo", "id": 1234})
         if args[:2] == ("run", "list"):
+            self.queried_workflows.append(args[args.index("--workflow") + 1])
             return json.dumps([{"databaseId": 123}])
         if args == ("api", "repos/owner/repo/pulls/42"):
             return json.dumps(self.pr)
@@ -96,6 +98,65 @@ class PublicationTests(unittest.TestCase):
                     self.publish()
                 self.metadata[field] = original
         self.assertEqual(self.edits, [])
+        self.assertEqual(self.uploads, [])
+
+    def capture_metadata(self):
+        self.metadata.pop("journey_outcome")
+        self.metadata.update(
+            workflow="app-store-screenshots.yml", capture_outcome="success",
+            verification_outcome="success", composition_outcome="success",
+        )
+
+    def test_capture_publication_checks_the_capture_workflow(self):
+        self.capture_metadata()
+        self.publish("Inspected both native locale captures, widget crops and birthday animation.")
+        self.assertEqual(self.queried_workflows, ["app-store-screenshots.yml"] * 2)
+        self.assertEqual(len(self.uploads), 2)
+        self.assertIn("current-head", self.pr["body"])
+
+    def test_ci_publication_keeps_the_existing_workflow(self):
+        self.publish()
+        self.assertEqual(self.queried_workflows, ["ci.yml"] * 2)
+
+    def test_capture_requires_every_stage_before_upload(self):
+        self.capture_metadata()
+        for outcome in ("capture_outcome", "export_outcome", "verification_outcome", "composition_outcome"):
+            for value in ("failure", "skipped", None):
+                with self.subTest(outcome=outcome, value=value):
+                    if value is None:
+                        self.metadata.pop(outcome)
+                    else:
+                        self.metadata[outcome] = value
+                    with self.assertRaises(ValueError):
+                        self.publish()
+                    self.metadata[outcome] = "success"
+        self.assertEqual(self.edits, [])
+        self.assertEqual(self.uploads, [])
+
+    def test_capture_rejects_stale_source_and_attempt(self):
+        self.capture_metadata()
+        for field, value in (("head_sha", "old-head"), ("run_attempt", "1"), ("run_id", "122")):
+            with self.subTest(field=field):
+                original = self.metadata[field]
+                self.metadata[field] = value
+                with self.assertRaises(ValueError):
+                    self.publish()
+                self.metadata[field] = original
+        self.assertEqual(self.edits, [])
+        self.assertEqual(self.uploads, [])
+
+    def test_unsupported_workflow_is_rejected_before_upload(self):
+        self.metadata["workflow"] = "unrelated-release.yml"
+        with self.assertRaisesRegex(ValueError, "CI or App Store"):
+            self.publish()
+        self.assertEqual(self.edits, [])
+        self.assertEqual(self.uploads, [])
+
+    def test_capture_metadata_needs_an_explicit_workflow(self):
+        self.capture_metadata()
+        self.metadata.pop("workflow")
+        with self.assertRaises(ValueError):
+            self.publish()
         self.assertEqual(self.uploads, [])
 
     def test_failed_ci_or_export_never_uploads(self):

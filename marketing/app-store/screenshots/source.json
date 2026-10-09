@@ -1,0 +1,49 @@
+{
+  "capture": {
+    "workflow": "app-store-screenshots.yml",
+    "head_sha": "f9fef06a16735a2a03c49159429b643228033357",
+    "checkout_sha": "63053a75d1c0c119eec80c3ffe49944975bea059",
+    "run_id": "37938358880",
+    "run_attempt": "1",
+    "device": "iPhone-17-Pro-Max",
+    "runtime": "26-5",
+    "xcode": "26.6",
+    "native_width": 1320,
+    "native_height": 2868,
+    "visual_checks": "0"
+  },
+  "size": [
+    1320,
+    2868
+  ],
+  "inputs": {
+    "en-US": {
+      "mia": "147b47e5f343b464cede5502336bbc1154ed2a100059d248e0ee74a9a8c9fdb4",
+      "leo-celebration": "b358448e2e43ca3713b29b425e41a2658a4aa9563531ee7b331e339fed21b450",
+      "mango": "7b5ff6538b5625730a03a45183d8ee35d2fe5124044cb1f6f8825e924dbc002d",
+      "teddy": "42bb682f755975371afda341a840a1d76eeb5546a217f41a1e0931876bba94bb",
+      "widget-small": "7c55ceea784e737b022c649bc6fd92d3b5f27c7293b8f550111ff69e0ad6ab6b",
+      "widget-medium": "f27f9258719d511963e31d902b83d327002a243864614f8288d05d3443fae325",
+      "widget-large": "d54d2b15830197cf217061b6fa3e1df039f90ac0939944aeaf3b6c4767832b14"
+    },
+    "ru": {
+      "mia": "9f2a54a4da62f270fbff9fe3db5a353155671f7c319720851be62f3a8be02f2c",
+      "leo-celebration": "b36b9ea0c3305a21bdbc6df456a237cfda5c5940b5faaaa2bed7ff952955cf24",
+      "mango": "2e253c140c3d657d5d336ccb553178ca573c408ea680c613fbb6b24fb56c8d16",
+      "teddy": "ff3476bf8eef8011a7e76500b41cd9d5b925e441f96bfc3bf4eea987164ae42a",
+      "widget-small": "5e52a495bf613023aa535b1b8195cf445a2a7506751eb742cafa189db6a06d05",
+      "widget-medium": "58b32ee6ed886a2c517be2fb67233c51f8b461bf97899a5d8b3aa57fa7471ad0",
+      "widget-large": "3cbaea59ffb6f9910bb5ef4991fc9494b3090997eebc7dabbbf301909c33285e"
+    }
+  },
+  "outputs": {
+    "en-US/01-mia.png": "d1526f548e4f625bd08f403dbf0c6a1f798c62e5b803ecd574d36daaaa8c1ab4",
+    "en-US/02-leo-celebration.png": "4def72029247ba026f1e995b54291e897c61b6f73d2730ab706d0793df49e684",
+    "en-US/03-mango-teddy.png": "43016ff541375eb2389df18da768862ee67939bd98eb7b1199179f035dd4ad1f",
+    "en-US/04-widgets.png": "3d67c3f4762dad8faa2ae5028794a9e96eed201700a3474f7f683936e6251c2e",
+    "ru/01-mia.png": "3a9da7870a13dac13a88a444b8124b3ed356aa4e69a30aa8fdc25413cc499c94",
+    "ru/02-leo-celebration.png": "d2a11e0548776a6a5fe9410996848f45f6ebfdd9e491fff2bd88b6379c528351",
+    "ru/03-mango-teddy.png": "52cfae8b5dda9e9f636c9a7bb094e0d326acc4af88b795fdcc283300ea5e65f4",
+    "ru/04-widgets.png": "0fbcf6fc89b8213327bc59b87bb3cc6171777f93e2d1607f1e77665b5caf2ce1"
+  }
+}

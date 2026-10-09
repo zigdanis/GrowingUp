@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
 		CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */; };
 		A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
@@ -225,6 +226,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C51000000000000000000002 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
 		CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCacheTests.swift; sourceTree = "<group>"; };
 		A5000000000000000000000E /* AgeWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetContentView.swift; sourceTree = "<group>"; };
 		A50000000000000000000008 /* UITestWidgetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestWidgetPreview.swift; sourceTree = "<group>"; };
@@ -907,6 +909,7 @@
 		A4461E02291EB42F4B6BD048 /* GrowingUpUITests */ = {
 			isa = PBXGroup;
 			children = (
+				C51000000000000000000002 /* AppStoreScreenshotTests.swift */,
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
@@ -1337,6 +1340,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
 				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,
 				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,

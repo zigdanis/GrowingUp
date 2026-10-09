@@ -1,6 +1,7 @@
 #if DEBUG
 	import Core
 	import SwiftUI
+	import UIKit
 	import WidgetKit
 
 	/// Exercises the extension's actual rendering against the isolated UI-test store.
@@ -27,6 +28,7 @@
 						.padding(16)
 						.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
 						.background(.background, in: RoundedRectangle(cornerRadius: 24))
+						.accessibilityElement(children: .contain)
 						.accessibilityIdentifier("widget.preview")
 				} else if let error {
 					Text(error).accessibilityIdentifier("widget.preview.error")
@@ -37,8 +39,15 @@
 			.task {
 				do {
 					let people = try await configurator.fetchUseCase.fetchWidgetPersons()
-					let persons = people.prefix(Constants.widgetPeopleLimit).enumerated().map { index, person in
-						WidgetPerson(id: person.id, index: index, name: person.name, birthday: person.birthday, image: nil)
+					var persons: [WidgetPerson] = []
+					for (index, person) in people.prefix(Constants.widgetPeopleLimit).enumerated() {
+						let image: UIImage?
+						if let reference = PersonImage(id: person.widgetPicId) {
+							image = try await configurator.loadImage(reference)
+						} else {
+							image = nil
+						}
+						persons.append(WidgetPerson(id: person.id, index: index, name: person.name, birthday: person.birthday, image: image))
 					}
 					entry = AgeEntry(date: configurator.now(), persons: persons)
 				} catch {

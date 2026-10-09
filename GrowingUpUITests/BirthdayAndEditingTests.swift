@@ -57,16 +57,15 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(app.staticTexts["Happy birthday!"].waitForNonExistence(timeout: 5))
 		checkpoint("birthday-midnight-confetti")
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
-		let leading = overview.coordinate(withNormalizedOffset: CGVector(dx: 0.15, dy: 0.7))
-		let trailing = overview.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.7))
-		trailing.press(forDuration: 0.05, thenDragTo: leading)
+		app.swipeLeft()
 		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Boris"), timeout: 5))
 		XCTAssertFalse(confetti.exists)
-		leading.press(forDuration: 0.05, thenDragTo: trailing)
-		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Alice"), timeout: 5))
+		app.swipeRight()
+		// Capture the short-lived burst before name queries spend its animation window.
 		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
 		XCTAssertEqual(confetti.value as? String, "2")
 		checkpoint("birthday-return-confetti")
+		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Alice"), timeout: 5))
 		XCTAssertFalse(app.buttons["editor.save"].exists)
 	}
 
