@@ -64,19 +64,22 @@ final class AppStoreScreenshotTests: XCTestCase {
 		checkpoint("store-\(locale)-mango")
 		selectPerson(3)
 		checkpoint("store-\(locale)-teddy")
-		// Returning to Leo starts the production birthday burst, after the photo has already loaded.
+		// Navigate and open the popover before midnight so XCTest synchronization cannot consume the burst.
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-15T23:59:20Z"
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "1"
+		relaunch()
 		selectPerson(1)
 		app.buttons["person.birthday"].tap()
-		let greeting = app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"]
-		XCTAssertTrue(greeting.waitForExistence(timeout: 5))
-		XCTAssertTrue(confetti.exists, "The screenshot must contain the active birthday animation.")
+		XCTAssertTrue(confetti.waitForExistence(timeout: 60), "The production midnight transition must start the birthday animation.")
 		// The production birthday popover demonstrates native Liquid Glass while the burst is running.
 		checkpoint("store-\(locale)-leo-celebration")
 		checkpoint("store-\(locale)-leo-celebration-frame-2")
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
-		XCTAssertTrue(greeting.exists)
+		XCTAssertTrue(app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"].exists)
 		XCTAssertFalse(app.staticTexts["birthday.countdown"].exists)
 		checkpoint("store-\(locale)-birthday-confirmed")
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T10:30:00Z"
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "0"
 	}
 
 	private func captureWidgets() {
@@ -112,7 +115,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 		wheels.element(boundBy: 2).adjust(toPickerWheelValue: String(year))
 		let formatter = DateFormatter()
 		formatter.locale = Locale(identifier: locale == "ru" ? "ru_RU" : "en_US")
-		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: formatter.monthSymbols[month - 1])
+		let monthName = formatter.monthSymbols[month - 1].capitalized(with: formatter.locale)
+		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: monthName)
 		wheels.element(boundBy: locale == "ru" ? 0 : 1).adjust(toPickerWheelValue: String(day))
 		app.buttons["editor.birthDate"].tap()
 		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
