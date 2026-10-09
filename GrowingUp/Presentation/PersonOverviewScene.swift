@@ -95,6 +95,9 @@ struct PersonOverviewScene: View {
 			burstStarted = nil
 		}
 		.task(id: person.appPicId) { await presenter.load(person: person) }
+		.onDisappear {
+			presenter.tick(person: person, now: now(), isSelected: false)
+		}
 		.task(id: isSelected ? person.birthday : nil) {
 			while !Task.isCancelled {
 				presenter.tick(person: person, now: now(), isSelected: isSelected)

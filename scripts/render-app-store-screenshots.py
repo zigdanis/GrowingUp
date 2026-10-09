@@ -178,7 +178,7 @@ def compose(directory, output):
                 phone(canvas, inputs['leo-celebration'][0], 92, 1004, 1135, 4)
             elif index == 2:
                 phone(canvas, inputs['teddy'][0], -106, 1233, 766, -9)
-                phone(canvas, inputs['mango'][0], 224, 1004, 1135, 5)
+                phone(canvas, inputs['mango'][0], 158, 1004, 1000, 5)
             else:
                 phone(canvas, widget_screen(inputs), 215, 900, 890, 0)
             path = destination / name

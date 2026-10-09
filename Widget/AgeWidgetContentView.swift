@@ -36,6 +36,7 @@ struct AgeWidgetContentView: View {
 					PersonCell(person: person, date: entry.date, compact: false)
 						.frame(maxWidth: .infinity)
 				}
+				.buttonStyle(.plain)
 			}
 		}
 	}
@@ -50,6 +51,7 @@ struct AgeWidgetContentView: View {
 							.frame(maxWidth: .infinity)
 							.frame(height: max(0, (geometry.size.height - 16) / 2))
 					}
+					.buttonStyle(.plain)
 				}
 			}
 		}
