@@ -104,6 +104,7 @@ jobs:
           python3 - <<'PY'
           import json
           import os
+          import re
           import struct
           from pathlib import Path
 
@@ -116,11 +117,12 @@ jobs:
               assert summary.get('failedTests', 0) == 0, f'{locale}: failed capture test'
               manifest = json.loads((source / 'attachments/manifest.json').read_text())
               attachments = [item for test in manifest for item in test['attachments']]
+              export_suffix = re.compile(r'_\d+_[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$')
               for checkpoint in ('mia', 'leo-celebration', 'mango', 'teddy',
                                  'widget-small', 'widget-medium', 'widget-large'):
                   name = f'store-{locale}-{checkpoint}'
                   matches = [item for item in attachments
-                             if item['suggestedHumanReadableName'].removesuffix('.png') == name]
+                             if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == name]
                   assert len(matches) == 1, f'{name}: expected one checkpoint, found {len(matches)}'
                   data = (source / 'attachments' / matches[0]['exportedFileName']).read_bytes()
                   assert data[:8] == b'\x89PNG\r\n\x1a\n', f'{name}: invalid PNG'

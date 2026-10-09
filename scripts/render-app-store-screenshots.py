@@ -41,9 +41,11 @@ def native_inputs(directory, locale):
     manifest = json.loads((attachments / 'manifest.json').read_text())
     entries = [item for test in manifest for item in test['attachments']]
     result = {}
+    export_suffix = re.compile(r'_\d+_[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$')
     for name in NAMES:
         checkpoint = f'store-{locale}-{name}'
-        matches = [item for item in entries if item['suggestedHumanReadableName'].removesuffix('.png') == checkpoint]
+        matches = [item for item in entries
+                   if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == checkpoint]
         if len(matches) != 1:
             raise ValueError(f'{checkpoint}: expected exactly one native checkpoint')
         path = (attachments / matches[0]['exportedFileName']).resolve()
