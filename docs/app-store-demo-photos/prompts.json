@@ -1,0 +1,23 @@
+{
+  "generator": "Built-in image_gen",
+  "generated_on": "2026-10-09",
+  "purpose": "Fictional demo portraits for GrowingUp App Store screenshot concepts and later simulator fixtures",
+  "assets": [
+    {
+      "file": "baby-girl.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: original demo portrait photo for GrowingUp iPhone App Store screenshots, not a mockup. Create one photorealistic natural editorial photograph, portrait orientation 2:3, high resolution. Soft natural window/daylight, candid believable texture, clean muted background. Frame subject's head and upper torso in the central half of the image, ample uncluttered darkened negative space in the top quarter for the app's white name and age overlay. Composition must also work cropped into a small circular widget avatar. Entirely fictional subject, no resemblance to a named real person. No text, logos, watermarks, app UI, collage, borders, or illustration. Subject: happy 10-month-old baby girl with light brown wispy hair, warm natural smile, wearing a simple cream knitted sweater, seated safely on a cozy sage-green sofa at home. Gentle authentic family photography, warm daylight, understated cream and sage palette."
+    },
+    {
+      "file": "young-boy.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: original demo portrait photo for GrowingUp iPhone App Store screenshots, not a mockup. Create one photorealistic natural editorial photograph, portrait orientation 2:3, high resolution. Soft natural window/daylight, candid believable texture, clean muted background. Frame subject's head and upper torso in the central half of the image, ample uncluttered darkened negative space in the top quarter for the app's white name and age overlay. Composition must also work cropped into a small circular widget avatar. Entirely fictional subject, no resemblance to a named real person. No text, logos, watermarks, app UI, collage, borders, or illustration. Subject: cheerful 5-year-old boy with curly dark hair and medium brown skin, wearing a muted blue cotton sweater, outdoors in a garden. Natural playful expression looking slightly toward camera, soft green leaves blurred behind, realistic family photography."
+    },
+    {
+      "file": "cat.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: original demo portrait photo for GrowingUp iPhone App Store screenshots, not a mockup. Create one photorealistic natural editorial photograph, portrait orientation 2:3, high resolution. Soft natural window/daylight, candid believable texture, clean muted background. Frame subject's head and upper torso in the central half of the image, ample uncluttered darkened negative space in the top quarter for the app's white name and age overlay. Composition must also work cropped into a small circular widget avatar. Entirely fictional subject, no resemblance to a named real person. No text, logos, watermarks, app UI, collage, borders, or illustration. Subject: affectionate ginger domestic shorthair cat with green eyes sitting on a soft cream blanket near a window. Portrait of head and upper body, ears fully in frame, calm curious look at camera, realistic fur detail and warm natural light, muted teal background."
+    },
+    {
+      "file": "dog.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: original demo portrait photo for GrowingUp iPhone App Store screenshots, not a mockup. Create one photorealistic natural editorial photograph, portrait orientation 2:3, high resolution. Soft natural window/daylight, candid believable texture, clean muted background. Frame subject's head and upper torso in the central half of the image, ample uncluttered darkened negative space in the top quarter for the app's white name and age overlay. Composition must also work cropped into a small circular widget avatar. Entirely fictional subject, no resemblance to a named real person. No text, logos, watermarks, app UI, collage, borders, or illustration. Subject: friendly golden retriever puppy, soft golden fur, wearing no accessories, sitting in a garden looking at camera. Head and upper body centered, mouth slightly open happy expression, ears fully in frame, soft sage-green foliage background, authentic natural pet photography."
+    }
+  ]
+}
