@@ -237,11 +237,16 @@ def placements(api, localization_id, group=None):
     return result
 
 
+def phone_placements(api, localization_id, groups):
+    return [placement for placement in placements(api, localization_id)
+            if placement["attributes"]["placementGroup"] in groups]
+
+
 def check_replaceable(current, live):
     inherited_ids = {p["image"]["id"] for p in live}
     for placement in current:
         image = placement["image"]
-        if image["id"] not in inherited_ids and not image["attributes"].get("referenceName", "").startswith(MANAGED_PREFIX):
+        if image["id"] not in inherited_ids and not (image["attributes"].get("referenceName") or "").startswith(MANAGED_PREFIX):
             raise ValueError("Draft contains unrelated screenshots; refusing to replace them")
 
 
@@ -322,6 +327,8 @@ def run(api, args, receipt):
     if len({value for values in specifications.values() for value in values}) != 1:
         raise ValueError("The eight screenshots must target the same iPhone group and dimensions")
     group, spec_id = specifications[LOCALES[0]][0]
+    phone_groups = {profile["placementProfileGroupId"] for profile in reference[0]["attributes"]["placementProfileGroups"]
+                    if profile["platform"] == "IPHONE_APP_STORE"}
     live, target, draft = select_version(versions, args.version)
     receipt.update(target_version=target, live_version=live["attributes"]["versionString"], placement_group=group, spec_id=spec_id)
     live_localizations = {loc["attributes"]["locale"]: loc for loc in api.collection(f"/v1/appStoreVersions/{live['id']}/appStoreVersionLocalizations")}
@@ -329,16 +336,18 @@ def run(api, args, receipt):
         if locale not in live_localizations:
             raise ValueError(f"Live metadata for {locale} is missing; metadata authoring needs a separate instruction")
     draft_localizations = {} if draft is None else {loc["attributes"]["locale"]: loc for loc in api.collection(f"/v1/appStoreVersions/{draft['id']}/appStoreVersionLocalizations")}
-    live_placements = {locale: placements(api, live_localizations[locale]["id"], group) for locale in LOCALES}
-    # Check all existing target locales before the first write.
+    live_placements = {locale: phone_placements(api, live_localizations[locale]["id"], phone_groups) for locale in LOCALES}
+    # Check all affected iPhone groups in both locales before the first write.
     for locale, localization in draft_localizations.items():
         if locale in LOCALES:
-            check_replaceable(placements(api, localization["id"], group), live_placements[locale])
+            check_replaceable(phone_placements(api, localization["id"], phone_groups), live_placements[locale])
     if draft is None:
         draft = api.create("appStoreVersions", {"platform": "IOS", "versionString": target, "releaseType": "MANUAL"}, {"app": relationship("apps", app_id)})
         draft_localizations = {loc["attributes"]["locale"]: loc for loc in api.collection(f"/v1/appStoreVersions/{draft['id']}/appStoreVersionLocalizations")}
     receipt["version_id"] = draft["id"]
     receipt["screenshots"] = []
+    receipt["cleared_placements"] = []
+    prepared_localizations = {}
     for locale in LOCALES:
         localization = draft_localizations.get(locale)
         if localization is None:
@@ -372,6 +381,23 @@ def run(api, args, receipt):
         })
         verified = placements(api, localization_id, group)
         verify_placements(verified, ordered, images[locale], spec_id)
+        prepared_localizations[locale] = (localization_id, ordered)
+    # Both new main sets are verified before removing old size-specific overrides.
+    receipt["verified_groups"] = {}
+    for locale, (localization_id, ordered) in prepared_localizations.items():
+        current_phone = phone_placements(api, localization_id, phone_groups)
+        check_replaceable(current_phone, live_placements[locale])
+        for placement in current_phone:
+            if placement["attributes"]["placementGroup"] != group:
+                api.request("DELETE", f"/v1/appAssetLibraryPlacements/{placement['id']}")
+                receipt["cleared_placements"].append({"locale": locale, "placement_id": placement["id"],
+                                                       "group": placement["attributes"]["placementGroup"],
+                                                       "image_id": placement["image"]["id"]})
+        remaining = phone_placements(api, localization_id, phone_groups)
+        if any(placement["attributes"]["placementGroup"] != group for placement in remaining):
+            raise ValueError("Old iPhone screenshot groups still override the new scaled screenshots")
+        verify_placements(remaining, ordered, images[locale], spec_id)
+        receipt["verified_groups"][locale] = [group]
     final = api.resource(f"/v1/appStoreVersions/{draft['id']}")
     if final["attributes"]["appStoreState"] != "PREPARE_FOR_SUBMISSION" or final["attributes"]["versionString"] != target:
         raise ValueError("App Store version changed state during screenshot preparation")

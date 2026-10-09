@@ -22,6 +22,7 @@ are intentionally versioned at Danis's request; raw captures, recordings,
 xcresult and DerivedData stay outside the repository. The final images are opaque
 1320 × 2868 PNGs. Smaller iPhone categories can use App Store Connect scaling;
 the iPhone-only app does not need an iPad set.
+Browse the committed final images in `docs/app-store-screenshots-preview.html`.
 
 CI composes the images with `scripts/render-app-store-screenshots.py`, Pillow
 12.3.0 and the licensed fonts in `marketing/fonts`. For a local recomposition:
@@ -40,7 +41,10 @@ The **App Store Metadata** workflow runs manually from reviewed, green `master`
 using the existing `testflight` environment's Apple API key. Its `inventory`
 operation is read-only. Its `upload` operation creates or reuses the next minor
 draft after the live App Store version, prepares EN/RU screenshot placements,
-and verifies processing and ordering. It does not upload an app binary or submit
+and verifies processing and ordering. Both new sets must pass verification before
+old inherited or managed screenshots in other iPhone groups are removed, so
+smaller iPhones use the new scaled set. Other draft artwork blocks the operation;
+iPad placements, previews and library image assets are retained. It does not upload an app binary or submit
 a release for App Review. These operations need Danis's instruction; the current
 screenshot task explicitly authorizes preparing the draft and uploading images.
 
