@@ -28,6 +28,7 @@ LIVE_STATES = {"READY_FOR_SALE", "READY_FOR_DISTRIBUTION"}
 READY_ASSETS = {"PREPARE_FOR_SUBMISSION", "APPROVED"}
 MANAGED_PREFIX = "GrowingUp-store:"
 CAPTURE_INPUTS = ("GrowingUp", "Core", "Widget", "GrowingUpUITests", "GrowingUp.xcodeproj",
+                  ".github/workflows/app-store-screenshots.yml",
                   "scripts/run-app-store-screenshots.sh", "scripts/render-app-store-screenshots.py",
                   "docs/app-store-demo-photos", "marketing/fonts")
 

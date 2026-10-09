@@ -28,6 +28,7 @@
 						.padding(16)
 						.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
 						.background(.background, in: RoundedRectangle(cornerRadius: 24))
+						.accessibilityElement(children: .contain)
 						.accessibilityIdentifier("widget.preview")
 				} else if let error {
 					Text(error).accessibilityIdentifier("widget.preview.error")

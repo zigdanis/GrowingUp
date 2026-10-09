@@ -148,7 +148,8 @@ def widget_screen(inputs):
         image = inputs[name][0]
         height = round(image.height * width / image.width)
         card = image.resize((width, height), Image.Resampling.LANCZOS)
-        card.putalpha(rounded_mask(card.size, width * .065))
+        native_width = 170 if name == 'widget-small' else 364
+        card.putalpha(rounded_mask(card.size, width * 24 / native_width))
         screen.alpha_composite(card, ((SIZE[0] - width) // 2, top))
     return screen
 

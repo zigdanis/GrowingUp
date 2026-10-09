@@ -86,10 +86,12 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private func captureWidgets() {
 		for (family, count) in [("small", 1), ("medium", 3), ("large", 4)] {
 			relaunch(widgetFamily: family)
-			let widget = app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch
+			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
 			XCTAssertTrue(widget.waitForExistence(timeout: 10))
+			XCTAssertEqual(widget.frame.width, family == "small" ? 170 : 364, accuracy: 0.5)
+			XCTAssertEqual(widget.frame.height, family == "large" ? 382 : 170, accuracy: 0.5)
 			for (index, name) in names.enumerated() {
-				let person = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
 				if index < count {
 					XCTAssertTrue(person.waitForExistence(timeout: 5))
 				} else {

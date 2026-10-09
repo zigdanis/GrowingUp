@@ -93,9 +93,10 @@ final class CachePersonsGatewayTests: XCTestCase {
 
 	func testAsyncAddHonorsCancellationBeforeSideEffects() async {
 		let operation = Task {
-			try await sut.add(parameters: parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: nil))
+			// Cancel before invoking the gateway, regardless of when the child task is scheduled.
+			withUnsafeCurrentTask { $0?.cancel() }
+			return try await sut.add(parameters: parameters(appImage: PersonImage(uiImage: UIImage()), widgetImage: nil))
 		}
-		operation.cancel()
 
 		do {
 			_ = try await operation.value
