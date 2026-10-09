@@ -23,6 +23,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		addPerson(index: 1, year: 2021, month: 1, day: 16)
 		addPerson(index: 2, year: 2024, month: 10, day: 16)
 		addPerson(index: 3, year: 2026, month: 1, day: 15)
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T08:24:12Z"
 		verifyPersistence()
 		capturePeople()
 		captureWidgets()
@@ -34,7 +35,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		app.launchEnvironment = [
 			UITestConfiguration.environmentKey: configuration.encoded,
 			"GROWINGUP_APP_STORE_CAPTURE": "1", "GROWINGUP_APP_STORE_PHOTOS": photos,
-			"GROWINGUP_BIRTHDAY_NOW": "2027-01-16T10:30:00Z", "TZ": "UTC"
+			"GROWINGUP_BIRTHDAY_NOW": "2027-01-16T00:00:00Z", "TZ": "UTC"
 		]
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
@@ -78,7 +79,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"].exists)
 		XCTAssertFalse(app.staticTexts["birthday.countdown"].exists)
 		checkpoint("store-\(locale)-birthday-confirmed")
-		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T10:30:00Z"
+		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T08:24:12Z"
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "0"
 	}
 
