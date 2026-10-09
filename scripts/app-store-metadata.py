@@ -29,7 +29,7 @@ READY_ASSETS = {"PREPARE_FOR_SUBMISSION", "APPROVED"}
 MANAGED_PREFIX = "GrowingUp-store:"
 CAPTURE_INPUTS = ("GrowingUp", "Core", "Widget", "GrowingUpUITests", "GrowingUp.xcodeproj",
                   "scripts/run-app-store-screenshots.sh", "scripts/render-app-store-screenshots.py",
-                  "docs/app-store-demo-photos", "marketing/app-store/fonts")
+                  "docs/app-store-demo-photos", "marketing/fonts")
 
 
 def version_tuple(value):

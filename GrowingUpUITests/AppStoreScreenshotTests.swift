@@ -19,9 +19,10 @@ final class AppStoreScreenshotTests: XCTestCase {
 		let photos = try XCTUnwrap(environment["GROWINGUP_APP_STORE_PHOTOS"])
 		launchCapture(photos: photos)
 		// Dates are entered using the native wheel editor, never injected into persistence.
-		for (index, date) in [(2026, 7, 16), (2021, 1, 16), (2024, 10, 16), (2026, 1, 15)].enumerated() {
-			addPerson(index: index, date: date)
-		}
+		addPerson(index: 0, year: 2026, month: 7, day: 16)
+		addPerson(index: 1, year: 2021, month: 1, day: 16)
+		addPerson(index: 2, year: 2024, month: 10, day: 16)
+		addPerson(index: 3, year: 2026, month: 1, day: 15)
 		verifyPersistence()
 		capturePeople()
 		captureWidgets()
@@ -95,7 +96,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		}
 	}
 
-	private func addPerson(index: Int, date: (Int, Int, Int)) {
+	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
 		if index > 0 { app.swipeLeft() }
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
@@ -108,11 +109,11 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(picker.waitForExistence(timeout: 5))
 		let wheels = picker.pickerWheels
 		XCTAssertEqual(wheels.count, 3)
-		wheels.element(boundBy: 2).adjust(toPickerWheelValue: String(date.0))
+		wheels.element(boundBy: 2).adjust(toPickerWheelValue: String(year))
 		let formatter = DateFormatter()
 		formatter.locale = Locale(identifier: locale == "ru" ? "ru_RU" : "en_US")
-		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: formatter.monthSymbols[date.1 - 1])
-		wheels.element(boundBy: locale == "ru" ? 0 : 1).adjust(toPickerWheelValue: String(date.2))
+		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: formatter.monthSymbols[month - 1])
+		wheels.element(boundBy: locale == "ru" ? 0 : 1).adjust(toPickerWheelValue: String(day))
 		app.buttons["editor.birthDate"].tap()
 		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
 		for slot in ["appPhoto", "widgetPhoto"] {

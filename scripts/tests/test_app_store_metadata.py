@@ -153,6 +153,7 @@ class AppStoreMetadataTests(unittest.TestCase):
                 command.return_value.returncode = 0
                 result = metadata.validate_provenance(folder, "b" * 40, images)
                 self.assertEqual(result["head_sha"], "a" * 40)
+                self.assertIn("marketing/fonts", command.call_args.args[0])
                 command.return_value.returncode = 1
                 with self.assertRaisesRegex(ValueError, "ancestor"):
                     metadata.validate_provenance(folder, "b" * 40, images)

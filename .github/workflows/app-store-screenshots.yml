@@ -38,7 +38,8 @@ jobs:
           echo "directory=$ARTIFACT_DIR" >> "$GITHUB_OUTPUT"
           jq -n --arg head "$HEAD_SHA" --arg checkout "$(git rev-parse HEAD)" \
             --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
-            '{head_sha: $head, checkout_sha: $checkout, run_id: $run, run_attempt: $attempt,
+            '{workflow: "app-store-screenshots.yml", head_sha: $head, checkout_sha: $checkout,
+              run_id: $run, run_attempt: $attempt,
               device: "iPhone-17-Pro-Max", runtime: "26-5", xcode: "26.6",
               native_width: 1320, native_height: 2868, visual_checks: "0"}' \
             > "$ARTIFACT_DIR/metadata.json"
