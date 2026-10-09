@@ -259,12 +259,29 @@ def verify_image(asset, image, spec_id):
 
 
 def verify_placements(verified, ordered, images, spec_id):
+    """Validate every asset and order; return False while placement processing is pending."""
     if [p["id"] for p in verified] != [p["id"] for p in ordered]:
         raise ValueError("Apple screenshot order does not match Mia, Leo, Mango/Teddy, widgets")
+    ready = True
     for placement, image in zip(verified, images):
         verify_image(placement["image"], image, spec_id)
-        if placement["attributes"]["state"] != "PARENT_PREPARE_FOR_SUBMISSION":
-            raise ValueError("Screenshot placement is not in the editable draft state")
+        state = placement["attributes"]["state"]
+        if state == "ASSET_PROCESSING":
+            ready = False
+        elif state != "PARENT_PREPARE_FOR_SUBMISSION":
+            raise ValueError(f"Screenshot placement {placement['id']} state is {state}; expected PARENT_PREPARE_FOR_SUBMISSION")
+    return ready
+
+
+def wait_for_placements(api, localization_id, group, ordered, images, spec_id):
+    deadline = time.monotonic() + 300
+    while True:
+        verified = placements(api, localization_id, group)
+        if verify_placements(verified, ordered, images, spec_id):
+            return
+        if time.monotonic() >= deadline:
+            raise TimeoutError("Apple screenshot placement ASSET_PROCESSING pending; rerun the same source to resume")
+        time.sleep(5)
 
 
 def prepare_image(api, library_id, image, spec_id):
@@ -317,6 +334,7 @@ def run(api, args, receipt):
             receipt["localizations"][version["id"]] = [{
                 "id": loc["id"], "locale": loc["attributes"]["locale"], "screenshots": [{
                     "placement_id": p["id"], "group": p["attributes"]["placementGroup"], "image_id": p["image"]["id"],
+                    "placement_state": p["attributes"]["state"],
                     "reference": p["image"]["attributes"].get("referenceName"), "state": p["image"]["attributes"]["state"],
                 } for p in placements(api, loc["id"])],
             } for loc in localizations]
@@ -379,8 +397,7 @@ def run(api, args, receipt):
         api.create("appAssetLibraryPlacementOrderingRequests", {"placementGroup": group}, {
             "orderedPlacements": {"data": ordered}, "appStoreVersionLocalization": relationship("appStoreVersionLocalizations", localization_id),
         })
-        verified = placements(api, localization_id, group)
-        verify_placements(verified, ordered, images[locale], spec_id)
+        wait_for_placements(api, localization_id, group, ordered, images[locale], spec_id)
         prepared_localizations[locale] = (localization_id, ordered)
     # Both new main sets are verified before removing old size-specific overrides.
     receipt["verified_groups"] = {}
@@ -396,7 +413,8 @@ def run(api, args, receipt):
         remaining = phone_placements(api, localization_id, phone_groups)
         if any(placement["attributes"]["placementGroup"] != group for placement in remaining):
             raise ValueError("Old iPhone screenshot groups still override the new scaled screenshots")
-        verify_placements(remaining, ordered, images[locale], spec_id)
+        if not verify_placements(remaining, ordered, images[locale], spec_id):
+            wait_for_placements(api, localization_id, group, ordered, images[locale], spec_id)
         receipt["verified_groups"][locale] = [group]
     final = api.resource(f"/v1/appStoreVersions/{draft['id']}")
     if final["attributes"]["appStoreState"] != "PREPARE_FOR_SUBMISSION" or final["attributes"]["versionString"] != target:
