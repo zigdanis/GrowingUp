@@ -45,7 +45,7 @@ class ScreenshotAPI:
     def add(self, localization, group, image_id, kind):
         self.assets[image_id] = {"id": image_id, "attributes": {"referenceName": None, "state": "APPROVED"}}
         placement = {"id": f"{localization}-{image_id}", "attributes": {
-            "placementGroup": group, "placementType": kind, "state": "PARENT_PREPARE_FOR_SUBMISSION"},
+            "placementGroup": group, "placementType": kind, "state": "ACTIVE"},
                      "relationships": {"image": {"data": {"id": image_id}}}}
         self.localizations[localization].append(placement)
 
@@ -94,7 +94,7 @@ class ScreenshotAPI:
                                                + [next(p for p in current if p["id"] == identifier) for identifier in wanted])
             return {"id": "ordering"}
         image_id = relationships["image"]["data"]["id"]
-        placement = {"id": f"placement-{image_id}", "attributes": {**attributes, "state": "PARENT_PREPARE_FOR_SUBMISSION"},
+        placement = {"id": f"placement-{image_id}", "attributes": {**attributes, "state": "ACTIVE"},
                      "relationships": {"image": {"data": {"id": image_id}}}}
         self.localizations[localization].append(placement)
         return placement
@@ -164,8 +164,16 @@ class AppStoreMetadataTests(unittest.TestCase):
             self.run_screenshot_upload(api, {})
         self.assertFalse(any(event[0] == "delete" for event in api.events))
 
+    def test_active_placements_with_editable_parent_complete_both_locale_sets(self):
+        receipt = {}
+        self.run_screenshot_upload(ScreenshotAPI(), receipt)
+        self.assertEqual(receipt["verified_state"], "PREPARE_FOR_SUBMISSION")
+        self.assertEqual(receipt["verified_groups"], {locale: ["primary"] for locale in metadata.LOCALES})
+        self.assertEqual([(image["locale"], image["file"]) for image in receipt["screenshots"]],
+                         [(locale, filename) for locale in metadata.LOCALES for filename in metadata.FILES])
+
     def test_processing_placement_is_reread_before_success_or_old_group_cleanup(self):
-        api = ScreenshotAPI(placement_states=("ASSET_PROCESSING", "PARENT_PREPARE_FOR_SUBMISSION"))
+        api = ScreenshotAPI(placement_states=("ASSET_PROCESSING", "ACTIVE"))
         receipt = {}
         with patch.object(metadata.time, "sleep") as sleep:
             self.run_screenshot_upload(api, receipt)
@@ -175,8 +183,8 @@ class AppStoreMetadataTests(unittest.TestCase):
         reads = [i for i, event in enumerate(api.events) if event == ("read", "draft-en-US", "primary", 4)]
         self.assertEqual(len([i for i in reads if i < first_delete]), 2)
 
-    def test_failed_or_reviewed_placement_is_terminal_and_reports_actual_state(self):
-        for state in ("FAILED", "PARENT_IN_REVIEW"):
+    def test_failed_inactive_or_unexpected_placement_is_terminal_and_reports_actual_state(self):
+        for state in ("FAILED", "INACTIVE", "PARENT_PREPARE_FOR_SUBMISSION", "UNKNOWN"):
             with self.subTest(state=state):
                 api = ScreenshotAPI(placement_states=(state,))
                 with patch.object(metadata.time, "sleep") as sleep, self.assertRaisesRegex(ValueError, state):
@@ -194,7 +202,7 @@ class AppStoreMetadataTests(unittest.TestCase):
         self.assertNotIn("verified_state", receipt)
         self.assertFalse(any(event[0] == "delete" for event in api.events))
 
-    def test_final_parent_in_review_cannot_be_reported_as_editable(self):
+    def test_active_placements_with_final_parent_in_review_cannot_be_reported_as_editable(self):
         receipt = {}
         with self.assertRaisesRegex(ValueError, "version changed state"):
             self.run_screenshot_upload(ScreenshotAPI(final_state="IN_REVIEW"), receipt)
@@ -207,7 +215,7 @@ class AppStoreMetadataTests(unittest.TestCase):
         for localizations in receipt["localizations"].values():
             for localization in localizations:
                 for image in localization["screenshots"]:
-                    self.assertEqual(image["placement_state"], "PARENT_PREPARE_FOR_SUBMISSION")
+                    self.assertEqual(image["placement_state"], "ACTIVE")
                     self.assertEqual(image["state"], "APPROVED")
         self.assertFalse(any(event[0] in {"create", "delete"} for event in api.events))
 
@@ -324,7 +332,7 @@ class AppStoreMetadataTests(unittest.TestCase):
     def test_order_verification_rejects_reversed_apple_response(self):
         images = [{"content": b"png", "width": 1320, "height": 2868, "reference": name} for name in ("mia", "leo")]
         verified = [{"id": image["reference"], "image": {"attributes": image_attributes(image)},
-                     "attributes": {"state": "PARENT_PREPARE_FOR_SUBMISSION"}} for image in images]
+                     "attributes": {"state": "ACTIVE"}} for image in images]
         ordered = [{"id": "mia"}, {"id": "leo"}]
         metadata.verify_placements(verified, ordered, images, "spec")
         with self.assertRaisesRegex(ValueError, "order"):
@@ -335,7 +343,7 @@ class AppStoreMetadataTests(unittest.TestCase):
         ordered = [{"id": "mia"}, {"id": "leo"}]
         pending = [{"id": image["reference"], "image": {"attributes": image_attributes(image)},
                     "attributes": {"state": "ASSET_PROCESSING"}} for image in images]
-        ready = [{**p, "attributes": {"state": "PARENT_PREPARE_FOR_SUBMISSION"}} for p in pending]
+        ready = [{**p, "attributes": {"state": "ACTIVE"}} for p in pending]
         wrong_asset = [{**p, "image": {"attributes": {**p["image"]["attributes"], "referenceName": "wrong"}}} for p in ready]
         for final, error in ((ready[::-1], "order"), (wrong_asset, "reviewed screenshot")):
             with self.subTest(error=error), patch.object(metadata, "placements", side_effect=(pending, final)), \

@@ -268,8 +268,8 @@ def verify_placements(verified, ordered, images, spec_id):
         state = placement["attributes"]["state"]
         if state == "ASSET_PROCESSING":
             ready = False
-        elif state != "PARENT_PREPARE_FOR_SUBMISSION":
-            raise ValueError(f"Screenshot placement {placement['id']} state is {state}; expected PARENT_PREPARE_FOR_SUBMISSION")
+        elif state != "ACTIVE":
+            raise ValueError(f"Screenshot placement {placement['id']} state is {state}; expected ACTIVE")
     return ready
 
 
