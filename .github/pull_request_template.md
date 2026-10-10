@@ -11,6 +11,7 @@
 
 <!-- For user-visible features/fixes, use .agents/skills/visual-acceptance/SKILL.md.
 Replace this section with inspected screenshots or a short demo from current-head CI.
+Follow docs/remote-ios-verification.md#compact-pr-media for sizing, layout and rendered inspection.
 For work without a visible app effect, explain why visual evidence does not apply. -->
 
 Pending visual acceptance. TestFlight deployment requires Danis's explicit approval.

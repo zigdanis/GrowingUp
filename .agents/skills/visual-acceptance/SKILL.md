@@ -8,7 +8,8 @@ description: Capture, inspect, and attach feature-specific iOS simulator screens
 Make the requested behavior quick for Danis to assess in the PR description.
 Use the existing macOS CI/XCUI evidence pipeline; read
 [docs/remote-ios-verification.md](../../../docs/remote-ios-verification.md)
-for retrieval, inspection, publication commands, and simulator limits.
+for retrieval, inspection, publication commands, and simulator limits, including
+the [compact PR media rules](../../../docs/remote-ios-verification.md#compact-pr-media).
 
 1. Translate the request into observable acceptance criteria. Extend the relevant
    `GrowingUpUI` journey with assertions and named screenshot checkpoints that
@@ -25,7 +26,7 @@ for retrieval, inspection, publication commands, and simulator limits.
    animation. Describe what you inspected, its outcome, and any device-only gaps
    in a temporary Markdown summary. Publish through `scripts/pr-visual-evidence.py`;
    it embeds native GitHub images/video in the PR body and preserves other sections.
-4. Read back the PR description and confirm the media renders. After a new push or
+4. Inspect the rendered PR attachments under the compact media rules. After a new push or
    CI rerun, replace evidence with reviewed media for the latest head/attempt before
    handoff. Media upload failures leave the description untouched; inspect a failed
    PR-update request before retrying. Remove
