@@ -334,7 +334,13 @@ class PublicationTests(unittest.TestCase):
                     compact = self.probe(outputs[1])
                     self.assertGreater(original["streams"][0]["has_b_frames"], 0)
                     start = float(original["format"]["start_time"])
-                    self.assertAlmostEqual(float(compact["format"]["duration"]), float(original["format"]["duration"]) - start, delta=0.05)
+                    packets = json.loads(subprocess.check_output([
+                        "ffprobe", "-v", "error", "-select_streams", "v:0", "-show_packets", "-show_entries",
+                        "packet=pts,pts_time,duration_time", "-of", "json", str(video),
+                    ], text=True))["packets"]
+                    final_packet = max(packets, key=lambda packet: int(packet["pts"]))
+                    expected_duration = float(final_packet["pts_time"]) + float(final_packet["duration_time"]) - start
+                    self.assertAlmostEqual(float(compact["format"]["duration"]), expected_duration, delta=0.05)
                     self.assertEqual([f"{float(frame['best_effort_timestamp_time']) - start:.6f}" for frame in original["frames"]],
                                      [frame["best_effort_timestamp_time"] for frame in compact["frames"]])
 
