@@ -5,7 +5,8 @@
 - Never place DerivedData, `.xcresult` bundles, downloaded CI artifacts, or other reproducible validation output inside the repository. Use Xcode's default DerivedData location or a `mktemp` directory, and remove temporary validation artifacts when the run is complete.
 - Reuse an existing compatible simulator for local builds and tests. Never create a local simulator unless Danis explicitly asks for one; if temporary simulator creation is explicitly approved, delete it as soon as the run completes.
 - On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Follow `docs/remote-ios-verification.md`: inspect relevant exported screenshots and recording frames for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review. A green build alone does not verify UI behavior.
-- For user-visible features and UI fixes, use `.agents/skills/visual-acceptance/SKILL.md` before merging a PR or deploying to TestFlight. Attach inspected screenshots or a short feature demo to the PR description for the current head; follow the [compact media rules](docs/remote-ios-verification.md#compact-pr-media) for sizing, layout and rendered inspection. Deploy to TestFlight only after Danis explicitly approves deployment.
+- Every screenshot in any PR description must follow the [compact media rules](docs/remote-ios-verification.md#compact-pr-media) for sizing, layout and rendered inspection. Publish reviewed CI screenshots through `scripts/pr-visual-evidence.py`.
+- For user-visible features and UI fixes, use `.agents/skills/visual-acceptance/SKILL.md` before merging a PR or deploying to TestFlight. Attach inspected screenshots or a short feature demo to the PR description for the current head. Deploy to TestFlight only after Danis explicitly approves deployment.
 
 ## Code Style
 
