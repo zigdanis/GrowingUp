@@ -74,22 +74,29 @@ def compact_media(directory, images, videos, temporary):
             # Passthrough preserves PTS; the final source packet fixes the encoder's trailing frame duration.
             timing = json.loads(subprocess.check_output([
                 ffprobe, "-v", "error", "-select_streams", "v:0", "-show_entries",
-                "stream=time_base:packet=pts,duration", "-show_packets", "-show_streams", "-of", "json", str(source),
+                "stream=time_base:packet=pts,duration:format=start_time",
+                "-show_packets", "-show_streams", "-show_format", "-of", "json", str(source),
             ], text=True))
             packets = timing.get("packets", [])
             if not packets or not timing.get("streams"):
                 raise ValueError(f"Recording has no video timing: {source.name}")
             # Packet order follows decoding, so select the last presented frame even with B-frames.
             final_packet = max(packets, key=lambda packet: int(packet["pts"]))
-            duration = Fraction(timing["streams"][0]["time_base"]) * int(final_packet.get("duration", 0))
+            time_base = Fraction(timing["streams"][0]["time_base"])
+            duration = time_base * int(final_packet.get("duration", 0))
             if duration <= 0:
                 raise ValueError(f"Recording has no final frame duration: {source.name}")
+            final_pts = int(final_packet["pts"]) * time_base - Fraction(timing["format"]["start_time"])
+            packet_timing = (
+                "setts=pts=PTS:dts=DTS:duration="
+                f"'if(eq(PTS,round(({final_pts})/TB)),({duration})/TB,DURATION)'"
+            )
             command = [ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
                        "-i", str(source), "-map", "0:v:0", "-map", "0:a?", "-vf",
                        f"scale=w='min({MAX_WIDTH},iw)':h='min({MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2",
                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p",
                        "-c:a", "aac", "-b:a", "96k",
-                       "-fps_mode", "passthrough", "-enc_time_base", "-1", "-r", str(1 / duration),
+                       "-fps_mode", "passthrough", "-enc_time_base", str(time_base), "-bsf:v", packet_timing,
                        "-movflags", "+faststart", str(output)]
         try:
             subprocess.run(command, check=True, capture_output=True, text=True)

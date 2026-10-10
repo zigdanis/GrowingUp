@@ -318,11 +318,13 @@ class PublicationTests(unittest.TestCase):
         image = self.directory / "small.png"
         video = self.directory / "variable.mp4"
         self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=1", "-frames:v", "1", str(image))
-        for selection in ("not(mod(n,3))", "eq(n,0)+eq(n,2)+eq(n,5)+eq(n,9)+eq(n,13)+eq(n,17)+eq(n,19)"):
-            with self.subTest(selection=selection):
+        cases = [("not(mod(n,3))", 0), ("not(mod(n,3))", 5),
+                 ("eq(n,0)+eq(n,2)+eq(n,5)+eq(n,9)+eq(n,13)+eq(n,17)+eq(n,19)", 0)]
+        for selection, offset in cases:
+            with self.subTest(selection=selection, offset=offset):
                 self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=10:duration=2",
                             "-vf", f"select='{selection}'", "-fps_mode", "vfr", "-c:v", "libx264",
-                            "-pix_fmt", "yuv420p", str(video))
+                            "-pix_fmt", "yuv420p", "-output_ts_offset", str(offset), str(video))
                 with tempfile.TemporaryDirectory(prefix="compact-output-") as temporary:
                     outputs = MODULE.compact_media(self.directory, [image.name], [video.name], Path(temporary))
                     for output in outputs:
@@ -330,8 +332,10 @@ class PublicationTests(unittest.TestCase):
                         self.assertEqual((stream["width"], stream["height"]), (100, 50))
                     original = self.probe(video)
                     compact = self.probe(outputs[1])
-                    self.assertAlmostEqual(float(compact["format"]["duration"]), float(original["format"]["duration"]), delta=0.05)
-                    self.assertEqual([frame["best_effort_timestamp_time"] for frame in original["frames"]],
+                    self.assertGreater(original["streams"][0]["has_b_frames"], 0)
+                    start = float(original["format"]["start_time"])
+                    self.assertAlmostEqual(float(compact["format"]["duration"]), float(original["format"]["duration"]) - start, delta=0.05)
+                    self.assertEqual([f"{float(frame['best_effort_timestamp_time']) - start:.6f}" for frame in original["frames"]],
                                      [frame["best_effort_timestamp_time"] for frame in compact["frames"]])
 
     def test_oversized_png_source_is_compacted_and_preserved(self):
