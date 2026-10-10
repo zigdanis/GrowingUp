@@ -107,7 +107,7 @@ def compact_media(directory, images, videos, temporary):
                 # Finalize movie metadata from encoded packet timing, preserving both streams without re-encoding.
                 subprocess.run([
                     ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y", "-i", str(encoded),
-                    "-map", "0", "-c", "copy", "-movflags", "+faststart", str(output),
+                    "-map", "0", "-c", "copy", "-bsf:v", packet_timing, "-movflags", "+faststart", str(output),
                 ], check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as error:
             detail = error.stderr.strip() or "unknown conversion error"

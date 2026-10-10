@@ -355,6 +355,35 @@ class PublicationTests(unittest.TestCase):
             self.assertLessEqual(output.stat().st_size, MODULE.MAX_BYTES)
             self.assertEqual(hashlib.sha256(source.read_bytes()).digest(), digest)
 
+    def test_rational_frame_timing_preserves_video_duration_and_audio_offset(self):
+        source = self.directory / "audio-offset.mp4"
+        self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=160x320:rate=30000/1001:duration=0.8",
+                    "-f", "lavfi", "-i", "sine=sample_rate=44100:duration=0.8", "-map", "0:v:0", "-map", "1:a:0",
+                    "-vf", "select='not(mod(n,4))+eq(n,22)'", "-fps_mode", "vfr", "-c:v", "libx264",
+                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-output_ts_offset", "3", str(source))
+        original = self.probe(source)
+        original_video = next(stream for stream in original["streams"] if stream["codec_type"] == "video")
+        original_audio = next(stream for stream in original["streams"] if stream["codec_type"] == "audio")
+        self.assertGreater(original_video["has_b_frames"], 0)
+        tolerance = 1 / 30000
+        with tempfile.TemporaryDirectory(prefix="compact-output-") as temporary:
+            output = MODULE.compact_media(self.directory, [], [source.name], Path(temporary))[0]
+            compact = self.probe(output)
+            video = next(stream for stream in compact["streams"] if stream["codec_type"] == "video")
+            audio = next(stream for stream in compact["streams"] if stream["codec_type"] == "audio")
+            # The stream interval reflects the MP4 sample timeline; demuxed final-packet duration can be wrong.
+            self.assertAlmostEqual(float(video["duration"]), float(original_video["duration"]), delta=tolerance)
+            self.assertAlmostEqual(float(video["start_time"]) - float(audio["start_time"]),
+                                   float(original_video["start_time"]) - float(original_audio["start_time"]),
+                                   delta=tolerance)
+            original_pts = [float(frame["best_effort_timestamp_time"]) - float(original["format"]["start_time"])
+                            for frame in original["frames"] if frame["media_type"] == "video"]
+            compact_pts = [float(frame["best_effort_timestamp_time"])
+                           for frame in compact["frames"] if frame["media_type"] == "video"]
+            self.assertEqual(len(compact_pts), len(original_pts))
+            for expected, actual in zip(original_pts, compact_pts):
+                self.assertAlmostEqual(actual, expected, delta=tolerance)
+
     def test_derivative_names_cannot_collide_with_other_sources(self):
         sources = [("a/02-frame.png", "red"), ("b/frame.png", "blue"), ("c/frame.png", "green")]
         for relative, color in sources:
