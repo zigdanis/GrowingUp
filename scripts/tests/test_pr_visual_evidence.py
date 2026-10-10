@@ -318,7 +318,7 @@ class PublicationTests(unittest.TestCase):
         image = self.directory / "small.png"
         video = self.directory / "variable.mp4"
         self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=1", "-frames:v", "1", str(image))
-        cases = [("not(mod(n,3))", 0), ("not(mod(n,3))", 5),
+        cases = [("not(mod(n,3))", 0), ("not(mod(n,3))", 5), ("not(mod(n,4))+eq(n,18)", 0),
                  ("eq(n,0)+eq(n,2)+eq(n,5)+eq(n,9)+eq(n,13)+eq(n,17)+eq(n,19)", 0)]
         for selection, offset in cases:
             with self.subTest(selection=selection, offset=offset):
@@ -340,7 +340,7 @@ class PublicationTests(unittest.TestCase):
                     ], text=True))["packets"]
                     final_packet = max(packets, key=lambda packet: int(packet["pts"]))
                     expected_duration = float(final_packet["pts_time"]) + float(final_packet["duration_time"]) - start
-                    self.assertAlmostEqual(float(compact["format"]["duration"]), expected_duration, delta=0.05)
+                    self.assertAlmostEqual(float(compact["format"]["duration"]), expected_duration, delta=0.001)
                     self.assertEqual([f"{float(frame['best_effort_timestamp_time']) - start:.6f}" for frame in original["frames"]],
                                      [frame["best_effort_timestamp_time"] for frame in compact["frames"]])
 

@@ -94,7 +94,7 @@ def compact_media(directory, images, videos, temporary):
             command = [ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
                        "-i", str(source), "-map", "0:v:0", "-map", "0:a?", "-vf",
                        f"scale=w='min({MAX_WIDTH},iw)':h='min({MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2",
-                       "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p",
+                       "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p", "-bf", "0",
                        "-c:a", "aac", "-b:a", "96k",
                        "-fps_mode", "passthrough", "-enc_time_base", str(time_base), "-bsf:v", packet_timing,
                        "-movflags", "+faststart", str(output)]
