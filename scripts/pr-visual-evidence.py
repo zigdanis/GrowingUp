@@ -7,6 +7,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from fractions import Fraction
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -55,6 +56,9 @@ def compact_media(directory, images, videos, temporary):
     ffmpeg = shutil.which("ffmpeg")
     if not ffmpeg:
         raise ValueError("ffmpeg is required to create compact PR evidence; install it with `brew install ffmpeg` or `sudo apt install ffmpeg`.")
+    ffprobe = shutil.which("ffprobe") if videos else None
+    if videos and not ffprobe:
+        raise ValueError("ffprobe is required for video timing; install the ffmpeg package with `brew install ffmpeg` or `sudo apt install ffmpeg`.")
 
     compacted = []
     for index, source in enumerate(sources):
@@ -67,12 +71,26 @@ def compact_media(directory, images, videos, temporary):
                        f"scale=w='min({MAX_WIDTH},iw)':h='min({MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease",
                        "-compression_level", "9", str(output)]
         else:
+            # Passthrough preserves PTS; the final source packet fixes the encoder's trailing frame duration.
+            timing = json.loads(subprocess.check_output([
+                ffprobe, "-v", "error", "-select_streams", "v:0", "-show_entries",
+                "stream=time_base:packet=pts,duration", "-show_packets", "-show_streams", "-of", "json", str(source),
+            ], text=True))
+            packets = timing.get("packets", [])
+            if not packets or not timing.get("streams"):
+                raise ValueError(f"Recording has no video timing: {source.name}")
+            # Packet order follows decoding, so select the last presented frame even with B-frames.
+            final_packet = max(packets, key=lambda packet: int(packet["pts"]))
+            duration = Fraction(timing["streams"][0]["time_base"]) * int(final_packet.get("duration", 0))
+            if duration <= 0:
+                raise ValueError(f"Recording has no final frame duration: {source.name}")
             command = [ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
                        "-i", str(source), "-map", "0:v:0", "-map", "0:a?", "-vf",
                        f"scale=w='min({MAX_WIDTH},iw)':h='min({MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2",
                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p",
                        "-c:a", "aac", "-b:a", "96k",
-                       "-fps_mode", "passthrough", "-movflags", "+faststart", str(output)]
+                       "-fps_mode", "passthrough", "-enc_time_base", "-1", "-r", str(1 / duration),
+                       "-movflags", "+faststart", str(output)]
         try:
             subprocess.run(command, check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as error:

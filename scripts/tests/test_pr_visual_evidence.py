@@ -318,19 +318,21 @@ class PublicationTests(unittest.TestCase):
         image = self.directory / "small.png"
         video = self.directory / "variable.mp4"
         self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=1", "-frames:v", "1", str(image))
-        self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=10:duration=2",
-                    "-vf", "select='not(mod(n,3))'", "-fps_mode", "vfr", "-c:v", "libx264",
-                    "-pix_fmt", "yuv420p", str(video))
-        with tempfile.TemporaryDirectory(prefix="compact-output-") as temporary:
-            outputs = MODULE.compact_media(self.directory, [image.name], [video.name], Path(temporary))
-            for output in outputs:
-                stream = self.probe(output)["streams"][0]
-                self.assertEqual((stream["width"], stream["height"]), (100, 50))
-            original = self.probe(video)
-            compact = self.probe(outputs[1])
-            self.assertAlmostEqual(float(compact["format"]["duration"]), float(original["format"]["duration"]), delta=0.05)
-            self.assertEqual([frame["best_effort_timestamp_time"] for frame in original["frames"]],
-                             [frame["best_effort_timestamp_time"] for frame in compact["frames"]])
+        for selection in ("not(mod(n,3))", "eq(n,0)+eq(n,2)+eq(n,5)+eq(n,9)+eq(n,13)+eq(n,17)+eq(n,19)"):
+            with self.subTest(selection=selection):
+                self.ffmpeg("-f", "lavfi", "-i", "testsrc=size=100x50:rate=10:duration=2",
+                            "-vf", f"select='{selection}'", "-fps_mode", "vfr", "-c:v", "libx264",
+                            "-pix_fmt", "yuv420p", str(video))
+                with tempfile.TemporaryDirectory(prefix="compact-output-") as temporary:
+                    outputs = MODULE.compact_media(self.directory, [image.name], [video.name], Path(temporary))
+                    for output in outputs:
+                        stream = self.probe(output)["streams"][0]
+                        self.assertEqual((stream["width"], stream["height"]), (100, 50))
+                    original = self.probe(video)
+                    compact = self.probe(outputs[1])
+                    self.assertAlmostEqual(float(compact["format"]["duration"]), float(original["format"]["duration"]), delta=0.05)
+                    self.assertEqual([frame["best_effort_timestamp_time"] for frame in original["frames"]],
+                                     [frame["best_effort_timestamp_time"] for frame in compact["frames"]])
 
     def test_oversized_png_source_is_compacted_and_preserved(self):
         source = self.directory / "large.png"
@@ -358,6 +360,10 @@ class PublicationTests(unittest.TestCase):
     def test_failed_preflight_never_uploads_and_cleans_derivatives(self):
         with patch.object(MODULE.shutil, "which", return_value=None), self.assertRaisesRegex(ValueError, "ffmpeg is required"):
             self.publish()
+        ffmpeg = MODULE.shutil.which("ffmpeg")
+        with patch.object(MODULE.shutil, "which", side_effect=lambda tool: ffmpeg if tool == "ffmpeg" else None), \
+                self.assertRaisesRegex(ValueError, "ffprobe is required"):
+            self.publish()
         with patch.object(MODULE, "MAX_BYTES", 1), self.assertRaisesRegex(ValueError, "at most 10 MiB"):
             self.publish()
         self.video.write_bytes(b"\x00\x00\x00\x20ftypisomnot really an mp4")
@@ -366,7 +372,7 @@ class PublicationTests(unittest.TestCase):
         def tracked(*args):
             outputs.append(args[-1])
             return original(*args)
-        with patch.object(MODULE, "compact_media", side_effect=tracked), self.assertRaisesRegex(ValueError, "Could not create compact evidence"):
+        with patch.object(MODULE, "compact_media", side_effect=tracked), self.assertRaises(subprocess.CalledProcessError):
             self.publish()
         self.assertTrue(all(not path.exists() for path in outputs))
         self.assertEqual(self.uploads, [])

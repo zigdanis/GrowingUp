@@ -154,7 +154,8 @@ conditional-write limits are documented in [GitHub REST best practices](https://
 ## Compact PR media
 
 PR attachments fit within **320×640 pixels**, preserve aspect ratio, and never
-upscale. The publisher requires local `ffmpeg`; install it with `brew install ffmpeg`
+upscale. The publisher requires local `ffmpeg` and its `ffprobe` tool for video timing;
+install them with `brew install ffmpeg`
 on macOS or `sudo apt install ffmpeg` on Ubuntu. It creates temporary upload copies
 and leaves the full-resolution originals intact for visual comparison. Sources may
 exceed 10 MiB; every copy must be nonempty, have a valid PNG or MP4 signature, and
