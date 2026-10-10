@@ -12,6 +12,49 @@ Glass comparisons remain pinned to iOS 26.5 / iPhone 17 Pro / arm64. iOS 18.5 /
 iPhone 16 checks behavior without comparing Glass baselines. Missing baselines
 fail; CI never records new baselines.
 
+## Fast checks for tooling changes
+
+Run focused checks locally while editing the App Store uploader:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest scripts.tests.test_app_store_metadata
+```
+
+Before pushing the finished change, run the script suite once with `ffmpeg` and
+`ffprobe` installed:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
+```
+
+CI's Detect Changes job skips Swift Format, SwiftLint, Build & Test and both UI
+jobs when every changed path is one of:
+
+- `scripts/app-store-metadata.py` or `scripts/tests/test_app_store_metadata.py`;
+- Markdown or HTML under `docs/`, or JSON under `docs/releases/`;
+- PNGs under `marketing/app-store/screenshots/`, or that directory's `source.json`;
+- root `AGENTS.md`, `CLAUDE.md` or `README.md`.
+
+Release Tools, Evidence Tools and Secret Patterns still run. App inputs, the
+simulator harness, workflows, the classifier itself and unknown paths get full
+iOS validation. Renames check both paths; deleted app inputs also require iOS.
+Manual `workflow_dispatch` always runs the full suite. These rules scope `ci.yml`;
+the separate App Store screenshot capture workflow keeps its own triggers.
+
+Use the automatic CI run for the latest push. Request another run only for a
+concrete failure or when a skipped change needs simulator evidence; batch locally
+verified fixes into a push instead of repeatedly restarting the same suite.
+
+UI jobs export, report and upload evidence after both successful and failed tests.
+On cancellation, `!cancelled()` skips this remaining work, the job summary and
+simulator/temp cleanup, so the replaced run can release its concurrency slot.
+Cancelled jobs use disposable GitHub-hosted macOS VMs; cleanup still runs after
+ordinary test failures. Cancelled runs may have no complete evidence artifact;
+review evidence from the replacement run. See GitHub's
+[status check functions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions),
+[cancellation behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-cancellation)
+and [hosted runners](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners).
+
 ## Review a pull request from Linux
 
 Push the PR branch, then run from the repository with authenticated `gh`, `jq` and `python3`:
@@ -26,7 +69,8 @@ the artifact's source commit/run/attempt and rechecks the PR head after waiting 
 downloading. It exits nonzero when CI fails, while retaining available evidence
 for diagnosis. A missing run/artifact is an error, not a successful validation.
 Downloads rejected by source validation and partial downloads are removed automatically.
-Documentation-only PRs skip simulator jobs and have no UI evidence to download.
+Changes limited to the non-iOS paths above skip simulator jobs and have no UI
+evidence to download.
 Artifact names include the CI attempt, so a rerun cannot accidentally download
 first-attempt evidence with the same name. To refresh evidence, rerun the full
 workflow with `gh run rerun RUN_ID`; rerunning only individual jobs can leave the
