@@ -91,15 +91,24 @@ def compact_media(directory, images, videos, temporary):
                 "setts=pts=PTS:dts=DTS:duration="
                 f"'if(eq(PTS,round(({final_pts})/TB)),({duration})/TB,DURATION)'"
             )
+            encoded_directory = output_directory / "encoded"
+            encoded_directory.mkdir()
+            encoded = encoded_directory / source.name
             command = [ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
                        "-i", str(source), "-map", "0:v:0", "-map", "0:a?", "-vf",
                        f"scale=w='min({MAX_WIDTH},iw)':h='min({MAX_HEIGHT},ih)':force_original_aspect_ratio=decrease:force_divisible_by=2",
                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "28", "-pix_fmt", "yuv420p", "-bf", "0",
                        "-c:a", "aac", "-b:a", "96k",
                        "-fps_mode", "passthrough", "-enc_time_base", str(time_base), "-bsf:v", packet_timing,
-                       "-movflags", "+faststart", str(output)]
+                       str(encoded)]
         try:
             subprocess.run(command, check=True, capture_output=True, text=True)
+            if source.suffix.lower() == ".mp4":
+                # Finalize movie metadata from encoded packet timing, preserving both streams without re-encoding.
+                subprocess.run([
+                    ffmpeg, "-nostdin", "-hide_banner", "-loglevel", "error", "-y", "-i", str(encoded),
+                    "-map", "0", "-c", "copy", "-movflags", "+faststart", str(output),
+                ], check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as error:
             detail = error.stderr.strip() or "unknown conversion error"
             raise ValueError(f"Could not create compact evidence for {source.name}: {detail}") from error
