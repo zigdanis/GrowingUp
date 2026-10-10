@@ -26,11 +26,14 @@ def image_attributes(image, spec_id="spec"):
 class ScreenshotAPI:
     """Stateful Apple responses for the placement replacement contract."""
 
-    def __init__(self, old_groups=True, unrelated=False, fail_second_locale=False):
+    def __init__(self, old_groups=True, unrelated=False, fail_second_locale=False,
+                 placement_states=(), final_state="PREPARE_FOR_SUBMISSION"):
         self.events = []
         self.assets = {}
         self.localizations = {f"{state}-{locale}": [] for state in ("live", "draft") for locale in metadata.LOCALES}
         self.fail_second_locale = fail_second_locale
+        self.placement_states = list(placement_states)
+        self.final_state = final_state
         for locale in metadata.LOCALES:
             for state in ("live", "draft"):
                 self.add(f"{state}-{locale}", "tablet", f"tablet-{locale}", "APP_SCREENSHOT")
@@ -40,7 +43,7 @@ class ScreenshotAPI:
                     self.add(f"{state}-{locale}", "small-phone", image_id, "APP_SCREENSHOT")
 
     def add(self, localization, group, image_id, kind):
-        self.assets[image_id] = {"id": image_id, "attributes": {"referenceName": None}}
+        self.assets[image_id] = {"id": image_id, "attributes": {"referenceName": None, "state": "APPROVED"}}
         placement = {"id": f"{localization}-{image_id}", "attributes": {
             "placementGroup": group, "placementType": kind, "state": "PARENT_PREPARE_FOR_SUBMISSION"},
                      "relationships": {"image": {"data": {"id": image_id}}}}
@@ -64,6 +67,9 @@ class ScreenshotAPI:
                       if placement["attributes"]["placementType"] == query["filter[placementType]"]
                       and (not query.get("filter[placementGroup]") or placement["attributes"]["placementGroup"] == query["filter[placementGroup]"])]
             self.events.append(("read", localization, query.get("filter[placementGroup]"), len(result)))
+            if localization == "draft-en-US" and len(result) == 4 and self.placement_states:
+                state = self.placement_states.pop(0) if len(self.placement_states) > 1 else self.placement_states[0]
+                result = [{**p, "attributes": {**p["attributes"], "state": state}} for p in result]
             return result
         raise AssertionError(path)
 
@@ -73,7 +79,7 @@ class ScreenshotAPI:
         if "/appAssetLibraryImages/" in path:
             return self.assets[path.split("/")[-1]]
         if path == "/v1/appStoreVersions/2.1.0":
-            return version("2.1.0")
+            return version("2.1.0", self.final_state)
         raise AssertionError(path)
 
     def create(self, kind, attributes, relationships):
@@ -158,6 +164,53 @@ class AppStoreMetadataTests(unittest.TestCase):
             self.run_screenshot_upload(api, {})
         self.assertFalse(any(event[0] == "delete" for event in api.events))
 
+    def test_processing_placement_is_reread_before_success_or_old_group_cleanup(self):
+        api = ScreenshotAPI(placement_states=("ASSET_PROCESSING", "PARENT_PREPARE_FOR_SUBMISSION"))
+        receipt = {}
+        with patch.object(metadata.time, "sleep") as sleep:
+            self.run_screenshot_upload(api, receipt)
+        sleep.assert_called_once_with(5)
+        self.assertEqual(receipt["verified_state"], "PREPARE_FOR_SUBMISSION")
+        first_delete = next(i for i, event in enumerate(api.events) if event[0] == "delete")
+        reads = [i for i, event in enumerate(api.events) if event == ("read", "draft-en-US", "primary", 4)]
+        self.assertEqual(len([i for i in reads if i < first_delete]), 2)
+
+    def test_failed_or_reviewed_placement_is_terminal_and_reports_actual_state(self):
+        for state in ("FAILED", "PARENT_IN_REVIEW"):
+            with self.subTest(state=state):
+                api = ScreenshotAPI(placement_states=(state,))
+                with patch.object(metadata.time, "sleep") as sleep, self.assertRaisesRegex(ValueError, state):
+                    self.run_screenshot_upload(api, {})
+                sleep.assert_not_called()
+                self.assertFalse(any(event[0] == "delete" for event in api.events))
+
+    def test_processing_timeout_keeps_old_groups_and_does_not_claim_success(self):
+        api = ScreenshotAPI(placement_states=("ASSET_PROCESSING",))
+        receipt = {}
+        with patch.object(metadata.time, "monotonic", side_effect=(0, 300)), \
+                patch.object(metadata.time, "sleep") as sleep, self.assertRaisesRegex(TimeoutError, "ASSET_PROCESSING"):
+            self.run_screenshot_upload(api, receipt)
+        sleep.assert_not_called()
+        self.assertNotIn("verified_state", receipt)
+        self.assertFalse(any(event[0] == "delete" for event in api.events))
+
+    def test_final_parent_in_review_cannot_be_reported_as_editable(self):
+        receipt = {}
+        with self.assertRaisesRegex(ValueError, "version changed state"):
+            self.run_screenshot_upload(ScreenshotAPI(final_state="IN_REVIEW"), receipt)
+        self.assertNotIn("verified_state", receipt)
+
+    def test_inventory_reports_placement_and_asset_states_separately_without_writes(self):
+        api = ScreenshotAPI()
+        receipt = {}
+        metadata.run(api, SimpleNamespace(operation="inventory"), receipt)
+        for localizations in receipt["localizations"].values():
+            for localization in localizations:
+                for image in localization["screenshots"]:
+                    self.assertEqual(image["placement_state"], "PARENT_PREPARE_FOR_SUBMISSION")
+                    self.assertEqual(image["state"], "APPROVED")
+        self.assertFalse(any(event[0] in {"create", "delete"} for event in api.events))
+
     def test_next_minor_comes_from_live_store_not_newer_beta_source(self):
         live = version("2.0.0", "READY_FOR_DISTRIBUTION")
         self.assertEqual(metadata.select_version([live], "next"), (live, "2.1.0", None))
@@ -222,7 +275,8 @@ class AppStoreMetadataTests(unittest.TestCase):
         image = {"content": b"png", "width": 1320, "height": 2868, "reference": "managed:sha256"}
         asset = {"id": "asset", "attributes": image_attributes(image)}
         metadata.verify_image(asset, image, "spec")
-        for field, value in [("fileSize", 4), ("referenceName", "other"), ("specId", "wrong"), ("state", "FAILED")]:
+        for field, value in [("fileSize", 4), ("referenceName", "other"), ("specId", "wrong"), ("state", "FAILED"),
+                             ("imageAsset", {"width": 1321, "height": 2868}), ("imageAsset", {"width": 1320, "height": 2869})]:
             bad = {"attributes": {**asset["attributes"], field: value}}
             with self.assertRaises(ValueError):
                 metadata.verify_image(bad, image, "spec")
@@ -275,6 +329,19 @@ class AppStoreMetadataTests(unittest.TestCase):
         metadata.verify_placements(verified, ordered, images, "spec")
         with self.assertRaisesRegex(ValueError, "order"):
             metadata.verify_placements(verified[::-1], ordered, images, "spec")
+
+    def test_processing_poll_rechecks_order_and_asset_before_accepting_ready_state(self):
+        images = [{"content": b"png", "width": 1320, "height": 2868, "reference": name} for name in ("mia", "leo")]
+        ordered = [{"id": "mia"}, {"id": "leo"}]
+        pending = [{"id": image["reference"], "image": {"attributes": image_attributes(image)},
+                    "attributes": {"state": "ASSET_PROCESSING"}} for image in images]
+        ready = [{**p, "attributes": {"state": "PARENT_PREPARE_FOR_SUBMISSION"}} for p in pending]
+        wrong_asset = [{**p, "image": {"attributes": {**p["image"]["attributes"], "referenceName": "wrong"}}} for p in ready]
+        for final, error in ((ready[::-1], "order"), (wrong_asset, "reviewed screenshot")):
+            with self.subTest(error=error), patch.object(metadata, "placements", side_effect=(pending, final)), \
+                    patch.object(metadata.time, "sleep") as sleep, self.assertRaisesRegex(ValueError, error):
+                metadata.wait_for_placements(None, "localization", "primary", ordered, images, "spec")
+            sleep.assert_called_once_with(5)
 
     def test_provenance_accepts_asset_commit_but_rejects_changed_capture_inputs_or_digest(self):
         with tempfile.TemporaryDirectory() as directory:
