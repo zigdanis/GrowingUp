@@ -51,4 +51,4 @@ Each commit should describe one coherent change. Keep the app runnable at the me
 
 The orchestrator owns PR creation, pushes and agent coordination. The implementation worker makes focused commits; independent tester and reviewer report issues through the orchestrator for the worker to fix.
 
-Keep the tracking PR draft and prevent automatic review-bot execution. Do not request bot reviews. Final delivery requires independent review, relevant local/UI verification, and green CI for the current head. Do not merge or enable auto-merge; Danis performs final review.
+Keep the tracking PR draft during implementation and visual verification. Complete independent review, mark the PR ready, and obtain bot reviews through [growingup-delivery](../.agents/skills/growingup-delivery/SKILL.md). Follow the authoritative [AGENTS.md merge policy](../AGENTS.md#merge-and-approval-policy) after the current-head checks and evidence pass.

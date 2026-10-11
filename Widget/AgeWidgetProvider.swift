@@ -12,9 +12,6 @@ import SwiftUI
 import UIKit
 import WidgetKit
 
-/// Max pinned people shown, matching the legacy widget and the app's limit.
-let rowsLimit = 3
-
 /// Age "ticks" at minute granularity (per-second refresh is not allowed for
 /// home-screen widgets), so we publish one entry per minute.
 private let entryCadence: TimeInterval = 60
@@ -38,13 +35,13 @@ struct AgeWidgetProvider: TimelineProvider {
 			return
 		}
 		Task {
-			completion(AgeEntry(date: Date(), persons: await loadPersons()))
+			completion(AgeEntry(date: Date(), persons: await loadPersons(family: context.family)))
 		}
 	}
 
 	func getTimeline(in context: Context, completion: @escaping (Timeline<AgeEntry>) -> Void) {
 		Task {
-			let persons = await loadPersons()
+			let persons = await loadPersons(family: context.family)
 			let start = Date()
 			var entries: [AgeEntry] = []
 			for offset in 0..<entriesPerTimeline {
@@ -60,13 +57,21 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	/// Fetches the pinned people (sorted by `createdDate`, matching the app's
 	/// deep-link indexing) and loads their widget images from the shared cache.
-	private func loadPersons() async -> [WidgetPerson] {
+	private func loadPersons(family: WidgetFamily) async -> [WidgetPerson] {
 		do {
 			let people = try await fetchUseCase.fetchWidgetPersons()
-			return await resolveImages(for: Array(people.prefix(rowsLimit)))
+			return await resolveImages(for: Array(people.prefix(personLimit(for: family))))
 		} catch {
 			Logging.logError(CoreError(error: error))
 			return []
+		}
+	}
+
+	private func personLimit(for family: WidgetFamily) -> Int {
+		switch family {
+		case .systemSmall: 1
+		case .systemMedium: 3
+		default: Constants.widgetPeopleLimit
 		}
 	}
 
@@ -75,7 +80,7 @@ struct AgeWidgetProvider: TimelineProvider {
 		for (index, person) in people.enumerated() {
 			var image: UIImage?
 			if let personImage = PersonImage(id: person.widgetPicId) {
-				image = try? await ImagesCache.loadImageFromDiskOrMemory(image: personImage)
+				image = try? await ImagesCache.loadWidgetImage(image: personImage)
 			}
 			resolved.append(
 				WidgetPerson(
@@ -92,7 +97,7 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	private static func samplePersons() -> [WidgetPerson] {
 		let calendar = Calendar.current
-		return (0..<2).map { index in
+		return (0..<Constants.widgetPeopleLimit).map { index in
 			let birthday = calendar.date(byAdding: .year, value: -(index + 1) * 3, to: Date()) ?? Date()
 			return WidgetPerson(id: UUID(), index: index, name: "—", birthday: birthday, image: nil)
 		}

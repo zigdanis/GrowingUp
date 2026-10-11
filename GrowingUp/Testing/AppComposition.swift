@@ -29,13 +29,30 @@ enum AppComposition {
 			}
 			try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
 			let stack = try UITestStore(url: root.appendingPathComponent("people.sqlite"))
-			if configuration.resetStore, configuration.seed == .pinned { try stack.seed() }
+			if configuration.resetStore, configuration.seed != .empty { try stack.seed(configuration.seed) }
 			let images = UITestImageStore(root: root)
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
 			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: configuration.failNextSave)
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
+			let environment = ProcessInfo.processInfo.environment
+			let clockDate = environment["GROWINGUP_BIRTHDAY_NOW"].flatMap(ISO8601DateFormatter().date(from:)) ?? fixedDate
+			let clockStarted = Date()
+			let clockRuns = environment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] == "1"
 			return SceneConfigurator(
-				gateway: gateway, loadImage: images.load, now: { fixedDate }, photoFixtures: (0..<18).map(fixture))
+				gateway: gateway, loadImage: images.load,
+				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
+				photoFixtures: try photoFixtures(environment: environment))
+		}
+
+		private static func photoFixtures(environment: [String: String]) throws -> [UIImage] {
+			guard environment["GROWINGUP_APP_STORE_CAPTURE"] == "1" else { return (0..<18).map(fixture) }
+			guard let directory = environment["GROWINGUP_APP_STORE_PHOTOS"] else { throw CocoaError(.fileNoSuchFile) }
+			return try ["baby-girl", "young-boy", "cat", "dog"].map { name in
+				let url = URL(fileURLWithPath: directory).appendingPathComponent("\(name).png")
+				let data = try Data(contentsOf: url)
+				guard let image = UIImage(data: data) else { throw CocoaError(.fileReadCorruptFile) }
+				return image
+			}
 		}
 
 		private static func fixture(_ index: Int) -> UIImage {

@@ -1,32 +1,13 @@
-fastlane documentation
-----
+# GrowingUp release lanes
 
-# Installation
+Run releases through the manually dispatched, master-only GitHub Actions
+TestFlight workflow. No local Mac or Apple account password is required.
 
-Make sure you have the latest version of the Xcode command line tools installed:
+See [TestFlight from Linux / T3 Code](../docs/testflight.md) for secure one-time
+setup, preflight, deployment, status and retry commands.
 
-```sh
-xcode-select --install
-```
+- `ios release_preflight`: check account, tester access and app/widget signing.
+- `ios app_store`: archive/upload a new release, or resume its exact build.
+- `ios release_status`: read processing and distribution without uploading.
 
-For _fastlane_ installation instructions, see [Installing _fastlane_](https://docs.fastlane.tools/#installing-fastlane)
-
-# Available Actions
-
-## iOS
-
-### ios app_store
-
-```sh
-[bundle exec] fastlane ios app_store
-```
-
-
-
-----
-
-This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
-
-More information about _fastlane_ can be found on [fastlane.tools](https://fastlane.tools).
-
-The documentation of _fastlane_ can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
+The first delivery is complete only after Danis confirms receipt on his phone.

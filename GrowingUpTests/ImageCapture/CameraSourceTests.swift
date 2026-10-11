@@ -5,9 +5,11 @@
 //  Covers the pure logic of the inline camera source: auth-state mapping, the
 //  flash-mode cycle, and the CameraSourceModel permission state machine driven
 //  through its injectable status/request seams (no real AVFoundation prompt).
+//  Also exercises photo selection and dismissal through the coordinator interface.
 //
 
 import AVFoundation
+import UIKit
 import XCTest
 
 @testable import GrowingUp
@@ -15,50 +17,82 @@ import XCTest
 @MainActor
 final class CameraSourceTests: XCTestCase {
 
-	func test_ImageCaptureCoordinator_routesBackFromCameraToSourceMenu() {
+	func testSystemPickerStartsCropOnlyAfterDismissal() {
+		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
+		let image = UIImage()
+		coordinator.choseAllPhotos()
+		coordinator.pickerFinished(with: image)
+		coordinator.pickerFinished(with: UIImage())
+		XCTAssertFalse(coordinator.isSystemPickerPresented)
+		XCTAssertNil(coordinator.imageToCrop)
+
+		coordinator.isSystemPickerPresented = false
+		coordinator.pickerDismissed()
+		XCTAssertTrue(coordinator.imageToCrop?.image === image)
+		coordinator.pickerDismissed()
+		XCTAssertTrue(coordinator.imageToCrop?.image === image)
+	}
+
+	func testCropResultIsHandedOffOnceAfterDismissal() {
+		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
+		let croppedImage = UIImage()
+		coordinator.choseAllPhotos()
+		coordinator.pickerFinished(with: UIImage())
+		coordinator.pickerDismissed()
+		coordinator.completedCrop(with: croppedImage)
+		XCTAssertNil(coordinator.imageToCrop)
+
+		coordinator.imageToCrop = nil
+		coordinator.completedCrop(with: UIImage())
+		XCTAssertTrue(coordinator.cropDismissed() === croppedImage)
+		XCTAssertNil(coordinator.cropDismissed())
+	}
+
+	func testCancelledCropReturnsToItsSourceAndCanSelectAgain() {
+		let sources: [(ImageCaptureSelectionOrigin, ImageCaptureStage)] = [(.camera, .camera), (.photoPreview, .photoPreview)]
+		for (origin, stage) in sources {
+			let coordinator = ImageCaptureCoordinator(stage: stage)
+			let firstImage = UIImage()
+			let nextImage = UIImage()
+			coordinator.selectedImage(firstImage, from: origin)
+			XCTAssertTrue(coordinator.imageToCrop?.image === firstImage)
+			coordinator.cancelledCrop()
+			coordinator.imageToCrop = nil
+			XCTAssertEqual(coordinator.stage, stage)
+			XCTAssertNil(coordinator.imageToCrop)
+			XCTAssertNil(coordinator.cropDismissed())
+
+			coordinator.selectedImage(nextImage, from: origin)
+			XCTAssertTrue(coordinator.imageToCrop?.image === nextImage)
+			coordinator.imageToCrop = nil
+			XCTAssertEqual(coordinator.stage, stage)
+			XCTAssertNil(coordinator.cropDismissed())
+		}
+	}
+
+	func testSourceMenuCanOpenCameraAndPhotosAndReturn() {
 		let coordinator = ImageCaptureCoordinator()
 		XCTAssertEqual(coordinator.stage, .sourceMenu)
 		coordinator.choseCamera()
 		XCTAssertEqual(coordinator.stage, .camera)
 		coordinator.wentBack()
 		XCTAssertEqual(coordinator.stage, .sourceMenu)
-	}
-
-	func test_ImageCaptureCoordinator_routesBackFromPhotoPreviewToSourceMenu() {
-		let coordinator = ImageCaptureCoordinator()
 		coordinator.chosePhotos()
 		XCTAssertEqual(coordinator.stage, .photoPreview)
 		coordinator.wentBack()
 		XCTAssertEqual(coordinator.stage, .sourceMenu)
 	}
 
-	func test_ImageCaptureCoordinator_pickerCancelAndFailureReturnToPhotoPreview() {
+	func testSystemPickerCancellationDoesNotStartCrop() {
 		let coordinator = ImageCaptureCoordinator()
 		coordinator.chosePhotos()
 		coordinator.choseAllPhotos()
-		XCTAssertEqual(coordinator.stage, .systemPhotoPicker)
-		coordinator.pickerFinishedWithoutImage()
+		coordinator.isSystemPickerPresented = false
+		coordinator.pickerFinished(with: nil)
+		coordinator.pickerDismissed()
 		XCTAssertEqual(coordinator.stage, .photoPreview)
-	}
-
-	func test_ImageCaptureCoordinator_cropCancelReturnsToCameraOrigin() {
-		let coordinator = ImageCaptureCoordinator()
-		coordinator.choseCamera()
-		coordinator.selectedImage(from: .camera)
-		XCTAssertEqual(coordinator.selectionOrigin, .camera)
-		coordinator.cancelledCrop()
-		XCTAssertEqual(coordinator.stage, .camera)
-		XCTAssertNil(coordinator.selectionOrigin)
-	}
-
-	func test_ImageCaptureCoordinator_systemPickerCropCancelReturnsToPhotoPreview() {
-		let coordinator = ImageCaptureCoordinator()
-		coordinator.chosePhotos()
-		coordinator.choseAllPhotos()
-		coordinator.selectedImage(from: .photoPreview)
-		coordinator.cancelledCrop()
-		XCTAssertEqual(coordinator.stage, .photoPreview)
-		XCTAssertNil(coordinator.selectionOrigin)
+		XCTAssertNil(coordinator.imageToCrop)
+		XCTAssertNil(coordinator.cropDismissed())
 	}
 
 	// MARK: - AVAuthorizationStatus

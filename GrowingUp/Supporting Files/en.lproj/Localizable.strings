@@ -108,3 +108,8 @@
 "Use photo" = "Use photo";
 
 "Selected photo" = "Selected photo";
+
+/* Birthday indicator and countdown popover. */
+"Birthday celebration" = "Birthday";
+"Until birthday" = "Until birthday";
+"Happy birthday!" = "Happy birthday!";
