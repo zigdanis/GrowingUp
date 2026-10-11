@@ -59,6 +59,21 @@
             value = "$(GROWINGUP_RECORD_SNAPSHOTS)"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "GROWINGUP_APP_STORE_CAPTURE"
+            value = "$(GROWINGUP_APP_STORE_CAPTURE)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "GROWINGUP_APP_STORE_PHOTOS"
+            value = "$(GROWINGUP_APP_STORE_PHOTOS)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "GROWINGUP_APP_STORE_LOCALE"
+            value = "$(GROWINGUP_APP_STORE_LOCALE)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
    </TestAction>
    <LaunchAction

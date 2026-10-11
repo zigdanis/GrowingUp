@@ -23,13 +23,12 @@ final class PersonEditorPresenter: Identifiable {
 	private let removeUseCase: RemovePersonUseCase
 	private let fetchUseCase: FetchPersonsUseCase
 	private let onMutation: (PersonMutation) -> Void
-	private let onCancel: () -> Void
 
 	init(
 		person: Person?, addUseCase: AddPersonUseCase, editUseCase: EditPersonUseCase,
 		removeUseCase: RemovePersonUseCase, fetchUseCase: FetchPersonsUseCase,
 		now: Date = Date(), loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
-		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void, onCancel: @escaping () -> Void
+		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void
 	) {
 		self.person = person
 		maximumBirthday = now
@@ -45,7 +44,35 @@ final class PersonEditorPresenter: Identifiable {
 		self.removeUseCase = removeUseCase
 		self.fetchUseCase = fetchUseCase
 		self.onMutation = onMutation
-		self.onCancel = onCancel
+	}
+
+	var dayOfBirth: Date {
+		get { birthday }
+		set { updateBirthday(day: newValue, time: birthday) }
+	}
+
+	var timeOfBirth: Date {
+		get { birthday }
+		set { updateBirthday(day: birthday, time: newValue) }
+	}
+
+	var hasChanges: Bool {
+		guard let person else { return true }
+		return name != person.name || birthday != person.birthday || isOnWidget != person.isOnWidget
+			|| appImage != PersonImage(id: person.appPicId) || widgetImage != PersonImage(id: person.widgetPicId)
+	}
+
+	var canSave: Bool { hasChanges && !isBusy && !isLoading }
+
+	private func updateBirthday(day: Date, time: Date) {
+		let calendar = Calendar.current
+		guard
+			let date = calendar.date(
+				bySettingHour: calendar.component(.hour, from: time),
+				minute: calendar.component(.minute, from: time),
+				second: calendar.component(.second, from: time), of: day)
+		else { return }
+		birthday = min(date, maximumBirthday)
 	}
 
 	func load() async {
@@ -53,7 +80,7 @@ final class PersonEditorPresenter: Identifiable {
 		defer { isLoading = false }
 		guard person == nil else { return }
 		do {
-			isOnWidget = try await fetchUseCase.fetchWidgetPersons().count < 3
+			isOnWidget = try await fetchUseCase.fetchWidgetPersons().count < Constants.widgetPeopleLimit
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
@@ -61,7 +88,7 @@ final class PersonEditorPresenter: Identifiable {
 	}
 
 	func save() async {
-		guard !isBusy, !isLoading else { return }
+		guard canSave else { return }
 		guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
 			error = SceneError(CoreError.noNameValue)
 			return
@@ -71,8 +98,8 @@ final class PersonEditorPresenter: Identifiable {
 		do {
 			if isOnWidget {
 				let pinned = try await fetchUseCase.fetchWidgetPersons()
-				guard pinned.filter({ $0.id != person?.id }).count < 3 else {
-					throw CoreError(message: "Unable to add more than 3 persons")
+				guard pinned.filter({ $0.id != person?.id }).count < Constants.widgetPeopleLimit else {
+					throw CoreError.widgetPeopleLimitReached
 				}
 			}
 			let parameters = AddPersonParameters(
@@ -104,8 +131,4 @@ final class PersonEditorPresenter: Identifiable {
 		}
 	}
 
-	func cancel() {
-		guard !isBusy else { return }
-		onCancel()
-	}
 }

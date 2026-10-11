@@ -1,0 +1,236 @@
+# Remote iOS verification
+
+Agents on Linux use GitHub Actions' macOS runners to build and exercise GrowingUp.
+No local Mac, signing credentials, extra cloud service or model API key is needed
+for simulator validation. CI runs automatically for pull requests and pushes to
+`master`; `gh workflow run ci.yml --ref BRANCH` requests an additional run.
+
+The existing `GrowingUp` scheme covers unit tests. `GrowingUpUI` covers adding,
+relaunching, photo selection/cropping/persistence, cancel/save-error recovery,
+pin limits/widget deep links, deletion, and English/Russian light/dark appearance.
+Glass comparisons remain pinned to iOS 26.5 / iPhone 17 Pro / arm64. iOS 18.5 /
+iPhone 16 checks behavior without comparing Glass baselines. Missing baselines
+fail; CI never records new baselines.
+
+## Fast checks for tooling changes
+
+Run focused checks locally while editing the App Store uploader:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest scripts.tests.test_app_store_metadata
+```
+
+Before pushing the finished change, run the script suite once with `ffmpeg` and
+`ffprobe` installed:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
+```
+
+CI's Detect Changes job skips Swift Format, SwiftLint, Build & Test and both UI
+jobs when every changed path is one of:
+
+- `scripts/app-store-metadata.py` or `scripts/tests/test_app_store_metadata.py`;
+- Markdown or HTML under `docs/`, or JSON under `docs/releases/`;
+- PNGs under `marketing/app-store/screenshots/`, or that directory's `source.json`;
+- root `AGENTS.md`, `CLAUDE.md` or `README.md`.
+
+Release Tools, Evidence Tools and Secret Patterns still run. App inputs, the
+simulator harness, workflows, the classifier itself and unknown paths get full
+iOS validation. Renames check both paths; deleted app inputs also require iOS.
+Manual `workflow_dispatch` always runs the full suite. These rules scope `ci.yml`;
+the separate App Store screenshot capture workflow keeps its own triggers.
+
+Use the automatic CI run for the latest push. Request another run only for a
+concrete failure or when a skipped change needs simulator evidence; batch locally
+verified fixes into a push instead of repeatedly restarting the same suite.
+
+UI jobs export, report and upload evidence after both successful and failed tests.
+On cancellation, `!cancelled()` skips this remaining work, the job summary and
+simulator/temp cleanup, so the replaced run can release its concurrency slot.
+Cancelled jobs use disposable GitHub-hosted macOS VMs; cleanup still runs after
+ordinary test failures. Cancelled runs may have no complete evidence artifact;
+review evidence from the replacement run. See GitHub's
+[status check functions](https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#status-check-functions),
+[cancellation behavior](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-cancellation)
+and [hosted runners](https://docs.github.com/en/actions/concepts/runners/github-hosted-runners).
+
+## Review a pull request from Linux
+
+Push the PR branch, then run from the repository with authenticated `gh`, `jq` and `python3`:
+
+```bash
+scripts/pr-evidence.sh PR_NUMBER
+```
+
+The command finds CI for the current PR head, waits for completion and downloads
+`ui-*` artifacts into a new temporary directory outside the repository. It checks
+the artifact's source commit/run/attempt and rechecks the PR head after waiting and after
+downloading. It exits nonzero when CI fails, while retaining available evidence
+for diagnosis. A missing run/artifact is an error, not a successful validation.
+Downloads rejected by source validation and partial downloads are removed automatically.
+Changes limited to the non-iOS paths above skip simulator jobs and have no UI
+evidence to download.
+Artifact names include the CI attempt, so a rerun cannot accidentally download
+first-attempt evidence with the same name. To refresh evidence, rerun the full
+workflow with `gh run rerun RUN_ID`; rerunning only individual jobs can leave the
+current attempt without UI artifacts. A new attempt during download is rejected.
+
+Each simulator artifact contains:
+
+- `index.html`: an offline report with test results, images and a video player.
+- `journeys.mp4`: the UI suite, recorded after compilation; stopped cleanly even
+  when assertions fail. It includes simulator launch/relaunch transitions.
+- `attachments/`: exported screenshots and expected/actual/difference images on
+  visual failures, plus `manifest.json` mapping images to their test journeys.
+- `test-summary.json` and `tests.json`: machine-readable results exported on macOS.
+- `metadata.json`: PR head SHA, checked-out SHA (the PR merge commit on PR runs),
+  run ID/attempt, Xcode, simulator, visual-check mode and step outcomes.
+- `build.log`, `xcodebuild.log`, `recording.log` and `UI.xcresult`: raw diagnostics.
+
+Early build or simulator failures can produce a partial artifact. Inspect its
+metadata and Actions logs; absence of screenshots/video does not establish that
+the app works. Download links also appear in the Actions job summary. Artifacts
+expire after 14 days. Keep the extracted directory together when opening
+`index.html`; GitHub downloads the report rather than hosting it as a website.
+
+## Agent iteration
+
+1. Add or update the relevant XCUI journey for the requested behavior, push the
+   same PR branch and retrieve evidence for that commit.
+2. Read CI results and `test-summary.json`. Inspect the named checkpoint images
+   and visual differences with the agent's image viewer.
+3. Review the video for interaction/animation issues. For an image-based viewer,
+   extract frames on Linux outside the repository:
+
+   ```bash
+   ffmpeg -i /tmp/EVIDENCE/journeys.mp4 -vf fps=1/2 /tmp/EVIDENCE/frame-%04d.png
+   ```
+
+   Inspect frames around the relevant journey; a contact sheet can help locate
+   it. Still frames do not establish animation smoothness; view the MP4 when that
+   matters. Exported checkpoint images are the source for exact comparisons.
+4. Validate failures against the requested behavior, fix concrete issues and
+   repeat on the same PR. Recheck all required checks and review conversations
+   after each push. Report the run URL, reviewed checkpoints and remaining limits.
+5. Remove downloaded artifacts and extracted frames after review. Complete PR
+   convergence and merge under the [AGENTS.md policy](../AGENTS.md#merge-and-approval-policy).
+
+This makes evidence available to the agent already working on the PR. Visual
+inspection is part of that agent's work; CI does not make an additional model call
+or treat a green test suite as proof of all UI behavior. Camera hardware, actual
+Home Screen widget hosting and device-only rendering still need device coverage;
+the current widget journey verifies the app's deep link and pin rules.
+
+TestFlight distribution is a separate release operation using the existing
+fastlane lanes. Simulator evidence does not upload or distribute a build.
+
+## Feature evidence in the PR description
+
+For user-visible feature work and UI fixes, use the repository's
+[`visual-acceptance` skill](../.agents/skills/visual-acceptance/SKILL.md). The agent
+defines acceptance criteria, exercises the feature through an XCUI journey, and
+inspects the evidence before publishing. A screenshot is sufficient for a static
+result; a short video shows interactions, navigation, persistence, or animation.
+Cover the requested feature rather than attaching the entire suite recording.
+
+Use GitHub CLI **2.99.0 or newer** with native `gh pr edit --attach` support and
+an authenticated user with push access. The installed CLI must support `--attach`;
+update it from [official GitHub CLI releases](https://github.com/cli/cli/releases)
+if it does not. Native attachments render directly in the PR description, outside
+the source tree and the 14-day Actions artifact lifecycle. No extra hosting service,
+published release, or model API key is needed. CI retains read-only repository
+permissions; the working agent chooses and uploads reviewed evidence using its
+existing GitHub login. GitHub App installation tokens, including Actions'
+`GITHUB_TOKEN`, cannot upload these attachments.
+
+After downloading current-head evidence, work within one simulator's artifact
+directory. For a video, locate the relevant segment in `journeys.mp4` and trim it
+on Linux (replace the example start and duration with the inspected segment):
+
+```bash
+ffmpeg -ss 00:00:30 -i /tmp/EVIDENCE/ui-DEVICE-RUNTIME/journeys.mp4 -t 15 \
+  -c:v libx264 -crf 28 -preset fast -pix_fmt yuv420p -an -movflags +faststart \
+  /tmp/EVIDENCE/ui-DEVICE-RUNTIME/feature-demo.mp4
+```
+
+Inspect the resulting clip too. Use screenshots from this run's exported
+attachments, not checked-in comparison baselines. Write a temporary review summary
+that names the acceptance criteria demonstrated, the checkpoints/journey inspected,
+and any limits. Then publish, using real exported filenames:
+
+```bash
+python3 scripts/pr-visual-evidence.py PR_NUMBER /tmp/EVIDENCE/ui-DEVICE-RUNTIME \
+  --summary-file /tmp/EVIDENCE/review.md \
+  --image attachments/CHECKPOINT.png \
+  --video feature-demo.mp4
+```
+
+Either `--image` or `--video` suffices; repeat the flags for additional relevant
+media. Follow the [compact media rules](#compact-pr-media) for upload copies,
+layout, and rendered inspection. The helper checks the PR head, latest successful
+CI run and attempt, and artifact outcomes before uploading. It replaces only the
+marked visual acceptance section, preserving the rest of the PR description, and
+records the full commit, run link, simulator, and agent's review. Media is uploaded
+first through `gh api` using the same native attachment endpoint as `gh --attach`; the helper then reads
+the latest description before replacing its evidence section. Upload failures
+leave the description untouched. GitHub does not support conditional PR writes,
+so an edit arriving between the final read and update can still race; coordinate
+description edits during that final update. Inspect a failed PR-update request
+before retrying. A concurrent push aborts publication or invalidates the helper's
+exact section after publication, preserving fresh surrounding text. Retrieve and review
+evidence again before handoff. Upload errors are blockers,
+not a reason to substitute artifact download links for visible feature evidence.
+
+Infrastructure or documentation work with no visible app effect should explain
+why app screenshots do not apply and include its actual functional verification.
+After publication, remove the temporary summary, clips, and downloaded evidence.
+Present the PR media before deployment and honor Danis's explicit TestFlight
+instruction, including valid authorization already given in the session. PR
+approval, passing CI, and visual acceptance do not dispatch a release. Follow
+[the TestFlight workflow](testflight.md) for the authorized deployment.
+
+References: [GitHub CLI attachments](https://docs.github.com/en/github-cli/github-cli/attaching-files-with-github-cli),
+[supported media and limits](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/attaching-files).
+The upload request follows the [GitHub CLI implementation](https://github.com/cli/cli/blob/v2.102.0/internal/attachments/client.go);
+conditional-write limits are documented in [GitHub REST best practices](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api#use-conditional-requests).
+
+## Compact PR media
+
+PR attachments fit within **320×640 pixels**, preserve aspect ratio, and never
+upscale. The publisher requires local `ffmpeg` and its `ffprobe` tool for video timing;
+install them with `brew install ffmpeg`
+on macOS or `sudo apt install ffmpeg` on Ubuntu. It creates temporary upload copies
+and leaves the full-resolution originals intact for visual comparison. Sources may
+exceed 10 MiB; every copy must be nonempty, have a valid PNG or MP4 signature, and
+fit within 10 MiB. All copies are converted and checked before the first upload.
+Temporary copies are removed on success or failure.
+
+Videos retain the selected clip's complete duration and timing. Upload copies use
+H.264/yuv420p MP4 with fast start and even dimensions within the same bounds.
+Trimming selects the demonstrated interaction; preserve real timing for animation.
+
+Place two screenshot embeds in one Markdown paragraph, separated by a space, with
+a blank line between pairs. Choose descriptive checkpoint filenames; the publisher
+turns them into meaningful alt labels. Keep each native video URL on its own line
+so GitHub renders its player.
+
+Inspect the original checkpoints and selected recording before publication. Then
+inspect every rendered compact attachment in the PR at a **1280×800 viewport**:
+confirm screenshot sharpness, compact bounds, and two-image grouping, and play
+each native video to its end. Fix unreadable or poorly grouped evidence before
+handoff; a successful upload alone does not complete visual acceptance.
+
+## Maintain the evidence tools
+
+Install `ffmpeg` (including `ffprobe`) before running the helper tests.
+
+```bash
+bash -n scripts/run-ui-journeys.sh
+bash -n scripts/pr-evidence.sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
+```
+
+The focused tests exercise real media conversion and publication, recorder
+finalization, failed-test status preservation, build failures and portable report
+generation. Real simulator behavior is verified by both macOS UI jobs.

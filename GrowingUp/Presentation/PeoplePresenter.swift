@@ -66,8 +66,7 @@ final class PeoplePresenter {
 	private func showEditor(person: Person?) {
 		editor = configurator.editor(
 			person: person,
-			onMutation: { [weak self] in self?.apply($0) },
-			onCancel: { [weak self] in self?.editor = nil })
+			onMutation: { [weak self] in self?.apply($0) })
 	}
 
 	func apply(_ mutation: PersonMutation) {

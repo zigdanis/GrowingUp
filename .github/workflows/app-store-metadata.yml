@@ -1,0 +1,99 @@
+name: App Store Metadata
+run-name: App Store screenshots — ${{ inputs.operation }} — ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Inspect Apple inventory, or prepare draft screenshot placements (never submit)
+        type: choice
+        options: [inventory, upload]
+        default: inventory
+        required: true
+      source_sha:
+        description: Reviewed full master commit SHA with successful CI and committed screenshots
+        type: string
+        required: true
+      version:
+        description: next, or the next minor version of the live App Store version
+        type: string
+        default: next
+
+permissions:
+  contents: read
+
+concurrency:
+  group: growingup-app-store-metadata
+  cancel-in-progress: false
+
+jobs:
+  metadata:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: testflight
+    permissions:
+      contents: read
+      actions: read
+    env:
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      OPERATION: ${{ inputs.operation }}
+      VERSION: ${{ inputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify reviewed master source and green CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'source_sha must be a full commit SHA'; exit 1; }
+          git merge-base --is-ancestor "$SOURCE_SHA" origin/master
+          CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch master --event push --commit "$SOURCE_SHA" --limit 1 --json status,conclusion)
+          jq -e '.[0].status == "completed" and .[0].conclusion == "success"' <<< "$CI" >/dev/null
+          case "$OPERATION" in inventory|upload) ;; *) exit 1 ;; esac
+          METADATA_DIRECTORY=$(mktemp -d "$RUNNER_TEMP/app-store-metadata.XXXXXX")
+          chmod 700 "$METADATA_DIRECTORY"
+          echo "METADATA_TEMP=$METADATA_DIRECTORY" >> "$GITHUB_ENV"
+          git worktree add --detach "$METADATA_DIRECTORY/source" "$SOURCE_SHA"
+          test -f "$METADATA_DIRECTORY/source/scripts/app-store-metadata.py"
+      - name: Install isolated API signing dependency
+        run: |
+          python3 -m venv "$METADATA_TEMP/venv"
+          "$METADATA_TEMP/venv/bin/pip" install 'PyJWT==2.10.1' 'cryptography==46.0.3'
+      - name: Inspect or prepare App Store draft screenshots
+        env:
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          for name in ('ASC_PRIVATE_KEY', 'ASC_KEY_ID', 'ASC_ISSUER_ID'):
+              if not os.environ.get(name, '').strip():
+                  raise SystemExit('Missing environment secret: ' + name)
+          path = Path(os.environ['METADATA_TEMP']) / 'AuthKey.p8'
+          path.write_text(os.environ['ASC_PRIVATE_KEY'] + '\n')
+          path.chmod(0o600)
+          PY
+          export ASC_KEY_PATH="$METADATA_TEMP/AuthKey.p8"
+          unset ASC_PRIVATE_KEY
+          "$METADATA_TEMP/venv/bin/python" "$METADATA_TEMP/source/scripts/app-store-metadata.py" "$OPERATION" \
+            --version "$VERSION" --source-sha "$SOURCE_SHA" \
+            --screenshots "$METADATA_TEMP/source/marketing/app-store/screenshots" \
+            --receipt "$METADATA_TEMP/receipt.json"
+      - name: Retain nonsecret Apple inventory or verified screenshot receipt
+        if: always() && env.METADATA_TEMP != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: app-store-metadata-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.METADATA_TEMP }}/receipt.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Remove credentials and temporary source
+        if: always() && env.METADATA_TEMP != ''
+        run: |
+          rm -rf "$METADATA_TEMP"
+          git worktree prune

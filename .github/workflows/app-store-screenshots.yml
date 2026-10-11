@@ -1,0 +1,215 @@
+name: App Store Screenshots
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/app-store-screenshots.yml'
+      - 'scripts/run-app-store-screenshots.sh'
+      - 'GrowingUp/**'
+      - 'GrowingUpUITests/**'
+      - 'GrowingUp.xcodeproj/**'
+      - 'Core/**'
+      - 'Widget/**'
+      - 'docs/app-store-demo-photos/**'
+      - 'scripts/render-app-store-screenshots.py'
+      - 'marketing/**'
+  workflow_dispatch:
+
+concurrency:
+  group: app-store-screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  capture:
+    name: App Store Capture — iPhone 17 Pro Max / iOS 26.5
+    runs-on: macos-26
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+      - name: Prepare capture directory
+        id: evidence
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          ARTIFACT_DIR=$(mktemp -d "$RUNNER_TEMP/app-store-capture.XXXXXX")
+          echo "directory=$ARTIFACT_DIR" >> "$GITHUB_OUTPUT"
+          jq -n --arg head "$HEAD_SHA" --arg checkout "$(git rev-parse HEAD)" \
+            --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
+            '{workflow: "app-store-screenshots.yml", head_sha: $head, checkout_sha: $checkout,
+              run_id: $run, run_attempt: $attempt,
+              device: "iPhone-17-Pro-Max", runtime: "26-5", xcode: "26.6",
+              native_width: 1320, native_height: 2868, visual_checks: "0"}' \
+            > "$ARTIFACT_DIR/metadata.json"
+      - name: Select pinned Xcode
+        run: |
+          test -d /Applications/Xcode_26.6.app \
+            || { echo 'Xcode 26.6 is unavailable on this runner'; ls /Applications; exit 1; }
+          sudo xcode-select -switch /Applications/Xcode_26.6.app
+          xcodebuild -version
+      - name: Prepare existing iPhone 17 Pro Max simulator
+        id: simulator
+        run: |
+          RUNTIME=com.apple.CoreSimulator.SimRuntime.iOS-26-5
+          DEVICE_TYPE=com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro-Max
+          UDID=$(xcrun simctl list devices available --json \
+            | jq -r --arg runtime "$RUNTIME" --arg deviceType "$DEVICE_TYPE" \
+              '.devices[$runtime][]? | select(.isAvailable and .deviceTypeIdentifier == $deviceType) | .udid' \
+            | head -n 1)
+          if [ -z "$UDID" ]; then
+            echo 'No existing iPhone 17 Pro Max simulator on iOS 26.5; no simulator will be created.'
+            xcrun simctl list devices available
+            xcrun simctl list runtimes
+            exit 1
+          fi
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl shutdown "$UDID" 2>/dev/null || true
+          xcrun simctl erase "$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi \
+            --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
+      - name: Capture English and Russian app journeys
+        id: capture
+        env:
+          SIM_UDID: ${{ steps.simulator.outputs.udid }}
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+          GROWINGUP_APP_STORE_PHOTOS: ${{ github.workspace }}/docs/app-store-demo-photos
+        run: scripts/run-app-store-screenshots.sh
+      - name: Export screenshots and test results
+        id: export
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+        run: |
+          for LOCALE in en ru; do
+            LOCALE_DIR="$ARTIFACT_DIR/$LOCALE"
+            if [ -d "$LOCALE_DIR/UI.xcresult" ]; then
+              xcrun xcresulttool export attachments --path "$LOCALE_DIR/UI.xcresult" \
+                --output-path "$LOCALE_DIR/attachments"
+              xcrun xcresulttool get test-results summary --path "$LOCALE_DIR/UI.xcresult" \
+                > "$LOCALE_DIR/test-summary.json"
+              xcrun xcresulttool get test-results tests --path "$LOCALE_DIR/UI.xcresult" \
+                > "$LOCALE_DIR/tests.json"
+            fi
+          done
+      - name: Verify required capture evidence
+        id: verify
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import struct
+          from pathlib import Path
+
+          directory = Path(os.environ['ARTIFACT_DIR'])
+          for locale in ('en', 'ru'):
+              source = directory / locale
+              assert (source / 'journeys.mp4').stat().st_size > 0, f'{locale}: missing recording'
+              summary = json.loads((source / 'test-summary.json').read_text())
+              assert summary.get('passedTests', 0) > 0, f'{locale}: no passed capture test'
+              assert summary.get('failedTests', 0) == 0, f'{locale}: failed capture test'
+              manifest = json.loads((source / 'attachments/manifest.json').read_text())
+              attachments = [item for test in manifest for item in test['attachments']]
+              export_suffix = re.compile(r'_\d+_[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$')
+              for checkpoint in ('mia', 'leo-celebration', 'mango', 'teddy',
+                                 'widget-small', 'widget-medium', 'widget-large'):
+                  name = f'store-{locale}-{checkpoint}'
+                  matches = [item for item in attachments
+                             if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == name]
+                  assert len(matches) == 1, f'{name}: expected one checkpoint, found {len(matches)}'
+                  data = (source / 'attachments' / matches[0]['exportedFileName']).read_bytes()
+                  assert data[:8] == b'\x89PNG\r\n\x1a\n', f'{name}: invalid PNG'
+                  dimensions = struct.unpack('>II', data[16:24])
+                  if not checkpoint.startswith('widget-'):
+                      assert dimensions == (1320, 2868), f'{name}: unexpected native size {dimensions}'
+                  else:
+                      expected = {'widget-small': (510, 510), 'widget-medium': (1092, 510),
+                                  'widget-large': (1092, 1146)}[checkpoint]
+                      assert dimensions == expected, f'{name}: unexpected widget crop {dimensions}'
+          PY
+      - name: Compose approved App Store frames from real captures
+        id: compose
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+        run: |
+          python3 -m venv "$ARTIFACT_DIR/render-venv"
+          trap 'rm -rf "$ARTIFACT_DIR/render-venv"' EXIT
+          "$ARTIFACT_DIR/render-venv/bin/python" -m pip install 'Pillow==12.3.0'
+          "$ARTIFACT_DIR/render-venv/bin/python" scripts/render-app-store-screenshots.py \
+            "$ARTIFACT_DIR" --output "$ARTIFACT_DIR/final"
+          test -s "$ARTIFACT_DIR/final/source.json"
+          test "$(find "$ARTIFACT_DIR/final/en-US" "$ARTIFACT_DIR/final/ru" -name '*.png' | wc -l | tr -d ' ')" = 8
+      - name: Create portable capture reports
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+          CAPTURE_OUTCOME: ${{ steps.capture.outcome }}
+          EXPORT_OUTCOME: ${{ steps.export.outcome }}
+          VERIFY_OUTCOME: ${{ steps.verify.outcome }}
+          COMPOSE_OUTCOME: ${{ steps.compose.outcome }}
+        run: |
+          jq --arg capture "$CAPTURE_OUTCOME" --arg export "$EXPORT_OUTCOME" \
+            --arg verification "$VERIFY_OUTCOME" \
+            --arg composition "$COMPOSE_OUTCOME" \
+            '. + {capture_outcome: $capture, export_outcome: $export, verification_outcome: $verification,
+              composition_outcome: $composition}' \
+            "$ARTIFACT_DIR/metadata.json" > "$ARTIFACT_DIR/metadata-next.json"
+          mv "$ARTIFACT_DIR/metadata-next.json" "$ARTIFACT_DIR/metadata.json"
+          for LOCALE in en ru; do
+            if [ -f "$ARTIFACT_DIR/$LOCALE/metadata.json" ]; then
+              jq --arg locale "$LOCALE" '. + {locale: $locale}' "$ARTIFACT_DIR/metadata.json" \
+                > "$ARTIFACT_DIR/$LOCALE/metadata.json"
+              python3 scripts/ui-evidence-report.py "$ARTIFACT_DIR/$LOCALE"
+            fi
+          done
+          python3 scripts/ui-evidence-report.py "$ARTIFACT_DIR"
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          report = Path(os.environ['ARTIFACT_DIR']) / 'index.html'
+          links = ('<h2>App Store screenshots</h2><ul>'
+                   '<li><a href="final/en-US/">English composed screenshots</a></li>'
+                   '<li><a href="final/ru/">Russian composed screenshots</a></li>'
+                   '<li><a href="en/index.html">English screenshots and recording</a></li>'
+                   '<li><a href="ru/index.html">Russian screenshots and recording</a></li></ul>')
+          report.write_text(report.read_text().replace('</html>', links + '</html>'))
+          PY
+      - name: Retain native screenshots and recordings
+        id: upload
+        if: always() && steps.evidence.outputs.directory != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: app-store-capture-attempt-${{ github.run_attempt }}
+          path: ${{ steps.evidence.outputs.directory }}
+          if-no-files-found: error
+          retention-days: 14
+      - name: Link capture evidence
+        if: always() && steps.upload.outputs.artifact-url != ''
+        env:
+          ARTIFACT_URL: ${{ steps.upload.outputs.artifact-url }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          {
+            echo '### App Store captures — iPhone 17 Pro Max / iOS 26.5'
+            echo
+            echo "PR head: \`$HEAD_SHA\`"
+            echo
+            echo "[Download RU/EN screenshots, journey recordings and test results]($ARTIFACT_URL)"
+            echo
+            echo 'Includes native simulator inputs and eight composed screenshots in final/. Inspect both locales before publication.'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Shut down capture simulator
+        if: always() && steps.simulator.outputs.udid != ''
+        run: xcrun simctl shutdown "${{ steps.simulator.outputs.udid }}" 2>/dev/null || true
+      - name: Remove temporary capture evidence
+        if: always() && steps.evidence.outputs.directory != ''
+        env:
+          ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+        run: rm -rf "$ARTIFACT_DIR"

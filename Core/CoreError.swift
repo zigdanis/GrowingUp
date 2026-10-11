@@ -29,12 +29,12 @@ public struct CoreError: Error, Equatable {
 
 	private mutating func checkForSpecificCoreDataError() {
 		if message.contains("widgetPersons") {
-			let threePersons = "Unable to add more than 3 persons"
-			self.message = NSLocalizedString(threePersons, bundle: bundle, comment: "Error Message")
+			self = Self.widgetPeopleLimitReached
 		}
 	}
 
 	public static let failedToCreateDate = CoreError(message: "Can't create Date value from specified parameters")
+	public static let widgetPeopleLimitReached = CoreError(message: "Unable to add more than 6 persons")
 	public static let noNameValue = CoreError(message: "Can't save person without specified name")
 	public static let noDayValue = CoreError(message: "Can't save person without specified day of birth")
 	public static let noTimeValue = CoreError(message: "Can't save person without specified time of birth")
