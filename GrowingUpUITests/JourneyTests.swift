@@ -61,6 +61,39 @@ final class JourneyTests: XCTestCase {
 		checkpoint("saved-photos-form")
 	}
 
+	func testFullScreenFallbackPhotoAndPagerEditing() {
+		launch(seed: .pinned)
+		assertFullScreenOverview(name: "Alice")
+		checkpoint("full-screen-fallback", compareBaseline: false)
+		// The lower corner is outside the name/age stack and must still open this person's editor.
+		overview.coordinate(withNormalizedOffset: CGVector(dx: 0.05, dy: 0.85)).tap()
+		XCTAssertTrue(app.textFields["editor.name"].waitForExistence(timeout: 5))
+		XCTAssertEqual(app.textFields["editor.name"].value as? String, "Alice")
+		choosePhoto(slot: "appPhoto")
+		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
+		app.buttons["crop.use"].tap()
+		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		relaunch()
+		overview.tap()
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		dismissEditor()
+		assertFullScreenOverview(name: "Alice")
+		checkpoint("full-screen-saved-photo", compareBaseline: false)
+		app.swipeLeft()
+		assertFullScreenOverview(name: "Boris")
+		checkpoint("full-screen-pager", compareBaseline: false)
+		overview.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.85)).tap()
+		XCTAssertTrue(app.textFields["editor.name"].waitForExistence(timeout: 5))
+		XCTAssertEqual(app.textFields["editor.name"].value as? String, "Boris")
+		checkpoint("full-screen-pager-editor", compareBaseline: false)
+		dismissEditor()
+		app.swipeRight()
+		assertFullScreenOverview(name: "Alice")
+	}
+
 	func testCancelAndRecoverFromSaveFailure() {
 		launch(failSave: true)
 		app.buttons["person.add"].tap()
@@ -235,6 +268,33 @@ final class JourneyTests: XCTestCase {
 }
 
 extension JourneyTests {
+	private func assertFullScreenOverview(name: String) {
+		let personName = app.staticTexts["person.name"]
+		let selectedName = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: personName)
+		XCTAssertEqual(XCTWaiter.wait(for: [selectedName], timeout: 5), .completed)
+		let age = app.staticTexts["person.age"]
+		let populatedAge = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label != ''"), object: age)
+		XCTAssertEqual(XCTWaiter.wait(for: [populatedAge], timeout: 5), .completed)
+		let screen = app.frame
+		let edit = overview.frame
+		XCTAssertEqual(edit.minX, screen.minX, accuracy: 1)
+		XCTAssertEqual(edit.maxX, screen.maxX, accuracy: 1)
+		XCTAssertEqual(edit.minY, screen.minY, accuracy: 1)
+		XCTAssertEqual(edit.maxY, screen.maxY, accuracy: 1)
+		let statusBar = app.statusBars.firstMatch
+		let contentTop = statusBar.exists ? statusBar.frame.maxY : screen.minY
+		for text in [personName, age] {
+			XCTAssertTrue(text.isHittable)
+			XCTAssertGreaterThan(text.frame.width, 0)
+			XCTAssertGreaterThan(text.frame.height, 0)
+			XCTAssertGreaterThanOrEqual(text.frame.minX, screen.minX + 24)
+			XCTAssertLessThanOrEqual(text.frame.maxX, screen.maxX - 24)
+			XCTAssertGreaterThanOrEqual(text.frame.minY, contentTop)
+			XCTAssertLessThan(text.frame.maxY, screen.midY)
+		}
+		XCTAssertLessThan(personName.frame.maxY, age.frame.minY)
+	}
+
 	private func launch(
 		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light,
 		widgetFamily: String? = nil
