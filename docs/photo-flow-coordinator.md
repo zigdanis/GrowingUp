@@ -58,7 +58,4 @@ detents, crop shapes/downsize limits and photo fixture injection. Do not change
 Core use cases, persistence transactions, App Group storage, pinning or widget
 timelines. No new presentation framework, protocols or dependencies are needed.
 
-Review against the starting master commit 39d5d4e178d6f118a755fd663bb06b1f18a458be
-and this specification. Resolve actionable review findings, then follow the
-[AGENTS.md merge policy](../AGENTS.md#merge-and-approval-policy) and
-[full-send workflow](../.agents/skills/full-send/SKILL.md).
+Review against the starting master commit 39d5d4e178d6f118a755fd663bb06b1f18a458be and this specification. Resolve actionable review findings, then follow the [full-send workflow](../.agents/skills/full-send/SKILL.md).

@@ -221,7 +221,7 @@ def publish(number, directory, summary, images, videos):
     for path, url in attachments:
         if path.suffix.lower() == ".mp4":
             evidence += url + "\n\n"
-    evidence += "TestFlight deployment awaits Danis's explicit approval.\n" + END
+    evidence += END
     # GitHub does not support conditional PR writes. Re-read after the slow uploads, immediately before PATCH.
     current = json.loads(gh("api", endpoint))
     if current["state"] != "open" or current["head"]["sha"] != sha:

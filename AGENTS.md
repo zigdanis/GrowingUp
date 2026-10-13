@@ -2,7 +2,7 @@
 
 - On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Inspect relevant exported screenshots and recording frames for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review.
 - Keep PR media compact and readable; publish reviewed CI screenshots through `scripts/pr-visual-evidence.py` and inspect their display in the PR.
-- Attach inspected screenshots or a short feature demo to the PR description for the current head.
+- For user-visible changes, attach inspected screenshots or a short feature demo to the PR description for the current head. For non-UI changes, report functional checks instead.
 
 ## Code Style
 
