@@ -61,4 +61,4 @@ timelines. No new presentation framework, protocols or dependencies are needed.
 Review against the starting master commit 39d5d4e178d6f118a755fd663bb06b1f18a458be
 and this specification. Resolve actionable review findings, then follow the
 [AGENTS.md merge policy](../AGENTS.md#merge-and-approval-policy) and
-[growingup-delivery workflow](../.agents/skills/growingup-delivery/SKILL.md).
+[full-send workflow](../.agents/skills/full-send/SKILL.md).
