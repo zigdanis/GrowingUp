@@ -107,6 +107,13 @@ class PublicationTests(unittest.TestCase):
         self.assertIn("user-attachments/assets/demo-mp4", body)
         self.assertNotIn(self.temporary.name, body)
 
+    def test_publication_preserves_authorization_without_adding_approval_gate(self):
+        authorization = "TestFlight is authorized by the developer's full-send request.\n"
+        self.pr["body"] += authorization
+        self.publish()
+        self.assertIn(authorization, self.pr["body"])
+        self.assertNotIn("TestFlight deployment awaits", self.pr["body"])
+
     def test_stale_head_or_attempt_never_uploads(self):
         for field, value in [("head_sha", "old-head"), ("run_attempt", "1"), ("run_id", "122")]:
             with self.subTest(field=field):

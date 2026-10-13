@@ -1,45 +1,17 @@
 ---
 name: visual-acceptance
-description: Capture, inspect, and attach feature-specific iOS simulator screenshots or videos to GrowingUp PR descriptions. Use for user-visible feature work and UI fixes, including work from Linux or Raspberry Pi, before merging a PR or deploying to TestFlight.
+description: Capture, inspect and attach iOS simulator screenshots or videos to pull requests. Use for user-visible features and UI fixes before merge or TestFlight deployment.
 ---
 
 # Visual acceptance
 
-Make the requested behavior quick for Danis to assess in the PR description.
-Use the existing macOS CI/XCUI evidence pipeline; read
-[docs/remote-ios-verification.md](../../../docs/remote-ios-verification.md)
-for retrieval, inspection, publication commands, and simulator limits, including
-the [compact PR media rules](../../../docs/remote-ios-verification.md#compact-pr-media).
+Capture and inspect screenshots or video that show the requested UI change, then attach them to the PR. For non-UI changes, report functional checks instead.
 
-1. Translate the request into observable acceptance criteria. Extend the relevant
-   `GrowingUpUI` journey with assertions and named screenshot checkpoints that
-   show the feature's actual result, using deterministic test fixtures. Choose a
-   screenshot when a final state proves the criterion; choose a short recording
-   when navigation, gestures, persistence across relaunch, or animation matters.
-   Include relevant language/appearance variants when the change affects them.
-2. Push the PR branch and retrieve evidence for its current head. Inspect the
-   selected screenshots and the relevant recording segment against every
-   criterion. Fix concrete failures and repeat on the same PR. Green CI, old
-   baselines, mockups, and unrelated journeys do not establish acceptance.
-3. Select the smallest useful demonstration from the passing run. Trim a recording
-   to the feature's interaction and outcome. Preserve real timing when judging
-   animation. Describe what you inspected, its outcome, and any device-only gaps
-   in a temporary Markdown summary. Publish through `scripts/pr-visual-evidence.py`;
-   it embeds native GitHub images/video in the PR body and preserves other sections.
-4. Inspect the rendered PR attachments under the compact media rules. After a new push or
-   CI rerun, replace evidence with reviewed media for the latest head/attempt before
-   handoff. Media upload failures leave the description untouched; inspect a failed
-   PR-update request before retrying. Remove
-   temporary downloads and clips after publication and review.
+Make the result easy for the developer to assess in the PR. Use the project's existing tools to capture and publish evidence.
 
-Finish when the PR body contains current, inspected evidence covering the requested
-behavior, with its commit/run and honest limitations. For a feature without a
-visible app effect, explain that in the PR and report its functional verification;
-do not attach an unrelated app screenshot. If CI, uploads, or device coverage block
-acceptance, state the concrete gap and keep the work unverified.
+- **Show:** capture the feature or fix described in the PR from its current code. Use a short video when screenshots aren't enough.
+- **Limit:** use 1–3 screenshots by default. Skip duplicates and unrelated screens.
+- **Check:** confirm that the media shows the requested behavior, attach it to the PR and check that it displays clearly.
+- **Clean up:** remove temporary downloads, screenshots and video clips after publishing and checking the PR.
 
-Visual acceptance completes the evidence gate. Follow the authoritative
-[merge and approval policy](../../../AGENTS.md#merge-and-approval-policy) and
-[TestFlight workflow](../../../docs/testflight.md). Publish inspected evidence
-before deployment; honor an explicit deployment instruction already given in
-the session without asking again for the same authorized release.
+Once the feature is ready, attach its reviewed screenshots or demo to the PR body. TestFlight processing and later release steps do not need to finish first.
