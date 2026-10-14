@@ -1,0 +1,94 @@
+{
+  "success": true,
+  "upload": true,
+  "phase": "authorized SE 3 addition",
+  "started_at_utc": "2026-10-14T04:05:21.185890+00:00",
+  "version_id": "4dccceea-13f4-4f10-8153-d1106ec1731c",
+  "version": "2.1.0",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "size": [
+        750,
+        1334
+      ],
+      "device": "iPhone-SE-3rd-generation",
+      "screenshots": [
+        {
+          "file": "01-mia.png",
+          "sha256": "27646cb8f178fdbd51cd070d10fb4267fab65828bcf94deff4be19beba7578c1",
+          "placement_id": "c6c00005-71fb-8cec-8f0d-f95be8d7f267",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-leo-celebration.png",
+          "sha256": "07a7026b8040fcff452276c6f0915b8eac4013d9a4c71eef84144ee8166893ce",
+          "placement_id": "bc000005-71fb-8cec-8f24-926b1b244242",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-mango-teddy.png",
+          "sha256": "73471ec19125ec6da8f0f2c550f4d1a179458601fb5116562ac0fa1f6b0dfcb5",
+          "placement_id": "a3000005-71fb-8cec-8f30-22264faa58b3",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-widgets.png",
+          "sha256": "231bc349dba3d986126087a45ad27a79e2d78380fdac204d034d5ad4383ec866",
+          "placement_id": "cd800005-71fb-8cec-8f36-b6b7e9ab62fa",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "size": [
+        750,
+        1334
+      ],
+      "device": "iPhone-SE-3rd-generation",
+      "screenshots": [
+        {
+          "file": "01-mia.png",
+          "sha256": "89a550f4a77575fa5f88e0ac3e3aab20eebb76ca9c15e8670a448f640c903322",
+          "placement_id": "93800005-71fb-8cec-8f1c-e88e1563eeb2",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-leo-celebration.png",
+          "sha256": "7294d0e0dbf44d3e4a32f300f52e868d54934065a870f606c4ec36f7dd4bab92",
+          "placement_id": "30000005-71fb-8cec-8f13-c81f6090b20b",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-mango-teddy.png",
+          "sha256": "619463ff45d4c96959eca70575f175176d035b01f988dd58ad154098512f2dab",
+          "placement_id": "20c00005-71fb-8cec-8f30-4c666e2c3a8e",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-widgets.png",
+          "sha256": "8f694900aba14ab64fbd221f4940e7cb62a00b520fa7c22ed81c729ae77973ca",
+          "placement_id": "acc00005-71fb-8cec-8f08-3abe9205cc5e",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [],
+  "verified_state": "PREPARE_FOR_SUBMISSION",
+  "other_groups_preserved": true,
+  "new_png_transfers": 8,
+  "preserved_previously_verified_pngs": 24,
+  "fresh_readback_verified": true,
+  "verified_own_png_count": 32,
+  "completed_at_utc": "2026-10-14T04:07:06.692330+00:00",
+  "prior_upload_summary": {
+    "initial_new_png_transfers": 2,
+    "authorized_resume_new_png_transfers": 14,
+    "original_large_DI_preserved": 8,
+    "prior_receipt": "pre-se3-apple-upload-receipt.json retained in external logs"
+  }
+}

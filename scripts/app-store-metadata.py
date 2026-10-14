@@ -103,14 +103,18 @@ class Apple:
             raise RuntimeError("Apple API network request failed; inspect inventory before retrying a mutation") from None
 
     def collection(self, path, **query):
+        return self.collection_with_included(path, **query)[0]
+
+    def collection_with_included(self, path, **query):
         if query:
             path += "?" + urllib.parse.urlencode(query)
-        result = []
+        result, included = [], []
         while path:
             page = self.request("GET", path)
             result.extend(page["data"])
+            included.extend(page.get("included", []))
             path = page.get("links", {}).get("next")
-        return result
+        return result, included
 
     def resource(self, path):
         return self.request("GET", path)["data"]
@@ -229,11 +233,16 @@ def placements(api, localization_id, group=None):
     query = {"filter[placementType]": "APP_SCREENSHOT", "sort": "placementGroupPosition", "include": "image"}
     if group:
         query["filter[placementGroup]"] = group
-    # Fetch images explicitly: collection pagination does not retain included resources.
-    result = api.collection(f"/v1/appStoreVersionLocalizations/{localization_id}/placements", **query)
+    path = f"/v1/appStoreVersionLocalizations/{localization_id}/placements"
+    if hasattr(api, "collection_with_included"):
+        result, included = api.collection_with_included(path, **query)
+    else:
+        result, included = api.collection(path, **query), []
+    images = {item["id"]: item for item in included if item.get("type") == "appAssetLibraryImages"}
     for placement in result:
         image_id = placement["relationships"]["image"]["data"]["id"]
-        placement["image"] = api.resource(f"/v1/appAssetLibraryImages/{image_id}")
+        # Use fresh included resources from this response, never a persistent cache.
+        placement["image"] = images[image_id] if image_id in images else api.resource(f"/v1/appAssetLibraryImages/{image_id}")
     return result
 
 
@@ -307,7 +316,7 @@ def prepare_image(api, library_id, image, spec_id):
         if asset["attributes"]["state"] in READY_ASSETS:
             verify_image(asset, image, spec_id)
             return asset
-        if asset["attributes"]["state"] != "UPLOAD_COMPLETE":
+        if asset["attributes"]["state"] not in {"UPLOAD_COMPLETE", "COMPLETE"}:
             raise ValueError(f"Screenshot processing state is {asset['attributes']['state']}; inspect this asset before retrying")
         if time.monotonic() >= deadline:
             raise TimeoutError("Apple screenshot processing pending; rerun the same source to resume")
@@ -399,20 +408,10 @@ def run(api, args, receipt):
         })
         wait_for_placements(api, localization_id, group, ordered, images[locale], spec_id)
         prepared_localizations[locale] = (localization_id, ordered)
-    # Both new main sets are verified before removing old size-specific overrides.
+    # Never erase another hardware family's explicitly uploaded screenshots.
     receipt["verified_groups"] = {}
     for locale, (localization_id, ordered) in prepared_localizations.items():
-        current_phone = phone_placements(api, localization_id, phone_groups)
-        check_replaceable(current_phone, live_placements[locale])
-        for placement in current_phone:
-            if placement["attributes"]["placementGroup"] != group:
-                api.request("DELETE", f"/v1/appAssetLibraryPlacements/{placement['id']}")
-                receipt["cleared_placements"].append({"locale": locale, "placement_id": placement["id"],
-                                                       "group": placement["attributes"]["placementGroup"],
-                                                       "image_id": placement["image"]["id"]})
-        remaining = phone_placements(api, localization_id, phone_groups)
-        if any(placement["attributes"]["placementGroup"] != group for placement in remaining):
-            raise ValueError("Old iPhone screenshot groups still override the new scaled screenshots")
+        remaining = placements(api, localization_id, group)
         if not verify_placements(remaining, ordered, images[locale], spec_id):
             wait_for_placements(api, localization_id, group, ordered, images[locale], spec_id)
         receipt["verified_groups"][locale] = [group]

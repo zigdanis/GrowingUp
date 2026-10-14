@@ -1,0 +1,48 @@
+{
+  "verified_at_utc": "2026-10-13T22:46:01.259205+00:00",
+  "version": "2.1.0",
+  "state": "PREPARE_FOR_SUBMISSION",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "own_count": 0
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+      "own_count": 4
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "own_count": 0
+    }
+  ],
+  "mutations": 0
+}

@@ -1,0 +1,12 @@
+{
+  "native_file": "native.mp4",
+  "source_timeline": "timeline.json",
+  "segments": [
+    {
+      "start": 12.816094875335693,
+      "end": 37.81609487533569
+    }
+  ],
+  "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+  "duration": 25
+}

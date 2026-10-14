@@ -1,0 +1,434 @@
+{
+  "verified_at_utc": "2026-10-14T04:07:03.932112+00:00",
+  "app_id": "1461697772",
+  "version_id": "4dccceea-13f4-4f10-8153-d1106ec1731c",
+  "version": "2.1.0",
+  "state": "PREPARE_FOR_SUBMISSION",
+  "localizations": [
+    {
+      "locale": "en-US",
+      "id": "f355f4e7-17b7-4c36-b7c7-0fe4e462c54a",
+      "groups": [
+        {
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "device": "iPhone-17-Pro",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "53035ea49f2efb135ec0eaa2a9fad3d0ea4a7b902371064a9de7101df08aaae1",
+              "placement_id": "19000005-71fb-8cec-8f33-10d4eae16827",
+              "image_id": "fb800005-71fb-8cec-8007-3871422743c9",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "72d6b440f4d3a8d376e9bd257ca9bd1b928e812405a7d25a3f2e36c3c3c9460a",
+              "placement_id": "0b000005-71fb-8cec-8f22-e864ecb69c44",
+              "image_id": "a0c00005-71fb-8cec-803e-2132afddbd5d",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "add122ffa34a55023c7425ffc7b923b628aa65939a9d8326af2e6e91832a6469",
+              "placement_id": "8b800005-71fb-8cec-8f0d-7deaf968bcf5",
+              "image_id": "97400005-71fb-8cec-8009-ff4422cb1015",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "0aa9af6b8a9b447662ca1678e02970720d1a46b8b556b06b8d04cb1b276099fa",
+              "placement_id": "72400005-71fb-8cec-8f0c-97c243581b08",
+              "image_id": "35c00005-71fb-8cec-8024-f71effe125f4",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "device": "iPhone-17-Pro-Max",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "d1526f548e4f625bd08f403dbf0c6a1f798c62e5b803ecd574d36daaaa8c1ab4",
+              "placement_id": "ba800005-71fb-8cec-8f22-736265328cbd",
+              "image_id": "88000005-71fb-8cec-802f-bb047e9a6d6a",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "4def72029247ba026f1e995b54291e897c61b6f73d2730ab706d0793df49e684",
+              "placement_id": "49c00005-71fb-8cec-8f18-70950c70f7c7",
+              "image_id": "67800005-71fb-8cec-8019-6c330b80ec63",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "43016ff541375eb2389df18da768862ee67939bd98eb7b1199179f035dd4ad1f",
+              "placement_id": "bcc00005-71fb-8cec-8f0c-d585e8b8fdd5",
+              "image_id": "38c00005-71fb-8cec-8009-4eafd9fe3de4",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "3d67c3f4762dad8faa2ae5028794a9e96eed201700a3474f7f683936e6251c2e",
+              "placement_id": "60000005-71fb-8cec-8f2a-602f4e9731ac",
+              "image_id": "c0c00005-71fb-8cec-8002-93ad12ebda2b",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "device": "iPhone-14-Plus",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "e0c30c6bcabbb7fa1dc51bc3363a8a8043820e815850e1a74a831fed12893d55",
+              "placement_id": "dc000005-71fb-8cec-8f2b-4d18abbfd480",
+              "image_id": "4c400005-71fb-8cec-8036-18cd746ffcef",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "a2b806a637dadbe895d3c13373ea47d381b0c4856798eba2f9de220a43b65d84",
+              "placement_id": "6a800005-71fb-8cec-8f23-dcf30bc006a6",
+              "image_id": "b6800005-71fb-8cec-8024-03d1ff06d6bd",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "f8e4488ba6f75ebbfb610d6035596de733557aa33f2830985a5ed453ed1a0ddd",
+              "placement_id": "7f000005-71fb-8cec-8f23-bafd28d0fefc",
+              "image_id": "43400005-71fb-8cec-800d-56b133db3ea7",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "cf378cec76ae9485f7df1885ff7725865a36fe1a4a4bf899076e6b1ca17c9fd6",
+              "placement_id": "0d400005-71fb-8cec-8f0b-cd70a9435035",
+              "image_id": "70c00005-71fb-8cec-801b-e9e81924954a",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "device": "iPhone-SE-3rd-generation",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "27646cb8f178fdbd51cd070d10fb4267fab65828bcf94deff4be19beba7578c1",
+              "placement_id": "c6c00005-71fb-8cec-8f0d-f95be8d7f267",
+              "image_id": "fb000005-71fb-8cec-8021-5014712e8c49",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "07a7026b8040fcff452276c6f0915b8eac4013d9a4c71eef84144ee8166893ce",
+              "placement_id": "bc000005-71fb-8cec-8f24-926b1b244242",
+              "image_id": "68000005-71fb-8cec-801f-f10064cb0f85",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "73471ec19125ec6da8f0f2c550f4d1a179458601fb5116562ac0fa1f6b0dfcb5",
+              "placement_id": "a3000005-71fb-8cec-8f30-22264faa58b3",
+              "image_id": "97400005-71fb-8cec-803e-11556dd3056a",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "231bc349dba3d986126087a45ad27a79e2d78380fdac204d034d5ad4383ec866",
+              "placement_id": "cd800005-71fb-8cec-8f36-b6b7e9ab62fa",
+              "image_id": "64c00005-71fb-8cec-8010-620f5ea5e723",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "id": "39cc2a34-72b4-4cbc-a4b1-9fca0474f06b",
+      "groups": [
+        {
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "device": "iPhone-17-Pro",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "bf80e8837eaad541c6f7c7e66b66217ea56f490e83e12b81b540099aa4157756",
+              "placement_id": "2cc00005-71fb-8cec-8f2f-1852e535fdc2",
+              "image_id": "5cc00005-71fb-8cec-8011-81d1298d0310",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "f8c788d9c37e5d243fd0762e2a2644cbb991086a98356bd1ecfedb781c09f3e5",
+              "placement_id": "68000005-71fb-8cec-8f3d-620360780e97",
+              "image_id": "6f400005-71fb-8cec-803c-d3ca83c79dde",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "334503a79cf2d0f3ed51b2c3afabfcd369ed47df7f6b51468ecd4e27892b558c",
+              "placement_id": "ef000005-71fb-8cec-8f21-376257da15f2",
+              "image_id": "d4400005-71fb-8cec-8038-86aafbf9246d",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "ea7d55b7f7758e6adf75d6f56dfabff5ba685cb83e8fe492d521a85b72f08c86",
+              "placement_id": "d2c00005-71fb-8cec-8f33-64a5c3ba66d7",
+              "image_id": "36400005-71fb-8cec-802e-080b8e35d09d",
+              "state": "ACTIVE",
+              "native_size": [
+                1206,
+                2622
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "device": "iPhone-17-Pro-Max",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "3a9da7870a13dac13a88a444b8124b3ed356aa4e69a30aa8fdc25413cc499c94",
+              "placement_id": "5b800005-71fb-8cec-8f0e-0dc82765d9be",
+              "image_id": "a4800005-71fb-8cec-8007-9b8cce83e758",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "d2a11e0548776a6a5fe9410996848f45f6ebfdd9e491fff2bd88b6379c528351",
+              "placement_id": "d8800005-71fb-8cec-8f01-faea4fcce335",
+              "image_id": "df000005-71fb-8cec-803a-9becaf2b49b0",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "52cfae8b5dda9e9f636c9a7bb094e0d326acc4af88b795fdcc283300ea5e65f4",
+              "placement_id": "4c000005-71fb-8cec-8f28-cd5538d9b546",
+              "image_id": "a1800005-71fb-8cec-800b-7775677a8ca3",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "0fbcf6fc89b8213327bc59b87bb3cc6171777f93e2d1607f1e77665b5caf2ce1",
+              "placement_id": "83c00005-71fb-8cec-8f0a-4eb380a81dac",
+              "image_id": "fb800005-71fb-8cec-8007-0757863759ce",
+              "state": "ACTIVE",
+              "native_size": [
+                1320,
+                2868
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "device": "iPhone-14-Plus",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "3775a712d6af52ff85257fe4172ed7a1af93c43a2f0389e5f9d3968c3a6ffaf3",
+              "placement_id": "76000005-71fb-8cec-8f21-1fcbc08cd2ed",
+              "image_id": "b8400005-71fb-8cec-8019-f9d79989c6e8",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "ca5207d94c8ffd0ace8487d0ffa16d062d26013ca9e23045fb18c3bf7f58bf34",
+              "placement_id": "3b000005-71fb-8cec-8f19-e13a56491534",
+              "image_id": "1f000005-71fb-8cec-8017-27fc089c35bd",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "76d8050aa524877b227654740306171ff56c66c37fa26a1158bc761d34293b7b",
+              "placement_id": "97000005-71fb-8cec-8f3f-a4c3925d1011",
+              "image_id": "5ac00005-71fb-8cec-803e-6a77499b3fc5",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "d42faf633a7b310225b8da98ee37e3ba9adf7b2c0449ea490b2fdbfef8add817",
+              "placement_id": "94c00005-71fb-8cec-8f31-5fe4434f32df",
+              "image_id": "01000005-71fb-8cec-802d-2858f0733b63",
+              "state": "ACTIVE",
+              "native_size": [
+                1284,
+                2778
+              ]
+            }
+          ]
+        },
+        {
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "device": "iPhone-SE-3rd-generation",
+          "own_screenshot_count": 4,
+          "screenshots": [
+            {
+              "file": "01-mia.png",
+              "sha256": "89a550f4a77575fa5f88e0ac3e3aab20eebb76ca9c15e8670a448f640c903322",
+              "placement_id": "93800005-71fb-8cec-8f1c-e88e1563eeb2",
+              "image_id": "65c00005-71fb-8cec-8013-57e044b35762",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "02-leo-celebration.png",
+              "sha256": "7294d0e0dbf44d3e4a32f300f52e868d54934065a870f606c4ec36f7dd4bab92",
+              "placement_id": "30000005-71fb-8cec-8f13-c81f6090b20b",
+              "image_id": "f6000005-71fb-8cec-8036-453a7003cda3",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "03-mango-teddy.png",
+              "sha256": "619463ff45d4c96959eca70575f175176d035b01f988dd58ad154098512f2dab",
+              "placement_id": "20c00005-71fb-8cec-8f30-4c666e2c3a8e",
+              "image_id": "01400005-71fb-8cec-8012-e8f4dadb2f31",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            },
+            {
+              "file": "04-widgets.png",
+              "sha256": "8f694900aba14ab64fbd221f4940e7cb62a00b520fa7c22ed81c729ae77973ca",
+              "placement_id": "acc00005-71fb-8cec-8f08-3abe9205cc5e",
+              "image_id": "88800005-71fb-8cec-803d-96352f6fcdbe",
+              "state": "ACTIVE",
+              "native_size": [
+                750,
+                1334
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "inheritance_verification": {
+    "status": "not_confirmed",
+    "reason": "Official related-placements API lists explicit placements and has no inherited/scaled source field or query parameter. No browser verification after user prohibited Browser/Computer Use."
+  },
+  "preserved_previous_placements": 24
+}
