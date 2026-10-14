@@ -1,0 +1,778 @@
+{
+  "title": "Little Days",
+  "bpm": 110,
+  "duration": 25.0,
+  "sample_rate": 48000,
+  "notes": [
+    {
+      "midi": 60,
+      "start": 0,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 0.012,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 0.024,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 71,
+      "start": 0.036,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 36,
+      "start": 0,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 36,
+      "start": 1.0909,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 76,
+      "start": 0,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 0.4091,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 0.8182,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 1.3636,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 1.7727,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 57,
+      "start": 2.1818,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 2.1938,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 2.2058,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 2.2178,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 33,
+      "start": 2.1818,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 33,
+      "start": 3.2727,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 76,
+      "start": 2.1818,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 2.5909,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 71,
+      "start": 3.0,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 3.5455,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 3.9545,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 53,
+      "start": 4.3636,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 57,
+      "start": 4.3756,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 4.3876,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 4.3996,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 29,
+      "start": 4.3636,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 29,
+      "start": 5.4545,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 77,
+      "start": 4.3636,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 4.7727,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 5.1818,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 69,
+      "start": 5.7273,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 6.1364,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 55,
+      "start": 6.5455,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 6.5575,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 62,
+      "start": 6.5695,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 6.5815,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 31,
+      "start": 6.5455,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 31,
+      "start": 7.6364,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 74,
+      "start": 6.5455,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 6.9545,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 77,
+      "start": 7.3636,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 7.9091,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 71,
+      "start": 8.3182,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 60,
+      "start": 8.7273,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 8.7393,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 8.7513,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 72,
+      "start": 8.7633,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 36,
+      "start": 8.7273,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 36,
+      "start": 9.8182,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 79,
+      "start": 8.7273,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 9.1364,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 81,
+      "start": 9.5455,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 10.0909,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 10.5,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 57,
+      "start": 10.9091,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 10.9211,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 10.9331,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 71,
+      "start": 10.9451,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 33,
+      "start": 10.9091,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 33,
+      "start": 12.0,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 76,
+      "start": 10.9091,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 11.3182,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 11.7273,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 71,
+      "start": 12.2727,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 69,
+      "start": 12.6818,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 53,
+      "start": 13.0909,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 57,
+      "start": 13.1029,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 13.1149,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 13.1269,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 29,
+      "start": 13.0909,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 29,
+      "start": 14.1818,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 72,
+      "start": 13.0909,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 77,
+      "start": 13.5,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 13.9091,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 14.4545,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 14.8636,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 55,
+      "start": 15.2727,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 59,
+      "start": 15.2847,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 62,
+      "start": 15.2967,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 15.3087,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 31,
+      "start": 15.2727,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 31,
+      "start": 16.3636,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 71,
+      "start": 15.2727,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 15.6818,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 16.0909,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 77,
+      "start": 16.6364,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 17.0455,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 60,
+      "start": 17.4545,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 17.4665,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 17.4785,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 71,
+      "start": 17.4905,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 36,
+      "start": 17.4545,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 36,
+      "start": 18.5455,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 76,
+      "start": 17.4545,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 17.8636,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 84,
+      "start": 18.2727,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 81,
+      "start": 18.8182,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 19.2273,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 53,
+      "start": 19.6364,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 57,
+      "start": 19.6484,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 60,
+      "start": 19.6604,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 19.6724,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 29,
+      "start": 19.6364,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 29,
+      "start": 20.7273,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 77,
+      "start": 19.6364,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 76,
+      "start": 20.0455,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 20.4545,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 69,
+      "start": 21.0,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 72,
+      "start": 21.4091,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 55,
+      "start": 21.8182,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 59,
+      "start": 21.8302,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 62,
+      "start": 21.8422,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 21.8542,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 31,
+      "start": 21.8182,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 31,
+      "start": 22.9091,
+      "duration": 0.8,
+      "voice": "bass"
+    },
+    {
+      "midi": 74,
+      "start": 21.8182,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 71,
+      "start": 22.2273,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 67,
+      "start": 22.6364,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 71,
+      "start": 23.1818,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 74,
+      "start": 23.5909,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 60,
+      "start": 24.0,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 64,
+      "start": 24.012,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 67,
+      "start": 24.024,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 72,
+      "start": 24.036,
+      "duration": 1.9,
+      "voice": "chord"
+    },
+    {
+      "midi": 36,
+      "start": 24.0,
+      "duration": 1.0,
+      "voice": "bass"
+    },
+    {
+      "midi": 76,
+      "start": 24.0,
+      "duration": 1.1,
+      "voice": "marimba"
+    },
+    {
+      "midi": 79,
+      "start": 24.5455,
+      "duration": 1.1,
+      "voice": "marimba"
+    }
+  ],
+  "origin": "Original procedural composition created for Danis; all synthesis from mathematical oscillators and seeded noise. No third-party samples or melodies used.",
+  "marketing_rights": "Danis may use, edit and distribute this generated score in GrowingUp marketing worldwide."
+}

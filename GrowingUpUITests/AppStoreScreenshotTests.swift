@@ -30,6 +30,97 @@ final class AppStoreScreenshotTests: XCTestCase {
 		app.terminate()
 	}
 
+	/// Local, opt-in fixture preparation; it never touches the live App Group database.
+	func testPrepareAppPreview() throws {
+		try configurePreview(reset: true)
+		addPerson(index: 0, year: 2026, month: 7, day: 16)
+		addPerson(index: 1, year: 2023, month: 1, day: 16)
+		addPerson(index: 2, year: 2024, month: 10, day: 16)
+		addPerson(index: 3, year: 2026, month: 1, day: 15)
+		verifyPersistence()
+		selectPerson(0)
+		previewMark("fixture-persisted")
+	}
+
+	/// A real-time pass through production UI. Host simctl captures the native screen.
+	func testRecordAppPreview() throws {
+		try recordPreview(expectNoConfetti: false)
+	}
+
+	func testRecordAppPreviewWithoutConfetti() throws {
+		try recordPreview(expectNoConfetti: true)
+	}
+
+	private func recordPreview(expectNoConfetti: Bool) throws {
+		try configurePreview(reset: false)
+		XCTAssertEqual(app.staticTexts["person.name"].label, names[0])
+		previewMark("ready")
+		Thread.sleep(forTimeInterval: 5)
+		previewMark("mia-start")
+		Thread.sleep(forTimeInterval: 4)
+		previewMark("leo-swipe")
+		app.swipeLeft(velocity: .fast)
+		previewMark("leo-arrived")
+		if expectNoConfetti { XCTAssertFalse(confetti.exists, "Reduce Motion must suppress the real confetti before capture proceeds.") }
+		app.buttons["person.birthday"].tap()
+		previewMark("birthday-open")
+		if expectNoConfetti { XCTAssertFalse(confetti.exists) }
+		XCTAssertTrue(app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"].exists)
+		Thread.sleep(forTimeInterval: 4)
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7)).tap()
+		previewMark("mango-swipe")
+		app.swipeLeft(velocity: .fast)
+		previewMark("mango-arrived")
+		XCTAssertEqual(app.staticTexts["person.name"].label, names[2])
+		Thread.sleep(forTimeInterval: 3.45)
+		previewMark("teddy-swipe")
+		app.swipeLeft(velocity: .fast)
+		previewMark("teddy-arrived")
+		XCTAssertEqual(app.staticTexts["person.name"].label, names[3])
+		Thread.sleep(forTimeInterval: 3.45)
+		previewMark("return-mia")
+		for _ in 0..<3 { app.swipeRight(velocity: .fast) }
+		previewMark("mia-returned")
+		XCTAssertTrue(app.staticTexts.matching(identifier: "person.name").matching(NSPredicate(format: "label == %@", names[0])).firstMatch.exists)
+		overview.tap()
+		previewMark("editor-open")
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		// Make a genuine, keyboard-free change so the native save action is enabled.
+		app.switches["editor.pin"].coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		previewMark("editor-change")
+		app.buttons["editor.save"].tap()
+		previewMark("saved")
+		Thread.sleep(forTimeInterval: 1.5)
+		XCTAssertFalse(app.buttons["editor.save"].exists)
+		previewMark("end")
+		// Retain the prepared simulator in its main-card state for Danis.
+	}
+
+	private func configurePreview(reset: Bool) throws {
+		let env = ProcessInfo.processInfo.environment
+		try XCTSkipUnless(env["GROWINGUP_APP_STORE_CAPTURE"] == "1", "Opt-in local media capture")
+		continueAfterFailure = false
+		locale = try XCTUnwrap(env["GROWINGUP_APP_STORE_LOCALE"])
+		XCTAssertTrue(["en", "ru"].contains(locale))
+		let identifier = UUID(uuidString: locale == "ru" ? "D11D2026-1013-4000-8000-000000000002" : "D11D2026-1013-4000-8000-000000000001")!
+		configuration = UITestConfiguration(identifier: identifier, resetStore: reset, seed: .empty, failNextSave: false, appearance: .dark)
+		app.launchEnvironment = [
+			UITestConfiguration.environmentKey: configuration.encoded,
+			"GROWINGUP_APP_STORE_CAPTURE": "1", "GROWINGUP_APP_STORE_PHOTOS": try XCTUnwrap(env["GROWINGUP_APP_STORE_PHOTOS"]),
+			"GROWINGUP_BIRTHDAY_NOW": "2027-01-16T08:24:12Z", "GROWINGUP_BIRTHDAY_CLOCK_RUNNING": "1", "TZ": "UTC"
+		]
+		app.launchArguments = [
+			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
+			"-AppleInterfaceStyle", "Dark", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+		]
+		app.launch()
+		XCTAssertTrue((reset ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+	}
+
+	private func previewMark(_ scene: String) {
+		print("PREVIEW_MARK \(scene) \(Date().timeIntervalSince1970)")
+	}
+
 	private func launchCapture(photos: String) {
 		configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .empty, failNextSave: false, appearance: .dark)
 		app.launchEnvironment = [
