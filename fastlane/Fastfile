@@ -2,12 +2,23 @@ default_platform :ios
 require 'securerandom'
 require 'cfpropertylist'
 require 'pilot'
+require 'zip'
 require_relative 'testflight_release'
 
 platform :ios do
   desc 'Check Apple account, tester access and app/widget signing without uploading'
   lane :release_preflight do
     run_release(upload: false)
+  end
+
+  desc 'Read-only release numbering, Apple metadata and signing readiness'
+  lane :release_plan do
+    run_release(upload: false)
+  end
+
+  desc 'Reserve release numbers and create a verified archive and IPA without uploading'
+  lane :release_archive do
+    run_release(upload: false, archive_only: true)
   end
 
   desc 'Archive, upload or resume the exact recorded GrowingUp TestFlight release'
@@ -25,8 +36,11 @@ platform :ios do
     run_release(upload: true, notes_only: true)
   end
 
-  def run_release(upload:, status_only: false, notes_only: false)
-    UI.user_error!('Use the manually dispatched TestFlight workflow') unless ENV['GITHUB_ACTIONS'] == 'true'
+  def run_release(upload:, status_only: false, notes_only: false, archive_only: false)
+    local = ENV['RELEASE_EXECUTOR'] == 'local'
+    unless local || (ENV['GITHUB_ACTIONS'] == 'true' && [nil, '', 'cloud'].include?(ENV['RELEASE_EXECUTOR']))
+      UI.user_error!('Use scripts/testflight.py with an explicit local or cloud executor')
+    end
     source = ENV.fetch('RELEASE_SOURCE_DIR')
     project = File.join(source, 'GrowingUp.xcodeproj')
     ['GrowingUp/Supporting Files/Info.plist', 'Widget/Info.plist'].each do |path|
@@ -47,29 +61,28 @@ platform :ios do
       # Clear even when token creation fails, before Fastlane prints lane context.
       lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
     end
-    if upload && !status_only && (notes_only || ENV['RESUME_RUN_ID'].to_s.empty?)
+    if (upload || archive_only) && !status_only && (notes_only || ENV['RESUME_RUN_ID'].to_s.empty?)
       validate_release_notes(release.requested_notes)
     end
-    release.preflight!(configure: !status_only && !notes_only)
-    release.prepare! if upload
+    # Planning and archive-only runs never modify tester membership or Apple metadata.
+    release.preflight!(configure: upload && !status_only && !notes_only)
+    if upload || archive_only
+      release.prepare!
+    else
+      release.plan!
+    end
     return release.status! if status_only
     return release.update_notes! if notes_only
-    validate_release_notes(release.record.fetch('notes')) if upload
-    if !upload || release.upload_needed?
-      keychain = File.join(ENV.fetch('RELEASE_TEMP'), 'signing.keychain')
-      keychain_password = SecureRandom.hex(32)
-      begin
-        create_keychain(path: keychain, password: keychain_password, default_keychain: false, unlock: true, timeout: 3600)
-        match(type: 'appstore', readonly: false, api_key: api_key,
-              app_identifier: [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID],
-              team_id: ENV.fetch('APPLE_TEAM_ID'), keychain_name: keychain, keychain_password: keychain_password,
-              generate_apple_certs: true, renew_expired_certs: true,
-              git_private_key: ENV.fetch('MATCH_GIT_PRIVATE_KEY_PATH'),
-              git_full_name: 'GrowingUp Release', git_user_email: 'release@users.noreply.github.com')
-        if upload
+    validate_release_notes(release.record.fetch('notes')) if upload || archive_only
+    ipa = release.reusable_ipa if upload || archive_only
+    needs_archive = (upload || archive_only) && release.upload_needed? && !ipa
+    if (!upload && !archive_only) || needs_archive
+      with_release_signing(api_key, local: local, readonly: local || !upload) do
+        if upload || archive_only
           configure_release_signing(project, lane_context.fetch(SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING))
           directory = ENV.fetch('RELEASE_TEMP')
           archive = File.join(directory, 'GrowingUp.xcarchive')
+          ipa = File.join(directory, 'GrowingUp.ipa')
           gym(project: project, scheme: 'GrowingUp', configuration: 'Release',
               export_method: 'app-store', output_directory: directory, output_name: 'GrowingUp.ipa',
               archive_path: archive, derived_data_path: File.join(directory, 'DerivedData'),
@@ -78,17 +91,29 @@ platform :ios do
               export_options: { signingStyle: 'manual', teamID: ENV.fetch('APPLE_TEAM_ID'),
                                 provisioningProfiles: lane_context[SharedValues::MATCH_PROVISIONING_PROFILE_MAPPING] })
           verify_release_archive(archive, release.record)
-          release.begin_upload!
-          pilot(api_key: api_key, app_identifier: TestflightRelease::APP_ID, apple_id: release.app['id'],
-                ipa: File.join(directory, 'GrowingUp.ipa'), skip_submission: true, skip_waiting_for_build_processing: true)
-          release.uploaded!
+          verify_release_signature(File.join(archive, 'Products/Applications/GrowingUp.app'))
+          verify_release_ipa(ipa, release.record)
+          release.archived!(archive, ipa)
         end
-      ensure
-        actual_keychain = File.exist?("#{keychain}-db") ? "#{keychain}-db" : keychain
-        delete_keychain(keychain_path: actual_keychain) if File.exist?(actual_keychain)
       end
     end
+    if archive_only
+      UI.user_error!('This release has already attempted an upload; inspect its status instead') unless release.record['phase'] == 'archived'
+      UI.success("Archived #{release.record['version']} (#{release.record['build_number']}); no upload was performed. Resume release #{release.record['release_id']} to upload.")
+      return
+    end
     if upload
+      if release.upload_needed?
+        UI.user_error!('No verified IPA available for the reserved release') unless ipa
+        # Recheck the hash and contents immediately before committing upload intent.
+        release.reusable_ipa
+        verify_release_ipa(ipa, release.record)
+        if release.begin_upload!(ipa: ipa)
+          pilot(api_key: api_key, app_identifier: TestflightRelease::APP_ID, apple_id: release.app['id'],
+                ipa: ipa, skip_submission: true, skip_waiting_for_build_processing: true)
+          release.uploaded!
+        end
+      end
       release.wait_for_processing!
       pilot(**release.pilot_options, api_key: api_key)
       release.verify_notes!
@@ -96,7 +121,57 @@ platform :ios do
       UI.success("TestFlight #{release.record['version']} (#{release.record['build_number']}): #{release.record['phase']}. Await Danis's device confirmation.")
     end
   ensure
+    lane_context.delete(SharedValues::APP_STORE_CONNECT_API_KEY)
     release&.write_report
+  end
+
+  def with_release_signing(api_key, local:, readonly:)
+    options = { type: 'appstore', readonly: readonly, api_key: api_key,
+                app_identifier: [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID],
+                team_id: ENV.fetch('APPLE_TEAM_ID'),
+                generate_apple_certs: !readonly, renew_expired_certs: !readonly,
+                git_full_name: 'GrowingUp Release', git_user_email: 'release@users.noreply.github.com' }
+    private_key = ENV['MATCH_GIT_PRIVATE_KEY_PATH'].to_s
+    options[:git_private_key] = private_key unless private_key.empty?
+    if local
+      output, _error, status = Open3.capture3('security', 'find-identity', '-v', '-p', 'codesigning')
+      unless status.success? && output.match?(/"(?:Apple|iPhone) Distribution:/)
+        UI.user_error!('No usable Apple Distribution identity in the local keychain. Install the existing release identity before deploying; no certificate will be created.')
+      end
+      match(**options, keychain_name: 'login.keychain', skip_set_partition_list: true)
+      yield
+    else
+      keychain = File.join(ENV.fetch('RELEASE_TEMP'), 'signing.keychain')
+      password = SecureRandom.hex(32)
+      begin
+        create_keychain(path: keychain, password: password, default_keychain: false, unlock: true, timeout: 3600)
+        match(**options, keychain_name: keychain, keychain_password: password)
+        yield
+      ensure
+        actual = File.exist?("#{keychain}-db") ? "#{keychain}-db" : keychain
+        delete_keychain(keychain_path: actual) if File.exist?(actual)
+      end
+    end
+  end
+
+  def verify_release_signature(app)
+    _output, _error, status = Open3.capture3('codesign', '--verify', '--deep', '--strict', app)
+    UI.user_error!('Archive code signature verification failed; inspect local signing identities and profiles') unless status.success?
+  end
+
+  def verify_release_ipa(ipa, record)
+    Zip::File.open(ipa) do |zip|
+      paths = zip.entries.select { |entry| entry.name.match?(%r{\APayload/[^/]+\.app/(?:PlugIns/[^/]+\.appex/)?Info\.plist\z}) }
+      UI.user_error!('IPA must contain GrowingUp and its widget') unless paths.length == 2
+      ids = [TestflightRelease::APP_ID, TestflightRelease::WIDGET_ID]
+      paths.each do |entry|
+        info = CFPropertyList.native_types(CFPropertyList::List.new(data: entry.get_input_stream.read).value)
+        UI.user_error!('Unexpected exported IPA bundle identifier') unless ids.delete(info['CFBundleIdentifier'])
+        unless info['CFBundleShortVersionString'] == record.fetch('version') && info['CFBundleVersion'] == record.fetch('build_number')
+          UI.user_error!('Exported IPA app/widget version or build number differs from release receipt')
+        end
+      end
+    end
   end
 
   def validate_release_notes(notes)

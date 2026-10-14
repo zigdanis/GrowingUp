@@ -73,6 +73,45 @@ no Carthage or CocoaPods step is required:
   SwiftLint, and builds + tests on an iOS Simulator on every pull request and
   on pushes to `master`.
 
+## TestFlight deployment
+
+One-time Mac setup (an existing App Store Connect API key JSON, kept outside Git):
+
+```sh
+scripts/testflight setup local --api-key /path/to/asc_api_key.json
+```
+
+Generate English/Russian notes with your signed-in local Codex CLI and review the
+printed text. No filename is needed:
+
+```sh
+scripts/testflight notes
+```
+
+Then choose **one** deployment location:
+
+```sh
+scripts/testflight deploy local --version 2.2.0  # build and upload on your Mac
+# or
+scripts/testflight deploy cloud --version 2.2.0  # build and upload in GitHub Actions
+```
+
+Both paths select the next free build number, apply matching app/widget versions,
+sign, upload, publish EN/RU notes and distribute to the tester group. Omit `--version`
+to choose the next patch above the recorded Apple/beta versions. New explicit
+versions must exceed the approved App Store version. Notes are regenerated if the
+source changes. Credentials stay in the Mac Keychain/private API key file locally,
+or the existing protected GitHub `testflight` environment in the cloud.
+
+`scripts/testflight check local` (or `cloud`) checks without uploading;
+`archive local` (or `cloud`) creates an archive without uploading.
+Use `status local` / `status cloud` to check the latest release and `resume local` /
+`resume cloud` to continue it after an interruption, preserving its version/build.
+An optional release ID selects an older release. Apple beta review may still be
+required before the build appears on a tester's device.
+
+See [release setup](fastlane/README.md) for prerequisites and compatibility commands.
+
 ## Authors
 
 - **Danis Ziganshin** — _Initial work_ — [zigdanis](https://github.com/zigdanis)

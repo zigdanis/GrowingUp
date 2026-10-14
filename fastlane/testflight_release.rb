@@ -3,12 +3,23 @@ require 'net/http'
 require 'open3'
 require 'uri'
 require 'rubygems/version'
+require 'securerandom'
+require 'digest'
+require 'time'
 
 # A private draft release stores each receipt in one durable API mutation.
 class TestflightRelease
   APP_ID = 'pro.ziganshin.GrowingUp'
   WIDGET_ID = "#{APP_ID}.Widget"
   PREFIX = 'testflight/receipts/'
+  ALLOCATION_REF = 'tags/testflight/allocation-lock'
+  class GithubError < StandardError
+    attr_reader :status
+    def initialize(message, status = nil)
+      super(message)
+      @status = status
+    end
+  end
   attr_reader :record, :group, :app, :inventory
 
   def initialize(env = ENV)
@@ -16,11 +27,13 @@ class TestflightRelease
     @repo = env.fetch('GITHUB_REPOSITORY')
     @release_id = env['RESUME_RUN_ID'].to_s.empty? ? env.fetch('GITHUB_RUN_ID') : env['RESUME_RUN_ID']
     raise 'Invalid release run ID' unless @release_id.match?(/\A\d+\z/)
-    @record = { 'workflow_url' => "https://github.com/#{@repo}/actions/runs/#{env.fetch('GITHUB_RUN_ID')}" }
+    @record = { 'workflow_url' => env['RELEASE_URL'] || "https://github.com/#{@repo}/actions/runs/#{env.fetch('GITHUB_RUN_ID')}",
+                'executor' => env['RELEASE_EXECUTOR'] == 'local' ? 'local' : 'cloud' }
   end
 
   def self.next_version(versions)
     latest = versions.map { |v| Gem::Version.new(v) }.max
+    latest ||= Gem::Version.new('0.0.0')
     parts = latest.segments.values_at(0, 1, 2).map { |p| p || 0 }
     parts[2] += 1
     parts.join('.')
@@ -36,10 +49,12 @@ class TestflightRelease
     command += ['--input', '-'] if data
     command += ['--paginate', '--slurp'] if paginate
     (method == 'GET' ? 3 : 1).times do
-      output, _error, status = Open3.capture3(*command, stdin_data: data ? JSON.generate(data) : '')
+      output, error, status = Open3.capture3(*command, stdin_data: data ? JSON.generate(data) : '')
       return output.empty? ? nil : JSON.parse(output) if status.success?
+      @github_status = error.to_s[/HTTP (\d{3})/, 1]&.to_i
+      break if @github_status && @github_status < 500
     end
-    raise "GitHub #{method} #{path} failed; inspect authentication/network and retry the same release"
+    raise GithubError.new("GitHub #{method} #{path} failed; inspect authentication/network and retry the same release", @github_status)
   end
 
   def asc(path, params = {})
@@ -110,11 +125,14 @@ class TestflightRelease
     @uploads, = asc("/v1/apps/#{app['id']}/buildUploads", 'limit' => 200)
     trains, = asc('/v1/preReleaseVersions', 'filter[app]' => app['id'], 'limit' => 200)
     store_versions, = asc("/v1/apps/#{app['id']}/appStoreVersions", 'filter[platform]' => 'IOS', 'limit' => 200)
+    blocking_states = %w[APPROVED PENDING_DEVELOPER_RELEASE READY_FOR_DISTRIBUTION READY_FOR_SALE PROCESSING_FOR_DISTRIBUTION]
+    @store_floor_versions = store_versions.select { |v| blocking_states.include?(v.dig('attributes', 'appStoreState')) }.map { |v| v.dig('attributes', 'versionString') }.compact
     @versions = (trains + store_versions).map { |v| v.dig('attributes', v['type'] == 'appStoreVersions' ? 'versionString' : 'version') }
     @versions += @uploads.map { |u| u.dig('attributes', 'cfBundleShortVersionString') }
     @versions << @env.fetch('PROJECT_VERSION')
     @versions = @versions.compact
     inventory['next_version'] = self.class.next_version(@versions)
+    inventory['tester_in_group'] = members.any? { |t| t['id'] == @tester_id }
     inventory['selected_group_id'] = group['id']
     inventory['selected_tester_id'] = @tester_id
     write_report
@@ -172,7 +190,64 @@ class TestflightRelease
     end
   end
 
+  # GitHub's create-ref operation is atomic across local Macs and Actions runners.
+  # Never steal an old lock: a paused holder could still reserve a number later.
+  def with_allocation_lock
+    owner = SecureRandom.hex(16)
+    metadata = { release_id: @release_id, executor: record['executor'], owner: owner, created_at: Time.now.utc.iso8601 }
+    tag = github('git/tags', method: 'POST', data: {
+      tag: "testflight-allocation-#{owner}", message: JSON.generate(metadata),
+      object: @env.fetch('SOURCE_SHA'), type: 'commit'
+    })
+    token = tag.fetch('sha')
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + 45
+    acquired = false
+    begin
+      loop do
+        begin
+          github('git/refs', method: 'POST', data: { ref: "refs/#{ALLOCATION_REF}", sha: token })
+          acquired = true
+          break
+        rescue GithubError => error
+          # Recover an accepted create whose response was lost, using this unique tag.
+          held = begin
+            github("git/ref/#{ALLOCATION_REF}")
+          rescue GithubError
+            raise error
+          end
+          if held.dig('object', 'sha') == token
+            acquired = true
+            break
+          end
+          raise error unless error.status == 422
+          if Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+            raise "Release allocation is locked. Inspect gh api repos/#{@repo}/git/ref/#{ALLOCATION_REF}, then its tag metadata. Once its release process has stopped, recover with gh api --method DELETE repos/#{@repo}/git/refs/#{ALLOCATION_REF}; retry the same release ID."
+          end
+          sleep 3
+        end
+      end
+      yield
+    ensure
+      if acquired
+        held = github("git/ref/#{ALLOCATION_REF}")
+        raise 'Allocation lock ownership changed; refusing to delete another release lock' unless held.dig('object', 'sha') == token
+        github("git/refs/#{ALLOCATION_REF}", method: 'DELETE')
+      end
+    end
+  end
+
   def prepare!
+    with_allocation_lock { select_release!(reserve: true) }
+  end
+
+  def plan!
+    select_release!(reserve: false)
+    inventory['next_version'] = record.fetch('version')
+    inventory['next_build'] = record.fetch('build_number')
+    write_report
+  end
+
+  def select_release!(reserve:)
     previous = records
     existing = previous.find { |r| r['release_id'] == @release_id }
     if existing
@@ -189,17 +264,26 @@ class TestflightRelease
     versions = @versions + previous.map { |r| r.fetch('version') }
     version = requested == 'next' ? self.class.next_version(versions) : requested
     raise 'Marketing version must be numeric (one to three components)' unless version.match?(/\A\d+(?:\.\d+){0,2}\z/)
-    raise 'Each new deployment must advance the marketing version' unless Gem::Version.new(version) > versions.map { |v| Gem::Version.new(v) }.max
-    pending = previous.find { |r| r['source_sha'] == @env['SOURCE_SHA'] && !%w[available processing_failed distribution_failed].include?(r['phase']) }
-    raise "This source already has a pending release; resume run #{pending['release_id']}" if pending
-    notes = requested_notes
+    floor = Array(@store_floor_versions).map { |v| Gem::Version.new(v) }.max
+    raise 'Marketing version must be newer than the approved or released App Store version' if floor && Gem::Version.new(version) <= floor
+    pending = previous.find do |receipt|
+      next false unless receipt['source_sha'] == @env['SOURCE_SHA']
+      next false if %w[available processing_failed distribution_failed].include?(receipt['phase'])
+      # A deliberate release on another marketing train is a distinct binary.
+      # It is safe only after Apple has processed the earlier upload completely.
+      !(requested != 'next' && receipt['version'] != version && receipt['processing_status'] == 'VALID')
+    end
+    if reserve && pending
+      raise "This source already has a pending release; resume run #{pending['release_id']}"
+    end
+    notes = reserve ? requested_notes : {}
     numbers = @builds.map { |b| b.dig('attributes', 'version') } + @uploads.map { |u| u.dig('attributes', 'cfBundleVersion') }
     numbers += previous.map { |r| r.fetch('build_number') } + [@env.fetch('PROJECT_BUILD')]
     @record.merge!('release_id' => @release_id, 'source_sha' => @env.fetch('SOURCE_SHA'),
                    'version' => version, 'build_number' => self.class.next_build(numbers.compact).to_s,
                    'app_id' => app['id'], 'group_id' => group['id'], 'tester_id' => @tester_id,
-                   'notes' => notes, 'phase' => 'reserved')
-    save!
+                   'notes' => notes, 'phase' => reserve ? 'reserved' : 'planned')
+    reserve ? save! : write_report
   end
 
   def save!
@@ -228,13 +312,53 @@ class TestflightRelease
     return false if exact_build
     # An upload intent is committed BEFORE invoking Transporter. Uncertain results
     # are polled, never blindly uploaded again, even after cancellation.
-    record.fetch('phase') == 'reserved'
+    %w[reserved archived].include?(record.fetch('phase'))
   end
 
-  def begin_upload!
-    raise 'This release already attempted an upload' unless record.fetch('phase') == 'reserved'
-    record['phase'] = 'uploading'
-    save!
+  def refresh_record!
+    current = records.find { |receipt| receipt['release_id'] == @release_id }
+    raise 'The reserved release receipt disappeared; refusing to upload' unless current
+    identity = %w[release_id source_sha version build_number app_id group_id tester_id]
+    raise 'Reserved release identity changed; refusing to upload' unless identity.all? { |key| current[key] == record[key] }
+    @record = current.merge('workflow_url' => record['workflow_url'])
+  end
+
+  def begin_upload!(ipa: nil)
+    with_allocation_lock do
+      # Every executor must reread the durable phase while holding the same lock.
+      # Once one runner claims uploading, no concurrent/resumed runner can claim it.
+      refresh_record!
+      next false unless %w[reserved archived].include?(record.fetch('phase'))
+      next false if exact_build
+      if ipa && Digest::SHA256.file(ipa).hexdigest != record.dig('artifacts', 'ipa_sha256')
+        raise 'Another executor recorded different release artifacts; resume using its verified IPA'
+      end
+      record['phase'] = 'uploading'
+      save!
+      true
+    end
+  end
+
+  def archived!(archive, ipa)
+    with_allocation_lock do
+      refresh_record!
+      # A late archive must never overwrite another runner's upload claim.
+      next false unless %w[reserved archived].include?(record.fetch('phase'))
+      record.merge!('phase' => 'archived', 'artifacts' => {
+        'archive' => File.expand_path(archive), 'ipa' => File.expand_path(ipa),
+        'ipa_sha256' => Digest::SHA256.file(ipa).hexdigest
+      })
+      save!
+      true
+    end
+  end
+
+  def reusable_ipa
+    return unless record['phase'] == 'archived'
+    path = record.dig('artifacts', 'ipa')
+    return unless path && File.file?(path)
+    raise 'Saved release IPA changed; refusing to upload it' unless Digest::SHA256.file(path).hexdigest == record.dig('artifacts', 'ipa_sha256')
+    path
   end
 
   def uploaded!
@@ -354,13 +478,16 @@ class TestflightRelease
   end
 
   def status!
-    build = exact_build
-    record['processing_status'] = build ? build.dig('attributes', 'processingState') : 'NOT_VISIBLE'
-    if record['processing_status'] == 'VALID'
-      verify_distribution!
-      verify_notes!(build)
-    else
-      save!
+    with_allocation_lock do
+      refresh_record!
+      build = exact_build
+      record['processing_status'] = build ? build.dig('attributes', 'processingState') : 'NOT_VISIBLE'
+      if record['processing_status'] == 'VALID'
+        verify_distribution!
+        verify_notes!(build)
+      else
+        save!
+      end
     end
   end
 

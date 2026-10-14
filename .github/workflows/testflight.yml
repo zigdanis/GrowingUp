@@ -6,7 +6,7 @@ on:
     inputs:
       operation:
         type: choice
-        options: [preflight, deploy, resume, status, notes]
+        options: [preflight, plan, archive, deploy, resume, status, notes]
         default: preflight
         required: true
       source_sha:
@@ -14,7 +14,7 @@ on:
         type: string
         required: true
       marketing_version:
-        description: next, or a version greater than every existing Apple version
+        description: next, or a version newer than the approved App Store version
         type: string
         default: next
       notes_en:
@@ -78,13 +78,13 @@ jobs:
           [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'source_sha must be a full commit SHA'; exit 1; }
           git merge-base --is-ancestor "$SOURCE_SHA" origin/master
           case "$OPERATION" in
-            deploy)
+            deploy|archive)
               test -z "$RESUME_RUN_ID"
               CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SOURCE_SHA" --limit 1 --json status,conclusion)
               jq -e '.[0].status == "completed" and .[0].conclusion == "success"' <<< "$CI" >/dev/null
               ;;
             resume|status|notes) [[ "$RESUME_RUN_ID" =~ ^[0-9]+$ ]] ;;
-            preflight) test -z "$RESUME_RUN_ID" ;;
+            preflight|plan) test -z "$RESUME_RUN_ID" ;;
             *) exit 1 ;;
           esac
           DIRECTORY=$(mktemp -d "$RUNNER_TEMP/growingup-release.XXXXXX")
@@ -129,10 +129,22 @@ jobs:
         run: |
           case "$OPERATION" in
             preflight) bundle exec fastlane ios release_preflight ;;
+            plan) bundle exec fastlane ios release_plan ;;
+            archive) bundle exec fastlane ios release_archive ;;
             status) bundle exec fastlane ios release_status ;;
             notes) bundle exec fastlane ios release_notes ;;
             deploy|resume) bundle exec fastlane ios app_store ;;
           esac
+      - name: Keep archive-only output
+        if: success() && inputs.operation == 'archive'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: testflight-archive-${{ github.run_id }}
+          path: |
+            ${{ env.RELEASE_TEMP }}/GrowingUp.ipa
+            ${{ env.RELEASE_TEMP }}/GrowingUp.xcarchive
+          if-no-files-found: error
+          retention-days: 14
       - name: Keep nonsecret release receipt
         if: always() && env.RELEASE_TEMP != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
