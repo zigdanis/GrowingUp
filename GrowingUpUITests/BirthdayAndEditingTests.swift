@@ -55,7 +55,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		// Dismiss the popover without entering editing, then inspect the full-screen burst.
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7)).tap()
 		XCTAssertTrue(app.staticTexts["Happy birthday!"].waitForNonExistence(timeout: 5))
-		checkpoint("birthday-midnight-confetti")
+		checkpoint("birthday-midnight-confetti-poppers")
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
 		app.swipeLeft()
 		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Boris"), timeout: 5))
@@ -64,8 +64,20 @@ final class BirthdayAndEditingTests: XCTestCase {
 		// Capture the short-lived burst before name queries spend its animation window.
 		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
 		XCTAssertEqual(confetti.value as? String, "2")
-		checkpoint("birthday-return-confetti")
+		// Let the falling confetti reach the middle of the screen before capturing it.
+		Thread.sleep(forTimeInterval: 1.2)
+		checkpoint("birthday-return-confetti-rain")
 		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Alice"), timeout: 5))
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
+		// Each later arrival continues the rotation of celebration styles.
+		app.swipeLeft()
+		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Boris"), timeout: 5))
+		app.swipeRight()
+		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
+		XCTAssertEqual(confetti.value as? String, "3")
+		Thread.sleep(forTimeInterval: 1.2)
+		checkpoint("birthday-return-confetti-fireworks")
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
 		XCTAssertFalse(app.buttons["editor.save"].exists)
 	}
 

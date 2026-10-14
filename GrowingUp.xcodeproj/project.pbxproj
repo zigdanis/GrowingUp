@@ -146,6 +146,7 @@
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
 		C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018955E31694F6F80D6537D /* GrowingUpWidget.swift */; };
 		C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */; };
+		C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */; };
 		C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292F8584945007D5945FF00 /* CameraPreview.swift */; };
 		C87931BC22CD54809B6D8A06 /* PeopleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */; };
 		CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */; };
@@ -165,6 +166,9 @@
 		BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303536429A34F2CB9827E7E /* BirthdayStatus.swift */; };
 		A4D69EDE58CD4F5AA4E0B6DC /* BirthdayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7E048F32F84582898290EC /* BirthdayInfoView.swift */; };
 		57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */; };
+		CB07E3253CC36578C3CF0EE6 /* ConfettiParticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */; };
+		65AD4915122A447E3A29BC1C /* ConfettiShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */; };
+		4782A8FF628A8B4685985602 /* ConfettiStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0027149D1CE1FB53B93D15 /* ConfettiStyle.swift */; };
 		3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D17FB22584FC46369370216E /* BirthdayStatusTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
 /* End PBXBuildFile section */
@@ -344,6 +348,7 @@
 		8D9A7D536DAF10611A2F97FA /* PermissionExplainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionExplainerConfig.swift; sourceTree = "<group>"; };
 		8E88731C743E444D0561E0DE /* ValueWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueWrapper.swift; sourceTree = "<group>"; };
 		92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftUIPresenterTests.swift; sourceTree = "<group>"; };
+		DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiStyleTests.swift; sourceTree = "<group>"; };
 		96254A372E8172B6422F0CB4 /* LimitedLibraryPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedLibraryPickerPresenter.swift; sourceTree = "<group>"; };
 		97ABEB737086B8C5A490A11D /* JourneyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JourneyTests.swift; sourceTree = "<group>"; };
 		99060B5830237EC7DDBDA31E /* CameraSessionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionController.swift; sourceTree = "<group>"; };
@@ -387,6 +392,9 @@
 		1303536429A34F2CB9827E7E /* BirthdayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatus.swift; sourceTree = "<group>"; };
 		2C7E048F32F84582898290EC /* BirthdayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayInfoView.swift; sourceTree = "<group>"; };
 		7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayConfettiView.swift; sourceTree = "<group>"; };
+		D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiParticle.swift; sourceTree = "<group>"; };
+		8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiShape.swift; sourceTree = "<group>"; };
+		2D0027149D1CE1FB53B93D15 /* ConfettiStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiStyle.swift; sourceTree = "<group>"; };
 		D17FB22584FC46369370216E /* BirthdayStatusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatusTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -722,6 +730,7 @@
 			isa = PBXGroup;
 			children = (
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
+				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 			);
 			path = Presenters;
@@ -824,6 +833,9 @@
 				B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */,
 				433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */,
 				7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */,
+				D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */,
+				8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */,
+				2D0027149D1CE1FB53B93D15 /* ConfettiStyle.swift */,
 				2C7E048F32F84582898290EC /* BirthdayInfoView.swift */,
 				4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */,
 				E848E5E4B3C416E656E4810F /* OverviewPresenter.swift */,
@@ -1254,6 +1266,7 @@
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
+				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1292,6 +1305,9 @@
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
 				57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */,
+				CB07E3253CC36578C3CF0EE6 /* ConfettiParticle.swift in Sources */,
+				65AD4915122A447E3A29BC1C /* ConfettiShape.swift in Sources */,
+				4782A8FF628A8B4685985602 /* ConfettiStyle.swift in Sources */,
 				A4D69EDE58CD4F5AA4E0B6DC /* BirthdayInfoView.swift in Sources */,
 				24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */,
 				5BCFB8E0FDB9C17A4E153C3B /* EmptyPersonScene.swift in Sources */,

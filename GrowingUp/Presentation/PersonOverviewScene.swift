@@ -77,7 +77,7 @@ struct PersonOverviewScene: View {
 					}
 			}
 			if let burstStarted, isSelected, !reduceMotion {
-				BirthdayConfettiView(started: burstStarted)
+				BirthdayConfettiView(started: burstStarted, celebration: presenter.celebrationID)
 					.accessibilityElement(children: .ignore)
 					.accessibilityLabel(Text("Happy birthday!"))
 					.accessibilityIdentifier("person.confetti")
@@ -91,7 +91,7 @@ struct PersonOverviewScene: View {
 		}
 		.task(id: burstStarted) {
 			guard burstStarted != nil else { return }
-			do { try await Task.sleep(for: .seconds(3.5)) } catch { return }
+			do { try await Task.sleep(for: .seconds(ConfettiStyle.duration)) } catch { return }
 			burstStarted = nil
 		}
 		.task(id: person.appPicId) { await presenter.load(person: person) }
