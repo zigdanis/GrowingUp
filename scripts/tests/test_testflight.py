@@ -98,6 +98,7 @@ class TestflightNotesTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             notes = Path(directory) / 'testflight-next.json'
             notes.write_text(json.dumps(notes_text, ensure_ascii=False), encoding='utf-8')
+            notes.with_suffix('.source.json').write_text(json.dumps({'source_sha': 'b' * 40}))
             with (patch.object(sys, 'argv', ['testflight.py', 'deploy', 'next', 'master', str(notes)]),
                   patch.object(testflight, 'DEFAULT_NOTES', notes),
                   patch.object(testflight, 'readiness'),
@@ -112,6 +113,36 @@ class TestflightNotesTest(unittest.TestCase):
         self.assertEqual('b' * 40, payload['inputs']['source_sha'])
         self.assertEqual(notes_text['en'], payload['inputs']['notes_en'])
         self.assertEqual(notes_text['ru'], payload['inputs']['notes_ru'])
+
+    def test_legacy_default_notes_are_refreshed_before_dispatching_another_source(self):
+        for metadata in (None, {'source_sha': 'a' * 40}):
+            calls = []
+
+            def gh(*args, data=None):
+                calls.append((args, data))
+                if args[0] == 'run':
+                    return '[{"status":"completed","conclusion":"success"}]' if '--commit' in args else '[]'
+                return '{"html_url":"https://example.test/run/123","workflow_run_id":123}'
+
+            with self.subTest(metadata=metadata), tempfile.TemporaryDirectory() as directory:
+                notes = Path(directory) / 'notes.json'
+                notes.write_text('{"en":"Old English","ru":"Старый текст"}')
+                if metadata:
+                    notes.with_suffix('.source.json').write_text(json.dumps(metadata))
+
+                def generate(source):
+                    self.assertEqual('b' * 40, source)
+                    notes.write_text('{"en":"New English","ru":"Новый текст"}')
+
+                with (patch.object(sys, 'argv', ['testflight.py', 'deploy', 'next']),
+                      patch.object(testflight, 'DEFAULT_NOTES', notes), patch.object(testflight, 'readiness'),
+                      patch.object(testflight, 'api', return_value={'sha': 'b' * 40}),
+                      patch.object(testflight, 'prepare_notes', side_effect=generate) as generated,
+                      patch.object(testflight, 'gh', side_effect=gh), contextlib.redirect_stdout(io.StringIO())):
+                    testflight.main()
+                generated.assert_called_once_with('b' * 40)
+                self.assertEqual('New English', calls[-1][1]['inputs']['notes_en'])
+                self.assertEqual('Новый текст', calls[-1][1]['inputs']['notes_ru'])
 
     def test_notes_dispatch_uses_original_receipt_identity_and_both_locales(self):
         recorded = {'source_sha': 'a' * 40, 'version': '2.1.4', 'build_number': '26', 'phase': 'available'}

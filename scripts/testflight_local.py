@@ -69,11 +69,34 @@ def last_local_id():
     return json.loads(path.read_text())['release_id']
 
 
-def save_latest(release_id):
+def save_latest(release_id, attempt_id):
     STATE.mkdir(parents=True, exist_ok=True, mode=0o700)
     path = STATE / 'latest.json'
-    path.write_text(json.dumps({'release_id': release_id}) + '\n')
-    path.chmod(0o600)
+    # Serialize pointer updates across different releases and replace atomically so
+    # status/resume never sees half-written JSON or an older concurrent attempt.
+    with (STATE / '.latest.lock').open('a+') as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        current = json.loads(path.read_text()) if path.exists() else {}
+        if int(current.get('attempt_id', current.get('release_id', '0'))) > int(attempt_id):
+            return
+        with tempfile.NamedTemporaryFile(mode='w', dir=STATE, prefix='.latest-', delete=False) as temporary:
+            temporary.write(json.dumps({'release_id': release_id, 'attempt_id': attempt_id}) + '\n')
+            temporary_path = Path(temporary.name)
+        try:
+            os.replace(temporary_path, path)
+        finally:
+            temporary_path.unlink(missing_ok=True)
+
+
+def remember_recorded_release(directory, release_id, attempt_id):
+    try:
+        recorded = json.loads((directory / 'release.json').read_text())
+    except (OSError, ValueError):
+        return False
+    if recorded.get('release_id') != release_id or not recorded.get('receipt_id'):
+        return False
+    save_latest(release_id, attempt_id)
+    return True
 
 
 @contextmanager
@@ -137,8 +160,6 @@ def run_local(operation, source_sha, version, notes, api, release_id=None):
         raise ValueError('Release ID must be numeric')
     directory = STATE / release_id
     directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if operation in ('deploy', 'archive', 'resume'):
-        save_latest(release_id)
     lane = {'check': 'release_plan', 'deploy': 'app_store', 'archive': 'release_archive',
             'resume': 'app_store', 'status': 'release_status', 'update-notes': 'release_notes'}[operation]
     with release_file_lock(directory) as lock_fd, credentials(api) as (env, secrets):
@@ -162,11 +183,14 @@ def run_local(operation, source_sha, version, notes, api, release_id=None):
                 log_path = directory / (operation + '.log')
                 print(f'Local {operation}: {release_id}\nLog: {log_path}', flush=True)
                 command = ['bundle', 'exec', 'fastlane', 'ios', lane]
+                remembered = operation not in ('deploy', 'archive', 'resume')
                 with log_path.open('w') as log:
                     process = subprocess.Popen(command, cwd=ROOT, env=env, stdout=subprocess.PIPE,
                                                stderr=subprocess.STDOUT, text=True, bufsize=1, pass_fds=(lock_fd,))
                     try:
                         for line in process.stdout:
+                            if not remembered:
+                                remembered = remember_recorded_release(directory, release_id, run_id)
                             for secret in secrets:
                                 line = line.replace(secret, '[REDACTED]')
                             log.write(line)
@@ -177,6 +201,9 @@ def run_local(operation, source_sha, version, notes, api, release_id=None):
                         process.terminate()
                         process.wait()
                         raise
+                    finally:
+                        if not remembered:
+                            remember_recorded_release(directory, release_id, run_id)
                 if code:
                     followup = f'; resume release {release_id} after fixing the cause' if operation != 'check' else ''
                     raise RuntimeError(f'Local {operation} stopped. Inspect {log_path}{followup}.')

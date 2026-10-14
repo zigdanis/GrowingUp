@@ -92,6 +92,47 @@ class UnifiedCommandTests(unittest.TestCase):
 
 
 class LocalExecutorTests(unittest.TestCase):
+    def test_failed_attempt_keeps_previous_latest_until_reservation(self):
+        for failure in ('credentials', 'bundle', 'source', 'preflight', 'after-reservation'):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as directory:
+                @contextlib.contextmanager
+                def credentials(api):
+                    if failure == 'credentials':
+                        raise RuntimeError('Credential setup missing')
+                    yield {}, []
+
+                def run(args, **kwargs):
+                    failed = (failure == 'bundle' and args[:2] == ['bundle', 'check']) or (
+                        failure == 'source' and args[:3] == ['git', 'worktree', 'add'])
+                    return subprocess.CompletedProcess(args, int(failed), '', '')
+
+                class Process:
+                    stdout = io.StringIO('Fastlane stopped\n')
+                    def wait(self):
+                        return 1
+
+                def start_process(*args, **kwargs):
+                    data = {'release_id': '2000', 'phase': 'reserved'}
+                    if failure == 'after-reservation':
+                        data['receipt_id'] = 42
+                    Path(kwargs['env']['RELEASE_RECEIPT']).write_text(json.dumps(data))
+                    return Process()
+
+                with (patch.object(local, 'STATE', Path(directory)), patch.object(local.time, 'time_ns', return_value=2000),
+                      patch.object(local, 'credentials', credentials), patch.object(local.subprocess, 'run', side_effect=run),
+                      patch.object(local.subprocess, 'Popen', side_effect=start_process),
+                      contextlib.redirect_stdout(io.StringIO())):
+                    local.save_latest('100', '1000')
+                    with self.assertRaises(RuntimeError):
+                        local.run_local('deploy', 'a' * 40, '2.2.0', {}, None)
+                    self.assertEqual('2000' if failure == 'after-reservation' else '100', local.last_local_id())
+
+    def test_older_concurrent_attempt_cannot_replace_newer_latest(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(local, 'STATE', Path(directory)):
+            local.save_latest('newer-release', '3000')
+            local.save_latest('older-release', '2000')
+            self.assertEqual('newer-release', local.last_local_id())
+
     def test_same_release_artifacts_cannot_be_used_concurrently(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)

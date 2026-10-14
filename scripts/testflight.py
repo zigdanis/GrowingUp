@@ -66,6 +66,17 @@ def validate_notes(notes):
     return {'notes_en': notes['en'], 'notes_ru': notes['ru']}
 
 
+def notes_for_source(path, source, regenerate=True):
+    path = Path(path)
+    if path.resolve() == DEFAULT_NOTES.resolve():
+        metadata = path.with_suffix('.source.json')
+        if not path.exists() or not metadata.exists() or json.loads(metadata.read_text()).get('source_sha') != source:
+            if not regenerate:
+                raise RuntimeError('Generate notes for this release source or supply --notes FILE')
+            prepare_notes(source)
+    return read_notes(path)
+
+
 def prepare_notes(source):
     source_sha = api('commits/' + source)['sha']
     records = [json.loads(r['body']) for r in release_receipts()]
@@ -187,13 +198,7 @@ def unified_main(argv):
     notes = {}
     if args.operation in ('deploy', 'archive', 'update-notes'):
         path = args.notes or DEFAULT_NOTES
-        if args.notes is None:
-            metadata = path.with_suffix('.source.json')
-            if not path.exists() or not metadata.exists() or json.loads(metadata.read_text()).get('source_sha') != source:
-                if args.operation == 'update-notes':
-                    raise RuntimeError('Generate notes for this release source or supply --notes FILE')
-                prepare_notes(source)
-        notes = read_notes(path)
+        notes = notes_for_source(path, source, regenerate=args.operation != 'update-notes')
 
     if args.operation in ('deploy', 'archive'):
         ci = json.loads(gh('run', 'list', '--repo', REPO, '--workflow', 'ci.yml', '--commit', source,
@@ -272,7 +277,7 @@ def main():
         source = api('commits/' + ref)['sha']
         payload['source_sha'] = source
         if args.operation == 'deploy':
-            payload.update(read_notes(args.notes))
+            payload.update(notes_for_source(args.notes, source))
             ci = json.loads(gh('run', 'list', '--repo', REPO, '--workflow', 'ci.yml', '--commit', source,
                                '--limit', '1', '--json', 'status,conclusion'))
             if not ci or ci[0]['status'] != 'completed' or ci[0]['conclusion'] != 'success':
