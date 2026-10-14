@@ -1,0 +1,6 @@
+interface:
+  display_name: "Full send"
+  short_description: "GrowingUp delivery with an explicit beta endpoint"
+  default_prompt: "$full-send: Deliver this GrowingUp task through checked PR, merge and TestFlight beta."
+policy:
+  allow_implicit_invocation: true
