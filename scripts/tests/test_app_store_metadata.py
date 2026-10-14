@@ -109,6 +109,32 @@ class ScreenshotAPI:
         return {}
 
 
+class PlacementReadTests(unittest.TestCase):
+    def test_paginated_included_images_avoid_redundant_requests(self):
+        def placement(identifier):
+            return {"id": identifier, "relationships": {"image": {"data": {"id": identifier}}}}
+        pages = [
+            {"data": [placement("first")], "included": [{"type": "appAssetLibraryImages", "id": "first"}],
+             "links": {"next": "/next"}},
+            {"data": [placement("second")], "included": [{"type": "appAssetLibraryImages", "id": "second"}]},
+        ]
+        api = metadata.Apple.__new__(metadata.Apple)
+        with patch.object(api, "request", side_effect=pages) as request, patch.object(api, "resource") as resource:
+            result = metadata.placements(api, "locale")
+        self.assertEqual([p["image"]["id"] for p in result], ["first", "second"])
+        self.assertEqual(request.call_count, 2)
+        resource.assert_not_called()
+
+    def test_missing_included_image_is_fetched_explicitly(self):
+        api = metadata.Apple.__new__(metadata.Apple)
+        page = {"data": [{"id": "placement", "relationships": {"image": {"data": {"id": "missing"}}}}]}
+        with patch.object(api, "request", return_value=page), \
+                patch.object(api, "resource", return_value={"id": "missing"}) as resource:
+            result = metadata.placements(api, "locale")
+        resource.assert_called_once_with("/v1/appAssetLibraryImages/missing")
+        self.assertEqual(result[0]["image"]["id"], "missing")
+
+
 class AppStoreMetadataTests(unittest.TestCase):
     def run_screenshot_upload(self, api, receipt):
         args = SimpleNamespace(operation="upload", screenshots=Path("marketing/app-store/screenshots"), source_sha="a" * 40, version="2.1.0")
@@ -126,24 +152,20 @@ class AppStoreMetadataTests(unittest.TestCase):
                 patch.object(metadata, "resolve_spec", return_value=("primary", "spec")), patch.object(metadata, "prepare_image", side_effect=prepared):
             metadata.run(api, args, receipt)
 
-    def test_old_phone_groups_removed_after_both_main_sets_verified_preserving_tablets_previews_assets(self):
+    def test_other_hardware_groups_preserved_with_tablets_previews_assets(self):
         api = ScreenshotAPI()
         receipt = {}
         self.run_screenshot_upload(api, receipt)
         deleted = [event[1] for event in api.events if event[0] == "delete"]
-        self.assertEqual(deleted, ["draft-en-US-old-en-US", "draft-ru-old-ru"])
+        self.assertEqual(deleted, [])
         for locale in metadata.LOCALES:
-            first_delete = next(i for i, event in enumerate(api.events) if event[0] == "delete")
-            verification = next(i for i, event in enumerate(api.events)
-                                if event == ("read", f"draft-{locale}", "primary", 4))
-            self.assertLess(verification, first_delete)
             kept = {p["id"] for p in api.localizations[f"draft-{locale}"]}
+            self.assertIn(f"draft-{locale}-old-{locale}", kept)
             self.assertIn(f"draft-{locale}-tablet-{locale}", kept)
             self.assertIn(f"draft-{locale}-preview-{locale}", kept)
             self.assertIn(f"old-{locale}", api.assets)
         self.assertEqual(receipt["verified_groups"], {"en-US": ["primary"], "ru": ["primary"]})
-        self.assertEqual(receipt["cleared_placements"], [{"locale": locale, "placement_id": f"draft-{locale}-old-{locale}",
-                                                         "group": "small-phone", "image_id": f"old-{locale}"} for locale in metadata.LOCALES])
+        self.assertEqual(receipt["cleared_placements"], [])
 
     def test_unrelated_draft_phone_asset_stops_before_first_write(self):
         api = ScreenshotAPI(unrelated=True)
@@ -179,9 +201,9 @@ class AppStoreMetadataTests(unittest.TestCase):
             self.run_screenshot_upload(api, receipt)
         sleep.assert_called_once_with(5)
         self.assertEqual(receipt["verified_state"], "PREPARE_FOR_SUBMISSION")
-        first_delete = next(i for i, event in enumerate(api.events) if event[0] == "delete")
-        reads = [i for i, event in enumerate(api.events) if event == ("read", "draft-en-US", "primary", 4)]
-        self.assertEqual(len([i for i in reads if i < first_delete]), 2)
+        reads = [event for event in api.events if event == ("read", "draft-en-US", "primary", 4)]
+        self.assertGreaterEqual(len(reads), 2)
+        self.assertFalse(any(event[0] == "delete" for event in api.events))
 
     def test_failed_inactive_or_unexpected_placement_is_terminal_and_reports_actual_state(self):
         for state in ("FAILED", "INACTIVE", "PARENT_PREPARE_FOR_SUBMISSION", "UNKNOWN"):
@@ -337,6 +359,25 @@ class AppStoreMetadataTests(unittest.TestCase):
         metadata.verify_placements(verified, ordered, images, "spec")
         with self.assertRaisesRegex(ValueError, "order"):
             metadata.verify_placements(verified[::-1], ordered, images, "spec")
+
+    def test_complete_is_transient_and_is_polled_without_reuploading_reserved_image(self):
+        image = {"content": b"png", "width": 1206, "height": 2622, "reference": "managed:sha256"}
+        states = iter(("COMPLETE", "PREPARE_FOR_SUBMISSION"))
+
+        class API:
+            def collection(self, path, **query):
+                return [{"id": "asset", "attributes": {"state": "COMPLETE"}}]
+
+            def resource(self, path):
+                return {"id": "asset", "attributes": {**image_attributes(image), "state": next(states)}}
+
+            def upload(self, operations, content):
+                raise AssertionError("Processed upload must not be sent again")
+
+        with patch.object(metadata.time, "sleep") as sleep:
+            asset = metadata.prepare_image(API(), "library", image, "spec")
+        self.assertEqual(asset["attributes"]["state"], "PREPARE_FOR_SUBMISSION")
+        sleep.assert_called_once_with(5)
 
     def test_processing_poll_rechecks_order_and_asset_before_accepting_ready_state(self):
         images = [{"content": b"png", "width": 1320, "height": 2868, "reference": name} for name in ("mia", "leo")]

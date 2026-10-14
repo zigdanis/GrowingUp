@@ -1,0 +1,62 @@
+[
+  {
+    "kind": "di",
+    "locale": "en",
+    "export": "dynamic-island-en-no-confetti.mp4",
+    "size": [
+      886,
+      1920
+    ],
+    "edit": "sources/di/en/edit.json"
+  },
+  {
+    "kind": "di",
+    "locale": "ru",
+    "export": "dynamic-island-ru-no-confetti.mp4",
+    "size": [
+      886,
+      1920
+    ],
+    "edit": "sources/di/ru/edit.json"
+  },
+  {
+    "kind": "face-id",
+    "locale": "en",
+    "export": "face-id-en-no-confetti.mp4",
+    "size": [
+      886,
+      1920
+    ],
+    "edit": "sources/face-id/en/edit.json"
+  },
+  {
+    "kind": "face-id",
+    "locale": "ru",
+    "export": "face-id-ru-no-confetti.mp4",
+    "size": [
+      886,
+      1920
+    ],
+    "edit": "sources/face-id/ru/edit.json"
+  },
+  {
+    "kind": "home-button",
+    "locale": "en",
+    "export": "home-button-se3-en-no-confetti.mp4",
+    "size": [
+      750,
+      1334
+    ],
+    "edit": "sources/home-button/en/edit.json"
+  },
+  {
+    "kind": "home-button",
+    "locale": "ru",
+    "export": "home-button-se3-ru-no-confetti.mp4",
+    "size": [
+      750,
+      1334
+    ],
+    "edit": "sources/home-button/ru/edit.json"
+  }
+]

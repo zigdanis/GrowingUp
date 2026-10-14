@@ -1,0 +1,20 @@
+{
+  "native_file": "native.mp4",
+  "segments": [
+    {
+      "start": 17.766666666666666,
+      "end": 41.0
+    },
+    {
+      "native_file": "end-card-native.mp4",
+      "start": 0,
+      "end": 1.7666666666666666
+    }
+  ],
+  "duration": 25,
+  "trim_reason": "Exclude actual SpringBoard transition, append a separate genuine native Mia end-card on the same SE3/EN fixture. All source motion retains real time, no freeze or speed change.",
+  "springboard_first_frame": 1233,
+  "tail_frames": 53,
+  "end_card_clock": "2027-01-16T08:24:42Z plus real elapsed time",
+  "source_timeline": "timeline.json"
+}

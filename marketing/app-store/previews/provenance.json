@@ -1,0 +1,441 @@
+{
+  "status": "six-no-confetti-previews-uploaded-and-verified-in-editable-asc-draft",
+  "created_at_utc": "2026-10-13T23:15:31.333060+00:00",
+  "source_commit": "0d60b645b4bf42d98f5c294079b9e59c10a730ca",
+  "worktree": "~/.t3/worktrees/GrowingUp/media-app-preview-20261013",
+  "production_ui_modified": false,
+  "runtime": "iOS26.5 23F77",
+  "xcode": "26.6 17F113",
+  "capture_test_patch_sha256": "9cf442001ab48eaf482bffee43f22062d4ae185e238fa612557abab83df07789",
+  "exports": [
+    {
+      "kind": "di",
+      "locale": "en",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/dynamic-island-en-no-confetti.mp4",
+      "size": 35078601,
+      "sha256": "bebc56560a4e8c47e85460626cfca1a32d1690f33817c9e4581f49c191e98ef8",
+      "timeline": "marketing/app-store/previews/sources/di/en/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/di/en/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/di/en/native.mp4",
+        "source_timeline": "marketing/app-store/previews/sources/di/en/timeline.json",
+        "segments": [
+          {
+            "start": 21.143086910247803,
+            "end": 46.1430869102478
+          }
+        ],
+        "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+        "duration": 25
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/dynamic-island-en-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "DD1B22DD-179E-41FE-813A-91AEAB2B522B",
+        "name": "iPhone 17 Pro Max",
+        "native_size": [
+          1320,
+          2868
+        ],
+        "export_size": [
+          886,
+          1920
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/di-en-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "043080e3a11144d51b65fba173f3efda81c940a911e0d00b095c602d285fe3c3",
+      "delivered_file": "marketing/app-store/previews/dynamic-island-en-no-confetti.mp4"
+    },
+    {
+      "kind": "di",
+      "locale": "ru",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/dynamic-island-ru-no-confetti.mp4",
+      "size": 35135131,
+      "sha256": "bf7dfe621da854ed9a2b16858a4d76a6f9abdf229223dcd2ccc2dc8e7b50d8cc",
+      "timeline": "marketing/app-store/previews/sources/di/ru/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/di/ru/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/di/ru/native.mp4",
+        "source_timeline": "marketing/app-store/previews/sources/di/ru/timeline.json",
+        "segments": [
+          {
+            "start": 15.49943494796753,
+            "end": 40.49943494796753
+          }
+        ],
+        "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+        "duration": 25
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/dynamic-island-ru-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "DD1B22DD-179E-41FE-813A-91AEAB2B522B",
+        "name": "iPhone 17 Pro Max",
+        "native_size": [
+          1320,
+          2868
+        ],
+        "export_size": [
+          886,
+          1920
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/di-ru-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "9bc0282b344deaa7980ff46cb4799eee80eeed32c64f5b8d33d37d87c37b2e63",
+      "delivered_file": "marketing/app-store/previews/dynamic-island-ru-no-confetti.mp4"
+    },
+    {
+      "kind": "face-id",
+      "locale": "en",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/face-id-en-no-confetti.mp4",
+      "size": 35063069,
+      "sha256": "39a8cbd53bed17c2beda272ca661abea9af268fc983d8ed89d2974bf6df6cec5",
+      "timeline": "marketing/app-store/previews/sources/face-id/en/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/face-id/en/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/face-id/en/native.mp4",
+        "source_timeline": "marketing/app-store/previews/sources/face-id/en/timeline.json",
+        "segments": [
+          {
+            "start": 21.078476905822754,
+            "end": 46.078476905822754
+          }
+        ],
+        "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+        "duration": 25
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/face-id-en-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "9FF8A61A-73BA-44F1-8360-76318642010E",
+        "name": "GrowingUp-Video-FaceID-Large",
+        "native_size": [
+          1284,
+          2778
+        ],
+        "export_size": [
+          886,
+          1920
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/face-id-en-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "d988d83804f15e7ed53275e9c280a4335c1c33cd7cea6456a58676652cba8a2c",
+      "delivered_file": "marketing/app-store/previews/face-id-en-no-confetti.mp4"
+    },
+    {
+      "kind": "face-id",
+      "locale": "ru",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/face-id-ru-no-confetti.mp4",
+      "size": 35113698,
+      "sha256": "75f6485ca807b2a2bd1ed5bc3b68c81e8a77361c5cc64409ba4de7ffe81904c5",
+      "timeline": "marketing/app-store/previews/sources/face-id/ru/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/face-id/ru/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/face-id/ru/native.mp4",
+        "source_timeline": "marketing/app-store/previews/sources/face-id/ru/timeline.json",
+        "segments": [
+          {
+            "start": 12.816094875335693,
+            "end": 37.81609487533569
+          }
+        ],
+        "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+        "duration": 25
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/face-id-ru-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "9FF8A61A-73BA-44F1-8360-76318642010E",
+        "name": "GrowingUp-Video-FaceID-Large",
+        "native_size": [
+          1284,
+          2778
+        ],
+        "export_size": [
+          886,
+          1920
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/face-id-ru-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "8d759d7a699c978306088c2f65c14923ccc0a686e4eb0ffd22e0f9a09ab1a401",
+      "delivered_file": "marketing/app-store/previews/face-id-ru-no-confetti.mp4"
+    },
+    {
+      "kind": "home-button",
+      "locale": "en",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/home-button-se3-en-no-confetti.mp4",
+      "size": 35420217,
+      "sha256": "57c356f8ccddd93914d560e813bc58f4364f61c093dfef5631c05a78bd2701fc",
+      "timeline": "marketing/app-store/previews/sources/home-button/en/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/home-button/en/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/home-button/en/native.mp4",
+        "segments": [
+          {
+            "start": 17.766666666666666,
+            "end": 41.0
+          },
+          {
+            "native_file": "marketing/app-store/previews/sources/home-button/en/end-card-native.mp4",
+            "start": 0,
+            "end": 1.7666666666666666
+          }
+        ],
+        "duration": 25,
+        "trim_reason": "Exclude actual SpringBoard transition, append a separate genuine native Mia end-card on the same SE3/EN fixture. All source motion retains real time, no freeze or speed change.",
+        "springboard_first_frame": 1233,
+        "tail_frames": 53,
+        "end_card_clock": "2027-01-16T08:24:42Z plus real elapsed time"
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/home-button-se3-en-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "F5581E72-B8D2-41EB-89D3-EA7B2939871B",
+        "name": "GrowingUp-Video-Home-SE3",
+        "native_size": [
+          750,
+          1334
+        ],
+        "export_size": [
+          750,
+          1334
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/home-button-en-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "extra_native_source": "marketing/app-store/previews/sources/home-button/en/end-card-native.mp4",
+      "extra_native_clock": {
+        "clock": "2027-01-16T08:24:42Z",
+        "running": true,
+        "recording_started_epoch": 1791932968.655951,
+        "duration_requested": 7,
+        "device": "F5581E72-B8D2-41EB-89D3-EA7B2939871B",
+        "purpose": "Native final Mia card on same SE3, same persisted EN data; no XCTest teardown during capture."
+      },
+      "extra_native_sha256": "92686a6667c790b996cfbd5932c3eb4763903f79e3fac82bb537a47bf5c8c818",
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "ff60b75423d411c8aacd2460b42893dd1d7a1dd3f089db7b4c3422e9bc3cc54e",
+      "delivered_file": "marketing/app-store/previews/home-button-se3-en-no-confetti.mp4"
+    },
+    {
+      "kind": "home-button",
+      "locale": "ru",
+      "file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/home-button-se3-ru-no-confetti.mp4",
+      "size": 35347349,
+      "sha256": "90ac0f0cac460213a36dcf39574edbcec80b691e93625ff9659a687a32103c27",
+      "timeline": "marketing/app-store/previews/sources/home-button/ru/timeline.json",
+      "source_native": "marketing/app-store/previews/sources/home-button/ru/native.mp4",
+      "edit": {
+        "native_file": "marketing/app-store/previews/sources/home-button/ru/native.mp4",
+        "source_timeline": "marketing/app-store/previews/sources/home-button/ru/timeline.json",
+        "segments": [
+          {
+            "start": 12.675736904144287,
+            "end": 37.67573690414429
+          }
+        ],
+        "trim_reason": "Only intro/editor stationary dwell adjusted; all UI actions remain native real time. Production Reduce Motion suppressed confetti. No fake animation or app UI code edits.",
+        "duration": 25
+      },
+      "probe_file": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/final/home-button-se3-ru-no-confetti.ffprobe.json",
+      "device": {
+        "uuid": "F5581E72-B8D2-41EB-89D3-EA7B2939871B",
+        "name": "GrowingUp-Video-Home-SE3",
+        "native_size": [
+          750,
+          1334
+        ],
+        "export_size": [
+          750,
+          1334
+        ]
+      },
+      "ui_test_passed": true,
+      "full_decode_passed": true,
+      "qa_sheet": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/no-confetti/review/home-button-ru-all.png",
+      "aac_sha256": "a511451881099254f0f216441add7fc0897082ce9d73b5f5cc48fb9b1e3dd554",
+      "faststart_verified": true,
+      "mp4_atoms": [
+        "ftyp",
+        "moov",
+        "free",
+        "mdat"
+      ],
+      "ending_content_check": "No SpringBoard blue-screen signature in final5s; reviewed screenshot sequences separately.",
+      "visual_review": "Inspected full scene sequences: all4cards, native birthday popover, editorphotos/date, realsave, mainMia ending. No confetti, nokeyboard/loading/gallery/home screen.",
+      "source_native_sha256": "dd3373ba23c1e7d5add814cdd8b748fd53c2982c40f0d32473c831ec96fd9209",
+      "delivered_file": "marketing/app-store/previews/home-button-se3-ru-no-confetti.mp4"
+    }
+  ],
+  "fixture": "UI-created and persistence-verified fictional four-person test store; copied only into owned task simulator UITests stores. Approved docs/app-store-demo-photos. EN/RU names localized. Live AppGroup/user database untouched.",
+  "capture_clock": "2027-01-16T08:24:12Z plus real elapsedtime UTC; supplemental SEEN native endcard clock in its receipt.",
+  "no_confetti": "Standard simulator ReduceMotionEnabled true during capture; production accessibility branch verified via XCTest. Setting restored after captures. No application UI changes, rate changes or frozen frames added.",
+  "music": {
+    "title": "Little Days",
+    "bpm": 110,
+    "source_wav": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013/music/Little-Days.wav",
+    "rights": "Original procedural synthesis and seeded noise, no third-party samples/melodies. Danis may use/edit/distribute for GrowingUp marketing worldwide.",
+    "AAC_identical_to_original_pilot": true,
+    "listened_by_agent": false,
+    "limitation": "Audio input is unsupported; previous user feedback accepted everything exceptconfetti. Technical stereoAAC/48kHz/256kbps/loudness checks passed."
+  },
+  "issue": "https://github.com/zigdanis/GrowingUp/issues/60",
+  "issue_scope": "Fix actual birthday confetti performance separately; removal in media does not claim defect fixed.",
+  "single_simulator_policy": "Only one booted task simulator at a time; coordinated screenshot device ownership. All simulators shutdown after capture.",
+  "failed_local_capture": "First fresh FaceID boot reset ReduceMotion; check caught confetti, failed capture retained; setting reapplied after initialization, successful EN/RU captured.",
+  "cloud_ci_runs_this_thread": 0,
+  "upload_release_push": {
+    "app_store_preview_upload": true,
+    "app_review_submission": false,
+    "testflight_or_binary_release": false,
+    "git_push": false
+  },
+  "durable_sources": "~/Library/Application Support/GrowingUp/AppStoreMedia/preview-20261013",
+  "cleanup": {
+    "booted_simulators": [],
+    "own_caffeinate_pid": 52847,
+    "own_caffeinate_stopped": true,
+    "other_threads_processes_untouched": true
+  },
+  "app_store_connect": {
+    "app_id": "1461697772",
+    "version": "2.1.0",
+    "version_id": "4dccceea-13f4-4f10-8153-d1106ec1731c",
+    "state": "PREPARE_FOR_SUBMISSION",
+    "upload_method": "local Python CLI, Apple App Asset Library API",
+    "receipt": "apple-upload-receipt.json",
+    "verified_at_utc": "2026-10-14T04:17:39.868460+00:00",
+    "new_previews_first": true,
+    "existing_screenshots_preserved": 32,
+    "existing_previews_preserved": 8,
+    "deleted_assets_or_placements": 0,
+    "submitted_for_review": false,
+    "assets": [
+      {
+        "file": "dynamic-island-en-no-confetti.mp4",
+        "locale": "en-US",
+        "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+        "asset_id": "ca800005-71fb-8cec-810d-b7f5d4ed8a13",
+        "placement_id": "de400005-71fb-8cec-8f25-2a5d7ce63c69",
+        "sha256": "bebc56560a4e8c47e85460626cfca1a32d1690f33817c9e4581f49c191e98ef8",
+        "spec_id": "a7adff12-330a-5fa5-97d4-c5c7953edb0c",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      },
+      {
+        "file": "dynamic-island-ru-no-confetti.mp4",
+        "locale": "ru",
+        "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+        "asset_id": "43c00005-71fb-8cec-810d-94d5dd910684",
+        "placement_id": "89c00005-71fb-8cec-8f2f-f1dd04f5e389",
+        "sha256": "bf7dfe621da854ed9a2b16858a4d76a6f9abdf229223dcd2ccc2dc8e7b50d8cc",
+        "spec_id": "a7adff12-330a-5fa5-97d4-c5c7953edb0c",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      },
+      {
+        "file": "face-id-en-no-confetti.mp4",
+        "locale": "en-US",
+        "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+        "asset_id": "5ac00005-71fb-8cec-813a-781424c93712",
+        "placement_id": "5e000005-71fb-8cec-8f0c-7ce4a54b6be9",
+        "sha256": "39a8cbd53bed17c2beda272ca661abea9af268fc983d8ed89d2974bf6df6cec5",
+        "spec_id": "a7adff12-330a-5fa5-97d4-c5c7953edb0c",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      },
+      {
+        "file": "face-id-ru-no-confetti.mp4",
+        "locale": "ru",
+        "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+        "asset_id": "4d400005-71fb-8cec-8132-827343719c95",
+        "placement_id": "8cc00005-71fb-8cec-8f2e-4c22464b3870",
+        "sha256": "75f6485ca807b2a2bd1ed5bc3b68c81e8a77361c5cc64409ba4de7ffe81904c5",
+        "spec_id": "a7adff12-330a-5fa5-97d4-c5c7953edb0c",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      },
+      {
+        "file": "home-button-se3-en-no-confetti.mp4",
+        "locale": "en-US",
+        "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+        "asset_id": "57400005-71fb-8cec-8112-8178f10f38c3",
+        "placement_id": "f9000005-71fb-8cec-8f09-74562a5e6ff1",
+        "sha256": "57c356f8ccddd93914d560e813bc58f4364f61c093dfef5631c05a78bd2701fc",
+        "spec_id": "b6358c4a-2088-5203-a8d5-4f66377d7f6b",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      },
+      {
+        "file": "home-button-se3-ru-no-confetti.mp4",
+        "locale": "ru",
+        "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+        "asset_id": "54800005-71fb-8cec-810f-15ef65a9e770",
+        "placement_id": "74400005-71fb-8cec-8f3d-dee039433582",
+        "sha256": "90ac0f0cac460213a36dcf39574edbcec80b691e93625ff9659a687a32103c27",
+        "spec_id": "b6358c4a-2088-5203-a8d5-4f66377d7f6b",
+        "placement_state": "ACTIVE",
+        "preview_frame_state": "COMPLETE",
+        "poster_timecode": "00:00:02:00"
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "success": false,
+  "upload": true,
+  "phase": "authorized SE 3 addition",
+  "started_at_utc": "2026-10-13T22:38:31.916128+00:00",
+  "version_id": "4dccceea-13f4-4f10-8153-d1106ec1731c",
+  "version": "2.1.0",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro",
+      "screenshots": [
+        {
+          "file": "01-mia.png",
+          "sha256": "53035ea49f2efb135ec0eaa2a9fad3d0ea4a7b902371064a9de7101df08aaae1",
+          "placement_id": "19000005-71fb-8cec-8f33-10d4eae16827",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-leo-celebration.png",
+          "sha256": "72d6b440f4d3a8d376e9bd257ca9bd1b928e812405a7d25a3f2e36c3c3c9460a",
+          "placement_id": "0b000005-71fb-8cec-8f22-e864ecb69c44",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-mango-teddy.png",
+          "sha256": "add122ffa34a55023c7425ffc7b923b628aa65939a9d8326af2e6e91832a6469",
+          "placement_id": "8b800005-71fb-8cec-8f0d-7deaf968bcf5",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-widgets.png",
+          "sha256": "0aa9af6b8a9b447662ca1678e02970720d1a46b8b556b06b8d04cb1b276099fa",
+          "placement_id": "72400005-71fb-8cec-8f0c-97c243581b08",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [],
+  "error": "Apple API network request failed; inspect inventory before retrying a mutation",
+  "new_png_transfers": 0,
+  "preserved_previously_verified_pngs": 24
+}

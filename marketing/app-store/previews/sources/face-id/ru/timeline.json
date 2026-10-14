@@ -1,0 +1,25 @@
+{
+  "device": "9FF8A61A-73BA-44F1-8360-76318642010E",
+  "locale": "ru",
+  "native_file": "native.mp4",
+  "host_launch_epoch": 1791931872.501212,
+  "markers": {
+    "ready": 1791931880.8901482,
+    "mia-start": 1791931885.894648,
+    "leo-swipe": 1791931889.898864,
+    "leo-arrived": 1791931890.461629,
+    "birthday-open": 1791931891.246636,
+    "mango-swipe": 1791931896.074398,
+    "mango-arrived": 1791931896.6285539,
+    "teddy-swipe": 1791931900.095861,
+    "teddy-arrived": 1791931900.6436028,
+    "return-mia": 1791931904.1114712,
+    "mia-returned": 1791931905.743414,
+    "editor-open": 1791931906.362033,
+    "editor-change": 1791931908.139298,
+    "saved": 1791931908.957866,
+    "end": 1791931910.487629
+  },
+  "recording_started_epoch": 1791931872.671534,
+  "test_exit_code": 0
+}

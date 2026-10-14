@@ -1,0 +1,759 @@
+{
+  "created_at_utc": "2026-10-14T10:16:49.807584+00:00",
+  "capture_source_commit": "0d60b645b4bf42d98f5c294079b9e59c10a730ca",
+  "archive_base_commit": "803d63152821d4c284c64ecdf1a6d9c4bb259286",
+  "github_branch": "task/app-store-native-families-20261013-mbp",
+  "uploaded_screenshots": 32,
+  "uploaded_previews": 6,
+  "used_native_video_recordings": 7,
+  "credentials_included": false,
+  "cloud_ci_or_capture_runs_for_archiving": 0,
+  "video_helper_adjustments": "Portable checkout paths in auth/upload helpers; rebuild wrapper resolves archived edit inputs. Original capture patch retained; Swift snapshot formatted without changing logic.",
+  "files": [
+    {
+      "path": "marketing/app-store/README.md",
+      "bytes": 1665,
+      "sha256": "1f506c8d8d8e43d9adf2f5e385b51b0e48ee6f37b90d18dccc2db1fb8f1c414a"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/leo-celebration.png",
+      "bytes": 3456742,
+      "sha256": "32e511bc297e3435b4bd06070cd457d6a6e7c93898b07e14684c5739cac51fb9"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/mango.png",
+      "bytes": 3492550,
+      "sha256": "5c6f56a2b8c4a7b6e75e6022e7634470dbdeddb33edd0d268d336b592eb37ea0"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/mia.png",
+      "bytes": 3207741,
+      "sha256": "06bec351049c7a8126ca9199e58768ad9d5ef7bc538bdf65af299f16e764ed54"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/teddy.png",
+      "bytes": 3345993,
+      "sha256": "1e123857d85c9bac16128d953817daa6de8906d08b592a5e1e2f9b3d3d344cbf"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/test-summary.json",
+      "bytes": 986,
+      "sha256": "0131742218a5bb57a89c7b856665df36d6e25a771f63110c592962fa2e5efadc"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/widget-large.png",
+      "bytes": 215979,
+      "sha256": "249eaa140029fda20498921b41f65fd4c09f3fc8124655d38b6c7ae7a4c859c0"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/widget-medium.png",
+      "bytes": 150464,
+      "sha256": "e628d243ffdc081b495d0eb25d5dbb2845bf2dba95f5213e60b95e7c4171628a"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/en-US/widget-small.png",
+      "bytes": 64743,
+      "sha256": "6e5968cd664687b171decadf07caa917eb24c6587e7e2ae37c14565d9364da8b"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/metadata.json",
+      "bytes": 25749,
+      "sha256": "8d8d58314e1b9bb3b253ba7f0045e3fcee91b5ef06d4c64e1578379940bbabfd"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/leo-celebration.png",
+      "bytes": 3461283,
+      "sha256": "7387092793091fc44cf793bc5ccabda38fcc57f5aaa16ba8b1dd3f759dfd6114"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/mango.png",
+      "bytes": 3487950,
+      "sha256": "e91fff775a094080c6949f73ed677d58e458f1aa96c30bbfe778084219741ca1"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/mia.png",
+      "bytes": 3205825,
+      "sha256": "b6acfdb9550c76c30fe2591ad82822eb9bd44316981bb27e745838c6e31d0fd8"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/teddy.png",
+      "bytes": 3338331,
+      "sha256": "09f08a138ad5a0fe73e12f2df4f54e3110c91b80c390045e5e545eea97524fa9"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/test-summary.json",
+      "bytes": 986,
+      "sha256": "f7b56a391df103782b1e9a3030db01c9896485d12ff2f58979dbfc08f63aa427"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/widget-large.png",
+      "bytes": 221481,
+      "sha256": "6000e725dde36b526b19f79dd88411b2161ce80cc2acedd0b078efaa400f1e3e"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/widget-medium.png",
+      "bytes": 156782,
+      "sha256": "998589d6c89a0d97d5437fa47d37b237394f68d51bdd53b9c9f2860925de9ef5"
+    },
+    {
+      "path": "marketing/app-store/native-captures/dynamic-island-medium/ru/widget-small.png",
+      "bytes": 65117,
+      "sha256": "503df2ef138deae63e7eb2808474dd178eb5ec48b951ce06c22792470a1e9427"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/leo-celebration.png",
+      "bytes": 3804968,
+      "sha256": "213bb8c55fdc9154954743538839f22e7ea8299034a50b80b8ef194e79ac9943"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/mango.png",
+      "bytes": 3876302,
+      "sha256": "f337791f07b6407b748da7945b69f792563b69241018464d07ca48b1bbd0a82a"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/mia.png",
+      "bytes": 3560604,
+      "sha256": "eff214277619c58d82960d213f80d67bdefa915c70ee74a7b4a3ca6c5523b704"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/teddy.png",
+      "bytes": 3719754,
+      "sha256": "da7c01579541a6b2701e78b99a03ea27b1d53cde90988588171e7ec98ae41b36"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/test-summary.json",
+      "bytes": 990,
+      "sha256": "cee5ae7c190042c76590eaf354dd000497f0caa148e748bf9269d6366dab3aaf"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/widget-large.png",
+      "bytes": 215894,
+      "sha256": "dacc713773d8bb55092d174ac68ed905cb6c87e7a5cf3d33510b86d65e53c791"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/widget-medium.png",
+      "bytes": 150074,
+      "sha256": "741da21e305ab7a6248540924fb478be4922d602f44f29a4f3d71d516b574450"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/en-US/widget-small.png",
+      "bytes": 63912,
+      "sha256": "4cd82e5ade15043520b6ddb553c7eed11db058ad381b8af8103a377479ca4c2b"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/metadata.json",
+      "bytes": 25747,
+      "sha256": "8a142d28d2d0355ee24df19a4316c6ff4ba1d24aa03df29f1c331527f080e9cb"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/leo-celebration.png",
+      "bytes": 3818446,
+      "sha256": "59b31c9d2f0100db8a046b93cd67a1db1ad8678c95ffb7cd396918f7af228506"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/mango.png",
+      "bytes": 3871918,
+      "sha256": "77d92fff6bd92e9eb3e0829742e99b5d1486534b52702c7c5d398cb72a8a91e5"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/mia.png",
+      "bytes": 3558032,
+      "sha256": "75b4616a8edf0ad05198bf0613453bf33aaeabdf5232caff3a514ad167a8f919"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/teddy.png",
+      "bytes": 3711406,
+      "sha256": "6343cab3e0a603e8156132344d0766223045afb852e72a8f7d93cf66d84cd9e6"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/test-summary.json",
+      "bytes": 990,
+      "sha256": "cff8e3fa7b8117bd7f3b9403a463f2033112edcade8885b2e928623a1ef055d6"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/widget-large.png",
+      "bytes": 221460,
+      "sha256": "f81b31f07cedf0002f7c88be32a5dd508dbd410c99aca592bf6448062179357d"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/widget-medium.png",
+      "bytes": 156655,
+      "sha256": "c73116605b7f54dc4db1eb55a8215dda364a11efb639f19a22d48741bd536bcb"
+    },
+    {
+      "path": "marketing/app-store/native-captures/face-id-large/ru/widget-small.png",
+      "bytes": 64290,
+      "sha256": "9c9c06e4dd2b45c863884b6f2257ea8049508743a2c98bac878644b99feafcb2"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/leo-celebration.png",
+      "bytes": 1282043,
+      "sha256": "f053b65b7436455150959ef3b75b1548ec54de61978ba1fa6f38ab2a45b45cc6"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/mango.png",
+      "bytes": 1307135,
+      "sha256": "e6a766a526e3f4d4a0384a2d0741870ae9eb94793f68c202de158e11cf6c4281"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/mia.png",
+      "bytes": 1207646,
+      "sha256": "41656072cb3146da81863977f8193b6ef3f02bcd213c4f803fdbba8ecffd371b"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/teddy.png",
+      "bytes": 1249528,
+      "sha256": "a7a591b8d0e423cd14cfa6d127f59d01883205df6556437d8499abdc969ea3f3"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/test-summary.json",
+      "bytes": 1004,
+      "sha256": "01e57db8eb0103f59b714761c96d9323131ac9034829bb3e8a8a17806bb2e91a"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/widget-large.png",
+      "bytes": 111888,
+      "sha256": "c4cbd85bc74eed3c65614d8c5b396bf2882585a39ae3bc5132ad2e1ba0f42542"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/widget-medium.png",
+      "bytes": 77156,
+      "sha256": "d7cd7dba0414dda257f04347fdead368611c25526e6d2e932cdb4a1c5567a9ee"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/en-US/widget-small.png",
+      "bytes": 32653,
+      "sha256": "cd6e61cbc2b602db0adb6e5c321f2a8bb9c65a3f2482e106d398060ab3013fb4"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/metadata.json",
+      "bytes": 25769,
+      "sha256": "999b0301b8cee08bee347ad62b878b63ded9b4e8b8476b99e25b0225ad958910"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/leo-celebration.png",
+      "bytes": 1277475,
+      "sha256": "90b72831856d16954dfe409dbbe9b31b7dcd458f1c1c1710e63a5e4f36ab63ca"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/mango.png",
+      "bytes": 1304410,
+      "sha256": "d04a479edb23ceab7e680ceb2d87864d0088742a4028bc8f90b04b559cf702bd"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/mia.png",
+      "bytes": 1205937,
+      "sha256": "3b991dbc37a4c9419a4b52635c97f9d57c77bf3c5681c86722538066446a30b4"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/teddy.png",
+      "bytes": 1245478,
+      "sha256": "a30c5930aedcfe3900d47f6e778078c711094de05374d77d073774360de89fdb"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/test-summary.json",
+      "bytes": 1005,
+      "sha256": "9c979c9424276fd406d77f8365842eab1eccbd154e0475a9ce39a8abbaf4e14d"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/widget-large.png",
+      "bytes": 112694,
+      "sha256": "89f76e066d65fc62143feded3f2d5f3621895bc3c846cbf60230d5a25611942b"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/widget-medium.png",
+      "bytes": 78605,
+      "sha256": "9c5c987079162ba529e596e3365068dfe66557ddae0d7b3db916eb180d0bb5a8"
+    },
+    {
+      "path": "marketing/app-store/native-captures/home-button-medium/ru/widget-small.png",
+      "bytes": 32783,
+      "sha256": "63ea6a8c066c031f355363f9dcde93e9cdf9befea91c6b8509c42b8bcb585d42"
+    },
+    {
+      "path": "marketing/app-store/previews/README.md",
+      "bytes": 7264,
+      "sha256": "fce2a57b67680663232a8973b0b8465d95f36388d5e1210c78bc7f79e993b391"
+    },
+    {
+      "path": "marketing/app-store/previews/RECORDING.md",
+      "bytes": 3656,
+      "sha256": "c1257826704f4b94dc7338abd684c6c991ad4db1b4621b48cd63ae3886e28e4b"
+    },
+    {
+      "path": "marketing/app-store/previews/apple-upload-receipt.json",
+      "bytes": 7509,
+      "sha256": "9ea85866df19b17d5d5ef2b67b04c8b5fc7643f38709b7d3f1c74ede3b6bf013"
+    },
+    {
+      "path": "marketing/app-store/previews/dynamic-island-en-no-confetti.mp4",
+      "bytes": 35078601,
+      "sha256": "bebc56560a4e8c47e85460626cfca1a32d1690f33817c9e4581f49c191e98ef8"
+    },
+    {
+      "path": "marketing/app-store/previews/dynamic-island-ru-no-confetti.mp4",
+      "bytes": 35135131,
+      "sha256": "bf7dfe621da854ed9a2b16858a4d76a6f9abdf229223dcd2ccc2dc8e7b50d8cc"
+    },
+    {
+      "path": "marketing/app-store/previews/face-id-en-no-confetti.mp4",
+      "bytes": 35063069,
+      "sha256": "39a8cbd53bed17c2beda272ca661abea9af268fc983d8ed89d2974bf6df6cec5"
+    },
+    {
+      "path": "marketing/app-store/previews/face-id-ru-no-confetti.mp4",
+      "bytes": 35113698,
+      "sha256": "75f6485ca807b2a2bd1ed5bc3b68c81e8a77361c5cc64409ba4de7ffe81904c5"
+    },
+    {
+      "path": "marketing/app-store/previews/home-button-se3-en-no-confetti.mp4",
+      "bytes": 35420217,
+      "sha256": "57c356f8ccddd93914d560e813bc58f4364f61c093dfef5631c05a78bd2701fc"
+    },
+    {
+      "path": "marketing/app-store/previews/home-button-se3-ru-no-confetti.mp4",
+      "bytes": 35347349,
+      "sha256": "90ac0f0cac460213a36dcf39574edbcec80b691e93625ff9659a687a32103c27"
+    },
+    {
+      "path": "marketing/app-store/previews/music-score.json",
+      "bytes": 13309,
+      "sha256": "50247407c879b42507a33471d4a261d2e4f1ad9524378507d3c3b57cf588be38"
+    },
+    {
+      "path": "marketing/app-store/previews/provenance.json",
+      "bytes": 21171,
+      "sha256": "86dbd5c3c70b783774478036539706a583edf412382f3d8ca3e8c120f3f66509"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/en/edit.json",
+      "bytes": 379,
+      "sha256": "a3416ffaa0d0255123cf53ea89b02b9d8e1aac0bf728b68986a2859b0f07ae44"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/en/native.mp4",
+      "bytes": 25799453,
+      "sha256": "043080e3a11144d51b65fba173f3efda81c940a911e0d00b095c602d285fe3c3"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/en/timeline.json",
+      "bytes": 795,
+      "sha256": "2a2804666fed5d2df56ac2f3b19a433e76f8e1f417f3aad96a499e8de444678f"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/ru/edit.json",
+      "bytes": 379,
+      "sha256": "1ae3c81736e59b71b78e284a4d35a1fa13e5c7c88726734f6f89ed5618697265"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/ru/native.mp4",
+      "bytes": 25097087,
+      "sha256": "9bc0282b344deaa7980ff46cb4799eee80eeed32c64f5b8d33d37d87c37b2e63"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/di/ru/timeline.json",
+      "bytes": 793,
+      "sha256": "439e71145d37b9a7f0395182704c8fd763392721a5590d564f25fa750441df00"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/en/edit.json",
+      "bytes": 381,
+      "sha256": "54d0072b238207a24692c89f49e52624d6604cc54b647ca7c6aef61e9eaf0b50"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/en/native.mp4",
+      "bytes": 25769704,
+      "sha256": "d988d83804f15e7ed53275e9c280a4335c1c33cd7cea6456a58676652cba8a2c"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/en/timeline.json",
+      "bytes": 793,
+      "sha256": "f0f498850274cd4ef1080a1ac95cffcd7802c10c2a3a3e4b5ccd38e478ae72b0"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/ru/edit.json",
+      "bytes": 380,
+      "sha256": "a7ad91f48e75279860cefabdb4c05d0b9aa637ea65fb2048f09e774205926e37"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/ru/native.mp4",
+      "bytes": 23585977,
+      "sha256": "8d759d7a699c978306088c2f65c14923ccc0a686e4eb0ffd22e0f9a09ab1a401"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/face-id/ru/timeline.json",
+      "bytes": 794,
+      "sha256": "94232725a8f1f891ac3d2422f86bc00cfdcd5af1438949ebe9b82477944312eb"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/en/edit.json",
+      "bytes": 603,
+      "sha256": "167576dcee060d51b4bb6c8ba9a479b8b9cd368834bb0a4310cdad06489c8d11"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/en/end-card-native.mp4",
+      "bytes": 44828,
+      "sha256": "92686a6667c790b996cfbd5932c3eb4763903f79e3fac82bb537a47bf5c8c818"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/en/native.mp4",
+      "bytes": 7928368,
+      "sha256": "ff60b75423d411c8aacd2460b42893dd1d7a1dd3f089db7b4c3422e9bc3cc54e"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/en/timeline.json",
+      "bytes": 795,
+      "sha256": "f4d7b93b183b9bf7476023b2fe2b94589973c88eb10009086e687e6cce003969"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/ru/edit.json",
+      "bytes": 380,
+      "sha256": "0a764738a85bf293ea0ad037904fe5938cb0c7e98b09cbfc2a20fdc4729b2bf9"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/ru/native.mp4",
+      "bytes": 7173221,
+      "sha256": "dd3373ba23c1e7d5add814cdd8b748fd53c2982c40f0d32473c831ec96fd9209"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/home-button/ru/timeline.json",
+      "bytes": 793,
+      "sha256": "0b28552983ccc69861491d52fbe470dd6842d167e82ac3ea0b9bedcac1283b04"
+    },
+    {
+      "path": "marketing/app-store/previews/sources/index.json",
+      "bytes": 1121,
+      "sha256": "7f680366d688161718e7e02ff9e988daca9c762b81bc05fd7c288ea81f0be261"
+    },
+    {
+      "path": "marketing/app-store/previews/support/assemble.py",
+      "bytes": 3876,
+      "sha256": "09885545b180a6a9ce887abca918bc796b15d1b3c632b88595499a65d2cc0443"
+    },
+    {
+      "path": "marketing/app-store/previews/support/audit_motion.py",
+      "bytes": 908,
+      "sha256": "53a15f4c6661213362256c18e787e71777cadc818aae96f4747bfc01360ea3ad"
+    },
+    {
+      "path": "marketing/app-store/previews/support/capture-remaining.py",
+      "bytes": 3734,
+      "sha256": "c76d01d6b18e44de2e77533d42dc5600d6c00fbd60c27ca99291b703f1ce5e03"
+    },
+    {
+      "path": "marketing/app-store/previews/support/capture-test.patch.json",
+      "bytes": 5396,
+      "sha256": "0c5ea40c108b867929553e89792c87fa7e6a33cb1df126196789e33a87686414"
+    },
+    {
+      "path": "marketing/app-store/previews/support/compose-music.py",
+      "bytes": 3437,
+      "sha256": "328db24f7242f595d8fd94828d1fc701f0350e1d894d40afe6fb3d03754f880b"
+    },
+    {
+      "path": "marketing/app-store/previews/support/finalize-readback.py",
+      "bytes": 4480,
+      "sha256": "6b766ed94c59b9ec5671ebe98cdb09ba77db44429453a4e75317912fc62c883a"
+    },
+    {
+      "path": "marketing/app-store/previews/support/launch.py",
+      "bytes": 993,
+      "sha256": "14bb6a6f95d0a3c1db11674ebdbd2748c86d0aae22586129e2e868dcc830ae8b"
+    },
+    {
+      "path": "marketing/app-store/previews/support/local-auth.py",
+      "bytes": 749,
+      "sha256": "f3da9b509ed76cca879d78ddc70dac39bfe2cee2ef3c8656863c8f44d7b7c593"
+    },
+    {
+      "path": "marketing/app-store/previews/support/music/Little-Days.wav",
+      "bytes": 4800044,
+      "sha256": "3f61df583176934c73962845b3e82d40120c938674304f503759c37c61a7a3a0"
+    },
+    {
+      "path": "marketing/app-store/previews/support/music/compose.py",
+      "bytes": 3437,
+      "sha256": "328db24f7242f595d8fd94828d1fc701f0350e1d894d40afe6fb3d03754f880b"
+    },
+    {
+      "path": "marketing/app-store/previews/support/music/score.json",
+      "bytes": 13309,
+      "sha256": "50247407c879b42507a33471d4a261d2e4f1ad9524378507d3c3b57cf588be38"
+    },
+    {
+      "path": "marketing/app-store/previews/support/rebuild.py",
+      "bytes": 2458,
+      "sha256": "471fe51b6ddb607692ddd133c8c7fcb74a0a5c3613dde3bd9ed8fb0b14306ba4"
+    },
+    {
+      "path": "marketing/app-store/previews/support/record-end-card.py",
+      "bytes": 2365,
+      "sha256": "3b7fdddadde56f88d2b2eaae46198538e48a576b84dd5b6f63ab5bc4cfaea19b"
+    },
+    {
+      "path": "marketing/app-store/previews/support/record-no-confetti.py",
+      "bytes": 2434,
+      "sha256": "4ac538ce232d4c6076ea36d9ddd0d5ce908731e96b8a93f375f7e61ecb4bd4af"
+    },
+    {
+      "path": "marketing/app-store/previews/support/record.py",
+      "bytes": 2419,
+      "sha256": "24584febb092df38911077b95a48abcbce174542d0bcb94d285b6f2103636ef8"
+    },
+    {
+      "path": "marketing/app-store/previews/support/render.py",
+      "bytes": 3714,
+      "sha256": "9184addd3627c659b26874999d6829354a287cb0e4615f3bc5ae154ef72f1879"
+    },
+    {
+      "path": "marketing/app-store/previews/support/seed.py",
+      "bytes": 1144,
+      "sha256": "9146058ef769ed8ff58bad618dd623d924545e63fcca3341fc79943caf4e7496"
+    },
+    {
+      "path": "marketing/app-store/previews/support/upload-previews.py",
+      "bytes": 14924,
+      "sha256": "7ebaf882bc778697005b8cc8753025319e91a38cf230293c917ed1fd30787ea9"
+    },
+    {
+      "path": "marketing/app-store/screenshots/apple-network-recovery-inventory.json",
+      "bytes": 1031,
+      "sha256": "b82b0a5a9cc6bc41b81f75d52ede9f77319deda5b22b6f1318550a5d9d9313f9"
+    },
+    {
+      "path": "marketing/app-store/screenshots/apple-se3-network-stop.json",
+      "bytes": 1595,
+      "sha256": "3703788429cc1f36f90c18fbe10cbce824fc9d9ffbe0eddcb00ec26c57fa856f"
+    },
+    {
+      "path": "marketing/app-store/screenshots/apple-upload-receipt.json",
+      "bytes": 3126,
+      "sha256": "04ddde4bb712368c2f7d3b6506b2486c31ba58b610c7a1a34b75bd5498a3bcac"
+    },
+    {
+      "path": "marketing/app-store/screenshots/apple-verified-inventory.json",
+      "bytes": 15803,
+      "sha256": "e8eba7b52de475309bc31849d7b41461132aa1ea3d40fe8e7c0aa16b03938829"
+    },
+    {
+      "path": "marketing/app-store/screenshots/en-US/01-mia.png",
+      "bytes": 1950573,
+      "sha256": "d1526f548e4f625bd08f403dbf0c6a1f798c62e5b803ecd574d36daaaa8c1ab4"
+    },
+    {
+      "path": "marketing/app-store/screenshots/en-US/02-leo-celebration.png",
+      "bytes": 2124481,
+      "sha256": "4def72029247ba026f1e995b54291e897c61b6f73d2730ab706d0793df49e684"
+    },
+    {
+      "path": "marketing/app-store/screenshots/en-US/03-mango-teddy.png",
+      "bytes": 2398322,
+      "sha256": "43016ff541375eb2389df18da768862ee67939bd98eb7b1199179f035dd4ad1f"
+    },
+    {
+      "path": "marketing/app-store/screenshots/en-US/04-widgets.png",
+      "bytes": 419018,
+      "sha256": "3d67c3f4762dad8faa2ae5028794a9e96eed201700a3474f7f683936e6251c2e"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/en-US/01-mia.png",
+      "bytes": 1707003,
+      "sha256": "53035ea49f2efb135ec0eaa2a9fad3d0ea4a7b902371064a9de7101df08aaae1"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/en-US/02-leo-celebration.png",
+      "bytes": 1843867,
+      "sha256": "72d6b440f4d3a8d376e9bd257ca9bd1b928e812405a7d25a3f2e36c3c3c9460a"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/en-US/03-mango-teddy.png",
+      "bytes": 2085139,
+      "sha256": "add122ffa34a55023c7425ffc7b923b628aa65939a9d8326af2e6e91832a6469"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/en-US/04-widgets.png",
+      "bytes": 370312,
+      "sha256": "0aa9af6b8a9b447662ca1678e02970720d1a46b8b556b06b8d04cb1b276099fa"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/ru/01-mia.png",
+      "bytes": 1716688,
+      "sha256": "bf80e8837eaad541c6f7c7e66b66217ea56f490e83e12b81b540099aa4157756"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/ru/02-leo-celebration.png",
+      "bytes": 1856866,
+      "sha256": "f8c788d9c37e5d243fd0762e2a2644cbb991086a98356bd1ecfedb781c09f3e5"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/ru/03-mango-teddy.png",
+      "bytes": 2081267,
+      "sha256": "334503a79cf2d0f3ed51b2c3afabfcd369ed47df7f6b51468ecd4e27892b558c"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/ru/04-widgets.png",
+      "bytes": 370437,
+      "sha256": "ea7d55b7f7758e6adf75d6f56dfabff5ba685cb83e8fe492d521a85b72f08c86"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/dynamic-island-medium/source.json",
+      "bytes": 29267,
+      "sha256": "e3a74bd619acc42a124735e003c1db42619a9202472ef91a616ba178bf49c47e"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/en-US/01-mia.png",
+      "bytes": 1880071,
+      "sha256": "e0c30c6bcabbb7fa1dc51bc3363a8a8043820e815850e1a74a831fed12893d55"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/en-US/02-leo-celebration.png",
+      "bytes": 1995622,
+      "sha256": "a2b806a637dadbe895d3c13373ea47d381b0c4856798eba2f9de220a43b65d84"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/en-US/03-mango-teddy.png",
+      "bytes": 2296769,
+      "sha256": "f8e4488ba6f75ebbfb610d6035596de733557aa33f2830985a5ed453ed1a0ddd"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/en-US/04-widgets.png",
+      "bytes": 380181,
+      "sha256": "cf378cec76ae9485f7df1885ff7725865a36fe1a4a4bf899076e6b1ca17c9fd6"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/ru/01-mia.png",
+      "bytes": 1889350,
+      "sha256": "3775a712d6af52ff85257fe4172ed7a1af93c43a2f0389e5f9d3968c3a6ffaf3"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/ru/02-leo-celebration.png",
+      "bytes": 2020309,
+      "sha256": "ca5207d94c8ffd0ace8487d0ffa16d062d26013ca9e23045fb18c3bf7f58bf34"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/ru/03-mango-teddy.png",
+      "bytes": 2294574,
+      "sha256": "76d8050aa524877b227654740306171ff56c66c37fa26a1158bc761d34293b7b"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/ru/04-widgets.png",
+      "bytes": 379818,
+      "sha256": "d42faf633a7b310225b8da98ee37e3ba9adf7b2c0449ea490b2fdbfef8add817"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/face-id-large/source.json",
+      "bytes": 29258,
+      "sha256": "6537bfbcef3e5a814161fbb192a5e879e193520ceb0edf94d500f1ff05ebdb6c"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/en-US/01-mia.png",
+      "bytes": 396280,
+      "sha256": "27646cb8f178fdbd51cd070d10fb4267fab65828bcf94deff4be19beba7578c1"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/en-US/02-leo-celebration.png",
+      "bytes": 399811,
+      "sha256": "07a7026b8040fcff452276c6f0915b8eac4013d9a4c71eef84144ee8166893ce"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/en-US/03-mango-teddy.png",
+      "bytes": 588527,
+      "sha256": "73471ec19125ec6da8f0f2c550f4d1a179458601fb5116562ac0fa1f6b0dfcb5"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/en-US/04-widgets.png",
+      "bytes": 112101,
+      "sha256": "231bc349dba3d986126087a45ad27a79e2d78380fdac204d034d5ad4383ec866"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/ru/01-mia.png",
+      "bytes": 402092,
+      "sha256": "89a550f4a77575fa5f88e0ac3e3aab20eebb76ca9c15e8670a448f640c903322"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/ru/02-leo-celebration.png",
+      "bytes": 400689,
+      "sha256": "7294d0e0dbf44d3e4a32f300f52e868d54934065a870f606c4ec36f7dd4bab92"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/ru/03-mango-teddy.png",
+      "bytes": 589351,
+      "sha256": "619463ff45d4c96959eca70575f175176d035b01f988dd58ad154098512f2dab"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/ru/04-widgets.png",
+      "bytes": 114527,
+      "sha256": "8f694900aba14ab64fbd221f4940e7cb62a00b520fa7c22ed81c729ae77973ca"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families/home-button-medium/source.json",
+      "bytes": 29269,
+      "sha256": "812e1d60abca434868e495e97d1554b199733ebdcbbc81b8680761aa38b30a2f"
+    },
+    {
+      "path": "marketing/app-store/screenshots/families.json",
+      "bytes": 1666,
+      "sha256": "c0a60c3cc7d1db3fa530c12c83010372a8090e7cb455f3fa45866f34ebbe7e85"
+    },
+    {
+      "path": "marketing/app-store/screenshots/ru/01-mia.png",
+      "bytes": 1959578,
+      "sha256": "3a9da7870a13dac13a88a444b8124b3ed356aa4e69a30aa8fdc25413cc499c94"
+    },
+    {
+      "path": "marketing/app-store/screenshots/ru/02-leo-celebration.png",
+      "bytes": 2121395,
+      "sha256": "d2a11e0548776a6a5fe9410996848f45f6ebfdd9e491fff2bd88b6379c528351"
+    },
+    {
+      "path": "marketing/app-store/screenshots/ru/03-mango-teddy.png",
+      "bytes": 2397222,
+      "sha256": "52cfae8b5dda9e9f636c9a7bb094e0d326acc4af88b795fdcc283300ea5e65f4"
+    },
+    {
+      "path": "marketing/app-store/screenshots/ru/04-widgets.png",
+      "bytes": 418186,
+      "sha256": "0fbcf6fc89b8213327bc59b87bb3cc6171777f93e2d1607f1e77665b5caf2ce1"
+    },
+    {
+      "path": "marketing/app-store/screenshots/source.json",
+      "bytes": 2508,
+      "sha256": "a3b2feec3def8eaeadf5e6ddcc26df218e72e5868a0fb27ab74dfe661ac152c7"
+    },
+    {
+      "path": "GrowingUpUITests/AppStoreScreenshotTests.swift",
+      "bytes": 12363,
+      "sha256": "ff5b14d61afb1a76f5a7a3b7a3ddbd6512b124a7f06d48a0db93db430878d551"
+    },
+    {
+      "path": "scripts/render-app-store-screenshots.py",
+      "bytes": 14547,
+      "sha256": "c91a336b8276a6dd9ed3701391a253ce6b104d197ca45c3073a82928354dc3e8"
+    },
+    {
+      "path": "scripts/run-local-app-store-screenshots.py",
+      "bytes": 5392,
+      "sha256": "1aa5fd983ad64a40d809c62d0794a5986156494400bd22d8e9ec0c46e8fe577e"
+    },
+    {
+      "path": "scripts/app-store-families.py",
+      "bytes": 11357,
+      "sha256": "920cc77e51f7b94d8246068e75c008f37cf9fa59314267f9382e356e2a2e7849"
+    },
+    {
+      "path": "scripts/app-store-metadata.py",
+      "bytes": 24876,
+      "sha256": "738f4572db57e842589e0415d86776161b1d915a2e822df9dbca790abcc67750"
+    },
+    {
+      "path": "docs/app-store-native-families.md",
+      "bytes": 5035,
+      "sha256": "7442632b6c38476b2224667115baa5734228582ea8f07e43f26546a0d119c40b"
+    },
+    {
+      "path": "docs/app-store-hardware-preview.html",
+      "bytes": 4795574,
+      "sha256": "b56b68e12aa855eac0abad0f9ab016f4f318b21dc06375d9f28e58dcc3ed64ef"
+    }
+  ]
+}
