@@ -14,7 +14,7 @@ description: Deliver features, fixes and new builds through implementation, revi
 - **TestFlight:** an explicit TestFlight request also authorizes beta deployment. App Store actions need separate approval.
 - **Limits:** `PR-only` stops before merge. `No-deploy` stops before TestFlight.
 - **Discussion:** loading or discussing this skill does not authorize a release.
-- **Budget:** read the [verification policy](references/verification-policy.md) once at the start. Follow its CI limits, failure-handling and waiting rules throughout.
+- **Verification:** read the [verification policy](references/verification-policy.md) once at the start. Follow its batching, failure-handling and waiting rules throughout.
 
 ## Understand the task
 
@@ -27,7 +27,7 @@ description: Deliver features, fixes and new builds through implementation, revi
 - **Assign:** give the implementer a focused task, expected result and file ownership. If delegation is unavailable, implement it yourself.
 - **Implement:** make the requested change, add appropriate tests and run local checks.
 - **Review:** have an independent reviewer check correctness and the requested behavior. Fix confirmed issues before pushing.
-- **Push:** push the reviewed change, create or update the PR and start bot review. Use automatic CI instead of launching a duplicate; further runs follow the verification policy.
+- **Sync and push:** batch reviewed fixes, fetch the latest base branch and integrate it before pushing. Run relevant local checks on the combined result, then recheck the remote base immediately before one push. Create or update the PR and use automatic CI instead of launching a duplicate.
 
 ## Verify and merge
 

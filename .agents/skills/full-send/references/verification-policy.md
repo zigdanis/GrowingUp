@@ -1,11 +1,12 @@
-# CI limits, failures and waiting
+# Efficient verification, failures and waiting
 
-## CI limits
+## Batch before CI
 
-- **Runs:** per task, at most one full CI run for the ready PR and one on merged code before TestFlight. The second run is for release, not PR debugging.
-- **Count:** keep run links, results and time spent with the task. Include automatic runs, retries, cancellations and diagnostics; one suite counts once. New commits, PRs or threads do not reset the count.
-- **Checks:** prefer fast local checks and reuse automatic CI. Avoid unnecessary expensive jobs.
-- **Stop:** if a push or retry would exceed either limit, or the same failure repeats, ask the developer before continuing.
+- **Prepare:** collect known fixes and review findings, fetch the latest base branch, integrate it and run relevant local checks before pushing. Recheck the remote base immediately before the push so CI validates the combined result.
+- **Reuse:** use the automatic run from that push. Do not start duplicate runs or rerun successful checks for an unchanged commit.
+- **Repeat only when needed:** meaningful changes, base synchronization or a diagnosed failure can require another run. Within an authorized delivery, proceed without asking for separate permission for each necessary run; respect any explicit user budget.
+- **Track:** keep run links, results and time spent with the task, including retries and cancellations. Prefer fast local checks and avoid unnecessary expensive jobs; cancel superseded runs when they no longer provide useful evidence.
+- **Diagnose:** if the same failure repeats, investigate before another attempt. Stop retrying blindly; explain the blocker and ask for input when no concrete correction is available or continuing would materially expand cost or scope.
 
 ## Classify before correcting
 
