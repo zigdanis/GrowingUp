@@ -18,8 +18,11 @@
 			if let loadError { throw loadError }
 		}
 
-		func seed(_ seed: UITestSeed = .pinned) throws {
+		/// Seeds the people of `seed` and returns the widget picture IDs whose images the caller stores, in seeding order.
+		@discardableResult
+		func seed(_ seed: UITestSeed = .pinned, now: Date = Date()) throws -> [UUID] {
 			let context = persistentContainer.viewContext
+			var widgetPictures: [UUID] = []
 			try context.performAndWait {
 				let access = try AccessToWidget.sharedInstance(in: context)
 				let names = seed == .sixPinned ? ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"] : ["Alice", "Boris", "Clara"]
@@ -33,11 +36,32 @@
 						let day = index == 0 ? 16 : 15
 						person.birthdate = Calendar.current.date(from: DateComponents(year: 2020, month: month, day: day, hour: 6, minute: 30))!
 					}
+					if seed == .sixPinned {
+						person.birthdate = Calendar.current.date(byAdding: UITestStore.sixPinnedAges[index], to: now)!
+						// Clara and Farah keep the placeholder face so the widget shows both tile styles.
+						if ![2, 5].contains(index) {
+							let picture = UUID()
+							person.widgetPicId = picture.uuidString
+							widgetPictures.append(picture)
+						}
+					}
 					person.createdDate = Date(timeIntervalSince1970: Double(index))
 					person.accessToWidget = access
 				}
 				try context.save()
 			}
+			return widgetPictures
 		}
+
+		/// Offsets from `now` that show each widget tile: years with months, months with days, a newborn,
+		/// a birthday today, a birthday in three days, and an adult.
+		private static let sixPinnedAges = [
+			DateComponents(year: -5, month: -3, day: -12, hour: -1, minute: -30),
+			DateComponents(month: -11, day: -4, hour: -22),
+			DateComponents(day: -2, hour: -4, minute: -20),
+			DateComponents(year: -8, hour: -2),
+			DateComponents(year: -4, day: 3),
+			DateComponents(year: -30, month: -5, day: -25)
+		]
 	}
 #endif

@@ -11,8 +11,9 @@ live.
 - Keep a list of people, each with a name, birth date and photo.
 - Add or edit a person, including picking and cropping a photo.
 - Person overview with the age counting up in real time.
-- A **Home Screen widget** (WidgetKit) that surfaces up to three pinned people
-  at a glance, with their age updating at minute granularity.
+- A **Home Screen widget** (WidgetKit) in three sizes shows up to six pinned
+  people as photo tiles with a big milestone age and birthday countdowns,
+  refreshing only when that text changes.
 - Data is shared between the app and the widget through a shared App Group.
 - Localized in English and Russian.
 

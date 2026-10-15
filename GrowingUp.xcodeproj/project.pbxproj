@@ -13,7 +13,6 @@
 		A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000002 /* AgeEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62F0C37505B97098594764C3 /* AgeEntry.swift */; };
 		A50000000000000000000003 /* EmptyWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DBBC2301D979FD19D3228A /* EmptyWidgetView.swift */; };
-		A50000000000000000000004 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E1DD9433A99F1E976CD643 /* PersonCell.swift */; };
 		A50000000000000000000005 /* WidgetPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBA49908C60651E19B76C4 /* WidgetPerson.swift */; };
 		A50000000000000000000006 /* WidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */; };
 		A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000008 /* UITestWidgetPreview.swift */; };
@@ -159,7 +158,6 @@
 		E24E534674F44A03CD1119B4 /* ImageCaptureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699F40A42EB1DF729553B0F1 /* ImageCaptureCoordinator.swift */; };
 		E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B95C666900961A68BBCB3C5 /* PersonMutation.swift */; };
 		EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */; };
-		EC7FA6FB044CF631B4550369 /* PersonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1E1DD9433A99F1E976CD643 /* PersonCell.swift */; };
 		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
 		F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */; };
 		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
@@ -188,6 +186,19 @@
 		8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */; };
 		0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */; };
 		599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508A5E39114E5FF4A37059BB /* NavigationTests.swift */; };
+		DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
+		FE04D3B6442C611B7D1DAEC1 /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
+		A6A0189F74C35172B3B04AAC /* PersonTileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A6291E7B63A68981734E8F /* PersonTileContent.swift */; };
+		CF72D8C399272D69A96B8E11 /* PersonTileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A6291E7B63A68981734E8F /* PersonTileContent.swift */; };
+		76D1A74873FDD19C497FF93A /* PersonPhotoBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */; };
+		2340E4CB53BAB3DE5B682AAD /* PersonPhotoBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */; };
+		C411E373929F1EEB97B03106 /* AgeWidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E4ADC94B5F16A85B345C9 /* AgeWidgetBackground.swift */; };
+		EA1BDDD800E93CBA02F7B894 /* AgeWidgetBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E4ADC94B5F16A85B345C9 /* AgeWidgetBackground.swift */; };
+		14B6EEA1293D82D5240D120C /* AgeTimelineSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */; };
+		6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */; };
+		1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */; };
+		9D9F4D044A85D60A5BED0B06 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
+		788DE405402CE74376AD1024 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -385,7 +396,6 @@
 		B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersonEditorScene.swift; sourceTree = "<group>"; };
 		BDAB1D029EDF4BE9071E03E5 /* LimitedAccessHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedAccessHeader.swift; sourceTree = "<group>"; };
 		C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneConfigurator.swift; sourceTree = "<group>"; };
-		C1E1DD9433A99F1E976CD643 /* PersonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonCell.swift; sourceTree = "<group>"; };
 		C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestStore.swift; sourceTree = "<group>"; };
 		C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskImageStore.swift; sourceTree = "<group>"; };
 		C740FE9D2F12B67A364F32B6 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
@@ -431,6 +441,15 @@
 		6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarCircle.swift; sourceTree = "<group>"; };
 		C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAvatarStrip.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTile.swift; sourceTree = "<group>"; };
+		E9A6291E7B63A68981734E8F /* PersonTileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContent.swift; sourceTree = "<group>"; };
+		8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoBackground.swift; sourceTree = "<group>"; };
+		DB8E4ADC94B5F16A85B345C9 /* AgeWidgetBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetBackground.swift; sourceTree = "<group>"; };
+		520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTimelineSchedule.swift; sourceTree = "<group>"; };
+		720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTimelineScheduleTests.swift; sourceTree = "<group>"; };
+		A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContentTests.swift; sourceTree = "<group>"; };
+		0B3DB4282041C5288DAF9987 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widget.strings; sourceTree = "<group>"; };
+		C7A0465B1865B8FD8AF5EC84 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Widget.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -496,12 +515,16 @@
 				7018955E31694F6F80D6537D /* GrowingUpWidget.swift */,
 				137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */,
 				A5000000000000000000000A /* Localizable.strings */,
+				EDE3B14138496431B32AD7F5 /* Widget.strings */,
 				A5000000000000000000000E /* AgeWidgetContentView.swift */,
 				0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */,
 				62F0C37505B97098594764C3 /* AgeEntry.swift */,
 				D0DBBC2301D979FD19D3228A /* EmptyWidgetView.swift */,
 				85F86BF7E1D6CCE36B185DBE /* GrowingUpWidgetBundle.swift */,
-				C1E1DD9433A99F1E976CD643 /* PersonCell.swift */,
+				DB8E4ADC94B5F16A85B345C9 /* AgeWidgetBackground.swift */,
+				8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */,
+				D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */,
+				E9A6291E7B63A68981734E8F /* PersonTileContent.swift */,
 				44CBA49908C60651E19B76C4 /* WidgetPerson.swift */,
 			);
 			path = Widget;
@@ -517,6 +540,7 @@
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
 				3E043A34E30A8F80062A411B /* AgeSummary.swift */,
+				520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */,
 				4D7813DC942094FA5DDC9DF7 /* AgeUnit.swift */,
 				6DCD682917785D101653B7A2 /* AgeUnitValue.swift */,
 				1303536429A34F2CB9827E7E /* BirthdayStatus.swift */,
@@ -658,6 +682,7 @@
 			children = (
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
+				720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */,
 				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -769,6 +794,7 @@
 			children = (
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
+				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 				6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
@@ -1171,6 +1197,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A50000000000000000000009 /* Localizable.strings in Resources */,
+				9D9F4D044A85D60A5BED0B06 /* Widget.strings in Resources */,
 				09051B4E21C55A13008A99C6 /* WidgetAssets.xcassets in Resources */,
 				09051B6E21C569EE008A99C6 /* InfoPlist.strings in Resources */,
 			);
@@ -1199,6 +1226,7 @@
 				0978FDE7227256ED00487BC2 /* Localizable.strings in Resources */,
 				0916534C223ECBC40081FB10 /* LaunchScreen.storyboard in Resources */,
 				A50000000000000000000006 /* WidgetAssets.xcassets in Resources */,
+				788DE405402CE74376AD1024 /* Widget.strings in Resources */,
 				0916535E223ECBC40081FB10 /* Assets.xcassets in Resources */,
 				09165367223ECBC40081FB10 /* InfoPlist.strings in Resources */,
 			);
@@ -1247,7 +1275,10 @@
 				CD07596BD66BA84904B5B14F /* AgeEntry.swift in Sources */,
 				D8394461090803E7C9C8C51E /* EmptyWidgetView.swift in Sources */,
 				648F8DDDB53544007C495303 /* GrowingUpWidgetBundle.swift in Sources */,
-				EC7FA6FB044CF631B4550369 /* PersonCell.swift in Sources */,
+				DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */,
+				A6A0189F74C35172B3B04AAC /* PersonTileContent.swift in Sources */,
+				76D1A74873FDD19C497FF93A /* PersonPhotoBackground.swift in Sources */,
+				C411E373929F1EEB97B03106 /* AgeWidgetBackground.swift in Sources */,
 				1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1264,6 +1295,7 @@
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
 				FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */,
+				14B6EEA1293D82D5240D120C /* AgeTimelineSchedule.swift in Sources */,
 				6EB10138F14431FD1FE88FDE /* AgeUnit.swift in Sources */,
 				AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */,
 				BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */,
@@ -1310,6 +1342,7 @@
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
+				6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
@@ -1322,6 +1355,7 @@
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
+				1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 				3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
@@ -1337,7 +1371,10 @@
 				A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */,
 				A50000000000000000000002 /* AgeEntry.swift in Sources */,
 				A50000000000000000000003 /* EmptyWidgetView.swift in Sources */,
-				A50000000000000000000004 /* PersonCell.swift in Sources */,
+				FE04D3B6442C611B7D1DAEC1 /* PersonTile.swift in Sources */,
+				CF72D8C399272D69A96B8E11 /* PersonTileContent.swift in Sources */,
+				2340E4CB53BAB3DE5B682AAD /* PersonPhotoBackground.swift in Sources */,
+				EA1BDDD800E93CBA02F7B894 /* AgeWidgetBackground.swift in Sources */,
 				A50000000000000000000005 /* WidgetPerson.swift in Sources */,
 				A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */,
 				0916536C223ECBC40081FB10 /* GrowingUpApp.swift in Sources */,
@@ -1521,6 +1558,15 @@
 				09E7339221C453D200BA4157 /* en */,
 			);
 			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		EDE3B14138496431B32AD7F5 /* Widget.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0B3DB4282041C5288DAF9987 /* en */,
+				C7A0465B1865B8FD8AF5EC84 /* ru */,
+			);
+			name = Widget.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1837,7 +1883,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift PersonCell.swift WidgetPerson.swift UITestWidgetPreview.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift AgeWidgetBackground.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

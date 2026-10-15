@@ -12,9 +12,9 @@ struct GrowingUpWidget: Widget {
 	let kind = "pro.ziganshin.GrowingUp.Widget"
 
 	var body: some WidgetConfiguration {
+		// The entry view chooses its container background per family: the person's photo in the small widget.
 		StaticConfiguration(kind: kind, provider: AgeWidgetProvider()) { entry in
 			AgeWidgetEntryView(entry: entry)
-				.containerBackground(.fill.tertiary, for: .widget)
 		}
 		.configurationDisplayName("GrowingUp")
 		.description("See up to six pinned people and their live age.")
