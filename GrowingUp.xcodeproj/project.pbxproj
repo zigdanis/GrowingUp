@@ -175,6 +175,8 @@
 		FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E043A34E30A8F80062A411B /* AgeSummary.swift */; };
 		271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
+		14B6EEA1293D82D5240D120C /* AgeTimelineSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */; };
+		6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -405,6 +407,8 @@
 		3E043A34E30A8F80062A411B /* AgeSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummary.swift; sourceTree = "<group>"; };
 		A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummaryTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
+		520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTimelineSchedule.swift; sourceTree = "<group>"; };
+		720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTimelineScheduleTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -491,6 +495,7 @@
 				095000D5226DD93B00789BED /* EntityGateway */,
 				09051B6321C55F5B008A99C6 /* AgeCalculator.swift */,
 				3E043A34E30A8F80062A411B /* AgeSummary.swift */,
+				520D9678379BF981D9D8A95F /* AgeTimelineSchedule.swift */,
 				4D7813DC942094FA5DDC9DF7 /* AgeUnit.swift */,
 				6DCD682917785D101653B7A2 /* AgeUnitValue.swift */,
 				1303536429A34F2CB9827E7E /* BirthdayStatus.swift */,
@@ -632,6 +637,7 @@
 			children = (
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
+				720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */,
 				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -1225,6 +1231,7 @@
 				0983E765226D9652007EC8D2 /* EditPersonUseCase.swift in Sources */,
 				09051B6421C55F5B008A99C6 /* AgeCalculator.swift in Sources */,
 				FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */,
+				14B6EEA1293D82D5240D120C /* AgeTimelineSchedule.swift in Sources */,
 				6EB10138F14431FD1FE88FDE /* AgeUnit.swift in Sources */,
 				AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */,
 				BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */,
@@ -1271,6 +1278,7 @@
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
+				6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
