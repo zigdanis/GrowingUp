@@ -17,6 +17,7 @@ public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
 	@NSManaged public var createdDate: Date
+	@NSManaged public var celebratesBirthdays: Bool
 	@NSManaged public var accessToWidget: AccessToWidget?
 }
 
@@ -45,7 +46,8 @@ extension CoreDataPerson {
 			appPicId: UUID(string: appPicId),
 			widgetPicId: UUID(string: widgetPicId),
 			isOnWidget: isOnWidget,
-			createdDate: createdDate)
+			createdDate: createdDate,
+			celebratesBirthdays: celebratesBirthdays)
 	}
 
 	public func populate(with parameters: AddPersonParameters) {
@@ -53,6 +55,7 @@ extension CoreDataPerson {
 		birthdate = parameters.combinedDate()
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
+		celebratesBirthdays = parameters.celebratesBirthdays
 	}
 
 }
