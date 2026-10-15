@@ -2,30 +2,23 @@ import SwiftUI
 import UIKit
 import WidgetKit
 
-/// A person's widget photo filling its container, with scrims that keep white text readable on any photo.
+/// A person's widget photo filling its container; the photo already carries the scrims that keep white text readable (see `PhotoScrim`).
 struct PersonPhotoBackground: View {
-	let image: UIImage?
+	let photo: UIImage?
 	@Environment(\.widgetRenderingMode)
 	private var renderingMode
 
 	var body: some View {
 		Color.clear
-			.overlay { photo }
-			.overlay {
-				// Tinted and clear Home Screens draw views as alpha masks, where the scrims would only haze the photo.
-				if renderingMode == .fullColor {
-					LinearGradient(colors: [.black.opacity(0.35), .clear], startPoint: .top, endPoint: .center)
-					LinearGradient(colors: [.clear, .black.opacity(0.65)], startPoint: .center, endPoint: .bottom)
-				}
-			}
+			.overlay { content }
 			.clipped()
 			// The photo is decorative; the tile carries the label. Hidden, the scaled-to-fill image also cannot report its unclipped frame.
 			.accessibilityHidden(true)
 	}
 
-	@ViewBuilder private var photo: some View {
-		if let image {
-			Image(uiImage: image)
+	@ViewBuilder private var content: some View {
+		if let photo {
+			Image(uiImage: photo)
 				.resizable()
 				.widgetAccentedRenderingMode(.fullColor)
 				.scaledToFill()
@@ -33,6 +26,12 @@ struct PersonPhotoBackground: View {
 			ZStack {
 				Rectangle().fill(.fill.tertiary)
 				placeholderFace
+				// A photo has its scrims baked in; the plain fill is light in Light Mode, so it needs them for the white text.
+				// Tinted and clear Home Screens draw views as alpha masks, where the scrims would only haze the tile.
+				if renderingMode == .fullColor {
+					LinearGradient(colors: [.black.opacity(0.35), .clear], startPoint: .top, endPoint: .center)
+					LinearGradient(colors: [.clear, .black.opacity(0.65)], startPoint: .center, endPoint: .bottom)
+				}
 			}
 		}
 	}
