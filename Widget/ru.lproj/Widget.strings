@@ -1,0 +1,16 @@
+/* Strings drawn by the widget views. The table ships in both the widget extension and the app, which renders the same views for UI tests. */
+
+/* Empty widget invitation */
+"Add someone" = "Добавьте кого-нибудь";
+
+/* Tile caption after the primary age, e.g. "и 3 месяца" */
+"and %@" = "и %@";
+
+/* Tile caption, e.g. "День рождения через 3 дня" */
+"Birthday in %@" = "День рождения через %@";
+
+/* Tile caption on the birthday itself */
+"Birthday today" = "Сегодня день рождения 🎂";
+
+/* Sample person in the Lock Screen widget gallery */
+"Leo" = "Лео";

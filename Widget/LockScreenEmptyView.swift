@@ -19,13 +19,21 @@ struct LockScreenEmptyView: View {
 				Image(systemName: "person.crop.circle.badge.plus").font(.title2)
 			}
 			.accessibilityElement(children: .ignore)
-			.accessibilityLabel(Text("Add someone"))
+			.accessibilityLabel(Text("Add someone", tableName: "Widget"))
 		case .accessoryInline:
-			Label("Add someone", systemImage: "person.crop.circle.badge.plus")
+			invitation
 		default:
-			Label("Add someone", systemImage: "person.crop.circle.badge.plus")
+			invitation
 				.font(.headline)
 				.frame(maxWidth: .infinity, alignment: .leading)
+		}
+	}
+
+	private var invitation: some View {
+		Label {
+			Text("Add someone", tableName: "Widget")
+		} icon: {
+			Image(systemName: "person.crop.circle.badge.plus")
 		}
 	}
 }

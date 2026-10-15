@@ -2,21 +2,15 @@
 //  AgeWidgetProvider.swift
 //  Widget
 //
-//  WidgetKit timeline provider that surfaces the pinned people and their live
-//  age, reusing the Core framework (Core Data + Disk image cache) over the
-//  shared App Group container.
+//  WidgetKit timeline provider that surfaces the pinned people and their
+//  milestone ages, reusing the Core framework (Core Data + Disk image cache)
+//  over the shared App Group container.
 //
 
 import Core
 import SwiftUI
 import UIKit
 import WidgetKit
-
-/// Age "ticks" at minute granularity (per-second refresh is not allowed for
-/// home-screen widgets), so we publish one entry per minute.
-private let entryCadence: TimeInterval = 60
-/// How many minute-entries to publish before asking WidgetKit to reload.
-private let entriesPerTimeline = 60
 
 struct AgeWidgetProvider: TimelineProvider {
 
@@ -34,17 +28,15 @@ struct AgeWidgetProvider: TimelineProvider {
 		}
 	}
 
+	/// Adds entries only when a tile's text can change: the next age change of any person, shown to the minute,
+	/// and local midnight for birthday captions. WidgetKit reloads after the last entry, at most 60 entries or a day ahead.
 	func getTimeline(in context: Context, completion: @escaping (Timeline<AgeEntry>) -> Void) {
 		Task {
 			let persons = await loadPersons(family: context.family)
-			let start = Date()
-			var entries: [AgeEntry] = []
-			for offset in 0..<entriesPerTimeline {
-				let date = start.addingTimeInterval(Double(offset) * entryCadence)
-				entries.append(AgeEntry(date: date, persons: persons))
-			}
-			let next = start.addingTimeInterval(Double(entriesPerTimeline) * entryCadence)
-			completion(Timeline(entries: entries, policy: .after(next)))
+			let now = Date()
+			let schedule = AgeTimelineSchedule(birthdays: persons.map(\.birthday), finestUnit: PersonTileContent.finestUnit)
+			let entries = schedule.entryDates(from: now).map { AgeEntry(date: $0, persons: persons) }
+			completion(Timeline(entries: entries, policy: .after(entries.last?.date ?? now)))
 		}
 	}
 
@@ -66,11 +58,20 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	// MARK: - Previews / placeholder
 
+	/// Gallery people whose ages show each kind of tile: years, months, a newborn and birthday captions.
 	private static func samplePersons() -> [WidgetPerson] {
-		let calendar = Calendar.current
-		return (0..<Constants.widgetPeopleLimit).map { index in
-			let birthday = calendar.date(byAdding: .year, value: -(index + 1) * 3, to: Date()) ?? Date()
-			return WidgetPerson(id: UUID(), index: index, name: "—", birthday: birthday, image: nil)
+		let now = Date()
+		let ages: [(String, DateComponents)] = [
+			("Alice", DateComponents(year: -5, month: -3, day: -12)),
+			("Boris", DateComponents(month: -11, day: -4)),
+			("Clara", DateComponents(day: -2, hour: -4)),
+			("Daria", DateComponents(year: -8)),
+			("Evan", DateComponents(year: -4, day: 3)),
+			("Farah", DateComponents(year: -30, month: -5))
+		]
+		return ages.enumerated().map { index, sample in
+			let birthday = Calendar.current.date(byAdding: sample.1, to: now) ?? now
+			return WidgetPerson(id: UUID(), index: index, name: sample.0, birthday: birthday, image: nil)
 		}
 	}
 }

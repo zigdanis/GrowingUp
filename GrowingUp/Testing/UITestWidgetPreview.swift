@@ -67,10 +67,13 @@
 					.frame(width: lockScreenSize.width, height: lockScreenSize.height)
 					.environment(\.colorScheme, .dark)
 			} else {
+				// Outside WidgetKit there is no container background, so the widget background is drawn directly.
 				AgeWidgetContentView(entry: entry, family: family)
 					.padding(16)
 					.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
-					.background(.background, in: RoundedRectangle(cornerRadius: 24))
+					.background { AgeWidgetBackground(entry: entry, family: family) }
+					.background(.background)
+					.clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
 			}
 		}
 	}

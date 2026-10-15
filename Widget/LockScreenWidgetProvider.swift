@@ -46,6 +46,6 @@ struct LockScreenWidgetProvider: TimelineProvider {
 	static func samplePerson(birthdayInDays: Int? = nil) -> WidgetPerson {
 		let age = birthdayInDays.map { DateComponents(year: -6, day: $0) } ?? DateComponents(year: -5, month: -3)
 		let birthday = Calendar.current.date(byAdding: age, to: Date()) ?? Date()
-		return WidgetPerson(id: UUID(), index: 0, name: String(localized: "Leo"), birthday: birthday, image: nil)
+		return WidgetPerson(id: UUID(), index: 0, name: String(localized: "Leo", table: "Widget"), birthday: birthday, image: nil)
 	}
 }

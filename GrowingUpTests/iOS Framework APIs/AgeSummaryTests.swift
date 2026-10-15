@@ -51,7 +51,7 @@ final class AgeSummaryTests: XCTestCase {
 		XCTAssertTrue(russianCompact.hasSuffix("3 месяца"), russianCompact)
 	}
 
-	func testSecondarySkipsZeroUnitsButNeverGoesBelowTheFinestUnit() {
+	func testSecondaryIsAtMostTwoUnitsFinerAndNeverBelowTheFinestUnit() {
 		let birthday = date(2025, 1, 10, 10, 7).addingTimeInterval(30)
 		let exact = summary(birthday, date(2026, 1, 10, 10, 7).addingTimeInterval(30))
 		XCTAssertEqual(exact.primary, AgeUnitValue(value: 1, unit: .years))
@@ -61,9 +61,16 @@ final class AgeSummaryTests: XCTestCase {
 		let fiveDays = summary(birthday, date(2026, 1, 15, 12))
 		XCTAssertEqual(fiveDays.secondary, AgeUnitValue(value: 5, unit: .days))
 		XCTAssertEqual(fiveDays.localizedCompact(locale: english), "1 year, 5 days")
-		let oneHour = date(2026, 1, 10, 11, 7).addingTimeInterval(30)
-		XCTAssertEqual(summary(birthday, oneHour).secondary, AgeUnitValue(value: 1, unit: .hours))
-		XCTAssertNil(summary(birthday, oneHour, .days).secondary)
+		let adult = date(2020, 6, 3, 8)
+		let sixYearsFiveHours = summary(adult, date(2026, 6, 3, 13), .minutes)
+		XCTAssertEqual(sixYearsFiveHours.primary, AgeUnitValue(value: 6, unit: .years))
+		XCTAssertNil(sixYearsFiveHours.secondary)
+		XCTAssertEqual(sixYearsFiveHours.localizedCompact(locale: english), "6 years")
+		XCTAssertEqual(summary(adult, date(2026, 6, 4, 13), .minutes).localizedCompact(locale: english), "6 years, 1 day")
+		XCTAssertEqual(summary(adult, date(2020, 9, 3, 13), .minutes).localizedCompact(locale: english), "3 months, 5 hours")
+		let fiveDaysOld = summary(adult, date(2020, 6, 8, 8, 30))
+		XCTAssertEqual(fiveDaysOld.secondary, AgeUnitValue(value: 30, unit: .minutes))
+		XCTAssertNil(summary(adult, date(2020, 6, 8, 8, 30), .hours).secondary)
 	}
 
 	func testFinestUnitTruncatesInsteadOfRounding() {
@@ -73,10 +80,10 @@ final class AgeSummaryTests: XCTestCase {
 		XCTAssertNil(summary(newborn, almostTwoMinutes, .minutes).secondary)
 		let halfMinute = date(2026, 1, 10, 10, 7).addingTimeInterval(59)
 		XCTAssertEqual(summary(newborn, halfMinute, .minutes).primary, AgeUnitValue(value: 0, unit: .minutes))
-		let twoDays = date(2026, 1, 12, 10, 8)
-		XCTAssertEqual(summary(newborn, twoDays).secondary, AgeUnitValue(value: 30, unit: .seconds))
-		XCTAssertEqual(summary(newborn, twoDays, .minutes).primary, AgeUnitValue(value: 2, unit: .days))
-		XCTAssertNil(summary(newborn, twoDays, .minutes).secondary)
+		let oneHour = date(2026, 1, 10, 11, 8)
+		XCTAssertEqual(summary(newborn, oneHour).secondary, AgeUnitValue(value: 30, unit: .seconds))
+		XCTAssertEqual(summary(newborn, oneHour, .minutes).primary, AgeUnitValue(value: 1, unit: .hours))
+		XCTAssertNil(summary(newborn, oneHour, .minutes).secondary)
 	}
 
 	func testLeapDayBirthdayCountsLikeTheCalendar() {
@@ -122,7 +129,9 @@ final class AgeSummaryTests: XCTestCase {
 		XCTAssertEqual(nextChange(newborn, date(2026, 1, 10, 11, 30), .minutes), date(2026, 1, 10, 11, 30).addingTimeInterval(30))
 		XCTAssertEqual(nextChange(newborn, date(2026, 1, 12, 15), .days), date(2026, 1, 13, 10, 7).addingTimeInterval(30))
 		XCTAssertEqual(nextChange(date(2020, 6, 3, 8), date(2025, 9, 15, 20, 30), .days), date(2025, 10, 3, 8))
-		XCTAssertEqual(nextChange(date(2025, 1, 10, 10, 7), date(2026, 1, 10, 10, 7), .minutes), date(2026, 1, 10, 10, 8))
+		XCTAssertEqual(nextChange(date(2025, 1, 10, 10, 7), date(2026, 1, 10, 10, 7), .minutes), date(2026, 1, 11, 10, 7))
+		XCTAssertEqual(nextChange(date(2020, 6, 3, 8), date(2026, 6, 3, 13), .minutes), date(2026, 6, 4, 8), "6 years waits for a day")
+		XCTAssertEqual(nextChange(newborn, date(2026, 1, 10, 11, 8), .minutes), date(2026, 1, 10, 11, 8).addingTimeInterval(30))
 		XCTAssertEqual(nextChange(newborn, date(2025, 12, 31), .minutes), date(2026, 1, 10, 10, 8).addingTimeInterval(30))
 	}
 
@@ -133,12 +142,16 @@ final class AgeSummaryTests: XCTestCase {
 			date(2027, 1, 10, 11, 7).addingTimeInterval(30), date(2025, 12, 31)
 		]
 		let leapNows = [date(2021, 2, 28, 12), date(2021, 3, 15, 12), date(2024, 2, 29, 10)]
+		let adultNows = [date(2025, 9, 15, 20, 30), date(2026, 6, 3, 13), date(2026, 6, 4, 13), date(2026, 6, 3, 8)]
 		for finestUnit in [AgeUnit.seconds, .minutes, .days] {
 			for now in nows {
 				assertNextChange(newborn, now, finestUnit)
 			}
 			for now in leapNows {
 				assertNextChange(date(2020, 2, 29, 10), now, finestUnit)
+			}
+			for now in adultNows {
+				assertNextChange(date(2020, 6, 3, 8), now, finestUnit)
 			}
 		}
 	}

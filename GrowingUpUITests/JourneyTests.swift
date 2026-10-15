@@ -139,16 +139,27 @@ final class JourneyTests: XCTestCase {
 	func testWidgetSizesRenderPinnedPeopleInBothLanguages() {
 		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
 		for locale in ["en", "ru"] {
-			for (family, count) in [("small", 1), ("medium", 3), ("large", 6), ("circular", 1), ("rectangular", 1), ("inline", 1)] {
-				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
-				for (index, name) in names.enumerated() {
-					let person = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
-					if index < count {
-						XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
-					} else {
-						XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
+			for appearance in UITestAppearance.allCases {
+				for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
+					launch(seed: .sixPinned, locale: locale, appearance: appearance, widgetFamily: family)
+					for (index, name) in names.enumerated() {
+						let person = widgetTile(name)
+						if index < count {
+							XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
+						} else {
+							XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
+						}
 					}
+					if family == "large" { assertWidgetCaptions(locale: locale) }
+					checkpoint("widget-\(family)-\(locale)-\(appearance.launchArgumentValue)", compareBaseline: false)
+					app.terminate()
 				}
+			}
+			// Lock Screen widgets keep the Lock Screen's look whatever the app appearance, so they render once per language.
+			for family in ["circular", "rectangular", "inline"] {
+				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
+				XCTAssertTrue(widgetTile("Alice").waitForExistence(timeout: 5), family)
+				XCTAssertFalse(widgetTile("Boris").exists, "\(family) should show only the first person")
 				checkpoint("widget-\(family)-\(locale)", compareBaseline: false)
 				app.terminate()
 			}
@@ -159,8 +170,9 @@ final class JourneyTests: XCTestCase {
 		// Alice, the first pinned person, was born on 16 January 2020.
 		for (family, expected) in [("circular", "Birthday today"), ("rectangular", "Birthday today"), ("inline", "turns 7 today")] {
 			launch(seed: .birthdays, widgetFamily: family, clock: "2027-01-16T08:00:00Z")
-			let predicate = NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@", "Alice", expected)
-			XCTAssertTrue(app.descendants(matching: .any).matching(predicate).firstMatch.waitForExistence(timeout: 5), family)
+			let alice = widgetTile("Alice")
+			XCTAssertTrue(alice.waitForExistence(timeout: 5), family)
+			XCTAssertTrue(alice.label.contains(expected), "\(family): \(alice.label)")
 			checkpoint("widget-\(family)-birthday-en", compareBaseline: false)
 			app.terminate()
 		}
@@ -269,6 +281,24 @@ extension JourneyTests {
 			XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch.waitForExistence(timeout: 10))
 		} else {
 			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		}
+	}
+
+	private func widgetTile(_ name: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+	}
+
+	/// The seed gives Alice 5 years and 3 months, Daria her birthday today and Evan his birthday in three days.
+	private func assertWidgetCaptions(locale: String) {
+		let russian = locale == "ru"
+		let expectations = [
+			("Alice", russian ? "5 лет" : "5 years, 3 months"),
+			("Daria", russian ? "Сегодня день рождения" : "Birthday today"),
+			("Evan", russian ? "День рождения через 3 дня" : "Birthday in 3 days")
+		]
+		for (name, text) in expectations {
+			let label = widgetTile(name).label
+			XCTAssertTrue(label.contains(text), "\(name): \(label)")
 		}
 	}
 

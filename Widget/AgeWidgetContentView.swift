@@ -6,6 +6,8 @@ struct AgeWidgetContentView: View {
 	let entry: AgeEntry
 	let family: WidgetFamily
 
+	private static let columns = 3
+
 	var body: some View {
 		if entry.persons.isEmpty {
 			EmptyWidgetView()
@@ -21,39 +23,46 @@ struct AgeWidgetContentView: View {
 		}
 	}
 
-	// One person, whole widget deep-links to that person.
+	// One person over their photo, which `AgeWidgetBackground` supplies; the whole widget deep-links to them.
 	private var smallView: some View {
 		let person = entry.persons[0]
-		return PersonCell(person: person, date: entry.date, compact: true)
+		return PersonTile(person: person, date: entry.date, family: family)
 			.widgetURL(person.deepLinkURL)
 	}
 
-	// Up to three people side by side, each independently tappable.
+	// Up to three photo tiles side by side, each independently tappable.
 	private var mediumView: some View {
-		HStack(spacing: 0) {
-			ForEach(entry.persons.prefix(3)) { person in
-				Link(destination: person.deepLinkURL) {
-					PersonCell(person: person, date: entry.date, compact: false)
-						.frame(maxWidth: .infinity)
-				}
-				.buttonStyle(.plain)
+		HStack(spacing: 8) {
+			ForEach(entry.persons.prefix(Self.columns)) { person in
+				link(to: person)
 			}
 		}
 	}
 
-	// Up to six people in two rows, preserving the provider's deep-link indices.
+	// Up to six equally sized tiles in rows of three, preserving the provider's deep-link indices.
 	private var largeView: some View {
-		GeometryReader { geometry in
-			LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 3), spacing: 16) {
-				ForEach(entry.persons.prefix(Constants.widgetPeopleLimit)) { person in
-					Link(destination: person.deepLinkURL) {
-						PersonCell(person: person, date: entry.date, compact: false)
-							.frame(maxWidth: .infinity)
-							.frame(height: max(0, (geometry.size.height - 16) / 2))
+		let persons = Array(entry.persons.prefix(Constants.widgetPeopleLimit))
+		let rows = Constants.widgetPeopleLimit / Self.columns
+		return Grid(horizontalSpacing: 8, verticalSpacing: 8) {
+			ForEach(0..<rows, id: \.self) { row in
+				GridRow {
+					ForEach(0..<Self.columns, id: \.self) { column in
+						let index = row * Self.columns + column
+						if index < persons.count {
+							link(to: persons[index])
+						} else {
+							Color.clear
+						}
 					}
-					.buttonStyle(.plain)
 				}
 			}
 		}
+	}
+
+	private func link(to person: WidgetPerson) -> some View {
+		Link(destination: person.deepLinkURL) {
+			PersonTile(person: person, date: entry.date, family: family)
+		}
+		.buttonStyle(.plain)
 	}
 }
