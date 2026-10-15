@@ -156,6 +156,18 @@ final class AgeSummaryTests: XCTestCase {
 		}
 	}
 
+	func testNextChangeSkipsTheRepeatedHourWhenClocksGoBack() throws {
+		var newYork = calendar
+		newYork.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let birthday = try XCTUnwrap(newYork.date(from: DateComponents(year: 2026, month: 10, day: 31)))
+		// 06:00 UTC is the second 01:00 of 1 November in New York, where the calendar still counts 1 day, 1 hour.
+		let now = date(2026, 11, 1, 6)
+		let current = AgeSummary(birthday: birthday, now: now, finestUnit: .minutes, calendar: newYork)
+		let next = AgeSummary.nextChangeDate(birthday: birthday, after: now, finestUnit: .minutes, calendar: newYork)
+		XCTAssertGreaterThan(next.timeIntervalSince(now), 2)
+		XCTAssertNotEqual(AgeSummary(birthday: birthday, now: next, finestUnit: .minutes, calendar: newYork), current)
+	}
+
 	private func assertNextChange(_ birthday: Date, _ now: Date, _ finestUnit: AgeUnit, line: UInt = #line) {
 		let next = nextChange(birthday, now, finestUnit)
 		let current = summary(birthday, now, finestUnit)
