@@ -30,7 +30,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		}
 		launch(clock: "2027-01-02T08:00:00Z", locale: "ru")
 		XCTAssertTrue(app.staticTexts["birthday.countdown"].waitForExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "День рождения через 14 дней")
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "До дня рождения: 14 дней")
 		checkpoint("birthday-countdown-days-ru")
 		app.terminate()
 		launch(clock: "2027-01-01T08:00:00Z")

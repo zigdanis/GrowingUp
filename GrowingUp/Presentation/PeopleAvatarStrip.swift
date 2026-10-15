@@ -18,6 +18,8 @@ struct PeopleAvatarStrip: View {
 				ScrollView(.horizontal, showsIndicators: false) {
 					avatars
 				}
+				// A horizontal scroll view would otherwise grow vertically inside the bottom-aligned overlay.
+				.frame(height: 44)
 				.onAppear { proxy.scrollTo(selectedID, anchor: .center) }
 				.onChange(of: selectedID) { _, id in
 					withAnimation { proxy.scrollTo(id, anchor: .center) }

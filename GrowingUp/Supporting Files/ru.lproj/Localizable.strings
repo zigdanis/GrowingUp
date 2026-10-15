@@ -121,7 +121,7 @@
 "Turns %@ today 🎂" = "Сегодня исполняется %@ 🎂";
 
 /* Next birthday in the bottom card; the argument is the remaining time, such as "14 days". */
-"Birthday in %@" = "День рождения через %@";
+"Birthday in %@" = "До дня рождения: %@";
 
 /* Next birthday in the bottom card on the birthday itself. */
 "Birthday today 🎂" = "Сегодня день рождения 🎂";

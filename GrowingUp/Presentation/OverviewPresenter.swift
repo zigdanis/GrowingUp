@@ -25,8 +25,8 @@ final class OverviewPresenter {
 	private let locale: Locale
 
 	init(
-		loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory, calendar: Calendar = .current,
-		locale: Locale = .current
+		loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory, calendar: Calendar = .autoupdatingCurrent,
+		locale: Locale = .autoupdatingCurrent
 	) {
 		self.loadImage = loadImage
 		self.calendar = calendar
