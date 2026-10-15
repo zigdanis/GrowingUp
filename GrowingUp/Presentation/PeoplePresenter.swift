@@ -46,6 +46,16 @@ final class PeoplePresenter {
 
 	func edit(_ person: Person) { showEditor(person: person) }
 
+	/// Shows the page of the person with `id`, or the add page for `nil` while another person can be added.
+	func select(_ id: UUID?) {
+		guard let id else {
+			if canAdd { selectedID = nil }
+			return
+		}
+		guard persons.contains(where: { $0.id == id }) else { return }
+		selectedID = id
+	}
+
 	func open(_ url: URL) {
 		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
 			let value = components.queryItems?.first(where: { $0.name == Constants.widgetPersonIndexKey })?.value,

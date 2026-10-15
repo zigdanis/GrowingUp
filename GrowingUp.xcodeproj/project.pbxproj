@@ -175,6 +175,9 @@
 		FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E043A34E30A8F80062A411B /* AgeSummary.swift */; };
 		271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
+		47F91BDB15D345441CFF1C01 /* AvatarThumbnailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */; };
+		3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */; };
+		C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -405,6 +408,9 @@
 		3E043A34E30A8F80062A411B /* AgeSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummary.swift; sourceTree = "<group>"; };
 		A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummaryTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
+		A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenter.swift; sourceTree = "<group>"; };
+		6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenterTests.swift; sourceTree = "<group>"; };
+		9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleSelectionTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -744,6 +750,8 @@
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
+				6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */,
+				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
 			);
 			path = Presenters;
 			sourceTree = "<group>";
@@ -859,6 +867,7 @@
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
+				A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1284,6 +1293,8 @@
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
+				3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */,
+				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1365,6 +1376,7 @@
 				00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */,
 				2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */,
 				23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */,
+				47F91BDB15D345441CFF1C01 /* AvatarThumbnailsPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
