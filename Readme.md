@@ -13,6 +13,7 @@ live.
 - Person overview with the age counting up in real time.
 - A **Home Screen widget** (WidgetKit) that surfaces up to three pinned people
   at a glance, with their age updating at minute granularity.
+- **Lock Screen widgets** (ring, rectangular and inline) with the first pinned person's age and next birthday.
 - Data is shared between the app and the widget through a shared App Group.
 - Localized in English and Russian.
 
