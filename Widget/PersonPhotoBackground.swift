@@ -19,6 +19,8 @@ struct PersonPhotoBackground: View {
 				}
 			}
 			.clipped()
+			// The photo is decorative; the tile carries the label. Hidden, the scaled-to-fill image also cannot report its unclipped frame.
+			.accessibilityHidden(true)
 	}
 
 	@ViewBuilder private var photo: some View {
@@ -30,8 +32,22 @@ struct PersonPhotoBackground: View {
 		} else {
 			ZStack {
 				Rectangle().fill(.fill.tertiary)
-				Image("face").resizable().scaledToFit().foregroundStyle(.secondary).padding(20)
+				placeholderFace
 			}
+		}
+	}
+
+	/// The face sits between the name row and the age text, which fill the top and bottom of a tile, and scales with the container.
+	private var placeholderFace: some View {
+		GeometryReader { proxy in
+			let side = min(proxy.size.width * 0.4, proxy.size.height * 0.24)
+			Image("face")
+				.resizable()
+				.scaledToFit()
+				.foregroundStyle(.secondary)
+				.frame(width: side, height: side)
+				.frame(maxWidth: .infinity)
+				.padding(.top, proxy.size.height * 0.18)
 		}
 	}
 }
