@@ -165,6 +165,7 @@
 		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
 		BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303536429A34F2CB9827E7E /* BirthdayStatus.swift */; };
 		B60000000000000000000002 /* LockScreenText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* LockScreenText.swift */; };
+		B60000000000000000000004 /* LockScreenSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000003 /* LockScreenSchedule.swift */; };
 		A4D69EDE58CD4F5AA4E0B6DC /* BirthdayInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C7E048F32F84582898290EC /* BirthdayInfoView.swift */; };
 		57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */; };
 		CB07E3253CC36578C3CF0EE6 /* ConfettiParticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */; };
@@ -176,6 +177,7 @@
 		FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E043A34E30A8F80062A411B /* AgeSummary.swift */; };
 		271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */; };
 		B60000000000000000000023 /* LockScreenTextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000022 /* LockScreenTextTests.swift */; };
+		B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000024 /* LockScreenScheduleTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -397,6 +399,7 @@
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
 		1303536429A34F2CB9827E7E /* BirthdayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatus.swift; sourceTree = "<group>"; };
 		B60000000000000000000001 /* LockScreenText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenText.swift; sourceTree = "<group>"; };
+		B60000000000000000000003 /* LockScreenSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenSchedule.swift; sourceTree = "<group>"; };
 		2C7E048F32F84582898290EC /* BirthdayInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayInfoView.swift; sourceTree = "<group>"; };
 		7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayConfettiView.swift; sourceTree = "<group>"; };
 		D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiParticle.swift; sourceTree = "<group>"; };
@@ -408,6 +411,7 @@
 		3E043A34E30A8F80062A411B /* AgeSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummary.swift; sourceTree = "<group>"; };
 		A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummaryTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000022 /* LockScreenTextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenTextTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000024 /* LockScreenScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenScheduleTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -499,6 +503,7 @@
 				6DCD682917785D101653B7A2 /* AgeUnitValue.swift */,
 				1303536429A34F2CB9827E7E /* BirthdayStatus.swift */,
 				B60000000000000000000001 /* LockScreenText.swift */,
+				B60000000000000000000003 /* LockScreenSchedule.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
 				0916531D223ECBC40081FB10 /* Gateways */,
 				0916531F223ECBC40081FB10 /* UseCases */,
@@ -638,6 +643,7 @@
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
 				B60000000000000000000022 /* LockScreenTextTests.swift */,
+				B60000000000000000000024 /* LockScreenScheduleTests.swift */,
 				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -1235,6 +1241,7 @@
 				AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */,
 				BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */,
 				B60000000000000000000002 /* LockScreenText.swift in Sources */,
+				B60000000000000000000004 /* LockScreenSchedule.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */,
@@ -1279,6 +1286,7 @@
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
 				B60000000000000000000023 /* LockScreenTextTests.swift in Sources */,
+				B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
