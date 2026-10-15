@@ -1,35 +1,24 @@
 import SwiftUI
 
-struct PersonPhotoMenu: View {
-	@Bindable var presenter: PersonEditorPresenter
-	let isWidget: Bool
+/// The main photo's source menu: Photos, Camera and, when there is a photo, Remove.
+struct PersonPhotoMenu<MenuLabel: View>: View {
+	let presenter: PersonEditorPresenter
 	@Binding var photoRequest: PhotoRequest?
+	@ViewBuilder let label: () -> MenuLabel
 
 	var body: some View {
 		Menu {
-			Button("Photos", systemImage: "photo") {
-				photoRequest = PhotoRequest(isWidget: isWidget, source: .photos)
-			}
-			.accessibilityIdentifier("photo.source.photos")
-			Button("Camera", systemImage: "camera") {
-				photoRequest = PhotoRequest(isWidget: isWidget, source: .camera)
-			}
-			if (isWidget ? presenter.widgetImage : presenter.appImage) != nil {
-				Button("Remove", systemImage: "trash", role: .destructive) {
-					if isWidget { presenter.widgetImage = nil } else { presenter.appImage = nil }
-				}
-				.accessibilityIdentifier("photo.source.remove")
+			Button("Photos", systemImage: "photo") { photoRequest = PhotoRequest(source: .photos) }
+				.accessibilityIdentifier("photo.source.photos")
+			Button("Camera", systemImage: "camera") { photoRequest = PhotoRequest(source: .camera) }
+			if presenter.appImage != nil {
+				Button("Remove", systemImage: "trash", role: .destructive) { presenter.removeMainPhoto() }
+					.accessibilityIdentifier("photo.source.remove")
 			}
 		} label: {
-			VStack(spacing: 12) {
-				PersonPicture(
-					image: isWidget ? presenter.widgetImage : presenter.appImage, loadImage: presenter.loadImage,
-					identifier: isWidget ? "widgetPhoto" : "appPhoto", onError: { presenter.error = SceneError($0) })
-				Text(isWidget ? LocalizedStringKey("widget pic") : LocalizedStringKey("main pic"))
-			}
-			.frame(maxWidth: .infinity)
+			label()
 		}
-		.accessibilityLabel(isWidget ? Text("Change widget picture") : Text("Change app picture"))
-		.accessibilityIdentifier(isWidget ? "editor.widgetPhoto" : "editor.appPhoto")
+		.accessibilityLabel(presenter.appImage == nil ? Text("Add a photo") : Text("Change photo"))
+		.accessibilityIdentifier("editor.appPhoto")
 	}
 }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED17B50F84B6DD961CCD3331 /* ChipToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */; };
+		ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */; };
+		ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177A5032D09303945B40C8 /* PersonEditorHero.swift */; };
+		ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17002F611FE46339590755 /* PersonImageLoader.swift */; };
 		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
 		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
@@ -233,6 +237,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipToggleStyle.swift; sourceTree = "<group>"; };
+		ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorChips.swift; sourceTree = "<group>"; };
+		ED177A5032D09303945B40C8 /* PersonEditorHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorHero.swift; sourceTree = "<group>"; };
+		ED17002F611FE46339590755 /* PersonImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImageLoader.swift; sourceTree = "<group>"; };
 		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
@@ -837,6 +845,10 @@
 		499D6EF315D5CC57361D1497 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */,
+				ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */,
+				ED177A5032D09303945B40C8 /* PersonEditorHero.swift */,
+				ED17002F611FE46339590755 /* PersonImageLoader.swift */,
 				449ED61637164BFF288A6770 /* PeoplePresenter.swift */,
 				7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */,
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
@@ -1288,6 +1300,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED17B50F84B6DD961CCD3331 /* ChipToggleStyle.swift in Sources */,
+				ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */,
+				ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */,
+				ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */,
 				A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */,
 				A50000000000000000000002 /* AgeEntry.swift in Sources */,
 				A50000000000000000000003 /* EmptyWidgetView.swift in Sources */,
