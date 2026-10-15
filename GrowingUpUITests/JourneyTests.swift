@@ -212,6 +212,7 @@ final class JourneyTests: XCTestCase {
 		menu.tap()
 		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
 		XCTAssertFalse(remove.exists)
+		settleMenu()
 		checkpoint("image-menu-empty")
 		app.buttons["photo.source.photos"].tap()
 		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
@@ -223,6 +224,7 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
 		menu.tap()
 		XCTAssertTrue(remove.waitForExistence(timeout: 5))
+		settleMenu()
 		checkpoint("image-menu-existing")
 		remove.tap()
 		XCTAssertTrue(remove.waitForNonExistence(timeout: 5))
@@ -231,6 +233,7 @@ final class JourneyTests: XCTestCase {
 		menu.tap()
 		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
 		XCTAssertFalse(remove.exists)
+		settleMenu()
 		checkpoint("image-menu-removed")
 		app.buttons["photo.source.photos"].tap()
 		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
@@ -319,6 +322,11 @@ extension JourneyTests {
 	/// Editor chips are buttons that report their state as a "1"/"0" value.
 	private func chip(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+
+	/// Lets the source menu finish its Liquid Glass morph so a checkpoint cannot capture it mid-animation.
+	private func settleMenu() {
+		Thread.sleep(forTimeInterval: 1)
 	}
 
 	private func dismissPhotos() {

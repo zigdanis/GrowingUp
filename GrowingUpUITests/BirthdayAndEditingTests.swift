@@ -210,9 +210,8 @@ final class BirthdayAndEditingTests: XCTestCase {
 		celebrate.tap()
 		XCTAssertEqual(celebrate.value as? String, "1")
 		app.buttons["editor.save"].tap()
-		// Saving can keep the editor busy for several seconds; only start waiting for confetti once the overview is back.
-		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
-		XCTAssertTrue(confetti.waitForExistence(timeout: 8))
+		// Saving can keep the editor busy for several seconds and the burst lasts only a few more, so poll from the tap.
+		XCTAssertTrue(confetti.waitForExistence(timeout: 30))
 	}
 }
 
