@@ -34,14 +34,15 @@ struct AgeWidgetProvider: TimelineProvider {
 	}
 
 	/// Adds entries only when a tile's text can change: the next age change of any person, shown to the minute,
-	/// and local midnight for birthday captions. WidgetKit reloads after the last entry, at most 60 entries or a day ahead.
+	/// and local midnight for birthday captions. WidgetKit reloads at the first change after the last entry, which is always in the future.
 	func getTimeline(in context: Context, completion: @escaping (Timeline<AgeEntry>) -> Void) {
 		Task {
 			let persons = await loadPersons(family: context.family)
 			let now = Date()
 			let schedule = AgeTimelineSchedule(birthdays: persons.map(\.birthday), finestUnit: PersonTileContent.finestUnit)
-			let entries = schedule.entryDates(from: now).map { AgeEntry(date: $0, persons: persons) }
-			completion(Timeline(entries: entries, policy: .after(entries.last?.date ?? now)))
+			let dates = schedule.entryDates(from: now)
+			let entries = dates.map { AgeEntry(date: $0, persons: persons) }
+			completion(Timeline(entries: entries, policy: .after(schedule.reloadDate(after: dates, now: now))))
 		}
 	}
 

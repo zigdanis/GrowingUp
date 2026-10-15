@@ -11,7 +11,7 @@ struct AgeWidgetBackground: View {
 
 	var body: some View {
 		if family == .systemSmall, let person = entry.persons.first {
-			PersonPhotoBackground(image: person.image)
+			PersonPhotoBackground(photo: person.photo)
 		} else {
 			Rectangle().fill(.fill.tertiary)
 		}
