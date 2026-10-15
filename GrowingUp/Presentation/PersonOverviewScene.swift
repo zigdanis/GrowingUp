@@ -8,8 +8,8 @@ struct PersonOverviewScene: View {
 	let safeAreaInsets: EdgeInsets
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
-	@State private var showingBirthday = false
 	@State private var burstStarted: Date?
+	@State private var editPresses = 0
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 
@@ -25,57 +25,23 @@ struct PersonOverviewScene: View {
 	}
 
 	var body: some View {
-		ZStack(alignment: .topTrailing) {
-			Button(action: onEdit) {
-				ZStack {
-					Color.black
-					if let image = presenter.image {
-						GeometryReader { geometry in
-							Image(uiImage: image)
-								.resizable()
-								.scaledToFill()
-								.frame(width: geometry.size.width, height: geometry.size.height)
-								.clipped()
-						}
-					} else {
-						LinearGradient(colors: [.indigo, .black], startPoint: .topLeading, endPoint: .bottomTrailing)
-						Text("🤷").font(.system(size: 100))
-					}
-					LinearGradient(
-						colors: [.black.opacity(0.45), .clear, .black.opacity(0.65)],
-						startPoint: .top, endPoint: .bottom)
-					VStack(spacing: 20) {
-						Text(person.name).font(.largeTitle.bold()).accessibilityIdentifier("person.name")
-						Text(presenter.age).font(.title2).multilineTextAlignment(.center)
-							.accessibilityIdentifier("person.age")
-						Spacer()
-					}
-					.padding(24)
-					.padding(.top, safeAreaInsets.top)
-					.padding(.bottom, safeAreaInsets.bottom)
-					.foregroundStyle(.white)
+		ZStack {
+			photo
+			VStack(spacing: 0) {
+				ViewThatFits(in: .vertical) {
+					// Lets a long press on the age reach the photo below.
+					ageCard.allowsHitTesting(false)
+					ScrollView { ageCard }
+						.scrollBounceBehavior(.basedOnSize)
 				}
-				.contentShape(Rectangle())
+				.layoutPriority(1)
+				Spacer(minLength: 24)
+				BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit)
+					.padding(.horizontal, 16)
+					.padding(.bottom, 12)
 			}
-			.buttonStyle(.plain)
-			.accessibilityElement(children: .contain)
-			.accessibilityLabel(Text("Edit person"))
-			.accessibilityIdentifier("person.edit")
-			if let status = presenter.birthdayStatus, status.isUpcoming {
-				Button("Birthday celebration", systemImage: "birthday.cake.fill") { showingBirthday = true }
-					.labelStyle(.iconOnly)
-					.font(.title2)
-					.foregroundStyle(.white)
-					.frame(width: 44, height: 44)
-					.background(.black.opacity(0.25), in: Circle())
-					.padding(.trailing, 16)
-					.padding(.top, safeAreaInsets.top + 18)
-					.accessibilityIdentifier("person.birthday")
-					.popover(isPresented: $showingBirthday, arrowEdge: .top) {
-						BirthdayInfoView(status: presenter.birthdayStatus ?? status)
-							.presentationCompactAdaptation(.popover)
-					}
-			}
+			.padding(.top, safeAreaInsets.top + 16)
+			.padding(.bottom, safeAreaInsets.bottom)
 			if let burstStarted, isSelected, !reduceMotion {
 				BirthdayConfettiView(started: burstStarted, celebration: presenter.celebrationID)
 					.accessibilityElement(children: .ignore)
@@ -86,6 +52,7 @@ struct PersonOverviewScene: View {
 			}
 		}
 		.ignoresSafeArea(.container)
+		.sensoryFeedback(.impact(weight: .medium), trigger: editPresses)
 		.onChange(of: presenter.celebrationID) { _, _ in
 			burstStarted = reduceMotion ? nil : Date()
 		}
@@ -106,5 +73,49 @@ struct PersonOverviewScene: View {
 			}
 		}
 		.sceneError($presenter.error)
+	}
+
+	private var photo: some View {
+		ZStack {
+			Color.black
+			if let image = presenter.image {
+				GeometryReader { geometry in
+					Image(uiImage: image)
+						.resizable()
+						.scaledToFill()
+						.frame(width: geometry.size.width, height: geometry.size.height)
+						.clipped()
+				}
+			} else {
+				LinearGradient(colors: [.indigo, .black], startPoint: .topLeading, endPoint: .bottomTrailing)
+				Text("🤷").font(.system(size: 100))
+			}
+			// Darkens the top behind the age and, more strongly, the bottom behind the strip and card,
+			// so white text stays readable on very light photos.
+			LinearGradient(
+				stops: [
+					.init(color: .black.opacity(0.55), location: 0),
+					.init(color: .black.opacity(0.15), location: 0.35),
+					.init(color: .clear, location: 0.5),
+					.init(color: .black.opacity(0.3), location: 0.68),
+					.init(color: .black.opacity(0.8), location: 1)
+				],
+				startPoint: .top, endPoint: .bottom)
+		}
+		.accessibilityHidden(true)
+		.contentShape(Rectangle())
+		// A secondary way into the editor; the Edit button is the visible and accessible one.
+		.onLongPressGesture {
+			editPresses += 1
+			onEdit()
+		}
+	}
+
+	private var ageCard: some View {
+		PersonAgeCard(
+			name: person.name, primaryValue: presenter.primaryValue, primaryUnit: presenter.primaryUnit,
+			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge
+		)
+		.padding(.horizontal, 24)
 	}
 }

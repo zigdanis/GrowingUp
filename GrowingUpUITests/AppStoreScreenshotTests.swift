@@ -9,6 +9,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var names: [String] { locale == "ru" ? ["Мия", "Лео", "Манго", "Тедди"] : ["Mia", "Leo", "Mango", "Teddy"] }
 	private var overview: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
+	private var birthdayToday: String { locale == "ru" ? "День рождения сегодня 🎂" : "Birthday today 🎂" }
 
 	func testCaptureAppStoreScreenshots() throws {
 		let environment = ProcessInfo.processInfo.environment
@@ -62,12 +63,10 @@ final class AppStoreScreenshotTests: XCTestCase {
 		app.swipeLeft(velocity: .fast)
 		previewMark("leo-arrived")
 		if expectNoConfetti { XCTAssertFalse(confetti.exists, "Reduce Motion must suppress the real confetti before capture proceeds.") }
-		app.buttons["person.birthday"].tap()
 		previewMark("birthday-open")
 		if expectNoConfetti { XCTAssertFalse(confetti.exists) }
-		XCTAssertTrue(app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"].exists)
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, birthdayToday)
 		Thread.sleep(forTimeInterval: 4)
-		app.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7)).tap()
 		previewMark("mango-swipe")
 		app.swipeLeft(velocity: .fast)
 		previewMark("mango-arrived")
@@ -156,19 +155,17 @@ final class AppStoreScreenshotTests: XCTestCase {
 		checkpoint("store-\(locale)-mango")
 		selectPerson(3)
 		checkpoint("store-\(locale)-teddy")
-		// Navigate and open the popover before midnight so XCTest synchronization cannot consume the burst.
+		// Navigate before midnight so XCTest synchronization cannot consume the burst.
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-15T23:59:20Z"
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "1"
 		relaunch()
 		selectPerson(1)
-		app.buttons["person.birthday"].tap()
 		XCTAssertTrue(confetti.waitForExistence(timeout: 60), "The production midnight transition must start the birthday animation.")
-		// The production birthday popover demonstrates native Liquid Glass while the burst is running.
+		// The production birthday card demonstrates native Liquid Glass while the burst is running.
 		checkpoint("store-\(locale)-leo-celebration")
 		checkpoint("store-\(locale)-leo-celebration-frame-2")
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
-		XCTAssertTrue(app.staticTexts[locale == "ru" ? "С днём рождения!" : "Happy birthday!"].exists)
-		XCTAssertFalse(app.staticTexts["birthday.countdown"].exists)
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, birthdayToday)
 		checkpoint("store-\(locale)-birthday-confirmed")
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T08:24:12Z"
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "0"

@@ -110,6 +110,21 @@
 "Selected photo" = "Выбранное фото";
 
 /* Birthday indicator and countdown popover. */
-"Birthday celebration" = "День рождения";
-"Until birthday" = "До дня рождения";
 "Happy birthday!" = "С днём рождения!";
+
+/* Person page (overview) */
+
+/* Line under the milestone age with the next finer unit, such as "and 3 months". */
+"and %@" = "и %@";
+
+/* Line under the milestone age on a birthday; the argument is the age being turned, such as "6 years". */
+"Turns %@ today 🎂" = "Сегодня исполняется %@ 🎂";
+
+/* Next birthday in the bottom card; the argument is the remaining time, such as "14 days". */
+"Birthday in %@" = "День рождения через %@";
+
+/* Next birthday in the bottom card on the birthday itself. */
+"Birthday today 🎂" = "День рождения сегодня 🎂";
+
+/* Title of the button that opens the editor for the shown person. */
+"Edit" = "Изменить";

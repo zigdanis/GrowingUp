@@ -126,7 +126,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		})
 		let now = person.birthday.addingTimeInterval(120)
 		presenter.tick(person: person, now: now)
-		XCTAssertEqual(presenter.age, AgeCalculator.ageString(for: person.dateComponents(at: now)))
+		XCTAssertEqual(presenter.summary, AgeSummary(birthday: person.birthday, now: now, finestUnit: .minutes))
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
 	}
