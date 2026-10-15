@@ -13,10 +13,11 @@ final class LockScreenScheduleTests: XCTestCase {
 
 	func testOrdinaryDaysChangeAtEveryMidnightAndOnTheMonthlyAnniversary() {
 		let now = date(2025, 9, 29, 20, 30)
-		XCTAssertEqual(entryDates(leo, now, limit: 14), [
+		let expected = [
 			date(2025, 9, 30), date(2025, 10, 1), date(2025, 10, 2), date(2025, 10, 3), date(2025, 10, 3, 8),
 			date(2025, 10, 4), date(2025, 10, 5), date(2025, 10, 6)
-		])
+		]
+		XCTAssertEqual(entryDates(leo, now, limit: 14), expected)
 	}
 
 	func testEveryEntryChangesTheText() {
