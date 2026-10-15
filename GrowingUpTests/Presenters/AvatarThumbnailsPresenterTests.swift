@@ -71,4 +71,22 @@ final class AvatarThumbnailsPresenterTests: XCTestCase {
 			context.fill(CGRect(x: 0, y: 0, width: 600, height: 400))
 		}
 	}
+
+	func testNewPreferredPhotoReplacesACachedFallback() async throws {
+		let failing = UUID()
+		var person = Person.createPerson()
+		person.widgetPicId = failing
+		let presenter = AvatarThumbnailsPresenter(loadImage: { picture in
+			guard picture.id != failing else { throw CoreError.missingValue }
+			return Self.photo()
+		})
+		await presenter.load([person])
+		let appPicture = try XCTUnwrap(person.appPicId)
+		XCTAssertNotNil(presenter.thumbnails[appPicture])
+		XCTAssertNil(presenter.thumbnails[failing])
+		let replacement = UUID()
+		person.widgetPicId = replacement
+		await presenter.load([person])
+		XCTAssertNotNil(presenter.thumbnails[replacement], "The new widget photo loads although the app photo is cached")
+	}
 }

@@ -27,8 +27,10 @@ final class AvatarThumbnailsPresenter {
 	func load(_ persons: [Person]) async {
 		let referenced = Set(persons.flatMap { Self.pictureIDs(of: $0) })
 		thumbnails = thumbnails.filter { referenced.contains($0.key) }
-		for person in persons where thumbnail(for: person) == nil {
+		for person in persons {
+			// Walks the pictures from the preferred one down; a cached fallback must not hide a new preferred picture.
 			for id in Self.pictureIDs(of: person) where !failedPictures.contains(id) {
+				if thumbnails[id] != nil { break }
 				do {
 					let image = try await loadImage(PersonImage(id: id, uiImage: nil))
 					try Task.checkCancellation()

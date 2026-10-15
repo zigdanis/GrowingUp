@@ -3,7 +3,7 @@ import XCTest
 @MainActor
 final class NavigationTests: XCTestCase {
 	private var app: XCUIApplication!
-	private var name: XCUIElement { app.staticTexts["person.name"] }
+	private var personName: XCUIElement { app.staticTexts["person.name"] }
 	private var edit: XCUIElement { app.buttons["person.edit"] }
 
 	override func setUp() {
@@ -14,36 +14,36 @@ final class NavigationTests: XCTestCase {
 
 	func testAvatarStripSwitchesPeopleAndOpensTheAddPage() {
 		launch()
-		XCTAssertEqual(name.label, "Alice")
+		XCTAssertEqual(personName.label, "Alice")
 		XCTAssertTrue(app.buttons["people.avatar.0"].isSelected)
 		XCTAssertEqual(app.buttons["people.avatar.1"].label, "Boris")
 		XCTAssertEqual(app.buttons["people.avatar.add"].label, "Add person")
 		app.buttons["people.avatar.1"].tap()
-		XCTAssertTrue(waitFor(name, label: "Boris"))
+		XCTAssertTrue(waitFor(personName, label: "Boris"))
 		XCTAssertTrue(app.buttons["people.avatar.1"].isSelected)
 		checkpoint("navigation-avatar-selected")
 		// Swiping still pages, and the strip follows the shown person.
 		app.swipeLeft()
-		XCTAssertTrue(waitFor(name, label: "Clara"))
+		XCTAssertTrue(waitFor(personName, label: "Clara"))
 		XCTAssertTrue(app.buttons["people.avatar.2"].isSelected)
 		app.buttons["people.avatar.add"].tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		XCTAssertTrue(app.buttons["people.avatar.add"].isSelected)
 		checkpoint("navigation-add-page")
 		app.buttons["people.avatar.0"].tap()
-		XCTAssertTrue(waitFor(name, label: "Alice"))
+		XCTAssertTrue(waitFor(personName, label: "Alice"))
 	}
 
 	func testLongPressOnThePhotoAndTheEditButtonOpenTheEditor() {
 		launch()
 		app.buttons["people.avatar.1"].tap()
-		XCTAssertTrue(waitFor(name, label: "Boris"))
+		XCTAssertTrue(waitFor(personName, label: "Boris"))
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55)).press(forDuration: 1.2)
 		let save = app.buttons["editor.save"]
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
 		XCTAssertEqual(app.textFields["editor.name"].value as? String, "Boris")
 		dismissEditor()
-		XCTAssertEqual(name.label, "Boris")
+		XCTAssertEqual(personName.label, "Boris")
 		edit.tap()
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
 		checkpoint("navigation-edit-button")
