@@ -139,10 +139,12 @@ final class PersonEditorPresenterTests: XCTestCase {
 	func testMainPhotoForReframingPrefersThePickedImageAndReportsLoadFailures() async {
 		let stored = image(width: 600, height: 800)
 		var loads = 0
-		let loader = SceneConfigurator(gateway: PersonsGatewaySpy(), loadImage: { _ in
-			loads += 1
-			return stored
-		})
+		let loader = SceneConfigurator(
+			gateway: PersonsGatewaySpy(),
+			loadImage: { _ in
+				loads += 1
+				return stored
+			})
 		let presenter = loader.editor(person: .createPerson(), onMutation: { _ in })
 		let loaded = await presenter.loadMainPhoto()
 		XCTAssertTrue(loaded === stored)
