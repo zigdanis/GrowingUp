@@ -203,6 +203,8 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
 		// The birthday is today, so the indicator stays while the opted-out confetti never starts.
 		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
+		// Every arrival on a birthday page starts a celebration, so an opted-out person must stay quiet on return.
+		leaveAndReturn()
 		XCTAssertFalse(confetti.waitForExistence(timeout: 3))
 		overview.tap()
 		XCTAssertTrue(celebrate.waitForExistence(timeout: 5))
@@ -210,8 +212,10 @@ final class BirthdayAndEditingTests: XCTestCase {
 		celebrate.tap()
 		XCTAssertEqual(celebrate.value as? String, "1")
 		app.buttons["editor.save"].tap()
-		// Saving can keep the editor busy for several seconds and the burst lasts only a few more, so poll from the tap.
-		XCTAssertTrue(confetti.waitForExistence(timeout: 30))
+		// Saving can keep the editor busy for seconds, so return to the page after it closes instead of racing the burst.
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
+		leaveAndReturn()
+		XCTAssertTrue(confetti.waitForExistence(timeout: 8))
 	}
 }
 
@@ -278,6 +282,13 @@ extension BirthdayAndEditingTests {
 			discard.tap()
 		}
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+	}
+
+	/// Swipes to the next person and back, which is how a birthday page is arrived on again.
+	private func leaveAndReturn() {
+		app.swipeLeft()
+		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Boris"), timeout: 5))
+		app.swipeRight()
 	}
 
 	private func waitFor(_ element: XCUIElement, predicate: NSPredicate, timeout: TimeInterval) -> Bool {
