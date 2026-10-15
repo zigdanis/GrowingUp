@@ -14,5 +14,7 @@ public enum Constants {
 	public static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
 	public static let widgetPeopleLimit = 6
 	public static let widgetPersonIndexKey = "personIndex"
+	/// The host of the `growingup-app://add-person` link that widgets open when nobody is pinned.
+	public static let widgetAddPersonHost = "add-person"
 	public static let openPersonNotification = Notification.Name(rawValue: "pro.ziganshin.GrowingUp.openPersonWithIndex")
 }

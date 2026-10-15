@@ -18,6 +18,12 @@
 		A50000000000000000000006 /* WidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */; };
 		A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000008 /* UITestWidgetPreview.swift */; };
 		B60000000000000000000007 /* WidgetPersonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000005 /* WidgetPersonLoader.swift */; };
+		B6000000000000000000000A /* LockScreenEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000008 /* LockScreenEntry.swift */; };
+		B6000000000000000000000D /* LockScreenWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000B /* LockScreenWidgetContentView.swift */; };
+		B60000000000000000000010 /* CircularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000E /* CircularAgeView.swift */; };
+		B60000000000000000000013 /* RectangularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000011 /* RectangularAgeView.swift */; };
+		B60000000000000000000016 /* InlineAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000014 /* InlineAgeView.swift */; };
+		B60000000000000000000019 /* LockScreenEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000017 /* LockScreenEmptyView.swift */; };
 		A50000000000000000000009 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000A /* Localizable.strings */; };
 		A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* RemovalConfirmationTests.swift */; };
 		00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */; };
@@ -87,6 +93,16 @@
 		1B6340AF1941142FCD03A380 /* PermissionExplainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9A7D536DAF10611A2F97FA /* PermissionExplainerConfig.swift */; };
 		1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBA49908C60651E19B76C4 /* WidgetPerson.swift */; };
 		B60000000000000000000006 /* WidgetPersonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000005 /* WidgetPersonLoader.swift */; };
+		B60000000000000000000009 /* LockScreenEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000008 /* LockScreenEntry.swift */; };
+		B6000000000000000000000C /* LockScreenWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000B /* LockScreenWidgetContentView.swift */; };
+		B6000000000000000000000F /* CircularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000E /* CircularAgeView.swift */; };
+		B60000000000000000000012 /* RectangularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000011 /* RectangularAgeView.swift */; };
+		B60000000000000000000015 /* InlineAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000014 /* InlineAgeView.swift */; };
+		B60000000000000000000018 /* LockScreenEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000017 /* LockScreenEmptyView.swift */; };
+		B6000000000000000000001B /* LockScreenWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001A /* LockScreenWidgetProvider.swift */; };
+		B6000000000000000000001D /* GrowingUpLockScreenWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */; };
+		B6000000000000000000001F /* LockScreenWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001E /* LockScreenWidgetEntryView.swift */; };
+		B60000000000000000000021 /* LockScreenWidgetPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000020 /* LockScreenWidgetPreviews.swift */; };
 		23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */; };
 		24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76A20096A409E8AA71BA5C6 /* AppComposition.swift */; };
 		28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */; };
@@ -338,6 +354,16 @@
 		449ED61637164BFF288A6770 /* PeoplePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PeoplePresenter.swift; sourceTree = "<group>"; };
 		44CBA49908C60651E19B76C4 /* WidgetPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPerson.swift; sourceTree = "<group>"; };
 		B60000000000000000000005 /* WidgetPersonLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPersonLoader.swift; sourceTree = "<group>"; };
+		B60000000000000000000008 /* LockScreenEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenEntry.swift; sourceTree = "<group>"; };
+		B6000000000000000000000B /* LockScreenWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetContentView.swift; sourceTree = "<group>"; };
+		B6000000000000000000000E /* CircularAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000011 /* RectangularAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000014 /* InlineAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000017 /* LockScreenEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenEmptyView.swift; sourceTree = "<group>"; };
+		B6000000000000000000001A /* LockScreenWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetProvider.swift; sourceTree = "<group>"; };
+		B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingUpLockScreenWidget.swift; sourceTree = "<group>"; };
+		B6000000000000000000001E /* LockScreenWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetEntryView.swift; sourceTree = "<group>"; };
+		B60000000000000000000020 /* LockScreenWidgetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetPreviews.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
 		4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableImage.swift; sourceTree = "<group>"; };
 		4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonScene.swift; sourceTree = "<group>"; };
@@ -491,6 +517,16 @@
 				C1E1DD9433A99F1E976CD643 /* PersonCell.swift */,
 				44CBA49908C60651E19B76C4 /* WidgetPerson.swift */,
 				B60000000000000000000005 /* WidgetPersonLoader.swift */,
+				B60000000000000000000008 /* LockScreenEntry.swift */,
+				B6000000000000000000000B /* LockScreenWidgetContentView.swift */,
+				B6000000000000000000000E /* CircularAgeView.swift */,
+				B60000000000000000000011 /* RectangularAgeView.swift */,
+				B60000000000000000000014 /* InlineAgeView.swift */,
+				B60000000000000000000017 /* LockScreenEmptyView.swift */,
+				B6000000000000000000001A /* LockScreenWidgetProvider.swift */,
+				B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */,
+				B6000000000000000000001E /* LockScreenWidgetEntryView.swift */,
+				B60000000000000000000020 /* LockScreenWidgetPreviews.swift */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -1238,6 +1274,16 @@
 				EC7FA6FB044CF631B4550369 /* PersonCell.swift in Sources */,
 				1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */,
 				B60000000000000000000006 /* WidgetPersonLoader.swift in Sources */,
+				B60000000000000000000009 /* LockScreenEntry.swift in Sources */,
+				B6000000000000000000000C /* LockScreenWidgetContentView.swift in Sources */,
+				B6000000000000000000000F /* CircularAgeView.swift in Sources */,
+				B60000000000000000000012 /* RectangularAgeView.swift in Sources */,
+				B60000000000000000000015 /* InlineAgeView.swift in Sources */,
+				B60000000000000000000018 /* LockScreenEmptyView.swift in Sources */,
+				B6000000000000000000001B /* LockScreenWidgetProvider.swift in Sources */,
+				B6000000000000000000001D /* GrowingUpLockScreenWidget.swift in Sources */,
+				B6000000000000000000001F /* LockScreenWidgetEntryView.swift in Sources */,
+				B60000000000000000000021 /* LockScreenWidgetPreviews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1330,6 +1376,12 @@
 				A50000000000000000000004 /* PersonCell.swift in Sources */,
 				A50000000000000000000005 /* WidgetPerson.swift in Sources */,
 				B60000000000000000000007 /* WidgetPersonLoader.swift in Sources */,
+				B6000000000000000000000A /* LockScreenEntry.swift in Sources */,
+				B6000000000000000000000D /* LockScreenWidgetContentView.swift in Sources */,
+				B60000000000000000000010 /* CircularAgeView.swift in Sources */,
+				B60000000000000000000013 /* RectangularAgeView.swift in Sources */,
+				B60000000000000000000016 /* InlineAgeView.swift in Sources */,
+				B60000000000000000000019 /* LockScreenEmptyView.swift in Sources */,
 				A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */,
 				0916536C223ECBC40081FB10 /* GrowingUpApp.swift in Sources */,
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
@@ -1819,7 +1871,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift PersonCell.swift WidgetPerson.swift UITestWidgetPreview.swift WidgetPersonLoader.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift PersonCell.swift WidgetPerson.swift UITestWidgetPreview.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;
