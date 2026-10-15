@@ -28,14 +28,18 @@ enum AppComposition {
 				try FileManager.default.removeItem(at: root)
 			}
 			try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+			let environment = ProcessInfo.processInfo.environment
+			let clockDate = environment["GROWINGUP_BIRTHDAY_NOW"].flatMap(ISO8601DateFormatter().date(from:)) ?? fixedDate
 			let stack = try UITestStore(url: root.appendingPathComponent("people.sqlite"))
-			if configuration.resetStore, configuration.seed != .empty { try stack.seed(configuration.seed) }
 			let images = UITestImageStore(root: root)
+			if configuration.resetStore, configuration.seed != .empty {
+				for (index, picture) in try stack.seed(configuration.seed, now: clockDate).enumerated() {
+					try images.store(PersonImage(id: picture, uiImage: fixture(index)))
+				}
+			}
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
 			let failureGateway = UITestFailureGateway(base: persistentGateway, failNextSave: configuration.failNextSave)
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
-			let environment = ProcessInfo.processInfo.environment
-			let clockDate = environment["GROWINGUP_BIRTHDAY_NOW"].flatMap(ISO8601DateFormatter().date(from:)) ?? fixedDate
 			let clockStarted = Date()
 			let clockRuns = environment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] == "1"
 			return SceneConfigurator(
