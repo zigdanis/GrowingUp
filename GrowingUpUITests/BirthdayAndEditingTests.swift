@@ -93,30 +93,30 @@ final class BirthdayAndEditingTests: XCTestCase {
 		name.typeText(" Draft")
 		XCTAssertTrue(save.isEnabled)
 		checkpoint("editor-save-enabled")
-		name.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 6))
+		// Return dismisses the keyboard so it cannot cover the chips.
+		name.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 6) + "\n")
 		XCTAssertFalse(save.isEnabled)
-		dismissNameKeyboard()
-		let pin = app.switches["editor.pin"]
-		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		let pin = chip("editor.pin")
+		pin.tap()
 		XCTAssertEqual(pin.value as? String, "0")
 		XCTAssertTrue(save.isEnabled)
-		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		pin.tap()
 		XCTAssertEqual(pin.value as? String, "1")
 		XCTAssertFalse(save.isEnabled)
 		name.tap()
-		name.typeText(" Unsaved")
-		dismissNameKeyboard()
-		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		name.typeText(" Unsaved\n")
+		pin.tap()
 		XCTAssertEqual(pin.value as? String, "0")
-		for slot in ["appPhoto", "widgetPhoto"] { choosePhoto(slot) }
+		choosePhoto()
+		reframeWidgetPhoto()
 		XCTAssertTrue(save.isEnabled)
-		dismissEditor()
+		cancelEditor(discarding: true)
 		relaunch()
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Alice")
 		overview.tap()
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
 		XCTAssertFalse(save.isEnabled)
-		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+		XCTAssertEqual(chip("editor.pin").value as? String, "1")
 		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
 		XCTAssertFalse(app.images["editor.widgetPhoto.loaded"].exists)
 		checkpoint("editor-cancel-restores-draft")
@@ -129,34 +129,41 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("editor-explicit-save-persisted")
 	}
 
-	func testBothPhotoChangesAndRemovalTrackDirtyState() {
+	func testPhotoChangeReframeAndRemovalTrackDirtyState() {
 		launch(clock: "2027-01-15T08:00:00Z")
 		overview.tap()
 		let save = app.buttons["editor.save"]
+		let widgetPhoto = app.images["editor.widgetPhoto.loaded"]
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
-		for slot in ["appPhoto", "widgetPhoto"] {
-			XCTAssertFalse(save.isEnabled)
-			choosePhoto(slot)
-			XCTAssertTrue(save.isEnabled)
-			app.buttons["editor.\(slot)"].tap()
-			app.buttons["photo.source.remove"].tap()
-			XCTAssertFalse(save.isEnabled)
-		}
-		choosePhoto("appPhoto")
-		choosePhoto("widgetPhoto")
+		XCTAssertFalse(save.isEnabled)
+		XCTAssertFalse(app.buttons["editor.widgetPhoto.reframe"].isEnabled)
+		choosePhoto()
+		XCTAssertTrue(save.isEnabled)
+		XCTAssertTrue(widgetPhoto.waitForExistence(timeout: 5))
+		removePhoto()
+		XCTAssertFalse(save.isEnabled)
+		XCTAssertTrue(widgetPhoto.waitForNonExistence(timeout: 5))
+		choosePhoto()
 		save.tap()
 		XCTAssertTrue(save.waitForNonExistence(timeout: 5))
 		overview.tap()
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
 		XCTAssertFalse(save.isEnabled)
-		app.buttons["editor.widgetPhoto"].tap()
-		app.buttons["photo.source.remove"].tap()
+		reframeWidgetPhoto()
 		XCTAssertTrue(save.isEnabled)
+		checkpoint("editor-reframe-dirty")
+		cancelEditor(discarding: true)
+		overview.tap()
+		XCTAssertTrue(save.waitForExistence(timeout: 5))
+		removePhoto()
+		XCTAssertTrue(save.isEnabled)
+		XCTAssertTrue(widgetPhoto.waitForNonExistence(timeout: 5))
 		checkpoint("editor-photo-removal-dirty")
-		dismissEditor()
+		cancelEditor(discarding: true)
 		relaunch()
 		overview.tap()
-		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertTrue(widgetPhoto.waitForExistence(timeout: 5))
 		XCTAssertFalse(save.isEnabled)
 	}
 
@@ -177,6 +184,37 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("birthday-edited-date-stays-current")
 	}
 
+	func testCelebrateChipControlsConfetti() {
+		launch(clock: "2027-01-15T08:00:00Z")
+		overview.tap()
+		let born = app.buttons["editor.birthDate"]
+		XCTAssertTrue(born.waitForExistence(timeout: 5))
+		born.tap()
+		let picker = app.datePickers["editor.birthDate.picker"]
+		XCTAssertTrue(picker.waitForExistence(timeout: 5))
+		picker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "15")
+		born.tap()
+		let celebrate = chip("editor.celebrate")
+		XCTAssertEqual(celebrate.value as? String, "1")
+		celebrate.tap()
+		XCTAssertEqual(celebrate.value as? String, "0")
+		checkpoint("editor-celebrate-off")
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		// The birthday is today, so the indicator stays while the opted-out confetti never starts.
+		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
+		XCTAssertFalse(confetti.waitForExistence(timeout: 3))
+		overview.tap()
+		XCTAssertTrue(celebrate.waitForExistence(timeout: 5))
+		XCTAssertEqual(celebrate.value as? String, "0")
+		celebrate.tap()
+		XCTAssertEqual(celebrate.value as? String, "1")
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
+	}
+}
+
+extension BirthdayAndEditingTests {
 	private func launch(clock: String, runningClock: Bool = false, locale: String = "en") {
 		configuration = UITestConfiguration(
 			identifier: UUID(), resetStore: true, seed: .birthdays, failNextSave: false, appearance: .dark)
@@ -197,8 +235,13 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(overview.waitForExistence(timeout: 10))
 	}
 
-	private func choosePhoto(_ slot: String) {
-		app.buttons["editor.\(slot)"].tap()
+	/// Editor chips are buttons that report their state as a "1"/"0" value.
+	private func chip(_ identifier: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+
+	private func choosePhoto() {
+		app.buttons["editor.appPhoto"].tap()
 		app.buttons["photo.source.photos"].tap()
 		let thumbnail = app.buttons.matching(identifier: "photo.thumbnail").firstMatch
 		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
@@ -208,19 +251,32 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(thumbnail.waitForNonExistence(timeout: 5))
 	}
 
-	private func dismissEditor() {
-		let navigation = app.navigationBars.firstMatch
-		let start = navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-		start.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
-		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+	private func reframeWidgetPhoto() {
+		let reframe = app.buttons["editor.widgetPhoto.reframe"]
+		XCTAssertTrue(reframe.waitForExistence(timeout: 5))
+		reframe.tap()
+		let use = app.buttons["crop.use"]
+		XCTAssertTrue(use.waitForExistence(timeout: 5))
+		use.tap()
+		XCTAssertTrue(use.waitForNonExistence(timeout: 5))
 	}
 
-	private func dismissNameKeyboard() {
-		// Expanding a birthday field clears the editor's name focus.
-		let birthday = app.buttons["editor.birthDate"]
-		birthday.tap()
-		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
-		birthday.tap()
+	private func removePhoto() {
+		app.buttons["editor.appPhoto"].tap()
+		let remove = app.buttons["photo.source.remove"]
+		XCTAssertTrue(remove.waitForExistence(timeout: 5))
+		remove.tap()
+	}
+
+	/// Cancels the editor, confirming the discard dialog that unsaved changes raise.
+	private func cancelEditor(discarding: Bool) {
+		app.buttons["editor.cancel"].tap()
+		if discarding {
+			let discard = app.buttons.matching(NSPredicate(format: "identifier == %@ OR label == %@", "editor.discard", "Discard")).firstMatch
+			XCTAssertTrue(discard.waitForExistence(timeout: 5))
+			discard.tap()
+		}
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
 	private func waitFor(_ element: XCUIElement, predicate: NSPredicate, timeout: TimeInterval) -> Bool {

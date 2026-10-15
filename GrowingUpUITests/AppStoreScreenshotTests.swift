@@ -86,7 +86,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		previewMark("editor-open")
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		// Make a genuine, keyboard-free change so the native save action is enabled.
-		app.switches["editor.pin"].coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		chip("editor.pin").tap()
 		previewMark("editor-change")
 		app.buttons["editor.save"].tap()
 		previewMark("saved")
@@ -143,7 +143,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 			overview.tap()
 			XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 10))
 			XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 10))
-			XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+			XCTAssertEqual(chip("editor.pin").value as? String, "1")
 			checkpoint("store-\(locale)-persisted-\(index)")
 			dismissEditor()
 		}
@@ -200,7 +200,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
-		name.typeText(names[index])
+		// Return dismisses the keyboard so it cannot cover the birthday row.
+		name.typeText(names[index] + "\n")
 		app.buttons["editor.birthDate"].tap()
 		let picker = app.datePickers["editor.birthDate.picker"]
 		XCTAssertTrue(picker.waitForExistence(timeout: 5))
@@ -213,20 +214,25 @@ final class AppStoreScreenshotTests: XCTestCase {
 		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: monthName)
 		wheels.element(boundBy: locale == "ru" ? 0 : 1).adjust(toPickerWheelValue: String(day))
 		app.buttons["editor.birthDate"].tap()
-		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
-		for slot in ["appPhoto", "widgetPhoto"] {
-			app.buttons["editor.\(slot)"].tap()
-			app.buttons["photo.source.photos"].tap()
-			let thumbnails = app.buttons.matching(identifier: "photo.thumbnail")
-			XCTAssertTrue(thumbnails.firstMatch.waitForExistence(timeout: 5))
-			XCTAssertEqual(thumbnails.count, 4)
-			thumbnails.element(boundBy: index).tap()
-			XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
-			checkpoint("store-\(locale)-crop-\(index)-\(slot)")
-			app.buttons["crop.use"].tap()
-			XCTAssertTrue(thumbnails.firstMatch.waitForNonExistence(timeout: 5))
-			XCTAssertTrue(app.images["editor.\(slot).loaded"].waitForExistence(timeout: 10))
-		}
+		XCTAssertEqual(chip("editor.pin").value as? String, "1")
+		app.buttons["editor.appPhoto"].tap()
+		app.buttons["photo.source.photos"].tap()
+		let thumbnails = app.buttons.matching(identifier: "photo.thumbnail")
+		XCTAssertTrue(thumbnails.firstMatch.waitForExistence(timeout: 5))
+		XCTAssertEqual(thumbnails.count, 4)
+		thumbnails.element(boundBy: index).tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
+		checkpoint("store-\(locale)-crop-\(index)-appPhoto")
+		app.buttons["crop.use"].tap()
+		XCTAssertTrue(thumbnails.firstMatch.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 10))
+		// The widget picture is derived from the main photo; reframing shows its circular crop.
+		app.buttons["editor.widgetPhoto.reframe"].tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
+		checkpoint("store-\(locale)-crop-\(index)-widgetPhoto")
+		app.buttons["crop.use"].tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 10))
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 10))
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
@@ -250,10 +256,13 @@ final class AppStoreScreenshotTests: XCTestCase {
 	}
 
 	private func dismissEditor() {
-		let navigation = app.navigationBars.firstMatch
-		let start = navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-		start.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
+		app.buttons["editor.cancel"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+	}
+
+	/// Editor chips are buttons that report their state as a "1"/"0" value.
+	private func chip(_ identifier: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}
 
 	private func checkpoint(_ name: String, element: XCUIElement? = nil) {
