@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
 		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
 		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
@@ -232,6 +233,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
 		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
@@ -736,6 +738,7 @@
 		098054F4223C295400E24D40 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
@@ -1252,6 +1255,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
 				ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */,
 				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
