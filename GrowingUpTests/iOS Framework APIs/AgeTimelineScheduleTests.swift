@@ -41,6 +41,20 @@ final class AgeTimelineScheduleTests: XCTestCase {
 		XCTAssertTrue(mixed.contains(date(2026, 1, 14)))
 	}
 
+	func testReloadDateIsAfterTheLastEntryOnAShortHorizonDay() throws {
+		var newYork = calendar
+		newYork.timeZone = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let schedule = AgeTimelineSchedule(birthdays: [adult], calendar: newYork)
+		// Clocks go back on 1 November 2026, so the next midnight is 25 hours away and beyond the 24-hour horizon.
+		let now = try XCTUnwrap(newYork.date(from: DateComponents(year: 2026, month: 11, day: 1, minute: 1)))
+		let entries = schedule.entryDates(from: now)
+		XCTAssertEqual(entries, [now])
+		let lastEntry = try XCTUnwrap(entries.last)
+		let reload = schedule.reloadDate(after: entries, now: now)
+		XCTAssertGreaterThan(reload, lastEntry)
+		XCTAssertEqual(reload, try XCTUnwrap(newYork.date(from: DateComponents(year: 2026, month: 11, day: 2))))
+	}
+
 	private func date(_ year: Int, _ month: Int, _ day: Int, _ hour: Int = 0, _ minute: Int = 0) -> Date {
 		calendar.date(from: DateComponents(year: year, month: month, day: day, hour: hour, minute: minute))!
 	}
