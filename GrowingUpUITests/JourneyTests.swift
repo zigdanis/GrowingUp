@@ -139,7 +139,7 @@ final class JourneyTests: XCTestCase {
 	func testWidgetSizesRenderPinnedPeopleInBothLanguages() {
 		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
 		for locale in ["en", "ru"] {
-			for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
+			for (family, count) in [("small", 1), ("medium", 3), ("large", 6), ("circular", 1), ("rectangular", 1), ("inline", 1)] {
 				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
 				for (index, name) in names.enumerated() {
 					let person = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
@@ -152,6 +152,17 @@ final class JourneyTests: XCTestCase {
 				checkpoint("widget-\(family)-\(locale)", compareBaseline: false)
 				app.terminate()
 			}
+		}
+	}
+
+	func testLockScreenWidgetsCelebrateTheFirstPinnedBirthday() {
+		// Alice, the first pinned person, was born on 16 January 2020.
+		for (family, expected) in [("circular", "Birthday today"), ("rectangular", "Birthday today"), ("inline", "turns 7 today")] {
+			launch(seed: .birthdays, widgetFamily: family, clock: "2027-01-16T08:00:00Z")
+			let predicate = NSPredicate(format: "label BEGINSWITH %@ AND label CONTAINS %@", "Alice", expected)
+			XCTAssertTrue(app.descendants(matching: .any).matching(predicate).firstMatch.waitForExistence(timeout: 5), family)
+			checkpoint("widget-\(family)-birthday-en", compareBaseline: false)
+			app.terminate()
 		}
 	}
 
@@ -237,7 +248,7 @@ final class JourneyTests: XCTestCase {
 extension JourneyTests {
 	private func launch(
 		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light,
-		widgetFamily: String? = nil
+		widgetFamily: String? = nil, clock: String? = nil
 	) {
 		configuration = UITestConfiguration(
 			identifier: UUID(uuidString: identifier)!, resetStore: true, seed: seed, failNextSave: failSave,
@@ -247,6 +258,7 @@ extension JourneyTests {
 			"TZ": "UTC"
 		]
 		if let widgetFamily { app.launchEnvironment["GROWINGUP_WIDGET_PREVIEW"] = widgetFamily }
+		if let clock { app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = clock }
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
 			"-AppleInterfaceStyle", appearance.launchArgumentValue,
