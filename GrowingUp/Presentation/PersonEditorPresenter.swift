@@ -142,7 +142,9 @@ final class PersonEditorPresenter: Identifiable {
 		guard let appImage else { return nil }
 		if let image = appImage.uiImage { return image }
 		do {
-			return try await loadImage(appImage)
+			let loaded = try await loadImage(appImage)
+			// The photo may have been replaced or removed while loading; a stale image must not be reframed.
+			return self.appImage?.id == appImage.id ? loaded : nil
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)

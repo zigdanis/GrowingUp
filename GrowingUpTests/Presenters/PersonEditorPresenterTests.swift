@@ -160,6 +160,26 @@ final class PersonEditorPresenterTests: XCTestCase {
 		XCTAssertEqual(failed.error?.message, CoreError.missingValue.message)
 	}
 
+	func testMainPhotoLoadedForReframingIsDiscardedWhenThePhotoChangesMeanwhile() async {
+		let stored = image(width: 600, height: 800)
+		let started = AsyncStream.makeStream(of: Void.self)
+		let gate = AsyncStream.makeStream(of: Void.self)
+		let loader = SceneConfigurator(
+			gateway: PersonsGatewaySpy(),
+			loadImage: { _ in
+				started.continuation.yield()
+				for await _ in gate.stream { break }
+				return stored
+			})
+		let presenter = loader.editor(person: .createPerson(), onMutation: { _ in })
+		let task = Task { await presenter.loadMainPhoto() != nil }
+		for await _ in started.stream { break }
+		presenter.setMainPhoto(image(width: 900, height: 1200))
+		gate.continuation.yield()
+		let usedStaleImage = await task.value
+		XCTAssertFalse(usedStaleImage)
+	}
+
 	func testOptedOutBirthdayKeepsTheIndicatorWithoutConfetti() {
 		var person = Person.createPerson()
 		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 0)

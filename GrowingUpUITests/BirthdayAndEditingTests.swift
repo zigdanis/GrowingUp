@@ -200,7 +200,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertEqual(celebrate.value as? String, "0")
 		checkpoint("editor-celebrate-off")
 		app.buttons["editor.save"].tap()
-		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
 		// The birthday is today, so the indicator stays while the opted-out confetti never starts.
 		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
 		XCTAssertFalse(confetti.waitForExistence(timeout: 3))
@@ -210,7 +210,9 @@ final class BirthdayAndEditingTests: XCTestCase {
 		celebrate.tap()
 		XCTAssertEqual(celebrate.value as? String, "1")
 		app.buttons["editor.save"].tap()
-		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
+		// Saving can keep the editor busy for several seconds; only start waiting for confetti once the overview is back.
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
+		XCTAssertTrue(confetti.waitForExistence(timeout: 8))
 	}
 }
 

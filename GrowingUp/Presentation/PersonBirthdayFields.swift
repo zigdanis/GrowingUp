@@ -4,25 +4,24 @@ import SwiftUI
 struct PersonBirthdayFields: View {
 	private static let pickersID = "editor.birthday.pickers"
 	@Bindable var presenter: PersonEditorPresenter
+	let proxy: ScrollViewProxy
 	let onExpand: () -> Void
 	@State private var isExpanded = false
 	@Environment(\.dynamicTypeSize)
 	private var dynamicTypeSize
 
 	var body: some View {
-		ScrollViewReader { proxy in
-			VStack(alignment: .leading, spacing: 0) {
-				bornRow
-				if isExpanded {
-					pickers.id(Self.pickersID)
-				}
+		VStack(alignment: .leading, spacing: 0) {
+			bornRow
+			if isExpanded {
+				pickers.id(Self.pickersID)
 			}
-			.onChange(of: isExpanded) { _, expanded in
-				if expanded { reveal(using: proxy) }
-			}
-			.onChange(of: presenter.hasBirthTime) { _, hasTime in
-				if hasTime { reveal(using: proxy) }
-			}
+		}
+		.onChange(of: isExpanded) { _, expanded in
+			if expanded { reveal() }
+		}
+		.onChange(of: presenter.hasBirthTime) { _, hasTime in
+			if hasTime { reveal() }
 		}
 	}
 
@@ -84,7 +83,7 @@ struct PersonBirthdayFields: View {
 	}
 
 	/// Scrolls the expanded pickers into view so their wheels are not left below the fold.
-	private func reveal(using proxy: ScrollViewProxy) {
+	private func reveal() {
 		withAnimation { proxy.scrollTo(Self.pickersID, anchor: .bottom) }
 	}
 }

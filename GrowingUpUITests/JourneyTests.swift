@@ -354,9 +354,14 @@ extension JourneyTests {
 		let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
 		XCTAssertEqual(XCTWaiter.wait(for: [named, hittable], timeout: 10), .completed)
 		XCTAssertTrue(app.textFields["editor.name"].waitForNonExistence(timeout: 5))
+		// A person born "today" on the fixed clock can still be playing the birthday burst after a relaunch.
+		_ = confetti.waitForExistence(timeout: 3)
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 10))
 		XCTAssertFalse(app.sheets.firstMatch.exists)
 		XCTAssertFalse(app.alerts.firstMatch.exists)
 	}
+
+	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 
 	private func checkpoint(_ name: String, compareBaseline: Bool = true, file: StaticString = #filePath, line: UInt = #line) {
 		let screenshot = app.screenshot()

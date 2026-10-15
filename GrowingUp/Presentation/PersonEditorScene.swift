@@ -13,21 +13,23 @@ struct PersonEditorScene: View {
 
 	var body: some View {
 		NavigationStack {
-			ScrollView {
-				VStack(alignment: .leading, spacing: 0) {
-					PersonEditorHero(presenter: presenter, photoRequest: $photoRequest)
-					VStack(alignment: .leading, spacing: 16) {
-						nameField
-						Divider()
-						PersonBirthdayFields(presenter: presenter, onExpand: { isNameFocused = false })
-						Divider()
-						PersonEditorChips(presenter: presenter, onReframe: reframe)
+			ScrollViewReader { proxy in
+				ScrollView {
+					VStack(alignment: .leading, spacing: 0) {
+						PersonEditorHero(presenter: presenter, photoRequest: $photoRequest)
+						VStack(alignment: .leading, spacing: 16) {
+							nameField
+							Divider()
+							PersonBirthdayFields(presenter: presenter, proxy: proxy, onExpand: { isNameFocused = false })
+							Divider()
+							PersonEditorChips(presenter: presenter, onReframe: reframe)
+						}
+						.padding(20)
 					}
-					.padding(20)
+					.disabled(presenter.isBusy || presenter.isLoading)
 				}
-				.disabled(presenter.isBusy || presenter.isLoading)
+				.scrollDismissesKeyboard(.interactively)
 			}
-			.scrollDismissesKeyboard(.interactively)
 			.navigationTitle(presenter.person == nil ? Text("Add person") : Text("Edit person"))
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar { toolbarItems }
