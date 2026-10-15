@@ -5,6 +5,12 @@ import XCTest
 @testable import GrowingUp
 
 final class WidgetPersonLoaderTests: XCTestCase {
+	/// A real picture: the person's `photo` is drawn from it, which an empty `UIImage` cannot be.
+	private static let photo = UIGraphicsImageRenderer(size: CGSize(width: 4, height: 4)).image { context in
+		UIColor.orange.setFill()
+		context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
+	}
+
 	func testFirstPinnedPersonInCreationOrderHasTheFirstDeepLinkIndex() async {
 		let people = pinnedPeople(count: 3)
 		let useCase = FetchPersonsUseCaseSpy()
@@ -14,7 +20,7 @@ final class WidgetPersonLoaderTests: XCTestCase {
 			fetch: { try await useCase.fetchWidgetPersons() },
 			loadImage: { image in
 				requestedImages.append(image.id)
-				return UIImage()
+				return Self.photo
 			})
 		let first = await loader.loadFirst()
 		XCTAssertEqual(first?.id, people[0].id)
@@ -32,7 +38,7 @@ final class WidgetPersonLoaderTests: XCTestCase {
 	func testNobodyPinnedOrFailedFetchLoadsNobody() async {
 		let useCase = FetchPersonsUseCaseSpy()
 		useCase.completionResult = .success([])
-		let empty = WidgetPersonLoader(fetch: { try await useCase.fetchWidgetPersons() }, loadImage: { _ in UIImage() })
+		let empty = WidgetPersonLoader(fetch: { try await useCase.fetchWidgetPersons() }, loadImage: { _ in Self.photo })
 		let nobody = await empty.loadFirst()
 		XCTAssertNil(nobody)
 		useCase.completionResult = .failure(.coreDataFetchFailed)
