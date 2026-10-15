@@ -73,11 +73,13 @@ final class OverviewPresenterTests: XCTestCase {
 		presenter.tick(person: child, now: date(2027, 1, 16, 8))
 		XCTAssertEqual(presenter.primaryValue, "7")
 		XCTAssertEqual(presenter.secondaryText, "Turns 7 years old today 🎂")
-		XCTAssertEqual(presenter.tickerText, "01:30:00")
+		XCTAssertEqual(presenter.tickerText, "0 days · 01:30:00")
 		presenter.tick(person: person(born: date(2026, 1, 16, 6, 30)), now: date(2027, 1, 16, 8))
 		XCTAssertEqual(presenter.secondaryText, "Turns 1 year old today 🎂")
+		// Hours are too fine to follow years, so the ticker carries them.
 		presenter.tick(person: child, now: date(2027, 1, 17))
-		XCTAssertEqual(presenter.secondaryText, "and 17 hours")
+		XCTAssertNil(presenter.secondaryText)
+		XCTAssertEqual(presenter.tickerText, "0 days · 17:30:00")
 		XCTAssertEqual(presenter.birthdayText, "Birthday in 364 days")
 	}
 
