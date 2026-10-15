@@ -8,5 +8,8 @@ struct AgeWidgetEntryView: View {
 
 	var body: some View {
 		AgeWidgetContentView(entry: entry, family: family)
+			.containerBackground(for: .widget) {
+				AgeWidgetBackground(entry: entry, family: family)
+			}
 	}
 }

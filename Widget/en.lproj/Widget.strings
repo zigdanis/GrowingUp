@@ -1,0 +1,13 @@
+/* Strings drawn by the widget views. The table ships in both the widget extension and the app, which renders the same views for UI tests. */
+
+/* Empty widget invitation */
+"Add someone" = "Add someone";
+
+/* Tile caption after the primary age, e.g. "and 3 months" */
+"and %@" = "and %@";
+
+/* Tile caption, e.g. "Birthday in 3 days" */
+"Birthday in %@" = "Birthday in %@";
+
+/* Tile caption on the birthday itself */
+"Birthday today" = "Birthday today 🎂";
