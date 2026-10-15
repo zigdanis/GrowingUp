@@ -185,6 +185,9 @@
 		FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */; };
 		014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DAA5842EE458E988A419CC /* AgeTickerTests.swift */; };
 		090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */; };
+		8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */; };
+		0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */; };
+		599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508A5E39114E5FF4A37059BB /* NavigationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -425,6 +428,9 @@
 		F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCapsuleButtonChrome.swift; sourceTree = "<group>"; };
 		32DAA5842EE458E988A419CC /* AgeTickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTickerTests.swift; sourceTree = "<group>"; };
 		7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPresenterTests.swift; sourceTree = "<group>"; };
+		6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarCircle.swift; sourceTree = "<group>"; };
+		C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAvatarStrip.swift; sourceTree = "<group>"; };
+		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -889,6 +895,8 @@
 				FD747763C8209752813AD713 /* BirthdayCard.swift */,
 				CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */,
 				F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */,
+				6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */,
+				C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -967,6 +975,7 @@
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
+				508A5E39114E5FF4A37059BB /* NavigationTests.swift */,
 			);
 			path = GrowingUpUITests;
 			sourceTree = "<group>";
@@ -1405,6 +1414,8 @@
 				55095DA496B16231CA9D9463 /* BirthdayCard.swift in Sources */,
 				DC2BDE64469CCED7BCE572D2 /* GlassCardChrome.swift in Sources */,
 				FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */,
+				8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */,
+				0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1419,6 +1430,7 @@
 				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
 				A20000000000000000000006 /* UITestSeed.swift in Sources */,
+				599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

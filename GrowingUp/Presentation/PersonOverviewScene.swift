@@ -5,6 +5,7 @@ struct PersonOverviewScene: View {
 	let person: Person
 	let isSelected: Bool
 	let onEdit: () -> Void
+	let onCardHeightChange: (CGFloat) -> Void
 	let safeAreaInsets: EdgeInsets
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
@@ -14,11 +15,13 @@ struct PersonOverviewScene: View {
 	private var reduceMotion
 
 	init(
-		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, onEdit: @escaping () -> Void
+		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, onEdit: @escaping () -> Void,
+		onCardHeightChange: @escaping (CGFloat) -> Void
 	) {
 		self.person = person
 		self.isSelected = isSelected
 		self.onEdit = onEdit
+		self.onCardHeightChange = onCardHeightChange
 		self.safeAreaInsets = safeAreaInsets
 		now = configurator.now
 		_presenter = State(initialValue: OverviewPresenter(loadImage: configurator.loadImage))
@@ -35,10 +38,16 @@ struct PersonOverviewScene: View {
 						.scrollBounceBehavior(.basedOnSize)
 				}
 				.layoutPriority(1)
-				Spacer(minLength: 24)
+				// Leaves room for the avatar strip that floats above the card.
+				Spacer(minLength: 72)
 				BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit)
 					.padding(.horizontal, 16)
 					.padding(.bottom, 12)
+					.onGeometryChange(for: CGFloat.self) { proxy in
+						proxy.size.height
+					} action: { height in
+						onCardHeightChange(height)
+					}
 			}
 			.padding(.top, safeAreaInsets.top + 16)
 			.padding(.bottom, safeAreaInsets.bottom)
