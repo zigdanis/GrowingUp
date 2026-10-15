@@ -9,7 +9,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var names: [String] { locale == "ru" ? ["Мия", "Лео", "Манго", "Тедди"] : ["Mia", "Leo", "Mango", "Teddy"] }
 	private var overview: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
-	private var birthdayToday: String { locale == "ru" ? "День рождения сегодня 🎂" : "Birthday today 🎂" }
+	private var birthdayToday: String { locale == "ru" ? "Сегодня день рождения 🎂" : "Birthday today 🎂" }
 
 	func testCaptureAppStoreScreenshots() throws {
 		let environment = ProcessInfo.processInfo.environment

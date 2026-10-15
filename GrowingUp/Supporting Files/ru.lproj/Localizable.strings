@@ -124,7 +124,7 @@
 "Birthday in %@" = "День рождения через %@";
 
 /* Next birthday in the bottom card on the birthday itself. */
-"Birthday today 🎂" = "День рождения сегодня 🎂";
+"Birthday today 🎂" = "Сегодня день рождения 🎂";
 
 /* Title of the button that opens the editor for the shown person. */
 "Edit" = "Изменить";
