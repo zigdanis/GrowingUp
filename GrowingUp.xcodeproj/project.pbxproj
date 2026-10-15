@@ -173,6 +173,7 @@
 		6EB10138F14431FD1FE88FDE /* AgeUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7813DC942094FA5DDC9DF7 /* AgeUnit.swift */; };
 		AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCD682917785D101653B7A2 /* AgeUnitValue.swift */; };
 		FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E043A34E30A8F80062A411B /* AgeSummary.swift */; };
+		271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -402,6 +403,7 @@
 		4D7813DC942094FA5DDC9DF7 /* AgeUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeUnit.swift; sourceTree = "<group>"; };
 		6DCD682917785D101653B7A2 /* AgeUnitValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeUnitValue.swift; sourceTree = "<group>"; };
 		3E043A34E30A8F80062A411B /* AgeSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummary.swift; sourceTree = "<group>"; };
+		A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummaryTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -629,6 +631,7 @@
 			isa = PBXGroup;
 			children = (
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
+				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
 				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -1267,6 +1270,7 @@
 				CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
+				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
