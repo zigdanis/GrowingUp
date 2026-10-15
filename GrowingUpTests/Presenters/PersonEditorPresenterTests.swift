@@ -88,6 +88,41 @@ final class PersonEditorPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 0, minute: 0))
 	}
 
+	func testTogglingTheBirthTimeRestoresTheStoredTime() async {
+		var person = Person.createPerson()
+		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 30)
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.hasBirthTime = false
+		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 0, minute: 0))
+		XCTAssertTrue(presenter.isDirty)
+		presenter.hasBirthTime = true
+		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 6, minute: 30))
+		XCTAssertFalse(presenter.isDirty)
+	}
+
+	func testBirthTimeIsRestoredOnTheDayChosenWhileItWasOff() async {
+		var person = Person.createPerson()
+		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 30)
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.hasBirthTime = false
+		presenter.dayOfBirth = date(year: 2019, month: 7, day: 8, hour: 15, minute: 0)
+		presenter.hasBirthTime = true
+		XCTAssertEqual(presenter.birthday, date(year: 2019, month: 7, day: 8, hour: 6, minute: 30))
+	}
+
+	func testTurningOnAnUnknownBirthTimeStaysAtMidnight() async {
+		var person = Person.createPerson()
+		let midnight = date(year: 2020, month: 1, day: 2, hour: 0, minute: 0)
+		person.birthday = midnight
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.hasBirthTime = true
+		XCTAssertEqual(presenter.birthday, midnight)
+		XCTAssertFalse(presenter.isDirty)
+	}
+
 	func testPickingAMainPhotoDerivesTheWidgetPicture() async {
 		var person = Person.createPerson()
 		person.appPicId = nil

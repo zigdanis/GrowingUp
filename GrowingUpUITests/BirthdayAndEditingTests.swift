@@ -205,6 +205,8 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
 		// Every arrival on a birthday page starts a celebration, so an opted-out person must stay quiet on return.
 		leaveAndReturn()
+		// Boris celebrates on the fixed clock too, so confetti only counts once Alice is the selected page.
+		XCTAssertTrue(waitFor(app.staticTexts["person.name"], predicate: NSPredicate(format: "label == %@", "Alice"), timeout: 5))
 		XCTAssertFalse(confetti.waitForExistence(timeout: 3))
 		overview.tap()
 		XCTAssertTrue(celebrate.waitForExistence(timeout: 5))
@@ -216,6 +218,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
 		leaveAndReturn()
 		XCTAssertTrue(confetti.waitForExistence(timeout: 8))
+		XCTAssertEqual(app.staticTexts["person.name"].label, "Alice")
 	}
 }
 
