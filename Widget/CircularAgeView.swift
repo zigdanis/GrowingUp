@@ -37,7 +37,7 @@ struct CircularAgeView: View {
 
 	/// The photo only in full color; the tinted and vibrant looks flatten photos, so they show the initial.
 	@ViewBuilder private var face: some View {
-		if renderingMode == .fullColor, let image = person.image {
+		if renderingMode == .fullColor, let image = person.photo {
 			Image(uiImage: image).resizable().scaledToFill().frame(width: 16, height: 16).clipShape(Circle()).privacySensitive()
 		} else {
 			Text(text.initial).font(.system(size: 10, weight: .semibold)).privacySensitive()

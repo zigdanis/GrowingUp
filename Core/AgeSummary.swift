@@ -28,6 +28,9 @@ public struct AgeSummary: Codable, Hashable, Sendable {
 	/// How many units finer than `primary` the secondary unit may be.
 	private static let secondaryReach = 2
 
+	/// How many successive counts of each unit `nextChangeDate` considers.
+	private static let changeSearchDepth = 8
+
 	/// The finest unit `secondary` may use.
 	private var finestSecondaryUnit: AgeUnit {
 		max(finestUnit, AgeUnit(rawValue: primary.unit.rawValue - Self.secondaryReach) ?? .seconds)
@@ -63,15 +66,21 @@ public struct AgeSummary: Codable, Hashable, Sendable {
 		let changingUnit = summary.secondary?.unit ?? summary.finestSecondaryUnit
 		let fields = Set(AgeUnit.allCases.map(\.calendarComponent))
 		var anniversary = calendar.date(from: calendar.dateComponents(fields, from: birthday)) ?? birthday
-		var next = Date.distantFuture
+		var candidates = [Date]()
 		// Replays the calendar's difference: every unit counts on from the anniversary reached by the coarser units,
-		// so the earliest next count among the shown units is the next change.
+		// so the next counts of the shown units are the candidate changes. A few counts per unit are kept because a
+		// repeated hour on a daylight saving change can put the first one at `now`, or at an instant that still reads the same.
 		for item in ageValues(birthday: birthday, now: now, calendar: calendar) where item.unit >= changingUnit {
 			let component = item.unit.calendarComponent
-			next = min(next, calendar.date(byAdding: component, value: item.value + 1, to: anniversary) ?? next)
+			for step in 1...Self.changeSearchDepth {
+				if let date = calendar.date(byAdding: component, value: item.value + step, to: anniversary), date > now {
+					candidates.append(date)
+				}
+			}
 			anniversary = calendar.date(byAdding: component, value: item.value, to: anniversary) ?? anniversary
 		}
-		return next > now ? next : now.addingTimeInterval(1)
+		let next = candidates.sorted().first { AgeSummary(birthday: birthday, now: $0, finestUnit: finestUnit, calendar: calendar) != summary }
+		return next ?? now.addingTimeInterval(1)
 	}
 
 	/// Whole units of age from `birthday` up to `now`, coarsest first, as counted by `AgeCalculator`; zero before the birthday.

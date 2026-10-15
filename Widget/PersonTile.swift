@@ -20,7 +20,7 @@ struct PersonTile: View {
 			} else {
 				label(content)
 					.padding(8)
-					.background { PersonPhotoBackground(image: person.image) }
+					.background { PersonPhotoBackground(photo: person.photo) }
 					.clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
 			}
 		}

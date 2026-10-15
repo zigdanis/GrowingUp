@@ -12,7 +12,7 @@ struct RectangularAgeView: View {
 	var body: some View {
 		HStack(spacing: 8) {
 			// The tinted and vibrant looks flatten photos, so only full color shows one.
-			if renderingMode == .fullColor, let image = person.image {
+			if renderingMode == .fullColor, let image = person.photo {
 				Image(uiImage: image).resizable().scaledToFill().frame(width: 36, height: 36).clipShape(Circle()).privacySensitive()
 			}
 			VStack(alignment: .leading, spacing: 2) {

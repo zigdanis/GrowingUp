@@ -27,6 +27,13 @@ public struct AgeTimelineSchedule: Sendable {
 		}
 	}
 
+	/// When a timeline whose entries are `entries` should reload: the first change after its last entry, never `now` itself.
+	///
+	/// A fixed horizon can end before the next local midnight, such as on a 25-hour day, so the last entry alone is not a future date.
+	public func reloadDate(after entries: [Date], now: Date) -> Date {
+		nextChange(after: entries.last ?? now)
+	}
+
 	/// Timeline entry dates: `now`, then every following change, stopping after `limit` dates or `horizon` seconds after `now`.
 	public func entryDates(from now: Date, limit: Int = 60, horizon: TimeInterval = 86_400) -> [Date] {
 		let end = now.addingTimeInterval(horizon)

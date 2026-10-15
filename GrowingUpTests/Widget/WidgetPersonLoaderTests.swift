@@ -21,7 +21,7 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		XCTAssertEqual(first?.index, 0)
 		XCTAssertEqual(first?.name, people[0].name)
 		XCTAssertEqual(first?.birthday, people[0].birthday)
-		XCTAssertNotNil(first?.image)
+		XCTAssertNotNil(first?.photo)
 		XCTAssertEqual(requestedImages, [people[0].widgetPicId].compactMap { $0 })
 		let two = await loader.load(limit: 2)
 		XCTAssertEqual(two.map(\.id), people.prefix(2).map(\.id))
@@ -49,8 +49,8 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		let loader = WidgetPersonLoader(fetch: { people }, loadImage: { _ in throw CoreError.missingValue })
 		let persons = await loader.load(limit: Constants.widgetPeopleLimit)
 		XCTAssertEqual(persons.map(\.id), people.map(\.id))
-		XCTAssertNil(persons[0].image)
-		XCTAssertNil(persons[1].image)
+		XCTAssertNil(persons[0].photo)
+		XCTAssertNil(persons[1].photo)
 	}
 
 	private func pinnedPeople(count: Int) -> [Person] {

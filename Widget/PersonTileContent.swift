@@ -24,7 +24,7 @@ struct PersonTileContent {
 		name = person.name
 		value = summary.localizedPrimaryValue(locale: locale)
 		unit = summary.localizedPrimaryUnit(locale: locale)
-		let secondaryCaption = summary.localizedSecondary(locale: locale).map { String(localized: "and \($0)", table: "Widget") }
+		let secondaryCaption = summary.localizedSecondary(locale: locale).map { String(localized: "and \($0)", table: "Widget", locale: locale) }
 		caption = birthdayCaption ?? secondaryCaption
 		isBirthday = birthday.isToday
 		accessibilityLabel = [person.name, summary.localizedCompact(locale: locale), birthdayCaption].compactMap { $0 }.joined(separator: ", ")
@@ -32,10 +32,10 @@ struct PersonTileContent {
 
 	private static func birthdayCaption(for birthday: BirthdayStatus, locale: Locale) -> String? {
 		if birthday.isToday {
-			return String(localized: "Birthday today", table: "Widget")
+			return String(localized: "Birthday today", table: "Widget", locale: locale)
 		}
 		guard (1...7).contains(birthday.daysRemaining) else { return nil }
 		let days = AgeUnitValue(value: birthday.daysRemaining, unit: .days).localizedString(locale: locale)
-		return String(localized: "Birthday in \(days)", table: "Widget")
+		return String(localized: "Birthday in \(days)", table: "Widget", locale: locale)
 	}
 }
