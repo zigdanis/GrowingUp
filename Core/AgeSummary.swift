@@ -7,9 +7,10 @@ import Foundation
 public struct AgeSummary: Codable, Hashable, Sendable {
 	/// The largest non-zero unit, never finer than `finestUnit`; zero `finestUnit`s for a zero age.
 	public let primary: AgeUnitValue
-	/// The next finer non-zero unit after `primary`, scanning down to `finestUnit`; `nil` when all of them are zero.
+	/// The first non-zero unit among the two units finer than `primary`, never finer than `finestUnit`; `nil` when both are zero.
 	///
-	/// Zero units in between are skipped, so 1 year, 0 months and 5 days reads "1 year, 5 days".
+	/// A zero unit in between is skipped, so 1 year, 0 months and 5 days reads "1 year, 5 days", while 6 years, 0 months,
+	/// 0 days and 5 hours reads "6 years": an hour count next to years would read as a glitch rather than as context.
 	public let secondary: AgeUnitValue?
 	/// The finest unit the summary may show. Finer components are truncated, never rounded, so a summary with
 	/// `.minutes` never runs ahead of the clock.
@@ -20,8 +21,16 @@ public struct AgeSummary: Codable, Hashable, Sendable {
 		let values = Self.ageValues(birthday: birthday, now: now, calendar: calendar).filter { $0.unit >= finestUnit }
 		let primaryIndex = values.firstIndex { $0.value > 0 } ?? values.count - 1
 		primary = values[primaryIndex]
-		secondary = values[(primaryIndex + 1)...].first { $0.value > 0 }
+		secondary = values.dropFirst(primaryIndex + 1).prefix(Self.secondaryReach).first { $0.value > 0 }
 		self.finestUnit = finestUnit
+	}
+
+	/// How many units finer than `primary` the secondary unit may be.
+	private static let secondaryReach = 2
+
+	/// The finest unit `secondary` may use.
+	private var finestSecondaryUnit: AgeUnit {
+		max(finestUnit, AgeUnit(rawValue: primary.unit.rawValue - Self.secondaryReach) ?? .seconds)
 	}
 
 	/// The primary number alone, such as "5".
@@ -46,13 +55,12 @@ public struct AgeSummary: Codable, Hashable, Sendable {
 
 	/// The earliest instant strictly after `now` at which `AgeSummary(birthday:now:finestUnit:calendar:)` reads differently.
 	///
-	/// A summary only changes when the last unit it shows counts up: `secondary`, or `finestUnit` while there is no
-	/// secondary unit. "5 years, 3 months" therefore changes on the next monthly anniversary of the birth time, and
-	/// "2 days" with `.days` as the finest unit on the next day at the birth time, which lets a widget timeline add
-	/// entries only when its text changes.
+	/// A summary only changes when the last unit it shows counts up: `secondary`, or the finest unit a secondary could
+	/// use while there is none. "5 years, 3 months" therefore changes on the next monthly anniversary of the birth time,
+	/// and "6 years" on the next day at the birth time, which lets a widget timeline add entries only when its text changes.
 	public static func nextChangeDate(birthday: Date, after now: Date, finestUnit: AgeUnit = .seconds, calendar: Calendar = .current) -> Date {
 		let summary = AgeSummary(birthday: birthday, now: now, finestUnit: finestUnit, calendar: calendar)
-		let changingUnit = summary.secondary?.unit ?? finestUnit
+		let changingUnit = summary.secondary?.unit ?? summary.finestSecondaryUnit
 		let fields = Set(AgeUnit.allCases.map(\.calendarComponent))
 		var anniversary = calendar.date(from: calendar.dateComponents(fields, from: birthday)) ?? birthday
 		var next = Date.distantFuture
