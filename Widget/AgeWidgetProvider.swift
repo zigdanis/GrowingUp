@@ -20,11 +20,6 @@ private let entriesPerTimeline = 60
 
 struct AgeWidgetProvider: TimelineProvider {
 
-	private var fetchUseCase: FetchPersonsUseCase {
-		let gateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		return FetchPersonsUseCaseImplementation(personsGateway: gateway)
-	}
-
 	func placeholder(in context: Context) -> AgeEntry {
 		AgeEntry(date: Date(), persons: Self.samplePersons())
 	}
@@ -58,13 +53,7 @@ struct AgeWidgetProvider: TimelineProvider {
 	/// Fetches the pinned people (sorted by `createdDate`, matching the app's
 	/// deep-link indexing) and loads their widget images from the shared cache.
 	private func loadPersons(family: WidgetFamily) async -> [WidgetPerson] {
-		do {
-			let people = try await fetchUseCase.fetchWidgetPersons()
-			return await resolveImages(for: Array(people.prefix(personLimit(for: family))))
-		} catch {
-			Logging.logError(CoreError(error: error))
-			return []
-		}
+		await WidgetPersonLoader.live.load(limit: personLimit(for: family))
 	}
 
 	private func personLimit(for family: WidgetFamily) -> Int {
@@ -73,24 +62,6 @@ struct AgeWidgetProvider: TimelineProvider {
 		case .systemMedium: 3
 		default: Constants.widgetPeopleLimit
 		}
-	}
-
-	private func resolveImages(for people: [Person]) async -> [WidgetPerson] {
-		var resolved = [WidgetPerson]()
-		for (index, person) in people.enumerated() {
-			var image: UIImage?
-			if let personImage = PersonImage(id: person.widgetPicId) {
-				image = try? await ImagesCache.loadWidgetImage(image: personImage)
-			}
-			resolved.append(
-				WidgetPerson(
-					id: person.id,
-					index: index,
-					name: person.name,
-					birthday: person.birthday,
-					image: image))
-		}
-		return resolved
 	}
 
 	// MARK: - Previews / placeholder
