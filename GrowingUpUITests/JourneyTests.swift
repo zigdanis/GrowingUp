@@ -176,6 +176,22 @@ final class JourneyTests: XCTestCase {
 			checkpoint("widget-\(family)-birthday-en", compareBaseline: false)
 			app.terminate()
 		}
+		launch(seed: .birthdays, locale: "ru", widgetFamily: "rectangular", clock: "2027-01-16T08:00:00Z")
+		let russianAlice = widgetTile("Alice")
+		XCTAssertTrue(russianAlice.waitForExistence(timeout: 5))
+		XCTAssertTrue(russianAlice.label.contains("Сегодня день рождения"), russianAlice.label)
+		checkpoint("widget-rectangular-birthday-ru", compareBaseline: false)
+		app.terminate()
+	}
+
+	func testLockScreenWidgetsInviteToAddSomeoneWhenNobodyIsPinned() {
+		for family in ["circular", "rectangular", "inline"] {
+			launch(seed: .empty, widgetFamily: family)
+			let invitation = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "Add someone")).firstMatch
+			XCTAssertTrue(invitation.waitForExistence(timeout: 5), family)
+			checkpoint("widget-\(family)-empty-en", compareBaseline: false)
+			app.terminate()
+		}
 	}
 
 	private func assertSeventhPinRejected(message: String, checkpoint name: String) {

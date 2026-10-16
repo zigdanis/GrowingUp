@@ -19,6 +19,10 @@ public struct AgeUnitValue: Codable, Hashable, Sendable {
 	///
 	/// Derived from `localizedString(locale:)` by removing the formatted number, so the plural form always
 	/// follows Foundation's rules for `locale`.
+	///
+	/// This relies on `DateComponentsFormatter` and `localizedValue` printing the number identically, which holds for the shipped
+	/// English and Russian locales where values stay below 1000. In a locale where they differ, the number would remain in the
+	/// result next to the unit, so every new locale needs a plural test like the existing ones.
 	public func localizedUnit(locale: Locale = .current) -> String {
 		localizedString(locale: locale)
 			.replacingOccurrences(of: localizedValue(locale: locale), with: "")

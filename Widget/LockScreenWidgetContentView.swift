@@ -13,6 +13,7 @@ struct LockScreenWidgetContentView: View {
 		if let person = entry.person {
 			// Accessory widgets cannot hold links, so the whole widget opens the person.
 			ageView(person, text: LockScreenText(name: person.name, birthday: person.birthday, now: entry.date, locale: locale))
+				.privacySensitive()
 				.widgetURL(person.deepLinkURL)
 		} else {
 			LockScreenEmptyView(family: family)
@@ -23,7 +24,7 @@ struct LockScreenWidgetContentView: View {
 	private func ageView(_ person: WidgetPerson, text: LockScreenText) -> some View {
 		switch family {
 		case .accessoryCircular:
-			CircularAgeView(person: person, text: text)
+			CircularAgeView(text: text)
 		case .accessoryInline:
 			InlineAgeView(text: text)
 		default:

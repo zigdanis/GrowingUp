@@ -12,8 +12,6 @@ public struct LockScreenText: Equatable, Sendable {
 	public static let birthdayLineDays = 30
 
 	public let name: String
-	/// The first character of the name, uppercased, such as "L".
-	public let initial: String
 	/// One line for the inline widget: "Leo · 5 years", "Leo's birthday in 3 days" or "Leo turns 6 today".
 	public let inline: String
 	/// The age in its two largest units, such as "5 years, 3 months".
@@ -55,7 +53,6 @@ public struct LockScreenText: Equatable, Sendable {
 		}
 		let compactAge = age.localizedCompact(locale: locale)
 		self.name = name
-		initial = name.first.map { String($0).uppercased(with: locale) } ?? ""
 		self.inline = inline
 		self.compactAge = compactAge
 		self.birthdayLine = birthdayLine

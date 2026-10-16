@@ -22,4 +22,11 @@ public enum LockScreenSchedule {
 		// The schedule starts with `now` itself, which the caller's first entry already covers.
 		return Array(schedule.entryDates(from: now, limit: limit + 1, horizon: reach).dropFirst())
 	}
+
+	/// When a timeline whose entries are `now` followed by `entries` should reload: the first Lock Screen change after its
+	/// last entry, which is a later one than the last entry itself.
+	public static func reloadDate(birthday: Date, after entries: [Date], now: Date, calendar: Calendar = .current) -> Date {
+		let finestUnit = LockScreenText.finestUnit(birthday: birthday, now: entries.last ?? now, calendar: calendar)
+		return AgeTimelineSchedule(birthdays: [birthday], finestUnit: finestUnit, calendar: calendar).reloadDate(after: entries, now: now)
+	}
 }

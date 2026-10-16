@@ -7,9 +7,9 @@ struct InlineAgeView: View {
 
 	var body: some View {
 		if text.isBirthday {
-			Label(text.inline, systemImage: "birthday.cake").privacySensitive()
+			Label(text.inline, systemImage: "birthday.cake")
 		} else {
-			Text(text.inline).privacySensitive()
+			Text(text.inline)
 		}
 	}
 }

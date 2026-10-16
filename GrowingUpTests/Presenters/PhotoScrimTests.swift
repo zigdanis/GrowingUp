@@ -4,23 +4,27 @@ import XCTest
 @testable import GrowingUp
 
 final class PhotoScrimTests: XCTestCase {
-	private let size = CGSize(width: 20, height: 40)
-
-	func testScrimDarkensTheTopAndBottomEdgesAndKeepsTheMiddleAndTheImageGeometry() throws {
-		let white = solidWhiteImage()
+	func testScrimDarkensTheTopAndBottomEdgesOfTheSquareCrop() throws {
+		let white = solidWhiteImage(width: 20, height: 40)
 		let scrimmed = PhotoScrim.apply(to: white)
-		XCTAssertEqual(scrimmed.size, white.size)
+		XCTAssertEqual(scrimmed.size, CGSize(width: 20, height: 20), "The longer side is cropped")
 		XCTAssertEqual(scrimmed.scale, white.scale)
 		let brightness = try brightnessPerRow(of: scrimmed)
-		XCTAssertEqual(brightness.count, 40)
-		let middle = brightness[20]
+		XCTAssertEqual(brightness.count, 20)
+		let middle = brightness[10]
 		XCTAssertGreaterThan(middle, 0.9, "The centre is not darkened")
 		XCTAssertLessThan(brightness[0], middle - 0.15, "The top edge is darkened")
-		XCTAssertLessThan(brightness[39], middle - 0.3, "The bottom edge is darkened more")
-		XCTAssertLessThan(brightness[39], brightness[0])
+		XCTAssertLessThan(brightness[19], middle - 0.3, "The bottom edge is darkened more")
+		XCTAssertLessThan(brightness[19], brightness[0])
 	}
 
-	private func solidWhiteImage() -> UIImage {
+	func testPicturesAPixelOffSquareBecomeExactlySquare() {
+		XCTAssertEqual(PhotoScrim.apply(to: solidWhiteImage(width: 256, height: 255)).size, CGSize(width: 255, height: 255))
+		XCTAssertEqual(PhotoScrim.apply(to: solidWhiteImage(width: 255, height: 256)).size, CGSize(width: 255, height: 255))
+	}
+
+	private func solidWhiteImage(width: CGFloat, height: CGFloat) -> UIImage {
+		let size = CGSize(width: width, height: height)
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = 1
 		format.opaque = true

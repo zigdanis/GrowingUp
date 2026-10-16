@@ -21,7 +21,6 @@ final class LockScreenTextTests: XCTestCase {
 		XCTAssertNil(lockScreen.birthdayLine)
 		XCTAssertFalse(lockScreen.isBirthday)
 		XCTAssertEqual(lockScreen.primaryValue, "5")
-		XCTAssertEqual(lockScreen.initial, "L")
 		XCTAssertEqual(lockScreen.yearProgress, 104.0 / 365.0, accuracy: 1e-9)
 		XCTAssertEqual(lockScreen.accessibilityLabel, "Leo, 5 years, 3 months")
 	}
@@ -113,7 +112,6 @@ final class LockScreenTextTests: XCTestCase {
 			XCTAssertEqual(birthday.inline, "Лео · сегодня исполняется \(years) \(word)")
 			let ordinary = text(birth, date(2026, 3, 15, 12), name: "Лео", locale: russian)
 			XCTAssertEqual(ordinary.inline, "Лео · \(years) \(word)")
-			XCTAssertEqual(ordinary.initial, "Л")
 		}
 	}
 

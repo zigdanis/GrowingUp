@@ -11,5 +11,7 @@ struct AgeWidgetEntryView: View {
 			.containerBackground(for: .widget) {
 				AgeWidgetBackground(entry: entry, family: family)
 			}
+			// The small widget's photo and its scrim keep the white text legible, so the system must not strip them.
+			.containerBackgroundRemovable(family != .systemSmall)
 	}
 }

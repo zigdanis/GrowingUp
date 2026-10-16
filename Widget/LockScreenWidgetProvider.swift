@@ -34,8 +34,9 @@ struct LockScreenWidgetProvider: TimelineProvider {
 			let dates = person.map { LockScreenSchedule.entryDates(birthday: $0.birthday, after: now, calendar: calendar, limit: Self.entryLimit) } ?? []
 			let entries = ([now] + dates).map { LockScreenEntry(date: $0, person: person) }
 			// Pinning someone in the app reloads every timeline, so an empty one only checks again the next day.
-			let tomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)) ?? now.addingTimeInterval(86_400)
-			completion(Timeline(entries: entries, policy: .after(dates.last ?? tomorrow)))
+			let tomorrow = AgeTimelineSchedule(birthdays: [], calendar: calendar).nextChange(after: now)
+			let reload = person.map { LockScreenSchedule.reloadDate(birthday: $0.birthday, after: dates, now: now, calendar: calendar) } ?? tomorrow
+			completion(Timeline(entries: entries, policy: .after(reload)))
 		}
 	}
 

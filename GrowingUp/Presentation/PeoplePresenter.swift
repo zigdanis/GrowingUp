@@ -37,6 +37,9 @@ final class PeoplePresenter {
 		} catch is CancellationError {
 		} catch {
 			isLoading = false
+			// A failed first load must not open the editor or select a person on a later successful one.
+			pendingAdd = false
+			pendingWidgetIndex = nil
 			self.error = SceneError(error)
 		}
 	}

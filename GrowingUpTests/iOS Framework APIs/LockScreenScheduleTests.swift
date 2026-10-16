@@ -72,6 +72,16 @@ final class LockScreenScheduleTests: XCTestCase {
 		XCTAssertEqual(text(birth, oneDayOld).compactAge, "1 day")
 	}
 
+	func testTheTimelineReloadsAfterItsLastEntry() {
+		let now = date(2025, 9, 25, 20, 30)
+		XCTAssertEqual(LockScreenSchedule.reloadDate(birthday: leo, after: entryDates(leo, now, limit: 100), now: now, calendar: calendar), date(2025, 10, 3))
+		XCTAssertEqual(LockScreenSchedule.reloadDate(birthday: leo, after: [], now: now, calendar: calendar), date(2025, 9, 26))
+		let birth = date(2026, 1, 10, 10, 7).addingTimeInterval(30)
+		let newborn = date(2026, 1, 10, 10, 30)
+		let reload = LockScreenSchedule.reloadDate(birthday: birth, after: entryDates(birth, newborn, limit: 40), now: newborn, calendar: calendar)
+		XCTAssertGreaterThan(reload, date(2026, 1, 11, 10, 7).addingTimeInterval(30))
+	}
+
 	func testEveryHourOfTheFirstDayChangesTheText() {
 		let birth = date(2026, 1, 10, 10, 7).addingTimeInterval(30)
 		let now = date(2026, 1, 10, 10, 30)

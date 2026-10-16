@@ -251,6 +251,19 @@ extension SwiftUIPresenterTests {
 		XCTAssertNil(fullPresenter.editor)
 	}
 
+	func testFailedLoadDropsThePendingAddPersonLink() async {
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		presenter.open(URL(string: "growingup-app://\(Constants.widgetAddPersonHost)")!)
+		await presenter.load()
+		XCTAssertNotNil(presenter.error)
+		XCTAssertNil(presenter.editor)
+		gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: 2))
+		await presenter.load()
+		XCTAssertNil(presenter.editor)
+	}
+
 	func testExistingEditorTracksEveryFieldAndRevertedDraft() async {
 		let gateway = PersonsGatewaySpy()
 		let person = Person.createPerson()

@@ -34,6 +34,13 @@ final class PersonTileContentTests: XCTestCase {
 		XCTAssertEqual(tile("Evan", born: date(2023, 1, 23, 8)).caption, "and 11 months", "Eight days ahead is not announced yet")
 	}
 
+	func testBirthdayAheadOfTheEntryDateIsNotAnnounced() {
+		let content = tile("Unborn", born: now.addingTimeInterval(3 * 86_400))
+		XCTAssertNil(content.caption)
+		XCTAssertFalse(content.isBirthday)
+		XCTAssertEqual(content.accessibilityLabel, "Unborn, 0 minutes")
+	}
+
 	func testNewbornShowsMinutesButNeverSeconds() {
 		let midnight = date(2027, 1, 15)
 		let content = tile("Clara", born: midnight.addingTimeInterval(-60), at: midnight.addingTimeInterval(30))

@@ -8,14 +8,19 @@ enum PhotoScrim {
 	private static let topOpacity: CGFloat = 0.35
 	private static let bottomOpacity: CGFloat = 0.65
 
-	/// A copy of `image` with the same size and scale, darkened from its vertical centre towards the top and, more, towards the bottom.
+	/// The centred square crop of `image`, at its scale, darkened from its vertical centre towards the top and, more, towards the bottom.
+	///
+	/// The side is the shorter side of `image`. Widget pictures are stored a pixel off square, and a photo that is not exactly square
+	/// would be laid out wider than its tile and widen the tile's accessibility frame.
 	static func apply(to image: UIImage) -> UIImage {
+		let side = min(image.size.width, image.size.height)
+		let bounds = CGRect(x: 0, y: 0, width: side, height: side)
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = image.scale
 		format.opaque = true
-		let bounds = CGRect(origin: .zero, size: image.size)
-		return UIGraphicsImageRenderer(size: image.size, format: format).image { context in
-			image.draw(in: bounds)
+		return UIGraphicsImageRenderer(size: bounds.size, format: format).image { context in
+			let origin = CGPoint(x: (side - image.size.width) / 2, y: (side - image.size.height) / 2)
+			image.draw(in: CGRect(origin: origin, size: image.size))
 			drawGradient(in: context.cgContext, from: (bounds.minY, topOpacity), to: (bounds.midY, 0))
 			drawGradient(in: context.cgContext, from: (bounds.midY, 0), to: (bounds.maxY, bottomOpacity))
 		}
