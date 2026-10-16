@@ -192,8 +192,10 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("editor-celebrate-off")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
-		// The birthday is today, so the indicator stays while the opted-out confetti never starts.
-		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
+		// The birthday is today, so the card still announces it while the opted-out confetti never starts.
+		let birthdayLine = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(birthdayLine.waitForExistence(timeout: 5))
+		XCTAssertEqual(birthdayLine.label, "Birthday today 🎂")
 		// Every arrival on a birthday page starts a celebration, so an opted-out person must stay quiet on return.
 		leaveAndReturn()
 		// Boris celebrates on the fixed clock too, so confetti only counts once Alice is the selected page.
