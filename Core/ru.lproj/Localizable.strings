@@ -23,3 +23,9 @@
 "Missing value" = "Отсутствует параметр";
 "Unknown error occured" = "Неизвестная ошибка";
 "Unable to add more than 6 persons" = "В виджет можно добавить не больше 6 человек.";
+
+/* Lock Screen inline widget: the person's name and age, such as "Leo · 5 years" */
+"%@ · %@" = "%@ · %@";
+
+/* Lock Screen rectangular widget line on the person's birthday */
+"Birthday today" = "Сегодня день рождения 🎂";

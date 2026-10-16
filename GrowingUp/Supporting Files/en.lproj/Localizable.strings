@@ -95,9 +95,30 @@
 "Selected photo" = "Selected photo";
 
 /* Birthday indicator and countdown popover. */
-"Birthday celebration" = "Birthday";
-"Until birthday" = "Until birthday";
 "Happy birthday!" = "Happy birthday!";
+
+/* Person page (overview) */
+
+/* Line under the milestone age with the next finer unit, such as "and 3 months". */
+"and %@" = "and %@";
+
+/* Line under the milestone age on a birthday; the argument is the age being turned, such as "6 years". */
+"Turns %@ today 🎂" = "Turns %@ old today 🎂";
+
+/* Next birthday in the bottom card; the argument is the remaining time, such as "14 days". */
+"Birthday in %@" = "Birthday in %@";
+
+/* Next birthday in the bottom card on the birthday itself. */
+"Birthday today 🎂" = "Birthday today 🎂";
+
+/* Title of the button that opens the editor for the shown person. */
+"Edit" = "Edit";
+
+/* Headline of the page for adding a person. */
+"Who is growing up?" = "Who is growing up?";
+
+/* Explanation on the page for adding a person. */
+"Add someone you love and watch their age count up, live to the second." = "Add someone you love and watch their age count up, live to the second.";
 
 /* Person editor. */
 "Change photo" = "Change photo";

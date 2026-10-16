@@ -13,7 +13,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		app = XCUIApplication()
 	}
 
-	func testLocalizedCountdownThresholdsAndIndicatorWindow() {
+	func testLocalizedCountdownThresholdsAndFarOffBirthday() {
 		for (clock, expected, name) in [
 			("2027-01-02T08:00:00Z", "14 days", "days"),
 			("2027-01-15T23:00:01Z", "60 minutes", "minutes"),
@@ -21,29 +21,25 @@ final class BirthdayAndEditingTests: XCTestCase {
 			("2027-01-15T23:59:30Z", "30 seconds", "seconds")
 		] {
 			launch(clock: clock)
-			app.buttons["person.birthday"].tap()
 			let countdown = app.staticTexts["birthday.countdown"]
 			XCTAssertTrue(countdown.waitForExistence(timeout: 5))
-			XCTAssertEqual(countdown.label, expected)
+			XCTAssertEqual(countdown.label, "Birthday in \(expected)")
 			XCTAssertFalse(app.buttons["editor.save"].exists)
 			checkpoint("birthday-countdown-\(name)-en")
 			app.terminate()
 		}
 		launch(clock: "2027-01-02T08:00:00Z", locale: "ru")
-		app.buttons["person.birthday"].tap()
 		XCTAssertTrue(app.staticTexts["birthday.countdown"].waitForExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "14 дней")
-		XCTAssertTrue(app.staticTexts["До дня рождения"].exists)
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "До дня рождения: 14 дней")
 		checkpoint("birthday-countdown-days-ru")
 		app.terminate()
 		launch(clock: "2027-01-01T08:00:00Z")
-		XCTAssertFalse(app.buttons["person.birthday"].exists)
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "Birthday in 15 days")
 		checkpoint("birthday-outside-window")
 	}
 
 	func testLiveMidnightAndEveryBirthdayPageArrival() {
 		launch(clock: "2027-01-15T23:59:40Z", runningClock: true)
-		app.buttons["person.birthday"].tap()
 		let countdown = app.staticTexts["birthday.countdown"]
 		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
 		let initial = countdown.label
@@ -51,10 +47,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		XCTAssertTrue(waitFor(countdown, predicate: NSPredicate(format: "label != %@", initial), timeout: 5))
 		checkpoint("birthday-live-seconds")
 		XCTAssertTrue(confetti.waitForExistence(timeout: 25))
-		XCTAssertTrue(app.staticTexts["Happy birthday!"].exists)
-		// Dismiss the popover without entering editing, then inspect the full-screen burst.
-		app.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.7)).tap()
-		XCTAssertTrue(app.staticTexts["Happy birthday!"].waitForNonExistence(timeout: 5))
+		XCTAssertEqual(countdown.label, "Birthday today 🎂")
 		checkpoint("birthday-midnight-confetti-poppers")
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
 		app.swipeLeft()
@@ -178,9 +171,7 @@ final class BirthdayAndEditingTests: XCTestCase {
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(confetti.waitForExistence(timeout: 5))
 		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
-		app.buttons["person.birthday"].tap()
-		XCTAssertTrue(app.staticTexts["Happy birthday!"].waitForExistence(timeout: 5))
-		XCTAssertFalse(app.staticTexts["birthday.countdown"].exists)
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "Birthday today 🎂")
 		checkpoint("birthday-edited-date-stays-current")
 	}
 
@@ -201,8 +192,10 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("editor-celebrate-off")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 20))
-		// The birthday is today, so the indicator stays while the opted-out confetti never starts.
-		XCTAssertTrue(app.buttons["person.birthday"].waitForExistence(timeout: 5))
+		// The birthday is today, so the card still announces it while the opted-out confetti never starts.
+		let birthdayLine = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(birthdayLine.waitForExistence(timeout: 5))
+		XCTAssertEqual(birthdayLine.label, "Birthday today 🎂")
 		// Every arrival on a birthday page starts a celebration, so an opted-out person must stay quiet on return.
 		leaveAndReturn()
 		// Boris celebrates on the fixed clock too, so confetti only counts once Alice is the selected page.

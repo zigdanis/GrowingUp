@@ -23,3 +23,9 @@
 "Missing value" = "Missing value";
 "Unknown error occured" = "Unknown error occured";
 "Unable to add more than 6 persons" = "You can pin up to 6 people to the widget.";
+
+/* Lock Screen inline widget: the person's name and age, such as "Leo · 5 years" */
+"%@ · %@" = "%@ · %@";
+
+/* Lock Screen rectangular widget line on the person's birthday */
+"Birthday today" = "Birthday today 🎂";
