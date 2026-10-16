@@ -19,14 +19,16 @@ struct PersonTileContent {
 
 	init(person: WidgetPerson, date: Date, locale: Locale, calendar: Calendar = .current) {
 		let summary = AgeSummary(birthday: person.birthday, now: date, finestUnit: Self.finestUnit, calendar: calendar)
+		// A birthday after the entry date reads as a zero age, so it must not announce a birthday either.
+		let isBorn = person.birthday <= date
 		let birthday = BirthdayStatus(birthday: person.birthday, now: date, calendar: calendar)
-		let birthdayCaption = Self.birthdayCaption(for: birthday, locale: locale)
+		let birthdayCaption = isBorn ? Self.birthdayCaption(for: birthday, locale: locale) : nil
 		name = person.name
 		value = summary.localizedPrimaryValue(locale: locale)
 		unit = summary.localizedPrimaryUnit(locale: locale)
 		let secondaryCaption = summary.localizedSecondary(locale: locale).map { String(localized: "and \($0)", table: "Widget", locale: locale) }
 		caption = birthdayCaption ?? secondaryCaption
-		isBirthday = birthday.isToday
+		isBirthday = isBorn && birthday.isToday
 		accessibilityLabel = [person.name, summary.localizedCompact(locale: locale), birthdayCaption].compactMap { $0 }.joined(separator: ", ")
 	}
 
