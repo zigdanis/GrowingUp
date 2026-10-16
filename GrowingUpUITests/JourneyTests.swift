@@ -27,29 +27,33 @@ final class JourneyTests: XCTestCase {
 		relaunch()
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
 		overview.tap()
-		XCTAssertTrue(app.buttons["editor.birthDate"].waitForExistence(timeout: 5))
-		XCTAssertTrue(app.buttons["editor.birthDate"].label.contains("Jan 10, 2027"))
-		XCTAssertTrue(app.buttons["editor.birthTime"].label.contains("11:20"))
+		let born = app.buttons["editor.birthDate"]
+		XCTAssertTrue(born.waitForExistence(timeout: 5))
+		XCTAssertTrue(born.label.contains("January 10, 2027"), born.label)
+		XCTAssertTrue(born.label.contains("11:20"), born.label)
+		born.tap()
+		XCTAssertEqual(app.switches["editor.birthTime"].value as? String, "1")
 	}
 
-	func testEditBothPhotosAndPersist() {
+	func testEditPhotoReframeAndPersist() {
 		launch()
 		addPerson()
 		overview.tap()
-		choosePhoto(slot: "appPhoto")
+		choosePhoto()
 		checkpoint("photo-controls")
 		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
 		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
 		checkpoint("main-crop")
 		app.buttons["crop.use"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
-		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		choosePhoto(slot: "widgetPhoto")
-		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		let reframe = app.buttons["editor.widgetPhoto.reframe"]
+		XCTAssertTrue(reframe.isEnabled)
+		reframe.tap()
 		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
 		checkpoint("widget-crop")
 		app.buttons["crop.use"].tap()
-		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.buttons["crop.use"].waitForNonExistence(timeout: 5))
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
@@ -65,6 +69,7 @@ final class JourneyTests: XCTestCase {
 		launch(failSave: true)
 		app.buttons["person.add"].tap()
 		let name = app.textFields["editor.name"]
+		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
 		name.typeText("Ada")
 		app.buttons["editor.save"].tap()
@@ -75,19 +80,21 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		overview.tap()
 		let draftName = app.textFields["editor.name"]
+		XCTAssertTrue(draftName.waitForExistence(timeout: 5))
 		draftName.tap()
-		draftName.typeText(" Unsaved")
-		choosePhoto(slot: "appPhoto")
+		draftName.typeText(" Unsaved\n")
+		choosePhoto()
 		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
 		XCTAssertTrue(app.buttons["crop.cancel"].waitForExistence(timeout: 5))
 		app.buttons["crop.cancel"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 		dismissPhotos()
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		dismissEditor()
+		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
+		cancelEditor(discarding: true)
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		relaunch()
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
+		waitForSettledOverview(showing: "Ada")
 		checkpoint("cancelled-photo")
 	}
 
@@ -107,7 +114,7 @@ final class JourneyTests: XCTestCase {
 			XCTAssertTrue(field.waitForExistence(timeout: 5))
 			field.tap()
 			field.typeText(name)
-			XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+			XCTAssertEqual(chip("editor.pin").value as? String, "1")
 			app.buttons["editor.save"].tap()
 			XCTAssertTrue(overview.waitForExistence(timeout: 5))
 			XCTAssertEqual(app.staticTexts["person.name"].label, name)
@@ -119,7 +126,7 @@ final class JourneyTests: XCTestCase {
 		// Editing an already pinned person still works when all six slots are occupied.
 		overview.tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		XCTAssertEqual(app.switches["editor.pin"].value as? String, "1")
+		XCTAssertEqual(chip("editor.pin").value as? String, "1")
 		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
 		let sixthName = app.textFields["editor.name"]
 		sixthName.tap()
@@ -201,11 +208,11 @@ final class JourneyTests: XCTestCase {
 		let field = app.textFields["editor.name"]
 		XCTAssertTrue(field.waitForExistence(timeout: 5))
 		field.tap()
-		field.typeText("Seventh")
-		let pin = app.switches["editor.pin"]
+		// Return dismisses the keyboard so it cannot cover the chips.
+		field.typeText("Seventh\n")
+		let pin = chip("editor.pin")
 		XCTAssertEqual(pin.value as? String, "0")
-		// The identifier belongs to the full form row; the native switch occupies its trailing edge.
-		pin.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		pin.tap()
 		XCTAssertEqual(pin.value as? String, "1")
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
@@ -219,8 +226,15 @@ final class JourneyTests: XCTestCase {
 		launch()
 		addPerson()
 		overview.tap()
-		app.buttons["editor.remove"].tap()
-		app.sheets.buttons["Remove"].tap()
+		let menu = app.buttons["editor.menu"]
+		XCTAssertTrue(menu.waitForExistence(timeout: 5))
+		menu.tap()
+		let remove = app.buttons["editor.remove"]
+		XCTAssertTrue(remove.waitForExistence(timeout: 5))
+		remove.tap()
+		let confirmation = app.buttons.matching(NSPredicate(format: "label == %@ AND identifier != %@", "Remove", "editor.remove")).firstMatch
+		XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
+		confirmation.tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		relaunch()
 		XCTAssertTrue(app.buttons["person.add"].exists)
@@ -230,31 +244,40 @@ final class JourneyTests: XCTestCase {
 	func testPhotoRemovalMenuTracksEachImage() {
 		launch()
 		app.buttons["person.add"].tap()
-		for slot in ["appPhoto", "widgetPhoto"] {
-			app.buttons["editor.\(slot)"].tap()
-			XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
-			XCTAssertFalse(app.buttons["photo.source.remove"].exists)
-			if slot == "appPhoto" { checkpoint("image-menu-empty") }
-			app.buttons["photo.source.photos"].tap()
-			XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
-			app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
-			XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
-			app.buttons["crop.use"].tap()
-			XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
-			app.buttons["editor.\(slot)"].tap()
-			XCTAssertTrue(app.buttons["photo.source.remove"].waitForExistence(timeout: 5))
-			if slot == "appPhoto" { checkpoint("image-menu-existing") }
-			app.buttons["photo.source.remove"].tap()
-			XCTAssertTrue(app.buttons["photo.source.remove"].waitForNonExistence(timeout: 5))
-			app.buttons["editor.\(slot)"].tap()
-			XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
-			XCTAssertFalse(app.buttons["photo.source.remove"].exists)
-			if slot == "appPhoto" { checkpoint("image-menu-removed") }
-			app.buttons["photo.source.photos"].tap()
-			XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
-			dismissPhotos()
-			XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		}
+		let menu = app.buttons["editor.appPhoto"]
+		let remove = app.buttons["photo.source.remove"]
+		let thumbnail = app.buttons.matching(identifier: "photo.thumbnail").firstMatch
+		XCTAssertTrue(menu.waitForExistence(timeout: 5))
+		menu.tap()
+		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
+		XCTAssertFalse(remove.exists)
+		settleMenu()
+		checkpoint("image-menu-empty")
+		app.buttons["photo.source.photos"].tap()
+		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
+		thumbnail.tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
+		app.buttons["crop.use"].tap()
+		XCTAssertTrue(thumbnail.waitForNonExistence(timeout: 5))
+		// The widget picture is derived from the new main photo.
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		menu.tap()
+		XCTAssertTrue(remove.waitForExistence(timeout: 5))
+		settleMenu()
+		checkpoint("image-menu-existing")
+		remove.tap()
+		XCTAssertTrue(remove.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForNonExistence(timeout: 5))
+		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
+		menu.tap()
+		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
+		XCTAssertFalse(remove.exists)
+		settleMenu()
+		checkpoint("image-menu-removed")
+		app.buttons["photo.source.photos"].tap()
+		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
+		dismissPhotos()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 	}
 
 	func testLocalizedPhotoAppearance() {
@@ -264,7 +287,7 @@ final class JourneyTests: XCTestCase {
 				app.buttons["person.add"].tap()
 				XCTAssertTrue(app.textFields["editor.name"].waitForExistence(timeout: 5))
 				checkpoint("form-\(locale)-\(appearance.launchArgumentValue)")
-				choosePhoto(slot: "appPhoto")
+				choosePhoto()
 				checkpoint("photo-\(locale)-\(appearance.launchArgumentValue)")
 				app.terminate()
 			}
@@ -331,22 +354,37 @@ extension JourneyTests {
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
-		name.typeText("Ada")
+		// Return dismisses the keyboard so it cannot cover the birthday row.
+		name.typeText("Ada\n")
 		app.buttons["editor.birthDate"].tap()
 		let date = app.datePickers["editor.birthDate.picker"]
 		XCTAssertTrue(date.waitForExistence(timeout: 5))
 		date.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "10")
 		if capturePickers { checkpoint("editor-date") }
-		app.buttons["editor.birthTime"].tap()
-		let time = app.datePickers["editor.birthTime.picker"]
-		XCTAssertTrue(time.waitForExistence(timeout: 5))
-		time.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
-		time.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
+		let time = app.switches["editor.birthTime"]
+		XCTAssertEqual(time.value as? String, "0")
+		// The identifier belongs to the full toggle row; the native switch occupies its trailing edge.
+		time.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+		XCTAssertEqual(time.value as? String, "1")
+		let timePicker = app.datePickers["editor.birthTime.picker"]
+		XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
+		timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
+		timePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
 		if capturePickers { checkpoint("editor-time") }
-		app.buttons["editor.birthTime"].tap()
+		app.buttons["editor.birthDate"].tap()
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
+	}
+
+	/// Editor chips are buttons that report their state as a "1"/"0" value.
+	private func chip(_ identifier: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+
+	/// Lets the source menu finish its Liquid Glass morph so a checkpoint cannot capture it mid-animation.
+	private func settleMenu() {
+		Thread.sleep(forTimeInterval: 1)
 	}
 
 	private func dismissPhotos() {
@@ -357,21 +395,39 @@ extension JourneyTests {
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
 	}
 
-	private func dismissEditor() {
-		// Drag from the sheet's navigation area, avoiding scrolling the form or dismissing only the keyboard.
-		let navigationBar = app.navigationBars.firstMatch
-		XCTAssertTrue(navigationBar.waitForExistence(timeout: 5))
-		let start = navigationBar.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-		let end = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85))
-		start.press(forDuration: 0.1, thenDragTo: end)
+	/// Cancels the editor, confirming the discard dialog that unsaved changes raise.
+	private func cancelEditor(discarding: Bool) {
+		app.buttons["editor.cancel"].tap()
+		if discarding {
+			let discard = app.buttons.matching(NSPredicate(format: "identifier == %@ OR label == %@", "editor.discard", "Discard")).firstMatch
+			XCTAssertTrue(discard.waitForExistence(timeout: 5))
+			discard.tap()
+		}
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
-	private func choosePhoto(slot: String) {
-		app.buttons["editor.\(slot)"].tap()
+	private func choosePhoto() {
+		app.buttons["editor.appPhoto"].tap()
 		app.buttons["photo.source.photos"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 	}
+
+	/// Waits until the relaunched overview shows `name` with nothing presented over it, so the checkpoint
+	/// cannot capture a launch or dismissal animation.
+	private func waitForSettledOverview(showing name: String) {
+		let personName = app.staticTexts["person.name"]
+		let named = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: personName)
+		let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
+		XCTAssertEqual(XCTWaiter.wait(for: [named, hittable], timeout: 10), .completed)
+		XCTAssertTrue(app.textFields["editor.name"].waitForNonExistence(timeout: 5))
+		// A person born "today" on the fixed clock can still be playing the birthday burst after a relaunch.
+		_ = confetti.waitForExistence(timeout: 3)
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 10))
+		XCTAssertFalse(app.sheets.firstMatch.exists)
+		XCTAssertFalse(app.alerts.firstMatch.exists)
+	}
+
+	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 
 	private func checkpoint(_ name: String, compareBaseline: Bool = true, file: StaticString = #filePath, line: UInt = #line) {
 		let screenshot = app.screenshot()

@@ -79,6 +79,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in })
 		await presenter.load()
 		presenter.name = "  "
+		XCTAssertFalse(presenter.canSave)
 		await presenter.save()
 		XCTAssertFalse(gateway.addPersonCalled)
 		XCTAssertEqual(presenter.error?.message, CoreError.noNameValue.message)
@@ -266,7 +267,8 @@ extension SwiftUIPresenterTests {
 
 	func testExistingEditorTracksEveryFieldAndRevertedDraft() async {
 		let gateway = PersonsGatewaySpy()
-		let person = Person.createPerson()
+		var person = Person.createPerson()
+		person.birthday = Calendar.current.date(from: DateComponents(year: 2020, month: 1, day: 2, hour: 15, minute: 8))!
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in XCTFail("Unsaved") })
 		await presenter.load()
 		XCTAssertFalse(presenter.canSave)
@@ -275,23 +277,27 @@ extension SwiftUIPresenterTests {
 		presenter.name += " draft"
 		XCTAssertTrue(presenter.canSave)
 		presenter.name = person.name
-		XCTAssertFalse(presenter.hasChanges)
-		presenter.birthday = person.birthday.addingTimeInterval(60)
+		XCTAssertFalse(presenter.isDirty)
+		presenter.timeOfBirth = person.birthday.addingTimeInterval(60)
 		XCTAssertTrue(presenter.canSave)
-		presenter.birthday = person.birthday
-		XCTAssertFalse(presenter.hasChanges)
+		presenter.timeOfBirth = person.birthday
+		XCTAssertFalse(presenter.isDirty)
 		presenter.isOnWidget.toggle()
 		XCTAssertTrue(presenter.canSave)
 		presenter.isOnWidget = person.isOnWidget
-		XCTAssertFalse(presenter.hasChanges)
+		XCTAssertFalse(presenter.isDirty)
+		presenter.celebratesBirthdays.toggle()
+		XCTAssertTrue(presenter.canSave)
+		presenter.celebratesBirthdays = person.celebratesBirthdays
+		XCTAssertFalse(presenter.isDirty)
 		presenter.appImage = PersonImage(uiImage: UIImage())
 		XCTAssertTrue(presenter.canSave)
 		presenter.appImage = PersonImage(id: person.appPicId)
-		XCTAssertFalse(presenter.hasChanges)
+		XCTAssertFalse(presenter.isDirty)
 		presenter.widgetImage = PersonImage(uiImage: UIImage())
 		XCTAssertTrue(presenter.canSave)
 		presenter.widgetImage = PersonImage(id: person.widgetPicId)
-		XCTAssertFalse(presenter.hasChanges)
+		XCTAssertFalse(presenter.isDirty)
 	}
 
 	func testRemovingEitherStoredPhotoIsDirtyAndUnsavedDraftDoesNotPersist() async {
