@@ -98,5 +98,53 @@
 			<string>%li years</string>
 		</dict>
 	</dict>
+	<key>%@ turns %li today</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%@ turns %#@Variable@ today</string>
+		<key>Variable</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>one</key>
+			<string>%li</string>
+			<key>other</key>
+			<string>%li</string>
+		</dict>
+	</dict>
+	<key>%@'s birthday in %li days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%@'s birthday in %#@Variable@</string>
+		<key>Variable</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>one</key>
+			<string>%li day</string>
+			<key>other</key>
+			<string>%li days</string>
+		</dict>
+	</dict>
+	<key>Birthday in %li days</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>Birthday in %#@Variable@</string>
+		<key>Variable</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>li</string>
+			<key>one</key>
+			<string>%li day</string>
+			<key>other</key>
+			<string>%li days</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

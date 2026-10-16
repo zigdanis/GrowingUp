@@ -11,6 +11,7 @@ final class PeoplePresenter {
 	var error: SceneError?
 	private(set) var isLoading = true
 	private var pendingWidgetIndex: Int?
+	private var pendingAdd = false
 	let configurator: SceneConfigurator
 	private let reloadWidgets: () -> Void
 
@@ -32,9 +33,13 @@ final class PeoplePresenter {
 			if selectedID == nil { selectedID = persons.first?.id }
 			isLoading = false
 			if let pendingWidgetIndex { selectWidgetPerson(index: pendingWidgetIndex) }
+			if pendingAdd { addFromWidget() }
 		} catch is CancellationError {
 		} catch {
 			isLoading = false
+			// A failed first load must not open the editor or select a person on a later successful one.
+			pendingAdd = false
+			pendingWidgetIndex = nil
 			self.error = SceneError(error)
 		}
 	}
@@ -57,12 +62,23 @@ final class PeoplePresenter {
 	}
 
 	func open(_ url: URL) {
+		if URLComponents(url: url, resolvingAgainstBaseURL: false)?.host == Constants.widgetAddPersonHost {
+			// Waits for the people, like a person link, so the editor only opens while there is room for one more.
+			pendingAdd = true
+			if !isLoading { addFromWidget() }
+			return
+		}
 		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
 			let value = components.queryItems?.first(where: { $0.name == Constants.widgetPersonIndexKey })?.value,
 			let index = Int(value), index >= 0
 		else { return }
 		pendingWidgetIndex = index
 		if !isLoading { selectWidgetPerson(index: index) }
+	}
+
+	private func addFromWidget() {
+		pendingAdd = false
+		add()
 	}
 
 	private func selectWidgetPerson(index: Int) {

@@ -23,6 +23,13 @@
 		A50000000000000000000005 /* WidgetPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBA49908C60651E19B76C4 /* WidgetPerson.swift */; };
 		A50000000000000000000006 /* WidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 09051B4D21C55A13008A99C6 /* WidgetAssets.xcassets */; };
 		A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A50000000000000000000008 /* UITestWidgetPreview.swift */; };
+		B60000000000000000000007 /* WidgetPersonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000005 /* WidgetPersonLoader.swift */; };
+		B6000000000000000000000A /* LockScreenEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000008 /* LockScreenEntry.swift */; };
+		B6000000000000000000000D /* LockScreenWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000B /* LockScreenWidgetContentView.swift */; };
+		B60000000000000000000010 /* CircularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000E /* CircularAgeView.swift */; };
+		B60000000000000000000013 /* RectangularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000011 /* RectangularAgeView.swift */; };
+		B60000000000000000000016 /* InlineAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000014 /* InlineAgeView.swift */; };
+		B60000000000000000000019 /* LockScreenEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000017 /* LockScreenEmptyView.swift */; };
 		A50000000000000000000009 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000A /* Localizable.strings */; };
 		A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A40000000000000000000002 /* RemovalConfirmationTests.swift */; };
 		00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */; };
@@ -91,6 +98,17 @@
 		1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */; };
 		1B6340AF1941142FCD03A380 /* PermissionExplainerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D9A7D536DAF10611A2F97FA /* PermissionExplainerConfig.swift */; };
 		1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CBA49908C60651E19B76C4 /* WidgetPerson.swift */; };
+		B60000000000000000000006 /* WidgetPersonLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000005 /* WidgetPersonLoader.swift */; };
+		B60000000000000000000009 /* LockScreenEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000008 /* LockScreenEntry.swift */; };
+		B6000000000000000000000C /* LockScreenWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000B /* LockScreenWidgetContentView.swift */; };
+		B6000000000000000000000F /* CircularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000000E /* CircularAgeView.swift */; };
+		B60000000000000000000012 /* RectangularAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000011 /* RectangularAgeView.swift */; };
+		B60000000000000000000015 /* InlineAgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000014 /* InlineAgeView.swift */; };
+		B60000000000000000000018 /* LockScreenEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000017 /* LockScreenEmptyView.swift */; };
+		B6000000000000000000001B /* LockScreenWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001A /* LockScreenWidgetProvider.swift */; };
+		B6000000000000000000001D /* GrowingUpLockScreenWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */; };
+		B6000000000000000000001F /* LockScreenWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6000000000000000000001E /* LockScreenWidgetEntryView.swift */; };
+		B60000000000000000000021 /* LockScreenWidgetPreviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000020 /* LockScreenWidgetPreviews.swift */; };
 		23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */; };
 		24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76A20096A409E8AA71BA5C6 /* AppComposition.swift */; };
 		28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */; };
@@ -169,6 +187,8 @@
 		F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */; };
 		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
 		BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303536429A34F2CB9827E7E /* BirthdayStatus.swift */; };
+		B60000000000000000000002 /* LockScreenText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* LockScreenText.swift */; };
+		B60000000000000000000004 /* LockScreenSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000003 /* LockScreenSchedule.swift */; };
 		57A7470200094C6893873AD7 /* BirthdayConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */; };
 		CB07E3253CC36578C3CF0EE6 /* ConfettiParticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */; };
 		65AD4915122A447E3A29BC1C /* ConfettiShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */; };
@@ -178,6 +198,9 @@
 		AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DCD682917785D101653B7A2 /* AgeUnitValue.swift */; };
 		FDE0AD21914F964EDE9DD480 /* AgeSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E043A34E30A8F80062A411B /* AgeSummary.swift */; };
 		271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */; };
+		B60000000000000000000023 /* LockScreenTextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000022 /* LockScreenTextTests.swift */; };
+		B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000024 /* LockScreenScheduleTests.swift */; };
+		B60000000000000000000027 /* WidgetPersonLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000026 /* WidgetPersonLoaderTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
 		47F91BDB15D345441CFF1C01 /* AvatarThumbnailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */; };
 		3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */; };
@@ -193,6 +216,7 @@
 		8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */; };
 		0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */; };
 		599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508A5E39114E5FF4A37059BB /* NavigationTests.swift */; };
+		D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */; };
 		DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
 		FE04D3B6442C611B7D1DAEC1 /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
 		A6A0189F74C35172B3B04AAC /* PersonTileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A6291E7B63A68981734E8F /* PersonTileContent.swift */; };
@@ -372,6 +396,17 @@
 		43D7813F4BD212B2A4A194C9 /* PreviewPhotos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewPhotos.swift; sourceTree = "<group>"; };
 		449ED61637164BFF288A6770 /* PeoplePresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PeoplePresenter.swift; sourceTree = "<group>"; };
 		44CBA49908C60651E19B76C4 /* WidgetPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPerson.swift; sourceTree = "<group>"; };
+		B60000000000000000000005 /* WidgetPersonLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPersonLoader.swift; sourceTree = "<group>"; };
+		B60000000000000000000008 /* LockScreenEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenEntry.swift; sourceTree = "<group>"; };
+		B6000000000000000000000B /* LockScreenWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetContentView.swift; sourceTree = "<group>"; };
+		B6000000000000000000000E /* CircularAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircularAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000011 /* RectangularAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RectangularAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000014 /* InlineAgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InlineAgeView.swift; sourceTree = "<group>"; };
+		B60000000000000000000017 /* LockScreenEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenEmptyView.swift; sourceTree = "<group>"; };
+		B6000000000000000000001A /* LockScreenWidgetProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetProvider.swift; sourceTree = "<group>"; };
+		B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingUpLockScreenWidget.swift; sourceTree = "<group>"; };
+		B6000000000000000000001E /* LockScreenWidgetEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetEntryView.swift; sourceTree = "<group>"; };
+		B60000000000000000000020 /* LockScreenWidgetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetPreviews.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
 		4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableImage.swift; sourceTree = "<group>"; };
 		4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonScene.swift; sourceTree = "<group>"; };
@@ -435,6 +470,8 @@
 		3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonBirthdayFields.swift; sourceTree = "<group>"; };
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
 		1303536429A34F2CB9827E7E /* BirthdayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatus.swift; sourceTree = "<group>"; };
+		B60000000000000000000001 /* LockScreenText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenText.swift; sourceTree = "<group>"; };
+		B60000000000000000000003 /* LockScreenSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenSchedule.swift; sourceTree = "<group>"; };
 		7531E00BEADE4990A71FDD6B /* BirthdayConfettiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayConfettiView.swift; sourceTree = "<group>"; };
 		D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiParticle.swift; sourceTree = "<group>"; };
 		8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiShape.swift; sourceTree = "<group>"; };
@@ -444,6 +481,9 @@
 		6DCD682917785D101653B7A2 /* AgeUnitValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeUnitValue.swift; sourceTree = "<group>"; };
 		3E043A34E30A8F80062A411B /* AgeSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummary.swift; sourceTree = "<group>"; };
 		A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeSummaryTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000022 /* LockScreenTextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenTextTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000024 /* LockScreenScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenScheduleTests.swift; sourceTree = "<group>"; };
+		B60000000000000000000026 /* WidgetPersonLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPersonLoaderTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
 		A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenter.swift; sourceTree = "<group>"; };
 		6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenterTests.swift; sourceTree = "<group>"; };
@@ -459,6 +499,7 @@
 		6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarCircle.swift; sourceTree = "<group>"; };
 		C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAvatarStrip.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetTests.swift; sourceTree = "<group>"; };
 		D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTile.swift; sourceTree = "<group>"; };
 		E9A6291E7B63A68981734E8F /* PersonTileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContent.swift; sourceTree = "<group>"; };
 		8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoBackground.swift; sourceTree = "<group>"; };
@@ -547,6 +588,17 @@
 				D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */,
 				E9A6291E7B63A68981734E8F /* PersonTileContent.swift */,
 				44CBA49908C60651E19B76C4 /* WidgetPerson.swift */,
+				B60000000000000000000005 /* WidgetPersonLoader.swift */,
+				B60000000000000000000008 /* LockScreenEntry.swift */,
+				B6000000000000000000000B /* LockScreenWidgetContentView.swift */,
+				B6000000000000000000000E /* CircularAgeView.swift */,
+				B60000000000000000000011 /* RectangularAgeView.swift */,
+				B60000000000000000000014 /* InlineAgeView.swift */,
+				B60000000000000000000017 /* LockScreenEmptyView.swift */,
+				B6000000000000000000001A /* LockScreenWidgetProvider.swift */,
+				B6000000000000000000001C /* GrowingUpLockScreenWidget.swift */,
+				B6000000000000000000001E /* LockScreenWidgetEntryView.swift */,
+				B60000000000000000000020 /* LockScreenWidgetPreviews.swift */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -566,6 +618,8 @@
 				4D7813DC942094FA5DDC9DF7 /* AgeUnit.swift */,
 				6DCD682917785D101653B7A2 /* AgeUnitValue.swift */,
 				1303536429A34F2CB9827E7E /* BirthdayStatus.swift */,
+				B60000000000000000000001 /* LockScreenText.swift */,
+				B60000000000000000000003 /* LockScreenSchedule.swift */,
 				0916532C223ECBC40081FB10 /* CoreError.swift */,
 				0916531D223ECBC40081FB10 /* Gateways */,
 				0916531F223ECBC40081FB10 /* UseCases */,
@@ -706,6 +760,8 @@
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
 				720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */,
+				B60000000000000000000022 /* LockScreenTextTests.swift */,
+				B60000000000000000000024 /* LockScreenScheduleTests.swift */,
 				D17FB22584FC46369370216E /* BirthdayStatusTests.swift */,
 			);
 			path = "iOS Framework APIs";
@@ -731,6 +787,14 @@
 			path = Cache;
 			sourceTree = "<group>";
 		};
+		B60000000000000000000028 /* Widget */ = {
+			isa = PBXGroup;
+			children = (
+				B60000000000000000000026 /* WidgetPersonLoaderTests.swift */,
+			);
+			path = Widget;
+			sourceTree = "<group>";
+		};
 		094DF9C1223AB35D00C331EC /* GrowingUpTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -738,6 +802,7 @@
 				098054F4223C295400E24D40 /* Presenters */,
 				094DF9CA223ADC3800C331EC /* Gateways */,
 				0929F1E52258CA7100212F29 /* iOS Framework APIs */,
+				B60000000000000000000028 /* Widget */,
 				4EC8924D144DC798B8A912C8 /* ImageCapture */,
 				094DF9CD223ADCD400C331EC /* Helpers */,
 				094DF9C4223AB35D00C331EC /* Info.plist */,
@@ -1029,6 +1094,7 @@
 				C51000000000000000000002 /* AppStoreScreenshotTests.swift */,
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
+				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 				508A5E39114E5FF4A37059BB /* NavigationTests.swift */,
 			);
@@ -1310,6 +1376,17 @@
 				B1C2D3E4F5061728394A5B6D /* PhotoScrim.swift in Sources */,
 				C411E373929F1EEB97B03106 /* AgeWidgetBackground.swift in Sources */,
 				1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */,
+				B60000000000000000000006 /* WidgetPersonLoader.swift in Sources */,
+				B60000000000000000000009 /* LockScreenEntry.swift in Sources */,
+				B6000000000000000000000C /* LockScreenWidgetContentView.swift in Sources */,
+				B6000000000000000000000F /* CircularAgeView.swift in Sources */,
+				B60000000000000000000012 /* RectangularAgeView.swift in Sources */,
+				B60000000000000000000015 /* InlineAgeView.swift in Sources */,
+				B60000000000000000000018 /* LockScreenEmptyView.swift in Sources */,
+				B6000000000000000000001B /* LockScreenWidgetProvider.swift in Sources */,
+				B6000000000000000000001D /* GrowingUpLockScreenWidget.swift in Sources */,
+				B6000000000000000000001F /* LockScreenWidgetEntryView.swift in Sources */,
+				B60000000000000000000021 /* LockScreenWidgetPreviews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1330,6 +1407,8 @@
 				6EB10138F14431FD1FE88FDE /* AgeUnit.swift in Sources */,
 				AEEA156E9C986BEF5C8AA69E /* AgeUnitValue.swift in Sources */,
 				BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */,
+				B60000000000000000000002 /* LockScreenText.swift in Sources */,
+				B60000000000000000000004 /* LockScreenSchedule.swift in Sources */,
 				092F4190226F9A370049E29E /* Logging.swift in Sources */,
 				095000E2226DED6200789BED /* ImagesCache.swift in Sources */,
 				09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */,
@@ -1376,6 +1455,9 @@
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
 				6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */,
+				B60000000000000000000023 /* LockScreenTextTests.swift in Sources */,
+				B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */,
+				B60000000000000000000027 /* WidgetPersonLoaderTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
@@ -1415,6 +1497,13 @@
 				B1C2D3E4F5061728394A5B6E /* PhotoScrim.swift in Sources */,
 				EA1BDDD800E93CBA02F7B894 /* AgeWidgetBackground.swift in Sources */,
 				A50000000000000000000005 /* WidgetPerson.swift in Sources */,
+				B60000000000000000000007 /* WidgetPersonLoader.swift in Sources */,
+				B6000000000000000000000A /* LockScreenEntry.swift in Sources */,
+				B6000000000000000000000D /* LockScreenWidgetContentView.swift in Sources */,
+				B60000000000000000000010 /* CircularAgeView.swift in Sources */,
+				B60000000000000000000013 /* RectangularAgeView.swift in Sources */,
+				B60000000000000000000016 /* InlineAgeView.swift in Sources */,
+				B60000000000000000000019 /* LockScreenEmptyView.swift in Sources */,
 				A50000000000000000000007 /* UITestWidgetPreview.swift in Sources */,
 				0916536C223ECBC40081FB10 /* GrowingUpApp.swift in Sources */,
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
@@ -1502,6 +1591,7 @@
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
 				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,
+				D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */,
 				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,
 				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
@@ -1922,7 +2012,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

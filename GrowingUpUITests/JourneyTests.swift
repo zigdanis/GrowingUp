@@ -263,7 +263,7 @@ final class JourneyTests: XCTestCase {
 extension JourneyTests {
 	private func launch(
 		seed: UITestSeed = .empty, failSave: Bool = false, locale: String = "en", appearance: UITestAppearance = .light,
-		widgetFamily: String? = nil
+		widgetFamily: String? = nil, clock: String? = nil
 	) {
 		configuration = UITestConfiguration(
 			identifier: UUID(uuidString: identifier)!, resetStore: true, seed: seed, failNextSave: failSave,
@@ -273,6 +273,7 @@ extension JourneyTests {
 			"TZ": "UTC"
 		]
 		if let widgetFamily { app.launchEnvironment["GROWINGUP_WIDGET_PREVIEW"] = widgetFamily }
+		if let clock { app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = clock }
 		app.launchArguments = [
 			"-AppleLanguages", "(\(locale))", "-AppleLocale", locale == "ru" ? "ru_RU" : "en_US",
 			"-AppleInterfaceStyle", appearance.launchArgumentValue,

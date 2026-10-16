@@ -11,3 +11,6 @@
 
 /* Tile caption on the birthday itself */
 "Birthday today" = "Сегодня день рождения 🎂";
+
+/* Sample person in the Lock Screen widget gallery */
+"Leo" = "Лео";

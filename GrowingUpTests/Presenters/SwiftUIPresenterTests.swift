@@ -228,6 +228,43 @@ final class SwiftUIPresenterTests: XCTestCase {
 }
 
 extension SwiftUIPresenterTests {
+	func testAddPersonWidgetLinkWaitsForLoadAndRespectsTheLimit() async {
+		let link = URL(string: "growingup-app://\(Constants.widgetAddPersonHost)")!
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: 2))
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		presenter.open(link)
+		XCTAssertNil(presenter.editor)
+		await presenter.load()
+		XCTAssertNotNil(presenter.editor)
+		XCTAssertNil(presenter.editor?.person)
+		presenter.editor = nil
+		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=1")!)
+		XCTAssertEqual(presenter.selectedID, presenter.persons[1].id)
+		XCTAssertNil(presenter.editor)
+		presenter.open(link)
+		XCTAssertNotNil(presenter.editor)
+		let full = PersonsGatewaySpy()
+		full.fetchPersonsResultToBeReturned = .success((0..<20).map { _ in Person.createPerson() })
+		let fullPresenter = PeoplePresenter(configurator: SceneConfigurator(gateway: full), reloadWidgets: {})
+		fullPresenter.open(link)
+		await fullPresenter.load()
+		XCTAssertNil(fullPresenter.editor)
+	}
+
+	func testFailedLoadDropsThePendingAddPersonLink() async {
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		presenter.open(URL(string: "growingup-app://\(Constants.widgetAddPersonHost)")!)
+		await presenter.load()
+		XCTAssertNotNil(presenter.error)
+		XCTAssertNil(presenter.editor)
+		gateway.fetchPersonsResultToBeReturned = .success(pinnedPeople(count: 2))
+		await presenter.load()
+		XCTAssertNil(presenter.editor)
+	}
+
 	func testExistingEditorTracksEveryFieldAndRevertedDraft() async {
 		let gateway = PersonsGatewaySpy()
 		var person = Person.createPerson()

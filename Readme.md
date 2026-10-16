@@ -14,6 +14,8 @@ live.
 - A **Home Screen widget** (WidgetKit) in three sizes shows up to six pinned
   people as photo tiles with a big milestone age and birthday countdowns,
   refreshing only when that text changes.
+- **Lock Screen widgets** (ring, rectangular and inline) with the first pinned
+  person's age and next birthday, also shown in StandBy.
 - Data is shared between the app and the widget through a shared App Group.
 - Localized in English and Russian.
 
