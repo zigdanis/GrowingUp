@@ -146,18 +146,21 @@ final class JourneyTests: XCTestCase {
 	func testWidgetSizesRenderPinnedPeopleInBothLanguages() {
 		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
 		for locale in ["en", "ru"] {
-			for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
-				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
-				for (index, name) in names.enumerated() {
-					let person = app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
-					if index < count {
-						XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
-					} else {
-						XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
+			for appearance in UITestAppearance.allCases {
+				for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
+					launch(seed: .sixPinned, locale: locale, appearance: appearance, widgetFamily: family)
+					for (index, name) in names.enumerated() {
+						let person = widgetTile(name)
+						if index < count {
+							XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
+						} else {
+							XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
+						}
 					}
+					if family == "large" { assertWidgetCaptions(locale: locale) }
+					checkpoint("widget-\(family)-\(locale)-\(appearance.launchArgumentValue)", compareBaseline: false)
+					app.terminate()
 				}
-				checkpoint("widget-\(family)-\(locale)", compareBaseline: false)
-				app.terminate()
 			}
 		}
 	}
@@ -280,6 +283,24 @@ extension JourneyTests {
 			XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch.waitForExistence(timeout: 10))
 		} else {
 			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		}
+	}
+
+	private func widgetTile(_ name: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+	}
+
+	/// The seed gives Alice 5 years and 3 months, Daria her birthday today and Evan his birthday in three days.
+	private func assertWidgetCaptions(locale: String) {
+		let russian = locale == "ru"
+		let expectations = [
+			("Alice", russian ? "5 лет" : "5 years, 3 months"),
+			("Daria", russian ? "Сегодня день рождения" : "Birthday today"),
+			("Evan", russian ? "День рождения через 3 дня" : "Birthday in 3 days")
+		]
+		for (name, text) in expectations {
+			let label = widgetTile(name).label
+			XCTAssertTrue(label.contains(text), "\(name): \(label)")
 		}
 	}
 

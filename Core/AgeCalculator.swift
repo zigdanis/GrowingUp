@@ -16,12 +16,15 @@ public enum AgeCalculator {
 		return Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: initial, to: now)
 	}
 
-	/// Age, broken into time components, from `birthday` up to `date`.
-	public static func ageComponents(from birthday: Date, to date: Date) -> DateComponents {
+	/// Age, broken into time components, from `birthday` up to `date` in `calendar`.
+	///
+	/// Both dates are truncated to whole seconds, and larger components are counted before smaller ones,
+	/// so the result reads like "5 years 3 months 12 days". `AgeSummary` is derived from the same components.
+	public static func ageComponents(from birthday: Date, to date: Date, calendar: Calendar = .current) -> DateComponents {
 		let fields: Set<Calendar.Component> = [.year, .month, .day, .hour, .minute, .second]
-		let then = Calendar.current.dateComponents(fields, from: birthday)
-		let now = Calendar.current.dateComponents(fields, from: date)
-		return Calendar.current.dateComponents(fields, from: then, to: now)
+		let then = calendar.dateComponents(fields, from: birthday)
+		let now = calendar.dateComponents(fields, from: date)
+		return calendar.dateComponents(fields, from: then, to: now)
 	}
 
 	public static func ageString(for comps: DateComponents) -> String {

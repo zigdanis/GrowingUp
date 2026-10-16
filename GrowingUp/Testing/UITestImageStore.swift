@@ -7,6 +7,11 @@
 		init(root: URL) { self.root = root }
 
 		func save(_ image: PersonImage) async throws {
+			try store(image)
+		}
+
+		/// Writes synchronously so seeding can add pictures before the first scene loads them.
+		func store(_ image: PersonImage) throws {
 			guard let data = image.uiImage?.jpegData(compressionQuality: 0.95) else { throw CoreError.missingValue }
 			try data.write(to: root.appendingPathComponent(image.cachingKey), options: .atomic)
 		}
