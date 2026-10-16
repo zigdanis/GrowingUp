@@ -1,37 +1,32 @@
 import Core
 import SwiftUI
 
+/// A person's picture in a circle of `size` points, with a placeholder until it loads.
 struct PersonPicture: View {
 	let image: PersonImage?
 	let loadImage: (PersonImage) async throws -> UIImage
 	let identifier: String
+	let label: Text
+	let size: CGFloat
 	let onError: (Error) -> Void
-	@State private var loaded: UIImage?
 
 	var body: some View {
-		ZStack {
-			Circle().fill(.quaternary)
-			if let loaded {
-				Image(uiImage: loaded).resizable().scaledToFill()
-					.accessibilityLabel(Text("Selected photo"))
-					.accessibilityIdentifier("editor.\(identifier).loaded")
-			} else {
-				Image(systemName: "photo.badge.plus").font(.largeTitle)
+		PersonImageLoader(image: image, loadImage: loadImage, onError: onError) { loaded in
+			ZStack {
+				Circle().fill(.quaternary)
+				if let loaded {
+					Image(uiImage: loaded).resizable().scaledToFill()
+						.accessibilityLabel(label)
+						.accessibilityIdentifier("editor.\(identifier).loaded")
+				} else {
+					Image(systemName: "person.fill")
+						.font(.system(size: size * 0.45))
+						.foregroundStyle(.secondary)
+						.accessibilityHidden(true)
+				}
 			}
-		}
-		.frame(width: 96, height: 96)
-		.clipShape(.circle)
-		.task(id: image?.id) {
-			loaded = image?.uiImage
-			guard let image, loaded == nil else { return }
-			do {
-				let picture = try await loadImage(image)
-				try Task.checkCancellation()
-				loaded = picture
-			} catch is CancellationError {
-			} catch {
-				onError(error)
-			}
+			.frame(width: size, height: size)
+			.clipShape(.circle)
 		}
 	}
 }
