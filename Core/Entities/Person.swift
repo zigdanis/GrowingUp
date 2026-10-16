@@ -17,6 +17,8 @@ public struct Person: Equatable, Hashable, Sendable {
 	public var widgetPicId: UUID?
 	public var isOnWidget: Bool
 	public var createdDate: Date
+	/// Whether the overview celebrates this person's birthday with confetti.
+	public var celebratesBirthdays: Bool
 
 	public init(
 		id: UUID,
@@ -25,7 +27,8 @@ public struct Person: Equatable, Hashable, Sendable {
 		appPicId: UUID?,
 		widgetPicId: UUID?,
 		isOnWidget: Bool,
-		createdDate: Date
+		createdDate: Date,
+		celebratesBirthdays: Bool = true
 	) {
 		self.id = id
 		self.name = name
@@ -34,6 +37,7 @@ public struct Person: Equatable, Hashable, Sendable {
 		self.widgetPicId = widgetPicId
 		self.isOnWidget = isOnWidget
 		self.createdDate = createdDate
+		self.celebratesBirthdays = celebratesBirthdays
 	}
 
 	public var dateComponents: DateComponents {

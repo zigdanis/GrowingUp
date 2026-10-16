@@ -74,7 +74,8 @@ struct PersonOverviewScene: View {
 		.onDisappear {
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
-		.task(id: isSelected ? person.birthday : nil) {
+		// Restart with every saved change so the ticking loop never reads a stale birthday or celebration choice.
+		.task(id: isSelected ? person : nil) {
 			while !Task.isCancelled {
 				presenter.tick(person: person, now: now(), isSelected: isSelected)
 				guard isSelected else { break }

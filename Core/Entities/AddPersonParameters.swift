@@ -15,6 +15,7 @@ public struct AddPersonParameters: Equatable, Sendable {
 	public var appImage: PersonImage?
 	public var widgetImage: PersonImage?
 	public var isOnWidget: Bool
+	public var celebratesBirthdays: Bool
 
 	public init(
 		name: String,
@@ -22,7 +23,8 @@ public struct AddPersonParameters: Equatable, Sendable {
 		timeOfBirth: Date,
 		appImage: PersonImage?,
 		widgetImage: PersonImage?,
-		isOnWidget: Bool
+		isOnWidget: Bool,
+		celebratesBirthdays: Bool = true
 	) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
@@ -30,6 +32,7 @@ public struct AddPersonParameters: Equatable, Sendable {
 		self.appImage = appImage
 		self.widgetImage = widgetImage
 		self.isOnWidget = isOnWidget
+		self.celebratesBirthdays = celebratesBirthdays
 	}
 }
 

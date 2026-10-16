@@ -6,6 +6,7 @@
 //  (main picture, widget picture) for the in-app cropper.
 //
 
+import Core
 import CoreGraphics
 
 enum CropShape {
@@ -31,11 +32,11 @@ enum CropShape {
 
 	/// Longest-side target, in pixels, for the persisted image. Downscale only —
 	/// the main picture is shown full-screen (~1800px is ample at 3x), the widget
-	/// picture never exceeds ~56pt (480px covers Retina with headroom).
+	/// picture shares the budget of pictures derived from the main photo.
 	var maxPixelSize: CGFloat {
 		switch self {
 		case .rectangle: return 1800
-		case .circle: return 480
+		case .circle: return WidgetPictureDeriver.maxPixelSide
 		}
 	}
 }

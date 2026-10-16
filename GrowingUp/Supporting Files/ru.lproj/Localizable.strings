@@ -6,18 +6,6 @@
   Copyright © 2019-2026 Danis Ziganshin.
 */
 
-/* "text on label under app pic rounded button" */
-"main pic" = "основное";
-
-/* "text on label under widget pic rounded button" */
-"widget pic" = "в виджете";
-
-/* Accessibility label for the app picture image-source menu */
-"Change app picture" = "Изменить основное фото";
-
-/* Accessibility label for the widget picture image-source menu */
-"Change widget picture" = "Изменить фото для виджета";
-
 /* "Title for the button on new person screen" */
 "Add person" = "Добавить";
 
@@ -47,9 +35,6 @@
 
 /* Title for Button (that deletes Person) on Edit Person Page */
 "Remove" = "Удалить";
-
-/* Info Label for Cell with Toggle on Person settings screen */
-"Add to Widget" = "Добавить в Виджет";
 
 /* MARK: Image capture flow (photo library & permissions) */
 
@@ -134,3 +119,17 @@
 
 /* Explanation on the page for adding a person. */
 "Add someone you love and watch their age count up, live to the second." = "Добавьте близкого и следите, как растёт его возраст — с точностью до секунды.";
+
+/* Person editor. */
+"Change photo" = "Изменить фото";
+"Add a photo" = "Добавить фото";
+"Born" = "Дата рождения";
+"On widget" = "В виджете";
+"Celebrate birthdays" = "Праздновать дни рождения";
+"Widget picture" = "Фото для виджета";
+"Reframe" = "Кадрировать";
+"More" = "Ещё";
+"Remove…" = "Удалить…";
+"Discard changes?" = "Отменить изменения?";
+"Discard" = "Не сохранять";
+"Keep editing" = "Продолжить";

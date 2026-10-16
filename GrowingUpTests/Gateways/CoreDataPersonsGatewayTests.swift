@@ -62,6 +62,27 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		_ = try await inMemoryCoreDataGateway.fetchPersons()
 	}
 
+	func test_CelebratesBirthdays_DefaultsToTrueAndRoundTrips() async throws {
+		XCTAssertTrue(inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self).celebratesBirthdays)
+		inMemoryCoreDataStack.persistentContainer.viewContext.rollback()
+		let gateway = inMemoryCoreDataGateway
+		var parameters = AddPersonParameters.createParameters()
+		XCTAssertTrue(parameters.celebratesBirthdays)
+		let added = try await gateway.add(parameters: parameters)
+		XCTAssertTrue(added.celebratesBirthdays)
+
+		parameters.celebratesBirthdays = false
+		let edited = try await gateway.edit(person: added, with: parameters)
+		XCTAssertFalse(edited.celebratesBirthdays)
+		let fetchedAfterOptOut = try await gateway.fetchPersons()
+		XCTAssertEqual(fetchedAfterOptOut.map(\.celebratesBirthdays), [false])
+
+		parameters.celebratesBirthdays = true
+		_ = try await gateway.edit(person: edited, with: parameters)
+		let fetchedAfterOptIn = try await gateway.fetchPersons()
+		XCTAssertEqual(fetchedAfterOptIn.map(\.celebratesBirthdays), [true])
+	}
+
 	func test_Widget_AllowsSixPeopleAndUnpinningFreesASlot() async throws {
 		let gateway = inMemoryCoreDataGateway
 		for _ in 0..<6 {
@@ -116,14 +137,22 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 	}
 
 	func test_Widget_ModelUpgradePreservesPeopleAndPhotoIdentifiers() throws {
+		try assertUpgradePreservesPeople(fromModel: "GrowingUp.mom")
+	}
+
+	func test_CelebrationsUpgradeKeepsExistingPeopleCelebrating() throws {
+		try assertUpgradePreservesPeople(fromModel: "GrowingUpSixPeople.mom")
+	}
+
+	/// Lightweight migration from `fromModel` keeps people, pins and photos, and defaults celebrations to on.
+	private func assertUpgradePreservesPeople(fromModel modelName: String) throws {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
 		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 		defer { try? FileManager.default.removeItem(at: directory) }
 		let storeURL = directory.appendingPathComponent("GrowingUp.sqlite")
 		let bundle = try XCTUnwrap(Bundle(identifier: Constants.bundleIdentifier))
 		let modelURL = try XCTUnwrap(bundle.url(forResource: "GrowingUp", withExtension: "momd"))
-		let originalModel = try XCTUnwrap(
-			NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("GrowingUp.mom")))
+		let originalModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent(modelName)))
 		let currentModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL))
 		let originalContainer = try loadContainer(model: originalModel, storeURL: storeURL)
 		var originalPeople: [Person] = []
@@ -137,7 +166,12 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 				person.appPicId = UUID().uuidString
 				person.widgetPicId = UUID().uuidString
 				person.accessToWidget = index < 3 ? access : nil
-				originalPeople.append(person.person)
+				// Older models have no celebration flag, so build the expected person without reading it.
+				originalPeople.append(
+					Person(
+						id: try XCTUnwrap(UUID(string: person.id)), name: person.name ?? "", birthday: person.birthdate,
+						appPicId: UUID(string: person.appPicId), widgetPicId: UUID(string: person.widgetPicId), isOnWidget: index < 3,
+						createdDate: person.createdDate))
 			}
 			try originalContainer.viewContext.save()
 		}
@@ -191,4 +225,5 @@ private func assert(
 	XCTAssertEqual(person.appPicId, parameters.appImage?.id, "app pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.widgetPicId, parameters.widgetImage?.id, "widget pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.isOnWidget, parameters.isOnWidget, "fav state mismatch", file: file, line: line)
+	XCTAssertEqual(person.celebratesBirthdays, parameters.celebratesBirthdays, "celebration mismatch", file: file, line: line)
 }

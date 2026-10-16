@@ -6,18 +6,6 @@
   Copyright © 2019-2026 Danis Ziganshin.
 */
 
-/* "text on label under app pic rounded button" */
-"main pic" = "app pic";
-
-/* "text on label under widget pic rounded button" */
-"widget pic" = "widget pic";
-
-/* Accessibility label for the app picture image-source menu */
-"Change app picture" = "Change app picture";
-
-/* Accessibility label for the widget picture image-source menu */
-"Change widget picture" = "Change widget picture";
-
 /* "Title for the button on new person screen" */
 "Add person" = "Add person";
 
@@ -47,9 +35,6 @@
 
 /* Title for Button (that deletes Person) on Edit Person Page */
 "Remove" = "Remove";
-
-/* Info Label for Cell with Toggle on Person settings screen */
-"Add to Widget" = "Add to Widget";
 
 /* MARK: Image capture flow (photo library & permissions) */
 
@@ -134,3 +119,17 @@
 
 /* Explanation on the page for adding a person. */
 "Add someone you love and watch their age count up, live to the second." = "Add someone you love and watch their age count up, live to the second.";
+
+/* Person editor. */
+"Change photo" = "Change photo";
+"Add a photo" = "Add a photo";
+"Born" = "Born";
+"On widget" = "On widget";
+"Celebrate birthdays" = "Celebrate birthdays";
+"Widget picture" = "Widget picture";
+"Reframe" = "Reframe";
+"More" = "More";
+"Remove…" = "Remove…";
+"Discard changes?" = "Discard changes?";
+"Discard" = "Discard";
+"Keep editing" = "Keep editing";

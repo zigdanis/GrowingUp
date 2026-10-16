@@ -18,7 +18,7 @@ final class OverviewPresenter {
 	private(set) var accessibilityAge = ""
 	private(set) var birthdayStatus: BirthdayStatus?
 	private(set) var celebrationID = 0
-	private var wasSelected = false
+	private var wasCelebrating = false
 	var error: SceneError?
 	private let loadImage: (PersonImage) async throws -> UIImage
 	private let calendar: Calendar
@@ -51,10 +51,13 @@ final class OverviewPresenter {
 
 	func tick(person: Person, now: Date, isSelected: Bool = false) {
 		let status = BirthdayStatus(birthday: person.birthday, now: now)
-		if isSelected, status.isToday, !wasSelected || birthdayStatus?.isToday != true {
+		// A visible birthday starts a new celebration on every page arrival, at midnight, and when the person's
+		// celebrations are turned back on. People who opted out keep the indicator but get no confetti.
+		let isCelebrating = isSelected && status.isToday && person.celebratesBirthdays
+		if isCelebrating, !wasCelebrating {
 			celebrationID += 1
 		}
-		wasSelected = isSelected
+		wasCelebrating = isCelebrating
 		birthdayStatus = status
 		updateAge(person: person, now: now)
 	}

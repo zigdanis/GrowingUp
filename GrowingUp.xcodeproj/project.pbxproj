@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED17B50F84B6DD961CCD3331 /* ChipToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */; };
+		ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */; };
+		ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177A5032D09303945B40C8 /* PersonEditorHero.swift */; };
+		ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17002F611FE46339590755 /* PersonImageLoader.swift */; };
+		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
+		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
+		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
 		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
 		CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */; };
 		A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
@@ -261,6 +268,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipToggleStyle.swift; sourceTree = "<group>"; };
+		ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorChips.swift; sourceTree = "<group>"; };
+		ED177A5032D09303945B40C8 /* PersonEditorHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorHero.swift; sourceTree = "<group>"; };
+		ED17002F611FE46339590755 /* PersonImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImageLoader.swift; sourceTree = "<group>"; };
+		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
+		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
+		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
+		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
 		C51000000000000000000002 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
 		CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCacheTests.swift; sourceTree = "<group>"; };
 		A5000000000000000000000E /* AgeWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetContentView.swift; sourceTree = "<group>"; };
@@ -539,6 +554,7 @@
 		09051B5721C55EB6008A99C6 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */,
 				095000D1226DD3C100789BED /* Constants.swift */,
 				092C32CC226129310067B2DB /* Logging.swift */,
 				09E75943227735E9005025AD /* UUID+Extensions.swift */,
@@ -686,6 +702,7 @@
 		0929F1E52258CA7100212F29 /* iOS Framework APIs */ = {
 			isa = PBXGroup;
 			children = (
+				ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */,
 				09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */,
 				A892EA54EFAC6C2156E0CA4C /* AgeSummaryTests.swift */,
 				720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */,
@@ -798,6 +815,7 @@
 		098054F4223C295400E24D40 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
@@ -902,6 +920,10 @@
 		499D6EF315D5CC57361D1497 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */,
+				ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */,
+				ED177A5032D09303945B40C8 /* PersonEditorHero.swift */,
+				ED17002F611FE46339590755 /* PersonImageLoader.swift */,
 				449ED61637164BFF288A6770 /* PeoplePresenter.swift */,
 				7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */,
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
@@ -1295,6 +1317,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */,
 				09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */,
 				0983E76A226D9677007EC8D2 /* CoreError.swift in Sources */,
 				095000D7226DD95800789BED /* NSManagedObjectContext+Utils.swift in Sources */,
@@ -1338,6 +1361,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
+				ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */,
 				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
 				092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */,
@@ -1377,6 +1402,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED17B50F84B6DD961CCD3331 /* ChipToggleStyle.swift in Sources */,
+				ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */,
+				ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */,
+				ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */,
 				A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */,
 				A50000000000000000000002 /* AgeEntry.swift in Sources */,
 				A50000000000000000000003 /* EmptyWidgetView.swift in Sources */,
@@ -2052,8 +2081,9 @@
 			children = (
 				09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */,
 				A5000000000000000000000D /* GrowingUpSixPeople.xcdatamodel */,
+				ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */,
 			);
-			currentVersion = A5000000000000000000000D /* GrowingUpSixPeople.xcdatamodel */;
+			currentVersion = ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */;
 			path = GrowingUp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
