@@ -203,6 +203,7 @@
 		B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000024 /* LockScreenScheduleTests.swift */; };
 		B60000000000000000000027 /* WidgetPersonLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000026 /* WidgetPersonLoaderTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
+		D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */; };
 		DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
 		FE04D3B6442C611B7D1DAEC1 /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
 		A6A0189F74C35172B3B04AAC /* PersonTileContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9A6291E7B63A68981734E8F /* PersonTileContent.swift */; };
@@ -472,6 +473,7 @@
 		B60000000000000000000024 /* LockScreenScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenScheduleTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000026 /* WidgetPersonLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPersonLoaderTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
+		E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetTests.swift; sourceTree = "<group>"; };
 		D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTile.swift; sourceTree = "<group>"; };
 		E9A6291E7B63A68981734E8F /* PersonTileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContent.swift; sourceTree = "<group>"; };
 		8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoBackground.swift; sourceTree = "<group>"; };
@@ -1054,6 +1056,7 @@
 				C51000000000000000000002 /* AppStoreScreenshotTests.swift */,
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
+				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 			);
 			path = GrowingUpUITests;
@@ -1537,6 +1540,7 @@
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
 				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,
+				D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */,
 				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,
 				A20000000000000000000004 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
