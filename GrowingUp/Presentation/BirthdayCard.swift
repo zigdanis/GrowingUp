@@ -44,7 +44,6 @@ struct BirthdayCard: View {
 		}
 		.modifier(GlassCapsuleButtonChrome(prominent: false))
 		.tint(.white)
-		.accessibilityLabel(Text("Edit person"))
 		.accessibilityIdentifier("person.edit")
 	}
 }

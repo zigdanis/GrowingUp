@@ -6,7 +6,8 @@ struct EmptyPersonScene: View {
 	var body: some View {
 		ViewThatFits(in: .vertical) {
 			content
-			ScrollView { content }
+			// The avatar strip floats over the bottom of this page, so the scrolled content ends above it.
+			ScrollView { content.padding(.bottom, 96) }
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color(.systemBackground))

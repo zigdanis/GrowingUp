@@ -42,7 +42,7 @@ struct PeopleScene: View {
 								onSelect: { id in withAnimation { presenter.select(id) } }
 							)
 							.padding(.bottom, stripBottomPadding)
-							.animation(.snappy, value: stripBottomPadding)
+							.animation(cardHeights.isEmpty ? nil : .snappy, value: stripBottomPadding)
 						}
 					}
 				}
