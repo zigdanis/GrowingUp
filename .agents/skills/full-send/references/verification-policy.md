@@ -2,14 +2,14 @@
 
 ## What CI runs
 
-- **Every PR:** Secret Patterns, Swift Format, SwiftLint and Build & Test (unit tests). These four are the required checks. They finish in about 12 minutes.
+- **Every PR:** Secret Patterns, Release Tools, Swift Format, SwiftLint and Build & Test (unit tests). These five are the required checks. They finish in about 12 minutes, or about a minute when only docs, agent skills or tooling changed.
 - **PRs that touch app or UI-test code:** UI Tests — Glass also runs, starting with the unit tests. It produces the PR screenshots. `scripts/ci-scope.py` decides when it runs.
 - **Master pushes and manual runs only:** UI Tests — iOS 18. Manual only: App Store Screenshots. Neither gates a PR.
 - **To run everything on a branch:** `gh workflow run ci.yml --ref BRANCH`.
 
 ## Merge gate
 
-- The four required checks pass.
+- The five required checks pass.
 - Glass UI journeys pass if they ran. For a UI change, screenshots are published and inspected.
 - Bot findings classified as correctness issues are fixed. Everything else has a one-line reply.
 - An out-of-date branch is fine (branch protection doesn't require it). Master CI checks the merged result, and a red master is fixed first.
