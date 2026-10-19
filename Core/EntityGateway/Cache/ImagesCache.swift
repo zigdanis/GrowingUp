@@ -16,16 +16,20 @@ public enum ImagesCache {
 	public static let memoryCache = MemoryCache<UIImage>()
 
 	public static func loadImageFromDiskOrMemory(image: PersonImage) async throws -> UIImage {
+		try await loadImageFromDiskOrMemory(image: image, directory: .sharedContainer(appGroupName: Constants.appGroupId))
+	}
+
+	static func loadImageFromDiskOrMemory(image: PersonImage, directory: Disk.Directory) async throws -> UIImage {
 		try Task.checkCancellation()
 		let loadedImage = try await withCheckedThrowingContinuation { continuation in
 			DispatchQueue.global(qos: .userInitiated).async {
 				if let memoryImg = memoryCache.value(forKey: image.cachingKey) {
 					continuation.resume(returning: memoryImg)
 				} else {
-					let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 					do {
-						continuation.resume(
-							returning: try Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self))
+						let loadedImage = try Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self)
+						memoryCache.setValue(loadedImage, forKey: image.cachingKey)
+						continuation.resume(returning: loadedImage)
 					} catch {
 						continuation.resume(throwing: CoreError(error: error))
 					}

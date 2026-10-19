@@ -1,3 +1,4 @@
+import Disk
 import UIKit
 import XCTest
 
@@ -5,6 +6,24 @@ import XCTest
 
 @MainActor
 final class ImagesCacheTests: XCTestCase {
+	func testDiskLoadPopulatesMemoryCacheAndSurvivesDiskRemoval() async throws {
+		let photo = UIGraphicsImageRenderer(size: CGSize(width: 4, height: 4)).image { context in
+			UIColor.orange.setFill()
+			context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
+		}
+		let image = PersonImage(uiImage: photo)
+		defer {
+			ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
+			try? Disk.remove(image.cachingKey, from: .caches)
+		}
+		try Disk.save(photo, to: .caches, as: image.cachingKey)
+		let loaded = try await ImagesCache.loadImageFromDiskOrMemory(image: image, directory: .caches)
+		XCTAssertTrue(ImagesCache.memoryCache.value(forKey: image.cachingKey) === loaded)
+		try Disk.remove(image.cachingKey, from: .caches)
+		let cached = try await ImagesCache.loadImageFromDiskOrMemory(image: image, directory: .caches)
+		XCTAssertTrue(cached === loaded)
+	}
+
 	func testWidgetThumbnailBoundsDecodedPixelsAndPreservesOriginal() async throws {
 		let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID()).jpg")
 		defer { try? FileManager.default.removeItem(at: url) }

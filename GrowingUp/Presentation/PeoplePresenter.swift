@@ -10,6 +10,7 @@ final class PeoplePresenter {
 	var editor: PersonEditorPresenter?
 	var error: SceneError?
 	private(set) var isLoading = true
+	private var pendingWidgetID: UUID?
 	private var pendingWidgetIndex: Int?
 	private var pendingAdd = false
 	let configurator: SceneConfigurator
@@ -32,7 +33,7 @@ final class PeoplePresenter {
 			persons = try await configurator.fetchUseCase.fetchPersons().sorted()
 			if selectedID == nil { selectedID = persons.first?.id }
 			isLoading = false
-			if let pendingWidgetIndex { selectWidgetPerson(index: pendingWidgetIndex) }
+			selectWidgetPerson()
 			if pendingAdd { addFromWidget() }
 		} catch is CancellationError {
 		} catch {
@@ -40,6 +41,7 @@ final class PeoplePresenter {
 			// A failed first load must not open the editor or select a person on a later successful one.
 			pendingAdd = false
 			pendingWidgetIndex = nil
+			pendingWidgetID = nil
 			self.error = SceneError(error)
 		}
 	}
@@ -68,12 +70,19 @@ final class PeoplePresenter {
 			if !isLoading { addFromWidget() }
 			return
 		}
-		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-			let value = components.queryItems?.first(where: { $0.name == Constants.widgetPersonIndexKey })?.value,
-			let index = Int(value), index >= 0
-		else { return }
-		pendingWidgetIndex = index
-		if !isLoading { selectWidgetPerson(index: index) }
+		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
+		if let item = components.queryItems?.first(where: { $0.name == Constants.widgetPersonIDKey }) {
+			guard let value = item.value, let id = UUID(uuidString: value) else { return }
+			pendingWidgetID = id
+			pendingWidgetIndex = nil
+		} else {
+			guard let value = components.queryItems?.first(where: { $0.name == Constants.widgetPersonIndexKey })?.value,
+				let index = Int(value), index >= 0
+			else { return }
+			pendingWidgetIndex = index
+			pendingWidgetID = nil
+		}
+		if !isLoading { selectWidgetPerson() }
 	}
 
 	private func addFromWidget() {
@@ -81,12 +90,21 @@ final class PeoplePresenter {
 		add()
 	}
 
-	private func selectWidgetPerson(index: Int) {
+	private func selectWidgetPerson() {
+		let id = pendingWidgetID
+		let index = pendingWidgetIndex
+		pendingWidgetID = nil
 		pendingWidgetIndex = nil
-		let pinned = persons.filter(\.isOnWidget).sorted()
-		guard pinned.indices.contains(index) else { return }
-		editor = nil
-		selectedID = pinned[index].id
+		if let id {
+			guard persons.contains(where: { $0.id == id }) else { return }
+			editor = nil
+			selectedID = id
+		} else if let index {
+			let pinned = persons.filter(\.isOnWidget).sorted()
+			guard pinned.indices.contains(index) else { return }
+			editor = nil
+			selectedID = pinned[index].id
+		}
 	}
 
 	private func showEditor(person: Person?) {
