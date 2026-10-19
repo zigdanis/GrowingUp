@@ -29,7 +29,8 @@ A PR should open within the hour, show screenshots while it's still open, and me
 4. **Open the PR early:** push and open the PR, as a draft if work remains. Write the description for the developer (see below). One push per batch of fixes.
 5. **Show:** once the Glass UI job finishes, publish 1–3 screenshots with `scripts/pr-visual-evidence.py` while the PR is open.
 6. **Bot comments:** handle the bots' first review in one batch (see the [verification policy](references/verification-policy.md)). Don't ask for another bot review.
-7. **Merge:** merge when the merge gate passes. A behind-master branch doesn't need an update unless it conflicts.
+7. **Merge:** once review fixes are pushed and screenshots are published, run `gh pr merge PR --auto --merge` so GitHub merges when the required checks pass. A behind-master branch doesn't need an update unless it conflicts.
+   - **Stacks:** avoid stacked PRs. If you stack anyway, retarget each child to `master` before deleting its base branch. Deleting the base closes the children for good.
 8. **Release:** follow the steps below when authorized.
 
 ## PR description

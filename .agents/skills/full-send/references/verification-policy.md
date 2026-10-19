@@ -12,7 +12,8 @@
 - The four required checks pass.
 - Glass UI journeys pass if they ran. For a UI change, screenshots are published and inspected.
 - Bot findings classified as correctness issues are fixed. Everything else has a one-line reply.
-- An out-of-date branch is fine. Master CI checks the merged result, and a red master is fixed first.
+- An out-of-date branch is fine (branch protection doesn't require it). Master CI checks the merged result, and a red master is fixed first.
+- Unresolved bot threads no longer block merging, but each one still gets a reply.
 
 ## Bot reviews
 
