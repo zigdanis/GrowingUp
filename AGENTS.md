@@ -1,8 +1,8 @@
 ## Standing Rules
 
-- On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Inspect relevant exported screenshots and recording frames for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review.
-- Keep PR media compact and readable; publish reviewed CI screenshots through `scripts/pr-visual-evidence.py` and inspect their display in the PR.
-- For user-visible changes, attach inspected screenshots or a short feature demo to the PR description for the current head. For non-UI changes, report functional checks instead.
+- Deliver changes with the `full-send` skill in `.agents/skills/`: its roles, merge gate, bot-review and CI-budget rules apply to every PR, including PR-only work.
+- On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Inspect the exported screenshots for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review.
+- For user-visible changes, publish 1–3 reviewed CI screenshots with `scripts/pr-visual-evidence.py` while the PR is open. Use video only when the change is motion itself. For non-UI changes, report functional checks instead.
 
 ## Code Style
 
