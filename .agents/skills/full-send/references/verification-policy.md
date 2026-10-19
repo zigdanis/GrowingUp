@@ -29,6 +29,6 @@
 
 ## Waiting
 
-- Wait for checks with `gh pr checks PR --watch --required` (run it in the background when the harness re-invokes on exit). T3 `watch_pull_request` hasn't reliably woken threads, so don't depend on it alone.
+- Wait for checks with `gh pr checks PR --watch --required` (run it in the background when the harness re-invokes on exit). It can return early right after a push, so confirm nothing is still `pending` before acting. T3 `watch_pull_request` hasn't reliably woken threads, so don't depend on it alone.
 - Apple processing and beta review are normal waiting states.
 - When blocked, say what's done, what's pending and what would unblock it.
