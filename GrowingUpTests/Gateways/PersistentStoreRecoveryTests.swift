@@ -5,7 +5,7 @@ import XCTest
 
 final class PersistentStoreRecoveryTests: XCTestCase {
 	func testOnlyExplicitModelIncompatibilityAllowsBackup() {
-		for code in [NSPersistentStoreIncompatibleVersionHashError, NSMigrationMissingSourceModelError] {
+		for code in [NSPersistentStoreIncompatibleVersionHashError, NSMigrationMissingSourceModelError, NSMigrationMissingMappingModelError] {
 			XCTAssertTrue(PersistentStoreRecovery.shouldBackUp(NSError(domain: NSCocoaErrorDomain, code: code)))
 			XCTAssertFalse(PersistentStoreRecovery.shouldBackUp(NSError(domain: NSPOSIXErrorDomain, code: code)))
 		}

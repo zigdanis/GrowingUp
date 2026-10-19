@@ -29,17 +29,23 @@ public final class CoreDataStackImplementation: CoreDataStack {
 			if let loadedContainer { return loadedContainer }
 			do {
 				let container = try makeContainer()
-				do {
-					try loadStore(container)
-				} catch {
-					guard PersistentStoreRecovery.shouldBackUp(error as NSError),
-						let url = container.persistentStoreDescriptions.first?.url
-					else { throw error }
-					Logging.logError(CoreError(error: error))
-					let backup = try SQLiteStoreBackup().moveStore(at: url)
-					Logging.logWarning("Incompatible Core Data store preserved at \(backup.path)")
-					// Retry once on the same container, so callers receive the successfully loaded store.
-					try loadStore(container)
+				guard let url = container.persistentStoreDescriptions.first?.url else { throw CoreError.coreDataInit }
+				try SQLiteStoreAccess.coordinate(at: url) { coordinatedURL in
+					container.persistentStoreDescriptions[0].url = coordinatedURL
+					// Finish an interrupted recovery before SQLite can open a main file without its WAL.
+					if let backup = try SQLiteStoreBackup().resumePendingMove(at: coordinatedURL) {
+						Logging.logWarning("Interrupted Core Data recovery completed at \(backup.path)")
+					}
+					do {
+						try loadStore(container)
+					} catch {
+						guard PersistentStoreRecovery.shouldBackUp(error as NSError) else { throw error }
+						Logging.logError(CoreError(error: error))
+						let backup = try SQLiteStoreBackup().moveStore(at: coordinatedURL)
+						Logging.logWarning("Incompatible Core Data store preserved at \(backup.path)")
+						// Retry once on the same container, so callers receive the successfully loaded store.
+						try loadStore(container)
+					}
 				}
 				loadedContainer = container
 				return container

@@ -113,6 +113,27 @@ final class CoreDataStackImplementationTests: XCTestCase {
 		XCTAssertTrue(try FileManager.default.contentsOfDirectory(atPath: directory.path).isEmpty)
 	}
 
+	func testPendingRecoveryCompletesBeforeFirstLoad() throws {
+		let backup = directory.appendingPathComponent("GrowingUp.sqlite.backup-interrupted", isDirectory: true)
+		try FileManager.default.createDirectory(at: backup, withIntermediateDirectories: false)
+		try Data("people".utf8).write(to: store)
+		try Data("committed WAL".utf8).write(to: backup.appendingPathComponent("GrowingUp.sqlite-wal"))
+		try Data(backup.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"), options: .atomic)
+		var attempts = 0
+		let stack = CoreDataStackImplementation(makeContainer: self.makeContainer) { candidate in
+			attempts += 1
+			XCTAssertFalse(FileManager.default.fileExists(atPath: self.store.path))
+			XCTAssertFalse(FileManager.default.fileExists(atPath: self.store.appendingPathExtension("recovery").path))
+			XCTAssertEqual(try Data(contentsOf: backup.appendingPathComponent("GrowingUp.sqlite")), Data("people".utf8))
+			XCTAssertEqual(try Data(contentsOf: backup.appendingPathComponent("GrowingUp.sqlite-wal")), Data("committed WAL".utf8))
+			try CoreDataStackImplementation.loadPersistentStores(candidate)
+		}
+		let returned = try stack.persistentContainer
+		defer { close(returned) }
+		XCTAssertEqual(attempts, 1)
+		XCTAssertEqual(returned.persistentStoreCoordinator.persistentStores.count, 1)
+	}
+
 	private func makeContainer() throws -> NSPersistentContainer {
 		let modelURL = try XCTUnwrap(Bundle(for: CoreDataPerson.self).url(forResource: "GrowingUp", withExtension: "momd"))
 		let model = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL))

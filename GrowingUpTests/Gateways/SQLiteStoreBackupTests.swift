@@ -61,6 +61,39 @@ final class SQLiteStoreBackupTests: XCTestCase {
 		}
 	}
 
+	func testInterruptedMovesResumeWithoutDroppingWALOrOverwritingBackup() throws {
+		for movedSuffixes in [["-wal"], ["-wal", "-shm", ""]] {
+			try writeFamily()
+			let backup = directory.appendingPathComponent("GrowingUp.sqlite.backup-\(UUID().uuidString)", isDirectory: true)
+			try FileManager.default.createDirectory(at: backup, withIntermediateDirectories: false)
+			try Data(backup.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"), options: .atomic)
+			for suffix in movedSuffixes {
+				try FileManager.default.moveItem(at: URL(fileURLWithPath: store.path + suffix),
+					to: backup.appendingPathComponent(store.lastPathComponent + suffix))
+			}
+			XCTAssertEqual(try SQLiteStoreBackup().resumePendingMove(at: store), backup)
+			XCTAssertNil(try SQLiteStoreBackup().resumePendingMove(at: store))
+			for suffix in ["", "-wal", "-shm"] {
+				XCTAssertEqual(try Data(contentsOf: backup.appendingPathComponent(store.lastPathComponent + suffix)), Data("saved\(suffix)".utf8))
+				XCTAssertFalse(FileManager.default.fileExists(atPath: store.path + suffix))
+			}
+		}
+	}
+
+	func testResumeCollisionPreservesBothCopiesAndKeepsJournal() throws {
+		try writeFamily()
+		let backup = directory.appendingPathComponent("GrowingUp.sqlite.backup-collision", isDirectory: true)
+		try FileManager.default.createDirectory(at: backup, withIntermediateDirectories: false)
+		let journal = store.appendingPathExtension("recovery")
+		try Data(backup.lastPathComponent.utf8).write(to: journal, options: .atomic)
+		let preservedWAL = backup.appendingPathComponent("GrowingUp.sqlite-wal")
+		try Data("other WAL".utf8).write(to: preservedWAL)
+		XCTAssertThrowsError(try SQLiteStoreBackup().resumePendingMove(at: store))
+		XCTAssertTrue(FileManager.default.fileExists(atPath: journal.path))
+		XCTAssertEqual(try Data(contentsOf: preservedWAL), Data("other WAL".utf8))
+		XCTAssertEqual(try Data(contentsOf: URL(fileURLWithPath: store.path + "-wal")), Data("saved-wal".utf8))
+	}
+
 	private func writeFamily() throws {
 		for suffix in ["", "-wal", "-shm"] {
 			try Data("saved\(suffix)".utf8).write(to: URL(fileURLWithPath: store.path + suffix))
