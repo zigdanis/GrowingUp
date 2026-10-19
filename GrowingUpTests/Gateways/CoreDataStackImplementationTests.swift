@@ -36,8 +36,9 @@ final class CoreDataStackImplementationTests: XCTestCase {
 		XCTAssertEqual(returned.persistentStoreCoordinator.persistentStores.count, 1)
 		XCTAssertTrue(try stack.persistentContainer === returned)
 		XCTAssertEqual(attempts, 2)
-		let backup = try XCTUnwrap(FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
-			.first { $0.lastPathComponent.contains(".backup-") })
+		let backup = try XCTUnwrap(
+			FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil)
+				.first { $0.lastPathComponent.contains(".backup-") })
 		for suffix in ["", "-wal", "-shm"] {
 			XCTAssertEqual(try Data(contentsOf: backup.appendingPathComponent(store.lastPathComponent + suffix)), Data("saved\(suffix)".utf8))
 		}
@@ -60,7 +61,8 @@ final class CoreDataStackImplementationTests: XCTestCase {
 			}
 			XCTAssertThrowsError(try stack.persistentContainer) { XCTAssertEqual($0 as NSError, expected) }
 			XCTAssertEqual(attempts, 1)
-			XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: directory.path).sorted(),
+			XCTAssertEqual(
+				try FileManager.default.contentsOfDirectory(atPath: directory.path).sorted(),
 				["GrowingUp.sqlite", "GrowingUp.sqlite-shm", "GrowingUp.sqlite-wal"])
 			XCTAssertEqual(try Data(contentsOf: store), Data("people".utf8))
 			for suffix in ["-wal", "-shm"] {

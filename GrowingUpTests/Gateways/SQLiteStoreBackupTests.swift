@@ -68,7 +68,8 @@ final class SQLiteStoreBackupTests: XCTestCase {
 			try FileManager.default.createDirectory(at: backup, withIntermediateDirectories: false)
 			try Data(backup.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"), options: .atomic)
 			for suffix in movedSuffixes {
-				try FileManager.default.moveItem(at: URL(fileURLWithPath: store.path + suffix),
+				try FileManager.default.moveItem(
+					at: URL(fileURLWithPath: store.path + suffix),
 					to: backup.appendingPathComponent(store.lastPathComponent + suffix))
 			}
 			XCTAssertEqual(try SQLiteStoreBackup().resumePendingMove(at: store), backup)
@@ -92,6 +93,22 @@ final class SQLiteStoreBackupTests: XCTestCase {
 		XCTAssertTrue(FileManager.default.fileExists(atPath: journal.path))
 		XCTAssertEqual(try Data(contentsOf: preservedWAL), Data("other WAL".utf8))
 		XCTAssertEqual(try Data(contentsOf: URL(fileURLWithPath: store.path + "-wal")), Data("saved-wal".utf8))
+	}
+
+	func testFailedRollbackLeavesJournalForSafeResumption() throws {
+		try writeFamily()
+		let mover = SQLiteStoreBackup { source, destination in
+			if source.lastPathComponent.hasSuffix("-shm") || source.deletingLastPathComponent() != self.directory {
+				throw CocoaError(.fileWriteNoPermission)
+			}
+			try FileManager.default.moveItem(at: source, to: destination)
+		}
+		XCTAssertThrowsError(try mover.moveStore(at: store))
+		XCTAssertTrue(FileManager.default.fileExists(atPath: store.appendingPathExtension("recovery").path))
+		let backup = try XCTUnwrap(SQLiteStoreBackup().resumePendingMove(at: store))
+		for suffix in ["", "-wal", "-shm"] {
+			XCTAssertEqual(try Data(contentsOf: backup.appendingPathComponent(store.lastPathComponent + suffix)), Data("saved\(suffix)".utf8))
+		}
 	}
 
 	private func writeFamily() throws {

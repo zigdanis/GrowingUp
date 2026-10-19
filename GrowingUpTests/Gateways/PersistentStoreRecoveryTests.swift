@@ -13,9 +13,10 @@ final class PersistentStoreRecoveryTests: XCTestCase {
 
 	func testPermissionProtectionIOAndGenericMigrationErrorsLeaveStoreAlone() {
 		let incompatible = NSError(domain: NSCocoaErrorDomain, code: NSPersistentStoreIncompatibleVersionHashError)
-		for code in [NSFileReadNoPermissionError, NSFileWriteNoPermissionError, NSFileReadUnknownError,
-			NSPersistentStoreOpenError, NSMigrationError, NSPersistentStoreOperationError]
-		{
+		for code in [
+			NSFileReadNoPermissionError, NSFileWriteNoPermissionError, NSFileReadUnknownError,
+			NSPersistentStoreOpenError, NSMigrationError, NSPersistentStoreOperationError
+		] {
 			let error = NSError(domain: NSCocoaErrorDomain, code: code, userInfo: [NSUnderlyingErrorKey: incompatible])
 			XCTAssertFalse(PersistentStoreRecovery.shouldBackUp(error), "Unexpected recovery for \(code)")
 		}
