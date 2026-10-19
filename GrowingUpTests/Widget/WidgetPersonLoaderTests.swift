@@ -1,7 +1,7 @@
-import Core
 import UIKit
 import XCTest
 
+@testable import Core
 @testable import GrowingUp
 
 final class WidgetPersonLoaderTests: XCTestCase {
@@ -57,6 +57,16 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		XCTAssertEqual(persons.map(\.id), people.map(\.id))
 		XCTAssertNil(persons[0].photo)
 		XCTAssertNil(persons[1].photo)
+	}
+
+	func testLockedStoreFailureProducesPlaceholderInsteadOfCrashing() async {
+		let stack = CoreDataStackImplementation(makeContainer: { throw CocoaError(.fileReadNoPermission) })
+		let gateway = CoreDataPersonsGateway(coreDataStack: stack)
+		let loader = WidgetPersonLoader(fetch: { try await gateway.fetchWidgetPersons() }, loadImage: { _ in Self.photo })
+		let people = await loader.load(limit: Constants.widgetPeopleLimit)
+		let first = await loader.loadFirst()
+		XCTAssertTrue(people.isEmpty)
+		XCTAssertNil(first)
 	}
 
 	private func pinnedPeople(count: Int) -> [Person] {

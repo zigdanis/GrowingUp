@@ -4,55 +4,77 @@ import Foundation
 public final class CoreDataStackImplementation: CoreDataStack {
 	public static let sharedInstance = CoreDataStackImplementation()
 
-	public lazy var persistentContainer: NSPersistentContainer = self.recreatePersistanContainer()
+	private let lock = NSLock()
+	private var loadedContainer: NSPersistentContainer?
+	private let makeContainer: () throws -> NSPersistentContainer
+	private let loadStore: (NSPersistentContainer) throws -> Void
 
-	private func recreatePersistanContainer() -> NSPersistentContainer {
-		let fileURL = FileManager.default
-			.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId)?
-			.appendingPathComponent("Application Support/GrowingUp.sqlite")
-		guard let appGroupURL = fileURL else {
-			let message = "Failed to get App Group URL"
-			Logging.logError(CoreError(message: message))
-			fatalError(message)
-		}
-		checkAndCreateDirectoryIfNeeded(at: appGroupURL)
-		let description = NSPersistentStoreDescription(url: appGroupURL)
-		let coreBundle = Bundle(identifier: "pro.ziganshin.Core")!
-		let modelURL = coreBundle.url(forResource: "GrowingUp", withExtension: "momd")!
-		let model = NSManagedObjectModel(contentsOf: modelURL)!
-		let container = NSPersistentContainer(name: "GrowingUp", managedObjectModel: model)
-		container.persistentStoreDescriptions = [description]
-		container.loadPersistentStores { description, error in
-			if let error = error as NSError? {
-				if error.domain == NSCocoaErrorDomain {
-					self.deleteSQLiteStore(for: description.url!)
-					_ = self.recreatePersistanContainer()
-				} else {
-					Logging.logError(CoreError.coreDataInit)
-					fatalError("Unresolved error \(error), \(error.userInfo)")
+	private convenience init() {
+		self.init(makeContainer: Self.makeSharedContainer)
+	}
+
+	/// Injection keeps load failures and the single recovery attempt testable without an App Group entitlement.
+	init(
+		makeContainer: @escaping () throws -> NSPersistentContainer,
+		loadStore: @escaping (NSPersistentContainer) throws -> Void = CoreDataStackImplementation.loadPersistentStores
+	) {
+		self.makeContainer = makeContainer
+		self.loadStore = loadStore
+	}
+
+	public var persistentContainer: NSPersistentContainer {
+		get throws {
+			lock.lock()
+			defer { lock.unlock() }
+			if let loadedContainer { return loadedContainer }
+			do {
+				let container = try makeContainer()
+				do {
+					try loadStore(container)
+				} catch {
+					guard PersistentStoreRecovery.shouldBackUp(error as NSError),
+						let url = container.persistentStoreDescriptions.first?.url
+					else { throw error }
+					Logging.logError(CoreError(error: error))
+					let backup = try SQLiteStoreBackup().moveStore(at: url)
+					Logging.logWarning("Incompatible Core Data store preserved at \(backup.path)")
+					// Retry once on the same container, so callers receive the successfully loaded store.
+					try loadStore(container)
 				}
+				loadedContainer = container
+				return container
+			} catch {
+				Logging.logError(CoreError(error: error))
+				// Cache only success: a later widget timeline or app request can retry after unlock.
+				throw error
 			}
 		}
+	}
+
+	private static func makeSharedContainer() throws -> NSPersistentContainer {
+		guard let appGroup = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId) else {
+			throw CoreError(message: "Failed to get App Group URL")
+		}
+		let url = appGroup.appendingPathComponent("Application Support/GrowingUp.sqlite")
+		try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+		guard let modelURL = Bundle(for: CoreDataPerson.self).url(forResource: "GrowingUp", withExtension: "momd"),
+			let model = NSManagedObjectModel(contentsOf: modelURL)
+		else { throw CoreError.coreDataInit }
+		let container = NSPersistentContainer(name: "GrowingUp", managedObjectModel: model)
+		container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: url)]
 		return container
 	}
 
-	private func deleteSQLiteStore(for url: URL) {
-		do {
-			try FileManager.default.removeItem(at: url)
-		} catch let error as NSError {
-			Logging.logError(CoreError(title: "\(error.code)", message: error.userInfo.description))
-			fatalError("Unresolved error \(error), \(error.userInfo)")
+	static func loadPersistentStores(_ container: NSPersistentContainer) throws {
+		for description in container.persistentStoreDescriptions {
+			description.shouldAddStoreAsynchronously = false
+			description.shouldMigrateStoreAutomatically = true
+			description.shouldInferMappingModelAutomatically = true
 		}
-	}
-
-	private func checkAndCreateDirectoryIfNeeded(at path: URL) {
-		let directoryPath = path.deletingLastPathComponent()
-		do {
-			try FileManager.default.createDirectory(at: directoryPath, withIntermediateDirectories: true, attributes: nil)
-		} catch {
-			let message = "Failed to create directory in App Group folder for .sqlite file at \(directoryPath)"
-			Logging.logError(CoreError(message: message))
-			fatalError(message)
+		var loadError: Error?
+		container.loadPersistentStores { _, error in
+			if let error { loadError = error }
 		}
+		if let loadError { throw loadError }
 	}
 }
