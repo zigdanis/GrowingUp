@@ -13,7 +13,12 @@ public struct PersonImage: @unchecked Sendable, Equatable {
 	public var id: UUID
 	public var uiImage: UIImage?
 	public var cachingKey: String {
-		return id.uuidString + ".jpg"
+		return id.uuidString + ".png"
+	}
+
+	/// Previous releases stored JPEGs under this key. Keep it for reading and removing existing photos.
+	var legacyCachingKey: String {
+		id.uuidString + ".jpg"
 	}
 
 	public init(id: UUID? = nil, uiImage: UIImage? = nil) {
