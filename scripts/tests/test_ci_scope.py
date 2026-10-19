@@ -51,7 +51,9 @@ class CIScopeTests(unittest.TestCase):
     def test_uploader_tests_docs_and_committed_screenshots_need_only_tool_checks(self):
         for path in ("scripts/app-store-metadata.py", "scripts/tests/test_app_store_metadata.py",
                      "docs/guide.md", "docs/app-store-screenshots-preview.html", "docs/releases/notes.json",
-                     "marketing/app-store/screenshots/ru/01-mia.png", "marketing/app-store/screenshots/source.json"):
+                     "marketing/app-store/screenshots/ru/01-mia.png", "marketing/app-store/screenshots/source.json",
+                     ".agents/skills/full-send/SKILL.md", ".agents/skills/full-send/agents/openai.yaml",
+                     ".macroscope/correctness/correctness.md", ".coderabbit.yaml", "AGENTS.md"):
             self.write(path)
         self.commit()
         for event in ("pull_request", "push"):

@@ -12,7 +12,7 @@ import subprocess
 
 
 NON_IOS_FILES = {
-    "AGENTS.md", "CLAUDE.md", "README.md",
+    "AGENTS.md", "CLAUDE.md", "README.md", ".coderabbit.yaml",
     "scripts/app-store-metadata.py", "scripts/tests/test_app_store_metadata.py",
 }
 
@@ -25,6 +25,8 @@ def non_ios_file(path):
     file = PurePosixPath(path)
     if path in NON_IOS_FILES:
         return True
+    if path.startswith((".agents/", ".macroscope/")):
+        return file.suffix in {".md", ".yaml"}
     if path.startswith("docs/"):
         return file.suffix in {".md", ".html"} or (path.startswith("docs/releases/") and file.suffix == ".json")
     if path.startswith("marketing/app-store/screenshots/"):
