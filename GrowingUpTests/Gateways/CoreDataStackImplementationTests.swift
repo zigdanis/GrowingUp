@@ -22,14 +22,14 @@ final class CoreDataStackImplementationTests: XCTestCase {
 		}
 		let container = try makeContainer()
 		var attempts = 0
-		let stack = CoreDataStackImplementation(makeContainer: { container }) { candidate in
+		let stack = CoreDataStackImplementation(makeContainer: { container }, loadStore: { candidate in
 			attempts += 1
 			XCTAssertTrue(candidate === container)
 			if attempts == 1 {
 				throw NSError(domain: NSCocoaErrorDomain, code: NSPersistentStoreIncompatibleVersionHashError)
 			}
 			try CoreDataStackImplementation.loadPersistentStores(candidate)
-		}
+		})
 		let returned = try stack.persistentContainer
 		defer { close(returned) }
 		XCTAssertTrue(returned === container)
@@ -77,11 +77,11 @@ final class CoreDataStackImplementationTests: XCTestCase {
 		description.shouldMigrateStoreAutomatically = false
 		description.shouldInferMappingModelAutomatically = false
 		var attempts = 0
-		let stack = CoreDataStackImplementation(makeContainer: { container }) { candidate in
+		let stack = CoreDataStackImplementation(makeContainer: { container }, loadStore: { candidate in
 			attempts += 1
 			if attempts == 1 { throw CocoaError(.fileReadNoPermission) }
 			try CoreDataStackImplementation.loadPersistentStores(candidate)
-		}
+		})
 		XCTAssertThrowsError(try stack.persistentContainer)
 		let returned = try stack.persistentContainer
 		defer { close(returned) }
