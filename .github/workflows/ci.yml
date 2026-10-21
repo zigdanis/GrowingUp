@@ -23,7 +23,7 @@ jobs:
       FASTLANE_SKIP_DOCS: 'true'
     steps:
       - uses: actions/checkout@v7
-      - uses: ruby/setup-ruby@14594264cd68ce8a2345dd349bc3d138a4ef85c8 # v1
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
         with:
           ruby-version: '3.3'
           bundler-cache: true
@@ -57,6 +57,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       ios_required: ${{ steps.filter.outputs.ios_required }}
+      ui_required: ${{ steps.filter.outputs.ui_required }}
+      ui_matrix: ${{ steps.ui.outputs.matrix }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -70,6 +72,25 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
+
+      # PRs get the Glass journeys and their screenshots. The slower, flakier
+      # iOS 18 pass runs on master pushes and manual runs only.
+      - name: Choose UI devices
+        id: ui
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          MATRIX=$(jq -c --arg event "$EVENT_NAME" \
+            '[.[] | select($event != "pull_request" or .on_pull_request) | del(.on_pull_request)]' <<'JSON'
+          [
+            {"name": "Glass", "runner": "macos-26", "xcode": "26.6", "runtime": "26-5",
+             "device": "iPhone-17-Pro", "visual": "1", "on_pull_request": true},
+            {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
+             "device": "iPhone-16", "visual": "0", "on_pull_request": false}
+          ]
+          JSON
+          )
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
 
   secrets:
     name: Secret Patterns
@@ -115,8 +136,8 @@ jobs:
 
   build-test:
     name: Build & Test
-    needs: [changes, release-tools, formatting, lint]
-    if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' && needs.release-tools.result == 'success' && needs.formatting.result == 'success' && needs.lint.result == 'success' }}
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
     runs-on: macos-26
     steps:
       - uses: actions/checkout@v7
@@ -167,24 +188,13 @@ jobs:
 
   ui-tests:
     name: UI Tests — ${{ matrix.name }}
-    needs: [changes, build-test]
-    if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' && needs.build-test.result == 'success' }}
+    # Starts beside Build & Test so screenshots arrive about ten minutes sooner.
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.ui_required == 'true' }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - name: Glass
-            runner: macos-26
-            xcode: '26.6'
-            runtime: '26-5'
-            device: iPhone-17-Pro
-            visual: '1'
-          - name: iOS 18
-            runner: macos-15
-            xcode: '26.3'
-            runtime: '18-5'
-            device: iPhone-16
-            visual: '0'
+        include: ${{ fromJSON(needs.changes.outputs.ui_matrix) }}
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 35
     steps:
