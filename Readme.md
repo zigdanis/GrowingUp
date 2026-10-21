@@ -63,7 +63,11 @@ no Carthage or CocoaPods step is required:
   changing files. The scripts use the formatter from the selected Xcode
   toolchain on macOS and a standalone `swift-format` on Linux. On Linux,
   install the pinned toolchain with `swiftly install`. CI uses Xcode's formatter.
-  Zed uses the same formatter automatically on save via `.zed/settings.json`.
+  VS Code formats on save through Xcode's SourceKit-LSP via `.vscode/settings.json`;
+  install the recommended Swift and SweetPad extensions. For full code completion,
+  install the SweetPad CLI (`brew install sweetpad-dev/tap/sweetpad`) and run
+  `sweetpad bsp init` once per clone. The generated `buildServer.json` is
+  machine-specific; keep it out of Git.
 - **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
   `scripts/lint-swift.sh` for the same strict check used in CI.

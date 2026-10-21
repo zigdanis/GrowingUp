@@ -1,0 +1,11 @@
+{
+  "[swift]": {
+    "editor.defaultFormatter": "swiftlang.swift-vscode",
+    "editor.formatOnSave": true,
+    "editor.insertSpaces": false,
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "editor.rulers": [160],
+    "editor.wordWrapColumn": 160
+  }
+}
