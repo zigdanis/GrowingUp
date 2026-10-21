@@ -334,8 +334,6 @@ extension JourneyTests {
 		XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
 		timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
 		timePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
-		// The period wheel defaults to the current time of day, so pin it to keep baselines stable.
-		timePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "AM")
 		if capturePickers { checkpoint("editor-time") }
 		app.buttons["editor.birthDate"].tap()
 		app.buttons["editor.save"].tap()
