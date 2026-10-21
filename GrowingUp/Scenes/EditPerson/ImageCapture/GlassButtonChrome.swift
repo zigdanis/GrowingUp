@@ -41,7 +41,7 @@ struct GlassButtonChrome: ViewModifier {
 					}
 				}
 			}
-			.overlay(legacyShape.stroke(.white.opacity(0.5), lineWidth: 1))
+			.overlay { legacyShape.stroke(.white.opacity(0.5), lineWidth: 1) }
 			.shadow(color: .black.opacity(0.3), radius: 4, y: 1)
 	}
 }

@@ -25,6 +25,9 @@ struct PersonEditorScene: View {
 							PersonEditorChips(presenter: presenter, onReframe: reframe)
 						}
 						.padding(20)
+						// A centered, readable column in wide sheets, such as on an unfolded iPhone Duo.
+						.frame(maxWidth: 560)
+						.frame(maxWidth: .infinity)
 					}
 					.disabled(presenter.isBusy || presenter.isLoading)
 				}
@@ -71,7 +74,7 @@ struct PersonEditorScene: View {
 
 	@ToolbarContentBuilder private var toolbarItems: some ToolbarContent {
 		ToolbarItem(placement: .cancellationAction) {
-			Button("Cancel", action: cancel)
+			Button(action: cancel) { actionLabel("Cancel", systemImage: "xmark") }
 				.disabled(presenter.isBusy)
 				.accessibilityIdentifier("editor.cancel")
 				.confirmationDialog("Discard changes?", isPresented: $confirmingDiscard, titleVisibility: .visible) {
@@ -97,9 +100,24 @@ struct PersonEditorScene: View {
 			}
 		}
 		ToolbarItem(placement: .confirmationAction) {
-			Button("Save") { Task { await presenter.save() } }
-				.disabled(!presenter.canSave)
-				.accessibilityIdentifier("editor.save")
+			Button {
+				Task { await presenter.save() }
+			} label: {
+				actionLabel("Save", systemImage: "checkmark")
+			}
+			.disabled(!presenter.canSave)
+			.accessibilityIdentifier("editor.save")
+		}
+	}
+
+	/// Bars that turn vertical on iPhone Duo hide items without an icon, so iOS 27.1, which brings them, gets icons;
+	/// the title stays for accessibility. Earlier systems keep the text buttons.
+	@ViewBuilder
+	private func actionLabel(_ title: LocalizedStringKey, systemImage: String) -> some View {
+		if #available(iOS 27.1, *) {
+			Label(title, systemImage: systemImage)
+		} else {
+			Text(title)
 		}
 	}
 

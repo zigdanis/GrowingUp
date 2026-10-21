@@ -73,6 +73,6 @@ struct PersonTile: View {
 			.font(.system(size: 10, weight: .bold))
 			.foregroundStyle(.white)
 			.frame(width: 20, height: 20)
-			.background(Circle().fill(.pink))
+			.background { Circle().fill(.pink) }
 	}
 }

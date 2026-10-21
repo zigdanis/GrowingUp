@@ -37,6 +37,8 @@ struct EmptyPersonScene: View {
 		}
 		.multilineTextAlignment(.center)
 		.padding(32)
+		// Wider than any iPhone, such as an iPhone Duo, the invitation stays a readable centered column.
+		.frame(maxWidth: 440)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 	}
 }

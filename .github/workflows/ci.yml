@@ -75,8 +75,10 @@ jobs:
 
       # Every UI pass runs the shipping toolchain (Xcode 27.1, iOS 27.1 SDK). PRs get the
       # Glass journeys and their screenshots plus the iPhone Duo pass, whose iOS 27.1
-      # runtime only offers that device. The slower, flakier iOS 18 pass runs on master
-      # pushes and manual runs only. Runtimes missing from the image are downloaded.
+      # runtime only offers that device. The Duo simulator boots folded, so its journeys
+      # run on the outer display ("primary"); simctl needs that display named for video.
+      # The slower, flakier iOS 18 pass runs on master pushes and manual runs only.
+      # Runtimes missing from the image are downloaded.
       - name: Choose UI devices
         id: ui
         env:
@@ -88,7 +90,7 @@ jobs:
             {"name": "Glass", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
              "device": "iPhone-18-Pro", "visual": "0", "on_pull_request": true},
             {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
-             "device": "iPhone-Duo", "visual": "0", "on_pull_request": true},
+             "device": "iPhone-Duo", "display": "primary", "visual": "0", "on_pull_request": true},
             {"name": "iOS 18", "runner": "xcode-27", "xcode": "27.1", "runtime": "18-5",
              "device": "iPhone-16", "visual": "0", "on_pull_request": false}
           ]
@@ -256,6 +258,7 @@ jobs:
         id: journeys
         env:
           SIM_UDID: ${{ steps.simulator.outputs.udid }}
+          SIM_DISPLAY: ${{ matrix.display }}
           ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
           GROWINGUP_VISUAL_CHECKS: ${{ matrix.visual }}
         run: scripts/run-ui-journeys.sh

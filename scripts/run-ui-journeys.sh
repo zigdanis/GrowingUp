@@ -24,8 +24,9 @@ trap stop_recording EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 "$ARTIFACT_DIR/journeys.mp4" \
-  > "$ARTIFACT_DIR/recording.log" 2>&1 &
+# Devices with several screens, such as iPhone Duo, record only the one named in SIM_DISPLAY.
+xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 ${SIM_DISPLAY:+"--display=$SIM_DISPLAY"} \
+  "$ARTIFACT_DIR/journeys.mp4" > "$ARTIFACT_DIR/recording.log" 2>&1 &
 RECORDER_PID=$!
 
 # Wait for simctl to attach before allowing the first app interaction.

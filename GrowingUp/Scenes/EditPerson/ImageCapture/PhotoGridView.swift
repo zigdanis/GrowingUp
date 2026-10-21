@@ -15,10 +15,9 @@ struct PhotoGridView: View {
 
 	@State private var showLimitedPicker = false
 
-	private let columns = Array(
-		repeating: GridItem(.flexible(), spacing: 2),
-		count: 3
-	)
+	private let spacing: CGFloat = 2
+	/// Wider windows, such as an unfolded iPhone Duo, get more columns rather than ever-larger thumbnails.
+	private let minimumThumbnailSide: CGFloat = 120
 
 	var body: some View {
 		content
@@ -66,12 +65,13 @@ struct PhotoGridView: View {
 
 	private var grid: some View {
 		GeometryReader { proxy in
-			let side = (proxy.size.width - 4) / 3
+			let count = columnCount(for: proxy.size.width)
+			let side = (proxy.size.width - spacing * CGFloat(count - 1)) / CGFloat(count)
 			ScrollView {
 				if viewModel.authState == .limited {
 					LimitedAccessHeader { showLimitedPicker = true }
 				}
-				LazyVGrid(columns: columns, spacing: 2) {
+				LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: spacing), count: count), spacing: spacing) {
 					ForEach(viewModel.assets) { asset in
 						PhotoThumbnailCell(
 							asset: asset,
@@ -86,4 +86,8 @@ struct PhotoGridView: View {
 		}
 	}
 
+	/// Three columns at every iPhone portrait width (up to 440 pt), more once the window is wider.
+	private func columnCount(for width: CGFloat) -> Int {
+		max(3, Int((width + spacing) / (minimumThumbnailSide + spacing)))
+	}
 }
