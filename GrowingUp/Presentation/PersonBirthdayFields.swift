@@ -15,13 +15,14 @@ struct PersonBirthdayFields: View {
 			bornRow
 			if isExpanded {
 				pickers.id(Self.pickersID)
+					.onGeometryChange(for: CGFloat.self) { geometry in
+						geometry.size.height
+					} action: { _ in
+						// Scroll after the inserted wheel has a measured height, rather than using
+						// the previous layout from the expansion or time-toggle state change.
+						reveal()
+					}
 			}
-		}
-		.onChange(of: isExpanded) { _, expanded in
-			if expanded { reveal() }
-		}
-		.onChange(of: presenter.hasBirthTime) { _, hasTime in
-			if hasTime { reveal() }
 		}
 	}
 
