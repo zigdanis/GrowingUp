@@ -17,7 +17,6 @@ reviews:
   suggested_reviewers: false
   path_filters:
     - "!**/*.png"
-    - "!**/__Snapshots__/**"
     - "!docs/**"
     - "!marketing/**"
   auto_review:

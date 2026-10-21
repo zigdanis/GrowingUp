@@ -84,15 +84,82 @@ final class OverviewPresenterTests: XCTestCase {
 	}
 
 	func testBirthdayLineSwitchesUnitsAsMidnightApproaches() {
-		let presenter = makePresenter()
 		let child = person(born: date(2020, 1, 16, 6))
 		let midnight = date(2027, 1, 16)
-		for (remaining, expected) in [
-			(86_400.0 * 14, "Birthday in 14 days"), (86_400.0, "Birthday in 1 day"), (86_399.0, "Birthday in 24 hours"),
-			(3_599.0, "Birthday in 60 minutes"), (59.0, "Birthday in 59 seconds"), (0, "Birthday today 🎂")
+		for (identifier, prefix, today, durations) in [
+			(
+				"en", "Birthday in ", "Birthday today 🎂",
+				["15 days", "14 days", "1 day", "24 hours", "1 hour", "60 minutes", "1 minute", "59 seconds", "30 seconds", "1 second"]
+			),
+			(
+				"ru", "До дня рождения: ", "Сегодня день рождения 🎂",
+				["15 дней", "14 дней", "1 день", "24 часа", "1 час", "60 минут", "1 минута", "59 секунд", "30 секунд", "1 секунда"]
+			)
 		] {
-			presenter.tick(person: child, now: midnight.addingTimeInterval(-remaining))
-			XCTAssertEqual(presenter.birthdayText, expected)
+			let presenter = OverviewPresenter(calendar: calendar, locale: Locale(identifier: identifier))
+			let remaining: [TimeInterval] = [86_400 * 15, 86_400 * 14, 86_400, 86_399, 3_600, 3_599, 60, 59, 30, 1]
+			for (seconds, duration) in zip(remaining, durations) {
+				presenter.tick(person: child, now: midnight.addingTimeInterval(-seconds))
+				XCTAssertEqual(presenter.birthdayText, prefix + duration, "\(identifier): \(seconds) seconds remaining")
+				XCTAssertEqual(presenter.birthdayStatus?.isUpcoming, seconds <= 86_400 * 14)
+			}
+			presenter.tick(person: child, now: midnight)
+			XCTAssertEqual(presenter.birthdayText, today)
+		}
+	}
+
+	func testClockAdvancesFromLiveSecondsThroughMidnightAndRepeatedArrivals() {
+		let presenter = makePresenter()
+		let child = person(born: date(2020, 1, 16, 6))
+		var now = date(2027, 1, 15, 23, 59, 30)
+		let clock = { now }
+		presenter.tick(person: child, now: clock(), isSelected: true)
+		XCTAssertEqual(presenter.birthdayText, "Birthday in 30 seconds")
+		XCTAssertEqual(presenter.celebrationID, 0)
+		now = now.addingTimeInterval(1)
+		presenter.tick(person: child, now: clock(), isSelected: true)
+		XCTAssertEqual(presenter.birthdayText, "Birthday in 29 seconds")
+		now = now.addingTimeInterval(29)
+		presenter.tick(person: child, now: clock(), isSelected: true)
+		XCTAssertEqual(presenter.birthdayText, "Birthday today 🎂")
+		XCTAssertEqual(presenter.celebrationID, 1)
+		for arrival in 2...3 {
+			now = now.addingTimeInterval(60)
+			presenter.tick(person: child, now: clock(), isSelected: true)
+			XCTAssertEqual(presenter.celebrationID, arrival - 1, "Timer ticks must not restart the burst")
+			presenter.tick(person: child, now: clock(), isSelected: false)
+			presenter.tick(person: child, now: clock(), isSelected: true)
+			XCTAssertEqual(presenter.celebrationID, arrival)
+		}
+	}
+
+	func testSavedBirthdayMutationUsesTheUpdatedPersonOnEveryClockTick() async {
+		let gateway = PersonsGatewaySpy()
+		let local = Calendar.current
+		var child = person(born: local.date(from: DateComponents(year: 2020, month: 1, day: 16, hour: 6))!)
+		child.isOnWidget = false
+		gateway.fetchPersonsResultToBeReturned = .success([child])
+		var now = local.date(from: DateComponents(year: 2027, month: 1, day: 15, hour: 8))!
+		let clock = { now }
+		let people = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway, now: clock), reloadWidgets: {})
+		await people.load()
+		people.edit(child)
+		let editor = people.editor!
+		await editor.load()
+		editor.dayOfBirth = local.date(from: DateComponents(year: 2020, month: 1, day: 15))!
+		var updated = child
+		updated.birthday = editor.birthday
+		gateway.editPersonResultToBeReturned = .success(updated)
+		await editor.save()
+		XCTAssertTrue(gateway.editPersonCalled)
+		XCTAssertEqual(gateway.addPersonParameters.combinedDate(), updated.birthday)
+		XCTAssertNil(people.editor)
+		let presenter = OverviewPresenter(calendar: local, locale: Locale(identifier: "en"))
+		for _ in 0..<3 {
+			presenter.tick(person: people.persons[0], now: clock(), isSelected: true)
+			XCTAssertEqual(presenter.birthdayText, "Birthday today 🎂")
+			XCTAssertEqual(presenter.celebrationID, 1)
+			now = now.addingTimeInterval(60)
 		}
 	}
 

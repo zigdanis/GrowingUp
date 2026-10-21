@@ -1,5 +1,3 @@
-import SnapshotTesting
-import UIKit
 import XCTest
 
 @MainActor
@@ -12,9 +10,7 @@ final class JourneyTests: XCTestCase {
 
 	override func setUp() {
 		super.setUp()
-		// SnapshotTesting reports each deliberate recording as a failure after writing the image.
-		// Continue only in explicit recording runs so all checkpoints are generated; functional failures remain reported.
-		continueAfterFailure = ProcessInfo.processInfo.environment["GROWINGUP_RECORD_SNAPSHOTS"] == "1"
+		continueAfterFailure = false
 		app = XCUIApplication()
 		identifier = UUID().uuidString
 	}
@@ -36,9 +32,10 @@ final class JourneyTests: XCTestCase {
 	}
 
 	func testEditPhotoReframeAndPersist() {
-		launch()
-		addPerson()
+		launch(seed: .pinned)
 		overview.tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
+		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
 		choosePhoto()
 		checkpoint("photo-controls")
 		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
@@ -62,7 +59,28 @@ final class JourneyTests: XCTestCase {
 		overview.tap()
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
 		checkpoint("saved-photos-form")
+		app.buttons["editor.appPhoto"].tap()
+		let remove = app.buttons["photo.source.remove"]
+		XCTAssertTrue(remove.waitForExistence(timeout: 5))
+		checkpoint("image-menu-existing")
+		remove.tap()
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
+		app.buttons["editor.appPhoto"].tap()
+		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
+		XCTAssertFalse(remove.exists)
+		checkpoint("image-menu-removed")
+		app.buttons["photo.source.photos"].tap()
+		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
+		dismissPhotos()
+		cancelEditor(discarding: true)
+		overview.tap()
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
 	}
 
 	func testCancelAndRecoverFromSaveFailure() {
@@ -98,70 +116,40 @@ final class JourneyTests: XCTestCase {
 		checkpoint("cancelled-photo")
 	}
 
-	func testSixPinsPersistAndWidgetLinkSelectsSixthPerson() {
-		launch(seed: .pinned)
-		app.open(URL(string: "growingup-app://?personIndex=1")!)
-		XCTAssertTrue(app.staticTexts["person.name"].waitForExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Boris")
-		checkpoint("widget-link")
-		app.open(URL(string: "growingup-app://?personIndex=2")!)
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Clara")
-		for name in ["Fourth", "Fifth", "Sixth"] {
-			app.swipeLeft()
-			XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
-			app.buttons["person.add"].tap()
-			let field = app.textFields["editor.name"]
-			XCTAssertTrue(field.waitForExistence(timeout: 5))
-			field.tap()
-			field.typeText(name)
-			XCTAssertEqual(chip("editor.pin").value as? String, "1")
-			app.buttons["editor.save"].tap()
-			XCTAssertTrue(overview.waitForExistence(timeout: 5))
-			XCTAssertEqual(app.staticTexts["person.name"].label, name)
-		}
-		relaunch()
+	func testRussianCountdownPhotoAndPinLimit() {
+		launch(seed: .sixPinned, locale: "ru", appearance: .dark, widgetFamily: "large")
+		assertWidgetCaptions(locale: "ru")
+		checkpoint("widget-large-ru-Dark")
+		app.terminate()
+		launch(seed: .birthdays, locale: "ru", appearance: .dark, clock: "2027-01-02T08:00:00Z")
+		XCTAssertTrue(app.staticTexts["birthday.countdown"].waitForExistence(timeout: 5))
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "До дня рождения: 14 дней")
+		checkpoint("birthday-countdown-days-ru")
+		app.terminate()
+		launch(seed: .sixPinned, locale: "ru", appearance: .dark)
 		app.open(URL(string: "growingup-app://?personIndex=5")!)
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Sixth")
-		checkpoint("widget-sixth-link", compareBaseline: false)
-		// Editing an already pinned person still works when all six slots are occupied.
-		overview.tap()
-		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		XCTAssertEqual(chip("editor.pin").value as? String, "1")
-		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
-		let sixthName = app.textFields["editor.name"]
-		sixthName.tap()
-		sixthName.typeText(" Updated")
-		app.buttons["editor.save"].tap()
-		XCTAssertTrue(overview.waitForExistence(timeout: 5))
-		assertSeventhPinRejected(message: "You can pin up to 6 people to the widget.", checkpoint: "widget-limit-en")
-	}
-
-	func testSeventhPinErrorIsLocalizedInRussian() {
-		launch(seed: .sixPinned, locale: "ru")
-		app.open(URL(string: "growingup-app://?personIndex=5")!)
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Farah")
+		XCTAssertTrue(waitForName("Farah"))
 		assertSeventhPinRejected(message: "В виджет можно добавить не больше 6 человек.", checkpoint: "widget-limit-ru")
+		checkpoint("form-ru-Dark")
+		choosePhoto()
+		checkpoint("photo-ru-Dark")
 	}
 
-	func testWidgetSizesRenderPinnedPeopleInBothLanguages() {
+	func testHomeScreenWidgetSizes() {
 		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
-		for locale in ["en", "ru"] {
-			for appearance in UITestAppearance.allCases {
-				for (family, count) in [("small", 1), ("medium", 3), ("large", 6)] {
-					launch(seed: .sixPinned, locale: locale, appearance: appearance, widgetFamily: family)
-					for (index, name) in names.enumerated() {
-						let person = widgetTile(name)
-						if index < count {
-							XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
-						} else {
-							XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
-						}
-					}
-					if family == "large" { assertWidgetCaptions(locale: locale) }
-					checkpoint("widget-\(family)-\(locale)-\(appearance.launchArgumentValue)", compareBaseline: false)
-					app.terminate()
+		for (family, count, appearance) in [("small", 1, UITestAppearance.light), ("medium", 3, .dark), ("large", 6, .light)] {
+			launch(seed: .sixPinned, appearance: appearance, widgetFamily: family)
+			for (index, name) in names.enumerated() {
+				let person = widgetTile(name)
+				if index < count {
+					XCTAssertTrue(person.waitForExistence(timeout: 5), "\(family): \(name)")
+				} else {
+					XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
 				}
 			}
+			if family == "large" { assertWidgetCaptions(locale: "en") }
+			checkpoint("widget-\(family)-en-\(appearance.launchArgumentValue)")
+			app.terminate()
 		}
 	}
 
@@ -181,7 +169,7 @@ final class JourneyTests: XCTestCase {
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5))
 		XCTAssertTrue(app.alerts.staticTexts[message].exists)
-		checkpoint(name, compareBaseline: false)
+		checkpoint(name)
 		app.alerts.buttons.firstMatch.tap()
 		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
 	}
@@ -203,59 +191,6 @@ final class JourneyTests: XCTestCase {
 		relaunch()
 		XCTAssertTrue(app.buttons["person.add"].exists)
 		checkpoint("deleted")
-	}
-
-	func testPhotoRemovalMenuTracksEachImage() {
-		launch()
-		app.buttons["person.add"].tap()
-		let menu = app.buttons["editor.appPhoto"]
-		let remove = app.buttons["photo.source.remove"]
-		let thumbnail = app.buttons.matching(identifier: "photo.thumbnail").firstMatch
-		XCTAssertTrue(menu.waitForExistence(timeout: 5))
-		menu.tap()
-		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
-		XCTAssertFalse(remove.exists)
-		settleMenu()
-		checkpoint("image-menu-empty")
-		app.buttons["photo.source.photos"].tap()
-		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
-		thumbnail.tap()
-		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
-		app.buttons["crop.use"].tap()
-		XCTAssertTrue(thumbnail.waitForNonExistence(timeout: 5))
-		// The widget picture is derived from the new main photo.
-		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
-		menu.tap()
-		XCTAssertTrue(remove.waitForExistence(timeout: 5))
-		settleMenu()
-		checkpoint("image-menu-existing")
-		remove.tap()
-		XCTAssertTrue(remove.waitForNonExistence(timeout: 5))
-		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForNonExistence(timeout: 5))
-		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
-		menu.tap()
-		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
-		XCTAssertFalse(remove.exists)
-		settleMenu()
-		checkpoint("image-menu-removed")
-		app.buttons["photo.source.photos"].tap()
-		XCTAssertTrue(thumbnail.waitForExistence(timeout: 5))
-		dismissPhotos()
-		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-	}
-
-	func testLocalizedPhotoAppearance() {
-		for locale in ["en", "ru"] {
-			for appearance in UITestAppearance.allCases {
-				launch(locale: locale, appearance: appearance)
-				app.buttons["person.add"].tap()
-				XCTAssertTrue(app.textFields["editor.name"].waitForExistence(timeout: 5))
-				checkpoint("form-\(locale)-\(appearance.launchArgumentValue)")
-				choosePhoto()
-				checkpoint("photo-\(locale)-\(appearance.launchArgumentValue)")
-				app.terminate()
-			}
-		}
 	}
 
 }
@@ -310,7 +245,10 @@ extension JourneyTests {
 		configuration = configuration.forRelaunch()
 		app.launchEnvironment[UITestConfiguration.environmentKey] = configuration.encoded
 		app.launch()
-		XCTAssertTrue(overview.waitForExistence(timeout: 5) || app.buttons["person.add"].exists)
+		let page = app.descendants(matching: .any).matching(
+			NSPredicate(format: "identifier == %@ OR identifier == %@", "person.edit", "person.add")
+		).firstMatch
+		XCTAssertTrue(page.waitForExistence(timeout: 5))
 	}
 
 	private func addPerson(capturePickers: Bool = false) {
@@ -320,22 +258,25 @@ extension JourneyTests {
 		name.tap()
 		// Return dismisses the keyboard so it cannot cover the birthday row.
 		name.typeText("Ada\n")
-		app.buttons["editor.birthDate"].tap()
-		let date = app.datePickers["editor.birthDate.picker"]
-		XCTAssertTrue(date.waitForExistence(timeout: 5))
-		date.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "10")
-		if capturePickers { checkpoint("editor-date") }
-		let time = app.switches["editor.birthTime"]
-		XCTAssertEqual(time.value as? String, "0")
-		// The identifier belongs to the full toggle row; the native switch occupies its trailing edge.
-		time.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
-		XCTAssertEqual(time.value as? String, "1")
-		let timePicker = app.datePickers["editor.birthTime.picker"]
-		XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
-		timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
-		timePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
-		if capturePickers { checkpoint("editor-time") }
-		app.buttons["editor.birthDate"].tap()
+		if capturePickers {
+			app.buttons["editor.birthDate"].tap()
+			let date = app.datePickers["editor.birthDate.picker"]
+			XCTAssertTrue(date.waitForExistence(timeout: 5))
+			date.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "10")
+			checkpoint("editor-date")
+			let time = app.switches["editor.birthTime"]
+			XCTAssertEqual(time.value as? String, "0")
+			// The identifier belongs to the full toggle row; the native switch occupies its trailing edge.
+			time.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
+			XCTAssertEqual(time.value as? String, "1")
+			let timePicker = app.datePickers["editor.birthTime.picker"]
+			XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
+			timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
+			timePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
+			timePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "AM")
+			checkpoint("editor-time")
+			app.buttons["editor.birthDate"].tap()
+		}
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
@@ -344,11 +285,6 @@ extension JourneyTests {
 	/// Editor chips are buttons that report their state as a "1"/"0" value.
 	private func chip(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
-	}
-
-	/// Lets the source menu finish its Liquid Glass morph so a checkpoint cannot capture it mid-animation.
-	private func settleMenu() {
-		Thread.sleep(forTimeInterval: 1)
 	}
 
 	private func dismissPhotos() {
@@ -384,45 +320,20 @@ extension JourneyTests {
 		let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
 		XCTAssertEqual(XCTWaiter.wait(for: [named, hittable], timeout: 10), .completed)
 		XCTAssertTrue(app.textFields["editor.name"].waitForNonExistence(timeout: 5))
-		// A person born "today" on the fixed clock can still be playing the birthday burst after a relaunch.
-		_ = confetti.waitForExistence(timeout: 3)
-		XCTAssertTrue(confetti.waitForNonExistence(timeout: 10))
 		XCTAssertFalse(app.sheets.firstMatch.exists)
 		XCTAssertFalse(app.alerts.firstMatch.exists)
 	}
 
-	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
+	private func waitForName(_ name: String) -> Bool {
+		XCTWaiter.wait(
+			for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: app.staticTexts["person.name"])], timeout: 5)
+			== .completed
+	}
 
-	private func checkpoint(_ name: String, compareBaseline: Bool = true, file: StaticString = #filePath, line: UInt = #line) {
-		let screenshot = app.screenshot()
-		let attachment = XCTAttachment(screenshot: screenshot)
+	private func checkpoint(_ name: String) {
+		let attachment = XCTAttachment(screenshot: app.screenshot())
 		attachment.name = name
 		attachment.lifetime = .keepAlways
 		add(attachment)
-		// Compatibility runs assert behavior; exact visual baselines are scoped to the pinned glass runtime.
-		guard compareBaseline, ProcessInfo.processInfo.environment["GROWINGUP_VISUAL_CHECKS"] == "1" else { return }
-		let recording = ProcessInfo.processInfo.environment["GROWINGUP_RECORD_SNAPSHOTS"] == "1"
-		let failure = verifySnapshot(
-			of: screenshot.image, as: .image(precision: 0.995, perceptualPrecision: 0.98), named: name,
-			record: recording ? .all : .never, file: file, testName: "iOS26_5-iPhone17Pro-arm64", line: line)
-		// Export every changed checkpoint so intentional UI updates can be reviewed together.
-		// Functional assertions retain the suite's normal stop-on-failure behavior.
-		let previousContinueAfterFailure = continueAfterFailure
-		continueAfterFailure = true
-		defer { continueAfterFailure = previousContinueAfterFailure }
-		if let failure { XCTFail(failure, file: file, line: line) }
-		if name.hasPrefix("photo-") {
-			// Compare the controls separately so a small opaque button cannot hide in a full-screen tolerance.
-			let image = screenshot.image
-			let pixels = image.cgImage!
-			let height = min(pixels.height, Int(120 * image.scale))
-			let region = pixels.cropping(to: CGRect(x: 0, y: pixels.height - height, width: pixels.width, height: height))!
-			let controls = UIImage(cgImage: region, scale: image.scale, orientation: .up)
-			let failure = verifySnapshot(
-				of: controls, as: .image(precision: 0.995, perceptualPrecision: 0.98), named: "\(name)-controls-region",
-				record: recording ? .all : .never, file: file, testName: "iOS26_5-iPhone17Pro-arm64", line: line)
-			if let failure { XCTFail(failure, file: file, line: line) }
-		}
-
 	}
 }

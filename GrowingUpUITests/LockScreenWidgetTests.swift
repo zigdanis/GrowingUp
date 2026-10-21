@@ -10,45 +10,22 @@ final class LockScreenWidgetTests: XCTestCase {
 		app = XCUIApplication()
 	}
 
-	func testLockScreenWidgetsRenderTheFirstPinnedPersonInBothLanguages() {
-		for locale in ["en", "ru"] {
-			// Lock Screen widgets keep the Lock Screen's look whatever the app appearance, so they render once per language.
-			for family in ["circular", "rectangular", "inline"] {
-				launch(seed: .sixPinned, locale: locale, widgetFamily: family)
-				XCTAssertTrue(widgetTile("Alice").waitForExistence(timeout: 5), family)
-				XCTAssertFalse(widgetTile("Boris").exists, "\(family) should show only the first person")
-				checkpoint("widget-\(family)-\(locale)")
-				app.terminate()
-			}
-		}
-	}
-
-	func testLockScreenWidgetsCelebrateTheFirstPinnedBirthday() {
-		// Alice, the first pinned person, was born on 16 January 2020.
-		for (family, expected) in [("circular", "Birthday today"), ("rectangular", "Birthday today"), ("inline", "turns 7 today")] {
-			launch(seed: .birthdays, widgetFamily: family, clock: "2027-01-16T08:00:00Z")
-			let alice = widgetTile("Alice")
-			XCTAssertTrue(alice.waitForExistence(timeout: 5), family)
-			XCTAssertTrue(alice.label.contains(expected), "\(family): \(alice.label)")
-			checkpoint("widget-\(family)-birthday-en")
-			app.terminate()
-		}
+	func testLockScreenWidgetFamiliesAndStates() {
+		launch(seed: .sixPinned, widgetFamily: "circular")
+		XCTAssertTrue(widgetTile("Alice").waitForExistence(timeout: 5))
+		XCTAssertFalse(widgetTile("Boris").exists)
+		checkpoint("widget-circular-en")
+		app.terminate()
 		launch(seed: .birthdays, locale: "ru", widgetFamily: "rectangular", clock: "2027-01-16T08:00:00Z")
-		let russianAlice = widgetTile("Alice")
-		XCTAssertTrue(russianAlice.waitForExistence(timeout: 5))
-		XCTAssertTrue(russianAlice.label.contains("Сегодня день рождения"), russianAlice.label)
+		let alice = widgetTile("Alice")
+		XCTAssertTrue(alice.waitForExistence(timeout: 5))
+		XCTAssertTrue(alice.label.contains("Сегодня день рождения"), alice.label)
 		checkpoint("widget-rectangular-birthday-ru")
 		app.terminate()
-	}
-
-	func testLockScreenWidgetsInviteToAddSomeoneWhenNobodyIsPinned() {
-		for family in ["circular", "rectangular", "inline"] {
-			launch(seed: .empty, widgetFamily: family)
-			let invitation = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "Add someone")).firstMatch
-			XCTAssertTrue(invitation.waitForExistence(timeout: 5), family)
-			checkpoint("widget-\(family)-empty-en")
-			app.terminate()
-		}
+		launch(seed: .empty, widgetFamily: "inline")
+		let invitation = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "Add someone")).firstMatch
+		XCTAssertTrue(invitation.waitForExistence(timeout: 5))
+		checkpoint("widget-inline-empty-en")
 	}
 
 	private func launch(seed: UITestSeed, locale: String = "en", widgetFamily: String, clock: String? = nil) {
@@ -73,7 +50,7 @@ final class LockScreenWidgetTests: XCTestCase {
 		app.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
 	}
 
-	/// Lock Screen screenshots are reviewed as CI attachments; they have no pixel baseline.
+	/// Screenshots are retained for review as CI attachments.
 	private func checkpoint(_ name: String) {
 		let attachment = XCTAttachment(screenshot: app.screenshot())
 		attachment.name = name

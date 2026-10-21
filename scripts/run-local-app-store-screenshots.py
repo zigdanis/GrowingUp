@@ -48,7 +48,7 @@ def main():
                 'run_id':output.name, 'run_attempt':'1', 'device':args.device,
                 'simulator_udid':args.udid, 'family':args.family, 'runtime':'26-5',
                 'xcode':'26.6', 'native_width':args.width, 'native_height':args.height,
-                'visual_checks':'0', 'capture_input_hashes':hashes}
+                'capture_input_hashes':hashes}
     (output / 'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
     products = None
     if args.built_products:
@@ -63,7 +63,7 @@ def main():
           '-derivedDataPath',str(args.derived_data.resolve()),'-destination',f'id={args.udid}',
           '-parallel-testing-enabled','NO','-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots',
           'GROWINGUP_APP_STORE_CAPTURE=1',f'GROWINGUP_APP_STORE_PHOTOS={ROOT}/docs/app-store-demo-photos',
-          'GROWINGUP_VISUAL_CHECKS=0','GROWINGUP_RECORD_SNAPSHOTS=0','CODE_SIGNING_ALLOWED=NO']
+          'CODE_SIGNING_ALLOWED=NO']
     for locale in ('en','ru'):
         folder=output / locale; folder.mkdir()
         (folder/'metadata.json').write_text(json.dumps(metadata | {'locale':locale},indent=2)+'\n')

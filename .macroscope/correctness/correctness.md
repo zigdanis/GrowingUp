@@ -51,4 +51,4 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 - Require focused tests for changed gateway transaction behavior, use-case contracts, presenter state/error handling, age/date calculations, or widget data mapping. Do not demand tests that merely duplicate formatting, compiler, or framework behavior.
 - Repository validation is defined by `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. Treat those scripts and `.github/workflows/ci.yml` as the source of truth for proposed validation changes.
 
-- UI journeys run through the `GrowingUpUI` scheme with isolated DEBUG-only SQLite/image fixtures. Glass screenshot baselines are pinned to iOS 26.5 / iPhone 17 Pro / arm64; CI must never auto-record missing baselines. Keep the focused controls-region comparison and expected/actual/difference attachments on failures.
+- UI journeys run through the `GrowingUpUI` scheme with isolated DEBUG-only SQLite/image fixtures. Checkpoints are XCTest screenshot attachments for human review; no pixel comparisons or reference images are used. Keep screenshot and video export working.

@@ -48,7 +48,6 @@ Managed with **Swift Package Manager** and resolved automatically by Xcode —
 no Carthage or CocoaPods step is required:
 
 - [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
-- [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing) — UI-test image comparisons only.
 
 ## Requirements
 
