@@ -57,8 +57,9 @@ no Carthage or CocoaPods step is required:
   archive check rejects older SDKs. CI runs Xcode 27.1 on GitHub's `xcode-27`
   runners.
 - iOS 18.1+ deployment target. CI's UI journeys cover iPhone 17 Pro (iOS 26.5,
-  with the pinned appearance baselines) and iPhone Duo (iOS 27.1) on every app
-  change, plus iPhone 18 Pro (iOS 27.0) and iPhone 16 (iOS 18.5) on master.
+  with the pinned appearance baselines) and iPhone Duo (iOS 27.1, Xcode 27.1) on
+  every app change, plus iPhone 18 Pro (iOS 27.0) and iPhone 16 (iOS 18.5) on
+  master.
 
 ## Tooling
 

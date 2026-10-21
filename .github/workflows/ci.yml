@@ -73,12 +73,12 @@ jobs:
         run: |
           python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
 
-      # Every UI pass runs the shipping toolchain (Xcode 27.1, iOS 27.1 SDK). PRs get the
-      # Glass journeys, screenshots and pinned iOS 26.5 baselines, plus the iPhone Duo
-      # pass, whose iOS 27.1 runtime only offers that device. The Duo simulator boots
+      # PRs get the Glass journeys, screenshots and pinned iOS 26.5 baselines on the image that
+      # ships that runtime, plus the iPhone Duo pass on the shipping toolchain (Xcode 27.1),
+      # whose downloaded iOS 27.1 runtime only offers that device. The Duo simulator boots
       # folded, so its journeys run on the outer display ("primary"); simctl needs that
-      # display named for video. The iOS 27 and slower, flakier iOS 18 passes run on
-      # master pushes and manual runs only. Runtimes missing from the image are downloaded.
+      # display named for video. The iOS 27 and slower, flakier iOS 18 passes run on master
+      # pushes and manual runs only.
       - name: Choose UI devices
         id: ui
         env:
@@ -87,13 +87,13 @@ jobs:
           MATRIX=$(jq -c --arg event "$EVENT_NAME" \
             '[.[] | select($event != "pull_request" or .on_pull_request) | del(.on_pull_request)]' <<'JSON'
           [
-            {"name": "Glass", "runner": "xcode-27", "xcode": "27.1", "runtime": "26-5",
+            {"name": "Glass", "runner": "macos-26", "xcode": "26.6", "runtime": "26-5",
              "device": "iPhone-17-Pro", "visual": "1", "on_pull_request": true},
             {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
              "device": "iPhone-Duo", "display": "primary", "visual": "0", "on_pull_request": true},
             {"name": "iOS 27", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
              "device": "iPhone-18-Pro", "visual": "0", "on_pull_request": false},
-            {"name": "iOS 18", "runner": "xcode-27", "xcode": "27.1", "runtime": "18-5",
+            {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
              "device": "iPhone-16", "visual": "0", "on_pull_request": false}
           ]
           JSON
@@ -204,7 +204,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.changes.outputs.ui_matrix) }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 35
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v7
       - name: Prepare evidence directory
@@ -258,6 +258,8 @@ jobs:
           xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Run UI journeys and appearance comparisons
         id: journeys
+        # A step timeout fails instead of cancelling, so the evidence below is still exported.
+        timeout-minutes: 40
         env:
           SIM_UDID: ${{ steps.simulator.outputs.udid }}
           SIM_DISPLAY: ${{ matrix.display }}
