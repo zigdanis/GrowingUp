@@ -37,7 +37,7 @@ concurrency:
 jobs:
   release:
     if: github.ref == 'refs/heads/master'
-    runs-on: macos-26
+    runs-on: xcode-27
     timeout-minutes: 75
     environment: testflight
     permissions:
@@ -63,9 +63,10 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      # The iOS 27.1 SDK is the first whose builds fill iPhone Duo's displays; the archive check enforces it.
       - name: Select Xcode
         run: |
-          sudo xcode-select -switch /Applications/Xcode.app
+          sudo xcode-select -switch /Applications/Xcode_27.1.app
           xcodebuild -version
       - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1
         with:

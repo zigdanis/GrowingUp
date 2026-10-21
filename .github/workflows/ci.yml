@@ -73,8 +73,10 @@ jobs:
         run: |
           python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
 
-      # PRs get the Glass journeys and their screenshots. The slower, flakier
-      # iOS 18 pass runs on master pushes and manual runs only.
+      # Every UI pass runs the shipping toolchain (Xcode 27.1, iOS 27.1 SDK). PRs get the
+      # Glass journeys and their screenshots plus the iPhone Duo pass, whose iOS 27.1
+      # runtime only offers that device. The slower, flakier iOS 18 pass runs on master
+      # pushes and manual runs only. Runtimes missing from the image are downloaded.
       - name: Choose UI devices
         id: ui
         env:
@@ -83,9 +85,11 @@ jobs:
           MATRIX=$(jq -c --arg event "$EVENT_NAME" \
             '[.[] | select($event != "pull_request" or .on_pull_request) | del(.on_pull_request)]' <<'JSON'
           [
-            {"name": "Glass", "runner": "macos-26", "xcode": "26.6", "runtime": "26-5",
-             "device": "iPhone-17-Pro", "visual": "1", "on_pull_request": true},
-            {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
+            {"name": "Glass", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
+             "device": "iPhone-18-Pro", "visual": "0", "on_pull_request": true},
+            {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
+             "device": "iPhone-Duo", "visual": "0", "on_pull_request": true},
+            {"name": "iOS 18", "runner": "xcode-27", "xcode": "27.1", "runtime": "18-5",
              "device": "iPhone-16", "visual": "0", "on_pull_request": false}
           ]
           JSON
@@ -105,12 +109,12 @@ jobs:
     name: Swift Format
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
 
       - name: Check formatting
         run: |
@@ -138,12 +142,12 @@ jobs:
     name: Build & Test
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
 
       - name: Show versions
         run: |
@@ -222,16 +226,26 @@ jobs:
           test -d "/Applications/Xcode_${{ matrix.xcode }}.app"
           sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode }}.app"
           xcodebuild -version
-      - name: Prepare existing simulator
+      - name: Prepare simulator
         id: simulator
         run: |
           RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-${{ matrix.runtime }}"
           DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}"
+          if ! xcrun simctl list runtimes available --json \
+            | jq -e --arg runtime "$RUNTIME" '.runtimes[] | select(.identifier == $runtime)' > /dev/null; then
+            VERSION="${{ matrix.runtime }}"
+            for ATTEMPT in 1 2 3; do
+              xcodebuild -downloadPlatform iOS -buildVersion "${VERSION//-/.}" && break
+              test "$ATTEMPT" -lt 3 || { echo "Could not download the iOS $VERSION runtime"; exit 1; }
+              sleep 30
+            done
+          fi
           UDID=$(xcrun simctl list devices available --json \
             | jq -r --arg runtime "$RUNTIME" --arg deviceType "$DEVICE_TYPE" \
               '.devices[$runtime][]? | select(.isAvailable and .deviceTypeIdentifier == $deviceType) | .udid' \
             | head -n 1)
-          test -n "$UDID" || { echo "No existing ${{ matrix.device }} simulator for $RUNTIME"; exit 1; }
+          # Downloaded runtimes come without devices.
+          test -n "$UDID" || UDID=$(xcrun simctl create "${{ matrix.device }}" "$DEVICE_TYPE" "$RUNTIME")
           xcrun simctl shutdown "$UDID" 2>/dev/null || true
           xcrun simctl erase "$UDID"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"

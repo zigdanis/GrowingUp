@@ -52,8 +52,12 @@ no Carthage or CocoaPods step is required:
 
 ## Requirements
 
-- Xcode 26 or newer (CI pins Xcode 26.6 and 26.3).
-- iOS 18.1+ deployment target.
+- Xcode 27.1 or newer. Release builds must use the iOS 27.1 SDK, the first whose
+  builds fill both iPhone Duo displays instead of running letterboxed; the
+  archive check rejects older SDKs. CI runs Xcode 27.1 on GitHub's `xcode-27`
+  runners.
+- iOS 18.1+ deployment target. CI's UI journeys cover iPhone 18 Pro (iOS 27.0),
+  iPhone Duo (iOS 27.1) and, on master, iPhone 16 (iOS 18.5).
 
 ## Tooling
 
