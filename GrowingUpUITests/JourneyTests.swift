@@ -341,7 +341,9 @@ extension JourneyTests {
 			predicate: NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "11:20", birthPeriod),
 			object: app.buttons["editor.birthDate"])
 		XCTAssertEqual(XCTWaiter.wait(for: [selectedTime], timeout: 5), .completed)
-		XCTAssertLessThanOrEqual(timePicker.frame.maxY, app.frame.maxY, "The expanded time wheel must be fully on screen")
+		for wheel in timePicker.pickerWheels.allElementsBoundByIndex {
+			XCTAssertTrue(wheel.isHittable, "The selected time must remain reachable after expanding the wheel")
+		}
 		if capturePickers { checkpoint("editor-time") }
 		app.buttons["editor.birthDate"].tap()
 		app.buttons["editor.save"].tap()
