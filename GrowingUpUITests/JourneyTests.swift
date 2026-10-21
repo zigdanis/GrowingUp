@@ -18,7 +18,7 @@ final class JourneyTests: XCTestCase {
 	func testAddAndRelaunch() {
 		launch()
 		checkpoint("empty")
-		addPerson(capturePickers: true)
+		addPerson(birthPeriod: "PM", capturePickers: true)
 		checkpoint("overview")
 		relaunch()
 		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
@@ -26,7 +26,7 @@ final class JourneyTests: XCTestCase {
 		let born = app.buttons["editor.birthDate"]
 		XCTAssertTrue(born.waitForExistence(timeout: 5))
 		XCTAssertTrue(born.label.contains("January 10, 2027"), born.label)
-		XCTAssertTrue(born.label.contains("11:20"), born.label)
+		XCTAssertTrue(born.label.contains("11:20") && born.label.contains("PM"), born.label)
 		born.tap()
 		XCTAssertEqual(app.switches["editor.birthTime"].value as? String, "1")
 	}
@@ -251,7 +251,7 @@ extension JourneyTests {
 		XCTAssertTrue(page.waitForExistence(timeout: 5))
 	}
 
-	private func addPerson(capturePickers: Bool = false) {
+	private func addPerson(birthPeriod: String = "AM", capturePickers: Bool = false) {
 		app.buttons["person.add"].tap()
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
@@ -273,7 +273,15 @@ extension JourneyTests {
 			XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
 			timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
 			timePicker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "20")
-			timePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: "AM")
+			// Adjusting the hour from midnight can roll the native wheel into the previous PM.
+			timePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: birthPeriod)
+			let selectedTime = XCTNSPredicateExpectation(
+				predicate: NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "11:20", birthPeriod),
+				object: app.buttons["editor.birthDate"])
+			XCTAssertEqual(XCTWaiter.wait(for: [selectedTime], timeout: 5), .completed)
+			for wheel in timePicker.pickerWheels.allElementsBoundByIndex {
+				XCTAssertTrue(wheel.isHittable, "The selected time must remain reachable after expanding the wheel")
+			}
 			checkpoint("editor-time")
 			app.buttons["editor.birthDate"].tap()
 		}

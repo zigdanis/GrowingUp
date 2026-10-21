@@ -45,7 +45,7 @@ final class NavigationTests: XCTestCase {
 		XCTAssertFalse(save.isEnabled)
 		checkpoint("navigation-edit-button")
 		dismissEditor()
-		app.open(URL(string: "growingup-app://?personIndex=5")!)
+		app.open(URL(string: "growingup-app://?personID=00000000-0000-0000-0000-000000000006")!)
 		XCTAssertTrue(waitFor(personName, label: "Farah"))
 		checkpoint("widget-sixth-link")
 	}

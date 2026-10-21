@@ -20,6 +20,51 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.selectedID, pinned[5].id)
 	}
 
+	func testStableWidgetLinkWaitsForLoadAndFindsUnpinnedPerson() async {
+		let gateway = PersonsGatewaySpy()
+		let pinned = pinnedPeople(count: 2)
+		var target = Person.createPerson()
+		target.isOnWidget = false
+		gateway.fetchPersonsResultToBeReturned = .success(pinned + [target])
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		let widgetPerson = WidgetPerson(id: target.id, index: 0, name: target.name, birthday: target.birthday, image: nil)
+		presenter.open(widgetPerson.deepLinkURL)
+		XCTAssertNil(presenter.selectedID)
+		await presenter.load()
+		XCTAssertEqual(presenter.selectedID, target.id)
+		presenter.select(pinned[0].id)
+		presenter.open(widgetPerson.deepLinkURL)
+		XCTAssertEqual(presenter.selectedID, target.id)
+	}
+
+	func testUnknownOrInvalidWidgetUUIDDoesNotFallBackToIndex() async {
+		let gateway = PersonsGatewaySpy()
+		let pinned = pinnedPeople(count: 2)
+		gateway.fetchPersonsResultToBeReturned = .success(pinned)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		presenter.open(URL(string: "growingup-app://?personID=\(UUID().uuidString)&personIndex=1")!)
+		await presenter.load()
+		XCTAssertEqual(presenter.selectedID, pinned[0].id)
+		for value in [UUID().uuidString, "invalid"] {
+			presenter.open(URL(string: "growingup-app://?personID=\(value)&personIndex=1")!)
+			XCTAssertEqual(presenter.selectedID, pinned[0].id)
+		}
+		presenter.open(URL(string: "growingup-app://?personIndex=1")!)
+		XCTAssertEqual(presenter.selectedID, pinned[1].id)
+	}
+
+	func testStaleWidgetLinkAfterRemovalDoesNotSelectReplacement() async {
+		let gateway = PersonsGatewaySpy()
+		let pinned = pinnedPeople(count: 3)
+		gateway.fetchPersonsResultToBeReturned = .success(pinned)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		await presenter.load()
+		presenter.apply(.removed(pinned[1]))
+		presenter.select(pinned[0].id)
+		presenter.open(URL(string: "growingup-app://?personID=\(pinned[1].id.uuidString)")!)
+		XCTAssertEqual(presenter.selectedID, pinned[0].id)
+	}
+
 	func testLoadErrorIsVisibleAndEndsLoading() async {
 		let gateway = PersonsGatewaySpy()
 		gateway.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)

@@ -19,8 +19,9 @@ public class CoreDataPersonsGateway: PersonsGateway {
 
 	public func add(parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
+		let container = try coreDataStack.persistentContainer
 		return try await withCheckedThrowingContinuation { continuation in
-			coreDataStack.persistentContainer.performBackgroundTask { context in
+			container.performBackgroundTask { context in
 				guard let person = context.addEntity(withType: CoreDataPerson.self) else {
 					continuation.resume(throwing: CoreError.coreDataAddFailed)
 					return
@@ -45,8 +46,9 @@ public class CoreDataPersonsGateway: PersonsGateway {
 
 	public func fetchPersons() async throws -> [Person] {
 		try Task.checkCancellation()
+		let container = try coreDataStack.persistentContainer
 		let persons = try await withCheckedThrowingContinuation { continuation in
-			coreDataStack.persistentContainer.performBackgroundTask { context in
+			container.performBackgroundTask { context in
 				let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 				request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
 				do {
@@ -62,8 +64,9 @@ public class CoreDataPersonsGateway: PersonsGateway {
 
 	public func fetchWidgetPersons() async throws -> [Person] {
 		try Task.checkCancellation()
+		let container = try coreDataStack.persistentContainer
 		let persons = try await withCheckedThrowingContinuation { continuation in
-			coreDataStack.persistentContainer.performBackgroundTask { context in
+			container.performBackgroundTask { context in
 				do {
 					guard let persons = try AccessToWidget.sharedInstance(in: context).widgetPersons else {
 						throw CoreError.missingValue
@@ -82,8 +85,9 @@ public class CoreDataPersonsGateway: PersonsGateway {
 
 	public func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
+		let container = try coreDataStack.persistentContainer
 		return try await withCheckedThrowingContinuation { continuation in
-			coreDataStack.persistentContainer.performBackgroundTask { context in
+			container.performBackgroundTask { context in
 				do {
 					let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 					request.predicate = NSPredicate(
@@ -108,8 +112,9 @@ public class CoreDataPersonsGateway: PersonsGateway {
 
 	public func remove(person: Person) async throws {
 		try Task.checkCancellation()
+		let container = try coreDataStack.persistentContainer
 		try await withCheckedThrowingContinuation { continuation in
-			coreDataStack.persistentContainer.performBackgroundTask { context in
+			container.performBackgroundTask { context in
 				do {
 					let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 					request.predicate = NSPredicate(

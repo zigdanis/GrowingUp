@@ -198,12 +198,8 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		let description = NSPersistentStoreDescription(url: storeURL)
 		description.shouldAddStoreAsynchronously = false
 		container.persistentStoreDescriptions = [description]
-		var loadingError: Error?
-		container.loadPersistentStores { _, error in loadingError = error }
-		if let loadingError {
-			throw loadingError
-		}
-		return container
+		let stack = CoreDataStackImplementation(makeContainer: { container })
+		return try stack.persistentContainer
 	}
 
 	private func closeContainer(_ container: NSPersistentContainer) throws {
