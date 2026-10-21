@@ -3,19 +3,8 @@ name: App Store Screenshots
 permissions:
   contents: read
 
+# Manual only: run it when preparing App Store media, not on every PR.
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/app-store-screenshots.yml'
-      - 'scripts/run-app-store-screenshots.sh'
-      - 'GrowingUp/**'
-      - 'GrowingUpUITests/**'
-      - 'GrowingUp.xcodeproj/**'
-      - 'Core/**'
-      - 'Widget/**'
-      - 'docs/app-store-demo-photos/**'
-      - 'scripts/render-app-store-screenshots.py'
-      - 'marketing/**'
   workflow_dispatch:
 
 concurrency:

@@ -10,5 +10,5 @@ import CoreData
 import Foundation
 
 public protocol CoreDataStack {
-	var persistentContainer: NSPersistentContainer { get }
+	var persistentContainer: NSPersistentContainer { get throws }
 }

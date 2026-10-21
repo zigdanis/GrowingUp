@@ -5,13 +5,12 @@ description: Capture, inspect and attach iOS simulator screenshots or videos to 
 
 # Visual acceptance
 
-Capture and inspect screenshots or video that show the requested UI change, then attach them to the PR. For non-UI changes, report functional checks instead.
+The developer wants to see the feature while the PR is open, not after it merges. Publish screenshots as soon as the first Glass UI job finishes, then refresh them only if the UI changes later.
 
-Make the result easy for the developer to assess in the PR. Use the project's existing tools to capture and publish evidence.
-
-- **Show:** capture the feature or fix described in the PR from its current code. Use a short video when screenshots aren't enough.
+- **Show:** capture the feature or fix described in the PR from its current code. Add UI-test steps that screenshot the new state if no existing journey reaches it.
 - **Limit:** use 1–3 screenshots by default. Skip duplicates and unrelated screens.
-- **Check:** confirm that the media shows the requested behavior, attach it to the PR and check that it displays clearly.
-- **Clean up:** remove temporary downloads, screenshots and video clips after publishing and checking the PR.
+- **Video:** only when the change is motion itself (an animation or transition) and screenshots can't show it. Don't record or review video otherwise.
+- **Check:** confirm that the screenshots show the requested behavior, publish them with `scripts/pr-visual-evidence.py` and check that they display clearly in the PR.
+- **Clean up:** remove temporary downloads after publishing.
 
-Once the feature is ready, attach its reviewed screenshots or demo to the PR body. TestFlight processing and later release steps do not need to finish first.
+For non-UI changes, report the functional checks instead.

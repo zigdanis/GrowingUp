@@ -34,7 +34,9 @@ public final class DiskImageStore: @unchecked Sendable, ImageStore {
 					ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
 				}
 				do {
-					try Disk.remove(image.cachingKey, from: self.directory)
+					for key in [image.cachingKey, image.legacyCachingKey] where Disk.exists(key, in: self.directory) {
+						try Disk.remove(key, from: self.directory)
+					}
 					continuation.resume()
 				} catch {
 					continuation.resume(throwing: error)

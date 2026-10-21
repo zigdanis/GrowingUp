@@ -27,7 +27,8 @@ public enum ImagesCache {
 					continuation.resume(returning: memoryImg)
 				} else {
 					do {
-						let loadedImage = try Disk.retrieve(image.cachingKey, from: directory, as: UIImage.self)
+						let key = storedCachingKey(for: image, in: directory)
+						let loadedImage = try Disk.retrieve(key, from: directory, as: UIImage.self)
 						memoryCache.setValue(loadedImage, forKey: image.cachingKey)
 						continuation.resume(returning: loadedImage)
 					} catch {
@@ -44,8 +45,14 @@ public enum ImagesCache {
 	public static func loadWidgetImage(image: PersonImage) async throws -> UIImage {
 		try Task.checkCancellation()
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
-		let url = try Disk.url(for: image.cachingKey, in: directory)
+		let url = try Disk.url(for: storedCachingKey(for: image, in: directory), in: directory)
 		return try await loadWidgetImage(at: url)
+	}
+
+	static func storedCachingKey(
+		for image: PersonImage, in directory: Disk.Directory = .sharedContainer(appGroupName: Constants.appGroupId)
+	) -> String {
+		Disk.exists(image.cachingKey, in: directory) ? image.cachingKey : image.legacyCachingKey
 	}
 
 	static func loadWidgetImage(at url: URL) async throws -> UIImage {

@@ -1,10 +1,32 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 
+# One quiet review per PR: findings only, nothing written into the PR description.
 reviews:
+  profile: chill
+  request_changes_workflow: false
+  high_level_summary: false
+  poem: false
+  review_status: false
+  collapse_walkthrough: true
+  changed_files_summary: false
+  sequence_diagrams: false
+  estimate_code_review_effort: false
+  related_issues: false
+  related_prs: false
+  suggested_labels: false
+  suggested_reviewers: false
+  path_filters:
+    - "!**/*.png"
+    - "!**/__Snapshots__/**"
+    - "!docs/**"
+    - "!marketing/**"
   auto_review:
     enabled: true
     auto_incremental_review: false
     drafts: false
+
+chat:
+  auto_reply: false
 
 knowledge_base:
   code_guidelines:

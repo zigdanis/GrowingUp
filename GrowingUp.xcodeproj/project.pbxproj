@@ -233,6 +233,12 @@
 		B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */; };
 		9D9F4D044A85D60A5BED0B06 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 		788DE405402CE74376AD1024 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
+		AE3C6D308BB54317A5AA4DF0 /* PersistentStoreRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */; };
+		A3A7D5EF49F14A50A9AEF3C6 /* SQLiteStoreBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C26DB971613467092BD4C6B /* SQLiteStoreBackup.swift */; };
+		2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */; };
+		05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */; };
+		7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */; };
+		CF6F04B22E594F399E944388 /* SQLiteStoreAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E154F23824F82B105C458 /* SQLiteStoreAccess.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -511,6 +517,12 @@
 		B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrimTests.swift; sourceTree = "<group>"; };
 		0B3DB4282041C5288DAF9987 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widget.strings; sourceTree = "<group>"; };
 		C7A0465B1865B8FD8AF5EC84 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Widget.strings; sourceTree = "<group>"; };
+		6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStoreRecovery.swift; sourceTree = "<group>"; };
+		1C26DB971613467092BD4C6B /* SQLiteStoreBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStoreBackup.swift; sourceTree = "<group>"; };
+		DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStoreRecoveryTests.swift; sourceTree = "<group>"; };
+		AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStoreBackupTests.swift; sourceTree = "<group>"; };
+		D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStackImplementationTests.swift; sourceTree = "<group>"; };
+		4F5E154F23824F82B105C458 /* SQLiteStoreAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStoreAccess.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -813,6 +825,9 @@
 		094DF9CA223ADC3800C331EC /* Gateways */ = {
 			isa = PBXGroup;
 			children = (
+				D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */,
+				AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */,
+				DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */,
 				094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */,
 				0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */,
 				CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */,
@@ -866,6 +881,8 @@
 		095000D6226DD94700789BED /* LocalPersistance */ = {
 			isa = PBXGroup;
 			children = (
+				1C26DB971613467092BD4C6B /* SQLiteStoreBackup.swift */,
+				6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */,
 				09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */,
 				09165341223ECBC40081FB10 /* CoreDataStack.swift */,
 				09165347223ECBC40081FB10 /* CoreDataPerson.swift */,
@@ -873,6 +890,7 @@
 				09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */,
 				09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */,
 				3981A595ABEABAB3379B9407 /* CoreDataStackImplementation.swift */,
+				4F5E154F23824F82B105C458 /* SQLiteStoreAccess.swift */,
 			);
 			path = LocalPersistance;
 			sourceTree = "<group>";
@@ -1429,6 +1447,9 @@
 				93FD87F27D684E64797A6BF5 /* DiskImageStore.swift in Sources */,
 				59292205208AA413665CE54F /* ValueWrapper.swift in Sources */,
 				AED00FF147F3E528FB039EE6 /* CoreDataStackImplementation.swift in Sources */,
+				CF6F04B22E594F399E944388 /* SQLiteStoreAccess.swift in Sources */,
+				A3A7D5EF49F14A50A9AEF3C6 /* SQLiteStoreBackup.swift in Sources */,
+				AE3C6D308BB54317A5AA4DF0 /* PersistentStoreRecovery.swift in Sources */,
 				97F12A7FE34A8F3EC06215C7 /* AddPersonUseCaseImplementation.swift in Sources */,
 				9902F81FF6251AACE29B1E95 /* EditPersonUseCaseImplementation.swift in Sources */,
 				73216BAB019414662978A519 /* FetchPersonsUseCaseImplementation.swift in Sources */,
@@ -1447,6 +1468,9 @@
 				092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */,
 				09CFE6B822709FAB007AB456 /* RemovePersonUseCaseSpy.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
+				7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */,
+				05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */,
+				2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				A10000000000000000000004 /* ImageStoreSpy.swift in Sources */,
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
