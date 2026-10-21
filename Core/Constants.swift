@@ -13,6 +13,7 @@ public enum Constants {
 	public static let appGroupId = "group.pro.ziganshin.aging"
 	public static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
 	public static let widgetPeopleLimit = 6
+	public static let widgetPersonIDKey = "personID"
 	public static let widgetPersonIndexKey = "personIndex"
 	/// The host of the `growingup-app://add-person` link that widgets open when nobody is pinned.
 	public static let widgetAddPersonHost = "add-person"

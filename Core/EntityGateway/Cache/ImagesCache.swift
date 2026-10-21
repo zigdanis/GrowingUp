@@ -16,16 +16,21 @@ public enum ImagesCache {
 	public static let memoryCache = MemoryCache<UIImage>()
 
 	public static func loadImageFromDiskOrMemory(image: PersonImage) async throws -> UIImage {
+		try await loadImageFromDiskOrMemory(image: image, directory: .sharedContainer(appGroupName: Constants.appGroupId))
+	}
+
+	static func loadImageFromDiskOrMemory(image: PersonImage, directory: Disk.Directory) async throws -> UIImage {
 		try Task.checkCancellation()
 		let loadedImage = try await withCheckedThrowingContinuation { continuation in
 			DispatchQueue.global(qos: .userInitiated).async {
 				if let memoryImg = memoryCache.value(forKey: image.cachingKey) {
 					continuation.resume(returning: memoryImg)
 				} else {
-					let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 					do {
-						continuation.resume(
-							returning: try Disk.retrieve(storedCachingKey(for: image), from: directory, as: UIImage.self))
+						let key = storedCachingKey(for: image, in: directory)
+						let loadedImage = try Disk.retrieve(key, from: directory, as: UIImage.self)
+						memoryCache.setValue(loadedImage, forKey: image.cachingKey)
+						continuation.resume(returning: loadedImage)
 					} catch {
 						continuation.resume(throwing: CoreError(error: error))
 					}
@@ -40,13 +45,14 @@ public enum ImagesCache {
 	public static func loadWidgetImage(image: PersonImage) async throws -> UIImage {
 		try Task.checkCancellation()
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
-		let url = try Disk.url(for: storedCachingKey(for: image), in: directory)
+		let url = try Disk.url(for: storedCachingKey(for: image, in: directory), in: directory)
 		return try await loadWidgetImage(at: url)
 	}
 
-	static func storedCachingKey(for image: PersonImage) -> String {
-		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
-		return Disk.exists(image.cachingKey, in: directory) ? image.cachingKey : image.legacyCachingKey
+	static func storedCachingKey(
+		for image: PersonImage, in directory: Disk.Directory = .sharedContainer(appGroupName: Constants.appGroupId)
+	) -> String {
+		Disk.exists(image.cachingKey, in: directory) ? image.cachingKey : image.legacyCachingKey
 	}
 
 	static func loadWidgetImage(at url: URL) async throws -> UIImage {

@@ -10,7 +10,7 @@ struct WidgetPerson: Identifiable {
 	let photo: UIImage?
 
 	var deepLinkURL: URL {
-		URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=\(index)")!
+		URL(string: "growingup-app://?\(Constants.widgetPersonIDKey)=\(id.uuidString)")!
 	}
 
 	init(id: UUID, index: Int, name: String, birthday: Date, image: UIImage?) {

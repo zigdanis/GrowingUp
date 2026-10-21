@@ -11,7 +11,7 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
 	}
 
-	func testFirstPinnedPersonInCreationOrderHasTheFirstDeepLinkIndex() async {
+	func testFirstPinnedPersonInCreationOrderHasStableDeepLink() async {
 		let people = pinnedPeople(count: 3)
 		let useCase = FetchPersonsUseCaseSpy()
 		useCase.completionResult = .success(people.reversed())
@@ -32,7 +32,9 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		let two = await loader.load(limit: 2)
 		XCTAssertEqual(two.map(\.id), people.prefix(2).map(\.id))
 		XCTAssertEqual(two.map(\.index), [0, 1])
-		XCTAssertEqual(two.map(\.deepLinkURL.absoluteString), ["growingup-app://?personIndex=0", "growingup-app://?personIndex=1"])
+		XCTAssertEqual(
+			two.map(\.deepLinkURL.absoluteString),
+			people.prefix(2).map { "growingup-app://?personID=\($0.id.uuidString)" })
 	}
 
 	func testNobodyPinnedOrFailedFetchLoadsNobody() async {
