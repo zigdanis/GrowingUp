@@ -70,6 +70,8 @@ struct PeopleScene: View {
 						}
 					}
 				}
+				// The pages have no text input; beside another app in Split View, its keyboard must not move them.
+				.ignoresSafeArea(.keyboard)
 			}
 		}
 		.task { await presenter.load() }
