@@ -231,6 +231,9 @@ extension JourneyTests {
 		XCTAssertEqual(frames[0].minY, frames[1].minY, accuracy: 1)
 		XCTAssertEqual(frames[2].minY, frames[3].minY, accuracy: 1)
 		XCTAssertGreaterThanOrEqual(frames[2].minY, frames[0].maxY)
+		XCTAssertEqual(frames[0].minX, frames[2].minX, accuracy: 1)
+		XCTAssertEqual(frames[1].minX, frames[3].minX, accuracy: 1)
+		XCTAssertGreaterThan(frames[1].minX, frames[0].midX, "The second column starts right of the first")
 		for frame in frames {
 			XCTAssertEqual(frame.width, frames[0].width, accuracy: 1)
 			XCTAssertEqual(frame.height, frames[0].height, accuracy: 1)
