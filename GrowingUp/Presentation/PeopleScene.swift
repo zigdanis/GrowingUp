@@ -34,8 +34,6 @@ struct PeopleScene: View {
 										onCardHeightChange: { cardHeights[person.id] = $0 }
 									)
 									.containerRelativeFrame([.horizontal, .vertical])
-									// Only the shown page reaches VoiceOver and UI tests, as with the page-style TabView.
-									.accessibilityHidden(presenter.selectedID != person.id)
 									.id(PeoplePageID.person(person.id))
 								}
 								if presenter.canAdd {
@@ -43,7 +41,6 @@ struct PeopleScene: View {
 										// The pager ignores the safe area, so the invitation keeps clear of the status bar itself.
 										.safeAreaPadding(geometry.safeAreaInsets)
 										.containerRelativeFrame([.horizontal, .vertical])
-										.accessibilityHidden(presenter.selectedID != nil)
 										.id(PeoplePageID.add)
 								}
 							}

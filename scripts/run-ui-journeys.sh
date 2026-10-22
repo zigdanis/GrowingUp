@@ -39,8 +39,9 @@ grep -q 'Recording started' "$ARTIFACT_DIR/recording.log" \
   || { echo 'Simulator video recording did not start within 30 seconds.' >&2; exit 1; }
 
 TEST_STATUS=0
+# Skipping diagnostics collection keeps a failing journey from stalling the run for minutes.
 xcodebuild test-without-building -project GrowingUp.xcodeproj -scheme GrowingUpUI \
-  -destination "id=$SIM_UDID" -parallel-testing-enabled NO \
+  -destination "id=$SIM_UDID" -parallel-testing-enabled NO -collect-test-diagnostics never \
   -resultBundlePath "$ARTIFACT_DIR/UI.xcresult" \
   GROWINGUP_VISUAL_CHECKS="$GROWINGUP_VISUAL_CHECKS" GROWINGUP_RECORD_SNAPSHOTS=0 \
   CODE_SIGNING_ALLOWED=NO | tee "$ARTIFACT_DIR/xcodebuild.log" || TEST_STATUS=$?

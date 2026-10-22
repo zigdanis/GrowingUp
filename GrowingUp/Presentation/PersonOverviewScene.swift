@@ -99,7 +99,7 @@ struct PersonOverviewScene: View {
 			.layoutPriority(1)
 			// Leaves room for the avatar strip that floats above the card.
 			Spacer(minLength: 72)
-			BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit)
+			BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit, isShown: isSelected)
 				.padding(.horizontal, 16)
 				.padding(.bottom, 12)
 				.onGeometryChange(for: CGFloat.self) { proxy in
@@ -194,7 +194,8 @@ struct PersonOverviewScene: View {
 	private var ageCard: some View {
 		PersonAgeCard(
 			name: person.name, primaryValue: presenter.primaryValue, primaryUnit: presenter.primaryUnit,
-			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge
+			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge,
+			isShown: isSelected
 		)
 		.padding(.horizontal, 24)
 	}

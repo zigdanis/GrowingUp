@@ -10,6 +10,9 @@ struct PersonAgeCard: View {
 	let secondaryText: String?
 	let tickerText: String
 	let accessibilityAge: String
+	/// Whether the pager shows this page. The paging scroll view keeps neighbouring pages loaded, so only the shown
+	/// page carries the identifiers UI tests look up.
+	var isShown = true
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 
@@ -45,7 +48,7 @@ struct PersonAgeCard: View {
 		.accessibilityAddTraits(.isStaticText)
 		.accessibilityLabel(Text(name))
 		.accessibilityValue(Text(accessibilityAge))
-		.accessibilityIdentifier("person.name")
+		.accessibilityIdentifier(isShown ? "person.name" : "")
 	}
 
 	private var value: some View {

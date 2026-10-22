@@ -4,6 +4,9 @@ import SwiftUI
 struct BirthdayCard: View {
 	let birthdayText: String
 	let onEdit: () -> Void
+	/// Whether the pager shows this page. The paging scroll view keeps neighbouring pages loaded, so only the shown
+	/// page carries the identifiers UI tests look up.
+	var isShown = true
 
 	var body: some View {
 		ViewThatFits(in: .horizontal) {
@@ -30,7 +33,7 @@ struct BirthdayCard: View {
 				.accessibilityHidden(true)
 			Text(birthdayText)
 				.monospacedDigit()
-				.accessibilityIdentifier("birthday.countdown")
+				.accessibilityIdentifier(isShown ? "birthday.countdown" : "")
 		}
 		.font(.headline)
 		.foregroundStyle(.white)
@@ -44,6 +47,6 @@ struct BirthdayCard: View {
 		}
 		.modifier(GlassCapsuleButtonChrome(prominent: false))
 		.tint(.white)
-		.accessibilityIdentifier("person.edit")
+		.accessibilityIdentifier(isShown ? "person.edit" : "")
 	}
 }
