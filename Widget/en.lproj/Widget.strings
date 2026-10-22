@@ -3,6 +3,9 @@
 /* Empty widget invitation */
 "Add someone" = "Add someone";
 
+/* Empty widget caption under the invitation */
+"Choose people in GrowingUp" = "Choose people in GrowingUp";
+
 /* Tile caption after the primary age, e.g. "and 3 months" */
 "and %@" = "and %@";
 

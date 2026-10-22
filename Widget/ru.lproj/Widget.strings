@@ -3,6 +3,9 @@
 /* Empty widget invitation */
 "Add someone" = "Добавьте кого-нибудь";
 
+/* Empty widget caption under the invitation */
+"Choose people in GrowingUp" = "Выберите людей в GrowingUp";
+
 /* Tile caption after the primary age, e.g. "и 3 месяца" */
 "and %@" = "и %@";
 
