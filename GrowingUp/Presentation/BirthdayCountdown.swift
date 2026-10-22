@@ -7,7 +7,8 @@ import Foundation
 /// minutes and seconds as the celebration approaches.
 enum BirthdayCountdown {
 	static func text(for status: BirthdayStatus, locale: Locale = .current) -> String {
-		guard !status.isToday else { return String(localized: "Birthday today 🎂", locale: locale) }
+		let bundle = localizedBundle(for: locale)
+		guard !status.isToday else { return String(localized: "Birthday today 🎂", bundle: bundle, locale: locale) }
 		let countdown = status.countdown
 		let remaining: AgeUnitValue
 		if let days = countdown.day {
@@ -20,6 +21,15 @@ enum BirthdayCountdown {
 			remaining = AgeUnitValue(value: countdown.second ?? 0, unit: .seconds)
 		}
 		let duration = remaining.localizedString(locale: locale)
-		return String(localized: "Birthday in \(duration)", locale: locale)
+		return String(localized: "Birthday in \(duration)", bundle: bundle, locale: locale)
+	}
+
+	/// `String(localized:locale:)` uses the locale for formatting, but the bundle chooses the language.
+	/// Match Core's `LockScreenText` lookup so an explicit locale also controls the surrounding phrase.
+	private static func localizedBundle(for locale: Locale) -> Bundle {
+		let bundle = Bundle.main
+		let language = locale.language.languageCode?.identifier ?? ""
+		let localization = bundle.localizations.contains(language) ? language : bundle.developmentLocalization
+		return localization.flatMap { bundle.path(forResource: $0, ofType: "lproj") }.flatMap(Bundle.init(path:)) ?? bundle
 	}
 }

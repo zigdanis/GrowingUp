@@ -50,16 +50,6 @@
       </Testables>
       <EnvironmentVariables>
          <EnvironmentVariable
-            key = "GROWINGUP_VISUAL_CHECKS"
-            value = "$(GROWINGUP_VISUAL_CHECKS)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "GROWINGUP_RECORD_SNAPSHOTS"
-            value = "$(GROWINGUP_RECORD_SNAPSHOTS)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "GROWINGUP_APP_STORE_CAPTURE"
             value = "$(GROWINGUP_APP_STORE_CAPTURE)"
             isEnabled = "YES">

@@ -39,7 +39,7 @@ for kind in ['face-id','home-button']:
     n+=1;take='capture'+str(n)
    assert booted()==[udid],booted()
    run([sys.executable,str(root/'seed.py'),udid,locale])
-   run(['xcodebuild','build-for-testing','-project','GrowingUp.xcodeproj','-scheme','GrowingUpUI','-destination','id='+udid,'-derivedDataPath',str(root/'DerivedData'),'-parallel-testing-enabled','NO','GROWINGUP_APP_STORE_CAPTURE=1','GROWINGUP_APP_STORE_LOCALE='+locale,'GROWINGUP_APP_STORE_PHOTOS='+str(cwd/'docs/app-store-demo-photos'),'GROWINGUP_VISUAL_CHECKS=0','GROWINGUP_RECORD_SNAPSHOTS=0','CODE_SIGNING_ALLOWED=NO'],folder/'build.log')
+   run(['xcodebuild','build-for-testing','-project','GrowingUp.xcodeproj','-scheme','GrowingUpUI','-destination','id='+udid,'-derivedDataPath',str(root/'DerivedData'),'-parallel-testing-enabled','NO','GROWINGUP_APP_STORE_CAPTURE=1','GROWINGUP_APP_STORE_LOCALE='+locale,'GROWINGUP_APP_STORE_PHOTOS='+str(cwd/'docs/app-store-demo-photos'),'CODE_SIGNING_ALLOWED=NO'],folder/'build.log')
    print('CAPTURE',kind,locale,flush=True)
    run([sys.executable,str(root/'record-no-confetti.py'),udid,str(folder),'--locale',locale,'--take',take])
    print('PASSED',kind,locale,flush=True)

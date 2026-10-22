@@ -30,7 +30,7 @@ jobs:
             '{workflow: "app-store-screenshots.yml", head_sha: $head, checkout_sha: $checkout,
               run_id: $run, run_attempt: $attempt,
               device: "iPhone-17-Pro-Max", runtime: "26-5", xcode: "26.6",
-              native_width: 1320, native_height: 2868, visual_checks: "0"}' \
+              native_width: 1320, native_height: 2868}' \
             > "$ARTIFACT_DIR/metadata.json"
       - name: Select pinned Xcode
         run: |

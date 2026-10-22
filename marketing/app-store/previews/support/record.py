@@ -12,7 +12,7 @@ for line in rec.stderr:
     record_log.write(line);record_log.flush()
     if 'Recording started' in line:
         receipt['recording_started_epoch']=time.time();break
-cmd=['xcodebuild','test-without-building','-project','GrowingUp.xcodeproj','-scheme','GrowingUpUI','-destination','id='+a.device,'-derivedDataPath',str(root/'DerivedData'),'-parallel-testing-enabled','NO','-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testRecordAppPreview','-resultBundlePath',str(out/(a.take+'.xcresult')),'GROWINGUP_APP_STORE_CAPTURE=1','GROWINGUP_APP_STORE_LOCALE='+a.locale,'GROWINGUP_APP_STORE_PHOTOS='+str(Path.cwd()/'docs/app-store-demo-photos'),'GROWINGUP_VISUAL_CHECKS=0','GROWINGUP_RECORD_SNAPSHOTS=0','CODE_SIGNING_ALLOWED=NO']
+cmd=['xcodebuild','test-without-building','-project','GrowingUp.xcodeproj','-scheme','GrowingUpUI','-destination','id='+a.device,'-derivedDataPath',str(root/'DerivedData'),'-parallel-testing-enabled','NO','-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testRecordAppPreview','-resultBundlePath',str(out/(a.take+'.xcresult')),'GROWINGUP_APP_STORE_CAPTURE=1','GROWINGUP_APP_STORE_LOCALE='+a.locale,'GROWINGUP_APP_STORE_PHOTOS='+str(Path.cwd()/'docs/app-store-demo-photos'),'CODE_SIGNING_ALLOWED=NO']
 try:
     with open(log,'w') as stream:
         proc=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)

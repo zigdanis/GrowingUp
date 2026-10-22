@@ -50,7 +50,7 @@ final class OverviewPresenter {
 	}
 
 	func tick(person: Person, now: Date, isSelected: Bool = false) {
-		let status = BirthdayStatus(birthday: person.birthday, now: now)
+		let status = BirthdayStatus(birthday: person.birthday, now: now, calendar: calendar)
 		// A visible birthday starts a new celebration on every page arrival, at midnight, and when the person's
 		// celebrations are turned back on. People who opted out keep the indicator but get no confetti.
 		let isCelebrating = isSelected && status.isToday && person.celebratesBirthdays

@@ -149,6 +149,21 @@ final class PersonEditorPresenterTests: XCTestCase {
 		XCTAssertTrue(presenter.canSave)
 	}
 
+	func testPickingThenRemovingANewPhotoRestoresTheCleanDraft() async {
+		var person = Person.createPerson()
+		person.appPicId = nil
+		person.widgetPicId = nil
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in XCTFail("Unsaved") })
+		await presenter.load()
+		presenter.setMainPhoto(image(width: 900, height: 1200))
+		XCTAssertTrue(presenter.canSave)
+		presenter.removeMainPhoto()
+		XCTAssertFalse(presenter.isDirty)
+		XCTAssertFalse(presenter.canSave)
+		XCTAssertNil(presenter.appImage)
+		XCTAssertNil(presenter.widgetImage)
+	}
+
 	func testReframingReplacesOnlyTheWidgetPicture() async {
 		let person = Person.createPerson()
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
