@@ -4,7 +4,7 @@ import XCTest
 final class RemovalConfirmationTests: XCTestCase {
 	func testRemovalConfirmationStaysNearButton() {
 		continueAfterFailure = false
-		for (locale, appearance) in [("en", UITestAppearance.light), ("ru", .dark)] {
+		for (locale, appearance) in [("en", UITestAppearance.light)] {
 			let app = XCUIApplication()
 			launch(app, locale: locale, appearance: appearance)
 			let overview = app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch

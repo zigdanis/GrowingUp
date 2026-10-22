@@ -32,7 +32,7 @@ def render(directory):
         '.images{display:flex;flex-wrap:wrap;gap:24px}figure{margin:0;width:320px}',
         'img,video{max-width:100%;max-height:720px}figcaption{overflow-wrap:anywhere}</style>',
         '<h1>GrowingUp simulator evidence</h1>',
-        '<p>Automated assertions and visual comparisons report their own results below. '
+        '<p>Automated assertion results are reported below. '
         'Inspect the screenshots and recording before accepting the change.</p>',
         '<h2>Source and environment</h2>',
         f'<pre>{html.escape(json.dumps(metadata, indent=2))}</pre>',
@@ -42,7 +42,7 @@ def render(directory):
     video = directory / "journeys.mp4"
     if video.exists():
         parts += ['<h2>Journey recording</h2>', f'<video controls preload="metadata" src="{link(video)}"></video>']
-    parts += ['<h2>Screenshots and visual differences</h2><div class="images">']
+    parts += ['<h2>Screenshots</h2><div class="images">']
     images = sorted(attachments.glob("*.png"))
     for path in images:
         label = html.escape(names.get(path.name, path.name))

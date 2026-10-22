@@ -36,7 +36,7 @@ for LOCALE in en ru; do
     -destination "id=$SIM_UDID" -parallel-testing-enabled NO \
     -only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots \
     GROWINGUP_APP_STORE_CAPTURE=1 GROWINGUP_APP_STORE_PHOTOS="$GROWINGUP_APP_STORE_PHOTOS" \
-    GROWINGUP_APP_STORE_LOCALE="$LOCALE" GROWINGUP_VISUAL_CHECKS=0 GROWINGUP_RECORD_SNAPSHOTS=0 \
+    GROWINGUP_APP_STORE_LOCALE="$LOCALE" \
     CODE_SIGNING_ALLOWED=NO | tee "$LOCALE_DIR/build.log"
 
   xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 "$LOCALE_DIR/journeys.mp4" \
@@ -58,7 +58,7 @@ for LOCALE in en ru; do
     -only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots \
     -resultBundlePath "$LOCALE_DIR/UI.xcresult" \
     GROWINGUP_APP_STORE_CAPTURE=1 GROWINGUP_APP_STORE_PHOTOS="$GROWINGUP_APP_STORE_PHOTOS" \
-    GROWINGUP_APP_STORE_LOCALE="$LOCALE" GROWINGUP_VISUAL_CHECKS=0 GROWINGUP_RECORD_SNAPSHOTS=0 \
+    GROWINGUP_APP_STORE_LOCALE="$LOCALE" \
     CODE_SIGNING_ALLOWED=NO | tee "$LOCALE_DIR/xcodebuild.log" || TEST_STATUS=$?
 
   # SIGINT finalizes the MP4 container even when an assertion failed.

@@ -12,7 +12,7 @@ final class NavigationTests: XCTestCase {
 		app = XCUIApplication()
 	}
 
-	func testAvatarStripSwitchesPeopleAndOpensTheAddPage() {
+	func testNavigationAvatarsEditorAndWidgetLinks() {
 		launch()
 		XCTAssertEqual(personName.label, "Alice")
 		XCTAssertTrue(app.buttons["people.avatar.0"].isSelected)
@@ -32,10 +32,6 @@ final class NavigationTests: XCTestCase {
 		checkpoint("navigation-add-page")
 		app.buttons["people.avatar.0"].tap()
 		XCTAssertTrue(waitFor(personName, label: "Alice"))
-	}
-
-	func testLongPressOnThePhotoAndTheEditButtonOpenTheEditor() {
-		launch()
 		app.buttons["people.avatar.1"].tap()
 		XCTAssertTrue(waitFor(personName, label: "Boris"))
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55)).press(forDuration: 1.2)
@@ -46,11 +42,16 @@ final class NavigationTests: XCTestCase {
 		XCTAssertEqual(personName.label, "Boris")
 		edit.tap()
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
+		XCTAssertFalse(save.isEnabled)
 		checkpoint("navigation-edit-button")
+		dismissEditor()
+		app.open(URL(string: "growingup-app://?personID=00000000-0000-0000-0000-000000000006")!)
+		XCTAssertTrue(waitFor(personName, label: "Farah"))
+		checkpoint("widget-sixth-link")
 	}
 
 	private func launch() {
-		let configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .pinned, failNextSave: false, appearance: .dark)
+		let configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: .dark)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", "Dark",

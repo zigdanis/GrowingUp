@@ -131,7 +131,6 @@ class EvidenceTests(unittest.TestCase):
                 PATH=f"{directory}:{os.environ['PATH']}",
                 ARTIFACT_DIR=str(directory),
                 SIM_UDID="existing-simulator",
-                GROWINGUP_VISUAL_CHECKS="1",
                 MOCK_BUILD_STATUS=str(build_status),
                 MOCK_TEST_STATUS=str(test_status),
                 MOCK_RECORD_STATUS=str(record_status),
@@ -175,6 +174,7 @@ class EvidenceTests(unittest.TestCase):
             )
             report = (directory / "index.html").read_text()
             self.assertIn("abc123", report)
+            self.assertIn("<h2>Screenshots</h2>", report)
             self.assertIn("attachments/image%20with%20spaces.png", report)
             self.assertIn("&lt;photo &amp; &quot;crop&quot;&gt;", report)
             self.assertNotIn('<photo & "crop">', report)

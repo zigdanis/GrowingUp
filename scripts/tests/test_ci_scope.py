@@ -63,7 +63,7 @@ class CIScopeTests(unittest.TestCase):
     def test_app_assets_project_packages_tests_harness_workflows_and_unknown_paths_need_ios(self):
         for path in ("Core/Person.swift", "GrowingUp/Assets.xcassets/icon.png", "GrowingUp.xcodeproj/project.pbxproj",
                      "GrowingUp.xcodeproj/xcshareddata/swiftpm/Package.resolved", "GrowingUpTests/PersonTests.swift",
-                     "GrowingUpUITests/Baselines/glass.png", "scripts/run-ui-journeys.sh",
+                     "GrowingUpUITests/JourneyTests.swift", "scripts/run-ui-journeys.sh",
                      "scripts/run-app-store-screenshots.sh", "scripts/ci-scope.py", "scripts/tests/test_ci_scope.py",
                      ".github/workflows/ci.yml", "docs/app-store-demo-photos/baby-girl.png", "unknown/tool.py",
                      "marketing/app-store/screenshots/new.swift", "Gemfile", ".swiftlint.yml"):

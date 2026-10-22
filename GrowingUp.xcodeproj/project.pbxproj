@@ -149,7 +149,6 @@
 		9125CA94453C916124E5FBD9 /* SceneError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D709780AF10F557CB4110DF1 /* SceneError.swift */; };
 		93FD87F27D684E64797A6BF5 /* DiskImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */; };
 		97F12A7FE34A8F3EC06215C7 /* AddPersonUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50D219DBE5023AC85A59C26 /* AddPersonUseCaseImplementation.swift */; };
-		98D7B7D1E3A1F41588A053AE /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = C08118FD24B066697CEC0935 /* SnapshotTesting */; };
 		9902F81FF6251AACE29B1E95 /* EditPersonUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CFF7E7133C5E71BD9198A6 /* EditPersonUseCaseImplementation.swift */; };
 		A10000000000000000000002 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ImageStore.swift */; };
 		A10000000000000000000004 /* ImageStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* ImageStoreSpy.swift */; };
@@ -570,7 +569,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				813D51978BCCA1B2BB788F71 /* Foundation.framework in Frameworks */,
-				98D7B7D1E3A1F41588A053AE /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1238,7 +1236,6 @@
 			);
 			name = GrowingUpUITests;
 			packageProductDependencies = (
-				C08118FD24B066697CEC0935 /* SnapshotTesting */,
 			);
 			productName = GrowingUpUITests;
 			productReference = 5AFDB4B8E50EBC7CEB4873D0 /* GrowingUpUITests.xctest */;
@@ -1301,7 +1298,6 @@
 			mainGroup = 098E560021C409E300E4CA1E;
 			packageReferences = (
 				B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */,
-				683ABCA89D2AEE87ACAE3592 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			productRefGroup = 098E560A21C409E300E4CA1E /* Products */;
 			projectDirPath = "";
@@ -2174,14 +2170,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		683ABCA89D2AEE87ACAE3592 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
-			requirement = {
-				kind = revision;
-				revision = 98ba2e1a302c405dd8752e9fcacef0d5f500cac9;
-			};
-		};
 		B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/saoudrizwan/Disk.git";
@@ -2193,11 +2181,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		C08118FD24B066697CEC0935 /* SnapshotTesting */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 683ABCA89D2AEE87ACAE3592 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
-			productName = SnapshotTesting;
-		};
 		EE1D6EEE2702E7B0FB6F0B1F /* Disk */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */;

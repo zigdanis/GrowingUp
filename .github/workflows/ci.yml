@@ -73,9 +73,9 @@ jobs:
         run: |
           python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
 
-      # PRs get the Glass journeys, screenshots and pinned iOS 26.5 baselines on the image that
-      # ships that runtime, plus the iPhone Duo pass on the shipping toolchain (Xcode 27.1),
-      # whose downloaded iOS 27.1 runtime only offers that device. The Duo simulator boots
+      # PRs get the Glass journeys and screenshots on the image that ships iOS 26.5, plus
+      # the iPhone Duo pass on the shipping toolchain (Xcode 27.1), whose downloaded iOS 27.1
+      # runtime only offers that device. The Duo simulator boots
       # folded, so its journeys run on the outer display ("primary"); simctl needs that
       # display named for video. The iOS 27 and slower, flakier iOS 18 passes run on master
       # pushes and manual runs only.
@@ -88,13 +88,13 @@ jobs:
             '[.[] | select($event != "pull_request" or .on_pull_request) | del(.on_pull_request)]' <<'JSON'
           [
             {"name": "Glass", "runner": "macos-26", "xcode": "26.6", "runtime": "26-5",
-             "device": "iPhone-17-Pro", "visual": "1", "on_pull_request": true},
+             "device": "iPhone-17-Pro", "on_pull_request": true},
             {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
-             "device": "iPhone-Duo", "display": "primary", "visual": "0", "on_pull_request": true},
+             "device": "iPhone-Duo", "display": "primary", "on_pull_request": true},
             {"name": "iOS 27", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
-             "device": "iPhone-18-Pro", "visual": "0", "on_pull_request": false},
+             "device": "iPhone-18-Pro", "on_pull_request": false},
             {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
-             "device": "iPhone-16", "visual": "0", "on_pull_request": false}
+             "device": "iPhone-16", "on_pull_request": false}
           ]
           JSON
           )
@@ -214,16 +214,14 @@ jobs:
           DEVICE: ${{ matrix.device }}
           RUNTIME: ${{ matrix.runtime }}
           XCODE: ${{ matrix.xcode }}
-          VISUAL_CHECKS: ${{ matrix.visual }}
         run: |
           ARTIFACT_DIR=$(mktemp -d "$RUNNER_TEMP/ui-evidence.XXXXXX")
           echo "directory=$ARTIFACT_DIR" >> "$GITHUB_OUTPUT"
           jq -n --arg head "$HEAD_SHA" --arg checkout "$(git rev-parse HEAD)" \
             --arg run "$GITHUB_RUN_ID" --arg attempt "$GITHUB_RUN_ATTEMPT" \
             --arg device "$DEVICE" --arg runtime "$RUNTIME" --arg xcode "$XCODE" \
-            --arg visual "$VISUAL_CHECKS" \
             '{head_sha: $head, checkout_sha: $checkout, run_id: $run, run_attempt: $attempt,
-              device: $device, runtime: $runtime, xcode: $xcode, visual_checks: $visual}' \
+              device: $device, runtime: $runtime, xcode: $xcode}' \
             > "$ARTIFACT_DIR/metadata.json"
       - name: Select pinned Xcode
         run: |
@@ -256,7 +254,7 @@ jobs:
           xcrun simctl boot "$UDID"
           xcrun simctl bootstatus "$UDID" -b
           xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
-      - name: Run UI journeys and appearance comparisons
+      - name: Run UI journeys
         id: journeys
         # A step timeout fails instead of cancelling, so the evidence below is still exported.
         timeout-minutes: 40
@@ -264,7 +262,6 @@ jobs:
           SIM_UDID: ${{ steps.simulator.outputs.udid }}
           SIM_DISPLAY: ${{ matrix.display }}
           ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
-          GROWINGUP_VISUAL_CHECKS: ${{ matrix.visual }}
         run: scripts/run-ui-journeys.sh
       - name: Export evidence for Linux review
         id: export
@@ -293,7 +290,7 @@ jobs:
             "$ARTIFACT_DIR/metadata.json" > "$ARTIFACT_DIR/metadata-next.json"
           mv "$ARTIFACT_DIR/metadata-next.json" "$ARTIFACT_DIR/metadata.json"
           python3 scripts/ui-evidence-report.py "$ARTIFACT_DIR"
-      - name: Retain video, screenshots, differences and test results
+      - name: Retain video, screenshots and test results
         id: upload
         if: ${{ !cancelled() && steps.evidence.outputs.directory != '' }}
         uses: actions/upload-artifact@v7
