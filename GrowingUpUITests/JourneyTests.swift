@@ -137,8 +137,11 @@ final class JourneyTests: XCTestCase {
 
 	func testHomeScreenWidgetSizes() {
 		let names = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
-		for (family, count, appearance) in [("small", 1, UITestAppearance.light), ("medium", 3, .dark), ("large", 6, .light)] {
-			launch(seed: .sixPinned, appearance: appearance, widgetFamily: family)
+		let capacity = ["small": 1, "medium": 3, "large": 6]
+		for (family, seed) in [("small", UITestSeed.sixPinned), ("medium", .sixPinned), ("large", .sixPinned), ("large", .fourPinned)] {
+			let count = seed == .fourPinned ? 4 : capacity[family, default: 0]
+			let appearance: UITestAppearance = family == "medium" || seed == .fourPinned ? .dark : .light
+			launch(seed: seed, appearance: appearance, widgetFamily: family)
 			for (index, name) in names.enumerated() {
 				let person = widgetTile(name)
 				if index < count {
@@ -147,8 +150,9 @@ final class JourneyTests: XCTestCase {
 					XCTAssertFalse(person.exists, "\(family) should show only \(count) people")
 				}
 			}
-			if family == "large" { assertWidgetCaptions(locale: "en") }
-			checkpoint("widget-\(family)-en-\(appearance.launchArgumentValue)")
+			if count == 6 { assertWidgetCaptions(locale: "en") }
+			if count == 4 { assertTwoByTwo(names.prefix(4).map { widgetTile($0).frame }) }
+			checkpoint("widget-\(family)-\(count)-en-\(appearance.launchArgumentValue)")
 			app.terminate()
 		}
 	}
@@ -219,6 +223,17 @@ extension JourneyTests {
 			XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch.waitForExistence(timeout: 10))
 		} else {
 			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		}
+	}
+
+	/// Four people fill a large widget as two equal rows of two, leaving no empty slot.
+	private func assertTwoByTwo(_ frames: [CGRect]) {
+		XCTAssertEqual(frames[0].minY, frames[1].minY, accuracy: 1)
+		XCTAssertEqual(frames[2].minY, frames[3].minY, accuracy: 1)
+		XCTAssertGreaterThanOrEqual(frames[2].minY, frames[0].maxY)
+		for frame in frames {
+			XCTAssertEqual(frame.width, frames[0].width, accuracy: 1)
+			XCTAssertEqual(frame.height, frames[0].height, accuracy: 1)
 		}
 	}
 

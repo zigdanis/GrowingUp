@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
+		C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
+		C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
+		C7A1B2C3D4E5F60718000006 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
+		C7A1B2C3D4E5F60718000008 /* MonogramPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */; };
+		C7A1B2C3D4E5F60718000009 /* MonogramPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */; };
+		C7A1B2C3D4E5F6071800000B /* WidgetTileLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F6071800000A /* WidgetTileLayoutTests.swift */; };
+		C7A1B2C3D4E5F6071800000D /* TileTypeScaleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F6071800000C /* TileTypeScaleTests.swift */; };
+		C7A1B2C3D4E5F6071800000F /* MonogramPictureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F6071800000E /* MonogramPictureTests.swift */; };
 		ED17B50F84B6DD961CCD3331 /* ChipToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */; };
 		ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */; };
 		ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177A5032D09303945B40C8 /* PersonEditorHero.swift */; };
@@ -301,6 +310,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayout.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScale.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicture.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F6071800000A /* WidgetTileLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayoutTests.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F6071800000C /* TileTypeScaleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScaleTests.swift; sourceTree = "<group>"; };
+		C7A1B2C3D4E5F6071800000E /* MonogramPictureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPictureTests.swift; sourceTree = "<group>"; };
 		ED17E3A6CEB9C31E85144266 /* ChipToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipToggleStyle.swift; sourceTree = "<group>"; };
 		ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorChips.swift; sourceTree = "<group>"; };
 		ED177A5032D09303945B40C8 /* PersonEditorHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorHero.swift; sourceTree = "<group>"; };
@@ -603,6 +618,9 @@
 				DB8E4ADC94B5F16A85B345C9 /* AgeWidgetBackground.swift */,
 				8F534C5903772A74D4B5DAE0 /* PersonPhotoBackground.swift */,
 				B1C2D3E4F5061728394A5B6C /* PhotoScrim.swift */,
+				C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */,
+				C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */,
+				C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */,
 				D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */,
 				E9A6291E7B63A68981734E8F /* PersonTileContent.swift */,
 				44CBA49908C60651E19B76C4 /* WidgetPerson.swift */,
@@ -809,6 +827,9 @@
 			isa = PBXGroup;
 			children = (
 				B60000000000000000000026 /* WidgetPersonLoaderTests.swift */,
+				C7A1B2C3D4E5F6071800000A /* WidgetTileLayoutTests.swift */,
+				C7A1B2C3D4E5F6071800000C /* TileTypeScaleTests.swift */,
+				C7A1B2C3D4E5F6071800000E /* MonogramPictureTests.swift */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -1400,6 +1421,9 @@
 				A6A0189F74C35172B3B04AAC /* PersonTileContent.swift in Sources */,
 				76D1A74873FDD19C497FF93A /* PersonPhotoBackground.swift in Sources */,
 				B1C2D3E4F5061728394A5B6D /* PhotoScrim.swift in Sources */,
+				C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */,
+				C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */,
+				C7A1B2C3D4E5F60718000008 /* MonogramPicture.swift in Sources */,
 				C411E373929F1EEB97B03106 /* AgeWidgetBackground.swift in Sources */,
 				1D964F8ABA95E1776260F674 /* WidgetPerson.swift in Sources */,
 				B60000000000000000000006 /* WidgetPersonLoader.swift in Sources */,
@@ -1490,6 +1514,9 @@
 				B60000000000000000000023 /* LockScreenTextTests.swift in Sources */,
 				B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */,
 				B60000000000000000000027 /* WidgetPersonLoaderTests.swift in Sources */,
+				C7A1B2C3D4E5F6071800000B /* WidgetTileLayoutTests.swift in Sources */,
+				C7A1B2C3D4E5F6071800000D /* TileTypeScaleTests.swift in Sources */,
+				C7A1B2C3D4E5F6071800000F /* MonogramPictureTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
@@ -1529,6 +1556,9 @@
 				CF72D8C399272D69A96B8E11 /* PersonTileContent.swift in Sources */,
 				2340E4CB53BAB3DE5B682AAD /* PersonPhotoBackground.swift in Sources */,
 				B1C2D3E4F5061728394A5B6E /* PhotoScrim.swift in Sources */,
+				C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */,
+				C7A1B2C3D4E5F60718000006 /* TileTypeScale.swift in Sources */,
+				C7A1B2C3D4E5F60718000009 /* MonogramPicture.swift in Sources */,
 				EA1BDDD800E93CBA02F7B894 /* AgeWidgetBackground.swift in Sources */,
 				A50000000000000000000005 /* WidgetPerson.swift in Sources */,
 				B60000000000000000000007 /* WidgetPersonLoader.swift in Sources */,
@@ -2048,7 +2078,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift WidgetTileLayout.swift TileTypeScale.swift MonogramPicture.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

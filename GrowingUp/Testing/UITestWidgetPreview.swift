@@ -68,8 +68,8 @@
 					.environment(\.colorScheme, .dark)
 			} else {
 				// Outside WidgetKit there is no container background, so the widget background is drawn directly.
+				// Like the widget, which disables content margins, the tiles reach the rounded edges.
 				AgeWidgetContentView(entry: entry, family: family)
-					.padding(16)
 					.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
 					.background { AgeWidgetBackground(entry: entry, family: family) }
 					.background(.background)

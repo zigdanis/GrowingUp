@@ -25,7 +25,12 @@
 			var widgetPictures: [UUID] = []
 			try context.performAndWait {
 				let access = try AccessToWidget.sharedInstance(in: context)
-				let names = seed == .sixPinned ? ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"] : ["Alice", "Boris", "Clara"]
+				let six = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
+				let names = switch seed {
+				case .sixPinned: six
+				case .fourPinned: Array(six.prefix(4))
+				default: Array(six.prefix(3))
+				}
 				for (index, name) in names.enumerated() {
 					let person = CoreDataPerson(context: context)
 					person.id = String(format: "00000000-0000-0000-0000-%012d", index + 1)
@@ -36,9 +41,9 @@
 						let day = index == 0 ? 16 : 15
 						person.birthdate = Calendar.current.date(from: DateComponents(year: 2020, month: month, day: day, hour: 6, minute: 30))!
 					}
-					if seed == .sixPinned {
+					if seed == .sixPinned || seed == .fourPinned {
 						person.birthdate = Calendar.current.date(byAdding: UITestStore.sixPinnedAges[index], to: now)!
-						// Clara and Farah keep the placeholder face so the widget shows both tile styles.
+						// Clara and Farah have no photo, so the widget shows both photo and monogram tiles.
 						if ![2, 5].contains(index) {
 							let picture = UUID()
 							person.widgetPicId = picture.uuidString

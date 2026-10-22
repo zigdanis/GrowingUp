@@ -1,25 +1,21 @@
-import Core
 import SwiftUI
 import WidgetKit
 
+/// The pinned people as photo tiles that fill the widget edge to edge, split into rows by `WidgetTileLayout`.
 struct AgeWidgetContentView: View {
 	let entry: AgeEntry
 	let family: WidgetFamily
 
-	private static let columns = 3
+	/// The gap between tiles, which shows the widget background as a thin seam.
+	private static let seam: CGFloat = 2
 
 	var body: some View {
 		if entry.persons.isEmpty {
-			EmptyWidgetView()
+			EmptyWidgetView(isCompact: family == .systemSmall)
+		} else if family == .systemSmall {
+			smallView
 		} else {
-			switch family {
-			case .systemSmall:
-				smallView
-			case .systemLarge:
-				largeView
-			default:
-				mediumView
-			}
+			tiles
 		}
 	}
 
@@ -30,29 +26,13 @@ struct AgeWidgetContentView: View {
 			.widgetURL(person.deepLinkURL)
 	}
 
-	// Up to three photo tiles side by side, each independently tappable.
-	private var mediumView: some View {
-		HStack(spacing: 8) {
-			ForEach(entry.persons.prefix(Self.columns)) { person in
-				link(to: person)
-			}
-		}
-	}
-
-	// Up to six equally sized tiles in rows of three, preserving the provider's deep-link indices.
-	private var largeView: some View {
-		let persons = Array(entry.persons.prefix(Constants.widgetPeopleLimit))
-		let rows = Constants.widgetPeopleLimit / Self.columns
-		return Grid(horizontalSpacing: 8, verticalSpacing: 8) {
-			ForEach(0..<rows, id: \.self) { row in
-				GridRow {
-					ForEach(0..<Self.columns, id: \.self) { column in
-						let index = row * Self.columns + column
-						if index < persons.count {
-							link(to: persons[index])
-						} else {
-							Color.clear
-						}
+	// Rows of independently tappable tiles in pinned order, so each keeps its deep link.
+	private var tiles: some View {
+		VStack(spacing: Self.seam) {
+			ForEach(WidgetTileLayout.rows(count: entry.persons.count, family: family), id: \.lowerBound) { row in
+				HStack(spacing: Self.seam) {
+					ForEach(entry.persons[row]) { person in
+						link(to: person)
 					}
 				}
 			}
