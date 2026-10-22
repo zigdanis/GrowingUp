@@ -12,12 +12,16 @@ enum PhotoScrim {
 	///
 	/// The side is the shorter side of `image`. Widget pictures are stored a pixel off square, and a photo that is not exactly square
 	/// would be laid out wider than its tile and widen the tile's accessibility frame.
+	///
+	/// The result is drawn in standard range. On an iPhone 16 Pro the default format drew 16-bit float extended-range pixels, and archiving
+	/// a timeline with those photos took the extension past its 30 MB memory limit, so the widget stayed on its placeholder.
 	static func apply(to image: UIImage) -> UIImage {
 		let side = min(image.size.width, image.size.height)
 		let bounds = CGRect(x: 0, y: 0, width: side, height: side)
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = image.scale
 		format.opaque = true
+		format.preferredRange = .standard
 		return UIGraphicsImageRenderer(size: bounds.size, format: format).image { context in
 			let origin = CGPoint(x: (side - image.size.width) / 2, y: (side - image.size.height) / 2)
 			image.draw(in: CGRect(origin: origin, size: image.size))
