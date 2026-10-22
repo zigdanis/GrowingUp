@@ -17,10 +17,9 @@ enum MonogramPicture {
 		format.preferredRange = .standard
 		return UIGraphicsImageRenderer(size: bounds.size, format: format).image { context in
 			let hue = hue(for: id)
-			let colors = [
-				UIColor(hue: hue, saturation: 0.6, brightness: 0.82, alpha: 1),
-				UIColor(hue: (hue + 0.8).truncatingRemainder(dividingBy: 1), saturation: 0.7, brightness: 0.62, alpha: 1)
-			].map(\.cgColor) as CFArray
+			let start = UIColor(hue: hue, saturation: 0.6, brightness: 0.82, alpha: 1).cgColor
+			let end = UIColor(hue: (hue + 0.8).truncatingRemainder(dividingBy: 1), saturation: 0.7, brightness: 0.62, alpha: 1).cgColor
+			let colors = [start, end] as CFArray
 			if let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: colors, locations: nil) {
 				context.cgContext.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: side, y: side), options: [])
 			}

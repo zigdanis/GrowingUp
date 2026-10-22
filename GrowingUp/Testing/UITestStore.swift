@@ -25,12 +25,8 @@
 			var widgetPictures: [UUID] = []
 			try context.performAndWait {
 				let access = try AccessToWidget.sharedInstance(in: context)
-				let six = ["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"]
-				let names = switch seed {
-				case .sixPinned: six
-				case .fourPinned: Array(six.prefix(4))
-				default: Array(six.prefix(3))
-				}
+				let counts: [UITestSeed: Int] = [.sixPinned: 6, .fourPinned: 4]
+				let names = Array(["Alice", "Boris", "Clara", "Daria", "Evan", "Farah"].prefix(counts[seed, default: 3]))
 				for (index, name) in names.enumerated() {
 					let person = CoreDataPerson(context: context)
 					person.id = String(format: "00000000-0000-0000-0000-%012d", index + 1)
