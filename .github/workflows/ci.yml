@@ -73,8 +73,12 @@ jobs:
         run: |
           python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
 
-      # PRs get the Glass journeys and their screenshots. The slower, flakier
-      # iOS 18 pass runs on master pushes and manual runs only.
+      # PRs get the Glass journeys and screenshots on the image that ships iOS 26.5, plus
+      # the iPhone Duo pass on the shipping toolchain (Xcode 27.1), whose downloaded iOS 27.1
+      # runtime only offers that device. The Duo simulator boots
+      # folded, so its journeys run on the outer display ("primary"); simctl needs that
+      # display named for video. The iOS 27 and slower, flakier iOS 18 passes run on master
+      # pushes and manual runs only.
       - name: Choose UI devices
         id: ui
         env:
@@ -85,6 +89,10 @@ jobs:
           [
             {"name": "Glass", "runner": "macos-26", "xcode": "26.6", "runtime": "26-5",
              "device": "iPhone-17-Pro", "on_pull_request": true},
+            {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
+             "device": "iPhone-Duo", "display": "primary", "on_pull_request": true},
+            {"name": "iOS 27", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
+             "device": "iPhone-18-Pro", "on_pull_request": false},
             {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
              "device": "iPhone-16", "on_pull_request": false}
           ]
@@ -105,12 +113,12 @@ jobs:
     name: Swift Format
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
 
       - name: Check formatting
         run: |
@@ -138,12 +146,12 @@ jobs:
     name: Build & Test
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: macos-26
+    runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode.app
+        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
 
       - name: Show versions
         run: |
@@ -196,7 +204,7 @@ jobs:
       matrix:
         include: ${{ fromJSON(needs.changes.outputs.ui_matrix) }}
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 35
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v7
       - name: Prepare evidence directory
@@ -220,16 +228,26 @@ jobs:
           test -d "/Applications/Xcode_${{ matrix.xcode }}.app"
           sudo xcode-select -switch "/Applications/Xcode_${{ matrix.xcode }}.app"
           xcodebuild -version
-      - name: Prepare existing simulator
+      - name: Prepare simulator
         id: simulator
         run: |
           RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-${{ matrix.runtime }}"
           DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.${{ matrix.device }}"
+          if ! xcrun simctl list runtimes available --json \
+            | jq -e --arg runtime "$RUNTIME" '.runtimes[] | select(.identifier == $runtime)' > /dev/null; then
+            VERSION="${{ matrix.runtime }}"
+            for ATTEMPT in 1 2 3; do
+              xcodebuild -downloadPlatform iOS -buildVersion "${VERSION//-/.}" && break
+              test "$ATTEMPT" -lt 3 || { echo "Could not download the iOS $VERSION runtime"; exit 1; }
+              sleep 30
+            done
+          fi
           UDID=$(xcrun simctl list devices available --json \
             | jq -r --arg runtime "$RUNTIME" --arg deviceType "$DEVICE_TYPE" \
               '.devices[$runtime][]? | select(.isAvailable and .deviceTypeIdentifier == $deviceType) | .udid' \
             | head -n 1)
-          test -n "$UDID" || { echo "No existing ${{ matrix.device }} simulator for $RUNTIME"; exit 1; }
+          # Downloaded runtimes come without devices.
+          test -n "$UDID" || UDID=$(xcrun simctl create "${{ matrix.device }}" "$DEVICE_TYPE" "$RUNTIME")
           xcrun simctl shutdown "$UDID" 2>/dev/null || true
           xcrun simctl erase "$UDID"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
@@ -238,8 +256,11 @@ jobs:
           xcrun simctl status_bar "$UDID" override --time '9:41' --dataNetwork wifi --wifiMode active --wifiBars 3 --batteryState charged --batteryLevel 100
       - name: Run UI journeys
         id: journeys
+        # A step timeout fails instead of cancelling, so the evidence below is still exported.
+        timeout-minutes: 40
         env:
           SIM_UDID: ${{ steps.simulator.outputs.udid }}
+          SIM_DISPLAY: ${{ matrix.display }}
           ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
         run: scripts/run-ui-journeys.sh
       - name: Export evidence for Linux review

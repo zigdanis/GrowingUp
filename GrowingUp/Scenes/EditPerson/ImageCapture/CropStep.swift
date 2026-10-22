@@ -2,7 +2,8 @@
 //  CropStep.swift
 //  GrowingUp
 //
-//  Pan/zoom cropper: image aspect-fills at min zoom; crop frame is full screen (main) or a circular safe-area guide (widget).
+//  Pan/zoom cropper: image aspect-fills at min zoom; crop frame is full screen, or a centered portrait column in wider
+//  windows (main), or a circular safe-area guide (widget).
 //
 
 import SwiftUI
@@ -28,6 +29,9 @@ struct CropStep: View {
 	let maxZoom: CGFloat = 6
 	/// Gap between the circular guide and the safe-area edges.
 	let framePadding: CGFloat = 14
+	/// The widest width-to-height ratio of a main picture. iPhone screens and the closed iPhone Duo crop full screen;
+	/// wider windows crop a centered column, so every main picture stays portrait.
+	let maxMainAspect: CGFloat = 0.7
 
 	init(
 		image: UIImage,
@@ -72,7 +76,11 @@ struct CropStep: View {
 		let insets = Self.windowSafeInsets
 		containerSize = full
 		safeInsets = insets
-		let settled = clampOffset(offset, scale: scale, container: full, insets: insets)
+		// A resized window (e.g. an iPhone Duo folding) can need more zoom to keep the circular frame covered.
+		let settledScale = min(max(scale, minScale(in: full, insets: insets)), maxZoom)
+		let settled = clampOffset(offset, scale: settledScale, container: full, insets: insets)
+		scale = settledScale
+		lastScale = settledScale
 		offset = settled
 		lastOffset = settled
 	}
@@ -127,10 +135,26 @@ struct CropStep: View {
 					.position(x: frame.midX, y: frame.midY)
 			}
 			.allowsHitTesting(false)
-		} else if isGesturing {
-			// Main picture crops full-screen: no surround, just a thirds guide.
-			thirdsGrid(frame)
-				.allowsHitTesting(false)
+		} else {
+			ZStack {
+				// A column narrower than the window gets the circle guide's mask and outline.
+				if frame.width < containerSize.width {
+					Path { path in
+						path.addRect(CGRect(origin: .zero, size: containerSize))
+						path.addRect(frame)
+					}
+					.fill(Color.black.opacity(0.5), style: FillStyle(eoFill: true))
+					Rectangle()
+						.stroke(.white.opacity(0.9), lineWidth: 1)
+						.frame(width: frame.width, height: frame.height)
+						.position(x: frame.midX, y: frame.midY)
+				}
+				// A thirds guide while the picture moves.
+				if isGesturing {
+					thirdsGrid(frame)
+				}
+			}
+			.allowsHitTesting(false)
 		}
 	}
 
@@ -224,11 +248,16 @@ struct CropStep: View {
 // MARK: - Geometry & crop math
 
 extension CropStep {
-	/// Region that stays covered and gets cropped. Rectangle: full screen. Circle: a square centred in the safe area.
+	/// Region that stays covered and gets cropped. Rectangle: full screen, or a full-height column centred in windows
+	/// wider than `maxMainAspect`. Circle: a square centred in the safe area.
 	func frameRect(in container: CGSize, insets: EdgeInsets) -> CGRect {
 		guard container.width > 0, container.height > 0 else { return .zero }
 		guard shape.isCircular else {
-			return CGRect(origin: .zero, size: container)
+			guard container.width / container.height > maxMainAspect else {
+				return CGRect(origin: .zero, size: container)
+			}
+			let width = container.height * maxMainAspect
+			return CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
 		}
 		let availX = insets.leading + framePadding
 		let availY = insets.top + framePadding

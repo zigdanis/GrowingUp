@@ -62,9 +62,13 @@ final class NavigationTests: XCTestCase {
 	}
 
 	private func dismissEditor() {
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 		let navigation = app.navigationBars.firstMatch
-		XCTAssertTrue(navigation.waitForExistence(timeout: 5))
-		let start = navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+		// iPhone Duo's outer display shows the sheet's bar vertically, so the drag starts at the top of the sheet there.
+		let start =
+			navigation.exists && navigation.frame.width > navigation.frame.height
+			? navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+			: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.12))
 		start.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}

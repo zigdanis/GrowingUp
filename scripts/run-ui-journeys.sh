@@ -22,8 +22,9 @@ trap stop_recording EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
-xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 "$ARTIFACT_DIR/journeys.mp4" \
-  > "$ARTIFACT_DIR/recording.log" 2>&1 &
+# Devices with several screens, such as iPhone Duo, record only the one named in SIM_DISPLAY.
+xcrun simctl io "$SIM_UDID" recordVideo --codec=h264 ${SIM_DISPLAY:+"--display=$SIM_DISPLAY"} \
+  "$ARTIFACT_DIR/journeys.mp4" > "$ARTIFACT_DIR/recording.log" 2>&1 &
 RECORDER_PID=$!
 
 # Wait for simctl to attach before allowing the first app interaction.
@@ -36,8 +37,9 @@ grep -q 'Recording started' "$ARTIFACT_DIR/recording.log" \
   || { echo 'Simulator video recording did not start within 30 seconds.' >&2; exit 1; }
 
 TEST_STATUS=0
+# Skipping diagnostics collection keeps a failing journey from stalling the run for minutes.
 xcodebuild test-without-building -project GrowingUp.xcodeproj -scheme GrowingUpUI \
-  -destination "id=$SIM_UDID" -parallel-testing-enabled NO \
+  -destination "id=$SIM_UDID" -parallel-testing-enabled NO -collect-test-diagnostics never \
   -resultBundlePath "$ARTIFACT_DIR/UI.xcresult" \
   CODE_SIGNING_ALLOWED=NO | tee "$ARTIFACT_DIR/xcodebuild.log" || TEST_STATUS=$?
 

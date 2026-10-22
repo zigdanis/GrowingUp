@@ -201,6 +201,9 @@ platform :ios do
       unless info['CFBundleShortVersionString'] == record.fetch('version') && info['CFBundleVersion'] == record.fetch('build_number')
         UI.user_error!('Archived app/widget version or build number differs from release receipt')
       end
+      unless info['DTPlatformName'] == 'iphoneos' && Gem::Version.new(info['DTPlatformVersion'].to_s) >= Gem::Version.new(TestflightRelease::MINIMUM_SDK)
+        UI.user_error!("Archive must be built with the iOS #{TestflightRelease::MINIMUM_SDK} SDK or later; select Xcode #{TestflightRelease::MINIMUM_SDK} or newer")
+      end
     end
   end
 end

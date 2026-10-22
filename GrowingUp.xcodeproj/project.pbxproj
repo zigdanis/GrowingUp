@@ -207,6 +207,8 @@
 		0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015B5F413251C88922327A /* AgeTicker.swift */; };
 		143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */; };
 		3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */; };
+		2DEDF34AED6A1CE0079B1FA8 /* PersonPageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */; };
+		982A9A1BA0392809E28C4877 /* PeoplePageID.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1A43410FB908023DC9F51A /* PeoplePageID.swift */; };
 		55095DA496B16231CA9D9463 /* BirthdayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747763C8209752813AD713 /* BirthdayCard.swift */; };
 		DC2BDE64469CCED7BCE572D2 /* GlassCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */; };
 		FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */; };
@@ -230,6 +232,8 @@
 		6747B0105AB9794EE45BD2BF /* AgeTimelineScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */; };
 		1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */; };
 		B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */; };
+		311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */; };
+		C33A5EEDBB6A7097145958AE /* PeoplePageIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */; };
 		9D9F4D044A85D60A5BED0B06 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 		788DE405402CE74376AD1024 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 		AE3C6D308BB54317A5AA4DF0 /* PersistentStoreRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */; };
@@ -496,6 +500,8 @@
 		A0015B5F413251C88922327A /* AgeTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTicker.swift; sourceTree = "<group>"; };
 		6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCountdown.swift; sourceTree = "<group>"; };
 		D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAgeCard.swift; sourceTree = "<group>"; };
+		74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPageLayout.swift; sourceTree = "<group>"; };
+		EC1A43410FB908023DC9F51A /* PeoplePageID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeoplePageID.swift; sourceTree = "<group>"; };
 		FD747763C8209752813AD713 /* BirthdayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCard.swift; sourceTree = "<group>"; };
 		CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCardChrome.swift; sourceTree = "<group>"; };
 		F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCapsuleButtonChrome.swift; sourceTree = "<group>"; };
@@ -514,6 +520,8 @@
 		720D1A6E08F6D9396285052E /* AgeTimelineScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTimelineScheduleTests.swift; sourceTree = "<group>"; };
 		A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContentTests.swift; sourceTree = "<group>"; };
 		B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrimTests.swift; sourceTree = "<group>"; };
+		0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPageLayoutTests.swift; sourceTree = "<group>"; };
+		AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeoplePageIDTests.swift; sourceTree = "<group>"; };
 		0B3DB4282041C5288DAF9987 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widget.strings; sourceTree = "<group>"; };
 		C7A0465B1865B8FD8AF5EC84 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Widget.strings; sourceTree = "<group>"; };
 		6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStoreRecovery.swift; sourceTree = "<group>"; };
@@ -901,6 +909,8 @@
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
 				B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */,
+				0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */,
+				AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 				6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
@@ -1028,6 +1038,8 @@
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
 				D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */,
+				74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */,
+				EC1A43410FB908023DC9F51A /* PeoplePageID.swift */,
 				FD747763C8209752813AD713 /* BirthdayCard.swift */,
 				CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */,
 				F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */,
@@ -1492,6 +1504,8 @@
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
 				1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */,
 				B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */,
+				311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */,
+				C33A5EEDBB6A7097145958AE /* PeoplePageIDTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 				3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
@@ -1596,6 +1610,8 @@
 				0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */,
 				143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */,
 				3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */,
+				2DEDF34AED6A1CE0079B1FA8 /* PersonPageLayout.swift in Sources */,
+				982A9A1BA0392809E28C4877 /* PeoplePageID.swift in Sources */,
 				55095DA496B16231CA9D9463 /* BirthdayCard.swift in Sources */,
 				DC2BDE64469CCED7BCE572D2 /* GlassCardChrome.swift in Sources */,
 				FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */,

@@ -6,7 +6,7 @@
 //  Copyright © 2019-2026 Danis Ziganshin.
 //
 
-import Disk
+@preconcurrency import Disk
 import Foundation
 import ImageIO
 import UIKit

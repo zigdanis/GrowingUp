@@ -6,7 +6,8 @@
   "maximumBlankLines": 1,
   "multiElementCollectionTrailingCommas": false,
   "orderedImports": {
-    "includeConditionalImports": false
+    "includeConditionalImports": false,
+    "shouldGroupImports": true
   },
   "respectsExistingLineBreaks": true,
   "rules": {

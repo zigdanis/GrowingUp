@@ -11,6 +11,8 @@ require 'time'
 class TestflightRelease
   APP_ID = 'pro.ziganshin.GrowingUp'
   WIDGET_ID = "#{APP_ID}.Widget"
+  # The first SDK whose builds fill iPhone Duo's displays instead of running letterboxed.
+  MINIMUM_SDK = '27.1'
   PREFIX = 'testflight/receipts/'
   ALLOCATION_REF = 'tags/testflight/allocation-lock'
   class GithubError < StandardError

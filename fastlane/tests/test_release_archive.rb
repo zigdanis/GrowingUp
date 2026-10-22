@@ -16,7 +16,8 @@ Dir.mktmpdir('growingup-archive-test-') do |archive|
     plist.value = CFPropertyList.guess('CFBundleIdentifier' => identifier,
                                      'CFBundleShortVersionString' => record['version'],
                                      'CFBundleVersion' => record['build_number'],
-                                     'CFBundleDisplayName' => 'GrowingUp 🌱')
+                                     'CFBundleDisplayName' => 'GrowingUp 🌱',
+                                     'DTPlatformName' => 'iphoneos', 'DTPlatformVersion' => '27.1')
     plist.save(File.join(directory, 'Info.plist'), CFPropertyList::List::FORMAT_BINARY)
   end
 
@@ -31,6 +32,19 @@ Dir.mktmpdir('growingup-archive-test-') do |archive|
     raise 'Archive verification accepted a widget with the wrong build number'
   rescue FastlaneCore::Interface::FastlaneError => error
     raise unless error.message.include?('version or build number differs')
+  end
+
+  [app, widget].each do |directory|
+    plist = CFPropertyList::List.new(file: File.join(directory, 'Info.plist'))
+    data = CFPropertyList.native_types(plist.value).merge('CFBundleVersion' => '26', 'DTPlatformVersion' => '26.5')
+    plist.value = CFPropertyList.guess(data)
+    plist.save(File.join(directory, 'Info.plist'), CFPropertyList::List::FORMAT_BINARY)
+  end
+  begin
+    fastfile.verify_release_archive(archive, record)
+    raise 'Archive verification accepted an app built with an SDK that letterboxes on iPhone Duo'
+  rescue FastlaneCore::Interface::FastlaneError => error
+    raise unless error.message.include?('iOS 27.1 SDK or later')
   end
 end
 puts 'Binary archive verification checks passed.'
