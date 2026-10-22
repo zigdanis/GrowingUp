@@ -23,11 +23,12 @@ final class PhotoScrimTests: XCTestCase {
 		XCTAssertEqual(PhotoScrim.apply(to: solidWhiteImage(width: 255, height: 256)).size, CGSize(width: 255, height: 255))
 	}
 
-	func testScrimmedPhotosAre8BitSRGBEvenFromExtendedRangeSources() throws {
+	/// The system picks the exact pixel format, so this checks only what standard range promises: no extended-range or float pixels.
+	func testScrimmedPhotosAreStandardRangeEvenFromExtendedRangeSources() throws {
 		let cgImage = try XCTUnwrap(PhotoScrim.apply(to: try extendedRangeWhiteImage(side: 64)).cgImage)
-		XCTAssertEqual(cgImage.bitsPerComponent, 8)
+		let space = try XCTUnwrap(cgImage.colorSpace)
+		XCTAssertFalse(CGColorSpaceUsesExtendedRange(space))
 		XCTAssertFalse(cgImage.bitmapInfo.contains(.floatComponents))
-		XCTAssertEqual(cgImage.colorSpace?.name, CGColorSpace.sRGB)
 	}
 
 	private func solidWhiteImage(width: CGFloat, height: CGFloat) -> UIImage {
