@@ -60,7 +60,13 @@ final class NavigationTests: XCTestCase {
 		XCTAssertLessThanOrEqual(edit.frame.maxY, app.frame.maxY)
 		checkpoint("large-text-overview")
 		app.buttons["people.avatar.add"].tap()
-		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
+		let add = app.buttons["person.add"]
+		XCTAssertTrue(add.waitForExistence(timeout: 5))
+		// The invitation scrolls in the space above the strip, so its button can always be brought clear of it.
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+			.press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02)))
+		XCTAssertTrue(add.isHittable)
+		XCTAssertLessThanOrEqual(add.frame.maxY, app.buttons["people.avatar.0"].frame.minY)
 		checkpoint("large-text-add-page")
 	}
 

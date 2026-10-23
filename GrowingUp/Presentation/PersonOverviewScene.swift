@@ -95,7 +95,8 @@ struct PersonOverviewScene: View {
 				ScrollView { ageCard }
 					.scrollBounceBehavior(.basedOnSize)
 			}
-			.frame(maxHeight: maxAgeHeight, alignment: .top)
+			// The minimum keeps the age readable when the card, which is served first, would take the whole window.
+			.frame(minHeight: 120, maxHeight: maxAgeHeight, alignment: .top)
 			// Second after the card: the age takes the height the card leaves, scrolling when it does not fit.
 			.layoutPriority(1)
 			// Leaves room for the avatar strip that floats above the card.
