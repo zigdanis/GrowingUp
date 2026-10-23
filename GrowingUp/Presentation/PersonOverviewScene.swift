@@ -4,8 +4,10 @@ import SwiftUI
 struct PersonOverviewScene: View {
 	let person: Person
 	let isSelected: Bool
+	/// Opens the editor; a tap anywhere on the page does it, as there is no visible button.
 	let onEdit: () -> Void
-	let onCardHeightChange: (CGFloat) -> Void
+	/// Returns to the mosaic, for VoiceOver's escape gesture and actions.
+	let onClose: () -> Void
 	let safeAreaInsets: EdgeInsets
 	let layout: PersonPageLayout
 	/// The whole window, safe areas included, since the page draws edge to edge.
@@ -13,18 +15,17 @@ struct PersonOverviewScene: View {
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
 	@State private var burstStarted: Date?
-	@State private var editPresses = 0
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 
 	init(
 		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
-		pageSize: CGSize, onEdit: @escaping () -> Void, onCardHeightChange: @escaping (CGFloat) -> Void
+		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void
 	) {
 		self.person = person
 		self.isSelected = isSelected
 		self.onEdit = onEdit
-		self.onCardHeightChange = onCardHeightChange
+		self.onClose = onClose
 		self.safeAreaInsets = safeAreaInsets
 		self.layout = layout
 		self.pageSize = pageSize
@@ -62,7 +63,9 @@ struct PersonOverviewScene: View {
 			}
 		}
 		.ignoresSafeArea(.container)
-		.sensoryFeedback(.impact(weight: .medium), trigger: editPresses)
+		// The whole page is the way into the editor; a tap never competes with the pager's swipes or the zoom's drag down.
+		.contentShape(Rectangle())
+		.onTapGesture(perform: onEdit)
 		.onChange(of: presenter.celebrationID) { _, _ in
 			burstStarted = reduceMotion ? nil : Date()
 		}
@@ -90,23 +93,16 @@ struct PersonOverviewScene: View {
 	private func pageContent(maxAgeHeight: CGFloat? = nil) -> some View {
 		VStack(spacing: 0) {
 			ViewThatFits(in: .vertical) {
-				// Lets a long press on the age reach the photo below.
-				ageCard.allowsHitTesting(false)
+				ageCard
 				ScrollView { ageCard }
 					.scrollBounceBehavior(.basedOnSize)
 			}
 			.frame(maxHeight: maxAgeHeight, alignment: .top)
 			.layoutPriority(1)
-			// Leaves room for the avatar strip that floats above the card.
-			Spacer(minLength: 72)
-			BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit, isShown: isSelected)
-				.padding(.horizontal, 16)
-				.padding(.bottom, 12)
-				.onGeometryChange(for: CGFloat.self) { proxy in
-					proxy.size.height
-				} action: { height in
-					onCardHeightChange(height)
-				}
+			Spacer(minLength: 24)
+			BirthdayLine(birthdayText: presenter.birthdayText, isShown: isSelected)
+				.padding(.horizontal, 24)
+				.padding(.bottom, 16)
 		}
 		.padding(.top, safeAreaInsets.top + 16)
 		.padding(.bottom, safeAreaInsets.bottom)
@@ -117,12 +113,6 @@ struct PersonOverviewScene: View {
 			if layout == .landscape { panes } else { photo }
 		}
 		.accessibilityHidden(true)
-		.contentShape(Rectangle())
-		// A secondary way into the editor; the Edit button is the visible and accessible one.
-		.onLongPressGesture {
-			editPresses += 1
-			onEdit()
-		}
 	}
 
 	private var photo: some View {
@@ -177,7 +167,7 @@ struct PersonOverviewScene: View {
 		LinearGradient(colors: [.indigo, .black], startPoint: .topLeading, endPoint: .bottomTrailing)
 	}
 
-	/// Darkens the top behind the age and, more strongly, the bottom behind the strip and card,
+	/// Darkens the top behind the age and, more strongly, the bottom behind the birthday line,
 	/// so white text stays readable on very light photos.
 	private var scrim: some View {
 		LinearGradient(
@@ -197,6 +187,12 @@ struct PersonOverviewScene: View {
 			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge,
 			isShown: isSelected
 		)
+		// VoiceOver reaches the editor and the mosaic through the age, the page's main element; activating it edits,
+		// like a tap anywhere on the page.
+		.accessibilityAction(.default, onEdit)
+		.accessibilityAction(named: Text("Edit"), onEdit)
+		.accessibilityAction(named: Text("All people"), onClose)
+		.accessibilityAction(.escape, onClose)
 		.padding(.horizontal, 24)
 	}
 }

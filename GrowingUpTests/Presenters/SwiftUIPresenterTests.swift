@@ -16,6 +16,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=5")!)
 		await presenter.load()
 		XCTAssertEqual(presenter.selectedID, pinned[5].id)
+		XCTAssertTrue(presenter.isViewing, "A widget link opens the person over the mosaic")
 		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=-1")!)
 		XCTAssertEqual(presenter.selectedID, pinned[5].id)
 	}
@@ -44,13 +45,15 @@ final class SwiftUIPresenterTests: XCTestCase {
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
 		presenter.open(URL(string: "growingup-app://?personID=\(UUID().uuidString)&personIndex=1")!)
 		await presenter.load()
-		XCTAssertEqual(presenter.selectedID, pinned[0].id)
+		XCTAssertNil(presenter.selectedID)
+		XCTAssertFalse(presenter.isViewing)
 		for value in [UUID().uuidString, "invalid"] {
 			presenter.open(URL(string: "growingup-app://?personID=\(value)&personIndex=1")!)
-			XCTAssertEqual(presenter.selectedID, pinned[0].id)
+			XCTAssertFalse(presenter.isViewing)
 		}
 		presenter.open(URL(string: "growingup-app://?personIndex=1")!)
 		XCTAssertEqual(presenter.selectedID, pinned[1].id)
+		XCTAssertTrue(presenter.isViewing)
 	}
 
 	func testStaleWidgetLinkAfterRemovalDoesNotSelectReplacement() async {

@@ -39,10 +39,12 @@
 					}
 					if seed == .sixPinned || seed == .fourPinned {
 						person.birthdate = Calendar.current.date(byAdding: UITestStore.sixPinnedAges[index], to: now)!
-						// Clara and Farah have no photo, so the widget shows both photo and monogram tiles.
+						// Clara and Farah have no photo, so the widget shows both photo and monogram tiles. The others share
+						// one portrait fixture as widget and app photo, so a mosaic tile and its full-screen page match.
 						if ![2, 5].contains(index) {
 							let picture = UUID()
 							person.widgetPicId = picture.uuidString
+							person.appPicId = picture.uuidString
 							widgetPictures.append(picture)
 						}
 					}
