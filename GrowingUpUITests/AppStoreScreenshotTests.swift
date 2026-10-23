@@ -176,8 +176,10 @@ final class AppStoreScreenshotTests: XCTestCase {
 			relaunch(widgetFamily: family)
 			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
 			XCTAssertTrue(widget.waitForExistence(timeout: 10))
-			XCTAssertEqual(widget.frame.width, family == "small" ? 170 : 364, accuracy: 0.5)
-			XCTAssertEqual(widget.frame.height, family == "large" ? 382 : 170, accuracy: 0.5)
+			let nominal = CGSize(width: family == "small" ? 170 : 364, height: family == "large" ? 382 : 170)
+			// iPhone Duo's accessibility frame can extend past the drawn widget; the capture crops it to the real size.
+			XCTAssertGreaterThanOrEqual(widget.frame.width, nominal.width - 0.5)
+			XCTAssertGreaterThanOrEqual(widget.frame.height, nominal.height - 0.5)
 			for (index, name) in names.enumerated() {
 				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
 				if index < count {
@@ -186,7 +188,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 					XCTAssertFalse(person.exists)
 				}
 			}
-			checkpoint("store-\(locale)-widget-\(family)", element: widget)
+			checkpoint("store-\(locale)-widget-\(family)", element: widget, croppedTo: nominal)
 		}
 	}
 
@@ -261,9 +263,23 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private func chip(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}
+}
 
-	private func checkpoint(_ name: String, element: XCUIElement? = nil) {
-		let attachment = XCTAttachment(screenshot: element?.screenshot() ?? app.screenshot())
+extension AppStoreScreenshotTests {
+	/// With `croppedTo`, keeps the centered part of the element at that point size (the widget preview is centered).
+	private func checkpoint(_ name: String, element: XCUIElement? = nil, croppedTo size: CGSize? = nil) {
+		let screenshot = element?.screenshot() ?? app.screenshot()
+		let attachment: XCTAttachment
+		if let element, let size, let cgImage = screenshot.image.cgImage {
+			let scale = CGFloat(cgImage.width) / element.frame.width
+			let crop = CGRect(
+				x: (element.frame.width - size.width) / 2 * scale, y: (element.frame.height - size.height) / 2 * scale,
+				width: size.width * scale, height: size.height * scale
+			).integral
+			attachment = XCTAttachment(image: UIImage(cgImage: cgImage.cropping(to: crop) ?? cgImage), quality: .original)
+		} else {
+			attachment = XCTAttachment(screenshot: screenshot)
+		}
 		attachment.name = name
 		attachment.lifetime = .keepAlways
 		add(attachment)
