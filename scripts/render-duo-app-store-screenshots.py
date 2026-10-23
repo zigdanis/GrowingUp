@@ -23,7 +23,6 @@ _spec.loader.exec_module(base)
 SIZE = (1398, 2034)
 FAMILY = 'duo-outer'
 DEVICE = 'iPhone-Duo'
-RUNTIME = '27-1'
 WIDGET_NAMES = ('widget-small', 'widget-medium', 'widget-large')
 # Points per pixel is 3; the faux Home Screen of the widget card is laid out in points.
 WIDGET_POINTS = {'widget-small': (170, 170), 'widget-medium': (364, 170), 'widget-large': (364, 382)}
@@ -152,8 +151,8 @@ def read_capture(directory):
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
         raise ValueError('Capture metadata needs the full source head SHA')
-    if (metadata['device'], metadata['family'], metadata['runtime']) != (DEVICE, FAMILY, RUNTIME):
-        raise ValueError('Use an independently captured native iPhone Duo / iOS 27.1 outer-display run')
+    if (metadata['device'], metadata['family']) != (DEVICE, FAMILY):
+        raise ValueError('Use an independently captured native iPhone Duo outer-display run')
     if (metadata['native_width'], metadata['native_height']) != SIZE:
         raise ValueError('Native capture dimensions do not match the outer display')
     # The base reader checks the 3x widget crops and the display-sized cards against these globals.
