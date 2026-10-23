@@ -5,6 +5,7 @@ import hashlib
 import json
 import plistlib
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,26 @@ def run(args, log=None):
             sys.exit(result.returncode)
     else:
         subprocess.run(args, cwd=ROOT, check=True)
+
+def run_with_host_captures(args, log, udid, folder):
+    """Run the test while the host captures the inner display, which XCTest cannot read.
+
+    The test prints `HOST_CAPTURE <checkpoint>` and waits; each marker gets one simctl screenshot.
+    """
+    host = folder / 'host'
+    host.mkdir()
+    with log.open('w') as out:
+        process = subprocess.Popen(args, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            out.write(line)
+            marker = re.search(r'HOST_CAPTURE (\S+)', line)
+            if marker:
+                subprocess.run(['xcrun', 'simctl', 'io', udid, 'screenshot', '--display=primary-1', str(host / f'{marker.group(1)}.png')],
+                               check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if process.wait():
+            print(f'Failed ({process.returncode}): inspect {log}', flush=True)
+            sys.exit(process.returncode)
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -66,6 +87,9 @@ def main():
           '-parallel-testing-enabled','NO','-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots',
           'GROWINGUP_APP_STORE_CAPTURE=1',f'GROWINGUP_APP_STORE_PHOTOS={ROOT}/docs/app-store-demo-photos',
           'CODE_SIGNING_ALLOWED=NO']
+    host_capture = args.family == 'duo-inner'
+    if host_capture:
+        base.append('GROWINGUP_APP_STORE_HOST_CAPTURE=1')
     for locale in ('en','ru'):
         folder=output / locale; folder.mkdir()
         (folder/'metadata.json').write_text(json.dumps(metadata | {'locale':locale},indent=2)+'\n')
@@ -83,7 +107,10 @@ def main():
                     '-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots']
         else:
             test = base[:1]+['test-without-building']+base[1:]+[f'GROWINGUP_APP_STORE_LOCALE={locale}']
-        run(test+['-resultBundlePath',str(folder/'UI.xcresult')],folder/'xcodebuild.log')
+        if host_capture:
+            run_with_host_captures(test+['-resultBundlePath',str(folder/'UI.xcresult')],folder/'xcodebuild.log',args.udid,folder)
+        else:
+            run(test+['-resultBundlePath',str(folder/'UI.xcresult')],folder/'xcodebuild.log')
         run(['xcrun','xcresulttool','export','attachments','--path',str(folder/'UI.xcresult'),
              '--output-path',str(folder/'attachments')])
         for kind in ('summary','tests'):
