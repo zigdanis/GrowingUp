@@ -50,12 +50,26 @@ final class NavigationTests: XCTestCase {
 		checkpoint("widget-sixth-link")
 	}
 
-	private func launch() {
+	func testLargestTextKeepsCardsWholeAndClearOfTheStrip() {
+		launch(contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+		let countdown = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+		// The strip floats above the card and the card wraps its countdown rather than truncating it.
+		XCTAssertLessThanOrEqual(app.buttons["people.avatar.0"].frame.maxY, countdown.frame.minY)
+		XCTAssertTrue(edit.isHittable)
+		XCTAssertLessThanOrEqual(edit.frame.maxY, app.frame.maxY)
+		checkpoint("large-text-overview")
+		app.buttons["people.avatar.add"].tap()
+		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
+		checkpoint("large-text-add-page")
+	}
+
+	private func launch(contentSize: String = "UICTContentSizeCategoryL") {
 		let configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: .dark)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", "Dark",
-			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+			"-UIPreferredContentSizeCategoryName", contentSize
 		]
 		app.launch()
 		XCTAssertTrue(edit.waitForExistence(timeout: 10))
