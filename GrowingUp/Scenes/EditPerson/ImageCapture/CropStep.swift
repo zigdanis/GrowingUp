@@ -66,7 +66,7 @@ struct CropStep: View {
 					.simultaneousGesture(zoomGesture)
 					.accessibilityElement(children: .ignore)
 					.accessibilityLabel(Text("Photo crop"))
-					.accessibilityValue(Text(zoom.formatted(.percent.precision(.fractionLength(0)))))
+					.accessibilityValue(Text(Double(zoom).formatted(.percent.precision(.fractionLength(0)))))
 					.accessibilityAdjustableAction { direction in
 						switch direction {
 						case .increment: setCrop(scale: scale * zoomStep, offset: offset)
