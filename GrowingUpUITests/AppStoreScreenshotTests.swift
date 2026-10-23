@@ -193,7 +193,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 	}
 
 	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
-		if index > 0 { app.swipeLeft() }
+		if index > 0 { swipeToNextPage() }
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
 		let name = app.textFields["editor.name"]
@@ -281,5 +281,15 @@ final class AppStoreScreenshotTests: XCTestCase {
 		attachment.name = name
 		attachment.lifetime = .keepAlways
 		add(attachment)
+	}
+}
+
+extension AppStoreScreenshotTests {
+	/// Drags across the window: on iPhone Duo's open display XCTest reports a portrait-sized app frame for a landscape window.
+	private func swipeToNextPage() {
+		let window = app.windows.firstMatch
+		let start = window.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+		start.press(
+			forDuration: 0.05, thenDragTo: window.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)), withVelocity: .fast, thenHoldForDuration: 0)
 	}
 }
