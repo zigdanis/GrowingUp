@@ -27,7 +27,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--udid', required=True)
     parser.add_argument('--device', required=True)
-    parser.add_argument('--family', required=True, choices=('dynamic-island', 'face-id', 'home-button'))
+    parser.add_argument('--family', required=True, choices=('dynamic-island', 'face-id', 'home-button', 'duo-outer', 'duo-inner'))
+    parser.add_argument('--runtime', default='26-5', help='Simulator runtime, for example 27-1')
+    parser.add_argument('--xcode', default='26.6', help='Xcode version that builds and runs the capture')
     parser.add_argument('--width', required=True, type=int)
     parser.add_argument('--height', required=True, type=int)
     parser.add_argument('--output', required=True, type=Path)
@@ -46,8 +48,8 @@ def main():
                 hashes[str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
     metadata = {'workflow': 'local-screenshot-only', 'head_sha':head, 'checkout_sha':head,
                 'run_id':output.name, 'run_attempt':'1', 'device':args.device,
-                'simulator_udid':args.udid, 'family':args.family, 'runtime':'26-5',
-                'xcode':'26.6', 'native_width':args.width, 'native_height':args.height,
+                'simulator_udid':args.udid, 'family':args.family, 'runtime':args.runtime,
+                'xcode':args.xcode, 'native_width':args.width, 'native_height':args.height,
                 'capture_input_hashes':hashes}
     (output / 'metadata.json').write_text(json.dumps(metadata,indent=2)+'\n')
     products = None
