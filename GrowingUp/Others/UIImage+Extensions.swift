@@ -79,20 +79,6 @@ extension UIImage {
 		}
 	}
 
-	/// Bakes EXIF orientation into the pixels so cropping maps screen coordinates correctly.
-	func normalizedUp() -> UIImage {
-		guard imageOrientation != .up else { return self }
-		let format = UIGraphicsImageRendererFormat.default()
-		format.scale = scale
-		let renderer = UIGraphicsImageRenderer(size: size, format: format)
-		return renderer.image { _ in draw(in: CGRect(origin: .zero, size: size)) }
-	}
-
-	/// Normalizes camera output so downstream crop and encode steps never rotate it.
-	func normalizedOrientation() -> UIImage {
-		normalizedUp()
-	}
-
 	/// Mirrors pixels horizontally so front-camera capture matches its preview.
 	func horizontallyMirrored() -> UIImage {
 		let format = UIGraphicsImageRendererFormat.default()

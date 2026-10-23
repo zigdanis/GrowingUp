@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Blocking progress UI while a full-resolution image loads.
+/// Blocking progress UI while a tapped photo loads and decodes.
 struct SelectionProgressOverlay: View {
 	let progress: Double
 	let onCancel: () -> Void

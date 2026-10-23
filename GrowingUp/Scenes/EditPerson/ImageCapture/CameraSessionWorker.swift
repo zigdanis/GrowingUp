@@ -6,7 +6,6 @@
 //
 
 import AVFoundation
-import UIKit
 
 final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unchecked Sendable {
 	let session = AVCaptureSession()
@@ -15,7 +14,7 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 	private let photoOutput = AVCapturePhotoOutput()
 	private var videoInput: AVCaptureDeviceInput?
 	private var configured = false
-	private var captureCompletion: (@Sendable (UIImage?) -> Void)?
+	private var captureCompletion: (@Sendable (Data?) -> Void)?
 
 	func start(onStateChange: @escaping @Sendable (CameraSessionState) -> Void) {
 		sessionQueue.async { [weak self] in
@@ -60,11 +59,8 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 		}
 	}
 
-	func capturePhoto(
-		flash: AVCaptureDevice.FlashMode,
-		mirrorOutput: Bool,
-		completion: @escaping @Sendable (UIImage?) -> Void
-	) {
+	/// Captures a still and hands over its encoded data, or nil on failure.
+	func capturePhoto(flash: AVCaptureDevice.FlashMode, completion: @escaping @Sendable (Data?) -> Void) {
 		sessionQueue.async { [weak self] in
 			guard let self else { return }
 			// No active video connection (e.g. Simulator / no camera hardware):
@@ -80,9 +76,7 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 			if self.photoOutput.supportedFlashModes.contains(flash) {
 				settings.flashMode = flash
 			}
-			self.captureCompletion = { image in
-				completion(mirrorOutput ? image?.horizontallyMirrored() : image)
-			}
+			self.captureCompletion = completion
 			self.photoOutput.capturePhoto(with: settings, delegate: self)
 		}
 	}
@@ -92,21 +86,13 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 		didFinishProcessingPhoto photo: AVCapturePhoto,
 		error: Error?
 	) {
-		// Build the still off the main actor, then hop back to deliver it.
-		let image: UIImage?
-		if error == nil,
-			let data = photo.fileDataRepresentation(),
-			let captured = UIImage(data: data)
-		{
-			image = captured.normalizedOrientation()
-		} else {
-			image = nil
-		}
+		// Only the encoded photo; the controller decodes it to the working image.
+		let data = error == nil ? photo.fileDataRepresentation() : nil
 		sessionQueue.async { [weak self] in
 			guard let self else { return }
 			let completion = self.captureCompletion
 			self.captureCompletion = nil
-			completion?(image)
+			completion?(data)
 		}
 	}
 

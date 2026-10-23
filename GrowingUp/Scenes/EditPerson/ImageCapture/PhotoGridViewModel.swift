@@ -3,7 +3,7 @@
 //  GrowingUp
 //
 //  Owns the PhotoKit state machine for the custom photo grid: authorization,
-//  asset fetching, thumbnail delivery, single-select full-resolution loading,
+//  asset fetching, thumbnail delivery, single-select working-image loading,
 //  and live refresh on library changes (incl. full <-> limited transitions).
 //
 
@@ -17,17 +17,18 @@ final class PhotoGridViewModel: NSObject {
 
 	private(set) var authState: PhotoAuthState = .notDetermined
 	private(set) var assets: [PhotoAsset] = []
-	/// True while a tapped asset's full-resolution image is being prepared.
+	/// True while a tapped asset's working image is being prepared.
 	private(set) var isPreparingSelection = false
 	/// 0...1 while an iCloud original downloads; drives a determinate bar.
 	private(set) var selectionProgress: Double = 0
-	/// Set when full-resolution loading fails; drives a retry alert.
+	/// Set when loading the photo fails; drives a retry alert.
 	private(set) var selectionFailed = false
 
 	@ObservationIgnored private let imageManager = PHCachingImageManager()
 	@ObservationIgnored private var fetchResult: PHFetchResult<PHAsset>?
 	@ObservationIgnored private var registered = false
 	@ObservationIgnored private var selectionRequestID: PHImageRequestID?
+	@ObservationIgnored private var selectionTask: Task<Void, Never>?
 	@ObservationIgnored private let isPreview: Bool
 
 	override init() {
@@ -110,7 +111,7 @@ final class PhotoGridViewModel: NSObject {
 		}
 	}
 
-	// MARK: - Single selection -> full resolution
+	// MARK: - Single selection -> working image
 
 	func select(_ asset: PhotoAsset, completion: @escaping (UIImage) -> Void) {
 		guard !isPreparingSelection else { return }
@@ -122,59 +123,75 @@ final class PhotoGridViewModel: NSObject {
 		isPreparingSelection = true
 		selectionProgress = 0
 		selectionFailed = false
-		let options = PHImageRequestOptions()
-		options.deliveryMode = .highQualityFormat
-		options.resizeMode = .exact
-		options.isNetworkAccessAllowed = true
-		// Called on a background queue while an iCloud original downloads.
-		options.progressHandler = { [weak self] progress, error, _, _ in
-			Task { @MainActor in
-				guard let self, self.isPreparingSelection else { return }
-				self.selectionProgress = progress
-				if error != nil { self.failSelection() }
-			}
-		}
-		selectionRequestID = imageManager.requestImage(
-			for: photoAsset,
-			targetSize: PHImageManagerMaximumSize,
-			contentMode: .default,
-			options: options
-		) { [weak self] image, info in
-			guard let self else { return }
-			// Cancelled by the user: state is already reset; ignore the callback.
-			if (info?[PHImageCancelledKey] as? Bool) ?? false { return }
-			let degraded = (info?[PHImageResultIsDegradedKey] as? Bool) ?? false
-			if let image, !degraded {
-				self.selectionRequestID = nil
-				self.isPreparingSelection = false
-				self.selectionProgress = 0
+		selectionTask = Task {
+			do {
+				let data = try await imageData(for: photoAsset)
+				let image = try await WorkingImage.decode(data)
+				try Task.checkCancellation()
+				resetSelection()
 				completion(image)
-			} else if info?[PHImageErrorKey] != nil || (image == nil && !degraded) {
-				// Final delivery with no image, or an explicit error -> surface it.
-				self.failSelection()
+			} catch {
+				// A selection cancelled by the user was already reset by `cancelSelection`.
+				if !Task.isCancelled { failSelection() }
 			}
-			// A degraded placeholder with more to come: keep waiting.
 		}
 	}
 
-	/// Cancels an in-flight full-resolution load (e.g. a slow iCloud download).
+	/// The asset's current image data, downloaded from iCloud when needed.
+	private func imageData(for asset: PHAsset) async throws -> Data {
+		try Task.checkCancellation()
+		let options = PHImageRequestOptions()
+		options.deliveryMode = .highQualityFormat
+		options.isNetworkAccessAllowed = true
+		// Called on a background queue while an iCloud original downloads.
+		options.progressHandler = { [weak self] progress, _, _, _ in
+			Task { @MainActor in
+				guard let self, self.isPreparingSelection else { return }
+				self.selectionProgress = progress
+			}
+		}
+		let gate = ContinuationGate()
+		return try await withCheckedThrowingContinuation { continuation in
+			selectionRequestID = imageManager.requestImageDataAndOrientation(for: asset, options: options) { data, _, _, info in
+				let result: Result<Data, Error>
+				if let data {
+					result = .success(data)
+				} else if (info?[PHImageCancelledKey] as? Bool) ?? false {
+					result = .failure(CancellationError())
+				} else {
+					result = .failure(info?[PHImageErrorKey] as? Error ?? CocoaError(.fileReadUnknown))
+				}
+				// May be called off the main thread; the gate keeps a repeated callback from resuming twice.
+				Task { @MainActor in
+					guard gate.finish(when: true) else { return }
+					continuation.resume(with: result)
+				}
+			}
+		}
+	}
+
+	/// Cancels an in-flight load (e.g. a slow iCloud download) or decode.
 	func cancelSelection() {
+		selectionTask?.cancel()
 		if let id = selectionRequestID {
 			imageManager.cancelImageRequest(id)
-			selectionRequestID = nil
 		}
-		isPreparingSelection = false
-		selectionProgress = 0
+		resetSelection()
 	}
 
 	func dismissError() {
 		selectionFailed = false
 	}
 
-	private func failSelection() {
+	private func resetSelection() {
+		selectionTask = nil
 		selectionRequestID = nil
 		isPreparingSelection = false
 		selectionProgress = 0
+	}
+
+	private func failSelection() {
+		resetSelection()
 		selectionFailed = true
 	}
 
