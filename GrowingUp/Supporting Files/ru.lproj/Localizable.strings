@@ -133,3 +133,11 @@
 "Discard changes?" = "Отменить изменения?";
 "Discard" = "Не сохранять";
 "Keep editing" = "Продолжить";
+
+/* Photo crop screen, VoiceOver. */
+"Photo crop" = "Кадрирование фото";
+"Move photo up" = "Сдвинуть фото вверх";
+"Move photo down" = "Сдвинуть фото вниз";
+"Move photo left" = "Сдвинуть фото влево";
+"Move photo right" = "Сдвинуть фото вправо";
+"Reset crop" = "Сбросить кадрирование";

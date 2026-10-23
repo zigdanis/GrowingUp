@@ -136,6 +136,7 @@
 		40C689F53DEFCA3DB42BD7B6 /* PhotoThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08484233110DE426675C4EA7 /* PhotoThumbnailCell.swift */; };
 		4507FD220ECE19C1EC76C20E /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB1DDD7DA1AB8F30B81839D /* PhotoAsset.swift */; };
 		49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */; };
+		A76C0DE0000000000000B001 /* CropStepTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A76C0DE0000000000000F001 /* CropStepTests.swift */; };
 		4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */; };
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
@@ -404,6 +405,7 @@
 		0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetEntryView.swift; sourceTree = "<group>"; };
 		0F6D9304984D13833DA1013D /* ImageCaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptureSource.swift; sourceTree = "<group>"; };
 		109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceTests.swift; sourceTree = "<group>"; };
+		A76C0DE0000000000000F001 /* CropStepTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropStepTests.swift; sourceTree = "<group>"; };
 		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2352944A067948DFD24D8DFB /* PersonImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImages.swift; sourceTree = "<group>"; };
@@ -1074,6 +1076,7 @@
 			isa = PBXGroup;
 			children = (
 				109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */,
+				A76C0DE0000000000000F001 /* CropStepTests.swift */,
 			);
 			path = ImageCapture;
 			sourceTree = "<group>";
@@ -1519,6 +1522,7 @@
 				C7A1B2C3D4E5F6071800000F /* MonogramPictureTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
+				A76C0DE0000000000000B001 /* CropStepTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,

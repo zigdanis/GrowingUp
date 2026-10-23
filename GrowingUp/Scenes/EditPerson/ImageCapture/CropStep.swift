@@ -27,6 +27,9 @@ struct CropStep: View {
 	@State private var isGesturing = false
 
 	let maxZoom: CGFloat = 6
+	/// Zoom factor per VoiceOver increment, and the share of the frame one VoiceOver move shifts the photo.
+	let zoomStep: CGFloat = 1.25
+	let moveStep: CGFloat = 0.1
 	/// Gap between the circular guide and the safe-area edges.
 	let framePadding: CGFloat = 14
 	/// The widest width-to-height ratio of a main picture. iPhone screens and the closed iPhone Duo crop full screen;
@@ -61,6 +64,21 @@ struct CropStep: View {
 					.contentShape(Rectangle())
 					.simultaneousGesture(dragGesture)
 					.simultaneousGesture(zoomGesture)
+					.accessibilityElement(children: .ignore)
+					.accessibilityLabel(Text("Photo crop"))
+					.accessibilityValue(Text(zoom.formatted(.percent.precision(.fractionLength(0)))))
+					.accessibilityAdjustableAction { direction in
+						switch direction {
+						case .increment: setCrop(scale: scale * zoomStep, offset: offset)
+						case .decrement: setCrop(scale: scale / zoomStep, offset: offset)
+						@unknown default: break
+						}
+					}
+					.accessibilityAction(named: Text("Move photo up")) { moveCrop(CGSize(width: 0, height: -1)) }
+					.accessibilityAction(named: Text("Move photo down")) { moveCrop(CGSize(width: 0, height: 1)) }
+					.accessibilityAction(named: Text("Move photo left")) { moveCrop(CGSize(width: -1, height: 0)) }
+					.accessibilityAction(named: Text("Move photo right")) { moveCrop(CGSize(width: 1, height: 0)) }
+					.accessibilityAction(named: Text("Reset crop")) { setCrop(scale: 0, offset: .zero) }
 				topBar(insets: safeInsets)
 			}
 			.onAppear { updateContainer(proxy) }
@@ -199,6 +217,35 @@ struct CropStep: View {
 				.frame(width: 44, height: 44)
 		}
 		.modifier(GlassButtonChrome(prominent: prominent))
+	}
+
+	// MARK: - Accessibility
+
+	/// Zoom relative to the smallest zoom that fills the frame, shown as the crop's VoiceOver value.
+	private var zoom: CGFloat {
+		let minimum = minScale(in: containerSize, insets: safeInsets)
+		return minimum > 0 ? scale / minimum : 1
+	}
+
+	/// Moves the photo by a tenth of the frame per unit of `direction`.
+	private func moveCrop(_ direction: CGSize) {
+		let frame = frameRect(in: containerSize, insets: safeInsets)
+		setCrop(
+			scale: scale,
+			offset: CGSize(
+				width: offset.width + direction.width * frame.width * moveStep,
+				height: offset.height + direction.height * frame.height * moveStep))
+	}
+
+	/// Settles on the allowed zoom and offset nearest the proposal, like a gesture ending.
+	private func setCrop(scale proposedScale: CGFloat, offset proposedOffset: CGSize) {
+		let settled = settledCrop(scale: proposedScale, offset: proposedOffset, container: containerSize, insets: safeInsets)
+		withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
+			scale = settled.scale
+			offset = settled.offset
+		}
+		lastScale = settled.scale
+		lastOffset = settled.offset
 	}
 
 	// MARK: - Gestures
@@ -348,6 +395,14 @@ extension CropStep {
 			return maxZoom + (proposed - maxZoom) * 0.35
 		}
 		return proposed
+	}
+
+	/// The proposed zoom and offset limited to the allowed range; a zoom of 0 settles at the minimum.
+	func settledCrop(scale proposedScale: CGFloat, offset proposedOffset: CGSize, container: CGSize, insets: EdgeInsets)
+		-> (scale: CGFloat, offset: CGSize)
+	{
+		let settledScale = min(max(proposedScale, minScale(in: container, insets: insets)), maxZoom)
+		return (settledScale, clampOffset(proposedOffset, scale: settledScale, container: container, insets: insets))
 	}
 
 	func cropImage() -> UIImage {

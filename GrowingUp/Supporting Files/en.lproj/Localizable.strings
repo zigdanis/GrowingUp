@@ -133,3 +133,11 @@
 "Discard changes?" = "Discard changes?";
 "Discard" = "Discard";
 "Keep editing" = "Keep editing";
+
+/* Photo crop screen, VoiceOver. */
+"Photo crop" = "Photo crop";
+"Move photo up" = "Move photo up";
+"Move photo down" = "Move photo down";
+"Move photo left" = "Move photo left";
+"Move photo right" = "Move photo right";
+"Reset crop" = "Reset crop";
