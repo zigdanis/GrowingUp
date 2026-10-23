@@ -12,7 +12,10 @@ import Foundation
 @objc(CoreDataPerson)
 public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var appPicId: String?
-	@NSManaged public var birthdate: Date
+	/// The birth moment saved before `floatingBirthdate` existed; only read once to pin it.
+	@NSManaged public var birthdate: Date?
+	/// `Person.floatingBirthdate`; `nil` only until a store saved by an earlier version pins its legacy `birthdate`.
+	@NSManaged public var floatingBirthdate: Date?
 	@NSManaged public var id: String?
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
@@ -42,7 +45,7 @@ extension CoreDataPerson {
 		return Person(
 			id: UUID(string: id) ?? UUID(),
 			name: name ?? "",
-			birthday: birthdate,
+			floatingBirthdate: floatingBirthdate ?? pinnedLegacyBirthdate,
 			appPicId: UUID(string: appPicId),
 			widgetPicId: UUID(string: widgetPicId),
 			isOnWidget: isOnWidget,
@@ -50,9 +53,25 @@ extension CoreDataPerson {
 			celebratesBirthdays: celebratesBirthdays)
 	}
 
+	/// The legacy `birthdate` as the date and time it shows in the current time zone.
+	private var pinnedLegacyBirthdate: Date {
+		Person.floatingBirthdate(of: birthdate ?? createdDate)
+	}
+
+	/// Gives every person saved before birthdates were floating the date and time their birthday shows now, so the
+	/// day stays the same after the device changes time zone.
+	static func pinLegacyBirthdates(in context: NSManagedObjectContext) throws {
+		let request = fetchRequest()
+		request.predicate = NSPredicate(format: "floatingBirthdate == nil")
+		for person in try context.fetch(request) {
+			person.floatingBirthdate = person.pinnedLegacyBirthdate
+		}
+		if context.hasChanges { try context.save() }
+	}
+
 	public func populate(with parameters: AddPersonParameters) {
 		name = parameters.name
-		birthdate = parameters.combinedDate()
+		floatingBirthdate = Person.floatingBirthdate(of: parameters.combinedDate())
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
 		celebratesBirthdays = parameters.celebratesBirthdays

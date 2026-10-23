@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED17A1B2C3D4E5F60718293C /* BirthdayTravelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17A1B2C3D4E5F60718293B /* BirthdayTravelTests.swift */; };
 		C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
@@ -310,6 +311,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		ED17A1B2C3D4E5F60718293A /* GrowingUpFloatingBirthdates.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpFloatingBirthdates.xcdatamodel; sourceTree = "<group>"; };
+		ED17A1B2C3D4E5F60718293B /* BirthdayTravelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayTravelTests.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayout.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScale.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicture.swift; sourceTree = "<group>"; };
@@ -925,6 +928,7 @@
 		098054F4223C295400E24D40 /* Presenters */ = {
 			isa = PBXGroup;
 			children = (
+				ED17A1B2C3D4E5F60718293B /* BirthdayTravelTests.swift */,
 				ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
@@ -1493,6 +1497,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED17A1B2C3D4E5F60718293C /* BirthdayTravelTests.swift in Sources */,
 				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
 				ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */,
 				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
@@ -2225,8 +2230,9 @@
 				09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */,
 				A5000000000000000000000D /* GrowingUpSixPeople.xcdatamodel */,
 				ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */,
+				ED17A1B2C3D4E5F60718293A /* GrowingUpFloatingBirthdates.xcdatamodel */,
 			);
-			currentVersion = ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */;
+			currentVersion = ED17A1B2C3D4E5F60718293A /* GrowingUpFloatingBirthdates.xcdatamodel */;
 			path = GrowingUp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

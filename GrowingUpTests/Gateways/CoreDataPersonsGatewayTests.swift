@@ -34,7 +34,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
 		cdPerson.createdDate = Date()
-		cdPerson.birthdate = Date()
+		cdPerson.floatingBirthdate = Date()
 		inMemoryCoreDataStack.saveContext()
 		var editParams = AddPersonParameters.createParameters()
 		editParams.name = "John Snow"
@@ -52,7 +52,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
 		cdPerson.id = UUID().uuidString
 		cdPerson.createdDate = Date()
-		cdPerson.birthdate = Date()
+		cdPerson.floatingBirthdate = Date()
 		inMemoryCoreDataStack.saveContext()
 
 		try await inMemoryCoreDataGateway.remove(person: cdPerson.person)
@@ -144,24 +144,68 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		try assertUpgradePreservesPeople(fromModel: "GrowingUpSixPeople.mom")
 	}
 
+	func test_FloatingBirthdatesUpgradePreservesPeople() throws {
+		try assertUpgradePreservesPeople(fromModel: "GrowingUpCelebrations.mom")
+	}
+
+	/// An upgrade pins each saved birthday to the day and time it shows at that moment, which then survive travel.
+	func test_FloatingBirthdatesUpgradeKeepsBirthdaysOnTheirDayAfterTravel() throws {
+		let systemTimeZone = NSTimeZone.default
+		defer { NSTimeZone.default = systemTimeZone }
+		NSTimeZone.default = try XCTUnwrap(TimeZone(identifier: "Europe/Moscow"))
+		let moscow = Calendar.current
+		let birthdates = [
+			DateComponents(year: 2020, month: 5, day: 10), DateComponents(year: 2020, month: 2, day: 29, hour: 23, minute: 50)
+		].map { moscow.date(from: $0)! }
+		let storeURL = try makeStoreURL()
+		defer { try? FileManager.default.removeItem(at: storeURL.deletingLastPathComponent()) }
+		let originalContainer = try loadOriginalContainer(model: try model(named: "GrowingUpCelebrations.mom"), storeURL: storeURL)
+		try originalContainer.viewContext.performAndWait {
+			for (index, birthdate) in birthdates.enumerated() {
+				let person = CoreDataPerson(context: originalContainer.viewContext)
+				person.birthdate = birthdate
+				person.createdDate = Date(timeIntervalSince1970: Double(index))
+			}
+			try originalContainer.viewContext.save()
+		}
+		try closeContainer(originalContainer)
+
+		let upgradedContainer = try loadContainer(model: try model(named: nil), storeURL: storeURL)
+		defer { try? closeContainer(upgradedContainer) }
+		NSTimeZone.default = try XCTUnwrap(TimeZone(identifier: "America/New_York"))
+		let newYork = Calendar.current
+		try upgradedContainer.viewContext.performAndWait {
+			let request = CoreDataPerson.fetchRequest()
+			request.sortDescriptors = [NSSortDescriptor(key: "createdDate", ascending: true)]
+			let people = try upgradedContainer.viewContext.fetch(request)
+			var utc = Calendar(identifier: .gregorian)
+			utc.timeZone = .gmt
+			XCTAssertEqual(
+				people.map(\.floatingBirthdate),
+				[DateComponents(year: 2020, month: 5, day: 10), DateComponents(year: 2020, month: 2, day: 29, hour: 23, minute: 50)]
+					.map { utc.date(from: $0) })
+			let readings = people.map { person in
+				([.year, .month, .day, .hour, .minute] as [Calendar.Component]).map { newYork.component($0, from: person.person.birthday) }
+			}
+			XCTAssertEqual(readings, [[2020, 5, 10, 0, 0], [2020, 2, 29, 23, 50]])
+		}
+	}
+
 	/// Lightweight migration from `fromModel` keeps people, pins and photos, and defaults celebrations to on.
 	private func assertUpgradePreservesPeople(fromModel modelName: String) throws {
-		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
-		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-		defer { try? FileManager.default.removeItem(at: directory) }
-		let storeURL = directory.appendingPathComponent("GrowingUp.sqlite")
-		let bundle = try XCTUnwrap(Bundle(identifier: Constants.bundleIdentifier))
-		let modelURL = try XCTUnwrap(bundle.url(forResource: "GrowingUp", withExtension: "momd"))
-		let originalModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent(modelName)))
-		let currentModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL))
-		let originalContainer = try loadContainer(model: originalModel, storeURL: storeURL)
+		let storeURL = try makeStoreURL()
+		defer { try? FileManager.default.removeItem(at: storeURL.deletingLastPathComponent()) }
+		let originalModel = try model(named: modelName)
+		let currentModel = try model(named: nil)
+		let originalContainer = try loadOriginalContainer(model: originalModel, storeURL: storeURL)
 		var originalPeople: [Person] = []
 		try originalContainer.viewContext.performAndWait {
 			let access = try AccessToWidget.sharedInstance(in: originalContainer.viewContext)
 			for index in 0..<4 {
 				let person = CoreDataPerson(context: originalContainer.viewContext)
 				person.name = "Person \(index)"
-				person.birthdate = Date(timeIntervalSince1970: Double(index) * 86400)
+				let birthdate = Date(timeIntervalSince1970: Double(index) * 86400)
+				person.birthdate = birthdate
 				person.createdDate = Date(timeIntervalSince1970: Double(index) * 60)
 				person.appPicId = UUID().uuidString
 				person.widgetPicId = UUID().uuidString
@@ -169,7 +213,7 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 				// Older models have no celebration flag, so build the expected person without reading it.
 				originalPeople.append(
 					Person(
-						id: try XCTUnwrap(UUID(string: person.id)), name: person.name ?? "", birthday: person.birthdate,
+						id: try XCTUnwrap(UUID(string: person.id)), name: person.name ?? "", floatingBirthdate: Person.floatingBirthdate(of: birthdate),
 						appPicId: UUID(string: person.appPicId), widgetPicId: UUID(string: person.widgetPicId), isOnWidget: index < 3,
 						createdDate: person.createdDate))
 			}
@@ -191,6 +235,27 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		let upgradedMetadata = try NSPersistentStoreCoordinator.metadataForPersistentStore(
 			ofType: NSSQLiteStoreType, at: storeURL)
 		XCTAssertTrue(currentModel.isConfiguration(withName: nil, compatibleWithStoreMetadata: upgradedMetadata))
+	}
+
+	private func makeStoreURL() throws -> URL {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+		return directory.appendingPathComponent("GrowingUp.sqlite")
+	}
+
+	/// The model version `name` in the compiled model, or the current version for `nil`.
+	private func model(named name: String?) throws -> NSManagedObjectModel {
+		let bundle = try XCTUnwrap(Bundle(identifier: Constants.bundleIdentifier))
+		let modelURL = try XCTUnwrap(bundle.url(forResource: "GrowingUp", withExtension: "momd"))
+		return try XCTUnwrap(NSManagedObjectModel(contentsOf: name.map { modelURL.appendingPathComponent($0) } ?? modelURL))
+	}
+
+	/// Opens a store with an earlier model the way that version did, without pinning birthdates it has no attribute for.
+	private func loadOriginalContainer(model: NSManagedObjectModel, storeURL: URL) throws -> NSPersistentContainer {
+		let container = NSPersistentContainer(name: "GrowingUp", managedObjectModel: model)
+		container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: storeURL)]
+		try CoreDataStackImplementation.loadPersistentStores(container)
+		return container
 	}
 
 	private func loadContainer(model: NSManagedObjectModel, storeURL: URL) throws -> NSPersistentContainer {

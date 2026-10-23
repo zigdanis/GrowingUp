@@ -58,11 +58,11 @@ final class PersonEditorPresenter: Identifiable {
 
 	/// Whether the time of birth is known.
 	///
-	/// `CoreDataPerson.birthdate` is a single date without a "has time" flag, so an unknown time is stored as
-	/// local midnight (00:00:00) and the editor shows no time. The toggle loads as on only when the stored time
-	/// of day is not exactly midnight. Turning it off resets the time to midnight but remembers the time of day;
-	/// turning it back on restores that time on the current day, or keeps midnight when no time was known until
-	/// one is picked. A picked time stores its hour and minute with zero seconds. A birth time explicitly picked
+	/// `Person.floatingBirthdate` is a single date without a "has time" flag, so an unknown time is stored as
+	/// midnight (00:00:00), which reads as the start of the local day in every time zone, and the editor shows no
+	/// time. The toggle loads as on only when the stored time of day is not exactly midnight. Turning it off resets
+	/// the time to midnight but remembers the time of day; turning it back on restores that time on the current day,
+	/// or keeps midnight when no time was known until one is picked. A picked time stores its hour and minute with zero seconds. A birth time explicitly picked
 	/// as 00:00 therefore reopens with the toggle off.
 	var hasBirthTime: Bool {
 		get { birthTimeIsKnown }

@@ -117,7 +117,7 @@ final class CachePersonsGatewayTests: XCTestCase {
 
 	private func person(appPicID: UUID?, widgetPicID: UUID?) -> Person {
 		Person(
-			id: UUID(), name: "John", birthday: Date(), appPicId: appPicID, widgetPicId: widgetPicID,
+			id: UUID(), name: "John", floatingBirthdate: Date(), appPicId: appPicID, widgetPicId: widgetPicID,
 			isOnWidget: false, createdDate: Date())
 	}
 }

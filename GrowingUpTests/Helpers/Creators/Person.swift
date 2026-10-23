@@ -15,7 +15,7 @@ extension Person {
 
 	static func createPerson() -> Person {
 		return Person(
-			id: UUID(), name: "name", birthday: Date(), appPicId: UUID(), widgetPicId: UUID(), isOnWidget: false,
+			id: UUID(), name: "name", floatingBirthdate: Date(), appPicId: UUID(), widgetPicId: UUID(), isOnWidget: false,
 			createdDate: Date())
 	}
 }
