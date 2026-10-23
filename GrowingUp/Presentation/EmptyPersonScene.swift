@@ -13,8 +13,6 @@ struct EmptyPersonScene: View {
 		ViewThatFits(in: .vertical) {
 			// Centered in the whole page while the strip stays clear of it.
 			content.padding(.vertical, stripReach)
-			// Otherwise centered in the space above the strip.
-			content.padding(.bottom, stripReach)
 			// The avatar strip floats over the bottom of this page, so the scrolling ends above it.
 			ScrollView { content }.padding(.bottom, stripClearance)
 		}
