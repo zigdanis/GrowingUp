@@ -55,7 +55,9 @@ final class CameraSessionController {
 		}
 	}
 
+	/// Stops the session and drops a photo still being captured or decoded, so leaving the camera never opens the crop.
 	func stop() {
+		captureContinuation = nil
 		worker.stop { [weak self] running in
 			Task { @MainActor in
 				self?.isRunning = running
@@ -80,16 +82,19 @@ final class CameraSessionController {
 
 	// MARK: - Capture
 
-	/// Captures a still. Completion fires on the main actor with an image that
-	/// matches the visible preview orientation, or nil on failure.
+	/// Captures a still. Completion fires on the main actor with its working image, mirrored like the front camera's
+	/// preview, or nil on failure. The shutter stays disabled until then.
 	func capturePhoto(completion: @escaping (UIImage?) -> Void) {
 		guard !isCapturing else { return }
 		isCapturing = true
 		captureContinuation = completion
-		let flash = flashMode.avFlashMode
-		let isFront = isFront
-		worker.capturePhoto(flash: flash, mirrorOutput: isFront) { [weak self] image in
+		let mirrored = isFront
+		worker.capturePhoto(flash: flashMode.avFlashMode) { [weak self] data in
 			Task { @MainActor in
+				var image: UIImage?
+				if let data {
+					image = try? await WorkingImage.decode(data, mirrored: mirrored)
+				}
 				self?.finishCapture(with: image)
 			}
 		}

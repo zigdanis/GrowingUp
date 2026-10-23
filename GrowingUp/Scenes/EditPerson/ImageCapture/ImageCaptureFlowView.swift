@@ -52,10 +52,7 @@ struct ImageCaptureFlowView: View {
 			onDismiss: { if let image = coordinator.cropDismissed() { onComplete(image) } },
 			content: { item in
 				CropStep(
-					image: item.image, shape: cropShape,
-					onComplete: {
-						coordinator.completedCrop(with: $0.downsized(maxPixelSide: cropShape.maxPixelSize))
-					},
+					image: item.image, shape: cropShape, onComplete: { coordinator.completedCrop(with: $0) },
 					onCancel: coordinator.cancelledCrop)
 			})
 	}

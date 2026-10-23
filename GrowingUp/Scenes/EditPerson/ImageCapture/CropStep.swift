@@ -25,6 +25,7 @@ struct CropStep: View {
 	@State private var containerSize: CGSize = .zero
 	@State private var safeInsets = EdgeInsets()
 	@State private var isGesturing = false
+	@State private var isFinishing = false
 
 	let maxZoom: CGFloat = 6
 	/// Gap between the circular guide and the safe-area edges.
@@ -33,23 +34,24 @@ struct CropStep: View {
 	/// wider windows crop a centered column, so every main picture stays portrait.
 	let maxMainAspect: CGFloat = 0.7
 
+	/// `image` is upright: a `WorkingImage` or a picture the app stored. `onComplete` gets the framed part at the slot's
+	/// stored size.
 	init(
 		image: UIImage,
 		shape: CropShape,
 		onComplete: @escaping (UIImage) -> Void,
 		onCancel: @escaping () -> Void
 	) {
-		let normalized = image.normalizedUp()
-		self.source = normalized
+		self.source = image
 		self.shape = shape
 		self.onComplete = onComplete
 		self.onCancel = onCancel
-		if let cgImage = normalized.cgImage {
+		if let cgImage = image.cgImage {
 			self.pxW = CGFloat(cgImage.width)
 			self.pxH = CGFloat(cgImage.height)
 		} else {
-			self.pxW = normalized.size.width * normalized.scale
-			self.pxH = normalized.size.height * normalized.scale
+			self.pxW = image.size.width * image.scale
+			self.pxH = image.size.height * image.scale
 		}
 	}
 
@@ -179,15 +181,22 @@ struct CropStep: View {
 					.accessibilityLabel(Text("Cancel"))
 					.accessibilityIdentifier("crop.cancel")
 				Spacer()
-				glassButton(systemImage: "checkmark", prominent: true) {
-					onComplete(cropImage())
-				}
-				.accessibilityLabel(Text("Use photo"))
-				.accessibilityIdentifier("crop.use")
+				glassButton(systemImage: "checkmark", prominent: true, action: finish)
+					.accessibilityLabel(Text("Use photo"))
+					.accessibilityIdentifier("crop.use")
 			}
+			.disabled(isFinishing)
 			.padding(.horizontal, 20)
 			.padding(.top, insets.top + 8)  // ZStack ignores the safe area; clear the notch manually.
 			Spacer()
+		}
+	}
+
+	/// Hands over the framed part once it is scaled down; both buttons wait meanwhile.
+	private func finish() {
+		isFinishing = true
+		Task {
+			onComplete(await output(container: containerSize, insets: safeInsets, scale: scale, offset: offset))
 		}
 	}
 
@@ -350,12 +359,21 @@ extension CropStep {
 		return proposed
 	}
 
-	func cropImage() -> UIImage {
-		guard containerSize.width > 0, let cgImage = source.cgImage else { return source }
-		let pointsPerPixel = baseScale(in: containerSize) * scale
+	/// The framed part at the slot's stored size. Cropping only references the source's pixels; scaling them down
+	/// redraws, so that runs off the main actor.
+	func output(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) async -> UIImage {
+		let cropped = cropImage(container: container, insets: insets, scale: scale, offset: offset)
+		let maxPixelSide = shape.maxPixelSize
+		return await Task.detached(priority: .userInitiated) { cropped.downsized(maxPixelSide: maxPixelSide) }.value
+	}
+
+	/// The source pixels inside the crop frame, at the source's resolution.
+	func cropImage(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) -> UIImage {
+		guard container.width > 0, let cgImage = source.cgImage else { return source }
+		let pointsPerPixel = baseScale(in: container) * scale
 		guard pointsPerPixel > 0 else { return source }
-		let frame = frameRect(in: containerSize, insets: safeInsets)
-		let center = CGPoint(x: containerSize.width / 2, y: containerSize.height / 2)
+		let frame = frameRect(in: container, insets: insets)
+		let center = CGPoint(x: container.width / 2, y: container.height / 2)
 
 		let cropW = frame.width / pointsPerPixel
 		let cropH = frame.height / pointsPerPixel
