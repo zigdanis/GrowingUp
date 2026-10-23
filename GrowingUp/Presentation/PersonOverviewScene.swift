@@ -96,20 +96,33 @@ struct PersonOverviewScene: View {
 					.scrollBounceBehavior(.basedOnSize)
 			}
 			.frame(maxHeight: maxAgeHeight, alignment: .top)
+			// Second after the card: the age takes the height the card leaves, scrolling when it does not fit.
 			.layoutPriority(1)
 			// Leaves room for the avatar strip that floats above the card.
 			Spacer(minLength: 72)
-			BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit, isShown: isSelected)
-				.padding(.horizontal, 16)
-				.padding(.bottom, 12)
-				.onGeometryChange(for: CGFloat.self) { proxy in
-					proxy.size.height
-				} action: { height in
-					onCardHeightChange(height)
-				}
+			// At the largest text sizes the countdown wraps, so the card grows rather than truncating it;
+			// in a window too short even for that, the card scrolls instead of running off the page.
+			ViewThatFits(in: .vertical) {
+				birthdayCard
+				ScrollView { birthdayCard }
+					.scrollBounceBehavior(.basedOnSize)
+			}
+			.padding(.horizontal, 16)
+			.padding(.bottom, 12)
+			.onGeometryChange(for: CGFloat.self) { proxy in
+				proxy.size.height
+			} action: { height in
+				onCardHeightChange(height)
+			}
+			// The card gets its full height first, ahead of the age above it.
+			.layoutPriority(2)
 		}
 		.padding(.top, safeAreaInsets.top + 16)
 		.padding(.bottom, safeAreaInsets.bottom)
+	}
+
+	private var birthdayCard: some View {
+		BirthdayCard(birthdayText: presenter.birthdayText, onEdit: onEdit, isShown: isSelected)
 	}
 
 	private var background: some View {

@@ -37,7 +37,7 @@ struct PeopleScene: View {
 									.id(PeoplePageID.person(person.id))
 								}
 								if presenter.canAdd {
-									EmptyPersonScene(onAdd: presenter.add)
+									EmptyPersonScene(onAdd: presenter.add, stripClearance: stripClearance)
 										// The pager ignores the safe area, so the invitation keeps clear of the status bar itself.
 										.safeAreaPadding(geometry.safeAreaInsets)
 										.containerRelativeFrame([.horizontal, .vertical])
@@ -112,5 +112,11 @@ struct PeopleScene: View {
 	private var stripBottomPadding: CGFloat {
 		let cardHeight = presenter.selectedID.flatMap { cardHeights[$0] } ?? cardHeights.values.max() ?? 0
 		return cardHeight + 8
+	}
+
+	/// How high the strip's top sits above the bottom of the pages, so the add page's invitation stays above it;
+	/// with nobody added yet there is no strip to clear.
+	private var stripClearance: CGFloat {
+		presenter.persons.isEmpty ? 0 : stripBottomPadding + PeopleAvatarStrip.height
 	}
 }
