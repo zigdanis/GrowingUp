@@ -35,7 +35,7 @@ def run_with_host_captures(args, log, udid, folder):
         process = subprocess.Popen(args, cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
             out.write(line)
-            marker = re.search(r'HOST_CAPTURE (\S+)', line)
+            marker = re.fullmatch(r'HOST_CAPTURE (store-[\w-]+)', line.strip())
             if marker:
                 subprocess.run(['xcrun', 'simctl', 'io', udid, 'screenshot', '--display=primary-1', str(host / f'{marker.group(1)}.png')],
                                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
