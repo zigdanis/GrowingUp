@@ -125,8 +125,8 @@ final class PhotoGridViewModel: NSObject {
 		selectionFailed = false
 		selectionTask = Task {
 			do {
-				let data = try await imageData(for: photoAsset)
-				let image = try await WorkingImage.decode(data)
+				let (data, orientation) = try await imageData(for: photoAsset)
+				let image = try await WorkingImage.decode(data, orientation: orientation)
 				try Task.checkCancellation()
 				resetSelection()
 				completion(image)
@@ -137,8 +137,8 @@ final class PhotoGridViewModel: NSObject {
 		}
 	}
 
-	/// The asset's current image data, downloaded from iCloud when needed.
-	private func imageData(for asset: PHAsset) async throws -> Data {
+	/// The asset's current image data and the orientation Photos shows it in, downloaded from iCloud when needed.
+	private func imageData(for asset: PHAsset) async throws -> (Data, CGImagePropertyOrientation) {
 		try Task.checkCancellation()
 		let options = PHImageRequestOptions()
 		options.isNetworkAccessAllowed = true
@@ -151,9 +151,9 @@ final class PhotoGridViewModel: NSObject {
 		}
 		// PhotoKit calls the handler exactly once, also when the request is cancelled.
 		return try await withCheckedThrowingContinuation { continuation in
-			selectionRequestID = imageManager.requestImageDataAndOrientation(for: asset, options: options) { data, _, _, info in
+			selectionRequestID = imageManager.requestImageDataAndOrientation(for: asset, options: options) { data, _, orientation, info in
 				if let data {
-					continuation.resume(returning: data)
+					continuation.resume(returning: (data, orientation))
 				} else if (info?[PHImageCancelledKey] as? Bool) ?? false {
 					continuation.resume(throwing: CancellationError())
 				} else {

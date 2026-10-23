@@ -30,6 +30,18 @@ final class WorkingImageTests: XCTestCase {
 		try assertPixel(blue, in: image, column: 100, row: 300)
 	}
 
+	func testGivenOrientationWinsOverTheFileOne() async throws {
+		// Photos can keep a rotation outside the file; PhotoKit reports it separately from the data.
+		let stored = photo(width: 400, height: 200, quadrants: [.red, .blue, .red, .blue])
+		let turned = try await WorkingImage.decode(encoded(stored), orientation: .right)
+		try assertPixelSize(turned, width: 200, height: 400)
+		try assertPixel(red, in: turned, column: 100, row: 100)
+		try assertPixel(blue, in: turned, column: 100, row: 300)
+		let unturned = try await WorkingImage.decode(encoded(stored, orientation: .right), orientation: .up)
+		try assertPixelSize(unturned, width: 400, height: 200)
+		try assertPixel(red, in: unturned, column: 100, row: 100)
+	}
+
 	func testMirroredPhotoSwapsLeftAndRight() async throws {
 		let data = try encoded(photo(width: 400, height: 200, quadrants: [.red, .blue, .red, .blue]))
 		let image = try await WorkingImage.decode(data, mirrored: true)
