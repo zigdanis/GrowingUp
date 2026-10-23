@@ -79,7 +79,7 @@ final class JourneyTests: XCTestCase {
 		app.buttons["photo.source.photos"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 		dismissPhotos()
-		cancelEditor(discarding: true)
+		cancelEditor()
 		overview.tap()
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
@@ -111,7 +111,7 @@ final class JourneyTests: XCTestCase {
 		dismissPhotos()
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
-		cancelEditor(discarding: true)
+		cancelEditor()
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		relaunch()
 		waitForSettledOverview(showing: "Ada")
@@ -351,14 +351,9 @@ extension JourneyTests {
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
 	}
 
-	/// Cancels the editor, confirming the discard dialog that unsaved changes raise.
-	private func cancelEditor(discarding: Bool) {
+	/// Cancels the editor; unsaved changes are dropped without a confirmation.
+	private func cancelEditor() {
 		app.buttons["editor.cancel"].tap()
-		if discarding {
-			let discard = app.buttons.matching(NSPredicate(format: "identifier == %@ OR label == %@", "editor.discard", "Discard")).firstMatch
-			XCTAssertTrue(discard.waitForExistence(timeout: 5))
-			discard.tap()
-		}
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
