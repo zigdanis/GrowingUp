@@ -19,10 +19,10 @@ final class BirthdayTravelTests: XCTestCase {
 		for zone in ["America/New_York", "Asia/Tokyo"] {
 			travel(to: zone)
 			let person = try await storedPerson()
-			let editor = editor(for: person)
+			let editor = makeEditor(for: person)
 			XCTAssertEqual(reading(editor.birthday), [2020, 5, 10, 0, 0], zone)
 			XCTAssertFalse(editor.hasBirthTime, zone)
-			let overview = overview(of: person)
+			let overview = makeOverview(of: person)
 			XCTAssertEqual(overview.accessibilityAge, "6 years and 5 months, Birthday in 199 days", zone)
 			XCTAssertEqual(overview.tickerText, "13 days · 12:00:00", zone)
 		}
@@ -33,10 +33,10 @@ final class BirthdayTravelTests: XCTestCase {
 		for zone in ["America/New_York", "Asia/Tokyo"] {
 			travel(to: zone)
 			let person = try await storedPerson()
-			let editor = editor(for: person)
+			let editor = makeEditor(for: person)
 			XCTAssertEqual(reading(editor.birthday), [2020, 5, 10, 23, 50], zone)
 			XCTAssertTrue(editor.hasBirthTime, zone)
-			let overview = overview(of: person)
+			let overview = makeOverview(of: person)
 			XCTAssertEqual(overview.accessibilityAge, "6 years and 5 months, Birthday in 199 days", zone)
 			XCTAssertEqual(overview.tickerText, "12 days · 12:10:00", zone)
 		}
@@ -47,7 +47,7 @@ final class BirthdayTravelTests: XCTestCase {
 		travel(to: "America/New_York")
 		let person = try await storedPerson()
 		XCTAssertEqual(reading(person.birthday), [2020, 2, 29, 0, 0])
-		XCTAssertFalse(editor(for: person).hasBirthTime)
+		XCTAssertFalse(makeEditor(for: person).hasBirthTime)
 		XCTAssertEqual(reading(BirthdayStatus(birthday: person.birthday, now: date(2027, 2, 1)).date), [2027, 2, 28, 0, 0])
 		XCTAssertEqual(reading(BirthdayStatus(birthday: person.birthday, now: date(2028, 2, 1)).date), [2028, 2, 29, 0, 0])
 	}
@@ -57,16 +57,16 @@ final class BirthdayTravelTests: XCTestCase {
 		try await enter(2020, 9, 6, in: "America/Santiago")
 		let person = try await storedPerson()
 		XCTAssertEqual(reading(person.birthday), [2020, 9, 6, 1, 0])
-		XCTAssertFalse(editor(for: person).hasBirthTime)
+		XCTAssertFalse(makeEditor(for: person).hasBirthTime)
 		travel(to: "Europe/Moscow")
 		XCTAssertEqual(reading(person.birthday), [2020, 9, 6, 0, 0])
-		XCTAssertFalse(editor(for: person).hasBirthTime)
+		XCTAssertFalse(makeEditor(for: person).hasBirthTime)
 	}
 
 	func testSavingAfterTravelKeepsTheStoredBirthday() async throws {
 		let entered = try await enter(2020, 5, 10)
 		travel(to: "America/New_York")
-		let editor = editor(for: try await storedPerson())
+		let editor = makeEditor(for: try await storedPerson())
 		await editor.load()
 		editor.name = "Ada Lovelace"
 		await editor.save()
@@ -75,13 +75,28 @@ final class BirthdayTravelTests: XCTestCase {
 		XCTAssertEqual(saved.floatingBirthdate, entered.floatingBirthdate)
 	}
 
+	func testSavingAfterTravelKeepsABirthTimeAtTheStartOfTheLocalDay() async throws {
+		try await enter(2020, 9, 6, hour: 1, minute: 0)
+		// 01:00 starts 6 September 2020 in Santiago, so the editor there reads the time as unknown.
+		travel(to: "America/Santiago")
+		let editor = makeEditor(for: try await storedPerson())
+		await editor.load()
+		XCTAssertFalse(editor.hasBirthTime)
+		editor.name = "Ada Lovelace"
+		await editor.save()
+		travel(to: "Europe/Moscow")
+		let saved = makeEditor(for: try await storedPerson())
+		XCTAssertEqual(reading(saved.birthday), [2020, 9, 6, 1, 0])
+		XCTAssertTrue(saved.hasBirthTime)
+	}
+
 	/// Enters and saves a new person through the editor in `zone`, with a birth time only when `hour` is given.
 	@discardableResult
 	private func enter(
 		_ year: Int, _ month: Int, _ day: Int, hour: Int? = nil, minute: Int = 0, in zone: String = "Europe/Moscow"
 	) async throws -> Person {
 		travel(to: zone)
-		let editor = editor(for: nil)
+		let editor = makeEditor(for: nil)
 		await editor.load()
 		editor.name = "Ada"
 		editor.dayOfBirth = date(year, month, day)
@@ -92,16 +107,17 @@ final class BirthdayTravelTests: XCTestCase {
 	}
 
 	private func storedPerson() async throws -> Person {
-		try XCTUnwrap(try await gateway.fetchPersons().first)
+		let people = try await gateway.fetchPersons()
+		return try XCTUnwrap(people.first)
 	}
 
-	private func editor(for person: Person?) -> PersonEditorPresenter {
+	private func makeEditor(for person: Person?) -> PersonEditorPresenter {
 		SceneConfigurator(gateway: gateway, loadImage: { _ in UIImage() }, now: { self.date(2026, 10, 23, 12) })
 			.editor(person: person, onMutation: { _ in })
 	}
 
 	/// The person page at local noon on 23 October 2026.
-	private func overview(of person: Person) -> OverviewPresenter {
+	private func makeOverview(of person: Person) -> OverviewPresenter {
 		let overview = OverviewPresenter(loadImage: { _ in UIImage() }, calendar: .current, locale: Locale(identifier: "en"))
 		overview.tick(person: person, now: date(2026, 10, 23, 12))
 		return overview

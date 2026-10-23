@@ -71,7 +71,12 @@ extension CoreDataPerson {
 
 	public func populate(with parameters: AddPersonParameters) {
 		name = parameters.name
-		floatingBirthdate = Person.floatingBirthdate(of: parameters.combinedDate())
+		let birthday = parameters.combinedDate()
+		// An unchanged birthday keeps its stored reading, which the local clock cannot always show back, such as a birth
+		// at 01:00 on a day that starts at 01:00 after daylight saving time skipped midnight.
+		if floatingBirthdate == nil || person.birthday != birthday {
+			floatingBirthdate = Person.floatingBirthdate(of: birthday)
+		}
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
 		celebratesBirthdays = parameters.celebratesBirthdays

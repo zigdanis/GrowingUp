@@ -21,8 +21,8 @@ values themselves cannot be converted by an inferred mapping, so right after loa
 store `CoreDataStackImplementation` pins every person whose `floatingBirthdate` is still
 `nil`: it stores the date and time the old `birthdate` shows in the current time zone, the
 day the user sees today. This runs inside the cross-process store claim, so the app and
-the widget never pin twice, and it is saved in one transaction. If it fails, it is logged,
-people read in the current time zone as before, and the next load tries again.
+the widget never pin twice, and it is saved in one transaction. If it fails, the store load
+fails like any other load error: nothing is cached and the next request tries again.
 
 ## How to verify
 

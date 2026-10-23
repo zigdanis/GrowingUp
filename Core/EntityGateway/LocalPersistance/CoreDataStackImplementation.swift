@@ -46,7 +46,7 @@ public final class CoreDataStackImplementation: CoreDataStack {
 						// Retry once on the same container, so callers receive the successfully loaded store.
 						try loadStore(container)
 					}
-					Self.pinLegacyBirthdates(in: container)
+					try Self.pinLegacyBirthdates(in: container)
 				}
 				loadedContainer = container
 				return container
@@ -73,15 +73,11 @@ public final class CoreDataStackImplementation: CoreDataStack {
 	}
 
 	/// Pins birthdates saved by earlier versions while the store is still claimed, so the app and the widget never
-	/// pin them twice. A failure is logged: until a later load pins them, people read in the current time zone.
-	private static func pinLegacyBirthdates(in container: NSPersistentContainer) {
+	/// pin them twice. A failure fails the load like any other, so the container is not cached and a later request retries.
+	private static func pinLegacyBirthdates(in container: NSPersistentContainer) throws {
 		let context = container.newBackgroundContext()
-		context.performAndWait {
-			do {
-				try CoreDataPerson.pinLegacyBirthdates(in: context)
-			} catch {
-				Logging.logError(CoreError(error: error))
-			}
+		try context.performAndWait {
+			try CoreDataPerson.pinLegacyBirthdates(in: context)
 		}
 	}
 
