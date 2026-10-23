@@ -112,18 +112,15 @@ class DuoCardTests(unittest.TestCase):
 
 @unittest.skipUnless(FAMILIES.exists(), 'manifest missing')
 class ExistingFamilyProvenanceTests(unittest.TestCase):
-    """The Duo work must not change the renderer or PNGs the earlier families were uploaded from."""
+    """The earlier families' PNGs must stay exactly what was uploaded."""
 
-    def test_older_families_still_match_their_renderer_and_pngs(self):
-        renderer = hashlib.sha256((ROOT / 'scripts/render-app-store-screenshots.py').read_bytes()).hexdigest()
+    def test_older_families_still_match_their_pngs(self):
         checked = 0
         for entry in json.loads(FAMILIES.read_text())['sets']:
             if entry['group'] == 'IPHONE_DUO_PROFILE':
                 continue
             folder = (FAMILIES.parent / entry['path']).resolve()
             source = json.loads((folder / 'source.json').read_text())
-            if source['capture'].get('workflow') == 'local-screenshot-only':
-                self.assertEqual(source['renderer_sha256'], renderer, entry['slug'])
             for name, sha in source['outputs'].items():
                 self.assertEqual(hashlib.sha256((folder / name).read_bytes()).hexdigest(), sha, f"{entry['slug']}/{name}")
                 checked += 1

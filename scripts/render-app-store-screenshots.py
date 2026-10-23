@@ -259,8 +259,8 @@ def compose(directory, output):
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
         raise ValueError('Capture metadata needs the full source head SHA')
-    if metadata['device'] not in PROFILES or metadata['runtime'] != '26-5':
-        raise ValueError('Use a supported, independently captured native device / iOS 26.5')
+    if metadata['device'] not in PROFILES:
+        raise ValueError('Use a supported, independently captured native device')
     SIZE, FAMILY = PROFILES[metadata['device']]
     if (metadata['native_width'], metadata['native_height']) != SIZE:
         raise ValueError('Native capture dimensions do not match the selected hardware')

@@ -44,19 +44,30 @@ def run_with_host_captures(args, log, udid, folder):
             sys.exit(process.returncode)
 
 
+def runtime_of(udid):
+    """The simulator's runtime as the `27-1` form used in metadata."""
+    devices = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'devices', '-j'], text=True))['devices']
+    for runtime, entries in devices.items():
+        if any(entry['udid'] == udid for entry in entries):
+            return runtime.rsplit('iOS-', 1)[1]
+    raise SystemExit(f'No simulator with UDID {udid}')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--udid', required=True)
     parser.add_argument('--device', required=True)
     parser.add_argument('--family', required=True, choices=('dynamic-island', 'face-id', 'home-button', 'duo-outer', 'duo-inner'))
-    parser.add_argument('--runtime', default='26-5', help='Simulator runtime, for example 27-1')
-    parser.add_argument('--xcode', default='26.6', help='Xcode version that builds and runs the capture')
+    parser.add_argument('--runtime', help='Simulator runtime such as 27-1; defaults to the runtime of --udid')
+    parser.add_argument('--xcode', help='Xcode version recorded as evidence; defaults to the active Xcode')
     parser.add_argument('--width', required=True, type=int)
     parser.add_argument('--height', required=True, type=int)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--derived-data', required=True, type=Path)
     parser.add_argument('--built-products', type=Path, help='Reuse the same compiled app on another native simulator')
     args = parser.parse_args()
+    args.xcode = args.xcode or subprocess.check_output(['xcodebuild', '-version'], text=True).split()[1]
+    args.runtime = args.runtime or runtime_of(args.udid)
     output = args.output.resolve()
     if output == ROOT or ROOT in output.parents:
         parser.error('Capture evidence must be outside the repository')
