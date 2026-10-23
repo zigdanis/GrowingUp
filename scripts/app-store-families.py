@@ -36,55 +36,47 @@ def read_sets(manifest, catalog, only_groups=None):
         if folder != manifest.parent.resolve() and manifest.parent.resolve() not in folder.parents:
             raise ValueError('Screenshot folder escapes the manifest directory')
         source = json.loads((folder / 'source.json').read_text())
-        # A set lists its files and their native sizes; the older families use the four standard cards.
-        listed = entry.get('images') or [{'file': name, 'size': entry['size']} for name in m.FILES]
-        images = {locale:[m.screenshot(folder / locale / item['file'],locale) for item in listed] for locale in m.LOCALES}
+        images = {locale:[m.screenshot(folder / locale / name,locale) for name in m.FILES] for locale in m.LOCALES}
         outputs = {f'{locale}/{image["path"].name}':image['sha256'] for locale,files in images.items() for image in files}
-        if outputs != source['outputs'] or ('images' not in entry and source['size'] != entry['size']):
+        if outputs != source['outputs'] or source['size'] != entry['size']:
             raise ValueError('Screenshots do not match the reviewed manifest and provenance')
         for files in images.values():
-            for image,item in zip(files,listed):
-                if [image['width'],image['height']] != item['size']:
+            for image in files:
+                if [image['width'],image['height']] != entry['size']:
                     raise ValueError('Screenshot dimensions differ from native device dimensions')
                 group,spec = m.resolve_spec(catalog,image)
                 if group != entry['group']:
                     raise ValueError('Apple catalog resolved a different hardware group')
                 image['spec'] = spec
-        for capture,native_folder,inputs in captures(entry, source):
-            if capture['device'] != entry['device'] or capture['runtime'] != entry['runtime']:
-                raise ValueError('Manifest device/runtime differs from capture evidence')
-            if capture.get('workflow') == 'local-screenshot-only':
-                renderer = source.get('renderer', 'scripts/render-app-store-screenshots.py')
-                if source['renderer_sha256'] != digest(ROOT / renderer):
-                    raise ValueError('Renderer changed after composition')
-                if source.get('base_renderer_sha256', digest(ROOT / 'scripts/render-app-store-screenshots.py')) != digest(ROOT / 'scripts/render-app-store-screenshots.py'):
-                    raise ValueError('Shared renderer changed after composition')
-                for relative,sha in capture['capture_input_hashes'].items():
-                    if digest(ROOT / relative) != sha:
-                        raise ValueError('App/photo input changed after native capture')
-                for locale,names in inputs.items():
-                    for name,sha in names.items():
-                        native = ROOT / 'marketing/app-store/native-captures' / native_folder / locale / f'{name}.png'
-                        if digest(native) != sha:
-                            raise ValueError('Retained native source does not match composition')
-            else:
-                sha = capture['head_sha']
-                subprocess.run(['git','merge-base','--is-ancestor',sha,'HEAD'],cwd=ROOT,check=True,
-                               stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-                subprocess.run(['git','diff','--quiet',sha,'HEAD','--',*APP_INPUTS],cwd=ROOT,check=True)
-                subprocess.run(['git','diff','--quiet','HEAD','--',*APP_INPUTS],cwd=ROOT,check=True)
+        capture = source['capture']
+        if capture['device'] != entry['device'] or capture['runtime'] != entry['runtime']:
+            raise ValueError('Manifest device/runtime differs from capture evidence')
+        if capture.get('workflow') == 'local-screenshot-only':
+            renderer = source.get('renderer', 'scripts/render-app-store-screenshots.py')
+            if source['renderer_sha256'] != digest(ROOT / renderer):
+                raise ValueError('Renderer changed after composition')
+            if source.get('base_renderer_sha256', digest(ROOT / 'scripts/render-app-store-screenshots.py')) != digest(ROOT / 'scripts/render-app-store-screenshots.py'):
+                raise ValueError('Shared renderer changed after composition')
+            for relative,sha in capture['capture_input_hashes'].items():
+                if digest(ROOT / relative) != sha:
+                    raise ValueError('App/photo input changed after native capture')
+            for locale,inputs in source['inputs'].items():
+                for name,sha in inputs.items():
+                    native = ROOT / 'marketing/app-store/native-captures' / entry['slug'] / locale / f'{name}.png'
+                    if digest(native) != sha:
+                        raise ValueError('Retained native source does not match composition')
+        else:
+            sha = capture['head_sha']
+            subprocess.run(['git','merge-base','--is-ancestor',sha,'HEAD'],cwd=ROOT,check=True,
+                           stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+            subprocess.run(['git','diff','--quiet',sha,'HEAD','--',*APP_INPUTS],cwd=ROOT,check=True)
+            subprocess.run(['git','diff','--quiet','HEAD','--',*APP_INPUTS],cwd=ROOT,check=True)
         sets.append(entry | {'images':images})
     if len({s['group'] for s in sets}) != len(sets):
         raise ValueError('Duplicate target groups')
     if only_groups is None and 'IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE' not in {s['group'] for s in sets}:
         raise ValueError('Required DI medium must have its own explicit native set')
     return data,sets
-
-def captures(entry, source):
-    """The (capture record, native-capture folder, retained inputs) of each display a set was composed from."""
-    if 'displays' not in source:
-        return [(source['capture'], entry['slug'], source['inputs'])]
-    return [(display['capture'], f"{entry['slug']}/{name}", display['inputs']) for name,display in source['displays'].items()]
 
 def signature(placements):
     return {(p['id'],p['attributes']['placementGroup'],p['image']['id']) for p in placements}
@@ -102,7 +94,7 @@ def wait_active(api, loc_id, group, ordered, images, allow_extra=False):
         selected = [p for p in current if p['id'] in wanted]
         if not allow_extra and len(current) != len(ordered):
             raise ValueError('Unexpected screenshot placements in targeted group')
-        if m.verify_placements(selected,ordered,images,None):
+        if m.verify_placements(selected,ordered,images,images[0]['spec']):
             return current
         if time.monotonic() >= deadline:
             raise TimeoutError('Screenshot placement processing remains pending; inspect receipt before resuming')

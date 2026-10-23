@@ -26,88 +26,69 @@ class DuoCardTests(unittest.TestCase):
     def setUpClass(cls):
         cls.duo = load('duo_renderer', 'render-duo-app-store-screenshots.py')
 
-    def inputs(self, display):
-        size = self.duo.DISPLAYS[display]['size']
-        native = {name: (Image.new('RGBA', size, (255, 0, 255, 255)), Path(name)) for name in ('mia', 'leo-celebration', 'mango', 'teddy')}
+    def inputs(self):
+        native = {name: (Image.new('RGBA', self.duo.SIZE, (255, 0, 255, 255)), Path(name)) for name in ('mia', 'leo-celebration', 'mango', 'teddy')}
         for name, points in self.duo.WIDGET_POINTS.items():
             native[name] = (Image.new('RGBA', (points[0] * 3, points[1] * 3), (255, 0, 255, 255)), Path(name))
         return native
 
-    def render(self, display, locale, index):
-        size = self.duo.DISPLAYS[display]['size']
-        self.duo.base.SIZE = size
-        return self.duo.compose_image(self.duo.Canvas(size), display, self.inputs(display), locale, index)
-
-    def test_every_card_has_the_display_size_and_no_alpha(self):
-        for display, settings in self.duo.DISPLAYS.items():
-            for index in range(4):
-                card = self.render(display, 'en', index)
-                self.assertEqual(card.size, settings['size'])
-                self.assertEqual(card.mode, 'RGB')
+    def render(self, locale, index):
+        self.duo.base.SIZE = self.duo.SIZE
+        return self.duo.compose_image(self.duo.Canvas(self.duo.SIZE), self.inputs(), locale, index)
 
     def magenta(self, card, points):
         return any((lambda p: p[0] > 200 and p[1] < 60 and p[2] > 200)(card.getpixel(point)) for point in points)
 
-    def test_tilted_frames_keep_a_margin_to_the_edges(self):
-        for display, settings in self.duo.DISPLAYS.items():
-            width, height = settings['size']
-            for index in range(4):
-                card = self.render(display, 'ru', index)
-                where = f'{display} card {index + 1}'
-                for x in (0, 12, 24, width - 25, width - 13, width - 1):
-                    self.assertFalse(self.magenta(card, [(x, y) for y in range(0, height, 4)]), where)
-                for y in (0, 12, 24):
-                    self.assertFalse(self.magenta(card, [(x, y) for x in range(0, width, 4)]), where)
-                if display == 'inner':
-                    # The landscape cards show the whole device; the portrait ones bleed off the bottom on purpose.
-                    for y in (height - 25, height - 13, height - 1):
-                        self.assertFalse(self.magenta(card, [(x, y) for x in range(0, width, 4)]), where)
+    def test_every_card_has_the_display_size_and_no_alpha(self):
+        for index in range(4):
+            card = self.render('en', index)
+            self.assertEqual(card.size, self.duo.SIZE)
+            self.assertEqual(card.mode, 'RGB')
 
-    def test_outer_cards_cut_the_device_above_the_avatars_and_bar(self):
-        card = self.render('outer', 'en', 0)
+    def test_tilted_frames_keep_a_margin_to_the_edges(self):
+        width, height = self.duo.SIZE
+        for index in range(4):
+            card = self.render('ru', index)
+            for x in (0, 12, 24, width - 25, width - 13, width - 1):
+                self.assertFalse(self.magenta(card, [(x, y) for y in range(0, height, 4)]), f'card {index + 1}')
+            for y in (0, 12, 24):
+                self.assertFalse(self.magenta(card, [(x, y) for x in range(0, width, 4)]), f'card {index + 1}')
+
+    def test_cards_cut_the_device_above_the_avatars_and_bar(self):
+        card = self.render('en', 0)
         self.assertTrue(self.magenta(card, [(700, 2033)]))
         # About 72% of the framed screen shows: the cut is far above the bottom bar (84-92% of the screen).
-        frame_top = self.duo.LAYOUTS['outer']['tops']['mia']
-        visible = (2034 - frame_top) / (1240 * 2034 / 1398)
+        visible = (2034 - self.duo.TOPS['mia']) / (1240 * 2034 / 1398)
         self.assertLess(visible, .74)
 
     def test_russian_headlines_fit_the_text_area(self):
-        for display in self.duo.DISPLAYS:
-            for index in range(4):
-                self.render(display, 'ru', index)
+        for index in range(4):
+            self.render('ru', index)
 
     def test_overlong_headline_is_rejected(self):
-        size = self.duo.DISPLAYS['outer']['size']
-        canvas = self.duo.Canvas(size)
+        canvas = self.duo.Canvas(self.duo.SIZE)
         copy = self.duo.base.COPY
         self.duo.base.COPY = {'en': [('Возраст вашего\nребёнка' * 3, '')] * 4}
         try:
             with self.assertRaisesRegex(ValueError, 'approved text area'):
-                self.duo.marketing_copy(canvas, Image.new('RGBA', size), 'en', 0, self.duo.LAYOUTS['outer']['text'])
+                self.duo.marketing_copy(canvas, Image.new('RGBA', self.duo.SIZE), 'en', 0, self.duo.TEXT)
         finally:
             self.duo.base.COPY = copy
 
     def test_widget_screen_keeps_the_status_column_empty(self):
-        for display, settings in self.duo.DISPLAYS.items():
-            width, height = settings['size']
-            screen = self.duo.widget_screen(self.duo.Canvas(settings['size']), display, self.inputs(display))
-            self.assertEqual(screen.size, settings['size'])
-            # The right 84 pt (252 px) hold the clock and Wi-Fi of the native display.
-            self.assertFalse(self.magenta(screen, [(x, y) for x in range(width - 252, width, 6) for y in range(0, height, 6)]), display)
-            self.assertTrue(self.magenta(screen, [(width // 3, height // 3)]) or self.magenta(screen, [(width // 6, height // 6)]), display)
-
-    def test_inner_widget_card_sets_the_widgets_side_by_side_on_the_wide_display(self):
-        positions = self.duo.HOME_SCREEN['inner']['positions']
-        lefts = [left for left, _ in positions]
-        self.assertEqual(sorted(lefts), lefts)
-        self.assertEqual(len({top for _, top in positions}), 1)
+        width, height = self.duo.SIZE
+        screen = self.duo.widget_screen(self.duo.Canvas(self.duo.SIZE), self.inputs())
+        self.assertEqual(screen.size, self.duo.SIZE)
+        # The right 84 pt (252 px) hold the clock and Wi-Fi of the native display.
+        self.assertFalse(self.magenta(screen, [(x, y) for x in range(width - 252, width, 6) for y in range(0, height, 6)]))
+        self.assertTrue(self.magenta(screen, [(width // 3, height // 3)]) or self.magenta(screen, [(width // 6, height // 6)]))
 
     def test_composition_refuses_a_stale_output_folder(self):
         import tempfile
         with tempfile.TemporaryDirectory() as folder:
             (Path(folder) / 'old.png').write_bytes(b'x')
             with self.assertRaisesRegex(ValueError, 'empty'):
-                self.duo.compose(Path(folder), Path(folder), Path(folder))
+                self.duo.compose(Path(folder), Path(folder))
 
 
 @unittest.skipUnless(FAMILIES.exists(), 'manifest missing')

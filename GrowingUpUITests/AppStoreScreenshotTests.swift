@@ -193,7 +193,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 	}
 
 	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
-		if index > 0 { swipeToNextPage() }
+		if index > 0 { app.swipeLeft() }
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
 		let name = app.textFields["editor.name"]
@@ -267,13 +267,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 
 extension AppStoreScreenshotTests {
 	/// With `croppedTo`, keeps the centered part of the element at that point size (the widget preview is centered).
-	/// With host capture, the host takes the screenshot: XCTest cannot read iPhone Duo's open inner display.
 	private func checkpoint(_ name: String, element: XCUIElement? = nil, croppedTo size: CGSize? = nil) {
-		if ProcessInfo.processInfo.environment["GROWINGUP_APP_STORE_HOST_CAPTURE"] == "1" {
-			print("HOST_CAPTURE \(name)")
-			Thread.sleep(forTimeInterval: 2.5)
-			return
-		}
 		let screenshot = element?.screenshot() ?? app.screenshot()
 		let attachment: XCTAttachment
 		if let element, let size, let cgImage = screenshot.image.cgImage {
@@ -289,13 +283,5 @@ extension AppStoreScreenshotTests {
 		attachment.name = name
 		attachment.lifetime = .keepAlways
 		add(attachment)
-	}
-
-	/// Drags across the window: on iPhone Duo's open display XCTest reports a portrait-sized app frame for a landscape window.
-	private func swipeToNextPage() {
-		let window = app.windows.firstMatch
-		let start = window.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
-		start.press(
-			forDuration: 0.05, thenDragTo: window.coordinate(withNormalizedOffset: CGVector(dx: 0.2, dy: 0.5)), withVelocity: .fast, thenHoldForDuration: 0)
 	}
 }

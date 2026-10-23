@@ -64,11 +64,6 @@
             value = "$(GROWINGUP_APP_STORE_LOCALE)"
             isEnabled = "YES">
          </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "GROWINGUP_APP_STORE_HOST_CAPTURE"
-            value = "$(GROWINGUP_APP_STORE_HOST_CAPTURE)"
-            isEnabled = "YES">
-         </EnvironmentVariable>
       </EnvironmentVariables>
    </TestAction>
    <LaunchAction

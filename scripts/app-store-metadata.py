@@ -268,15 +268,12 @@ def verify_image(asset, image, spec_id):
 
 
 def verify_placements(verified, ordered, images, spec_id):
-    """Validate every asset and order; return False while placement processing is pending.
-
-    Without `spec_id`, each image is checked against its own resolved spec (sets of mixed sizes).
-    """
+    """Validate every asset and order; return False while placement processing is pending."""
     if [p["id"] for p in verified] != [p["id"] for p in ordered]:
         raise ValueError("Apple screenshot order does not match Mia, Leo, Mango/Teddy, widgets")
     ready = True
     for placement, image in zip(verified, images):
-        verify_image(placement["image"], image, spec_id or image["spec"])
+        verify_image(placement["image"], image, spec_id)
         state = placement["attributes"]["state"]
         if state == "ASSET_PROCESSING":
             ready = False

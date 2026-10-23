@@ -100,23 +100,21 @@ def solid_png(width, height, shade):
             + chunk(b'IDAT', zlib.compress(row * height)) + chunk(b'IEND', b''))
 
 DUO = 'IPHONE_DUO_PROFILE'
-OUTER, INNER = (1398, 2034), (2007, 2853)
-DUO_FILES = [f'{n + 1 + 4 * (display == "inner"):02d}-{display}-{slug}.png' for display in ('outer', 'inner')
-             for n, slug in enumerate(('mia', 'leo-celebration', 'mango-teddy', 'widgets'))]
+OUTER = (1398, 2034)
 CATALOG = {
     'features': [{'featureId': 'APP_STORE_VERSIONS', 'placementPolicies': [{
         'placementType': 'APP_SCREENSHOT', 'groupLimits': [{'groupIds': [DUO, 'OLD'], 'maxCount': 10}]}]}],
     'placementTypes': [{'placementTypeId': 'APP_SCREENSHOT', 'acceptsAssetCategories': ['APP_SCREENSHOTS_AND_PREVIEWS'],
-                        'specMappings': [{'placementGroupId': DUO, 'specs': ['outer-spec', 'inner-spec']}]}],
-    'imageSpecs': [{'specId': name, 'dimensions': {'minWidth': w, 'maxWidth': w, 'minHeight': h, 'maxHeight': h},
-                    'fileExtensions': ['.png'], 'maxFileSize': 10**9}
-                   for name, (w, h) in (('outer-spec', OUTER), ('inner-spec', INNER))],
+                        'specMappings': [{'placementGroupId': DUO, 'specs': ['outer-spec']}]}],
+    'imageSpecs': [{'specId': 'outer-spec', 'dimensions': {'minWidth': OUTER[0], 'maxWidth': OUTER[0],
+                                                           'minHeight': OUTER[1], 'maxHeight': OUTER[1]},
+                    'fileExtensions': ['.png'], 'maxFileSize': 10**9}],
     'placementProfileGroups': [{'placementProfileGroupId': DUO, 'platform': 'IPHONE_APP_STORE'}],
 }
 
 
 class DuoSetTests(unittest.TestCase):
-    """A Duo set puts the outer and the inner display, with two native sizes, into one placement group."""
+    """A Duo set is one placement group of the outer display's cards; selecting it skips the older families."""
 
     def setUp(self):
         self.folder = tempfile.TemporaryDirectory()
@@ -140,32 +138,26 @@ class DuoSetTests(unittest.TestCase):
 
     def write_duo(self):
         folder = self.screenshots / 'families/iphone-duo'
-        outputs, displays = {}, {}
-        for display, size in (('outer', OUTER), ('inner', INNER)):
-            inputs = {}
-            for locale in f.m.LOCALES:
-                inputs[locale] = {}
-                native = self.native / 'iphone-duo' / display / locale
-                native.mkdir(parents=True)
-                content = f'{display}-{locale}'.encode()
-                (native / 'mia.png').write_bytes(content)
-                inputs[locale]['mia'] = self.digest(content)
-            displays[display] = {'capture': {'workflow': 'local-screenshot-only', 'device': 'iPhone-Duo', 'runtime': '27-1',
-                                             'capture_input_hashes': {}}, 'inputs': inputs}
+        outputs, inputs = {}, {}
         for locale in f.m.LOCALES:
+            native = self.native / 'iphone-duo' / locale
+            native.mkdir(parents=True)
+            (native / 'mia.png').write_bytes(f'native-{locale}'.encode())
+            inputs[locale] = {'mia': self.digest(f'native-{locale}'.encode())}
             (folder / locale).mkdir(parents=True)
-            for index, name in enumerate(DUO_FILES):
-                content = solid_png(*(OUTER if index < 4 else INNER), index)
+            for index, name in enumerate(f.m.FILES):
+                content = solid_png(*OUTER, index)
                 (folder / locale / name).write_bytes(content)
                 outputs[f'{locale}/{name}'] = self.digest(content)
         source = {'renderer': 'scripts/render-duo-app-store-screenshots.py', 'renderer_sha256': self.digest(b'duo'),
-                  'base_renderer_sha256': self.digest(b'base'), 'displays': displays, 'outputs': outputs}
+                  'base_renderer_sha256': self.digest(b'base'), 'size': list(OUTER), 'outputs': outputs, 'inputs': inputs,
+                  'capture': {'workflow': 'local-screenshot-only', 'device': 'iPhone-Duo', 'runtime': '27-1',
+                              'capture_input_hashes': {}}}
         (folder / 'source.json').write_text(json.dumps(source))
 
     def write_manifest(self, old_set):
-        sets = [{'slug': 'iphone-duo', 'path': 'families/iphone-duo', 'group': DUO, 'device': 'iPhone-Duo', 'runtime': '27-1',
-                 'size': list(OUTER), 'images': [{'file': name, 'size': list(OUTER if index < 4 else INNER)}
-                                                 for index, name in enumerate(DUO_FILES)]}]
+        sets = [{'slug': 'iphone-duo', 'path': 'families/iphone-duo', 'group': DUO, 'device': 'iPhone-Duo',
+                 'runtime': '27-1', 'size': list(OUTER)}]
         if old_set:
             # An older family whose inputs changed since its capture: stale, but not part of this upload.
             old = self.screenshots / 'families/old'
@@ -174,13 +166,11 @@ class DuoSetTests(unittest.TestCase):
             sets.append({'slug': 'old', 'path': 'families/old', 'group': 'OLD', 'device': 'x', 'runtime': 'y', 'size': [1, 1]})
         self.manifest.write_text(json.dumps({'app_id': '1461697772', 'version': '2.3.0', 'version_id': 'v', 'sets': sets}))
 
-    def test_one_group_takes_both_displays_with_their_own_specs(self):
+    def test_duo_group_is_read_with_its_spec(self):
         _, sets = f.read_sets(self.manifest, CATALOG, [DUO])
         self.assertEqual([s['group'] for s in sets], [DUO])
         for locale in f.m.LOCALES:
-            images = sets[0]['images'][locale]
-            self.assertEqual([i['name'] if 'name' in i else i['path'].name for i in images], DUO_FILES)
-            self.assertEqual([i['spec'] for i in images], ['outer-spec'] * 4 + ['inner-spec'] * 4)
+            self.assertEqual([i['spec'] for i in sets[0]['images'][locale]], ['outer-spec'] * 4)
 
     def test_selected_group_does_not_revalidate_stale_older_families(self):
         self.write_manifest(old_set=True)
@@ -189,7 +179,7 @@ class DuoSetTests(unittest.TestCase):
             f.read_sets(self.manifest, CATALOG)
 
     def test_changed_retained_native_input_is_refused(self):
-        (self.native / 'iphone-duo/inner/ru/mia.png').write_bytes(b'edited')
+        (self.native / 'iphone-duo/ru/mia.png').write_bytes(b'edited')
         with self.assertRaisesRegex(ValueError, 'Retained native source'):
             f.read_sets(self.manifest, CATALOG, [DUO])
 
@@ -202,27 +192,6 @@ class DuoSetTests(unittest.TestCase):
         (self.root / 'scripts/render-app-store-screenshots.py').write_text('changed')
         with self.assertRaisesRegex(ValueError, 'Shared renderer changed'):
             f.read_sets(self.manifest, CATALOG, [DUO])
-
-    def test_a_listed_size_that_differs_from_the_png_is_refused(self):
-        data = json.loads(self.manifest.read_text())
-        data['sets'][0]['images'][5]['size'] = list(OUTER)
-        self.manifest.write_text(json.dumps(data))
-        with self.assertRaisesRegex(ValueError, 'dimensions differ'):
-            f.read_sets(self.manifest, CATALOG, [DUO])
-
-    def test_each_placement_is_verified_against_its_own_spec(self):
-        _, sets = f.read_sets(self.manifest, CATALOG, [DUO])
-        images = sets[0]['images']['ru']
-        def placement(index, image, spec):
-            return {'id': f'p{index}', 'attributes': {'state': 'ACTIVE'}, 'image': {'attributes': {
-                'state': 'APPROVED', 'fileSize': len(image['content']), 'referenceName': image['reference'],
-                'specId': spec, 'imageAsset': {'width': image['width'], 'height': image['height']}}}}
-        placements = [placement(i, image, image['spec']) for i, image in enumerate(images)]
-        ordered = [{'id': p['id']} for p in placements]
-        self.assertTrue(f.m.verify_placements(placements, ordered, images, None))
-        placements[6] = placement(6, images[6], 'outer-spec')
-        with self.assertRaisesRegex(ValueError, 'does not match'):
-            f.m.verify_placements(placements, ordered, images, None)
 
 
 if __name__=='__main__':unittest.main()
