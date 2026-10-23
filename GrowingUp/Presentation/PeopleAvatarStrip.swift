@@ -10,6 +10,8 @@ struct PeopleAvatarStrip: View {
 	let canAdd: Bool
 	let thumbnails: AvatarThumbnailsPresenter
 	let onSelect: (UUID?) -> Void
+	/// The strip's height, so the pages behind it can keep their content clear of it.
+	static let height: CGFloat = 44
 
 	var body: some View {
 		ViewThatFits(in: .horizontal) {
@@ -19,7 +21,7 @@ struct PeopleAvatarStrip: View {
 					avatars
 				}
 				// A horizontal scroll view would otherwise grow vertically inside the bottom-aligned overlay.
-				.frame(height: 44)
+				.frame(height: Self.height)
 				.onAppear { proxy.scrollTo(selectedID, anchor: .center) }
 				.onChange(of: selectedID) { _, id in
 					withAnimation { proxy.scrollTo(id, anchor: .center) }

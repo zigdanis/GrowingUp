@@ -2,12 +2,21 @@ import SwiftUI
 
 struct EmptyPersonScene: View {
 	let onAdd: () -> Void
+	/// How far up from the bottom of this page the floating avatar strip reaches, so the invitation keeps clear of it.
+	let stripClearance: CGFloat
+	/// The empty margin around the invitation, which may overlap the strip: only its text and button must stay clear.
+	private static let margin: CGFloat = 32
 
 	var body: some View {
+		let stripReach = max(0, stripClearance - Self.margin)
+		// Each option is measured at its intrinsic height, since the content's flexible frame reports that when unconstrained.
 		ViewThatFits(in: .vertical) {
-			content
-			// The avatar strip floats over the bottom of this page, so the scrolled content ends above it.
-			ScrollView { content.padding(.bottom, 96) }
+			// Centered in the whole page while the strip stays clear of it.
+			content.padding(.vertical, stripReach)
+			// Otherwise centered in the space above the strip.
+			content.padding(.bottom, stripReach)
+			// The avatar strip floats over the bottom of this page, so the scrolling ends above it.
+			ScrollView { content }.padding(.bottom, stripClearance)
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background(Color(.systemBackground))
@@ -36,7 +45,7 @@ struct EmptyPersonScene: View {
 			.accessibilityIdentifier("person.add")
 		}
 		.multilineTextAlignment(.center)
-		.padding(32)
+		.padding(Self.margin)
 		// Wider than any iPhone, such as an iPhone Duo, the invitation stays a readable centered column.
 		.frame(maxWidth: 440)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)

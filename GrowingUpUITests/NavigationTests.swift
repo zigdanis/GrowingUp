@@ -50,12 +50,35 @@ final class NavigationTests: XCTestCase {
 		checkpoint("widget-sixth-link")
 	}
 
-	private func launch() {
+	func testLargestTextKeepsCardsWholeAndClearOfTheStrip() {
+		launch(contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+		let countdown = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+		// The strip floats above the card and the card wraps its countdown rather than truncating it.
+		XCTAssertLessThanOrEqual(app.buttons["people.avatar.0"].frame.maxY, countdown.frame.minY)
+		XCTAssertTrue(edit.isHittable)
+		XCTAssertLessThanOrEqual(edit.frame.maxY, app.frame.maxY)
+		checkpoint("large-text-overview")
+		app.buttons["people.avatar.add"].tap()
+		let add = app.buttons["person.add"]
+		XCTAssertTrue(add.waitForExistence(timeout: 5))
+		// The invitation scrolls in the space above the strip, so its button can always be brought clear of it.
+		let strip = app.buttons["people.avatar.0"]
+		for _ in 0..<5 where !add.isHittable || add.frame.maxY > strip.frame.minY {
+			app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.25))
+				.press(forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.02)))
+		}
+		XCTAssertTrue(add.isHittable)
+		XCTAssertLessThanOrEqual(add.frame.maxY, strip.frame.minY)
+		checkpoint("large-text-add-page")
+	}
+
+	private func launch(contentSize: String = "UICTContentSizeCategoryL") {
 		let configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: .dark)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", "Dark",
-			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+			"-UIPreferredContentSizeCategoryName", contentSize
 		]
 		app.launch()
 		XCTAssertTrue(edit.waitForExistence(timeout: 10))
