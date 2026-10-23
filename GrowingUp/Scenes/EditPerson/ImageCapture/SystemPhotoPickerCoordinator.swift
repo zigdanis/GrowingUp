@@ -4,6 +4,8 @@ import UniformTypeIdentifiers
 final class SystemPhotoPickerCoordinator: NSObject, PHPickerViewControllerDelegate {
 	let onPicked: (UIImage) -> Void
 	let onCancel: () -> Void
+	private var isLoading = false
+	private var isFinished = false
 
 	init(onPicked: @escaping (UIImage) -> Void, onCancel: @escaping () -> Void) {
 		self.onPicked = onPicked
@@ -12,15 +14,29 @@ final class SystemPhotoPickerCoordinator: NSObject, PHPickerViewControllerDelega
 
 	func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 		guard let provider = results.first?.itemProvider else {
-			onCancel()
+			finish(with: nil)
 			return
 		}
+		// One photo at a time; another tap while it loads is ignored.
+		guard !isLoading else { return }
+		isLoading = true
 		showLoading(over: picker)
-		_ = provider.loadDataRepresentation(forTypeIdentifier: UTType.image.identifier) { [onPicked, onCancel] data, _ in
+		_ = provider.loadDataRepresentation(forTypeIdentifier: UTType.image.identifier) { data, _ in
 			Task { @MainActor in
-				if let data, let image = try? await WorkingImage.decode(data) { onPicked(image) } else { onCancel() }
+				var image: UIImage?
+				if let data {
+					image = try? await WorkingImage.decode(data)
+				}
+				self.finish(with: image)
 			}
 		}
+	}
+
+	/// Reports only the first outcome, so a photo that finishes loading after Cancel is dropped.
+	private func finish(with image: UIImage?) {
+		guard !isFinished else { return }
+		isFinished = true
+		if let image { onPicked(image) } else { onCancel() }
 	}
 
 	/// A spinner over the picker while the picked photo loads and decodes. Touches still reach the picker, so Cancel

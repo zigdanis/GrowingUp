@@ -141,7 +141,6 @@ final class PhotoGridViewModel: NSObject {
 	private func imageData(for asset: PHAsset) async throws -> Data {
 		try Task.checkCancellation()
 		let options = PHImageRequestOptions()
-		options.deliveryMode = .highQualityFormat
 		options.isNetworkAccessAllowed = true
 		// Called on a background queue while an iCloud original downloads.
 		options.progressHandler = { [weak self] progress, _, _, _ in
@@ -150,21 +149,15 @@ final class PhotoGridViewModel: NSObject {
 				self.selectionProgress = progress
 			}
 		}
-		let gate = ContinuationGate()
+		// PhotoKit calls the handler exactly once, also when the request is cancelled.
 		return try await withCheckedThrowingContinuation { continuation in
 			selectionRequestID = imageManager.requestImageDataAndOrientation(for: asset, options: options) { data, _, _, info in
-				let result: Result<Data, Error>
 				if let data {
-					result = .success(data)
+					continuation.resume(returning: data)
 				} else if (info?[PHImageCancelledKey] as? Bool) ?? false {
-					result = .failure(CancellationError())
+					continuation.resume(throwing: CancellationError())
 				} else {
-					result = .failure(info?[PHImageErrorKey] as? Error ?? CocoaError(.fileReadUnknown))
-				}
-				// May be called off the main thread; the gate keeps a repeated callback from resuming twice.
-				Task { @MainActor in
-					guard gate.finish(when: true) else { return }
-					continuation.resume(with: result)
+					continuation.resume(throwing: info?[PHImageErrorKey] as? Error ?? CocoaError(.fileReadUnknown))
 				}
 			}
 		}
