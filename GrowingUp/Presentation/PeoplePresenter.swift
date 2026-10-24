@@ -15,6 +15,10 @@ final class PeoplePresenter {
 	var editor: PersonEditorPresenter?
 	var error: SceneError?
 	private(set) var isLoading = true
+	/// Whether a long press put the mosaic in reordering, where tiles drag to new places instead of opening the viewer.
+	private(set) var isReordering = false
+	/// The latest order being stored; each save waits for the one before, so the store ends in the last order shown.
+	@ObservationIgnored private var orderSave: Task<Void, Error>?
 	private var pendingWidgetID: UUID?
 	private var pendingWidgetIndex: Int?
 	private var pendingAdd = false
@@ -57,9 +61,10 @@ final class PeoplePresenter {
 
 	func edit(_ person: Person) { showEditor(person: person) }
 
-	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile.
+	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile; tiles open nothing while
+	/// reordering.
 	func view(_ id: UUID) {
-		guard persons.contains(where: { $0.id == id }) else { return }
+		guard !isReordering, persons.contains(where: { $0.id == id }) else { return }
 		selectedID = id
 		isViewing = true
 	}
@@ -72,6 +77,53 @@ final class PeoplePresenter {
 
 	/// Returns from the viewer to the mosaic.
 	func closeViewer() { isViewing = false }
+
+	/// Lets the mosaic's tiles be dragged to new places, as a long press on one does.
+	func startReordering() {
+		guard !persons.isEmpty else { return }
+		isReordering = true
+	}
+
+	/// Returns the mosaic to opening people from their tiles.
+	func finishReordering() { isReordering = false }
+
+	/// Moves the person with `id` to `index` of the mosaic while reordering, such as under a dragged tile; `saveOrder()`
+	/// then stores the new order.
+	func move(_ id: UUID, to index: Int) {
+		guard isReordering, let source = persons.firstIndex(where: { $0.id == id }) else { return }
+		let destination = min(max(index, 0), persons.count - 1)
+		guard source != destination else { return }
+		var reordered = persons
+		reordered.insert(reordered.remove(at: source), at: destination)
+		persons = reordered
+	}
+
+	/// Stores the mosaic's current order, as a dragged tile lands; a failure puts the people back in their stored order.
+	func saveOrder() async {
+		let order = persons.map(\.id)
+		guard order != persons.sorted().map(\.id) else { return }
+		let storedOrder = Dictionary(uniqueKeysWithValues: persons.map { ($0.id, $0.displayOrder) })
+		// The people take their new places at once, so a change saved meanwhile keeps them where they are shown.
+		for index in persons.indices {
+			persons[index].displayOrder = index + 1
+		}
+		let previous = orderSave
+		let save = Task { [reorderUseCase = configurator.reorderUseCase] in
+			_ = await previous?.result
+			try await reorderUseCase.reorder(order)
+		}
+		orderSave = save
+		do {
+			try await save.value
+			reloadWidgets()
+		} catch {
+			for index in persons.indices {
+				persons[index].displayOrder = storedOrder[persons[index].id] ?? persons[index].displayOrder
+			}
+			persons.sort()
+			self.error = SceneError(error)
+		}
+	}
 
 	func open(_ url: URL) {
 		if URLComponents(url: url, resolvingAgainstBaseURL: false)?.host == Constants.widgetAddPersonHost {
@@ -117,10 +169,13 @@ final class PeoplePresenter {
 		guard let target else { return }
 		// The person opens over the mosaic, so closing the viewer lands on the mosaic like a tile tap would.
 		editor = nil
+		isReordering = false
 		view(target)
 	}
 
 	private func showEditor(person: Person?) {
+		// The "Add person" link of a widget may arrive while reordering, which the editor ends.
+		isReordering = false
 		weak var session: PersonEditorPresenter?
 		let editor = configurator.editor(
 			person: person,

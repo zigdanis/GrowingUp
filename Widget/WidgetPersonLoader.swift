@@ -3,7 +3,7 @@ import UIKit
 
 /// Loads the pinned people for the widgets with their widget photos.
 ///
-/// People are ordered by `createdDate`, so each person's `index` matches the app's deep link. A failed fetch is
+/// People follow the mosaic order, so each person's `index` matches the app's deep link. A failed fetch is
 /// logged and reads as nobody pinned; a photo that fails to load leaves that person without one.
 struct WidgetPersonLoader {
 	let fetch: () async throws -> [Person]

@@ -15,12 +15,16 @@
 		F9630DE9E4483A3BE44D9590 /* PeopleMosaic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */; };
 		C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA33E22728855C1FB098C693 /* PeopleInvitation.swift */; };
 		05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */; };
+		ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */; };
+		ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */; };
+		ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED183F51000DBDC05872F428 /* MosaicDrag.swift */; };
 		BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B232AA95FA03E9846676E93 /* MosaicPicture.swift */; };
 		6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */; };
 		4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE199505592BB868450287CE /* MosaicEdgeScrims.swift */; };
 		5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */; };
 		A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39444605A63DB84646F2AE /* AmbientBackground.swift */; };
 		B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D869F72C305651BFD41E0104 /* AddPersonButton.swift */; };
+		ED18701654761ECB1AFB4257 /* FinishReorderingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */; };
 		C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
@@ -79,6 +83,7 @@
 		092F4190226F9A370049E29E /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 092C32CC226129310067B2DB /* Logging.swift */; };
 		094145FF2222CD2F0035D0E6 /* Core.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09051B5621C55EB6008A99C6 /* Core.framework */; };
 		094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */; };
+		ED18A3E55B05EF2041B11DA2 /* CoreDataPersonsOrderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18EF40553A6D416F5697C0 /* CoreDataPersonsOrderTests.swift */; };
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
@@ -105,8 +110,10 @@
 		099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9164225F4D64005C963C /* FetchPersonsUseCaseTests.swift */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
 		09CFE6B02270290D007AB456 /* RemovePersonUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */; };
+		ED1810E8D370B22803BFC58D /* ReorderPersonsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18EB4032A5EA1922E9AECD /* ReorderPersonsUseCase.swift */; };
 		09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */; };
 		09CFE6B622703C26007AB456 /* RemovePersonUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B522703C26007AB456 /* RemovePersonUseCaseTests.swift */; };
+		ED182AD7D5ACBDB5B547CADA /* ReorderPersonsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED185C7762B401E117C92A77 /* ReorderPersonsUseCaseTests.swift */; };
 		09CFE6B822709FAB007AB456 /* RemovePersonUseCaseSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CFE6B722709FAB007AB456 /* RemovePersonUseCaseSpy.swift */; };
 		09D842852364DB9C008FFD86 /* GrowingUp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 09165378223ECFD60081FB10 /* GrowingUp.xcdatamodeld */; };
 		09D8428B2364EB5A008FFD86 /* AccessToWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D842892364EB5A008FFD86 /* AccessToWidget.swift */; };
@@ -115,6 +122,7 @@
 		09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6B52523535E26003A1A01 /* MemoryCache.swift */; };
 		0A0DB22A0E8EF87D2EF77F6C /* OverviewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E848E5E4B3C416E656E4810F /* OverviewPresenter.swift */; };
 		0E535C717B638D104C76D4A1 /* RemovePersonUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36202A4CB2F219F5B570019 /* RemovePersonUseCaseImplementation.swift */; };
+		ED180B85A231FF04FE7E93E3 /* ReorderPersonsUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED180DAED22F8B57E7443769 /* ReorderPersonsUseCaseImplementation.swift */; };
 		0ED0BC41BC32F0A632AD0DE9 /* CameraSessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5081903312CD073F9BEAE09 /* CameraSessionState.swift */; };
 		12253E864F22D0E788B0A58E /* ImageSourceSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6573684CEC109BF942F948B /* ImageSourceSelectionView.swift */; };
 		15D4457235609D2DFCAD162F /* CropShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E304222C36896704B86B7 /* CropShape.swift */; };
@@ -228,6 +236,7 @@
 		47F91BDB15D345441CFF1C01 /* MosaicPicturesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */; };
 		3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */; };
 		C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */; };
+		ED1844113AB9605B329116D0 /* PeopleReorderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */; };
 		0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015B5F413251C88922327A /* AgeTicker.swift */; };
 		143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */; };
 		3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */; };
@@ -237,6 +246,7 @@
 		014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DAA5842EE458E988A419CC /* AgeTickerTests.swift */; };
 		090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */; };
 		599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508A5E39114E5FF4A37059BB /* NavigationTests.swift */; };
+		ED18B5F43BE3D3EB33E4F43F /* ReorderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */; };
 		D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */; };
 		DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
 		FE04D3B6442C611B7D1DAEC1 /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
@@ -328,12 +338,16 @@
 		427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleMosaic.swift; sourceTree = "<group>"; };
 		DA33E22728855C1FB098C693 /* PeopleInvitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleInvitation.swift; sourceTree = "<group>"; };
 		EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTile.swift; sourceTree = "<group>"; };
+		ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTileButton.swift; sourceTree = "<group>"; };
+		ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicWiggle.swift; sourceTree = "<group>"; };
+		ED183F51000DBDC05872F428 /* MosaicDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicDrag.swift; sourceTree = "<group>"; };
 		5B232AA95FA03E9846676E93 /* MosaicPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicture.swift; sourceTree = "<group>"; };
 		A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayout.swift; sourceTree = "<group>"; };
 		AE199505592BB868450287CE /* MosaicEdgeScrims.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicEdgeScrims.swift; sourceTree = "<group>"; };
 		B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPalette.swift; sourceTree = "<group>"; };
 		1F39444605A63DB84646F2AE /* AmbientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientBackground.swift; sourceTree = "<group>"; };
 		D869F72C305651BFD41E0104 /* AddPersonButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonButton.swift; sourceTree = "<group>"; };
+		ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishReorderingButton.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayout.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScale.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicture.swift; sourceTree = "<group>"; };
@@ -346,6 +360,7 @@
 		ED17002F611FE46339590755 /* PersonImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImageLoader.swift; sourceTree = "<group>"; };
 		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
+		ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpDisplayOrder.xcdatamodel; sourceTree = "<group>"; };
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
 		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
 		C51000000000000000000002 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
@@ -394,6 +409,7 @@
 		094DF9C0223AB35D00C331EC /* GrowingUpTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		094DF9C4223AB35D00C331EC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsGatewayTests.swift; sourceTree = "<group>"; };
+		ED18EF40553A6D416F5697C0 /* CoreDataPersonsOrderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPersonsOrderTests.swift; sourceTree = "<group>"; };
 		094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
@@ -413,8 +429,10 @@
 		099C9164225F4D64005C963C /* FetchPersonsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPersonsUseCaseTests.swift; sourceTree = "<group>"; };
 		09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeCalculatorTests.swift; sourceTree = "<group>"; };
 		09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCase.swift; sourceTree = "<group>"; };
+		ED18EB4032A5EA1922E9AECD /* ReorderPersonsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderPersonsUseCase.swift; sourceTree = "<group>"; };
 		09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseTests.swift; sourceTree = "<group>"; };
 		09CFE6B522703C26007AB456 /* RemovePersonUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCaseTests.swift; sourceTree = "<group>"; };
+		ED185C7762B401E117C92A77 /* ReorderPersonsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderPersonsUseCaseTests.swift; sourceTree = "<group>"; };
 		09CFE6B722709FAB007AB456 /* RemovePersonUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCaseSpy.swift; sourceTree = "<group>"; };
 		09D26ADD2251091700BF452F /* PersonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImage.swift; sourceTree = "<group>"; };
 		09D842892364EB5A008FFD86 /* AccessToWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToWidget.swift; sourceTree = "<group>"; };
@@ -490,6 +508,7 @@
 		A20000000000000000000008 /* UITestAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestAppearance.swift; sourceTree = "<group>"; };
 		A20000000000000000000009 /* UITestSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSeed.swift; sourceTree = "<group>"; };
 		A36202A4CB2F219F5B570019 /* RemovePersonUseCaseImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCaseImplementation.swift; sourceTree = "<group>"; };
+		ED180DAED22F8B57E7443769 /* ReorderPersonsUseCaseImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderPersonsUseCaseImplementation.swift; sourceTree = "<group>"; };
 		A6573684CEC109BF942F948B /* ImageSourceSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSourceSelectionView.swift; sourceTree = "<group>"; };
 		A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemPhotoPicker.swift; sourceTree = "<group>"; };
 		AF145287DF805CE31F2E5744 /* ImageCaptureStage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptureStage.swift; sourceTree = "<group>"; };
@@ -537,6 +556,7 @@
 		A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenter.swift; sourceTree = "<group>"; };
 		6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenterTests.swift; sourceTree = "<group>"; };
 		9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleSelectionTests.swift; sourceTree = "<group>"; };
+		ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleReorderingTests.swift; sourceTree = "<group>"; };
 		A0015B5F413251C88922327A /* AgeTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTicker.swift; sourceTree = "<group>"; };
 		6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCountdown.swift; sourceTree = "<group>"; };
 		D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAgeCard.swift; sourceTree = "<group>"; };
@@ -546,6 +566,7 @@
 		32DAA5842EE458E988A419CC /* AgeTickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTickerTests.swift; sourceTree = "<group>"; };
 		7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPresenterTests.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderingTests.swift; sourceTree = "<group>"; };
 		E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetTests.swift; sourceTree = "<group>"; };
 		D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTile.swift; sourceTree = "<group>"; };
 		E9A6291E7B63A68981734E8F /* PersonTileContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContent.swift; sourceTree = "<group>"; };
@@ -742,10 +763,12 @@
 				096E61F022666DC9000181D4 /* EditPersonUseCase.swift */,
 				099C9157225E9871005C963C /* FetchPersonsUseCase.swift */,
 				09CFE6AF2270290D007AB456 /* RemovePersonUseCase.swift */,
+				ED18EB4032A5EA1922E9AECD /* ReorderPersonsUseCase.swift */,
 				B50D219DBE5023AC85A59C26 /* AddPersonUseCaseImplementation.swift */,
 				39CFF7E7133C5E71BD9198A6 /* EditPersonUseCaseImplementation.swift */,
 				0B59021019FEA8B7F3983226 /* FetchPersonsUseCaseImplementation.swift */,
 				A36202A4CB2F219F5B570019 /* RemovePersonUseCaseImplementation.swift */,
+				ED180DAED22F8B57E7443769 /* ReorderPersonsUseCaseImplementation.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -790,6 +813,7 @@
 				09CFE6B3227035E9007AB456 /* EditPersonUseCaseTests.swift */,
 				099C9164225F4D64005C963C /* FetchPersonsUseCaseTests.swift */,
 				09CFE6B522703C26007AB456 /* RemovePersonUseCaseTests.swift */,
+				ED185C7762B401E117C92A77 /* ReorderPersonsUseCaseTests.swift */,
 			);
 			path = UseCases;
 			sourceTree = "<group>";
@@ -877,6 +901,7 @@
 				AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */,
 				DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */,
 				094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */,
+				ED18EF40553A6D416F5697C0 /* CoreDataPersonsOrderTests.swift */,
 				0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */,
 				CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */,
 			);
@@ -955,6 +980,7 @@
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 				6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
+				ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */,
 				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
 				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
 				32DAA5842EE458E988A419CC /* AgeTickerTests.swift */,
@@ -1065,12 +1091,16 @@
 				427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */,
 				DA33E22728855C1FB098C693 /* PeopleInvitation.swift */,
 				EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */,
+				ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */,
+				ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */,
+				ED183F51000DBDC05872F428 /* MosaicDrag.swift */,
 				5B232AA95FA03E9846676E93 /* MosaicPicture.swift */,
 				A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */,
 				AE199505592BB868450287CE /* MosaicEdgeScrims.swift */,
 				B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */,
 				1F39444605A63DB84646F2AE /* AmbientBackground.swift */,
 				D869F72C305651BFD41E0104 /* AddPersonButton.swift */,
+				ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */,
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
 				B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */,
 				433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */,
@@ -1176,6 +1206,7 @@
 				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 				508A5E39114E5FF4A37059BB /* NavigationTests.swift */,
+				ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */,
 			);
 			path = GrowingUpUITests;
 			sourceTree = "<group>";
@@ -1497,6 +1528,7 @@
 				A10000000000000000000002 /* ImageStore.swift in Sources */,
 				0983E766226D9652007EC8D2 /* FetchPersonsUseCase.swift in Sources */,
 				09CFE6B02270290D007AB456 /* RemovePersonUseCase.swift in Sources */,
+				ED1810E8D370B22803BFC58D /* ReorderPersonsUseCase.swift in Sources */,
 				095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */,
 				0983E763226D964A007EC8D2 /* PersonsGateway.swift in Sources */,
 				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
@@ -1516,6 +1548,7 @@
 				9902F81FF6251AACE29B1E95 /* EditPersonUseCaseImplementation.swift in Sources */,
 				73216BAB019414662978A519 /* FetchPersonsUseCaseImplementation.swift in Sources */,
 				0E535C717B638D104C76D4A1 /* RemovePersonUseCaseImplementation.swift in Sources */,
+				ED180B85A231FF04FE7E93E3 /* ReorderPersonsUseCaseImplementation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1530,6 +1563,7 @@
 				092C32D322612AC70067B2DB /* DisplayPersonsUseCaseSpy.swift in Sources */,
 				09CFE6B822709FAB007AB456 /* RemovePersonUseCaseSpy.swift in Sources */,
 				094DF9CC223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift in Sources */,
+				ED18A3E55B05EF2041B11DA2 /* CoreDataPersonsOrderTests.swift in Sources */,
 				7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */,
 				05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */,
 				2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */,
@@ -1555,6 +1589,7 @@
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
 				098054FC223C2B8C00E24D40 /* AddPersonUseCaseSpy.swift in Sources */,
 				09CFE6B622703C26007AB456 /* RemovePersonUseCaseTests.swift in Sources */,
+				ED182AD7D5ACBDB5B547CADA /* ReorderPersonsUseCaseTests.swift in Sources */,
 				09E1C316236F487D00FC884B /* FetchPersonsUseCaseSpy.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
@@ -1566,6 +1601,7 @@
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 				3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
+				ED1844113AB9605B329116D0 /* PeopleReorderingTests.swift in Sources */,
 				8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */,
 				20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */,
 				014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */,
@@ -1627,12 +1663,16 @@
 				F9630DE9E4483A3BE44D9590 /* PeopleMosaic.swift in Sources */,
 				C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */,
 				05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */,
+				ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */,
+				ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */,
+				ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */,
 				BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */,
 				6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */,
 				4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */,
 				5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */,
 				A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */,
 				B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */,
+				ED18701654761ECB1AFB4257 /* FinishReorderingButton.swift in Sources */,
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
@@ -1703,6 +1743,7 @@
 				A20000000000000000000005 /* UITestAppearance.swift in Sources */,
 				A20000000000000000000006 /* UITestSeed.swift in Sources */,
 				599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */,
+				ED18B5F43BE3D3EB33E4F43F /* ReorderingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2265,8 +2306,9 @@
 				09165379223ECFD60081FB10 /* GrowingUp.xcdatamodel */,
 				A5000000000000000000000D /* GrowingUpSixPeople.xcdatamodel */,
 				ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */,
+				ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */,
 			);
-			currentVersion = ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */;
+			currentVersion = ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */;
 			path = GrowingUp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

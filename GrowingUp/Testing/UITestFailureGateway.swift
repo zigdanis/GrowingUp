@@ -1,5 +1,6 @@
 #if DEBUG
 	import Core
+	import Foundation
 
 	final class UITestFailureGateway: PersonsGateway {
 		let base: PersonsGateway
@@ -25,6 +26,11 @@
 		func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
 			try checkFailure()
 			return try await base.edit(person: person, with: parameters)
+		}
+
+		func reorder(_ ids: [UUID]) async throws {
+			try checkFailure()
+			try await base.reorder(ids)
 		}
 
 		func remove(person: Person) async throws { try await base.remove(person: person) }

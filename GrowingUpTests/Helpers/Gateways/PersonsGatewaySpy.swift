@@ -22,6 +22,9 @@ class PersonsGatewaySpy: PersonsGateway {
 	var editPersonResultToBeReturned: Result<Person, CoreError>!
 	var removePersonCalled = false
 	var removePersonResultToBeReturned: Result<Void, CoreError>!
+	var reorderedIDs: [[UUID]] = []
+	var reorderResultToBeReturned: Result<Void, CoreError> = .success(())
+	var onReorder: (@MainActor () async -> Void)?
 	var onAdd: (() -> Void)?
 	var onEdit: (() -> Void)?
 	var onRemove: (() -> Void)?
@@ -47,6 +50,12 @@ class PersonsGatewaySpy: PersonsGateway {
 		addPersonParameters = parameters
 		onEdit?()
 		return try editPersonResultToBeReturned.get()
+	}
+
+	func reorder(_ ids: [UUID]) async throws {
+		reorderedIDs.append(ids)
+		await onReorder?()
+		try reorderResultToBeReturned.get()
 	}
 
 	func remove(person: Person) async throws {

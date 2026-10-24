@@ -7,6 +7,7 @@ struct SceneConfigurator {
 	let addUseCase: AddPersonUseCase
 	let editUseCase: EditPersonUseCase
 	let removeUseCase: RemovePersonUseCase
+	let reorderUseCase: ReorderPersonsUseCase
 	let loadImage: (PersonImage) async throws -> UIImage
 	/// Decodes a stored picture to a thumbnail whose longer side is at most the given pixels, without caching the original.
 	let loadThumbnail: (PersonImage, Int) async throws -> UIImage
@@ -26,6 +27,7 @@ struct SceneConfigurator {
 		addUseCase = AddPersonUseCaseImplementation(personsGateway: gateway)
 		editUseCase = EditPersonUseCaseImplementation(personsGateway: gateway)
 		removeUseCase = RemovePersonUseCaseImplementation(personsGateway: gateway)
+		reorderUseCase = ReorderPersonsUseCaseImplementation(personsGateway: gateway)
 	}
 
 	func editor(

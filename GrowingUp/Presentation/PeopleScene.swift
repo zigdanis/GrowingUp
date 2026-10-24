@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
-/// open in the full-screen viewer, which swipes down back into the tile.
+/// open in the full-screen viewer, which swipes down back into the tile. While a long press reorders the mosaic, "Done"
+/// takes the button's place.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
@@ -23,11 +24,10 @@ struct PeopleScene: View {
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
-					if !presenter.isLoading, presenter.canAdd {
-						AddPersonButton(action: presenter.add)
-							.frame(maxWidth: .infinity)
-							.modifier(trailingPane)
-							.padding(.bottom, 8)
+					if presenter.isReordering {
+						floatingButton(FinishReorderingButton(action: presenter.finishReordering), trailingPane: trailingPane)
+					} else if !presenter.isLoading, presenter.canAdd {
+						floatingButton(AddPersonButton(action: presenter.add), trailingPane: trailingPane)
 					}
 				}
 		}
@@ -62,8 +62,17 @@ struct PeopleScene: View {
 		} else {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
-				zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view)
+				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view,
+				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
+				onSaveOrder: presenter.saveOrder)
 		}
+	}
+
+	private func floatingButton(_ button: some View, trailingPane: TrailingPaneOnLandscape) -> some View {
+		button
+			.frame(maxWidth: .infinity)
+			.modifier(trailingPane)
+			.padding(.bottom, 8)
 	}
 
 	/// The editor binding for one presenter of the sheet: the viewer while it is shown, otherwise the mosaic.

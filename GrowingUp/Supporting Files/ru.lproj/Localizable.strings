@@ -133,3 +133,8 @@
 "Reframe" = "Кадрировать";
 "More" = "Ещё";
 "Remove…" = "Удалить…";
+
+/* Mosaic reordering. */
+"Done" = "Готово";
+"Move earlier" = "Переместить раньше";
+"Move later" = "Переместить позже";

@@ -52,6 +52,10 @@ public final class CachePersonsGateway: PersonsGateway {
 		}
 	}
 
+	public func reorder(_ ids: [UUID]) async throws {
+		try await coreDataGateway.reorder(ids)
+	}
+
 	public func remove(person: Person) async throws {
 		try Task.checkCancellation()
 		try await coreDataGateway.remove(person: person)

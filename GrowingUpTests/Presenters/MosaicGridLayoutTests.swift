@@ -50,4 +50,34 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(MosaicGridLayout(size: size, count: 1, evenColumns: true).columns, 2)
 		XCTAssertEqual(MosaicGridLayout(size: size, count: 3).columns, 3)
 	}
+
+	func testSlotsSitCentredInRowsBelowTheMargin() {
+		let grid = MosaicGridLayout(size: CGSize(width: 393, height: 700), count: 5)
+		XCTAssertEqual(grid.origin(ofSlot: 0, width: 393), CGPoint(x: 12, y: 12))
+		let third = grid.origin(ofSlot: 3, width: 393)
+		XCTAssertEqual(third.x, 12 + grid.tileWidth + 12, accuracy: 0.01)
+		XCTAssertEqual(third.y, 12 + grid.tileHeight + 12, accuracy: 0.01)
+		let single = MosaicGridLayout(size: CGSize(width: 393, height: 700), count: 1)
+		XCTAssertEqual(single.origin(ofSlot: 0, width: 393).x, (393 - single.tileWidth) / 2, accuracy: 0.01)
+	}
+
+	func testThePointUnderATileOrNearestToItPicksItsSlot() {
+		let grid = MosaicGridLayout(size: CGSize(width: 393, height: 700), count: 5)
+		for index in 0..<5 {
+			let origin = grid.origin(ofSlot: index, width: 393)
+			let centre = CGPoint(x: origin.x + grid.tileWidth / 2, y: origin.y + grid.tileHeight / 2)
+			XCTAssertEqual(grid.slot(at: centre, count: 5, width: 393), index)
+		}
+		XCTAssertEqual(grid.slot(at: CGPoint(x: -40, y: -40), count: 5, width: 393), 0, "Above and before the tiles")
+		XCTAssertEqual(grid.slot(at: CGPoint(x: 999, y: 20), count: 5, width: 393), 1, "Beyond the last column")
+		XCTAssertEqual(grid.slot(at: CGPoint(x: 380, y: 2000), count: 5, width: 393), 4, "Past the last tile")
+	}
+
+	func testTheEmptySlotOfAnOddLandscapeMosaicTakesTheLastTile() {
+		let grid = MosaicGridLayout(size: CGSize(width: 951, height: 600), count: 3, evenColumns: true)
+		XCTAssertEqual(grid.columns, 4)
+		let empty = grid.origin(ofSlot: 3, width: 951)
+		let centre = CGPoint(x: empty.x + grid.tileWidth / 2, y: empty.y + grid.tileHeight / 2)
+		XCTAssertEqual(grid.slot(at: centre, count: 3, width: 951), 2)
+	}
 }

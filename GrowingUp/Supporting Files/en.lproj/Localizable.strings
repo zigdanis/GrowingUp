@@ -133,3 +133,8 @@
 "Reframe" = "Reframe";
 "More" = "More";
 "Remove…" = "Remove…";
+
+/* Mosaic reordering. */
+"Done" = "Done";
+"Move earlier" = "Move earlier";
+"Move later" = "Move later";

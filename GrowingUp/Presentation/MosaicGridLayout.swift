@@ -39,4 +39,28 @@ struct MosaicGridLayout: Equatable {
 		self.columns = columns
 		tileWidth = max(0, min(widest, filled))
 	}
+
+	// MARK: - Slots
+
+	/// The top-leading corner of the tile in slot `index` of the mosaic's scroll content, `width` wide: the columns sit
+	/// centred, below a `spacing` margin.
+	func origin(ofSlot index: Int, width: CGFloat) -> CGPoint {
+		CGPoint(
+			x: leadingMargin(width: width) + CGFloat(index % columns) * (tileWidth + Self.spacing),
+			y: Self.spacing + CGFloat(index / columns) * (tileHeight + Self.spacing))
+	}
+
+	/// The slot of `count` tiles whose cell, the tile with half the gap around it, holds `point` of the scroll content,
+	/// `width` wide; a point beyond the tiles takes the nearest one, and past the last tile the last slot.
+	func slot(at point: CGPoint, count: Int, width: CGFloat) -> Int {
+		let cellX = (point.x - leadingMargin(width: width) + Self.spacing / 2) / (tileWidth + Self.spacing)
+		let cellY = (point.y - Self.spacing / 2) / (tileHeight + Self.spacing)
+		let column = min(max(Int(cellX.rounded(.down)), 0), columns - 1)
+		let row = max(Int(cellY.rounded(.down)), 0)
+		return max(0, min(row * columns + column, count - 1))
+	}
+
+	private func leadingMargin(width: CGFloat) -> CGFloat {
+		(width - CGFloat(columns) * tileWidth - CGFloat(columns - 1) * Self.spacing) / 2
+	}
 }
