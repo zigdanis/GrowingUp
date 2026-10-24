@@ -6,12 +6,6 @@ import SwiftUI
 /// A long press on a tile starts reordering: the tile lifts and follows the finger, its neighbours make room live, and
 /// the mosaic scrolls when the finger nears its top or bottom edge.
 struct PeopleMosaic: View {
-	/// How far into the visible mosaic its edges start scrolling a dragged tile's way.
-	private static let autoscrollZone: CGFloat = 80
-	/// The autoscroll speed at the very edge, in points per second.
-	private static let autoscrollSpeed: CGFloat = 900
-	/// How long a dragged tile waits near an edge before the mosaic scrolls.
-	private static let autoscrollDelay = Duration.milliseconds(250)
 	private static let contentSpace = NamedCoordinateSpace.named("mosaic.content")
 
 	let persons: [Person]
@@ -32,7 +26,7 @@ struct PeopleMosaic: View {
 	let onSaveOrder: () async -> Void
 
 	@State private var drag: MosaicDrag?
-	@State private var scrollGeometry: ScrollGeometry?
+	@State private var autoscroll: MosaicAutoscroll?
 	@State private var position = ScrollPosition(idType: UUID.self)
 	/// -1 or 1 while a dragged tile is near the top or bottom edge, which scrolls the mosaic that way; otherwise 0.
 	@State private var autoscrollDirection = 0
@@ -68,7 +62,7 @@ struct PeopleMosaic: View {
 				.onScrollGeometryChange(
 					for: ScrollGeometry.self, of: { $0 },
 					action: { old, new in
-						scrollGeometry = new
+						autoscroll = MosaicAutoscroll(new)
 						// The content slid under a still finger, so the finger now points further along it.
 						guard var moved = drag, let location = moved.location else { return }
 						moved.location = CGPoint(x: location.x, y: location.y + new.contentOffset.y - old.contentOffset.y)
@@ -81,7 +75,7 @@ struct PeopleMosaic: View {
 					withAnimation { proxy.scrollTo(id, anchor: .center) }
 				}
 				.task(id: autoscrollDirection) {
-					await autoscroll()
+					await autoscrollWhileNearAnEdge()
 				}
 			}
 		}
@@ -149,7 +143,7 @@ struct PeopleMosaic: View {
 		if slot != index {
 			withAnimation(.snappy(duration: 0.25)) { onMove(drag.id, slot) }
 		}
-		autoscrollDirection = autoscrollDirection(at: drag.location)
+		autoscrollDirection = drag.location.flatMap { autoscroll?.direction(at: $0) } ?? 0
 	}
 
 	private func drop(_ id: UUID) {
@@ -170,46 +164,21 @@ struct PeopleMosaic: View {
 
 	// MARK: - Autoscroll
 
-	/// The mosaic's visible part in scroll content coordinates, clear of the bars and the floating button.
-	private var visibleContent: ClosedRange<CGFloat>? {
-		guard let scrollGeometry else { return nil }
-		// The visible rect spans the whole scroll view, under the bars and the button that the insets cover.
-		let top = scrollGeometry.visibleRect.minY + scrollGeometry.contentInsets.top
-		let bottom = scrollGeometry.visibleRect.maxY - scrollGeometry.contentInsets.bottom
-		return top...max(top, bottom)
-	}
-
-	private func autoscrollDirection(at location: CGPoint?) -> Int {
-		guard let location, let visible = visibleContent else { return 0 }
-		if location.y < visible.lowerBound + Self.autoscrollZone { return -1 }
-		if location.y > visible.upperBound - Self.autoscrollZone { return 1 }
-		return 0
-	}
-
 	/// Scrolls the mosaic a frame at a time while the dragged tile is near an edge, faster the closer the finger is.
 	///
 	/// It waits a moment first, so a tile dropped near an edge lands where it was dropped.
-	private func autoscroll() async {
+	private func autoscrollWhileNearAnEdge() async {
 		guard autoscrollDirection != 0 else { return }
-		try? await Task.sleep(for: Self.autoscrollDelay)
+		try? await Task.sleep(for: MosaicAutoscroll.delay)
 		var last = Date()
 		while !Task.isCancelled {
 			try? await Task.sleep(for: .milliseconds(16))
 			let now = Date()
 			defer { last = now }
-			guard let scrollGeometry, let location = drag?.location, let visible = visibleContent else { continue }
-			let depth =
-				autoscrollDirection < 0
-				? visible.lowerBound + Self.autoscrollZone - location.y : location.y - visible.upperBound + Self.autoscrollZone
-			let speed = Self.autoscrollSpeed * min(max(depth / Self.autoscrollZone, 0.15), 1)
-			let step = CGFloat(autoscrollDirection) * speed * CGFloat(now.timeIntervalSince(last))
-			// Content offsets count from the top inset, which the scroll position does not.
-			let top = -scrollGeometry.contentInsets.top
-			let bottom = max(
-				top, scrollGeometry.contentSize.height + scrollGeometry.contentInsets.bottom - scrollGeometry.visibleRect.height)
-			let offset = min(max(scrollGeometry.contentOffset.y + step, top), bottom)
-			guard offset != scrollGeometry.contentOffset.y else { continue }
-			position.scrollTo(y: offset + scrollGeometry.contentInsets.top)
+			guard let autoscroll, let location = drag?.location,
+				let next = autoscroll.position(after: now.timeIntervalSince(last), location: location)
+			else { continue }
+			position.scrollTo(y: next)
 		}
 	}
 }
