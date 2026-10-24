@@ -25,8 +25,11 @@ struct PersonEditModeScene: View {
 				.frame(maxWidth: .infinity)
 				.disabled(editor.isBusy || editor.isLoading || mode.isFinishing)
 			if let popover = mode.popover {
-				EditModePopoverCard(mode: mode, popover: popover, maxWidth: min(window.width, 440))
-					.transition(.opacity)
+				EditModePopoverCard(
+					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
+					safeAreaInsets: safeAreaInsets
+				)
+				.transition(.opacity)
 			}
 			if editor.isBusy || mode.isFinishing { ProgressView() }
 		}

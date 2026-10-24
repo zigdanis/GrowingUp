@@ -4,7 +4,10 @@ import SwiftUI
 struct EditModePopoverCard: View {
 	let mode: PersonEditModePresenter
 	let popover: PersonEditPopover
+	/// The widest the card gets, padding included; it must fit between the safe-area sides, as the time wheels cannot shrink.
 	let maxWidth: CGFloat
+	/// The window's safe area; the card centres between its sides, clear of iPhone Duo's side status bar, like the controls.
+	let safeAreaInsets: EdgeInsets
 
 	var body: some View {
 		ZStack {
@@ -16,6 +19,8 @@ struct EditModePopoverCard: View {
 			card
 				.padding(24)
 				.frame(maxWidth: maxWidth)
+				.padding(.leading, safeAreaInsets.leading)
+				.padding(.trailing, safeAreaInsets.trailing)
 		}
 	}
 
