@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
-/// open in the full-screen viewer, which swipes down back into the tile.
+/// open in the full-screen viewer, which swipes down back into the tile. "Add" opens the editor sheet.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
@@ -66,13 +66,14 @@ struct PeopleScene: View {
 		}
 	}
 
-	/// The editor binding for one presenter of the sheet: the viewer while it is shown, otherwise the mosaic.
+	/// The editor sheet's binding for one presenter of the sheet: the viewer while it is shown, otherwise the mosaic.
+	/// Only a new person opens the sheet; an existing one is edited in place in the viewer.
 	private func editor(whileViewing: Bool) -> Binding<PersonEditorPresenter?> {
 		Binding(
-			get: { presenter.isViewing == whileViewing ? presenter.editor : nil },
+			get: { presenter.isViewing == whileViewing ? presenter.sheetEditor : nil },
 			set: { editor in
-				guard presenter.isViewing == whileViewing else { return }
-				presenter.editor = editor
+				guard presenter.isViewing == whileViewing, editor == nil else { return }
+				presenter.cancelEditing(presenter.sheetEditor)
 			})
 	}
 

@@ -3,7 +3,7 @@
 //  GrowingUp
 //
 //  Pan/zoom cropper: image aspect-fills at min zoom; crop frame is full screen, or a centered portrait column in wider
-//  windows (main), or a circular safe-area guide (widget).
+//  windows (main), or a circular safe-area guide (widget). The math lives in `CropGeometry`.
 //
 
 import SwiftUI
@@ -15,8 +15,7 @@ struct CropStep: View {
 	private let onCancel: () -> Void
 
 	/// Source pixel dimensions, used to map the on-screen frame back to pixels.
-	let pxW: CGFloat
-	let pxH: CGFloat
+	let pixelSize: CGSize
 
 	@State private var scale: CGFloat = 1
 	@State private var lastScale: CGFloat = 1
@@ -26,13 +25,6 @@ struct CropStep: View {
 	@State private var safeInsets = EdgeInsets()
 	@State private var isGesturing = false
 	@State private var isFinishing = false
-
-	let maxZoom: CGFloat = 6
-	/// Gap between the circular guide and the safe-area edges.
-	let framePadding: CGFloat = 14
-	/// The widest width-to-height ratio of a main picture. iPhone screens and the closed iPhone Duo crop full screen;
-	/// wider windows crop a centered column, so every main picture stays portrait.
-	let maxMainAspect: CGFloat = 0.7
 
 	/// `image` is upright: a `WorkingImage` or a picture the app stored. `onComplete` gets the framed part at the slot's
 	/// stored size.
@@ -46,13 +38,7 @@ struct CropStep: View {
 		self.shape = shape
 		self.onComplete = onComplete
 		self.onCancel = onCancel
-		if let cgImage = image.cgImage {
-			self.pxW = CGFloat(cgImage.width)
-			self.pxH = CGFloat(cgImage.height)
-		} else {
-			self.pxW = image.size.width * image.scale
-			self.pxH = image.size.height * image.scale
-		}
+		self.pixelSize = CropGeometry.pixelSize(of: image)
 	}
 
 	var body: some View {
@@ -79,8 +65,9 @@ struct CropStep: View {
 		containerSize = full
 		safeInsets = insets
 		// A resized window (e.g. an iPhone Duo folding) can need more zoom to keep the circular frame covered.
-		let settledScale = min(max(scale, minScale(in: full, insets: insets)), maxZoom)
-		let settled = clampOffset(offset, scale: settledScale, container: full, insets: insets)
+		let geometry = geometry(in: full, insets: insets)
+		let settledScale = geometry.clampScale(scale)
+		let settled = geometry.clampOffset(offset, scale: settledScale)
 		scale = settledScale
 		lastScale = settledScale
 		offset = settled
@@ -110,7 +97,7 @@ struct CropStep: View {
 	}
 
 	private var imageLayer: some View {
-		let display = displaySize(in: containerSize)
+		let display = geometry.displaySize
 		return Image(uiImage: source)
 			.resizable()
 			.frame(width: display.width, height: display.height)
@@ -122,7 +109,7 @@ struct CropStep: View {
 	}
 
 	@ViewBuilder private var surround: some View {
-		let frame = frameRect(in: containerSize, insets: safeInsets)
+		let frame = geometry.frameRect
 		if shape.isCircular {
 			ZStack {
 				// Dark mask everywhere except the circular crop window.
@@ -153,25 +140,14 @@ struct CropStep: View {
 				}
 				// A thirds guide while the picture moves.
 				if isGesturing {
-					thirdsGrid(frame)
+					ThirdsGrid()
+						.stroke(.white.opacity(0.5), lineWidth: 0.5)
+						.frame(width: frame.width, height: frame.height)
+						.position(x: frame.midX, y: frame.midY)
 				}
 			}
 			.allowsHitTesting(false)
 		}
-	}
-
-	private func thirdsGrid(_ frame: CGRect) -> some View {
-		Path { path in
-			for line in 1...2 {
-				let lineX = frame.minX + frame.width * CGFloat(line) / 3
-				path.move(to: CGPoint(x: lineX, y: frame.minY))
-				path.addLine(to: CGPoint(x: lineX, y: frame.maxY))
-				let lineY = frame.minY + frame.height * CGFloat(line) / 3
-				path.move(to: CGPoint(x: frame.minX, y: lineY))
-				path.addLine(to: CGPoint(x: frame.maxX, y: lineY))
-			}
-		}
-		.stroke(.white.opacity(0.5), lineWidth: 0.5)
 	}
 
 	private func topBar(insets: EdgeInsets) -> some View {
@@ -220,10 +196,10 @@ struct CropStep: View {
 					width: lastOffset.width + value.translation.width,
 					height: lastOffset.height + value.translation.height
 				)
-				offset = rubberBandOffset(raw, scale: scale, container: containerSize, insets: safeInsets)
+				offset = geometry.rubberBandOffset(raw, scale: scale)
 			}
 			.onEnded { _ in
-				let settled = clampOffset(offset, scale: scale, container: containerSize, insets: safeInsets)
+				let settled = geometry.clampOffset(offset, scale: scale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
 					offset = settled
 				}
@@ -236,13 +212,13 @@ struct CropStep: View {
 		MagnifyGesture()
 			.onChanged { value in
 				isGesturing = true
-				let newScale = rubberBandedScale(lastScale * value.magnification)
+				let newScale = geometry.rubberBandedScale(lastScale * value.magnification)
 				scale = newScale
-				offset = rubberBandOffset(offset, scale: newScale, container: containerSize, insets: safeInsets)
+				offset = geometry.rubberBandOffset(offset, scale: newScale)
 			}
 			.onEnded { _ in
-				let settledScale = min(max(scale, minScale(in: containerSize, insets: safeInsets)), maxZoom)
-				let settledOffset = clampOffset(offset, scale: settledScale, container: containerSize, insets: safeInsets)
+				let settledScale = geometry.clampScale(scale)
+				let settledOffset = geometry.clampOffset(offset, scale: settledScale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
 					scale = settledScale
 					offset = settledOffset
@@ -257,136 +233,20 @@ struct CropStep: View {
 // MARK: - Geometry & crop math
 
 extension CropStep {
-	/// Region that stays covered and gets cropped. Rectangle: full screen, or a full-height column centred in windows
-	/// wider than `maxMainAspect`. Circle: a square centred in the safe area.
-	func frameRect(in container: CGSize, insets: EdgeInsets) -> CGRect {
-		guard container.width > 0, container.height > 0 else { return .zero }
-		guard shape.isCircular else {
-			guard container.width / container.height > maxMainAspect else {
-				return CGRect(origin: .zero, size: container)
-			}
-			let width = container.height * maxMainAspect
-			return CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
-		}
-		let availX = insets.leading + framePadding
-		let availY = insets.top + framePadding
-		let availW = max(0, container.width - insets.leading - insets.trailing - framePadding * 2)
-		let availH = max(0, container.height - insets.top - insets.bottom - framePadding * 2)
-		let side = min(availW, availH)
-		guard side > 0 else { return .zero }
-		return CGRect(
-			x: availX + (availW - side) / 2,
-			y: availY + (availH - side) / 2,
-			width: side,
-			height: side
-		)
+	func geometry(in container: CGSize, insets: EdgeInsets) -> CropGeometry {
+		CropGeometry(pixelSize: pixelSize, shape: shape, container: container, insets: insets)
 	}
 
-	/// Points-per-source-pixel so the image aspect-fills the screen at scale 1.
-	func baseScale(in container: CGSize) -> CGFloat {
-		guard pxW > 0, pxH > 0, container.width > 0, container.height > 0 else { return 1 }
-		return max(container.width / pxW, container.height / pxH)
-	}
+	/// The current canvas's geometry.
+	var geometry: CropGeometry { geometry(in: containerSize, insets: safeInsets) }
 
-	func displaySize(in container: CGSize) -> CGSize {
-		let scaleFactor = baseScale(in: container)
-		return CGSize(width: pxW * scaleFactor, height: pxH * scaleFactor)
-	}
-
-	/// Smallest zoom that still covers the crop frame (limiting side flush to the edge); capped at 1, never zooms in.
+	/// Smallest zoom that still covers the crop frame; see `CropGeometry.minScale`.
 	func minScale(in container: CGSize, insets: EdgeInsets) -> CGFloat {
-		let display = displaySize(in: container)
-		guard display.width > 0, display.height > 0 else { return 1 }
-		let frame = frameRect(in: container, insets: insets)
-		let needed = max(frame.width / display.width, frame.height / display.height)
-		return min(needed, 1)
+		geometry(in: container, insets: insets).minScale
 	}
 
-	/// Allowed offset range per axis so the image keeps the frame covered.
-	func offsetBounds(scale: CGFloat, container: CGSize, insets: EdgeInsets)
-		-> (x: ClosedRange<CGFloat>, y: ClosedRange<CGFloat>)
-	{
-		guard container.width > 0 else { return (0...0, 0...0) }
-		let frame = frameRect(in: container, insets: insets)
-		let display = displaySize(in: container)
-		let deltaX = frame.midX - container.width / 2
-		let deltaY = frame.midY - container.height / 2
-		let limX = max(0, (display.width * scale - frame.width) / 2)
-		let limY = max(0, (display.height * scale - frame.height) / 2)
-		return ((deltaX - limX)...(deltaX + limX), (deltaY - limY)...(deltaY + limY))
-	}
-
-	func clampOffset(_ proposed: CGSize, scale: CGFloat, container: CGSize, insets: EdgeInsets) -> CGSize {
-		let bounds = offsetBounds(scale: scale, container: container, insets: insets)
-		return CGSize(
-			width: min(max(proposed.width, bounds.x.lowerBound), bounds.x.upperBound),
-			height: min(max(proposed.height, bounds.y.lowerBound), bounds.y.upperBound)
-		)
-	}
-
-	/// Like `clampOffset`, but allows overscroll; the spring snaps it back.
-	func rubberBandOffset(_ proposed: CGSize, scale: CGFloat, container: CGSize, insets: EdgeInsets) -> CGSize {
-		let bounds = offsetBounds(scale: scale, container: container, insets: insets)
-		return CGSize(
-			width: rubberBand(
-				proposed.width, lower: bounds.x.lowerBound, upper: bounds.x.upperBound, dimension: container.width),
-			height: rubberBand(
-				proposed.height, lower: bounds.y.lowerBound, upper: bounds.y.upperBound, dimension: container.height)
-		)
-	}
-
-	/// Standard iOS rubber-band: linear within `[lower, upper]`, asymptotic past.
-	func rubberBand(_ value: CGFloat, lower: CGFloat, upper: CGFloat, dimension: CGFloat) -> CGFloat {
-		guard dimension > 0 else { return min(max(value, lower), upper) }
-		if value < lower {
-			let over = lower - value
-			return lower - (1 - 1 / (over / dimension * 0.55 + 1)) * dimension
-		} else if value > upper {
-			let over = value - upper
-			return upper + (1 - 1 / (over / dimension * 0.55 + 1)) * dimension
-		}
-		return value
-	}
-
-	/// Resists pinching below the frame-fill minimum or above `maxZoom`.
-	func rubberBandedScale(_ proposed: CGFloat) -> CGFloat {
-		let lower = minScale(in: containerSize, insets: safeInsets)
-		if proposed < lower {
-			return lower - (lower - proposed) * 0.35
-		} else if proposed > maxZoom {
-			return maxZoom + (proposed - maxZoom) * 0.35
-		}
-		return proposed
-	}
-
-	/// The framed part at the slot's stored size. Cropping only references the source's pixels; scaling them down
-	/// redraws, so that runs off the main actor.
+	/// The framed part at the slot's stored size.
 	func output(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) async -> UIImage {
-		let cropped = cropImage(container: container, insets: insets, scale: scale, offset: offset)
-		let maxPixelSide = shape.maxPixelSize
-		return await Task.detached(priority: .userInitiated) { cropped.downsized(maxPixelSide: maxPixelSide) }.value
-	}
-
-	/// The source pixels inside the crop frame, at the source's resolution.
-	func cropImage(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) -> UIImage {
-		guard container.width > 0, let cgImage = source.cgImage else { return source }
-		let pointsPerPixel = baseScale(in: container) * scale
-		guard pointsPerPixel > 0 else { return source }
-		let frame = frameRect(in: container, insets: insets)
-		let center = CGPoint(x: container.width / 2, y: container.height / 2)
-
-		let cropW = frame.width / pointsPerPixel
-		let cropH = frame.height / pointsPerPixel
-		// Image centred on screen at `offset`; the frame may sit off-centre, so map the frame centre back to source pixels.
-		let centerX = CGFloat(cgImage.width) / 2 + (frame.midX - center.x - offset.width) / pointsPerPixel
-		let centerY = CGFloat(cgImage.height) / 2 + (frame.midY - center.y - offset.height) / pointsPerPixel
-
-		var rect = CGRect(x: centerX - cropW / 2, y: centerY - cropH / 2, width: cropW, height: cropH)
-		rect.origin.x = min(max(0, rect.origin.x), CGFloat(cgImage.width) - rect.width)
-		rect.origin.y = min(max(0, rect.origin.y), CGFloat(cgImage.height) - rect.height)
-		rect = rect.integral
-
-		guard let cropped = cgImage.cropping(to: rect) else { return source }
-		return UIImage(cgImage: cropped, scale: 1, orientation: .up)
+		await geometry(in: container, insets: insets).output(of: source, scale: scale, offset: offset)
 	}
 }

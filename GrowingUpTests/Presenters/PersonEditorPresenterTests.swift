@@ -262,3 +262,32 @@ final class PersonEditorPresenterTests: XCTestCase {
 		}
 	}
 }
+
+/// The main photo reframed in place, and the widget picture that may follow it.
+extension PersonEditorPresenterTests {
+	func testAReframedMainPhotoKeepsASavedWidgetPicture() async {
+		let person = Person.createPerson()
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		XCTAssertNotEqual(presenter.appImage?.id, person.appPicId)
+		XCTAssertEqual(presenter.widgetImage?.id, person.widgetPicId, "A widget picture saved earlier may have been framed by hand")
+		XCTAssertTrue(presenter.canSave)
+	}
+
+	func testAReframedMainPhotoTakesAlongTheWidgetPictureDerivedFromIt() async {
+		let person = Person.createPerson()
+		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.setMainPhoto(image(width: 900, height: 1200))
+		let derived = presenter.widgetImage?.id
+		XCTAssertTrue(presenter.widgetPictureIsDerived)
+		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		XCTAssertNotEqual(presenter.widgetImage?.id, derived)
+		let framed = image(width: 480, height: 480)
+		presenter.setWidgetPhoto(framed)
+		XCTAssertFalse(presenter.widgetPictureIsDerived)
+		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		XCTAssertTrue(presenter.widgetImage?.uiImage === framed, "A widget picture framed by hand stays")
+	}
+}

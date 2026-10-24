@@ -4,7 +4,7 @@ import XCTest
 final class BirthdayAndEditingTests: XCTestCase {
 	private var app: XCUIApplication!
 	private var configuration: UITestConfiguration!
-	/// The shown person in the full-screen viewer; a tap on it opens the editor.
+	/// The shown person in the full-screen viewer; a tap on it turns the viewer into its edit mode.
 	private var overview: XCUIElement { app.buttons["person.name"] }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 
@@ -20,10 +20,13 @@ final class BirthdayAndEditingTests: XCTestCase {
 		app.buttons["editor.birthDate"].tap()
 		let picker = app.datePickers["editor.birthDate.picker"]
 		XCTAssertTrue(picker.waitForExistence(timeout: 5))
-		picker.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "15")
-		app.buttons["editor.birthDate"].tap()
-		// The chips move up while the wheel collapses; a tap during that animation can miss them.
+		let day = picker.buttons.matching(NSPredicate(format: "label ENDSWITH %@", "January 15")).firstMatch
+		XCTAssertTrue(day.waitForExistence(timeout: 5), picker.debugDescription)
+		day.tap()
+		// A tap on the dim layer below the centred calendar closes it.
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.8)).tap()
 		XCTAssertTrue(picker.waitForNonExistence(timeout: 5))
+		XCTAssertEqual(app.buttons["editor.birthDate"].value as? String, "Jan 15, 2020")
 		let celebrate = app.descendants(matching: .any).matching(identifier: "editor.celebrate").firstMatch
 		XCTAssertEqual(celebrate.value as? String, "1")
 		celebrate.tap()
