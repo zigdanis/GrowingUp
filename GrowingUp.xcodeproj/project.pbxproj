@@ -150,6 +150,7 @@
 		40C689F53DEFCA3DB42BD7B6 /* PhotoThumbnailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08484233110DE426675C4EA7 /* PhotoThumbnailCell.swift */; };
 		4507FD220ECE19C1EC76C20E /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB1DDD7DA1AB8F30B81839D /* PhotoAsset.swift */; };
 		49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */; };
+		2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109645F67F6E710500D9E8DA /* WorkingImageTests.swift */; };
 		4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */; };
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
@@ -187,6 +188,7 @@
 		AEF0820E4E60DE4F7326FF1C /* SystemPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */; };
 		B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */; };
 		BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2F72B99E6E5605512A6907 /* CropStep.swift */; };
+		C48F051F8A211CD8BB0E652A /* WorkingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F351CDD28C9DB271C24108 /* WorkingImage.swift */; };
 		BC25D01BED8E56ED655941C6 /* PeoplePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449ED61637164BFF288A6770 /* PeoplePresenter.swift */; };
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
 		C164EA21CBC065FBBD387762 /* GrowingUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7018955E31694F6F80D6537D /* GrowingUpWidget.swift */; };
@@ -426,6 +428,7 @@
 		0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetEntryView.swift; sourceTree = "<group>"; };
 		0F6D9304984D13833DA1013D /* ImageCaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptureSource.swift; sourceTree = "<group>"; };
 		109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceTests.swift; sourceTree = "<group>"; };
+		109645F67F6E710500D9E8DA /* WorkingImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingImageTests.swift; sourceTree = "<group>"; };
 		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2352944A067948DFD24D8DFB /* PersonImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImages.swift; sourceTree = "<group>"; };
@@ -471,6 +474,7 @@
 		85F86BF7E1D6CCE36B185DBE /* GrowingUpWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingUpWidgetBundle.swift; sourceTree = "<group>"; };
 		898315CCC5CACED1D6D6CB1D /* PhotoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRequest.swift; sourceTree = "<group>"; };
 		8C2F72B99E6E5605512A6907 /* CropStep.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CropStep.swift; sourceTree = "<group>"; };
+		73F351CDD28C9DB271C24108 /* WorkingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingImage.swift; sourceTree = "<group>"; };
 		8D9A7D536DAF10611A2F97FA /* PermissionExplainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionExplainerConfig.swift; sourceTree = "<group>"; };
 		8E88731C743E444D0561E0DE /* ValueWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueWrapper.swift; sourceTree = "<group>"; };
 		92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SwiftUIPresenterTests.swift; sourceTree = "<group>"; };
@@ -1098,6 +1102,7 @@
 			isa = PBXGroup;
 			children = (
 				109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */,
+				109645F67F6E710500D9E8DA /* WorkingImageTests.swift */,
 			);
 			path = ImageCapture;
 			sourceTree = "<group>";
@@ -1141,6 +1146,7 @@
 				C8886045F47F9DA2385E8F28 /* SelectionProgressOverlay.swift */,
 				A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */,
 				2791A25502BBBE7477684966 /* SystemPhotoPickerCoordinator.swift */,
+				73F351CDD28C9DB271C24108 /* WorkingImage.swift */,
 			);
 			path = ImageCapture;
 			sourceTree = "<group>";
@@ -1543,6 +1549,7 @@
 				C7A1B2C3D4E5F6071800000F /* MonogramPictureTests.swift in Sources */,
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
+				2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
@@ -1665,6 +1672,7 @@
 				2C508734FF7E86FE8E0A5DB4 /* SelectionProgressOverlay.swift in Sources */,
 				AEF0820E4E60DE4F7326FF1C /* SystemPhotoPicker.swift in Sources */,
 				739A5DDA2FD811EDB0B7E468 /* SystemPhotoPickerCoordinator.swift in Sources */,
+				C48F051F8A211CD8BB0E652A /* WorkingImage.swift in Sources */,
 				28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */,
 				A20000000000000000000001 /* UITestConfiguration.swift in Sources */,
 				A20000000000000000000002 /* UITestAppearance.swift in Sources */,

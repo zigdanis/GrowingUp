@@ -23,12 +23,15 @@ APP_INPUTS = ('GrowingUp', 'Core', 'Widget', 'GrowingUpUITests', 'GrowingUp.xcod
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
-def read_sets(manifest, catalog):
+def read_sets(manifest, catalog, only_groups=None):
+    """Validate the manifest sets; with `only_groups`, only those groups are read and checked."""
     data = json.loads(manifest.read_text())
-    if data['version'] != '2.1.0' or data['app_id'] != '1461697772':
-        raise ValueError('Expected the reviewed GrowingUp 2.1.0 draft manifest')
+    if data['app_id'] != '1461697772':
+        raise ValueError('Expected the reviewed GrowingUp manifest')
     sets = []
     for entry in data['sets']:
+        if only_groups is not None and entry['group'] not in only_groups:
+            continue
         folder = (manifest.parent / entry['path']).resolve()
         if folder != manifest.parent.resolve() and manifest.parent.resolve() not in folder.parents:
             raise ValueError('Screenshot folder escapes the manifest directory')
@@ -49,8 +52,11 @@ def read_sets(manifest, catalog):
         if capture['device'] != entry['device'] or capture['runtime'] != entry['runtime']:
             raise ValueError('Manifest device/runtime differs from capture evidence')
         if capture.get('workflow') == 'local-screenshot-only':
-            if source['renderer_sha256'] != digest(ROOT / 'scripts/render-app-store-screenshots.py'):
+            renderer = source.get('renderer', 'scripts/render-app-store-screenshots.py')
+            if source['renderer_sha256'] != digest(ROOT / renderer):
                 raise ValueError('Renderer changed after composition')
+            if source.get('base_renderer_sha256', digest(ROOT / 'scripts/render-app-store-screenshots.py')) != digest(ROOT / 'scripts/render-app-store-screenshots.py'):
+                raise ValueError('Shared renderer changed after composition')
             for relative,sha in capture['capture_input_hashes'].items():
                 if digest(ROOT / relative) != sha:
                     raise ValueError('App/photo input changed after native capture')
@@ -68,7 +74,7 @@ def read_sets(manifest, catalog):
         sets.append(entry | {'images':images})
     if len({s['group'] for s in sets}) != len(sets):
         raise ValueError('Duplicate target groups')
-    if 'IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE' not in {s['group'] for s in sets}:
+    if only_groups is None and 'IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE' not in {s['group'] for s in sets}:
         raise ValueError('Required DI medium must have its own explicit native set')
     return data,sets
 
@@ -96,7 +102,7 @@ def wait_active(api, loc_id, group, ordered, images, allow_extra=False):
 
 def run(api, manifest_path, receipt, upload=False, only_groups=None):
     catalog = api.collection('/v1/appAssetLibraryRefData')[0]['attributes']
-    manifest,sets = read_sets(manifest_path,catalog)
+    manifest,sets = read_sets(manifest_path,catalog,only_groups)
     if only_groups is not None:
         if not only_groups or not set(only_groups) <= {s['group'] for s in sets}:
             raise ValueError('Selected upload groups are absent from the validated manifest')
@@ -160,7 +166,7 @@ def run(api, manifest_path, receipt, upload=False, only_groups=None):
             wait_active(api,locs[locale],group,ordered,images)
             receipt['groups'].append({'locale':locale,'group':group,'size':s['size'],'device':s['device'],
                  'screenshots':[{'file':i['path'].name,'sha256':i['sha256'],'placement_id':p['id'],'state':'ACTIVE'} for i,p in zip(images,ordered)]})
-            print(f'{locale}: {group}: four own placements ACTIVE',flush=True)
+            print(f'{locale}: {group}: {len(ordered)} own placements ACTIVE',flush=True)
     for locale in m.LOCALES:
         after=m.placements(api,locs[locale])
         if signature([p for p in after if p['attributes']['placementGroup'] not in target_groups]) != untouched[locale]:

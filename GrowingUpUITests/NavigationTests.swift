@@ -53,13 +53,24 @@ final class NavigationTests: XCTestCase {
 		checkpoint("mosaic-light")
 	}
 
-	private func launch(appearance: UITestAppearance) {
+	func testLargestTextKeepsTheBirthdayLineWholeOnScreen() {
+		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+		XCTAssertTrue(app.buttons["person.add"].isHittable)
+		tile("Alice").tap()
+		let countdown = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+		// The line wraps its countdown rather than truncating it and stays on screen.
+		XCTAssertLessThanOrEqual(countdown.frame.maxY, app.frame.maxY)
+		checkpoint("large-text-viewer")
+	}
+
+	private func launch(appearance: UITestAppearance, contentSize: String = "UICTContentSizeCategoryL") {
 		let configuration = UITestConfiguration(
 			identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: appearance)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", appearance.launchArgumentValue,
-			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
+			"-UIPreferredContentSizeCategoryName", contentSize
 		]
 		app.launch()
 		XCTAssertTrue(tiles.firstMatch.waitForExistence(timeout: 10))
@@ -71,6 +82,8 @@ final class NavigationTests: XCTestCase {
 
 	/// Drags the viewer down, which zooms it back into the shown person's tile.
 	private func closeViewer() {
+		// A drag during the zoom-in, such as right after a widget link, is lost, so it waits for the viewer to settle.
+		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: personName)], timeout: 5)
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
 			forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
 		XCTAssertTrue(personName.waitForNonExistence(timeout: 5))

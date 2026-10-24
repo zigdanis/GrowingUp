@@ -1,6 +1,11 @@
+import hashlib
 import importlib.util
+import json
 from pathlib import Path
+import struct
+import tempfile
 import unittest
+import zlib
 from unittest.mock import patch
 
 from test_app_store_metadata import ScreenshotAPI, image_attributes
@@ -84,5 +89,109 @@ class FamilyReplacementTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'capacity'):
             self.upload(api,{})
         self.assertFalse(any(e[0] in ('create','delete') for e in api.events))
+
+
+def solid_png(width, height, shade):
+    row = b'\x00' + bytes([shade, shade, shade]) * width
+    def chunk(kind, data):
+        body = kind + data
+        return struct.pack('>I', len(data)) + body + struct.pack('>I', zlib.crc32(body))
+    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', width, height, 8, 2, 0, 0, 0))
+            + chunk(b'IDAT', zlib.compress(row * height)) + chunk(b'IEND', b''))
+
+DUO = 'IPHONE_DUO_PROFILE'
+OUTER = (1398, 2034)
+CATALOG = {
+    'features': [{'featureId': 'APP_STORE_VERSIONS', 'placementPolicies': [{
+        'placementType': 'APP_SCREENSHOT', 'groupLimits': [{'groupIds': [DUO, 'OLD'], 'maxCount': 10}]}]}],
+    'placementTypes': [{'placementTypeId': 'APP_SCREENSHOT', 'acceptsAssetCategories': ['APP_SCREENSHOTS_AND_PREVIEWS'],
+                        'specMappings': [{'placementGroupId': DUO, 'specs': ['outer-spec']}]}],
+    'imageSpecs': [{'specId': 'outer-spec', 'dimensions': {'minWidth': OUTER[0], 'maxWidth': OUTER[0],
+                                                           'minHeight': OUTER[1], 'maxHeight': OUTER[1]},
+                    'fileExtensions': ['.png'], 'maxFileSize': 10**9}],
+    'placementProfileGroups': [{'placementProfileGroupId': DUO, 'platform': 'IPHONE_APP_STORE'}],
+}
+
+
+class DuoSetTests(unittest.TestCase):
+    """A Duo set is one placement group of the outer display's cards; selecting it skips the older families."""
+
+    def setUp(self):
+        self.folder = tempfile.TemporaryDirectory()
+        self.addCleanup(self.folder.cleanup)
+        self.root = Path(self.folder.name)
+        patcher = patch.object(f, 'ROOT', self.root)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        scripts = self.root / 'scripts'
+        scripts.mkdir()
+        (scripts / 'render-app-store-screenshots.py').write_text('base')
+        (scripts / 'render-duo-app-store-screenshots.py').write_text('duo')
+        self.screenshots = self.root / 'marketing/app-store/screenshots'
+        self.native = self.root / 'marketing/app-store/native-captures'
+        self.write_duo()
+        self.manifest = self.screenshots / 'families.json'
+        self.write_manifest(old_set=False)
+
+    def digest(self, content):
+        return hashlib.sha256(content).hexdigest()
+
+    def write_duo(self):
+        folder = self.screenshots / 'families/iphone-duo'
+        outputs, inputs = {}, {}
+        for locale in f.m.LOCALES:
+            native = self.native / 'iphone-duo' / locale
+            native.mkdir(parents=True)
+            (native / 'mia.png').write_bytes(f'native-{locale}'.encode())
+            inputs[locale] = {'mia': self.digest(f'native-{locale}'.encode())}
+            (folder / locale).mkdir(parents=True)
+            for index, name in enumerate(f.m.FILES):
+                content = solid_png(*OUTER, index)
+                (folder / locale / name).write_bytes(content)
+                outputs[f'{locale}/{name}'] = self.digest(content)
+        source = {'renderer': 'scripts/render-duo-app-store-screenshots.py', 'renderer_sha256': self.digest(b'duo'),
+                  'base_renderer_sha256': self.digest(b'base'), 'size': list(OUTER), 'outputs': outputs, 'inputs': inputs,
+                  'capture': {'workflow': 'local-screenshot-only', 'device': 'iPhone-Duo', 'runtime': '27-1',
+                              'capture_input_hashes': {}}}
+        (folder / 'source.json').write_text(json.dumps(source))
+
+    def write_manifest(self, old_set):
+        sets = [{'slug': 'iphone-duo', 'path': 'families/iphone-duo', 'group': DUO, 'device': 'iPhone-Duo',
+                 'runtime': '27-1', 'size': list(OUTER)}]
+        if old_set:
+            # An older family whose inputs changed since its capture: stale, but not part of this upload.
+            old = self.screenshots / 'families/old'
+            old.mkdir(parents=True)
+            (old / 'source.json').write_text(json.dumps({'renderer_sha256': 'stale'}))
+            sets.append({'slug': 'old', 'path': 'families/old', 'group': 'OLD', 'device': 'x', 'runtime': 'y', 'size': [1, 1]})
+        self.manifest.write_text(json.dumps({'app_id': '1461697772', 'version': '2.3.0', 'version_id': 'v', 'sets': sets}))
+
+    def test_duo_group_is_read_with_its_spec(self):
+        _, sets = f.read_sets(self.manifest, CATALOG, [DUO])
+        self.assertEqual([s['group'] for s in sets], [DUO])
+        for locale in f.m.LOCALES:
+            self.assertEqual([i['spec'] for i in sets[0]['images'][locale]], ['outer-spec'] * 4)
+
+    def test_selected_group_does_not_revalidate_stale_older_families(self):
+        self.write_manifest(old_set=True)
+        f.read_sets(self.manifest, CATALOG, [DUO])
+        with self.assertRaises(OSError):
+            f.read_sets(self.manifest, CATALOG)
+
+    def test_changed_retained_native_input_is_refused(self):
+        (self.native / 'iphone-duo/ru/mia.png').write_bytes(b'edited')
+        with self.assertRaisesRegex(ValueError, 'Retained native source'):
+            f.read_sets(self.manifest, CATALOG, [DUO])
+
+    def test_changed_renderer_is_refused(self):
+        (self.root / 'scripts/render-duo-app-store-screenshots.py').write_text('changed')
+        with self.assertRaisesRegex(ValueError, 'Renderer changed'):
+            f.read_sets(self.manifest, CATALOG, [DUO])
+
+    def test_changed_shared_renderer_is_refused(self):
+        (self.root / 'scripts/render-app-store-screenshots.py').write_text('changed')
+        with self.assertRaisesRegex(ValueError, 'Shared renderer changed'):
+            f.read_sets(self.manifest, CATALOG, [DUO])
+
 
 if __name__=='__main__':unittest.main()

@@ -24,7 +24,8 @@ struct MosaicGridLayout: Equatable {
 	///   - count: how many people it shows; fewer people than columns get only as many columns, centred, so one
 	///     person is a single centred tile rather than a tile beside an empty hole.
 	///   - evenColumns: keeps an even number of columns, so the gap between the middle columns, not a tile, sits on
-	///     the window's centre, where a landscape iPhone Duo folds.
+	///     the window's centre, where a landscape iPhone Duo folds; an odd number of people leaves the last column's
+	///     slot empty rather than putting a tile on the fold.
 	init(size: CGSize, count: Int, evenColumns: Bool = false) {
 		let width = max(0, size.width - 2 * Self.spacing)
 		let heightLimit = size.height * Self.maximumHeightShare * 9 / 16
@@ -32,7 +33,8 @@ struct MosaicGridLayout: Equatable {
 		let narrowest = min(Self.minimumTileWidth, widest)
 		var fitting = max(Self.minimumColumns, Int((width + Self.spacing) / (narrowest + Self.spacing)))
 		if evenColumns, fitting > 1 { fitting -= fitting % 2 }
-		let columns = max(1, min(fitting, count))
+		let wanted = evenColumns ? count + count % 2 : count
+		let columns = max(1, min(fitting, wanted))
 		let filled = (width - CGFloat(fitting - 1) * Self.spacing) / CGFloat(fitting)
 		self.columns = columns
 		tileWidth = max(0, min(widest, filled))

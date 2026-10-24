@@ -54,7 +54,7 @@ struct PersonEditorScene: View {
 			CropStep(
 				image: item.image, shape: .circle,
 				onComplete: { cropped in
-					presenter.setWidgetPhoto(cropped.downsized(maxPixelSide: CropShape.circle.maxPixelSize))
+					presenter.setWidgetPhoto(cropped)
 					reframeImage = nil
 				}, onCancel: { reframeImage = nil }
 			)

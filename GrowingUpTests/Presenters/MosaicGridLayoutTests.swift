@@ -43,4 +43,11 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(grid.columns, 1)
 		XCTAssertEqual(grid.tileWidth, 142, accuracy: 0.01)
 	}
+
+	func testLandscapeKeepsEvenColumnsForAnOddNumberOfPeople() {
+		let size = CGSize(width: 951, height: 600)
+		XCTAssertEqual(MosaicGridLayout(size: size, count: 3, evenColumns: true).columns, 4)
+		XCTAssertEqual(MosaicGridLayout(size: size, count: 1, evenColumns: true).columns, 2)
+		XCTAssertEqual(MosaicGridLayout(size: size, count: 3).columns, 3)
+	}
 }

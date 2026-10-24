@@ -98,11 +98,15 @@ struct PersonOverviewScene: View {
 					.scrollBounceBehavior(.basedOnSize)
 			}
 			.frame(maxHeight: maxAgeHeight, alignment: .top)
+			// Second after the card: the age takes the height the card leaves, scrolling when it does not fit.
 			.layoutPriority(1)
 			Spacer(minLength: 24)
+			// At the largest text sizes the countdown wraps and the line grows rather than truncating it.
 			BirthdayLine(birthdayText: presenter.birthdayText, isShown: isSelected)
 				.padding(.horizontal, 24)
 				.padding(.bottom, 16)
+				// The line gets its full height first, ahead of the age above it.
+				.layoutPriority(2)
 		}
 		.padding(.top, safeAreaInsets.top + 16)
 		.padding(.bottom, safeAreaInsets.bottom)

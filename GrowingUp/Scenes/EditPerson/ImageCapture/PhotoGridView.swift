@@ -3,7 +3,7 @@
 //  GrowingUp
 //
 //  Custom PhotoKit grid with full -> limited -> denied/restricted handling.
-//  Single-select: a tap loads the full-resolution image and reports it upward.
+//  Single-select: a tap loads the photo as a working image and reports it upward.
 //
 
 import Photos

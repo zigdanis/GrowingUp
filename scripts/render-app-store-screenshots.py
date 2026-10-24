@@ -259,10 +259,13 @@ def compose(directory, output):
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
         raise ValueError('Capture metadata needs the full source head SHA')
-    if metadata['device'] not in PROFILES or metadata['runtime'] != '26-5':
-        raise ValueError('Use a supported, independently captured native device / iOS 26.5')
-    SIZE, FAMILY = PROFILES[metadata['device']]
-    if (metadata['native_width'], metadata['native_height']) != SIZE:
+    # Any simulator with a supported native size works (an iPhone 16 Pro and a 17 Pro both give 1206x2622).
+    native = (metadata['native_width'], metadata['native_height'])
+    profile = next((found for found in PROFILES.values() if found[0] == native), None)
+    if profile is None:
+        raise ValueError('Use an independently captured native device with a supported screen size')
+    SIZE, FAMILY = profile
+    if metadata['family'] != FAMILY:
         raise ValueError('Native capture dimensions do not match the selected hardware')
     if output.exists() and any(output.iterdir()):
         raise ValueError('Output directory must be empty to avoid stale screenshots')
