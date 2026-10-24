@@ -98,11 +98,11 @@ final class PeoplePresenter {
 		persons = reordered
 	}
 
-	/// Stores the mosaic's current order, as a dragged tile lands; a failure puts the people back in their stored order.
+	/// Stores the mosaic's current order, as a dragged tile lands; when the latest save fails, the people return to the order
+	/// that is stored. A failed save that a newer one superseded changes nothing: the newer save stores the whole order.
 	func saveOrder() async {
 		let order = persons.map(\.id)
 		guard order != persons.sorted().map(\.id) else { return }
-		let storedOrder = Dictionary(uniqueKeysWithValues: persons.map { ($0.id, $0.displayOrder) })
 		// The people take their new places at once, so a change saved meanwhile keeps them where they are shown.
 		for index in persons.indices {
 			persons[index].displayOrder = index + 1
@@ -117,10 +117,11 @@ final class PeoplePresenter {
 			try await save.value
 			reloadWidgets()
 		} catch {
-			for index in persons.indices {
-				persons[index].displayOrder = storedOrder[persons[index].id] ?? persons[index].displayOrder
+			guard orderSave == save else { return }
+			// The store holds the truth after the last save: an earlier one may have succeeded before this one failed.
+			if let stored = try? await configurator.fetchUseCase.fetchPersons(), orderSave == save {
+				persons = stored.sorted()
 			}
-			persons.sort()
 			self.error = SceneError(error)
 		}
 	}

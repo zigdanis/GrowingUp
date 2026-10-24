@@ -17,6 +17,10 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		NSSortDescriptor(key: #keyPath(CoreDataPerson.createdDate), ascending: true)
 	]
 
+	/// Keeps a new person's place at the end and a reordering from interleaving: each reads the stored order and then
+	/// saves, so one must finish before the other starts.
+	private static let orderLock = NSLock()
+
 	let coreDataStack: CoreDataStack
 
 	public init(coreDataStack: CoreDataStack) {
@@ -28,6 +32,8 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		let container = try coreDataStack.persistentContainer
 		return try await withCheckedThrowingContinuation { continuation in
 			container.performBackgroundTask { context in
+				Self.orderLock.lock()
+				defer { Self.orderLock.unlock() }
 				// Read before the insert, so the new person's own default order is not counted.
 				let lastOrder: Int64
 				do {
@@ -131,6 +137,8 @@ public class CoreDataPersonsGateway: PersonsGateway {
 		let container = try coreDataStack.persistentContainer
 		try await withCheckedThrowingContinuation { continuation in
 			container.performBackgroundTask { context in
+				Self.orderLock.lock()
+				defer { Self.orderLock.unlock() }
 				do {
 					let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 					request.sortDescriptors = Self.mosaicOrder

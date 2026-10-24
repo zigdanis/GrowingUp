@@ -82,6 +82,30 @@ final class PeopleReorderingTests: XCTestCase {
 		XCTAssertTrue(presenter.isReordering, "The mosaic stays in reordering to try again")
 	}
 
+	func testAFailedSaveThatANewerOneSupersededNeitherRollsBackNorShowsAnError() async {
+		let people = makePeople(count: 3)
+		let (presenter, gateway) = await loadedPresenter(people)
+		presenter.startReordering()
+		var releaseFirst: CheckedContinuation<Void, Never>?
+		gateway.onReorder = {
+			guard gateway.reorderedIDs.count == 1 else { return }
+			await withCheckedContinuation { releaseFirst = $0 }
+		}
+		gateway.reorderResultToBeReturned = .failure(.coreDataSaveFailed)
+		presenter.move(people[2].id, to: 0)
+		let first = Task { await presenter.saveOrder() }
+		while releaseFirst == nil { await Task.yield() }
+		presenter.move(people[1].id, to: 0)
+		let second = Task { await presenter.saveOrder() }
+		for _ in 0..<20 { await Task.yield() }
+		releaseFirst?.resume()
+		await first.value
+		gateway.reorderResultToBeReturned = .success(())
+		await second.value
+		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id, people[2].id, people[0].id])
+		XCTAssertNil(presenter.error)
+	}
+
 	func testSavesAreStoredInTheOrderTheyWereMade() async {
 		let people = makePeople(count: 3)
 		let (presenter, gateway) = await loadedPresenter(people)
