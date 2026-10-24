@@ -133,3 +133,13 @@
 "Reframe" = "Кадрировать";
 "More" = "Ещё";
 "Remove…" = "Удалить…";
+
+/* In-place edit mode of a person page. */
+"Done" = "Готово";
+"Widget" = "Виджет";
+"Celebrate" = "Праздник";
+"Circle" = "Кружок";
+"If known" = "если известно";
+/* Title of the removal alert; the argument is the person's name. */
+"Remove %@?" = "Удалить %@?";
+"Their photo, birthday and settings will disappear from the app and the widget." = "Фото, дата и настройки исчезнут из приложения и из виджета.";

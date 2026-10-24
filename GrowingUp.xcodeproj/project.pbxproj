@@ -35,6 +35,7 @@
 		ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177A5032D09303945B40C8 /* PersonEditorHero.swift */; };
 		ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17002F611FE46339590755 /* PersonImageLoader.swift */; };
 		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
+		8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */; };
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
 		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
 		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
@@ -151,6 +152,7 @@
 		4507FD220ECE19C1EC76C20E /* PhotoAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BB1DDD7DA1AB8F30B81839D /* PhotoAsset.swift */; };
 		49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */; };
 		2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109645F67F6E710500D9E8DA /* WorkingImageTests.swift */; };
+		CAE3BF5D998385F7E42130E9 /* CropGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */; };
 		4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */; };
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
@@ -188,6 +190,8 @@
 		AEF0820E4E60DE4F7326FF1C /* SystemPhotoPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A862DE70FE4EC4105270E87B /* SystemPhotoPicker.swift */; };
 		B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */; };
 		BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C2F72B99E6E5605512A6907 /* CropStep.swift */; };
+		FBF3A8332FF711B63A5361A6 /* ThirdsGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2469A79AAB54B9DED980854 /* ThirdsGrid.swift */; };
+		AE6B692672500EF253968520 /* CropGeometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92269C64A60057B4E5573DED /* CropGeometry.swift */; };
 		C48F051F8A211CD8BB0E652A /* WorkingImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F351CDD28C9DB271C24108 /* WorkingImage.swift */; };
 		BC25D01BED8E56ED655941C6 /* PeoplePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449ED61637164BFF288A6770 /* PeoplePresenter.swift */; };
 		BE3F519DD38840924A4AED64 /* AgeWidgetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */; };
@@ -209,6 +213,17 @@
 		F95E0D1D0230F93BBD5E5961 /* Disk in Frameworks */ = {isa = PBXBuildFile; productRef = EE1D6EEE2702E7B0FB6F0B1F /* Disk */; };
 		F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */; };
 		A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */; };
+		A7B4B72CFAF8A89B25EE8A83 /* PersonEditModeScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */; };
+		49DC0D8CD341CE0C8DA70241 /* EditModePopoverCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */; };
+		0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */; };
+		2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BED79DB5591DDB2C925728A /* EditModeFields.swift */; };
+		962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */; };
+		85FB66D749BD4B5623A4AC53 /* PersonPhotoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */; };
+		15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */; };
+		AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40165AC65764622424D2E29 /* EditModeControlLabel.swift */; };
+		26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */; };
+		0579BC523E214B06803F45C2 /* PersonEditPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */; };
+		13DEE217C1C1F4484954606D /* PhotoFraming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */; };
 		BF47FBDEE87F417E84DC68F1 /* BirthdayStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1303536429A34F2CB9827E7E /* BirthdayStatus.swift */; };
 		B60000000000000000000002 /* LockScreenText.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000001 /* LockScreenText.swift */; };
 		B60000000000000000000004 /* LockScreenSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000003 /* LockScreenSchedule.swift */; };
@@ -345,6 +360,7 @@
 		ED177A5032D09303945B40C8 /* PersonEditorHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorHero.swift; sourceTree = "<group>"; };
 		ED17002F611FE46339590755 /* PersonImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImageLoader.swift; sourceTree = "<group>"; };
 		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
+		B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenterTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
 		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
@@ -429,6 +445,7 @@
 		0F6D9304984D13833DA1013D /* ImageCaptureSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptureSource.swift; sourceTree = "<group>"; };
 		109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceTests.swift; sourceTree = "<group>"; };
 		109645F67F6E710500D9E8DA /* WorkingImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingImageTests.swift; sourceTree = "<group>"; };
+		13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropGeometryTests.swift; sourceTree = "<group>"; };
 		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2352944A067948DFD24D8DFB /* PersonImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImages.swift; sourceTree = "<group>"; };
@@ -474,6 +491,8 @@
 		85F86BF7E1D6CCE36B185DBE /* GrowingUpWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowingUpWidgetBundle.swift; sourceTree = "<group>"; };
 		898315CCC5CACED1D6D6CB1D /* PhotoRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoRequest.swift; sourceTree = "<group>"; };
 		8C2F72B99E6E5605512A6907 /* CropStep.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CropStep.swift; sourceTree = "<group>"; };
+		F2469A79AAB54B9DED980854 /* ThirdsGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdsGrid.swift; sourceTree = "<group>"; };
+		92269C64A60057B4E5573DED /* CropGeometry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropGeometry.swift; sourceTree = "<group>"; };
 		73F351CDD28C9DB271C24108 /* WorkingImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingImage.swift; sourceTree = "<group>"; };
 		8D9A7D536DAF10611A2F97FA /* PermissionExplainerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionExplainerConfig.swift; sourceTree = "<group>"; };
 		8E88731C743E444D0561E0DE /* ValueWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValueWrapper.swift; sourceTree = "<group>"; };
@@ -518,6 +537,17 @@
 		FE5B8EE370E7A268E9474FD2 /* PhotoPreviewControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewControls.swift; sourceTree = "<group>"; };
 		3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonBirthdayFields.swift; sourceTree = "<group>"; };
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
+		715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModeScene.swift; sourceTree = "<group>"; };
+		2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePopoverCard.swift; sourceTree = "<group>"; };
+		D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControls.swift; sourceTree = "<group>"; };
+		7BED79DB5591DDB2C925728A /* EditModeFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeFields.swift; sourceTree = "<group>"; };
+		AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePhoto.swift; sourceTree = "<group>"; };
+		62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoPlaceholder.swift; sourceTree = "<group>"; };
+		C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeToggleStyle.swift; sourceTree = "<group>"; };
+		D40165AC65764622424D2E29 /* EditModeControlLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControlLabel.swift; sourceTree = "<group>"; };
+		A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenter.swift; sourceTree = "<group>"; };
+		D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditPopover.swift; sourceTree = "<group>"; };
+		35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFraming.swift; sourceTree = "<group>"; };
 		1303536429A34F2CB9827E7E /* BirthdayStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayStatus.swift; sourceTree = "<group>"; };
 		B60000000000000000000001 /* LockScreenText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenText.swift; sourceTree = "<group>"; };
 		B60000000000000000000003 /* LockScreenSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenSchedule.swift; sourceTree = "<group>"; };
@@ -947,6 +977,7 @@
 			isa = PBXGroup;
 			children = (
 				ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */,
+				B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
@@ -1082,6 +1113,17 @@
 				9B95C666900961A68BBCB3C5 /* PersonMutation.swift */,
 				84F24E7EAB2550741D76E62D /* PersonPicture.swift */,
 				B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */,
+				715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */,
+				2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */,
+				D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */,
+				7BED79DB5591DDB2C925728A /* EditModeFields.swift */,
+				AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */,
+				62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */,
+				C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */,
+				D40165AC65764622424D2E29 /* EditModeControlLabel.swift */,
+				A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */,
+				D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */,
+				35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */,
 				3A886B45B94A4931A0B7DABB /* PersonBirthdayFields.swift */,
 				898315CCC5CACED1D6D6CB1D /* PhotoRequest.swift */,
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
@@ -1103,6 +1145,7 @@
 			children = (
 				109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */,
 				109645F67F6E710500D9E8DA /* WorkingImageTests.swift */,
+				13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */,
 			);
 			path = ImageCapture;
 			sourceTree = "<group>";
@@ -1118,6 +1161,8 @@
 				CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */,
 				2C1E304222C36896704B86B7 /* CropShape.swift */,
 				8C2F72B99E6E5605512A6907 /* CropStep.swift */,
+				F2469A79AAB54B9DED980854 /* ThirdsGrid.swift */,
+				92269C64A60057B4E5573DED /* CropGeometry.swift */,
 				3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */,
 				490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */,
 				EDE7546BFE10608147B0CB77 /* PhotoAuthState.swift */,
@@ -1524,6 +1569,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
+				8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */,
 				ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */,
 				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
@@ -1550,6 +1596,7 @@
 				3A1E1B60337B410FBF020D90 /* BirthdayStatusTests.swift in Sources */,
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */,
+				CAE3BF5D998385F7E42130E9 /* CropGeometryTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
@@ -1614,6 +1661,8 @@
 				CC552EE2BC6E5F53EF8447E3 /* CameraCardView.swift in Sources */,
 				29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */,
 				BB5B740075366CCE12181DB5 /* CropStep.swift in Sources */,
+				FBF3A8332FF711B63A5361A6 /* ThirdsGrid.swift in Sources */,
+				AE6B692672500EF253968520 /* CropGeometry.swift in Sources */,
 				557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */,
 				A73A55419A5987738B8B2535 /* PermissionExplainerView.swift in Sources */,
 				D3EF4855D8FA50027A872FEA /* PhotoAuthState.swift in Sources */,
@@ -1645,6 +1694,17 @@
 				E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */,
 				A9D71F8C6AE60DB48F7D554B /* PersonPicture.swift in Sources */,
 				A24DA89B803E4B02A0464A70 /* PersonPhotoMenu.swift in Sources */,
+				A7B4B72CFAF8A89B25EE8A83 /* PersonEditModeScene.swift in Sources */,
+				49DC0D8CD341CE0C8DA70241 /* EditModePopoverCard.swift in Sources */,
+				0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */,
+				2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */,
+				962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */,
+				85FB66D749BD4B5623A4AC53 /* PersonPhotoPlaceholder.swift in Sources */,
+				15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */,
+				AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */,
+				26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */,
+				0579BC523E214B06803F45C2 /* PersonEditPopover.swift in Sources */,
+				13DEE217C1C1F4484954606D /* PhotoFraming.swift in Sources */,
 				F380E990775B491B9FEB0B49 /* PersonBirthdayFields.swift in Sources */,
 				AD9C29AA3E3817E33857FC69 /* PhotoRequest.swift in Sources */,
 				4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */,

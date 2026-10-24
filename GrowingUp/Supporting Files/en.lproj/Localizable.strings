@@ -133,3 +133,13 @@
 "Reframe" = "Reframe";
 "More" = "More";
 "Remove…" = "Remove…";
+
+/* In-place edit mode of a person page. */
+"Done" = "Done";
+"Widget" = "Widget";
+"Celebrate" = "Celebrate";
+"Circle" = "Circle";
+"If known" = "If known";
+/* Title of the removal alert; the argument is the person's name. */
+"Remove %@?" = "Remove %@?";
+"Their photo, birthday and settings will disappear from the app and the widget." = "Their photo, birthday and settings will disappear from the app and the widget.";

@@ -19,6 +19,9 @@ final class PersonEditorPresenter: Identifiable {
 	var error: SceneError?
 	private(set) var isBusy = false
 	private(set) var isLoading = true
+	/// Whether the widget picture is the one `setMainPhoto(_:)` derived in this session, so a reframed main photo can take
+	/// it along. A widget picture framed separately, or one saved earlier, is never re-derived.
+	private(set) var widgetPictureIsDerived = false
 	private var birthTimeIsKnown: Bool
 	/// The time of day last known before the toggle was turned off; turning it back on restores it.
 	private var rememberedTime: DateComponents?
@@ -111,8 +114,11 @@ final class PersonEditorPresenter: Identifiable {
 		return parameters != baseline
 	}
 
-	var canSave: Bool {
-		isDirty && !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isBusy && !isLoading
+	var canSave: Bool { isDirty && isReadyToSave }
+
+	/// Whether a change could be saved now: the name is not blank and nothing is loading or saving.
+	var isReadyToSave: Bool {
+		!name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isBusy && !isLoading
 	}
 
 	/// Image identity decides equality here: every newly picked or reframed picture gets a new identifier.
@@ -136,17 +142,29 @@ final class PersonEditorPresenter: Identifiable {
 	func setMainPhoto(_ image: UIImage) {
 		appImage = PersonImage(uiImage: image)
 		widgetImage = PersonImage(uiImage: WidgetPictureDeriver.derive(from: image))
+		widgetPictureIsDerived = true
+	}
+
+	/// Replaces the main photo with a new framing of itself. A widget picture derived from the photo in this session
+	/// follows the new framing; one the person framed separately, or one saved earlier, stays as it is.
+	func reframeMainPhoto(_ image: UIImage) {
+		appImage = PersonImage(uiImage: image)
+		if widgetPictureIsDerived {
+			widgetImage = PersonImage(uiImage: WidgetPictureDeriver.derive(from: image))
+		}
 	}
 
 	/// Removes the main photo together with the widget picture that belongs to it.
 	func removeMainPhoto() {
 		appImage = nil
 		widgetImage = nil
+		widgetPictureIsDerived = false
 	}
 
 	/// Replaces only the widget picture, for example with a reframed crop of the main photo.
 	func setWidgetPhoto(_ image: UIImage) {
 		widgetImage = PersonImage(uiImage: image)
+		widgetPictureIsDerived = false
 	}
 
 	/// The full main photo, loaded from storage when it was saved earlier; `nil` without a photo or on failure.
@@ -200,6 +218,8 @@ final class PersonEditorPresenter: Identifiable {
 			} else {
 				saved = try await addUseCase.add(parameters: parameters)
 			}
+			// The draft now matches what is stored, so the same change cannot be saved twice.
+			baseline = parameters
 			onMutation(.saved(saved))
 		} catch is CancellationError {
 		} catch {
