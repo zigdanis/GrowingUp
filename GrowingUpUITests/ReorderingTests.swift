@@ -29,6 +29,15 @@ final class ReorderingTests: XCTestCase {
 		// While reordering, a tap on a tile opens nobody.
 		tile("Boris").tap()
 		XCTAssertFalse(app.buttons["person.name"].waitForExistence(timeout: 1))
+		// A tap on the gap between the tiles finishes reordering, like Done.
+		let gap = CGVector(dx: (tile("Boris").frame.maxX + tile("Clara").frame.minX) / 2, dy: tile("Boris").frame.midY)
+		app.coordinate(withNormalizedOffset: .zero).withOffset(gap).tap()
+		XCTAssertTrue(add.waitForExistence(timeout: 5))
+		XCTAssertFalse(done.exists)
+		// A press that lets go without moving starts reordering too, and letting go opens nobody.
+		tile("Boris").press(forDuration: 1)
+		XCTAssertTrue(done.waitForExistence(timeout: 5))
+		XCTAssertFalse(app.buttons["person.name"].waitForExistence(timeout: 1))
 		done.tap()
 		XCTAssertTrue(add.waitForExistence(timeout: 5))
 		XCTAssertFalse(done.exists)

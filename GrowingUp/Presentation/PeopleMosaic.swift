@@ -57,10 +57,7 @@ struct PeopleMosaic: View {
 					.padding(.vertical, MosaicGridLayout.spacing)
 					// Fills the visible mosaic, so a tap beside or below the tiles finishes reordering.
 					.frame(minHeight: geometry.size.height, alignment: .top)
-					.contentShape(.rect)
-					.onTapGesture {
-						if isReordering { onFinishReordering() }
-					}
+					.overlay { if isReordering { gaps(grid: grid) } }
 					.overlay(alignment: .topLeading) { floatingTile(grid: grid, width: width) }
 					.coordinateSpace(Self.contentSpace)
 				}
@@ -106,6 +103,14 @@ struct PeopleMosaic: View {
 			onDrop: { drop(person.id) },
 			onMoveEarlier: index > 0 ? { moveByAccessibility(person.id, to: index - 1) } : nil,
 			onMoveLater: index < persons.count - 1 ? { moveByAccessibility(person.id, to: index + 1) } : nil)
+	}
+
+	/// The space beside and below the tiles, where a tap finishes reordering; it lies over the tiles, as their touch areas
+	/// reach into the gaps and would take the tap first.
+	private func gaps(grid: MosaicGridLayout) -> some View {
+		Color.clear
+			.contentShape(MosaicGaps(grid: grid, count: persons.count), eoFill: true)
+			.onTapGesture(perform: onFinishReordering)
 	}
 
 	/// The lifted tile above the mosaic, under the finger, a little larger and higher than its neighbours.

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
 		20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */; };
+		A7F1C2D3E4B5968778695A53 /* MosaicGapsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A54 /* MosaicGapsTests.swift */; };
 		2A4C24DFC6617D3A116F55F7 /* UIImage+AverageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */; };
 		761476D71001BE90879AC852 /* TrailingPaneOnLandscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */; };
 		20EE864CF0F252B54304C349 /* PersonViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D964AC0CFE1BAC37F2286F54 /* PersonViewer.swift */; };
@@ -18,6 +19,7 @@
 		ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */; };
 		ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */; };
 		ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED183F51000DBDC05872F428 /* MosaicDrag.swift */; };
+		A7F1C2D3E4B5968778695A51 /* MosaicGaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A52 /* MosaicGaps.swift */; };
 		BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B232AA95FA03E9846676E93 /* MosaicPicture.swift */; };
 		6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */; };
 		4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE199505592BB868450287CE /* MosaicEdgeScrims.swift */; };
@@ -332,6 +334,7 @@
 /* Begin PBXFileReference section */
 		D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPaletteTests.swift; sourceTree = "<group>"; };
 		EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayoutTests.swift; sourceTree = "<group>"; };
+		A7F1C2D3E4B5968778695A54 /* MosaicGapsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGapsTests.swift; sourceTree = "<group>"; };
 		FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AverageColor.swift"; sourceTree = "<group>"; };
 		D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingPaneOnLandscape.swift; sourceTree = "<group>"; };
 		D964AC0CFE1BAC37F2286F54 /* PersonViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewer.swift; sourceTree = "<group>"; };
@@ -341,6 +344,7 @@
 		ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTileButton.swift; sourceTree = "<group>"; };
 		ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicWiggle.swift; sourceTree = "<group>"; };
 		ED183F51000DBDC05872F428 /* MosaicDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicDrag.swift; sourceTree = "<group>"; };
+		A7F1C2D3E4B5968778695A52 /* MosaicGaps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGaps.swift; sourceTree = "<group>"; };
 		5B232AA95FA03E9846676E93 /* MosaicPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicture.swift; sourceTree = "<group>"; };
 		A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayout.swift; sourceTree = "<group>"; };
 		AE199505592BB868450287CE /* MosaicEdgeScrims.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicEdgeScrims.swift; sourceTree = "<group>"; };
@@ -983,6 +987,7 @@
 				ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */,
 				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
 				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
+				A7F1C2D3E4B5968778695A54 /* MosaicGapsTests.swift */,
 				32DAA5842EE458E988A419CC /* AgeTickerTests.swift */,
 				7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */,
 			);
@@ -1094,6 +1099,7 @@
 				ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */,
 				ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */,
 				ED183F51000DBDC05872F428 /* MosaicDrag.swift */,
+				A7F1C2D3E4B5968778695A52 /* MosaicGaps.swift */,
 				5B232AA95FA03E9846676E93 /* MosaicPicture.swift */,
 				A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */,
 				AE199505592BB868450287CE /* MosaicEdgeScrims.swift */,
@@ -1604,6 +1610,7 @@
 				ED1844113AB9605B329116D0 /* PeopleReorderingTests.swift in Sources */,
 				8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */,
 				20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */,
+				A7F1C2D3E4B5968778695A53 /* MosaicGapsTests.swift in Sources */,
 				014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */,
 				090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */,
 			);
@@ -1666,6 +1673,7 @@
 				ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */,
 				ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */,
 				ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */,
+				A7F1C2D3E4B5968778695A51 /* MosaicGaps.swift in Sources */,
 				BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */,
 				6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */,
 				4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */,
