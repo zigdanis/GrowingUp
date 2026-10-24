@@ -11,9 +11,13 @@ struct EditModePhoto: View {
 			if let photo = mode.photo, let geometry = mode.geometry(of: photo) {
 				Color.black
 				framed(photo, geometry: geometry)
+					.accessibilityLabel(Text("Selected photo"))
+					.accessibilityIdentifier("editor.appPhoto.loaded")
 				guides(geometry.frameRect)
+					.accessibilityHidden(true)
 			} else if mode.editor.appImage == nil {
 				PersonPhotoPlaceholder()
+					.accessibilityHidden(true)
 			}
 			// While a saved photo loads, the viewer's page shows through, so the switch into edit mode never flashes.
 		}
@@ -24,7 +28,6 @@ struct EditModePhoto: View {
 		.onTapGesture(count: 2) {
 			withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) { mode.resetFraming() }
 		}
-		.accessibilityHidden(true)
 	}
 
 	private func framed(_ photo: UIImage, geometry: CropGeometry) -> some View {

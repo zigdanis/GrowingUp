@@ -2,7 +2,7 @@ import SwiftUI
 
 /// The calendar or the time wheels in a card centred on the screen over a dim layer; a tap outside the card closes it.
 struct EditModePopoverCard: View {
-	@Bindable var mode: PersonEditModePresenter
+	let mode: PersonEditModePresenter
 	let popover: PersonEditPopover
 	let maxWidth: CGFloat
 
@@ -27,6 +27,7 @@ struct EditModePopoverCard: View {
 				DatePicker("Day of birth", selection: $editor.dayOfBirth, in: ...editor.maximumBirthday, displayedComponents: .date)
 					.datePickerStyle(.graphical)
 					.labelsHidden()
+					.tint(Color(uiColor: .appColor))
 					.accessibilityIdentifier("editor.birthDate.picker")
 			case .time:
 				HStack(alignment: .firstTextBaseline) {

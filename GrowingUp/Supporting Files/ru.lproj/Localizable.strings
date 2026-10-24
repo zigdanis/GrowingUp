@@ -82,10 +82,6 @@
 
 "Save" = "Сохранить";
 
-"Remove person?" = "Удалить человека?";
-
-"Edit person" = "Редактировать";
-
 "OK" = "ОК";
 
 "Photo" = "Фото";
@@ -131,9 +127,6 @@
 "Celebrate birthdays" = "Праздновать дни рождения";
 "Widget picture" = "Фото для виджета";
 "Reframe" = "Кадрировать";
-"More" = "Ещё";
-"Remove…" = "Удалить…";
-
 /* In-place edit mode of a person page. */
 "Done" = "Готово";
 "Widget" = "Виджет";

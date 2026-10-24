@@ -33,7 +33,6 @@ struct PersonEditModeScene: View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
-		.accessibilityIdentifier("editor.mode")
 		.task { await editor.load() }
 		.task(id: editor.appImage?.id) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
@@ -89,6 +88,7 @@ struct PersonEditModeScene: View {
 			} label: {
 				Text("Cancel")
 					.font(.headline)
+					.foregroundStyle(.white)
 					.padding(.horizontal, 6)
 					.frame(minHeight: 32)
 			}

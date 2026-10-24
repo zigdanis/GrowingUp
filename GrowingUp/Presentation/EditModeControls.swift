@@ -3,7 +3,7 @@ import SwiftUI
 /// The edit mode's round controls along the bottom, all the same size: the photo's source menu, the widget and birthday
 /// switches, the widget picture's framing and, always last, removal.
 struct EditModeControls: View {
-	@Bindable var mode: PersonEditModePresenter
+	let mode: PersonEditModePresenter
 	@Binding var photoRequest: PhotoRequest?
 	let onFrameWidgetPicture: () -> Void
 

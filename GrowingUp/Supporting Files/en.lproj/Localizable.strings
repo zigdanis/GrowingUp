@@ -82,10 +82,6 @@
 
 "Save" = "Save";
 
-"Remove person?" = "Remove person?";
-
-"Edit person" = "Edit person";
-
 "OK" = "OK";
 
 "Photo" = "Photo";
@@ -131,9 +127,6 @@
 "Celebrate birthdays" = "Celebrate birthdays";
 "Widget picture" = "Widget picture";
 "Reframe" = "Reframe";
-"More" = "More";
-"Remove…" = "Remove…";
-
 /* In-place edit mode of a person page. */
 "Done" = "Done";
 "Widget" = "Widget";

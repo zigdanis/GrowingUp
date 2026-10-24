@@ -3,7 +3,7 @@ import SwiftUI
 /// The edit mode's fields in the top third, where the keyboard never covers them: the name, the date and time capsules
 /// and the age they give.
 struct EditModeFields: View {
-	@Bindable var mode: PersonEditModePresenter
+	let mode: PersonEditModePresenter
 	var isNameFocused: FocusState<Bool>.Binding
 
 	var body: some View {

@@ -29,15 +29,16 @@ final class NavigationTests: XCTestCase {
 		XCTAssertTrue(tile("Clara").isHittable)
 		tile("Boris").tap()
 		XCTAssertTrue(waitFor(personName, label: "Boris"))
-		// A tap anywhere on the person opens the editor.
+		// A tap anywhere on the person turns the viewer into its edit mode.
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.55)).tap()
 		let save = app.buttons["editor.save"]
 		XCTAssertTrue(save.waitForExistence(timeout: 5))
 		XCTAssertEqual(app.textFields["editor.name"].value as? String, "Boris")
 		XCTAssertFalse(save.isEnabled)
-		checkpoint("viewer-tap-editor")
-		dismissEditor()
-		XCTAssertEqual(personName.label, "Boris")
+		checkpoint("viewer-tap-edit-mode")
+		app.buttons["editor.cancel"].tap()
+		XCTAssertTrue(save.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(waitFor(personName, label: "Boris"))
 		closeViewer()
 		app.open(URL(string: "growingup-app://?personID=00000000-0000-0000-0000-000000000006")!)
 		XCTAssertTrue(waitFor(personName, label: "Farah"))
@@ -87,18 +88,6 @@ final class NavigationTests: XCTestCase {
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
 			forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
 		XCTAssertTrue(personName.waitForNonExistence(timeout: 5))
-	}
-
-	private func dismissEditor() {
-		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
-		let navigation = app.navigationBars.firstMatch
-		// iPhone Duo's outer display shows the sheet's bar vertically, so the drag starts at the top of the sheet there.
-		let start =
-			navigation.exists && navigation.frame.width > navigation.frame.height
-			? navigation.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-			: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.12))
-		start.press(forDuration: 0.1, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)))
-		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
 	private func waitFor(_ element: XCUIElement, label: String) -> Bool {

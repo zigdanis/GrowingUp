@@ -37,6 +37,8 @@ struct PersonViewer: View {
 				// Edit mode gives every gesture to the photo's framing, so the pager stays on the edited person.
 				.scrollDisabled(editMode != nil)
 				.accessibilityHidden(editMode != nil)
+				// On the pager alone: on the whole viewer it would replace the edit mode's own identifiers.
+				.accessibilityIdentifier("person.viewer")
 				.ignoresSafeArea()
 				// A freshly presented pager starts on its first page whatever its position says, so it moves to the tapped person
 				// before the zoom reveals it.
@@ -52,7 +54,6 @@ struct PersonViewer: View {
 		// nor does another app's keyboard beside the viewer in Split View.
 		.ignoresSafeArea(.keyboard)
 		.background(.black)
-		.accessibilityIdentifier("person.viewer")
 		// Locks the zoom transition's swipe down while editing. Verified on iOS 18.6 and 27.0 with a drag-down UI test
 		// (NavigationTests): with this modifier the cover stays, without it the same drag closes the viewer; after Cancel or
 		// Done the swipe zooms back into the tile again. No UIKit hook into the presentation controller is needed.
