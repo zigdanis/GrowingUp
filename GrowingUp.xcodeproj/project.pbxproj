@@ -25,8 +25,7 @@
 		4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE199505592BB868450287CE /* MosaicEdgeScrims.swift */; };
 		5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */; };
 		A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39444605A63DB84646F2AE /* AmbientBackground.swift */; };
-		B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D869F72C305651BFD41E0104 /* AddPersonButton.swift */; };
-		ED18701654761ECB1AFB4257 /* FinishReorderingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */; };
+		B3C161FC2905D822112DD0D1 /* FloatingCapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D869F72C305651BFD41E0104 /* FloatingCapsuleButton.swift */; };
 		C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
@@ -350,8 +349,7 @@
 		AE199505592BB868450287CE /* MosaicEdgeScrims.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicEdgeScrims.swift; sourceTree = "<group>"; };
 		B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPalette.swift; sourceTree = "<group>"; };
 		1F39444605A63DB84646F2AE /* AmbientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientBackground.swift; sourceTree = "<group>"; };
-		D869F72C305651BFD41E0104 /* AddPersonButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonButton.swift; sourceTree = "<group>"; };
-		ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinishReorderingButton.swift; sourceTree = "<group>"; };
+		D869F72C305651BFD41E0104 /* FloatingCapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingCapsuleButton.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayout.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScale.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicture.swift; sourceTree = "<group>"; };
@@ -1105,8 +1103,7 @@
 				AE199505592BB868450287CE /* MosaicEdgeScrims.swift */,
 				B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */,
 				1F39444605A63DB84646F2AE /* AmbientBackground.swift */,
-				D869F72C305651BFD41E0104 /* AddPersonButton.swift */,
-				ED186DEDC3CA93BECF034F86 /* FinishReorderingButton.swift */,
+				D869F72C305651BFD41E0104 /* FloatingCapsuleButton.swift */,
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
 				B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */,
 				433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */,
@@ -1679,8 +1676,7 @@
 				4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */,
 				5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */,
 				A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */,
-				B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */,
-				ED18701654761ECB1AFB4257 /* FinishReorderingButton.swift in Sources */,
+				B3C161FC2905D822112DD0D1 /* FloatingCapsuleButton.swift in Sources */,
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,

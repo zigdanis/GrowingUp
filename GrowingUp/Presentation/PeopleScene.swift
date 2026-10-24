@@ -25,9 +25,11 @@ struct PeopleScene: View {
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
 					if presenter.isReordering {
-						floatingButton(FinishReorderingButton(action: presenter.finishReordering), trailingPane: trailingPane)
+						floatingButton(
+							"Done", systemImage: "checkmark", identifier: "people.reorder.done", trailingPane: trailingPane,
+							action: presenter.finishReordering)
 					} else if !presenter.isLoading, presenter.canAdd {
-						floatingButton(AddPersonButton(action: presenter.add), trailingPane: trailingPane)
+						floatingButton("Add person", systemImage: "plus", identifier: "person.add", trailingPane: trailingPane, action: presenter.add)
 					}
 				}
 		}
@@ -68,8 +70,13 @@ struct PeopleScene: View {
 		}
 	}
 
-	private func floatingButton(_ button: some View, trailingPane: TrailingPaneOnLandscape) -> some View {
-		button
+	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window, above the home indicator.
+	private func floatingButton(
+		_ title: LocalizedStringKey, systemImage: String, identifier: String, trailingPane: TrailingPaneOnLandscape,
+		action: @escaping () -> Void
+	) -> some View {
+		FloatingCapsuleButton(title: title, systemImage: systemImage, action: action)
+			.accessibilityIdentifier(identifier)
 			.frame(maxWidth: .infinity)
 			.modifier(trailingPane)
 			.padding(.bottom, 8)
