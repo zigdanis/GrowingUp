@@ -2,6 +2,7 @@
 
 - Deliver changes with the `full-send` skill in `.agents/skills/`: its roles, merge gate, bot-review and CI-budget rules apply to every PR, including PR-only work.
 - On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Inspect the exported screenshots for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review.
+- To drive the app interactively from Linux, install the CI simulator build on an Expo cloud simulator with the `eas-simulator` skill: `scripts/simulator-app.sh [PR_NUMBER]` prints the `.app` path for a PR head, or for master without an argument.
 - For user-visible changes, publish 1–3 reviewed CI screenshots with `scripts/pr-visual-evidence.py` while the PR is open. Use video only when the change is motion itself. For non-UI changes, report functional checks instead.
 
 ## Code Style

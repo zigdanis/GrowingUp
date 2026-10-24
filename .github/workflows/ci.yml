@@ -50,6 +50,7 @@ jobs:
         run: |
           bash -n scripts/run-ui-journeys.sh
           bash -n scripts/pr-evidence.sh
+          bash -n scripts/simulator-app.sh
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
 
   changes:
