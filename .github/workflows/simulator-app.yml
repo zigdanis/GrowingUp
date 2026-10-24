@@ -1,0 +1,68 @@
+name: Simulator App
+
+# A Release build for the iOS Simulator. Linux agents install it on an Expo cloud simulator
+# via scripts/simulator-app.sh. It lives outside CI so it never gates merges, screenshots or TestFlight.
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - '*.md'
+      - '.coderabbit.yaml'
+      - '.agents/**'
+      - '.macroscope/**'
+      - 'docs/**'
+      - 'marketing/**'
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - '.coderabbit.yaml'
+      - '.agents/**'
+      - '.macroscope/**'
+      - 'docs/**'
+      - 'marketing/**'
+  workflow_dispatch:
+
+concurrency:
+  group: simulator-app-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Simulator App
+    runs-on: xcode-27
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Select Xcode
+        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
+
+      - name: Build Release app for the simulator
+        run: |
+          xcodebuild build \
+            -project GrowingUp.xcodeproj \
+            -scheme GrowingUp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath "$RUNNER_TEMP/simulator-app"
+
+      - name: Package app
+        # tar keeps the executable bits that upload-artifact drops; COPYFILE_DISABLE keeps out AppleDouble files.
+        run: |
+          mkdir "$RUNNER_TEMP/simulator-app-package"
+          COPYFILE_DISABLE=1 tar -C "$RUNNER_TEMP/simulator-app/Build/Products/Release-iphonesimulator" \
+            -czf "$RUNNER_TEMP/simulator-app-package/GrowingUp-simulator.tar.gz" GrowingUp.app
+
+      - name: Retain simulator app
+        uses: actions/upload-artifact@v7
+        with:
+          name: simulator-app
+          path: ${{ runner.temp }}/simulator-app-package/GrowingUp-simulator.tar.gz
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
