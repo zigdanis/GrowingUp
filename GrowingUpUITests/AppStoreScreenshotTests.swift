@@ -7,7 +7,9 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var configuration: UITestConfiguration!
 	private var locale = "en"
 	private var names: [String] { locale == "ru" ? ["Мия", "Лео", "Манго", "Тедди"] : ["Mia", "Leo", "Mango", "Teddy"] }
-	private var overview: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch }
+	/// The shown person in the full-screen viewer; a tap on it opens the editor.
+	private var overview: XCUIElement { app.buttons["person.name"] }
+	private var tiles: XCUIElementQuery { app.buttons.matching(identifier: "people.tile") }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 	private var birthdayToday: String { locale == "ru" ? "Сегодня день рождения 🎂" : "Birthday today 🎂" }
 
@@ -54,7 +56,11 @@ final class AppStoreScreenshotTests: XCTestCase {
 
 	private func recordPreview(expectNoConfetti: Bool) throws {
 		try configurePreview(reset: false)
-		XCTAssertEqual(app.staticTexts["person.name"].label, names[0])
+		previewMark("mosaic")
+		Thread.sleep(forTimeInterval: 2)
+		tiles.firstMatch.tap()
+		XCTAssertTrue(overview.waitForExistence(timeout: 5))
+		XCTAssertEqual(app.buttons["person.name"].label, names[0])
 		previewMark("ready")
 		Thread.sleep(forTimeInterval: 5)
 		previewMark("mia-start")
@@ -70,17 +76,17 @@ final class AppStoreScreenshotTests: XCTestCase {
 		previewMark("mango-swipe")
 		app.swipeLeft(velocity: .fast)
 		previewMark("mango-arrived")
-		XCTAssertEqual(app.staticTexts["person.name"].label, names[2])
+		XCTAssertEqual(app.buttons["person.name"].label, names[2])
 		Thread.sleep(forTimeInterval: 3.45)
 		previewMark("teddy-swipe")
 		app.swipeLeft(velocity: .fast)
 		previewMark("teddy-arrived")
-		XCTAssertEqual(app.staticTexts["person.name"].label, names[3])
+		XCTAssertEqual(app.buttons["person.name"].label, names[3])
 		Thread.sleep(forTimeInterval: 3.45)
 		previewMark("return-mia")
 		for _ in 0..<3 { app.swipeRight(velocity: .fast) }
 		previewMark("mia-returned")
-		XCTAssertTrue(app.staticTexts.matching(identifier: "person.name").matching(NSPredicate(format: "label == %@", names[0])).firstMatch.exists)
+		XCTAssertTrue(app.buttons.matching(identifier: "person.name").matching(NSPredicate(format: "label == %@", names[0])).firstMatch.exists)
 		overview.tap()
 		previewMark("editor-open")
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
@@ -113,7 +119,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 			"-AppleInterfaceStyle", "Dark", "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
 		]
 		app.launch()
-		XCTAssertTrue((reset ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+		XCTAssertTrue((reset ? app.buttons["person.add"] : tiles.firstMatch).waitForExistence(timeout: 10))
 	}
 
 	private func previewMark(_ scene: String) {
@@ -193,7 +199,6 @@ final class AppStoreScreenshotTests: XCTestCase {
 	}
 
 	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
-		if index > 0 { app.swipeLeft() }
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
 		let name = app.textFields["editor.name"]
@@ -234,8 +239,9 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 10))
 		app.buttons["editor.save"].tap()
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 10))
-		XCTAssertTrue(overview.waitForExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["person.name"].label, names[index])
+		// A new person lands on the mosaic as a new tile.
+		let tile = tiles.matching(NSPredicate(format: "label BEGINSWITH %@", names[index] + ",")).firstMatch
+		XCTAssertTrue(tile.waitForExistence(timeout: 5))
 	}
 
 	private func relaunch(widgetFamily: String? = nil) {
@@ -244,12 +250,12 @@ final class AppStoreScreenshotTests: XCTestCase {
 		app.launchEnvironment[UITestConfiguration.environmentKey] = configuration.encoded
 		app.launchEnvironment["GROWINGUP_WIDGET_PREVIEW"] = widgetFamily
 		app.launch()
-		if widgetFamily == nil { XCTAssertTrue(overview.waitForExistence(timeout: 10)) }
+		if widgetFamily == nil { XCTAssertTrue(tiles.firstMatch.waitForExistence(timeout: 10)) }
 	}
 
 	private func selectPerson(_ index: Int) {
 		app.open(URL(string: "growingup-app://?personIndex=\(index)")!)
-		let name = app.staticTexts["person.name"]
+		let name = app.buttons["person.name"]
 		let expected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", names[index]), object: name)
 		XCTAssertEqual(XCTWaiter.wait(for: [expected], timeout: 5), .completed)
 	}

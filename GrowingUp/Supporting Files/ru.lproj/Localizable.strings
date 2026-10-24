@@ -111,13 +111,16 @@
 /* Next birthday in the bottom card on the birthday itself. */
 "Birthday today 🎂" = "Сегодня день рождения 🎂";
 
-/* Title of the button that opens the editor for the shown person. */
+/* VoiceOver action on a person page that opens the editor. */
 "Edit" = "Изменить";
 
-/* Headline of the page for adding a person. */
+/* VoiceOver action on a person page that returns to the mosaic of everyone. */
+"All people" = "Все люди";
+
+/* Headline of the empty mosaic. */
 "Who is growing up?" = "Кто растёт?";
 
-/* Explanation on the page for adding a person. */
+/* Invitation under the headline of the empty mosaic. */
 "Add someone you love and watch their age count up, live to the second." = "Добавьте близкого и следите, как растёт его возраст — с точностью до секунды.";
 
 /* Person editor. */
@@ -130,6 +133,3 @@
 "Reframe" = "Кадрировать";
 "More" = "Ещё";
 "Remove…" = "Удалить…";
-"Discard changes?" = "Отменить изменения?";
-"Discard" = "Не сохранять";
-"Keep editing" = "Продолжить";

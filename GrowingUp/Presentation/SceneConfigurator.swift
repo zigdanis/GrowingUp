@@ -8,14 +8,18 @@ struct SceneConfigurator {
 	let editUseCase: EditPersonUseCase
 	let removeUseCase: RemovePersonUseCase
 	let loadImage: (PersonImage) async throws -> UIImage
+	/// Decodes a stored picture to a thumbnail whose longer side is at most the given pixels, without caching the original.
+	let loadThumbnail: (PersonImage, Int) async throws -> UIImage
 	let now: () -> Date
 	let photoFixtures: [UIImage]?
 
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
+		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil
 	) {
 		self.loadImage = loadImage
+		self.loadThumbnail = loadThumbnail
 		self.now = now
 		self.photoFixtures = photoFixtures
 		fetchUseCase = FetchPersonsUseCaseImplementation(personsGateway: gateway)

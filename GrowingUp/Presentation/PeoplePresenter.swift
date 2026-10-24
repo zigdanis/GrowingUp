@@ -6,7 +6,12 @@ import WidgetKit
 @Observable
 final class PeoplePresenter {
 	private(set) var persons: [Person] = []
-	var selectedID: UUID?
+	/// The person the full-screen viewer shows, or last showed, and whose mosaic tile it zooms from and back into.
+	///
+	/// It outlives the viewer, so a dismissal still knows its tile, and after an add it names the new tile to scroll to.
+	private(set) var selectedID: UUID?
+	/// Whether the full-screen viewer covers the mosaic; launch always starts on the mosaic.
+	var isViewing = false
 	var editor: PersonEditorPresenter?
 	var error: SceneError?
 	private(set) var isLoading = true
@@ -31,7 +36,6 @@ final class PeoplePresenter {
 	func load() async {
 		do {
 			persons = try await configurator.fetchUseCase.fetchPersons().sorted()
-			if selectedID == nil { selectedID = persons.first?.id }
 			isLoading = false
 			selectWidgetPerson()
 			if pendingAdd { addFromWidget() }
@@ -53,15 +57,21 @@ final class PeoplePresenter {
 
 	func edit(_ person: Person) { showEditor(person: person) }
 
-	/// Shows the page of the person with `id`, or the add page for `nil` while another person can be added.
-	func select(_ id: UUID?) {
-		guard let id else {
-			if canAdd { selectedID = nil }
-			return
-		}
+	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile.
+	func view(_ id: UUID) {
+		guard persons.contains(where: { $0.id == id }) else { return }
+		selectedID = id
+		isViewing = true
+	}
+
+	/// Follows the viewer's pager to the person with `id`, so the viewer closes into that person's tile.
+	func select(_ id: UUID) {
 		guard persons.contains(where: { $0.id == id }) else { return }
 		selectedID = id
 	}
+
+	/// Returns from the viewer to the mosaic.
+	func closeViewer() { isViewing = false }
 
 	func open(_ url: URL) {
 		if URLComponents(url: url, resolvingAgainstBaseURL: false)?.host == Constants.widgetAddPersonHost {
@@ -95,40 +105,57 @@ final class PeoplePresenter {
 		let index = pendingWidgetIndex
 		pendingWidgetID = nil
 		pendingWidgetIndex = nil
+		let target: UUID?
 		if let id {
-			guard persons.contains(where: { $0.id == id }) else { return }
-			editor = nil
-			selectedID = id
+			target = persons.contains(where: { $0.id == id }) ? id : nil
 		} else if let index {
 			let pinned = persons.filter(\.isOnWidget).sorted()
-			guard pinned.indices.contains(index) else { return }
-			editor = nil
-			selectedID = pinned[index].id
+			target = pinned.indices.contains(index) ? pinned[index].id : nil
+		} else {
+			target = nil
 		}
+		guard let target else { return }
+		// The person opens over the mosaic, so closing the viewer lands on the mosaic like a tile tap would.
+		editor = nil
+		view(target)
 	}
 
 	private func showEditor(person: Person?) {
-		editor = configurator.editor(
+		weak var session: PersonEditorPresenter?
+		let editor = configurator.editor(
 			person: person,
-			onMutation: { [weak self] in self?.apply($0) })
+			onMutation: { [weak self] in self?.apply($0, from: session) })
+		session = editor
+		self.editor = editor
 	}
 
-	func apply(_ mutation: PersonMutation) {
+	/// Applies a change that `session`, the editor that made it, has persisted.
+	///
+	/// The people always take the change, but only the editor still on screen moves the navigation and closes: a widget
+	/// link or a newer editor that replaced it while it was saving keeps what it shows.
+	func apply(_ mutation: PersonMutation, from session: PersonEditorPresenter?) {
+		let ownsNavigation = session != nil && session === editor
 		switch mutation {
 		case .saved(let person):
 			if let index = persons.firstIndex(where: { $0.id == person.id }) {
 				persons[index] = person
 			} else {
 				persons.append(person)
+				// A new person lands on the mosaic, which scrolls to their new tile.
+				if ownsNavigation { isViewing = false }
 			}
 			persons.sort()
-			selectedID = person.id
+			if ownsNavigation { selectedID = person.id }
 		case .removed(let person):
-			let index = persons.firstIndex(where: { $0.id == person.id }) ?? 0
 			persons.removeAll { $0.id == person.id }
-			selectedID = persons.isEmpty ? nil : persons[min(index, persons.count - 1)].id
+			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it. A viewer
+			// a widget link opened on the removed person closes too, as nothing is left to show.
+			if ownsNavigation || selectedID == person.id {
+				isViewing = false
+				selectedID = nil
+			}
 		}
-		editor = nil
+		if ownsNavigation { editor = nil }
 		reloadWidgets()
 	}
 }

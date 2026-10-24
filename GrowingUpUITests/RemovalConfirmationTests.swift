@@ -7,8 +7,12 @@ final class RemovalConfirmationTests: XCTestCase {
 		for (locale, appearance) in [("en", UITestAppearance.light)] {
 			let app = XCUIApplication()
 			launch(app, locale: locale, appearance: appearance)
-			let overview = app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch
-			XCTAssertTrue(overview.waitForExistence(timeout: 10))
+			let first = app.buttons.matching(identifier: "people.tile").firstMatch
+			XCTAssertTrue(first.waitForExistence(timeout: 10))
+			first.tap()
+			// A tap anywhere on the shown person opens the editor.
+			let overview = app.buttons["person.name"]
+			XCTAssertTrue(overview.waitForExistence(timeout: 5))
 			overview.tap()
 			let menu = app.buttons["editor.menu"]
 			XCTAssertTrue(menu.waitForExistence(timeout: 5))

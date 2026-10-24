@@ -7,6 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */; };
+		2A4C24DFC6617D3A116F55F7 /* UIImage+AverageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */; };
+		761476D71001BE90879AC852 /* TrailingPaneOnLandscape.swift in Sources */ = {isa = PBXBuildFile; fileRef = D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */; };
+		20EE864CF0F252B54304C349 /* PersonViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D964AC0CFE1BAC37F2286F54 /* PersonViewer.swift */; };
+		F9630DE9E4483A3BE44D9590 /* PeopleMosaic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */; };
+		C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA33E22728855C1FB098C693 /* PeopleInvitation.swift */; };
+		05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */; };
+		BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B232AA95FA03E9846676E93 /* MosaicPicture.swift */; };
+		6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */; };
+		4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE199505592BB868450287CE /* MosaicEdgeScrims.swift */; };
+		5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */; };
+		A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39444605A63DB84646F2AE /* AmbientBackground.swift */; };
+		B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D869F72C305651BFD41E0104 /* AddPersonButton.swift */; };
 		C7A1B2C3D4E5F60718000002 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000003 /* WidgetTileLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */; };
 		C7A1B2C3D4E5F60718000005 /* TileTypeScale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */; };
@@ -141,7 +155,6 @@
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
 		59292205208AA413665CE54F /* ValueWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E88731C743E444D0561E0DE /* ValueWrapper.swift */; };
-		5BCFB8E0FDB9C17A4E153C3B /* EmptyPersonScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */; };
 		5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */; };
 		627A031D879069E729F3B2EF /* CameraSourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B395D62EC8CB036A4D33657 /* CameraSourceView.swift */; };
 		648F8DDDB53544007C495303 /* GrowingUpWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F86BF7E1D6CCE36B185DBE /* GrowingUpWidgetBundle.swift */; };
@@ -212,21 +225,17 @@
 		B60000000000000000000025 /* LockScreenScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000024 /* LockScreenScheduleTests.swift */; };
 		B60000000000000000000027 /* WidgetPersonLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60000000000000000000026 /* WidgetPersonLoaderTests.swift */; };
 		9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */; };
-		47F91BDB15D345441CFF1C01 /* AvatarThumbnailsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */; };
-		3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */; };
+		47F91BDB15D345441CFF1C01 /* MosaicPicturesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */; };
+		3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */; };
 		C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */; };
 		0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015B5F413251C88922327A /* AgeTicker.swift */; };
 		143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */; };
 		3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */; };
 		2DEDF34AED6A1CE0079B1FA8 /* PersonPageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */; };
-		982A9A1BA0392809E28C4877 /* PeoplePageID.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1A43410FB908023DC9F51A /* PeoplePageID.swift */; };
-		55095DA496B16231CA9D9463 /* BirthdayCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747763C8209752813AD713 /* BirthdayCard.swift */; };
-		DC2BDE64469CCED7BCE572D2 /* GlassCardChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */; };
+		55095DA496B16231CA9D9463 /* BirthdayLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD747763C8209752813AD713 /* BirthdayLine.swift */; };
 		FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */; };
 		014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32DAA5842EE458E988A419CC /* AgeTickerTests.swift */; };
 		090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */; };
-		8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */; };
-		0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */; };
 		599C2CA92AEFB9DED8511CE1 /* NavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508A5E39114E5FF4A37059BB /* NavigationTests.swift */; };
 		D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */; };
 		DC8E1FCA2579CD6C177A7B3D /* PersonTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */; };
@@ -244,7 +253,6 @@
 		1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */; };
 		B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */; };
 		311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */; };
-		C33A5EEDBB6A7097145958AE /* PeoplePageIDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */; };
 		9D9F4D044A85D60A5BED0B06 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 		788DE405402CE74376AD1024 /* Widget.strings in Resources */ = {isa = PBXBuildFile; fileRef = EDE3B14138496431B32AD7F5 /* Widget.strings */; };
 		AE3C6D308BB54317A5AA4DF0 /* PersistentStoreRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */; };
@@ -312,6 +320,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPaletteTests.swift; sourceTree = "<group>"; };
+		EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayoutTests.swift; sourceTree = "<group>"; };
+		FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AverageColor.swift"; sourceTree = "<group>"; };
+		D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingPaneOnLandscape.swift; sourceTree = "<group>"; };
+		D964AC0CFE1BAC37F2286F54 /* PersonViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonViewer.swift; sourceTree = "<group>"; };
+		427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleMosaic.swift; sourceTree = "<group>"; };
+		DA33E22728855C1FB098C693 /* PeopleInvitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleInvitation.swift; sourceTree = "<group>"; };
+		EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTile.swift; sourceTree = "<group>"; };
+		5B232AA95FA03E9846676E93 /* MosaicPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicture.swift; sourceTree = "<group>"; };
+		A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayout.swift; sourceTree = "<group>"; };
+		AE199505592BB868450287CE /* MosaicEdgeScrims.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicEdgeScrims.swift; sourceTree = "<group>"; };
+		B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPalette.swift; sourceTree = "<group>"; };
+		1F39444605A63DB84646F2AE /* AmbientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientBackground.swift; sourceTree = "<group>"; };
+		D869F72C305651BFD41E0104 /* AddPersonButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonButton.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000001 /* WidgetTileLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetTileLayout.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000004 /* TileTypeScale.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileTypeScale.swift; sourceTree = "<group>"; };
 		C7A1B2C3D4E5F60718000007 /* MonogramPicture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonogramPicture.swift; sourceTree = "<group>"; };
@@ -436,7 +458,6 @@
 		B60000000000000000000020 /* LockScreenWidgetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetPreviews.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
 		4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableImage.swift; sourceTree = "<group>"; };
-		4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyPersonScene.swift; sourceTree = "<group>"; };
 		502C13DC235077331724142D /* LightweightPhotoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightweightPhotoPreviewView.swift; sourceTree = "<group>"; };
 		5292F8584945007D5945FF00 /* CameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		5AFDB4B8E50EBC7CEB4873D0 /* GrowingUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -513,21 +534,17 @@
 		B60000000000000000000024 /* LockScreenScheduleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenScheduleTests.swift; sourceTree = "<group>"; };
 		B60000000000000000000026 /* WidgetPersonLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPersonLoaderTests.swift; sourceTree = "<group>"; };
 		3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayAndEditingTests.swift; sourceTree = "<group>"; };
-		A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenter.swift; sourceTree = "<group>"; };
-		6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarThumbnailsPresenterTests.swift; sourceTree = "<group>"; };
+		A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenter.swift; sourceTree = "<group>"; };
+		6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenterTests.swift; sourceTree = "<group>"; };
 		9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleSelectionTests.swift; sourceTree = "<group>"; };
 		A0015B5F413251C88922327A /* AgeTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTicker.swift; sourceTree = "<group>"; };
 		6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCountdown.swift; sourceTree = "<group>"; };
 		D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonAgeCard.swift; sourceTree = "<group>"; };
 		74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPageLayout.swift; sourceTree = "<group>"; };
-		EC1A43410FB908023DC9F51A /* PeoplePageID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeoplePageID.swift; sourceTree = "<group>"; };
-		FD747763C8209752813AD713 /* BirthdayCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCard.swift; sourceTree = "<group>"; };
-		CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCardChrome.swift; sourceTree = "<group>"; };
+		FD747763C8209752813AD713 /* BirthdayLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayLine.swift; sourceTree = "<group>"; };
 		F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlassCapsuleButtonChrome.swift; sourceTree = "<group>"; };
 		32DAA5842EE458E988A419CC /* AgeTickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTickerTests.swift; sourceTree = "<group>"; };
 		7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPresenterTests.swift; sourceTree = "<group>"; };
-		6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarCircle.swift; sourceTree = "<group>"; };
-		C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAvatarStrip.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
 		E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetTests.swift; sourceTree = "<group>"; };
 		D21BB7E541AD95703DB3E1F8 /* PersonTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTile.swift; sourceTree = "<group>"; };
@@ -540,7 +557,6 @@
 		A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTileContentTests.swift; sourceTree = "<group>"; };
 		B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoScrimTests.swift; sourceTree = "<group>"; };
 		0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPageLayoutTests.swift; sourceTree = "<group>"; };
-		AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeoplePageIDTests.swift; sourceTree = "<group>"; };
 		0B3DB4282041C5288DAF9987 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Widget.strings; sourceTree = "<group>"; };
 		C7A0465B1865B8FD8AF5EC84 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Widget.strings; sourceTree = "<group>"; };
 		6817A2EF87A5425F95A6C869 /* PersistentStoreRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStoreRecovery.swift; sourceTree = "<group>"; };
@@ -750,6 +766,7 @@
 			children = (
 				09165328223ECBC40081FB10 /* UIColor+Extensions.swift */,
 				0916532A223ECBC40081FB10 /* UIImage+Extensions.swift */,
+				FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */,
 				0916532D223ECBC40081FB10 /* Date+Extensions.swift */,
 			);
 			path = Others;
@@ -935,10 +952,11 @@
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
 				B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */,
 				0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */,
-				AB148D3076A343FE8BF711B4 /* PeoplePageIDTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
-				6E9DA998137B36105ED7A7E9 /* AvatarThumbnailsPresenterTests.swift */,
+				6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
+				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
+				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
 				32DAA5842EE458E988A419CC /* AgeTickerTests.swift */,
 				7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */,
 			);
@@ -1042,6 +1060,17 @@
 				ED17002F611FE46339590755 /* PersonImageLoader.swift */,
 				449ED61637164BFF288A6770 /* PeoplePresenter.swift */,
 				7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */,
+				D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */,
+				D964AC0CFE1BAC37F2286F54 /* PersonViewer.swift */,
+				427C82A682556C5EBE92C5D1 /* PeopleMosaic.swift */,
+				DA33E22728855C1FB098C693 /* PeopleInvitation.swift */,
+				EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */,
+				5B232AA95FA03E9846676E93 /* MosaicPicture.swift */,
+				A22D0512DC0C6AB4767438DE /* MosaicGridLayout.swift */,
+				AE199505592BB868450287CE /* MosaicEdgeScrims.swift */,
+				B3FF57B125C36E55C7DDA23F /* AmbientPalette.swift */,
+				1F39444605A63DB84646F2AE /* AmbientBackground.swift */,
+				D869F72C305651BFD41E0104 /* AddPersonButton.swift */,
 				29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */,
 				B79A0B43B522C1E11D91DFFB /* PersonEditorScene.swift */,
 				433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */,
@@ -1049,7 +1078,6 @@
 				D8B35E81C9E216BFC447EC57 /* ConfettiParticle.swift */,
 				8402ECF136EB79B5EA3C2DF6 /* ConfettiShape.swift */,
 				2D0027149D1CE1FB53B93D15 /* ConfettiStyle.swift */,
-				4F5BAC284BC0D93335CB4C9E /* EmptyPersonScene.swift */,
 				E848E5E4B3C416E656E4810F /* OverviewPresenter.swift */,
 				9B95C666900961A68BBCB3C5 /* PersonMutation.swift */,
 				84F24E7EAB2550741D76E62D /* PersonPicture.swift */,
@@ -1059,17 +1087,13 @@
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
-				A7A7712286042972254A6CDC /* AvatarThumbnailsPresenter.swift */,
+				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
 				D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */,
 				74D9DD7B3A7A303C95B0C249 /* PersonPageLayout.swift */,
-				EC1A43410FB908023DC9F51A /* PeoplePageID.swift */,
-				FD747763C8209752813AD713 /* BirthdayCard.swift */,
-				CDE60CDF4554427FC39B3C33 /* GlassCardChrome.swift */,
+				FD747763C8209752813AD713 /* BirthdayLine.swift */,
 				F3CC4900FE04489D10B7BD52 /* GlassCapsuleButtonChrome.swift */,
-				6FE62A113E58C9DC3F70B9CB /* AvatarCircle.swift */,
-				C700DF43CB4518B7A8F8E1D7 /* PeopleAvatarStrip.swift */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -1539,10 +1563,11 @@
 				1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */,
 				B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */,
 				311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */,
-				C33A5EEDBB6A7097145958AE /* PeoplePageIDTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
-				3C8F9B0F06783D82F4EEFB4C /* AvatarThumbnailsPresenterTests.swift in Sources */,
+				3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
+				8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */,
+				20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */,
 				014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */,
 				090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */,
 			);
@@ -1580,6 +1605,7 @@
 				09165361223ECBC40081FB10 /* UIColor+Extensions.swift in Sources */,
 				09165366223ECBC40081FB10 /* Date+Extensions.swift in Sources */,
 				09165363223ECBC40081FB10 /* UIImage+Extensions.swift in Sources */,
+				2A4C24DFC6617D3A116F55F7 /* UIImage+AverageColor.swift in Sources */,
 				15D4457235609D2DFCAD162F /* CropShape.swift in Sources */,
 				1B5048C3683D6380022AC294 /* AVAuthorizationStatus+ImageCapture.swift in Sources */,
 				6E98A4F04191EE4F68AA877A /* CameraSessionController.swift in Sources */,
@@ -1596,6 +1622,17 @@
 				40C689F53DEFCA3DB42BD7B6 /* PhotoThumbnailCell.swift in Sources */,
 				BC25D01BED8E56ED655941C6 /* PeoplePresenter.swift in Sources */,
 				C87931BC22CD54809B6D8A06 /* PeopleScene.swift in Sources */,
+				761476D71001BE90879AC852 /* TrailingPaneOnLandscape.swift in Sources */,
+				20EE864CF0F252B54304C349 /* PersonViewer.swift in Sources */,
+				F9630DE9E4483A3BE44D9590 /* PeopleMosaic.swift in Sources */,
+				C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */,
+				05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */,
+				BC1F44170B46571367811682 /* MosaicPicture.swift in Sources */,
+				6019977FAEFB0723282A9F0A /* MosaicGridLayout.swift in Sources */,
+				4D019B9610EBC486AE44966D /* MosaicEdgeScrims.swift in Sources */,
+				5F6F12B01DE128BC327743FF /* AmbientPalette.swift in Sources */,
+				A63B24F16F5BA6355E8D8194 /* AmbientBackground.swift in Sources */,
+				B3C161FC2905D822112DD0D1 /* AddPersonButton.swift in Sources */,
 				28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */,
 				87A2FBA6002CAD010A5A799F /* PersonEditorScene.swift in Sources */,
 				5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */,
@@ -1604,7 +1641,6 @@
 				65AD4915122A447E3A29BC1C /* ConfettiShape.swift in Sources */,
 				4782A8FF628A8B4685985602 /* ConfettiStyle.swift in Sources */,
 				24409618EE10220459E7C0D8 /* AppComposition.swift in Sources */,
-				5BCFB8E0FDB9C17A4E153C3B /* EmptyPersonScene.swift in Sources */,
 				0A0DB22A0E8EF87D2EF77F6C /* OverviewPresenter.swift in Sources */,
 				E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */,
 				A9D71F8C6AE60DB48F7D554B /* PersonPicture.swift in Sources */,
@@ -1644,17 +1680,13 @@
 				00E087903EB74A2CA66C8965 /* UITestFailureGateway.swift in Sources */,
 				2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */,
 				23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */,
-				47F91BDB15D345441CFF1C01 /* AvatarThumbnailsPresenter.swift in Sources */,
+				47F91BDB15D345441CFF1C01 /* MosaicPicturesPresenter.swift in Sources */,
 				0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */,
 				143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */,
 				3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */,
 				2DEDF34AED6A1CE0079B1FA8 /* PersonPageLayout.swift in Sources */,
-				982A9A1BA0392809E28C4877 /* PeoplePageID.swift in Sources */,
-				55095DA496B16231CA9D9463 /* BirthdayCard.swift in Sources */,
-				DC2BDE64469CCED7BCE572D2 /* GlassCardChrome.swift in Sources */,
+				55095DA496B16231CA9D9463 /* BirthdayLine.swift in Sources */,
 				FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */,
-				8A238D405ED7E37ED4852A28 /* AvatarCircle.swift in Sources */,
-				0C4D3D866E8868ABF470F643 /* PeopleAvatarStrip.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2086,7 +2118,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift WidgetTileLayout.swift TileTypeScale.swift MonogramPicture.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift CircularAgeView.swift RectangularAgeView.swift InlineAgeView.swift LockScreenEmptyView.swift WidgetTileLayout.swift TileTypeScale.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

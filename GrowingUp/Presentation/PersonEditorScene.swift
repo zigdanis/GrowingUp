@@ -5,7 +5,6 @@ struct PersonEditorScene: View {
 	@Bindable var presenter: PersonEditorPresenter
 	@State private var photoRequest: PhotoRequest?
 	@State private var reframeImage: IdentifiableImage?
-	@State private var confirmingDiscard = false
 	@State private var confirmingRemoval = false
 	@FocusState private var isNameFocused: Bool
 	@Environment(\.dismiss)
@@ -38,7 +37,8 @@ struct PersonEditorScene: View {
 			.toolbar { toolbarItems }
 			.overlay { if presenter.isBusy { ProgressView() } }
 		}
-		.interactiveDismissDisabled(presenter.isBusy || presenter.isDirty)
+		// Unsaved edits are cheap to redo, so closing the sheet drops them without asking.
+		.interactiveDismissDisabled(presenter.isBusy)
 		.task { await presenter.load() }
 		.sceneError($presenter.error)
 		.sheet(item: $photoRequest) { request in
@@ -74,14 +74,13 @@ struct PersonEditorScene: View {
 
 	@ToolbarContentBuilder private var toolbarItems: some ToolbarContent {
 		ToolbarItem(placement: .cancellationAction) {
-			Button(action: cancel) { actionLabel("Cancel", systemImage: "xmark") }
-				.disabled(presenter.isBusy)
-				.accessibilityIdentifier("editor.cancel")
-				.confirmationDialog("Discard changes?", isPresented: $confirmingDiscard, titleVisibility: .visible) {
-					Button("Discard", role: .destructive) { dismiss() }
-						.accessibilityIdentifier("editor.discard")
-					Button("Keep editing", role: .cancel) {}
-				}
+			Button {
+				dismiss()
+			} label: {
+				actionLabel("Cancel", systemImage: "xmark")
+			}
+			.disabled(presenter.isBusy)
+			.accessibilityIdentifier("editor.cancel")
 		}
 		if presenter.person != nil {
 			ToolbarItem(placement: .topBarTrailing) {
@@ -125,14 +124,6 @@ struct PersonEditorScene: View {
 	private var moreSymbol: String {
 		if #available(iOS 26.0, *) { return "ellipsis" }
 		return "ellipsis.circle"
-	}
-
-	private func cancel() {
-		if presenter.isDirty {
-			confirmingDiscard = true
-		} else {
-			dismiss()
-		}
 	}
 
 	private func reframe() {
