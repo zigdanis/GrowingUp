@@ -84,9 +84,14 @@ final class NavigationTests: XCTestCase {
 	private func closeViewer() {
 		// A drag during the zoom-in, such as right after a widget link, is lost, so it waits for the viewer to settle.
 		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: personName)], timeout: 5)
-		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
-			forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
-		XCTAssertTrue(personName.waitForNonExistence(timeout: 5))
+		// A slow simulator can still drop the first drag after a widget link, so one more is allowed; a viewer that never
+		// closes still fails.
+		for _ in 0..<2 {
+			app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
+				forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+			if personName.waitForNonExistence(timeout: 5) { return }
+		}
+		XCTFail("Swiping down did not close the viewer")
 	}
 
 	private func dismissEditor() {

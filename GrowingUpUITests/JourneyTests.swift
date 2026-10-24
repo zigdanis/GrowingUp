@@ -321,7 +321,9 @@ extension JourneyTests {
 	/// Opens `name` from the mosaic in the full-screen viewer.
 	private func openPerson(_ name: String) {
 		XCTAssertTrue(tile(name).waitForExistence(timeout: 5))
-		tile(name).tap()
+		// Once the editor has closed, iPhone Duo keeps an empty window over the app that XCTest takes as covering the tile, so
+		// a plain tap lands on its rounded corner; a real touch at its centre passes through to it.
+		tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 		XCTAssertTrue(waitForName(name))
 	}
 
