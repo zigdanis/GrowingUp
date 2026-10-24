@@ -131,52 +131,6 @@ final class PersonEditModePresenterTests: XCTestCase {
 		XCTAssertFalse(mode.showsWidgetPictureButton)
 	}
 
-	func testFramingKeepsThePhotoCoveringTheScreenWithinTheZoomLimits() async {
-		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
-		await mode.loadPhoto()
-		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
-		XCTAssertFalse(mode.hasReframed)
-		mode.magnify(by: 0.5)
-		XCTAssertTrue(mode.isFraming)
-		XCTAssertGreaterThan(mode.framing.scale, 0.5, "Pinching below the cover resists")
-		mode.endMagnify()
-		XCTAssertEqual(mode.framing, .identity)
-		XCTAssertFalse(mode.isFraming)
-		mode.magnify(by: 10)
-		mode.endMagnify()
-		XCTAssertEqual(mode.framing.scale, CropGeometry.maxZoom)
-		mode.resetFraming()
-		mode.drag(by: CGSize(width: 500, height: 500))
-		mode.endDrag()
-		XCTAssertEqual(mode.framing.offset, CGSize(width: 75, height: 0), "The photo never uncovers the screen")
-		XCTAssertTrue(mode.hasReframed)
-		// A 3:4 window is wider than a main photo may be, so a 280 pt column stays covered, which leaves 10 pt of play.
-		mode.updateCanvas(CGSize(width: 300, height: 400), safeAreaInsets: EdgeInsets())
-		XCTAssertEqual(mode.framing.offset, CGSize(width: 10, height: 0), "A resized window settles the photo again")
-	}
-
-	func testANewFramingAloneCanBeSavedAndRendersTheVisibleRegion() async throws {
-		let person = Person.createPerson()
-		let gateway = PersonsGatewaySpy()
-		gateway.fetchPersonsResultToBeReturned = .success([person])
-		gateway.editPersonResultToBeReturned = .success(person)
-		let editor = SceneConfigurator(gateway: gateway, loadImage: { _ in self.image(width: 900, height: 1200) })
-			.editor(person: person, onMutation: { _ in })
-		let mode = PersonEditModePresenter(editor: editor, now: Date.init, onCancel: {})
-		await editor.load()
-		await mode.loadPhoto()
-		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
-		XCTAssertFalse(mode.canSave)
-		mode.magnify(by: 2)
-		mode.endMagnify()
-		XCTAssertTrue(mode.canSave, "A new framing is a change")
-		await mode.done()
-		let saved = try XCTUnwrap(gateway.addPersonParameters.appImage?.uiImage?.cgImage)
-		XCTAssertEqual(saved.width, 300)
-		XCTAssertEqual(saved.height, 600)
-		XCTAssertEqual(gateway.addPersonParameters.widgetImage?.id, person.widgetPicId, "A saved widget picture is left alone")
-	}
-
 	func testANewPhotoLandsInTheFrameAndItsWidgetPictureFollowsTheFraming() async throws {
 		let person = Person.createPerson()
 		let gateway = PersonsGatewaySpy()
@@ -256,6 +210,117 @@ final class PersonEditModePresenterTests: XCTestCase {
 	}
 }
 
+/// Framing the main photo in place and the region Done saves from it.
+extension PersonEditModePresenterTests {
+	func testFramingKeepsThePhotoCoveringTheScreenWithinTheZoomLimits() async {
+		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
+		await mode.loadPhoto()
+		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
+		XCTAssertFalse(mode.hasReframed)
+		mode.magnify(by: 0.5)
+		XCTAssertTrue(mode.isFraming)
+		XCTAssertGreaterThan(mode.framing.scale, 0.5, "Pinching below the cover resists")
+		mode.endMagnify()
+		XCTAssertEqual(mode.framing, .identity)
+		XCTAssertFalse(mode.isFraming)
+		mode.magnify(by: 10)
+		mode.endMagnify()
+		XCTAssertEqual(mode.framing.scale, CropGeometry.maxZoom)
+		mode.resetFraming()
+		mode.drag(by: CGSize(width: 500, height: 500))
+		mode.endDrag()
+		XCTAssertEqual(mode.framing.offset, CGSize(width: 75, height: 0), "The photo never uncovers the screen")
+		XCTAssertTrue(mode.hasReframed)
+		// A 300 × 400 window is just covered by the 3:4 photo, which leaves no play.
+		mode.updateCanvas(CGSize(width: 300, height: 400), safeAreaInsets: EdgeInsets())
+		XCTAssertEqual(mode.framing.offset, .zero, "A resized window settles the photo again")
+	}
+
+	func testReloadingTheSamePhotoKeepsItsFraming() async {
+		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
+		await mode.loadPhoto()
+		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
+		mode.magnify(by: 2)
+		mode.endMagnify()
+		mode.drag(by: CGSize(width: 60, height: -40))
+		mode.endDrag()
+		let framed = mode.framing
+		// Returning from the widget picture's crop restarts the screen's photo task for the same photo.
+		await mode.loadPhoto()
+		XCTAssertEqual(mode.framing, framed)
+		XCTAssertTrue(mode.hasReframed)
+		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		await mode.loadPhoto()
+		XCTAssertEqual(mode.framing, .identity, "A new photo starts as the viewer would show it")
+		mode.magnify(by: 2)
+		mode.endMagnify()
+		mode.editor.removeMainPhoto()
+		await mode.loadPhoto()
+		XCTAssertNil(mode.photo)
+		XCTAssertEqual(mode.framing, .identity)
+	}
+
+	func testAWideWindowKeepsTheWholeWindowCovered() async throws {
+		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
+		await mode.loadPhoto()
+		let window = CGSize(width: 1000, height: 700)
+		mode.updateCanvas(window, safeAreaInsets: EdgeInsets())
+		let geometry = try XCTUnwrap(mode.photo.flatMap(mode.geometry(of:)))
+		XCTAssertEqual(geometry.frameRect.width, 490, accuracy: 0.001, "Only the centred portrait column is saved")
+		XCTAssertEqual(geometry.displaySize.width, 1000, accuracy: 0.001)
+		XCTAssertEqual(geometry.displaySize.height, 1333.333, accuracy: 0.001)
+		let columnOnly = CropGeometry(pixelSize: geometry.pixelSize, shape: .rectangle, container: window, insets: EdgeInsets())
+		XCTAssertEqual(columnOnly.minScale, 0.525, accuracy: 0.001, "Covering just the column would leave 475 pt black")
+		XCTAssertEqual(geometry.minScale, 1)
+		mode.magnify(by: 0.5)
+		mode.endMagnify()
+		XCTAssertEqual(mode.framing.scale, 1, "The photo never shrinks inside the window")
+		mode.drag(by: CGSize(width: 400, height: 900))
+		mode.endDrag()
+		XCTAssertEqual(mode.framing.offset.width, 0, accuracy: 0.001)
+		XCTAssertEqual(mode.framing.offset.height, 316.667, accuracy: 0.001)
+	}
+
+	func testDoneSavesTheVisibleRegionOfTheFraming() async throws {
+		let person = Person.createPerson()
+		let gateway = savingGateway(for: person)
+		let mode = mode(for: person, gateway: gateway, photo: quadrants())
+		await mode.editor.load()
+		await mode.loadPhoto()
+		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
+		XCTAssertFalse(mode.canSave)
+		mode.magnify(by: 2)
+		mode.endMagnify()
+		mode.drag(by: CGSize(width: 75, height: 150))
+		mode.endDrag()
+		XCTAssertTrue(mode.canSave, "A new framing is a change")
+		await mode.done()
+		// At 2× on a 300 × 600 pt screen, moved right and down, the screen shows source pixels x 225–525, y 150–750, so
+		// the quadrants meet at column 225, row 450 of the saved photo.
+		let saved = try XCTUnwrap(gateway.addPersonParameters.appImage?.uiImage)
+		try assertSize(saved, width: 300, height: 600)
+		try assertQuadrants(of: saved, meetingAt: CGPoint(x: 225, y: 450))
+		XCTAssertEqual(gateway.addPersonParameters.widgetImage?.id, person.widgetPicId, "A saved widget picture is left alone")
+	}
+
+	func testAWideWindowSavesItsCentredColumn() async throws {
+		let person = Person.createPerson()
+		let gateway = savingGateway(for: person)
+		let mode = mode(for: person, gateway: gateway, photo: quadrants())
+		await mode.editor.load()
+		await mode.loadPhoto()
+		mode.updateCanvas(CGSize(width: 1000, height: 700), safeAreaInsets: EdgeInsets())
+		mode.drag(by: CGSize(width: 0, height: -90))
+		mode.endDrag()
+		await mode.done()
+		// The 490 × 700 pt column at 10/9 pt per pixel, with the photo moved up 90 pt, holds source pixels x 229–671, y 366–996,
+		// so the quadrants meet at column 221, row 234 of the saved photo.
+		let saved = try XCTUnwrap(gateway.addPersonParameters.appImage?.uiImage)
+		try assertSize(saved, width: 442, height: 630, accuracy: 1)
+		try assertQuadrants(of: saved, meetingAt: CGPoint(x: 221, y: 234))
+	}
+}
+
 extension PersonEditModePresenterTests {
 	/// A loaded presenter whose viewer shows the first of `count` people, who keep their mosaic order in `persons`.
 	private func viewing(count: Int) async -> (PeoplePresenter, PersonsGatewaySpy) {
@@ -282,6 +347,67 @@ extension PersonEditModePresenterTests {
 	/// The text with the no-break spaces of formatted dates turned into plain ones.
 	private func plain(_ text: String) -> String {
 		text.replacingOccurrences(of: "\u{00A0}", with: " ").replacingOccurrences(of: "\u{202F}", with: " ")
+	}
+
+	/// A gateway that saves `person` and lists only them.
+	private func savingGateway(for person: Person) -> PersonsGatewaySpy {
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success([person])
+		gateway.editPersonResultToBeReturned = .success(person)
+		return gateway
+	}
+
+	/// A 900 × 1200 photo split into red, green, blue and yellow quadrants in reading order.
+	private func quadrants() -> UIImage {
+		let format = UIGraphicsImageRendererFormat()
+		format.scale = 1
+		format.opaque = true
+		format.preferredRange = .standard
+		let size = CGSize(width: 900, height: 1200)
+		return UIGraphicsImageRenderer(size: size, format: format).image { context in
+			for (index, color) in [UIColor.red, .green, .blue, .yellow].enumerated() {
+				color.setFill()
+				let origin = CGPoint(x: CGFloat(index % 2) * 450, y: CGFloat(index / 2) * 600)
+				context.fill(CGRect(origin: origin, size: CGSize(width: 450, height: 600)))
+			}
+		}
+	}
+
+	private func assertSize(
+		_ image: UIImage, width: Int, height: Int, accuracy: Int = 0, file: StaticString = #filePath, line: UInt = #line
+	) throws {
+		let pixels = try XCTUnwrap(image.cgImage, file: file, line: line)
+		XCTAssertEqual(pixels.width, width, accuracy: accuracy, file: file, line: line)
+		XCTAssertEqual(pixels.height, height, accuracy: accuracy, file: file, line: line)
+	}
+
+	/// Checks the four quadrant colours 20 pixels away from where the quadrants meet in `image`.
+	private func assertQuadrants(of image: UIImage, meetingAt corner: CGPoint, file: StaticString = #filePath, line: UInt = #line) throws {
+		let expected: [(offset: CGVector, rgb: [UInt8])] = [
+			(CGVector(dx: -20, dy: -20), [255, 0, 0]), (CGVector(dx: 20, dy: -20), [0, 255, 0]),
+			(CGVector(dx: -20, dy: 20), [0, 0, 255]), (CGVector(dx: 20, dy: 20), [255, 255, 0])
+		]
+		for item in expected {
+			let column = Int(corner.x + item.offset.dx)
+			let row = Int(corner.y + item.offset.dy)
+			let actual = try pixel(in: image, column: column, row: row)
+			let matches = zip(actual, item.rgb).allSatisfy { abs(Int($0) - Int($1)) <= 40 }
+			XCTAssertTrue(matches, "Pixel at \(column), \(row) is \(actual), expected \(item.rgb)", file: file, line: line)
+		}
+	}
+
+	/// Reads one sRGB pixel, addressed from the top-left corner.
+	private func pixel(in image: UIImage, column: Int, row: Int) throws -> [UInt8] {
+		let pixels = try XCTUnwrap(image.cgImage)
+		let sRGB = try XCTUnwrap(CGColorSpace(name: CGColorSpace.sRGB))
+		let context = try XCTUnwrap(
+			CGContext(
+				data: nil, width: 1, height: 1, bitsPerComponent: 8, bytesPerRow: 4, space: sRGB,
+				bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+		// Core Graphics counts rows from the bottom; shift the image so the requested pixel covers the 1×1 canvas.
+		context.draw(pixels, in: CGRect(x: -column, y: row + 1 - pixels.height, width: pixels.width, height: pixels.height))
+		let bytes = try XCTUnwrap(context.data).assumingMemoryBound(to: UInt8.self)
+		return [bytes[0], bytes[1], bytes[2]]
 	}
 
 	private func makePeople(count: Int) -> [Person] {

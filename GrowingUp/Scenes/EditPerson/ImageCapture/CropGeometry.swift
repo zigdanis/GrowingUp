@@ -20,16 +20,21 @@ struct CropGeometry {
 	/// The whole canvas, safe areas included, in points.
 	let container: CGSize
 	let insets: EdgeInsets
+	/// Whether the picture must keep the whole canvas covered rather than only the crop frame, as where it is drawn edge
+	/// to edge while being framed in place. The crop still takes only the frame.
+	let coversWholeCanvas: Bool
 
-	init(pixelSize: CGSize, shape: CropShape, container: CGSize, insets: EdgeInsets) {
+	init(pixelSize: CGSize, shape: CropShape, container: CGSize, insets: EdgeInsets, coversWholeCanvas: Bool = false) {
 		self.pixelSize = pixelSize
 		self.shape = shape
 		self.container = container
 		self.insets = insets
+		self.coversWholeCanvas = coversWholeCanvas
 	}
 
-	init(image: UIImage, shape: CropShape, container: CGSize, insets: EdgeInsets) {
-		self.init(pixelSize: Self.pixelSize(of: image), shape: shape, container: container, insets: insets)
+	init(image: UIImage, shape: CropShape, container: CGSize, insets: EdgeInsets, coversWholeCanvas: Bool = false) {
+		self.init(
+			pixelSize: Self.pixelSize(of: image), shape: shape, container: container, insets: insets, coversWholeCanvas: coversWholeCanvas)
 	}
 
 	static func pixelSize(of image: UIImage) -> CGSize {
@@ -65,22 +70,27 @@ struct CropGeometry {
 		return max(container.width / pixelSize.width, container.height / pixelSize.height)
 	}
 
+	/// The region the picture must keep covered: the whole canvas, or just the crop frame.
+	var coveredRect: CGRect {
+		coversWholeCanvas ? CGRect(origin: .zero, size: container) : frameRect
+	}
+
 	var displaySize: CGSize {
 		CGSize(width: pixelSize.width * baseScale, height: pixelSize.height * baseScale)
 	}
 
-	/// Smallest zoom that still covers the crop frame (limiting side flush to the edge); capped at 1, never zooms in.
+	/// Smallest zoom that still covers `coveredRect` (limiting side flush to the edge); capped at 1, never zooms in.
 	var minScale: CGFloat {
 		let display = displaySize
 		guard display.width > 0, display.height > 0 else { return 1 }
-		let frame = frameRect
+		let frame = coveredRect
 		return min(max(frame.width / display.width, frame.height / display.height), 1)
 	}
 
-	/// Allowed offset range per axis so the picture keeps the frame covered.
+	/// Allowed offset range per axis so the picture keeps `coveredRect` covered.
 	func offsetBounds(scale: CGFloat) -> (x: ClosedRange<CGFloat>, y: ClosedRange<CGFloat>) {
 		guard container.width > 0 else { return (0...0, 0...0) }
-		let frame = frameRect
+		let frame = coveredRect
 		let display = displaySize
 		let deltaX = frame.midX - container.width / 2
 		let deltaY = frame.midY - container.height / 2

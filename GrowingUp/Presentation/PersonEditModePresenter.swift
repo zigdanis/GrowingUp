@@ -26,6 +26,8 @@ final class PersonEditModePresenter {
 	private(set) var isFinishing = false
 	/// Where the photo rests between gestures; a gesture moves it from here.
 	private var restingFraming = PhotoFraming.identity
+	/// The identity of the main photo `framing` belongs to; a reload of the same photo keeps it.
+	private var framedPhotoID: UUID?
 	/// The whole window, safe areas included: the canvas the photo fills, as on the viewer's page.
 	private var canvas = CGSize.zero
 	private var safeAreaInsets = EdgeInsets()
@@ -111,6 +113,7 @@ final class PersonEditModePresenter {
 			editor.reframeMainPhoto(framed)
 			// The framing now lives in the photo itself, which shows the same region at rest.
 			self.photo = framed
+			framedPhotoID = editor.appImage?.id
 			resetFraming()
 		}
 		await editor.save()
@@ -123,13 +126,17 @@ final class PersonEditModePresenter {
 
 	// MARK: - Framing
 
-	/// Loads the draft's main photo, after which it rests as the viewer showed it. Runs again whenever the photo changes.
+	/// Loads the draft's main photo. A new or removed photo rests as the viewer would show it; the same photo loaded
+	/// again, as when the screen returns from the widget picture's crop, keeps its framing.
 	func loadPhoto() async {
+		let photoID = editor.appImage?.id
 		let loaded = await editor.loadMainPhoto()
 		guard !Task.isCancelled else { return }
 		photo = loaded
-		framing = .identity
-		restingFraming = .identity
+		if photoID != framedPhotoID || loaded == nil {
+			resetFraming()
+		}
+		framedPhotoID = loaded == nil ? nil : photoID
 	}
 
 	/// Takes the window's size and safe area, keeping the photo covering the crop frame in a resized window.
@@ -142,10 +149,11 @@ final class PersonEditModePresenter {
 		framing = restingFraming
 	}
 
-	/// The crop math for `photo` on the current canvas, shared with `CropStep`.
+	/// The crop math for `photo` on the current canvas, shared with `CropStep`. The photo is drawn edge to edge while it
+	/// is framed, so it keeps the whole window covered; a wider window still saves only its centred portrait column.
 	func geometry(of photo: UIImage) -> CropGeometry? {
 		guard canvas.width > 0, canvas.height > 0 else { return nil }
-		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets)
+		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets, coversWholeCanvas: true)
 	}
 
 	func drag(by translation: CGSize) {
