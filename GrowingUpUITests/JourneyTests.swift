@@ -6,7 +6,9 @@ final class JourneyTests: XCTestCase {
 	private var identifier = UUID().uuidString
 	private var configuration: UITestConfiguration!
 
-	private var overview: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.edit").firstMatch }
+	/// The shown person in the full-screen viewer; a tap on it opens the editor.
+	private var overview: XCUIElement { app.buttons["person.name"] }
+	private var tiles: XCUIElementQuery { app.buttons.matching(identifier: "people.tile") }
 
 	override func setUp() {
 		super.setUp()
@@ -19,9 +21,10 @@ final class JourneyTests: XCTestCase {
 		launch()
 		checkpoint("empty")
 		addPerson(birthPeriod: "PM", capturePickers: true)
-		checkpoint("overview")
+		checkpoint("mosaic-one-person")
 		relaunch()
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
+		openPerson("Ada")
+		checkpoint("overview")
 		overview.tap()
 		let born = app.buttons["editor.birthDate"]
 		XCTAssertTrue(born.waitForExistence(timeout: 5))
@@ -33,7 +36,7 @@ final class JourneyTests: XCTestCase {
 
 	func testEditPhotoReframeAndPersist() {
 		launch(seed: .pinned)
-		overview.tap()
+		openEditor(of: "Alice")
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
 		choosePhoto()
@@ -56,7 +59,7 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		relaunch()
 		checkpoint("saved-photo")
-		overview.tap()
+		openEditor(of: "Alice")
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
 		XCTAssertFalse(app.buttons["editor.save"].isEnabled)
@@ -76,7 +79,7 @@ final class JourneyTests: XCTestCase {
 		app.buttons["photo.source.photos"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 		dismissPhotos()
-		cancelEditor(discarding: true)
+		cancelEditor()
 		overview.tap()
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
@@ -95,8 +98,7 @@ final class JourneyTests: XCTestCase {
 		app.alerts.buttons.firstMatch.tap()
 		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
 		app.buttons["editor.save"].tap()
-		XCTAssertTrue(overview.waitForExistence(timeout: 5))
-		overview.tap()
+		openEditor(of: "Ada")
 		let draftName = app.textFields["editor.name"]
 		XCTAssertTrue(draftName.waitForExistence(timeout: 5))
 		draftName.tap()
@@ -109,7 +111,7 @@ final class JourneyTests: XCTestCase {
 		dismissPhotos()
 		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 		XCTAssertFalse(app.images["editor.appPhoto.loaded"].exists)
-		cancelEditor(discarding: true)
+		cancelEditor()
 		XCTAssertTrue(overview.waitForExistence(timeout: 5))
 		relaunch()
 		waitForSettledOverview(showing: "Ada")
@@ -122,6 +124,7 @@ final class JourneyTests: XCTestCase {
 		checkpoint("widget-large-ru-Dark")
 		app.terminate()
 		launch(seed: .birthdays, locale: "ru", appearance: .dark, clock: "2027-01-02T08:00:00Z")
+		openPerson("Alice")
 		XCTAssertTrue(app.staticTexts["birthday.countdown"].waitForExistence(timeout: 5))
 		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, "До дня рождения: 14 дней")
 		checkpoint("birthday-countdown-days-ru")
@@ -158,7 +161,7 @@ final class JourneyTests: XCTestCase {
 	}
 
 	private func assertSeventhPinRejected(message: String, checkpoint name: String) {
-		app.swipeLeft()
+		closeViewer()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
 		let field = app.textFields["editor.name"]
@@ -181,7 +184,7 @@ final class JourneyTests: XCTestCase {
 	func testDeleteAndRelaunch() {
 		launch()
 		addPerson()
-		overview.tap()
+		openEditor(of: "Ada")
 		let menu = app.buttons["editor.menu"]
 		XCTAssertTrue(menu.waitForExistence(timeout: 5))
 		menu.tap()
@@ -192,8 +195,11 @@ final class JourneyTests: XCTestCase {
 		XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
 		confirmation.tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
+		XCTAssertTrue(overview.waitForNonExistence(timeout: 5), "Removing the shown person returns to the mosaic")
+		XCTAssertEqual(tiles.count, 0)
 		relaunch()
 		XCTAssertTrue(app.buttons["person.add"].exists)
+		XCTAssertEqual(tiles.count, 0)
 		checkpoint("deleted")
 	}
 
@@ -222,7 +228,7 @@ extension JourneyTests {
 		if widgetFamily != nil {
 			XCTAssertTrue(app.descendants(matching: .any).matching(identifier: "widget.preview").firstMatch.waitForExistence(timeout: 10))
 		} else {
-			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : overview).waitForExistence(timeout: 10))
+			XCTAssertTrue((seed == .empty ? app.buttons["person.add"] : tiles.firstMatch).waitForExistence(timeout: 10))
 		}
 	}
 
@@ -263,10 +269,9 @@ extension JourneyTests {
 		configuration = configuration.forRelaunch()
 		app.launchEnvironment[UITestConfiguration.environmentKey] = configuration.encoded
 		app.launch()
-		let page = app.descendants(matching: .any).matching(
-			NSPredicate(format: "identifier == %@ OR identifier == %@", "person.edit", "person.add")
-		).firstMatch
-		XCTAssertTrue(page.waitForExistence(timeout: 5))
+		// Launch always shows the mosaic, whose add button is there whether or not anyone was added.
+		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
+		XCTAssertFalse(overview.exists)
 	}
 
 	private func addPerson(birthPeriod: String = "AM", capturePickers: Bool = false) {
@@ -304,8 +309,35 @@ extension JourneyTests {
 			app.buttons["editor.birthDate"].tap()
 		}
 		app.buttons["editor.save"].tap()
-		XCTAssertTrue(overview.waitForExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["person.name"].label, "Ada")
+		// A new person lands on the mosaic as a new tile.
+		XCTAssertTrue(tile("Ada").waitForExistence(timeout: 5))
+		XCTAssertFalse(overview.exists)
+	}
+
+	private func tile(_ name: String) -> XCUIElement {
+		tiles.matching(NSPredicate(format: "label BEGINSWITH %@", name + ",")).firstMatch
+	}
+
+	/// Opens `name` from the mosaic in the full-screen viewer.
+	private func openPerson(_ name: String) {
+		XCTAssertTrue(tile(name).waitForExistence(timeout: 5))
+		// Once the editor has closed, iPhone Duo keeps an empty window over the app that XCTest takes as covering the tile, so
+		// a plain tap lands on its rounded corner; a real touch at its centre passes through to it.
+		tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+		XCTAssertTrue(waitForName(name))
+	}
+
+	/// Opens `name` from the mosaic and taps the viewer, which opens the editor.
+	private func openEditor(of name: String) {
+		openPerson(name)
+		overview.tap()
+	}
+
+	/// Drags the viewer down, which zooms it back into the shown person's tile.
+	private func closeViewer() {
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
+			forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+		XCTAssertTrue(overview.waitForNonExistence(timeout: 5))
 	}
 
 	/// Editor chips are buttons that report their state as a "1"/"0" value.
@@ -321,14 +353,9 @@ extension JourneyTests {
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
 	}
 
-	/// Cancels the editor, confirming the discard dialog that unsaved changes raise.
-	private func cancelEditor(discarding: Bool) {
+	/// Cancels the editor; unsaved changes are dropped without a confirmation.
+	private func cancelEditor() {
 		app.buttons["editor.cancel"].tap()
-		if discarding {
-			let discard = app.buttons.matching(NSPredicate(format: "identifier == %@ OR label == %@", "editor.discard", "Discard")).firstMatch
-			XCTAssertTrue(discard.waitForExistence(timeout: 5))
-			discard.tap()
-		}
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
@@ -338,13 +365,11 @@ extension JourneyTests {
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForExistence(timeout: 5))
 	}
 
-	/// Waits until the relaunched overview shows `name` with nothing presented over it, so the checkpoint
+	/// Waits until the relaunched mosaic shows `name`'s tile with nothing presented over it, so the checkpoint
 	/// cannot capture a launch or dismissal animation.
 	private func waitForSettledOverview(showing name: String) {
-		let personName = app.staticTexts["person.name"]
-		let named = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: personName)
-		let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
-		XCTAssertEqual(XCTWaiter.wait(for: [named, hittable], timeout: 10), .completed)
+		let hittable = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: tile(name))
+		XCTAssertEqual(XCTWaiter.wait(for: [hittable], timeout: 10), .completed)
 		XCTAssertTrue(app.textFields["editor.name"].waitForNonExistence(timeout: 5))
 		XCTAssertFalse(app.sheets.firstMatch.exists)
 		XCTAssertFalse(app.alerts.firstMatch.exists)
@@ -352,7 +377,7 @@ extension JourneyTests {
 
 	private func waitForName(_ name: String) -> Bool {
 		XCTWaiter.wait(
-			for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: app.staticTexts["person.name"])], timeout: 5)
+			for: [XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@", name), object: app.buttons["person.name"])], timeout: 5)
 			== .completed
 	}
 

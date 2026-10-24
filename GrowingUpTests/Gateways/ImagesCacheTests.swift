@@ -117,6 +117,20 @@ final class ImagesCacheTests: XCTestCase {
 		return Array(UnsafeBufferPointer(start: bytes, count: image.width * image.height * 4))
 	}
 
+	func testThumbnailLoadLeavesTheFullSizeCacheEmpty() async throws {
+		let image = PersonImage(uiImage: photo())
+		let url = try storedURL(for: image.cachingKey)
+		defer {
+			ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
+			try? FileManager.default.removeItem(at: url)
+		}
+		try await DiskImageStore().save(image)
+		ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
+		let thumbnail = try await ImagesCache.loadThumbnail(image: PersonImage(id: image.id), maxPixelSize: 150)
+		XCTAssertEqual(try XCTUnwrap(thumbnail.cgImage).width, 150)
+		XCTAssertNil(ImagesCache.memoryCache.value(forKey: image.cachingKey), "Only the thumbnail stays in memory")
+	}
+
 	func testWidgetThumbnailBoundsDecodedPixelsAndPreservesOriginal() async throws {
 		let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID()).jpg")
 		defer { try? FileManager.default.removeItem(at: url) }
@@ -131,7 +145,7 @@ final class ImagesCacheTests: XCTestCase {
 			})
 		try original.write(to: url)
 
-		let image = try await ImagesCache.loadWidgetImage(at: url)
+		let image = try await ImagesCache.loadThumbnail(at: url, maxPixelSize: 256)
 		let pixels = try XCTUnwrap(image.cgImage)
 		XCTAssertEqual(max(pixels.width, pixels.height), 256)
 		XCTAssertEqual(Double(pixels.width) / Double(pixels.height), 1.5, accuracy: 0.02)
@@ -145,7 +159,7 @@ final class ImagesCacheTests: XCTestCase {
 		for exists in [false, true] {
 			if exists { try corrupt.write(to: url) }
 			do {
-				_ = try await ImagesCache.loadWidgetImage(at: url)
+				_ = try await ImagesCache.loadThumbnail(at: url, maxPixelSize: 256)
 				XCTFail("Invalid image should use the widget's fallback")
 			} catch {
 				XCTAssertEqual(error as? CoreError, .missingValue)
@@ -156,7 +170,7 @@ final class ImagesCacheTests: XCTestCase {
 
 	func testCancelledWidgetImageLoadPropagatesCancellation() async {
 		let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID()).jpg")
-		let task = Task { try await ImagesCache.loadWidgetImage(at: url) }
+		let task = Task { try await ImagesCache.loadThumbnail(at: url, maxPixelSize: 256) }
 		task.cancel()
 		do {
 			_ = try await task.value

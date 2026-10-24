@@ -10,7 +10,9 @@ live.
 
 - Keep a list of people, each with a name, birth date and photo.
 - Add or edit a person, including picking and cropping a photo.
-- Person overview with the age counting up in real time.
+- A home mosaic of everyone as portrait photo tiles over a soft glow of their photos' colours, in light and dark.
+- Tap a tile to zoom the person full screen, with the age counting up in real time; swipe sideways between people,
+  swipe down to return, tap to edit.
 - A **Home Screen widget** (WidgetKit) in three sizes shows up to six pinned
   people as photo tiles with a big milestone age and birthday countdowns,
   refreshing only when that text changes.
@@ -28,8 +30,8 @@ The project follows **MVP + Clean Architecture**.
     - `UseCases` — `Add`/`Edit`/`Remove`/`FetchPersons` use cases.
     - `Gateways` / `EntityGateway` — persistence and caching behind protocols.
     - `AgeCalculator` — converts a birth date into time components.
-- **`GrowingUp`** — the SwiftUI app target. `Presentation/` contains the people,
-  overview, empty and editor scenes. Observable main-actor presenters own scene
+- **`GrowingUp`** — the SwiftUI app target. `Presentation/` contains the people mosaic,
+  the full-screen viewer and the editor scenes. Observable main-actor presenters own scene
   state, and `SceneConfigurator` injects Core use cases. `Scenes/EditPerson/ImageCapture/`
   contains the shared photo, crop and camera views and platform adapters.
 - **`Widget`** — the WidgetKit extension (SwiftUI), reusing `Core` for its data.
