@@ -122,7 +122,7 @@ struct PersonEditModeScene: View {
 	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.
 	private var columnWidth: CGFloat? {
 		guard layout != .phone else { return nil }
-		let column = CropGeometry(pixelSize: window, shape: .rectangle, container: window, insets: safeAreaInsets).frameRect.width
+		let column = CropGeometry.frameRect(for: .rectangle, in: window, insets: safeAreaInsets).width
 		return min(column, layout.columnWidth ?? column)
 	}
 

@@ -44,21 +44,24 @@ struct CropGeometry {
 		return CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale)
 	}
 
-	/// Region that stays covered and gets cropped. Rectangle: full screen, or a full-height column centred in windows
-	/// wider than `maxMainAspect`. Circle: a square centred in the safe area.
-	var frameRect: CGRect {
+	/// Region that stays covered and gets cropped; see `frameRect(for:in:insets:)`.
+	var frameRect: CGRect { Self.frameRect(for: shape, in: container, insets: insets) }
+
+	/// Region that stays covered and gets cropped, which depends only on the canvas. Rectangle: full screen, or a
+	/// full-height column centred in windows wider than `maxMainAspect`. Circle: a square centred in the safe area.
+	static func frameRect(for shape: CropShape, in container: CGSize, insets: EdgeInsets) -> CGRect {
 		guard container.width > 0, container.height > 0 else { return .zero }
 		guard shape.isCircular else {
-			guard container.width / container.height > Self.maxMainAspect else {
+			guard container.width / container.height > maxMainAspect else {
 				return CGRect(origin: .zero, size: container)
 			}
-			let width = container.height * Self.maxMainAspect
+			let width = container.height * maxMainAspect
 			return CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
 		}
-		let availX = insets.leading + Self.framePadding
-		let availY = insets.top + Self.framePadding
-		let availW = max(0, container.width - insets.leading - insets.trailing - Self.framePadding * 2)
-		let availH = max(0, container.height - insets.top - insets.bottom - Self.framePadding * 2)
+		let availX = insets.leading + framePadding
+		let availY = insets.top + framePadding
+		let availW = max(0, container.width - insets.leading - insets.trailing - framePadding * 2)
+		let availH = max(0, container.height - insets.top - insets.bottom - framePadding * 2)
 		let side = min(availW, availH)
 		guard side > 0 else { return .zero }
 		return CGRect(x: availX + (availW - side) / 2, y: availY + (availH - side) / 2, width: side, height: side)

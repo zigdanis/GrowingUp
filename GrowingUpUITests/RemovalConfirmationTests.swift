@@ -18,6 +18,7 @@ final class RemovalConfirmationTests: XCTestCase {
 			overview.tap()
 			let remove = app.buttons["editor.remove"]
 			XCTAssertTrue(remove.waitForExistence(timeout: 5))
+			XCTAssertEqual(remove.label, locale == "ru" ? "Удалить" : "Remove", "VoiceOver names the control, not its glyph")
 			remove.tap()
 			let alert = app.alerts.firstMatch
 			XCTAssertTrue(alert.waitForExistence(timeout: 5))

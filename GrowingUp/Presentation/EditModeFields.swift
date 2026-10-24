@@ -9,13 +9,20 @@ struct EditModeFields: View {
 	var body: some View {
 		VStack(alignment: .leading, spacing: 16) {
 			nameField
-			HStack(spacing: 8) {
-				Image(systemName: "birthday.cake.fill")
-					.font(.headline)
-					.opacity(0.8)
-					.accessibilityHidden(true)
-				capsule(mode.dateText, popover: .date, label: Text("Day of birth"), identifier: "editor.birthDate")
-				capsule(mode.timeText, popover: .time, label: Text("Time of birth"), identifier: "editor.birthTime")
+			// The capsules share a row; at accessibility text sizes the time moves under the date rather than truncating it.
+			ViewThatFits(in: .horizontal) {
+				HStack(spacing: 8) {
+					cake
+					dateCapsule
+					timeCapsule
+				}
+				VStack(alignment: .leading, spacing: 8) {
+					HStack(spacing: 8) {
+						cake
+						dateCapsule
+					}
+					timeCapsule
+				}
 			}
 			Text(mode.ageText)
 				.font(.subheadline.weight(.medium))
@@ -43,6 +50,21 @@ struct EditModeFields: View {
 				Rectangle().fill(.white.opacity(0.9)).frame(height: 2)
 			}
 			.accessibilityIdentifier("editor.name")
+	}
+
+	private var cake: some View {
+		Image(systemName: "birthday.cake.fill")
+			.font(.headline)
+			.opacity(0.8)
+			.accessibilityHidden(true)
+	}
+
+	private var dateCapsule: some View {
+		capsule(mode.dateText, popover: .date, label: Text("Day of birth"), identifier: "editor.birthDate")
+	}
+
+	private var timeCapsule: some View {
+		capsule(mode.timeText, popover: .time, label: Text("Time of birth"), identifier: "editor.birthTime")
 	}
 
 	private func capsule(_ text: String, popover: PersonEditPopover, label: Text, identifier: String) -> some View {

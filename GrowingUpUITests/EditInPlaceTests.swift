@@ -77,6 +77,25 @@ final class EditInPlaceTests: XCTestCase {
 		XCTAssertFalse(tile("Unsaved").exists)
 	}
 
+	func testAFailedSaveKeepsEditModeOpenForAnotherTry() {
+		launch(failNextSave: true)
+		openPerson("Boris")
+		enterEditMode()
+		XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+		rename(to: "Borya")
+		done.tap()
+		XCTAssertTrue(app.alerts.firstMatch.waitForExistence(timeout: 5), "The failed save reports")
+		checkpoint("edit-save-failed")
+		app.alerts.buttons.firstMatch.tap()
+		XCTAssertTrue(app.alerts.firstMatch.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(done.exists, "The draft stays open to try again")
+		XCTAssertEqual(nameField.value as? String, "Borya")
+		XCTAssertTrue(done.isEnabled)
+		done.tap()
+		XCTAssertTrue(done.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(waitForName("Borya"))
+	}
+
 	func testEditModeLocksTheViewersSwipes() {
 		launch()
 		openPerson("Boris")
@@ -101,8 +120,8 @@ final class EditInPlaceTests: XCTestCase {
 }
 
 extension EditInPlaceTests {
-	private func launch() {
-		configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: .dark)
+	private func launch(failNextSave: Bool = false) {
+		configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: failNextSave, appearance: .dark)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", "Dark",
