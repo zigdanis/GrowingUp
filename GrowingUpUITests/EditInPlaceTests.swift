@@ -20,7 +20,7 @@ final class EditInPlaceTests: XCTestCase {
 	func testDoneSavesTheNameAndDateForTheNextLaunch() {
 		launch()
 		openPerson("Alice")
-		overview.tap()
+		enterEditMode()
 		XCTAssertTrue(done.waitForExistence(timeout: 5))
 		XCTAssertFalse(done.isEnabled, "Nothing changed yet")
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
@@ -45,7 +45,7 @@ final class EditInPlaceTests: XCTestCase {
 		XCTAssertTrue(waitForName("Alicia"), "Done returns to the viewer, showing the saved person")
 		relaunch()
 		openPerson("Alicia")
-		overview.tap()
+		enterEditMode()
 		XCTAssertTrue(nameField.waitForExistence(timeout: 5))
 		XCTAssertEqual(nameField.value as? String, "Alicia")
 		XCTAssertEqual(app.buttons["editor.birthDate"].value as? String, "Oct 15, 2021")
@@ -55,7 +55,7 @@ final class EditInPlaceTests: XCTestCase {
 	func testCancelDropsTheChangesWithoutAQuestion() {
 		launch()
 		openPerson("Boris")
-		overview.tap()
+		enterEditMode()
 		XCTAssertTrue(nameField.waitForExistence(timeout: 5))
 		rename(to: "Unsaved")
 		let celebrate = control("editor.celebrate")
@@ -67,7 +67,7 @@ final class EditInPlaceTests: XCTestCase {
 		XCTAssertFalse(app.alerts.firstMatch.exists)
 		XCTAssertFalse(app.sheets.firstMatch.exists)
 		XCTAssertTrue(waitForName("Boris"), "Cancel returns to the unchanged viewer")
-		overview.tap()
+		enterEditMode()
 		XCTAssertTrue(nameField.waitForExistence(timeout: 5))
 		XCTAssertEqual(nameField.value as? String, "Boris")
 		XCTAssertEqual(control("editor.celebrate").value as? String, "1")
@@ -80,7 +80,7 @@ final class EditInPlaceTests: XCTestCase {
 	func testEditModeLocksTheViewersSwipes() {
 		launch()
 		openPerson("Boris")
-		overview.tap()
+		enterEditMode()
 		XCTAssertTrue(done.waitForExistence(timeout: 5))
 		// Swiping down or sideways moves the photo now; the viewer neither closes nor pages.
 		dragDown()
@@ -93,6 +93,7 @@ final class EditInPlaceTests: XCTestCase {
 		// Back in the viewer, the swipes work again.
 		app.swipeLeft()
 		XCTAssertTrue(waitForName("Clara"))
+		waitForSettledViewer()
 		dragDown()
 		XCTAssertTrue(overview.waitForNonExistence(timeout: 5))
 		XCTAssertTrue(tile("Clara").waitForExistence(timeout: 5))
@@ -130,8 +131,21 @@ extension EditInPlaceTests {
 		// a plain tap lands on its rounded corner; a real touch at its centre passes through to it.
 		tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 		XCTAssertTrue(waitForName(name))
+		waitForSettledViewer()
+	}
+
+	/// Waits until the viewer's page has settled after a zoom or a page change; a touch while it moves can be lost.
+	private func waitForSettledViewer() {
 		let settled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
 		XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 5), .completed)
+	}
+
+	/// Taps the settled viewer, which turns it into its edit mode. Like the tiles, it is tapped at its centre, which iPhone
+	/// Duo's leftover empty window cannot intercept.
+	private func enterEditMode() {
+		waitForSettledViewer()
+		overview.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+		XCTAssertTrue(done.waitForExistence(timeout: 5))
 	}
 
 	/// Replaces the name; Return only hides the keyboard.
