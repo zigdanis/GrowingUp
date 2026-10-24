@@ -6,8 +6,10 @@ import CoreGraphics
 struct MosaicGridLayout: Equatable {
 	/// The gap between tiles and the margin at the mosaic's sides.
 	static let spacing: CGFloat = 12
-	/// Two tiles of at least this width fit side by side across every supported iPhone.
+	/// The narrowest a tile gets before the mosaic adds a column; below two columns tiles narrow instead.
 	static let minimumTileWidth: CGFloat = 160
+	/// The fewest columns, so even the narrowest window, such as a 320 pt Slide Over, shows people side by side.
+	static let minimumColumns = 2
 	/// The widest a tile gets, so wide windows add columns instead of ever-larger tiles.
 	static let maximumTileWidth: CGFloat = 240
 	/// The tallest a tile gets as a share of the visible height, so a short window still shows a whole tile.
@@ -28,7 +30,7 @@ struct MosaicGridLayout: Equatable {
 		let heightLimit = size.height * Self.maximumHeightShare * 9 / 16
 		let widest = max(1, min(Self.maximumTileWidth, heightLimit))
 		let narrowest = min(Self.minimumTileWidth, widest)
-		var fitting = max(1, Int((width + Self.spacing) / (narrowest + Self.spacing)))
+		var fitting = max(Self.minimumColumns, Int((width + Self.spacing) / (narrowest + Self.spacing)))
 		if evenColumns, fitting > 1 { fitting -= fitting % 2 }
 		let columns = max(1, min(fitting, count))
 		let filled = (width - CGFloat(fitting - 1) * Self.spacing) / CGFloat(fitting)

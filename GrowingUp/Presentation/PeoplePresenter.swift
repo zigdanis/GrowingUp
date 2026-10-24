@@ -121,12 +121,20 @@ final class PeoplePresenter {
 	}
 
 	private func showEditor(person: Person?) {
-		editor = configurator.editor(
+		weak var session: PersonEditorPresenter?
+		let editor = configurator.editor(
 			person: person,
-			onMutation: { [weak self] in self?.apply($0) })
+			onMutation: { [weak self] in self?.apply($0, from: session) })
+		session = editor
+		self.editor = editor
 	}
 
-	func apply(_ mutation: PersonMutation) {
+	/// Applies a change that `session`, the editor that made it, has persisted.
+	///
+	/// The people always take the change, but only the editor still on screen moves the navigation and closes: a widget
+	/// link or a newer editor that replaced it while it was saving keeps what it shows.
+	func apply(_ mutation: PersonMutation, from session: PersonEditorPresenter?) {
+		let ownsNavigation = session != nil && session === editor
 		switch mutation {
 		case .saved(let person):
 			if let index = persons.firstIndex(where: { $0.id == person.id }) {
@@ -134,17 +142,20 @@ final class PeoplePresenter {
 			} else {
 				persons.append(person)
 				// A new person lands on the mosaic, which scrolls to their new tile.
-				isViewing = false
+				if ownsNavigation { isViewing = false }
 			}
 			persons.sort()
-			selectedID = person.id
+			if ownsNavigation { selectedID = person.id }
 		case .removed(let person):
 			persons.removeAll { $0.id == person.id }
-			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it.
-			isViewing = false
-			selectedID = nil
+			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it. A viewer
+			// a widget link opened on the removed person closes too, as nothing is left to show.
+			if ownsNavigation || selectedID == person.id {
+				isViewing = false
+				selectedID = nil
+			}
 		}
-		editor = nil
+		if ownsNavigation { editor = nil }
 		reloadWidgets()
 	}
 }

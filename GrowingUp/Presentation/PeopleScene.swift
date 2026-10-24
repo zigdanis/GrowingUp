@@ -11,7 +11,7 @@ struct PeopleScene: View {
 	init(presenter: PeoplePresenter, preferredColorScheme: ColorScheme?) {
 		_presenter = Bindable(presenter)
 		self.preferredColorScheme = preferredColorScheme
-		_pictures = State(initialValue: MosaicPicturesPresenter(loadImage: presenter.configurator.loadImage))
+		_pictures = State(initialValue: MosaicPicturesPresenter(loadThumbnail: presenter.configurator.loadThumbnail))
 	}
 
 	var body: some View {

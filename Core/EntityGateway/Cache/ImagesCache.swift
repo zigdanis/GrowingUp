@@ -43,10 +43,16 @@ public enum ImagesCache {
 
 	/// Decodes only the thumbnail needed by a widget, leaving the original and app cache untouched.
 	public static func loadWidgetImage(image: PersonImage) async throws -> UIImage {
+		try await loadThumbnail(image: image, maxPixelSize: 256)
+	}
+
+	/// Decodes a stored picture straight to a thumbnail whose longer side is at most `maxPixelSize` pixels, leaving the
+	/// original and the memory cache of full-size pictures untouched.
+	public static func loadThumbnail(image: PersonImage, maxPixelSize: Int) async throws -> UIImage {
 		try Task.checkCancellation()
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
 		let url = try Disk.url(for: storedCachingKey(for: image, in: directory), in: directory)
-		return try await loadWidgetImage(at: url)
+		return try await loadThumbnail(at: url, maxPixelSize: maxPixelSize)
 	}
 
 	static func storedCachingKey(
@@ -55,7 +61,8 @@ public enum ImagesCache {
 		Disk.exists(image.cachingKey, in: directory) ? image.cachingKey : image.legacyCachingKey
 	}
 
-	static func loadWidgetImage(at url: URL) async throws -> UIImage {
+	/// Decodes the picture at `url` straight to a thumbnail whose longer side is at most `maxPixelSize` pixels.
+	public static func loadThumbnail(at url: URL, maxPixelSize: Int) async throws -> UIImage {
 		try Task.checkCancellation()
 		let thumbnail: UIImage = try await withCheckedThrowingContinuation { continuation in
 			DispatchQueue.global(qos: .utility).async {
@@ -64,7 +71,7 @@ public enum ImagesCache {
 					kCGImageSourceCreateThumbnailFromImageAlways: true,
 					kCGImageSourceCreateThumbnailWithTransform: true,
 					kCGImageSourceShouldCacheImmediately: true,
-					kCGImageSourceThumbnailMaxPixelSize: 256
+					kCGImageSourceThumbnailMaxPixelSize: maxPixelSize
 				]
 				guard let source = CGImageSourceCreateWithURL(url as CFURL, sourceOptions),
 					let image = CGImageSourceCreateThumbnailAtIndex(source, 0, thumbnailOptions as CFDictionary)

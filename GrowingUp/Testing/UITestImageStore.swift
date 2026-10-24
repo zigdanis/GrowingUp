@@ -25,5 +25,9 @@
 			guard let result = UIImage(data: data) else { throw CoreError.missingValue }
 			return result
 		}
+
+		func loadThumbnail(_ image: PersonImage, maxPixelSize: Int) async throws -> UIImage {
+			try await ImagesCache.loadThumbnail(at: root.appendingPathComponent(image.cachingKey), maxPixelSize: maxPixelSize)
+		}
 	}
 #endif

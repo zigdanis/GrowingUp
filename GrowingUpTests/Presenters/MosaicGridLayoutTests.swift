@@ -30,9 +30,17 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(MosaicGridLayout(size: size, count: 20).columns % 2, 1, "Only the landscape layout asks for even columns")
 	}
 
-	func testANarrowWindowFallsBackToOneColumn() {
-		let grid = MosaicGridLayout(size: CGSize(width: 300, height: 700), count: 3)
+	func testEveryPortraitPhoneWidthShowsTwoColumns() {
+		for (width, tileWidth) in [(320, 142), (375, 169.5), (393, 178.5), (430, 197)] as [(CGFloat, CGFloat)] {
+			let grid = MosaicGridLayout(size: CGSize(width: width, height: 700), count: 2)
+			XCTAssertEqual(grid.columns, 2, "\(width) pt")
+			XCTAssertEqual(grid.tileWidth, tileWidth, accuracy: 0.01, "\(width) pt")
+		}
+	}
+
+	func testOnePersonInANarrowWindowIsOneCentredTileOfTheTwoColumnWidth() {
+		let grid = MosaicGridLayout(size: CGSize(width: 320, height: 700), count: 1)
 		XCTAssertEqual(grid.columns, 1)
-		XCTAssertGreaterThan(grid.tileWidth, 0)
+		XCTAssertEqual(grid.tileWidth, 142, accuracy: 0.01)
 	}
 }

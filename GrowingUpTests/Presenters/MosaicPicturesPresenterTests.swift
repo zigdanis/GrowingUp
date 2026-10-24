@@ -6,19 +6,21 @@ import XCTest
 
 @MainActor
 final class MosaicPicturesPresenterTests: XCTestCase {
-	func testLoadsEachPictureOnceDownsizedPreferringTheAppPhotoWithItsAverageColour() async throws {
+	func testLoadsEachPictureOnceAsAThumbnailPreferringTheAppPhotoWithItsAverageColour() async throws {
 		var requests: [UUID?] = []
-		let presenter = MosaicPicturesPresenter(loadImage: { picture in
+		var sizes: Set<Int> = []
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, maxPixelSize in
 			requests.append(picture.id)
-			return Self.photo(.systemTeal, size: CGSize(width: 1200, height: 2400))
+			sizes.insert(maxPixelSize)
+			return Self.photo(.systemTeal)
 		})
 		let person = Person.createPerson()
 		await presenter.load([person])
 		await presenter.load([person])
 		XCTAssertEqual(requests, [person.appPicId])
+		XCTAssertEqual(sizes, [960], "Tiles ask for a thumbnail, not the full-size photo")
 		let picture = try XCTUnwrap(presenter.picture(for: person))
 		XCTAssertEqual(picture.pictureID, person.appPicId)
-		XCTAssertLessThanOrEqual(min(picture.image.size.width, picture.image.size.height) * picture.image.scale, 601)
 		let average = try XCTUnwrap(picture.averageColor)
 		XCTAssertTrue(Self.isClose(average, to: .systemTeal), "\(average)")
 	}
@@ -31,7 +33,7 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 		noPhotos.appPicId = nil
 		noPhotos.widgetPicId = nil
 		let loadable = widgetOnly.widgetPicId
-		let presenter = MosaicPicturesPresenter(loadImage: { picture in
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
 			requests.append(picture.id)
 			guard picture.id == loadable else { throw CoreError.missingValue }
 			return Self.photo(.systemTeal)
@@ -55,7 +57,7 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 
 	func testChangedPhotoLoadsAgainAndRemovedPeopleAreDropped() async {
 		var requests = 0
-		let presenter = MosaicPicturesPresenter(loadImage: { _ in
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { _, _ in
 			requests += 1
 			return Self.photo(.systemTeal)
 		})
@@ -74,7 +76,7 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 		let failing = UUID()
 		var person = Person.createPerson()
 		person.appPicId = failing
-		let presenter = MosaicPicturesPresenter(loadImage: { picture in
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
 			guard picture.id != failing else { throw CoreError.missingValue }
 			return Self.photo(.systemTeal)
 		})
@@ -89,7 +91,7 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 	func testAmbientSeedsAreTheFirstFourLoadedColoursInMosaicOrder() async {
 		let colours: [UIColor] = [.red, .green, .blue, .yellow, .purple]
 		let people = colours.map { _ in Person.createPerson() }
-		let presenter = MosaicPicturesPresenter(loadImage: { picture in
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
 			let index = people.firstIndex { $0.appPicId == picture.id } ?? 0
 			return Self.photo(colours[index])
 		})
@@ -100,6 +102,59 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 		for (seed, colour) in zip(seeds, colours) {
 			XCTAssertTrue(Self.isClose(seed, to: colour), "\(seed) vs \(colour)")
 		}
+	}
+
+	func testASupersededLoadPublishesNothingOverTheNewerPictures() async {
+		var person = Person.createPerson()
+		var renamed = Person.createPerson()
+		renamed.appPicId = nil
+		renamed.widgetPicId = nil
+		let outdated = person.appPicId
+		var gate: CheckedContinuation<Void, Never>?
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
+			if picture.id == outdated { await withCheckedContinuation { gate = $0 } }
+			return Self.photo(.systemTeal)
+		})
+		let stale = Task { await presenter.load([person, renamed]) }
+		while gate == nil { await Task.yield() }
+		person.appPicId = UUID()
+		renamed.name = "Renamed"
+		await presenter.load([person, renamed])
+		gate?.resume()
+		await stale.value
+		XCTAssertEqual(presenter.picture(for: person)?.pictureID, person.appPicId, "The replacement photo stays")
+		XCTAssertEqual(presenter.picture(for: renamed)?.name, "Renamed", "The new monogram stays")
+	}
+
+	func testASupersededLoadDoesNotBringBackARemovedPerson() async {
+		let person = Person.createPerson()
+		var gate: CheckedContinuation<Void, Never>?
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { _, _ in
+			await withCheckedContinuation { gate = $0 }
+			return Self.photo(.systemTeal)
+		})
+		let stale = Task { await presenter.load([person]) }
+		while gate == nil { await Task.yield() }
+		await presenter.load([])
+		gate?.resume()
+		await stale.value
+		XCTAssertTrue(presenter.pictures.isEmpty)
+	}
+
+	func testACancelledLoadPublishesNothing() async {
+		let person = Person.createPerson()
+		var gate: CheckedContinuation<Void, Never>?
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { _, _ in
+			// Like a loader that ignores cancellation, it still returns its picture.
+			await withCheckedContinuation { gate = $0 }
+			return Self.photo(.systemTeal)
+		})
+		let stale = Task { await presenter.load([person]) }
+		while gate == nil { await Task.yield() }
+		stale.cancel()
+		gate?.resume()
+		await stale.value
+		XCTAssertNil(presenter.picture(for: person))
 	}
 
 	private static func photo(_ colour: UIColor, size: CGSize = CGSize(width: 600, height: 400)) -> UIImage {

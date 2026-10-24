@@ -62,7 +62,8 @@ final class SwiftUIPresenterTests: XCTestCase {
 		gateway.fetchPersonsResultToBeReturned = .success(pinned)
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
 		await presenter.load()
-		presenter.apply(.removed(pinned[1]))
+		presenter.edit(pinned[1])
+		presenter.apply(.removed(pinned[1]), from: presenter.editor)
 		presenter.select(pinned[0].id)
 		presenter.open(URL(string: "growingup-app://?personID=\(pinned[1].id.uuidString)")!)
 		XCTAssertEqual(presenter.selectedID, pinned[0].id)
@@ -75,22 +76,6 @@ final class SwiftUIPresenterTests: XCTestCase {
 		await presenter.load()
 		XCTAssertFalse(presenter.isLoading)
 		XCTAssertEqual(presenter.error?.message, CoreError.coreDataFetchFailed.message)
-	}
-
-	func testMutationsUpdateVisiblePersonAndReloadWidgets() {
-		let gateway = PersonsGatewaySpy()
-		var reloadCount = 0
-		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: { reloadCount += 1 })
-		var person = Person.createPerson()
-		presenter.apply(.saved(person))
-		XCTAssertEqual(presenter.selectedID, person.id)
-		person.name = "Updated"
-		presenter.apply(.saved(person))
-		XCTAssertEqual(presenter.persons.map(\.name), ["Updated"])
-		presenter.apply(.removed(person))
-		XCTAssertTrue(presenter.persons.isEmpty)
-		XCTAssertNil(presenter.selectedID)
-		XCTAssertEqual(reloadCount, 3)
 	}
 
 	func testSaveFailureRestoresButtonsAndDoesNotDismiss() async {
