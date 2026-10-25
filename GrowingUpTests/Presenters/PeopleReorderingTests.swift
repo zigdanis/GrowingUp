@@ -106,6 +106,22 @@ final class PeopleReorderingTests: XCTestCase {
 		XCTAssertNil(presenter.error)
 	}
 
+	func testAFailedSaveRestoresTheLastStoredOrderWhateverWasSavedBefore() async {
+		let people = makePeople(count: 3)
+		let (presenter, gateway) = await loadedPresenter(people)
+		gateway.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)
+		presenter.startReordering()
+		presenter.move(people[2].id, to: 0)
+		await presenter.saveOrder()
+		let stored = [people[2].id, people[0].id, people[1].id]
+		gateway.reorderResultToBeReturned = .failure(.coreDataSaveFailed)
+		presenter.move(people[1].id, to: 0)
+		await presenter.saveOrder()
+		XCTAssertEqual(presenter.persons.map(\.id), stored, "Nothing is read back: the stored order is known")
+		XCTAssertEqual(presenter.persons.map(\.displayOrder), [1, 2, 3])
+		XCTAssertEqual(presenter.error?.message, CoreError.coreDataSaveFailed.message)
+	}
+
 	func testSavesAreStoredInTheOrderTheyWereMade() async {
 		let people = makePeople(count: 3)
 		let (presenter, gateway) = await loadedPresenter(people)

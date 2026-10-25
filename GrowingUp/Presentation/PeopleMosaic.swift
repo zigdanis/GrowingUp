@@ -95,6 +95,7 @@ struct PeopleMosaic: View {
 				followDrag(grid: grid, width: width)
 			},
 			onDrop: { drop(person.id) },
+			onStartReordering: onStartReordering,
 			onMoveEarlier: index > 0 ? { moveByAccessibility(person.id, to: index - 1) } : nil,
 			onMoveLater: index < persons.count - 1 ? { moveByAccessibility(person.id, to: index + 1) } : nil)
 	}

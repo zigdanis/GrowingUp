@@ -136,5 +136,6 @@
 
 /* Mosaic reordering. */
 "Done" = "Done";
+"Reorder" = "Reorder";
 "Move earlier" = "Move earlier";
 "Move later" = "Move later";

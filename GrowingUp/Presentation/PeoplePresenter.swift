@@ -19,6 +19,8 @@ final class PeoplePresenter {
 	private(set) var isReordering = false
 	/// The latest order being stored; each save waits for the one before, so the store ends in the last order shown.
 	@ObservationIgnored private var orderSave: Task<Void, Error>?
+	/// The `displayOrder` of each person as the store holds it, which a failed save puts the mosaic back to.
+	@ObservationIgnored private var storedOrders: [UUID: Int] = [:]
 	private var pendingWidgetID: UUID?
 	private var pendingWidgetIndex: Int?
 	private var pendingAdd = false
@@ -40,6 +42,7 @@ final class PeoplePresenter {
 	func load() async {
 		do {
 			persons = try await configurator.fetchUseCase.fetchPersons().sorted()
+			storedOrders = Dictionary(persons.map { ($0.id, $0.displayOrder) }, uniquingKeysWith: { first, _ in first })
 			isLoading = false
 			selectWidgetPerson()
 			if pendingAdd { addFromWidget() }
@@ -115,13 +118,15 @@ final class PeoplePresenter {
 		orderSave = save
 		do {
 			try await save.value
+			for (index, id) in order.enumerated() { storedOrders[id] = index + 1 }
 			reloadWidgets()
 		} catch {
 			guard orderSave == save else { return }
-			// The store holds the truth after the last save: an earlier one may have succeeded before this one failed.
-			if let stored = try? await configurator.fetchUseCase.fetchPersons(), orderSave == save {
-				persons = stored.sorted()
+			// Saves are all or nothing and run in turn, so the store holds the order of the last one that succeeded.
+			for index in persons.indices {
+				persons[index].displayOrder = storedOrders[persons[index].id] ?? persons[index].displayOrder
 			}
+			persons.sort()
 			self.error = SceneError(error)
 		}
 	}
@@ -193,6 +198,7 @@ final class PeoplePresenter {
 		let ownsNavigation = session != nil && session === editor
 		switch mutation {
 		case .saved(let person):
+			storedOrders[person.id] = person.displayOrder
 			if let index = persons.firstIndex(where: { $0.id == person.id }) {
 				persons[index] = person
 			} else {
@@ -203,6 +209,7 @@ final class PeoplePresenter {
 			persons.sort()
 			if ownsNavigation { selectedID = person.id }
 		case .removed(let person):
+			storedOrders[person.id] = nil
 			persons.removeAll { $0.id == person.id }
 			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it. A viewer
 			// a widget link opened on the removed person closes too, as nothing is left to show.

@@ -5,7 +5,8 @@ import SwiftUI
 /// into a drag without letting go.
 ///
 /// The long press is the only way into reordering, with no context menu. While reordering the tile rocks, and the
-/// accessibility actions move it a place earlier or later.
+/// accessibility actions start reordering and move the
+/// tile a place earlier or later.
 struct MosaicTileButton: View {
 	/// How long a press waits before it lifts the tile, a little shorter than a context menu's.
 	static let liftDelay: TimeInterval = 0.4
@@ -23,6 +24,8 @@ struct MosaicTileButton: View {
 	let onLift: () -> Void
 	let onDrag: (DragGesture.Value) -> Void
 	let onDrop: () -> Void
+	/// Starts reordering without the long press, for accessibility.
+	let onStartReordering: () -> Void
 	/// Moves the tile a place earlier or later while reordering; nil at that end of the mosaic.
 	let onMoveEarlier: (() -> Void)?
 	let onMoveLater: (() -> Void)?
@@ -47,6 +50,9 @@ struct MosaicTileButton: View {
 			source.clipShape(.rect(cornerRadius: MosaicTile.cornerRadius))
 		}
 		.accessibilityActions {
+			if !isReordering {
+				Button("Reorder", action: onStartReordering)
+			}
 			if isReordering, let onMoveEarlier {
 				Button("Move earlier", action: onMoveEarlier)
 			}

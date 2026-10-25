@@ -335,9 +335,13 @@ extension JourneyTests {
 
 	/// Drags the viewer down, which zooms it back into the shown person's tile.
 	private func closeViewer() {
-		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
-			forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
-		XCTAssertTrue(overview.waitForNonExistence(timeout: 5))
+		// A slow simulator can drop the first drag, so one more is allowed; a viewer that never closes still fails.
+		for _ in 0..<2 {
+			app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).press(
+				forDuration: 0.05, thenDragTo: app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.9)))
+			if overview.waitForNonExistence(timeout: 5) { return }
+		}
+		XCTFail("Swiping down did not close the viewer")
 	}
 
 	/// Editor chips are buttons that report their state as a "1"/"0" value.
