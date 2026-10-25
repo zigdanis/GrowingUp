@@ -111,14 +111,15 @@ final class PeoplePresenter {
 			persons[index].displayOrder = index + 1
 		}
 		let previous = orderSave
-		let save = Task { [reorderUseCase = configurator.reorderUseCase] in
+		let save = Task { [weak self, reorderUseCase = configurator.reorderUseCase] in
 			_ = await previous?.result
 			try await reorderUseCase.reorder(order)
+			// Noted as part of the save, so a newer save that fails finds every order stored before it.
+			for (index, id) in order.enumerated() { self?.storedOrders[id] = index + 1 }
 		}
 		orderSave = save
 		do {
 			try await save.value
-			for (index, id) in order.enumerated() { storedOrders[id] = index + 1 }
 			reloadWidgets()
 		} catch {
 			guard orderSave == save else { return }

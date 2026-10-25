@@ -122,6 +122,33 @@ final class PeopleReorderingTests: XCTestCase {
 		XCTAssertEqual(presenter.error?.message, CoreError.coreDataSaveFailed.message)
 	}
 
+	func testAFailedSaveRestoresTheOrderStoredWhileItWaited() async {
+		let people = makePeople(count: 3)
+		let (presenter, gateway) = await loadedPresenter(people)
+		presenter.startReordering()
+		var releaseFirst: CheckedContinuation<Void, Never>?
+		gateway.onReorder = {
+			// The first save is held until the second waits behind it; the second then fails.
+			if gateway.reorderedIDs.count == 1 {
+				await withCheckedContinuation { releaseFirst = $0 }
+			} else {
+				gateway.reorderResultToBeReturned = .failure(.coreDataSaveFailed)
+			}
+		}
+		presenter.move(people[2].id, to: 0)
+		let first = Task { await presenter.saveOrder() }
+		while releaseFirst == nil { await Task.yield() }
+		presenter.move(people[1].id, to: 0)
+		let second = Task { await presenter.saveOrder() }
+		for _ in 0..<20 { await Task.yield() }
+		releaseFirst?.resume()
+		await second.value
+		await first.value
+		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id, people[1].id], "The first save's order")
+		XCTAssertEqual(presenter.persons.map(\.displayOrder), [1, 2, 3])
+		XCTAssertEqual(presenter.error?.message, CoreError.coreDataSaveFailed.message)
+	}
+
 	func testSavesAreStoredInTheOrderTheyWereMade() async {
 		let people = makePeople(count: 3)
 		let (presenter, gateway) = await loadedPresenter(people)
