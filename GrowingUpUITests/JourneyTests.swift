@@ -6,7 +6,7 @@ final class JourneyTests: XCTestCase {
 	private var identifier = UUID().uuidString
 	private var configuration: UITestConfiguration!
 
-	/// The shown person in the full-screen viewer; a tap on it opens the editor.
+	/// The shown person in the full-screen viewer; a tap on it turns the viewer into its edit mode.
 	private var overview: XCUIElement { app.buttons["person.name"] }
 	private var tiles: XCUIElementQuery { app.buttons.matching(identifier: "people.tile") }
 
@@ -28,10 +28,9 @@ final class JourneyTests: XCTestCase {
 		overview.tap()
 		let born = app.buttons["editor.birthDate"]
 		XCTAssertTrue(born.waitForExistence(timeout: 5))
-		XCTAssertTrue(born.label.contains("January 10, 2027"), born.label)
-		XCTAssertTrue(born.label.contains("11:20") && born.label.contains("PM"), born.label)
-		born.tap()
-		XCTAssertEqual(app.switches["editor.birthTime"].value as? String, "1")
+		XCTAssertEqual(born.value as? String, "Jan 10, 2027")
+		let time = app.buttons["editor.birthTime"].value as? String ?? ""
+		XCTAssertTrue(time.contains("11:20") && time.contains("PM"), time)
 	}
 
 	func testEditPhotoReframeAndPersist() {
@@ -46,6 +45,8 @@ final class JourneyTests: XCTestCase {
 		checkpoint("main-crop")
 		app.buttons["crop.use"].tap()
 		XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
+		// The widget picture's round control shows it and opens its circular crop.
 		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
 		let reframe = app.buttons["editor.widgetPhoto.reframe"]
 		XCTAssertTrue(reframe.isEnabled)
@@ -70,7 +71,7 @@ final class JourneyTests: XCTestCase {
 		checkpoint("image-menu-existing")
 		remove.tap()
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForNonExistence(timeout: 5))
-		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(app.buttons["editor.widgetPhoto.reframe"].waitForNonExistence(timeout: 5), "No widget picture without a photo")
 		XCTAssertTrue(app.buttons["editor.save"].isEnabled)
 		app.buttons["editor.appPhoto"].tap()
 		XCTAssertTrue(app.buttons["photo.source.photos"].waitForExistence(timeout: 5))
@@ -185,13 +186,10 @@ final class JourneyTests: XCTestCase {
 		launch()
 		addPerson()
 		openEditor(of: "Ada")
-		let menu = app.buttons["editor.menu"]
-		XCTAssertTrue(menu.waitForExistence(timeout: 5))
-		menu.tap()
 		let remove = app.buttons["editor.remove"]
 		XCTAssertTrue(remove.waitForExistence(timeout: 5))
 		remove.tap()
-		let confirmation = app.buttons.matching(NSPredicate(format: "label == %@ AND identifier != %@", "Remove", "editor.remove")).firstMatch
+		let confirmation = app.alerts.buttons["Remove"]
 		XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
 		confirmation.tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
@@ -327,10 +325,13 @@ extension JourneyTests {
 		XCTAssertTrue(waitForName(name))
 	}
 
-	/// Opens `name` from the mosaic and taps the viewer, which opens the editor.
+	/// Opens `name` from the mosaic and taps the viewer once the zoom settles, which turns it into its edit mode.
 	private func openEditor(of name: String) {
 		openPerson(name)
+		let settled = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: overview)
+		XCTAssertEqual(XCTWaiter.wait(for: [settled], timeout: 5), .completed)
 		overview.tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
 	}
 
 	/// Drags the viewer down, which zooms it back into the shown person's tile.
@@ -344,7 +345,7 @@ extension JourneyTests {
 		XCTFail("Swiping down did not close the viewer")
 	}
 
-	/// Editor chips are buttons that report their state as a "1"/"0" value.
+	/// Editor chips and edit-mode switches are buttons that report their state as a "1"/"0" value.
 	private func chip(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}

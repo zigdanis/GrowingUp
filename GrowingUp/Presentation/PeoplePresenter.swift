@@ -12,6 +12,8 @@ final class PeoplePresenter {
 	private(set) var selectedID: UUID?
 	/// Whether the full-screen viewer covers the mosaic; launch always starts on the mosaic.
 	var isViewing = false
+	/// The open editing session: a new person's in the editor sheet, or an existing person's in the viewer's in-place
+	/// edit mode. Only this session moves the navigation when its change lands; see `apply(_:from:)`.
 	var editor: PersonEditorPresenter?
 	var error: SceneError?
 	private(set) var isLoading = true
@@ -24,6 +26,8 @@ final class PeoplePresenter {
 	private var pendingWidgetID: UUID?
 	private var pendingWidgetIndex: Int?
 	private var pendingAdd = false
+	/// The in-place edit mode `edit(_:)` opened; it lasts only while its session is still `editor`.
+	private var inPlaceEditMode: PersonEditModePresenter?
 	let configurator: SceneConfigurator
 	private let reloadWidgets: () -> Void
 
@@ -38,6 +42,18 @@ final class PeoplePresenter {
 	}
 
 	var canAdd: Bool { persons.count < 20 }
+
+	/// The viewer's in-place edit mode, while its session still owns editing and the viewer shows.
+	var editMode: PersonEditModePresenter? {
+		guard let inPlaceEditMode, inPlaceEditMode.editor === editor, isViewing else { return nil }
+		return inPlaceEditMode
+	}
+
+	/// The session the editor sheet shows: a new person's. An in-place session never opens the sheet.
+	var sheetEditor: PersonEditorPresenter? {
+		guard let editor, editor !== inPlaceEditMode?.editor else { return nil }
+		return editor
+	}
 
 	func load() async {
 		do {
@@ -59,10 +75,23 @@ final class PeoplePresenter {
 
 	func add() {
 		guard canAdd else { return }
+		inPlaceEditMode = nil
 		showEditor(person: nil)
 	}
 
-	func edit(_ person: Person) { showEditor(person: person) }
+	/// Turns the viewer's page of `person` into its in-place edit mode.
+	func edit(_ person: Person) {
+		let editor = showEditor(person: person)
+		inPlaceEditMode = PersonEditModePresenter(
+			editor: editor, now: configurator.now, onCancel: { [weak self, weak editor] in self?.cancelEditing(editor) })
+	}
+
+	/// Drops the draft of `session` when it is still the open one; a session that was replaced has nothing left to close.
+	func cancelEditing(_ session: PersonEditorPresenter?) {
+		guard session != nil, session === editor else { return }
+		editor = nil
+		inPlaceEditMode = nil
+	}
 
 	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile; tiles open nothing while
 	/// reordering.
@@ -78,8 +107,12 @@ final class PeoplePresenter {
 		selectedID = id
 	}
 
-	/// Returns from the viewer to the mosaic.
-	func closeViewer() { isViewing = false }
+	/// Returns from the viewer to the mosaic. Edit mode locks the viewer's swipe, so only an accessibility action can get
+	/// here while editing; the draft goes with the viewer, as with Cancel.
+	func closeViewer() {
+		cancelEditing(editMode?.editor)
+		isViewing = false
+	}
 
 	/// Lets the mosaic's tiles be dragged to new places, as a long press on one does.
 	func startReordering() {
@@ -176,11 +209,13 @@ final class PeoplePresenter {
 		guard let target else { return }
 		// The person opens over the mosaic, so closing the viewer lands on the mosaic like a tile tap would.
 		editor = nil
+		inPlaceEditMode = nil
 		isReordering = false
 		view(target)
 	}
 
-	private func showEditor(person: Person?) {
+	@discardableResult
+	private func showEditor(person: Person?) -> PersonEditorPresenter {
 		// The "Add person" link of a widget may arrive while reordering, which the editor ends.
 		isReordering = false
 		weak var session: PersonEditorPresenter?
@@ -189,12 +224,14 @@ final class PeoplePresenter {
 			onMutation: { [weak self] in self?.apply($0, from: session) })
 		session = editor
 		self.editor = editor
+		return editor
 	}
 
 	/// Applies a change that `session`, the editor that made it, has persisted.
 	///
 	/// The people always take the change, but only the editor still on screen moves the navigation and closes: a widget
-	/// link or a newer editor that replaced it while it was saving keeps what it shows.
+	/// link or a newer editor that replaced it while it was saving keeps what it shows. A saved in-place edit returns the
+	/// viewer to showing the updated person.
 	func apply(_ mutation: PersonMutation, from session: PersonEditorPresenter?) {
 		let ownsNavigation = session != nil && session === editor
 		switch mutation {
@@ -219,7 +256,10 @@ final class PeoplePresenter {
 				selectedID = nil
 			}
 		}
-		if ownsNavigation { editor = nil }
+		if ownsNavigation {
+			editor = nil
+			inPlaceEditMode = nil
+		}
 		reloadWidgets()
 	}
 }

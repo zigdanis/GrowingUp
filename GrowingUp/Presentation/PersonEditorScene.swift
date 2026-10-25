@@ -1,11 +1,11 @@
 import Core
 import SwiftUI
 
+/// The editor sheet for a new person; an existing person is edited in place in the viewer (`PersonEditModeScene`).
 struct PersonEditorScene: View {
 	@Bindable var presenter: PersonEditorPresenter
 	@State private var photoRequest: PhotoRequest?
 	@State private var reframeImage: IdentifiableImage?
-	@State private var confirmingRemoval = false
 	@FocusState private var isNameFocused: Bool
 	@Environment(\.dismiss)
 	private var dismiss
@@ -32,7 +32,7 @@ struct PersonEditorScene: View {
 				}
 				.scrollDismissesKeyboard(.interactively)
 			}
-			.navigationTitle(presenter.person == nil ? Text("Add person") : Text("Edit person"))
+			.navigationTitle(Text("Add person"))
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar { toolbarItems }
 			.overlay { if presenter.isBusy { ProgressView() } }
@@ -82,22 +82,6 @@ struct PersonEditorScene: View {
 			.disabled(presenter.isBusy)
 			.accessibilityIdentifier("editor.cancel")
 		}
-		if presenter.person != nil {
-			ToolbarItem(placement: .topBarTrailing) {
-				Menu {
-					Button("Remove…", systemImage: "trash", role: .destructive) { confirmingRemoval = true }
-						.accessibilityIdentifier("editor.remove")
-				} label: {
-					Label("More", systemImage: moreSymbol)
-				}
-				.disabled(presenter.isBusy)
-				.accessibilityIdentifier("editor.menu")
-				// Attached to the menu button so iOS 26 anchors the confirmation to it.
-				.confirmationDialog("Remove person?", isPresented: $confirmingRemoval, titleVisibility: .visible) {
-					Button("Remove", role: .destructive) { Task { await presenter.remove() } }
-				}
-			}
-		}
 		ToolbarItem(placement: .confirmationAction) {
 			Button {
 				Task { await presenter.save() }
@@ -118,12 +102,6 @@ struct PersonEditorScene: View {
 		} else {
 			Text(title)
 		}
-	}
-
-	/// Liquid Glass already draws a circle around toolbar items, so only older systems need the circled symbol.
-	private var moreSymbol: String {
-		if #available(iOS 26.0, *) { return "ellipsis" }
-		return "ellipsis.circle"
 	}
 
 	private func reframe() {

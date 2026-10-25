@@ -7,7 +7,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var configuration: UITestConfiguration!
 	private var locale = "en"
 	private var names: [String] { locale == "ru" ? ["Мия", "Лео", "Манго", "Тедди"] : ["Mia", "Leo", "Mango", "Teddy"] }
-	/// The shown person in the full-screen viewer; a tap on it opens the editor.
+	/// The shown person in the full-screen viewer; a tap on it turns the viewer into its edit mode.
 	private var overview: XCUIElement { app.buttons["person.name"] }
 	private var tiles: XCUIElementQuery { app.buttons.matching(identifier: "people.tile") }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
@@ -265,7 +265,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
-	/// Editor chips are buttons that report their state as a "1"/"0" value.
+	/// Editor chips and edit-mode switches are buttons that report their state as a "1"/"0" value.
 	private func chip(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}

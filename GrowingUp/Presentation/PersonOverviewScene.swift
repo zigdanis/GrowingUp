@@ -4,7 +4,7 @@ import SwiftUI
 struct PersonOverviewScene: View {
 	let person: Person
 	let isSelected: Bool
-	/// Opens the editor; a tap anywhere on the page does it, as there is no visible button.
+	/// Turns the page into its in-place edit mode; a tap anywhere on the page does it, as there is no visible button.
 	let onEdit: () -> Void
 	/// Returns to the mosaic, for VoiceOver's escape gesture and actions.
 	let onClose: () -> Void
@@ -63,7 +63,7 @@ struct PersonOverviewScene: View {
 			}
 		}
 		.ignoresSafeArea(.container)
-		// The whole page is the way into the editor; a tap never competes with the pager's swipes or the zoom's drag down.
+		// The whole page is the way into edit mode; a tap never competes with the pager's swipes or the zoom's drag down.
 		.contentShape(Rectangle())
 		.onTapGesture(perform: onEdit)
 		.onChange(of: presenter.celebrationID) { _, _ in
@@ -140,7 +140,7 @@ struct PersonOverviewScene: View {
 				if let image = presenter.image {
 					filling(image).blur(radius: 60, opaque: true)
 				} else {
-					placeholder
+					PersonPhotoPlaceholder(showsShrug: false)
 				}
 				Color.black.opacity(0.45)
 				scrim
@@ -152,8 +152,7 @@ struct PersonOverviewScene: View {
 		if let image = presenter.image {
 			filling(image)
 		} else {
-			placeholder
-			Text("🤷").font(.system(size: 100))
+			PersonPhotoPlaceholder()
 		}
 	}
 
@@ -165,10 +164,6 @@ struct PersonOverviewScene: View {
 				.frame(width: geometry.size.width, height: geometry.size.height)
 				.clipped()
 		}
-	}
-
-	private var placeholder: some View {
-		LinearGradient(colors: [.indigo, .black], startPoint: .topLeading, endPoint: .bottomTrailing)
 	}
 
 	/// Darkens the top behind the age and, more strongly, the bottom behind the birthday line,
@@ -191,7 +186,7 @@ struct PersonOverviewScene: View {
 			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge,
 			isShown: isSelected
 		)
-		// VoiceOver reaches the editor and the mosaic through the age, the page's main element; activating it edits,
+		// VoiceOver reaches edit mode and the mosaic through the age, the page's main element; activating it edits,
 		// like a tap anywhere on the page.
 		.accessibilityAction(.default, onEdit)
 		.accessibilityAction(named: Text("Edit"), onEdit)

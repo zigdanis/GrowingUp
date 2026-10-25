@@ -82,10 +82,6 @@
 
 "Save" = "Сохранить";
 
-"Remove person?" = "Удалить человека?";
-
-"Edit person" = "Редактировать";
-
 "OK" = "ОК";
 
 "Photo" = "Фото";
@@ -131,11 +127,16 @@
 "Celebrate birthdays" = "Праздновать дни рождения";
 "Widget picture" = "Фото для виджета";
 "Reframe" = "Кадрировать";
-"More" = "Ещё";
-"Remove…" = "Удалить…";
-
-/* Mosaic reordering. */
+/* In-place edit mode of a person page. */
 "Done" = "Готово";
+"Widget" = "Виджет";
+"Celebrate" = "Праздник";
+"Circle" = "Кружок";
+"If known" = "если известно";
+/* Title of the removal alert; the argument is the person's name. */
+"Remove %@?" = "Удалить %@?";
+"Their photo, birthday and settings will disappear from the app and the widget." = "Фото, дата и настройки исчезнут из приложения и из виджета.";
+/* Mosaic reordering; "Done" is shared with the in-place edit mode. */
 "Reorder" = "Переставить";
 "Move earlier" = "Переместить раньше";
 "Move later" = "Переместить позже";
