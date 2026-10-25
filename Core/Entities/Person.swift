@@ -19,6 +19,8 @@ public struct Person: Equatable, Hashable, Sendable {
 	public var createdDate: Date
 	/// Whether the overview celebrates this person's birthday with confetti.
 	public var celebratesBirthdays: Bool
+	/// The person's place in the mosaic, set by reordering; people never reordered share 0 and follow `createdDate`.
+	public var displayOrder: Int
 
 	public init(
 		id: UUID,
@@ -28,7 +30,8 @@ public struct Person: Equatable, Hashable, Sendable {
 		widgetPicId: UUID?,
 		isOnWidget: Bool,
 		createdDate: Date,
-		celebratesBirthdays: Bool = true
+		celebratesBirthdays: Bool = true,
+		displayOrder: Int = 0
 	) {
 		self.id = id
 		self.name = name
@@ -38,6 +41,7 @@ public struct Person: Equatable, Hashable, Sendable {
 		self.isOnWidget = isOnWidget
 		self.createdDate = createdDate
 		self.celebratesBirthdays = celebratesBirthdays
+		self.displayOrder = displayOrder
 	}
 
 	public var dateComponents: DateComponents {
@@ -62,10 +66,10 @@ public struct Person: Equatable, Hashable, Sendable {
 
 }
 
+/// The mosaic order, shared by the viewer's pages and the widgets: by `displayOrder`, then by `createdDate`.
 extension Person: Comparable {
 
 	public static func < (lhs: Person, rhs: Person) -> Bool {
-		let comparison = lhs.createdDate.compare(rhs.createdDate)
-		return comparison == .orderedAscending
+		(lhs.displayOrder, lhs.createdDate) < (rhs.displayOrder, rhs.createdDate)
 	}
 }

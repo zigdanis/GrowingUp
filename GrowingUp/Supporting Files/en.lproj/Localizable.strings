@@ -136,3 +136,7 @@
 /* Title of the removal alert; the argument is the person's name. */
 "Remove %@?" = "Remove %@?";
 "Their photo, birthday and settings will disappear from the app and the widget." = "Their photo, birthday and settings will disappear from the app and the widget.";
+/* Mosaic reordering; "Done" is shared with the in-place edit mode. */
+"Reorder" = "Reorder";
+"Move earlier" = "Move earlier";
+"Move later" = "Move later";

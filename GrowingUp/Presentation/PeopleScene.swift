@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
-/// open in the full-screen viewer, which swipes down back into the tile. "Add" opens the editor sheet.
+/// open in the full-screen viewer, which swipes down back into the tile. "Add" opens the editor sheet; while a long press
+/// reorders the mosaic, "Done" takes the button's place.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
@@ -23,11 +24,12 @@ struct PeopleScene: View {
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
-					if !presenter.isLoading, presenter.canAdd {
-						AddPersonButton(action: presenter.add)
-							.frame(maxWidth: .infinity)
-							.modifier(trailingPane)
-							.padding(.bottom, 8)
+					if presenter.isReordering {
+						floatingButton(
+							"Done", systemImage: "checkmark", identifier: "people.reorder.done", trailingPane: trailingPane,
+							action: presenter.finishReordering)
+					} else if !presenter.isLoading, presenter.canAdd {
+						floatingButton("Add person", systemImage: "plus", identifier: "person.add", trailingPane: trailingPane, action: presenter.add)
 					}
 				}
 		}
@@ -62,8 +64,22 @@ struct PeopleScene: View {
 		} else {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
-				zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view)
+				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view,
+				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
+				onSaveOrder: presenter.saveOrder)
 		}
+	}
+
+	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window, above the home indicator.
+	private func floatingButton(
+		_ title: LocalizedStringKey, systemImage: String, identifier: String, trailingPane: TrailingPaneOnLandscape,
+		action: @escaping () -> Void
+	) -> some View {
+		FloatingCapsuleButton(title: title, systemImage: systemImage, action: action)
+			.accessibilityIdentifier(identifier)
+			.frame(maxWidth: .infinity)
+			.modifier(trailingPane)
+			.padding(.bottom, 8)
 	}
 
 	/// The editor sheet's binding for one presenter of the sheet: the viewer while it is shown, otherwise the mosaic.

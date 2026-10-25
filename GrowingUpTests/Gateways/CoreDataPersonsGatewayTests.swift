@@ -144,6 +144,49 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		try assertUpgradePreservesPeople(fromModel: "GrowingUpSixPeople.mom")
 	}
 
+	func test_DisplayOrderUpgradePreservesPeople() throws {
+		try assertUpgradePreservesPeople(fromModel: "GrowingUpCelebrations.mom")
+	}
+
+	/// People stored before reordering existed keep their creation order, and the next person joins the end.
+	func test_DisplayOrderUpgradeKeepsCreationOrderAndAddsAtTheEnd() async throws {
+		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+		defer { try? FileManager.default.removeItem(at: directory) }
+		let storeURL = directory.appendingPathComponent("GrowingUp.sqlite")
+		let modelURL = try XCTUnwrap(
+			Bundle(identifier: Constants.bundleIdentifier)?.url(forResource: "GrowingUp", withExtension: "momd"))
+		let previousModel = try XCTUnwrap(
+			NSManagedObjectModel(contentsOf: modelURL.appendingPathComponent("GrowingUpCelebrations.mom")))
+		let previousContainer = try loadContainer(model: previousModel, storeURL: storeURL)
+		try previousContainer.viewContext.performAndWait {
+			// Inserted out of creation order, so only `createdDate` can put them in order.
+			for (name, minutes) in [("Cleo", 30.0), ("Ada", 10.0), ("Ben", 20.0)] {
+				let person = CoreDataPerson(context: previousContainer.viewContext)
+				person.name = name
+				person.birthdate = Date(timeIntervalSince1970: 0)
+				person.createdDate = Date(timeIntervalSince1970: minutes * 60)
+			}
+			try previousContainer.viewContext.save()
+		}
+		try closeContainer(previousContainer)
+
+		let currentModel = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL))
+		let upgradedContainer = try loadContainer(model: currentModel, storeURL: storeURL)
+		defer { try? closeContainer(upgradedContainer) }
+		let gateway = CoreDataPersonsGateway(
+			coreDataStack: CoreDataStackImplementation(makeContainer: { upgradedContainer }, loadStore: { _ in }))
+		let upgraded = try await gateway.fetchPersons()
+		XCTAssertEqual(upgraded.map(\.name), ["Ada", "Ben", "Cleo"])
+		XCTAssertEqual(upgraded.map(\.displayOrder), [0, 0, 0])
+		var parameters = AddPersonParameters.createParameters()
+		parameters.name = "Dan"
+		parameters.isOnWidget = false
+		_ = try await gateway.add(parameters: parameters)
+		let withNewPerson = try await gateway.fetchPersons()
+		XCTAssertEqual(withNewPerson.map(\.name), ["Ada", "Ben", "Cleo", "Dan"])
+	}
+
 	/// Lightweight migration from `fromModel` keeps people, pins and photos, and defaults celebrations to on.
 	private func assertUpgradePreservesPeople(fromModel modelName: String) throws {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)

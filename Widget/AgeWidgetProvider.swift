@@ -43,7 +43,7 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	// MARK: - Data
 
-	/// Fetches the pinned people (sorted by `createdDate`, matching the app's
+	/// Fetches the pinned people (in mosaic order, matching the app's
 	/// deep-link indexing) and loads their widget images from the shared cache.
 	private func loadPersons(family: WidgetFamily) async -> [WidgetPerson] {
 		await WidgetPersonLoader.live.load(limit: personLimit(for: family))

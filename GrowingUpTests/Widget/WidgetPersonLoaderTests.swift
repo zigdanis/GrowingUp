@@ -37,6 +37,20 @@ final class WidgetPersonLoaderTests: XCTestCase {
 			people.prefix(2).map { "growingup-app://?personID=\($0.id.uuidString)" })
 	}
 
+	func testPinnedPeopleFollowTheMosaicOrder() async {
+		var people = pinnedPeople(count: 3)
+		// Reordered: the last created person moved first, and the rest follow in the stored order.
+		people[2].displayOrder = 1
+		people[0].displayOrder = 2
+		people[1].displayOrder = 3
+		let loader = WidgetPersonLoader(fetch: { people }, loadImage: { _ in Self.photo })
+		let persons = await loader.load(limit: Constants.widgetPeopleLimit)
+		XCTAssertEqual(persons.map(\.id), [people[2].id, people[0].id, people[1].id])
+		XCTAssertEqual(persons.map(\.index), [0, 1, 2])
+		let first = await loader.loadFirst()
+		XCTAssertEqual(first?.id, people[2].id, "The Lock Screen shows the first pinned person in mosaic order")
+	}
+
 	func testNobodyPinnedOrFailedFetchLoadsNobody() async {
 		let useCase = FetchPersonsUseCaseSpy()
 		useCase.completionResult = .success([])
