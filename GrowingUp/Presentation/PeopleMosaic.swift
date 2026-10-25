@@ -51,7 +51,8 @@ struct PeopleMosaic: View {
 					.padding(.vertical, MosaicGridLayout.spacing)
 					// Fills the visible mosaic, so a tap beside or below the tiles finishes reordering.
 					.frame(minHeight: geometry.size.height, alignment: .top)
-					.overlay { if isReordering { gaps(grid: grid) } }
+					.contentShape(.rect)
+					.simultaneousGesture(finishingTap(grid: grid, width: width), isEnabled: isReordering)
 					.overlay(alignment: .topLeading) { floatingTile(grid: grid, width: width) }
 					.coordinateSpace(Self.contentSpace)
 				}
@@ -100,12 +101,16 @@ struct PeopleMosaic: View {
 			onMoveLater: index < persons.count - 1 ? { moveByAccessibility(person.id, to: index + 1) } : nil)
 	}
 
-	/// The space beside and below the tiles, where a tap finishes reordering; it lies over the tiles, as their touch areas
-	/// reach into the gaps and would take the tap first.
-	private func gaps(grid: MosaicGridLayout) -> some View {
-		Color.clear
-			.contentShape(MosaicGaps(grid: grid, count: persons.count), eoFill: true)
-			.onTapGesture(perform: onFinishReordering)
+	/// A tap beside or below the tiles, which finishes reordering.
+	///
+	/// It recognizes alongside the tiles and measures the tap against their slots, rather than leaving it to hit testing:
+	/// a tile's touch area reaches into the gaps around it, by a different amount on each iOS. Reordering finishes once
+	/// the touch is handled, so a tile that took the same tap still sees reordering and opens nobody.
+	private func finishingTap(grid: MosaicGridLayout, width: CGFloat) -> some Gesture {
+		SpatialTapGesture(coordinateSpace: Self.contentSpace).onEnded { tap in
+			let tile = grid.slot(ofTileAt: tap.location, count: persons.count, width: width, cornerRadius: MosaicTile.cornerRadius)
+			if tile == nil { Task { onFinishReordering() } }
+		}
 	}
 
 	/// The lifted tile above the mosaic, under the finger, a little larger and higher than its neighbours.

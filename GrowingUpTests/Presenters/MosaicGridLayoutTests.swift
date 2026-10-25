@@ -73,6 +73,38 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(grid.slot(at: CGPoint(x: 380, y: 2000), count: 5, width: 393), 4, "Past the last tile")
 	}
 
+	func testOnlyAPointOnATileHitsIt() {
+		let grid = MosaicGridLayout(size: CGSize(width: 393, height: 852), count: 5)
+		let first = grid.origin(ofSlot: 0, width: 393)
+		let second = grid.origin(ofSlot: 1, width: 393)
+		func hit(_ left: CGFloat, _ top: CGFloat) -> Int? {
+			grid.slot(ofTileAt: CGPoint(x: left, y: top), count: 5, width: 393, cornerRadius: 22)
+		}
+		XCTAssertEqual(hit(first.x + 10, first.y + 30), 0, "Inside a tile")
+		XCTAssertEqual(hit(second.x + grid.tileWidth / 2, second.y + grid.tileHeight / 2), 1)
+		XCTAssertEqual(hit(first.x + 22, first.y + 1), 0, "The straight edge beside a corner")
+		XCTAssertNil(hit(first.x + 1, first.y + 1), "A tile's rounded corner")
+		XCTAssertNil(hit(first.x + grid.tileWidth - 1, first.y + grid.tileHeight - 1), "The opposite rounded corner")
+		XCTAssertNil(hit(6, first.y + 100), "The leading margin")
+		XCTAssertNil(hit((first.x + grid.tileWidth + second.x) / 2, first.y + 100), "The gap between tiles")
+		XCTAssertNil(hit(200, 6), "The top margin")
+		XCTAssertNil(hit(first.x + 50, first.y + grid.tileHeight + 6), "The gap between rows")
+		let sixth = grid.origin(ofSlot: 5, width: 393)
+		XCTAssertNil(hit(sixth.x + 50, sixth.y + 50), "The empty slot after the last tile")
+		XCTAssertNil(hit(100, 2000), "Below the last row")
+		let empty = MosaicGridLayout(size: CGSize(width: 393, height: 852), count: 0)
+		XCTAssertNil(empty.slot(ofTileAt: CGPoint(x: 100, y: 100), count: 0, width: 393, cornerRadius: 22), "An empty mosaic")
+	}
+
+	func testTheEmptySlotOfAnEvenColumnMosaicIsNoTile() {
+		let grid = MosaicGridLayout(size: CGSize(width: 951, height: 600), count: 3, evenColumns: true)
+		let empty = grid.origin(ofSlot: 3, width: 951)
+		let third = grid.origin(ofSlot: 2, width: 951)
+		let centre = { (origin: CGPoint) in CGPoint(x: origin.x + grid.tileWidth / 2, y: origin.y + grid.tileHeight / 2) }
+		XCTAssertNil(grid.slot(ofTileAt: centre(empty), count: 3, width: 951, cornerRadius: 22))
+		XCTAssertEqual(grid.slot(ofTileAt: centre(third), count: 3, width: 951, cornerRadius: 22), 2)
+	}
+
 	func testTheEmptySlotOfAnOddLandscapeMosaicTakesTheLastTile() {
 		let grid = MosaicGridLayout(size: CGSize(width: 951, height: 600), count: 3, evenColumns: true)
 		XCTAssertEqual(grid.columns, 4)

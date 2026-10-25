@@ -26,14 +26,16 @@ final class ReorderingTests: XCTestCase {
 		XCTAssertFalse(add.exists, "Done takes the Add button's place")
 		XCTAssertEqual(mosaicOrder(), ["Boris", "Clara", "Daria", "Alice", "Evan", "Farah"])
 		checkpoint("mosaic-reordering")
-		// While reordering, a tap on a tile opens nobody.
-		tile("Boris").tap()
+		// While reordering, a tap on a tile opens nobody and keeps reordering.
+		tapTile("Boris")
 		XCTAssertFalse(app.buttons["person.name"].waitForExistence(timeout: 1))
-		// A tap on the gap between the tiles finishes reordering, like Done.
+		XCTAssertTrue(done.exists)
+		// A tap on the gap between the tiles finishes reordering, like Done, and opens neither neighbour.
 		let gap = CGVector(dx: (tile("Boris").frame.maxX + tile("Clara").frame.minX) / 2, dy: tile("Boris").frame.midY)
 		app.coordinate(withNormalizedOffset: .zero).withOffset(gap).tap()
 		XCTAssertTrue(add.waitForExistence(timeout: 5))
 		XCTAssertFalse(done.exists)
+		XCTAssertFalse(app.buttons["person.name"].waitForExistence(timeout: 1))
 		// A press that lets go without moving starts reordering too, and letting go opens nobody.
 		tile("Boris").press(forDuration: 1)
 		XCTAssertTrue(done.waitForExistence(timeout: 5))
@@ -45,7 +47,7 @@ final class ReorderingTests: XCTestCase {
 		relaunch()
 		XCTAssertEqual(mosaicOrder(), ["Boris", "Clara", "Daria", "Alice", "Evan", "Farah"])
 		// The viewer pages through people in the new order.
-		tile("Daria").tap()
+		tapTile("Daria")
 		let name = app.buttons["person.name"]
 		XCTAssertTrue(waitFor(name, label: "Daria"))
 		app.swipeLeft()
@@ -115,6 +117,12 @@ final class ReorderingTests: XCTestCase {
 
 	private func tile(_ name: String) -> XCUIElement {
 		tiles.matching(NSPredicate(format: "label BEGINSWITH %@", name + ",")).firstMatch
+	}
+
+	/// Taps the centre of `name`'s tile with a real touch: iPhone Duo can keep an empty window over the app that XCTest
+	/// takes as covering the tile, so a plain tap would land on its rounded corner.
+	private func tapTile(_ name: String) {
+		tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 	}
 
 	private func waitFor(_ element: XCUIElement, label: String) -> Bool {
