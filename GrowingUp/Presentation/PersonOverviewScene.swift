@@ -74,7 +74,7 @@ struct PersonOverviewScene: View {
 			do { try await Task.sleep(for: .seconds(ConfettiStyle.duration)) } catch { return }
 			burstStarted = nil
 		}
-		.task(id: person.appPicId) { await presenter.load(person: person) }
+		.task(id: PersonPictureCandidates.ids(of: person)) { await presenter.load(person: person) }
 		.onDisappear {
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
@@ -86,7 +86,6 @@ struct PersonOverviewScene: View {
 				do { try await Task.sleep(for: .seconds(1)) } catch { break }
 			}
 		}
-		.sceneError($presenter.error)
 	}
 
 	/// The age at the top and the birthday card at the bottom, with the middle left to the photo.
@@ -122,7 +121,7 @@ struct PersonOverviewScene: View {
 	private var photo: some View {
 		ZStack {
 			Color.black
-			photoOrPlaceholder
+			photoOrMonogram
 			scrim
 		}
 	}
@@ -132,15 +131,15 @@ struct PersonOverviewScene: View {
 		HStack(spacing: 0) {
 			ZStack {
 				Color.black
-				photoOrPlaceholder
+				photoOrMonogram
 			}
 			.frame(width: pageSize.width / 2)
 			ZStack {
 				Color.black
 				if let image = presenter.image {
 					filling(image).blur(radius: 60, opaque: true)
-				} else {
-					PersonPhotoPlaceholder(showsShrug: false)
+				} else if presenter.showsMonogram {
+					PersonMonogram(id: person.id, name: person.name).blur(radius: 60, opaque: true)
 				}
 				Color.black.opacity(0.45)
 				scrim
@@ -148,11 +147,12 @@ struct PersonOverviewScene: View {
 		}
 	}
 
-	@ViewBuilder private var photoOrPlaceholder: some View {
+	/// The photo, or the monogram once no photo loads; black while one loads, so a photo never flashes the monogram first.
+	@ViewBuilder private var photoOrMonogram: some View {
 		if let image = presenter.image {
 			filling(image)
-		} else {
-			PersonPhotoPlaceholder()
+		} else if presenter.showsMonogram {
+			PersonMonogram(id: person.id, name: person.name)
 		}
 	}
 

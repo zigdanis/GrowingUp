@@ -2,6 +2,7 @@ import SwiftUI
 
 /// The edit mode's photo, filling the window exactly as the viewer's page does until a pinch zooms it or a drag moves it.
 /// The thirds grid over the crop frame shows that the gestures now belong to the photo; double-tapping puts it back.
+/// Without a photo it shows the person's monogram, as their page does.
 struct EditModePhoto: View {
 	let mode: PersonEditModePresenter
 	let window: CGSize
@@ -15,9 +16,9 @@ struct EditModePhoto: View {
 					.accessibilityIdentifier("editor.appPhoto.loaded")
 				guides(geometry.frameRect)
 					.accessibilityHidden(true)
-			} else if mode.editor.appImage == nil {
-				PersonPhotoPlaceholder()
-					.accessibilityHidden(true)
+			} else if mode.editor.appImage == nil, let person = mode.editor.person {
+				// The monogram the person's tile and page show without a photo, taking the edited name's initial.
+				PersonMonogram(id: person.id, name: mode.editor.name)
 			}
 			// While a saved photo loads, the viewer's page shows through, so the switch into edit mode never flashes.
 		}

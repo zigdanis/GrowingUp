@@ -39,6 +39,8 @@
 		ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */; };
 		ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177A5032D09303945B40C8 /* PersonEditorHero.swift */; };
 		ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17002F611FE46339590755 /* PersonImageLoader.swift */; };
+		ACE8F4BF5B048818C6A2AA13 /* PersonPictureCandidates.swift in Sources */ = {isa = PBXBuildFile; fileRef = E69652898AB5AFB2281DE37C /* PersonPictureCandidates.swift */; };
+		717652D8E842D301AAE46EA7 /* PersonMonogram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28251A3DB09CF303FD8B9612 /* PersonMonogram.swift */; };
 		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
 		8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */; };
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
@@ -227,7 +229,6 @@
 		0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */; };
 		2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BED79DB5591DDB2C925728A /* EditModeFields.swift */; };
 		962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */; };
-		85FB66D749BD4B5623A4AC53 /* PersonPhotoPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */; };
 		15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */; };
 		AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40165AC65764622424D2E29 /* EditModeControlLabel.swift */; };
 		26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */; };
@@ -252,6 +253,7 @@
 		47F91BDB15D345441CFF1C01 /* MosaicPicturesPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */; };
 		3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */; };
 		C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */; };
+		849221E116FFFE34DDE990EC /* PersonPictureCandidatesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDCEC4C18D1BDE046EA7C3C /* PersonPictureCandidatesTests.swift */; };
 		ED1844113AB9605B329116D0 /* PeopleReorderingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */; };
 		0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0015B5F413251C88922327A /* AgeTicker.swift */; };
 		143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */; };
@@ -376,6 +378,8 @@
 		ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorChips.swift; sourceTree = "<group>"; };
 		ED177A5032D09303945B40C8 /* PersonEditorHero.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorHero.swift; sourceTree = "<group>"; };
 		ED17002F611FE46339590755 /* PersonImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImageLoader.swift; sourceTree = "<group>"; };
+		E69652898AB5AFB2281DE37C /* PersonPictureCandidates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPictureCandidates.swift; sourceTree = "<group>"; };
+		28251A3DB09CF303FD8B9612 /* PersonMonogram.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonMonogram.swift; sourceTree = "<group>"; };
 		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
 		B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenterTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
@@ -564,7 +568,6 @@
 		D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControls.swift; sourceTree = "<group>"; };
 		7BED79DB5591DDB2C925728A /* EditModeFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeFields.swift; sourceTree = "<group>"; };
 		AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePhoto.swift; sourceTree = "<group>"; };
-		62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoPlaceholder.swift; sourceTree = "<group>"; };
 		C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeToggleStyle.swift; sourceTree = "<group>"; };
 		D40165AC65764622424D2E29 /* EditModeControlLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControlLabel.swift; sourceTree = "<group>"; };
 		A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenter.swift; sourceTree = "<group>"; };
@@ -589,6 +592,7 @@
 		A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenter.swift; sourceTree = "<group>"; };
 		6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesPresenterTests.swift; sourceTree = "<group>"; };
 		9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleSelectionTests.swift; sourceTree = "<group>"; };
+		5BDCEC4C18D1BDE046EA7C3C /* PersonPictureCandidatesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPictureCandidatesTests.swift; sourceTree = "<group>"; };
 		ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleReorderingTests.swift; sourceTree = "<group>"; };
 		A0015B5F413251C88922327A /* AgeTicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTicker.swift; sourceTree = "<group>"; };
 		6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayCountdown.swift; sourceTree = "<group>"; };
@@ -1015,6 +1019,7 @@
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 				6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
+				5BDCEC4C18D1BDE046EA7C3C /* PersonPictureCandidatesTests.swift */,
 				ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */,
 				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
 				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
@@ -1120,6 +1125,8 @@
 				ED17FE8A3B5126139E43C38F /* PersonEditorChips.swift */,
 				ED177A5032D09303945B40C8 /* PersonEditorHero.swift */,
 				ED17002F611FE46339590755 /* PersonImageLoader.swift */,
+				E69652898AB5AFB2281DE37C /* PersonPictureCandidates.swift */,
+				28251A3DB09CF303FD8B9612 /* PersonMonogram.swift */,
 				449ED61637164BFF288A6770 /* PeoplePresenter.swift */,
 				7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */,
 				D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */,
@@ -1153,7 +1160,6 @@
 				D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */,
 				7BED79DB5591DDB2C925728A /* EditModeFields.swift */,
 				AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */,
-				62A34B8F6F694F723CFD6FC9 /* PersonPhotoPlaceholder.swift */,
 				C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */,
 				D40165AC65764622424D2E29 /* EditModeControlLabel.swift */,
 				A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */,
@@ -1654,6 +1660,7 @@
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 				3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
+				849221E116FFFE34DDE990EC /* PersonPictureCandidatesTests.swift in Sources */,
 				ED1844113AB9605B329116D0 /* PeopleReorderingTests.swift in Sources */,
 				8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */,
 				20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */,
@@ -1671,6 +1678,8 @@
 				ED176BBA962F8291B72FBDF3 /* PersonEditorChips.swift in Sources */,
 				ED17583042D70491124A354C /* PersonEditorHero.swift in Sources */,
 				ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */,
+				ACE8F4BF5B048818C6A2AA13 /* PersonPictureCandidates.swift in Sources */,
+				717652D8E842D301AAE46EA7 /* PersonMonogram.swift in Sources */,
 				A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */,
 				A50000000000000000000002 /* AgeEntry.swift in Sources */,
 				A50000000000000000000003 /* EmptyWidgetView.swift in Sources */,
@@ -1746,7 +1755,6 @@
 				0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */,
 				2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */,
 				962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */,
-				85FB66D749BD4B5623A4AC53 /* PersonPhotoPlaceholder.swift in Sources */,
 				15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */,
 				AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */,
 				26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */,

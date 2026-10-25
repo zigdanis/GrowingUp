@@ -152,9 +152,10 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.birthday, calendar.date(from: DateComponents(year: 2026, month: 10, day: 4, hour: 18, minute: 30))!)
 	}
 
-	func testOverviewAgeUsesProvidedClockAndClearsMissingPicture() async {
+	func testOverviewAgeUsesProvidedClockAndShowsTheMonogramWithoutPictures() async {
 		var person = Person.createPerson()
 		person.appPicId = nil
+		person.widgetPicId = nil
 		let presenter = OverviewPresenter(loadImage: { _ in
 			XCTFail("No image to load"); return UIImage()
 		})
@@ -163,6 +164,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.summary, AgeSummary(birthday: person.birthday, now: now, finestUnit: .minutes))
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
+		XCTAssertTrue(presenter.showsMonogram)
 	}
 	func testFourthAndSixthPinsSaveWithAvailableCapacity() async {
 		for count in [3, 5] {
