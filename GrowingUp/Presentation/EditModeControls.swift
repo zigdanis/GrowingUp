@@ -3,15 +3,26 @@ import SwiftUI
 /// The edit mode's round controls along the bottom, all the same size: the photo's source menu, the widget and birthday
 /// switches, the widget picture's framing and, always last, removal. A new person has no removal, and no widget picture
 /// until they have a photo.
+///
+/// They share one row; when their titles do not fit, as at accessibility text sizes, the actions wrap under the photo
+/// and the switches.
 struct EditModeControls: View {
 	let mode: PersonEditModePresenter
 	@Binding var photoRequest: PhotoRequest?
 	let onFrameWidgetPicture: () -> Void
 
 	var body: some View {
-		HStack(alignment: .top, spacing: 8) {
-			settings
-			actions
+		ViewThatFits(in: .horizontal) {
+			HStack(alignment: .top, spacing: 8) {
+				settings
+				actions
+			}
+			Grid(horizontalSpacing: 8, verticalSpacing: 16) {
+				GridRow(alignment: .top) { settings }
+				if mode.showsWidgetPictureButton || mode.showsRemoveButton {
+					GridRow(alignment: .top) { actions }
+				}
+			}
 		}
 	}
 
@@ -56,6 +67,7 @@ struct EditModeControls: View {
 				}
 			}
 			.buttonStyle(.plain)
+			.accessibilityLabel(Text("Remove"))
 			.accessibilityIdentifier("editor.remove")
 			.frame(maxWidth: .infinity)
 		}

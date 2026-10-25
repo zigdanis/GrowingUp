@@ -116,6 +116,13 @@ final class PeoplePresenter {
 		selectedID = id
 	}
 
+	/// The person `offset` places from the one with `id` in mosaic order, such as the viewer's next page; nil past either
+	/// end.
+	func neighbour(of id: UUID, by offset: Int) -> UUID? {
+		guard let index = persons.firstIndex(where: { $0.id == id }), persons.indices.contains(index + offset) else { return nil }
+		return persons[index + offset].id
+	}
+
 	/// Finishes what waited for the cover to close: a removed person's tile leaves the mosaic, and a new person's page is
 	/// gone. A cover opened again meanwhile keeps what it shows.
 	func coverDidClose() {
@@ -143,7 +150,19 @@ final class PeoplePresenter {
 	/// Moves the person with `id` to `index` of the mosaic while reordering, such as under a dragged tile; `saveOrder()`
 	/// then stores the new order.
 	func move(_ id: UUID, to index: Int) {
-		guard isReordering, let source = persons.firstIndex(where: { $0.id == id }) else { return }
+		guard isReordering else { return }
+		place(id, at: index)
+	}
+
+	/// Moves the person with `id` `offset` places along the mosaic, as VoiceOver's "Move earlier" and "Move later" do on
+	/// a tile; unlike a drag it needs no reordering. `saveOrder()` then stores the new order.
+	func shift(_ id: UUID, by offset: Int) {
+		guard let index = persons.firstIndex(where: { $0.id == id }) else { return }
+		place(id, at: index + offset)
+	}
+
+	private func place(_ id: UUID, at index: Int) {
+		guard let source = persons.firstIndex(where: { $0.id == id }) else { return }
 		let destination = min(max(index, 0), persons.count - 1)
 		guard source != destination else { return }
 		var reordered = persons

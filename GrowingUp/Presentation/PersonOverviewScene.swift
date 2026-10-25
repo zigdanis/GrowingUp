@@ -8,6 +8,9 @@ struct PersonOverviewScene: View {
 	let onEdit: () -> Void
 	/// Returns to the mosaic, for VoiceOver's escape gesture and actions.
 	let onClose: () -> Void
+	/// Pages to the next or previous person, for VoiceOver, which reads people without swiping; nil at that end.
+	let onNext: (() -> Void)?
+	let onPrevious: (() -> Void)?
 	let safeAreaInsets: EdgeInsets
 	let layout: PersonPageLayout
 	/// The whole window, safe areas included, since the page draws edge to edge.
@@ -15,17 +18,22 @@ struct PersonOverviewScene: View {
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
 	@State private var burstStarted: Date?
+	/// VoiceOver lands on the age of a page the pager arrives at, such as after its "Next person" action.
+	@AccessibilityFocusState private var isAgeFocused: Bool
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 
 	init(
 		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
-		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void
+		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void, onNext: (() -> Void)?,
+		onPrevious: (() -> Void)?
 	) {
 		self.person = person
 		self.isSelected = isSelected
 		self.onEdit = onEdit
 		self.onClose = onClose
+		self.onNext = onNext
+		self.onPrevious = onPrevious
 		self.safeAreaInsets = safeAreaInsets
 		self.layout = layout
 		self.pageSize = pageSize
@@ -75,6 +83,9 @@ struct PersonOverviewScene: View {
 			burstStarted = nil
 		}
 		.task(id: PersonPictureCandidates.ids(of: person)) { await presenter.load(person: person) }
+		.onChange(of: isSelected) { _, selected in
+			if selected { isAgeFocused = true }
+		}
 		.onDisappear {
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
@@ -190,8 +201,17 @@ struct PersonOverviewScene: View {
 		// like a tap anywhere on the page.
 		.accessibilityAction(.default, onEdit)
 		.accessibilityAction(named: Text("Edit"), onEdit)
+		.accessibilityActions {
+			if let onNext {
+				Button("Next person", action: onNext)
+			}
+			if let onPrevious {
+				Button("Previous person", action: onPrevious)
+			}
+		}
 		.accessibilityAction(named: Text("All people"), onClose)
 		.accessibilityAction(.escape, onClose)
+		.accessibilityFocused($isAgeFocused)
 		.padding(.horizontal, 24)
 	}
 }

@@ -8,6 +8,8 @@ import SwiftUI
 /// the shown page into its in-place edit mode, which locks both swipes until Cancel or Done.
 struct PersonViewer: View {
 	let presenter: PeoplePresenter
+	@Environment(\.accessibilityReduceMotion)
+	private var reduceMotion
 
 	var body: some View {
 		let editMode = presenter.editMode
@@ -51,7 +53,9 @@ struct PersonViewer: View {
 							person: person, isSelected: presenter.selectedID == person.id, configurator: presenter.configurator,
 							safeAreaInsets: safeAreaInsets, layout: layout, pageSize: window,
 							onEdit: { presenter.edit(person) },
-							onClose: presenter.closeViewer
+							onClose: presenter.closeViewer,
+							onNext: pageAction(from: person, by: 1),
+							onPrevious: pageAction(from: person, by: -1)
 						)
 						.containerRelativeFrame([.horizontal, .vertical])
 						.id(person.id)
@@ -71,6 +75,15 @@ struct PersonViewer: View {
 			// A freshly presented pager starts on its first page whatever its position says, so it moves to the tapped person
 			// before the zoom reveals it.
 			.onAppear { proxy.scrollTo(presenter.selectedID) }
+		}
+	}
+
+	/// Pages from `person` to their neighbour `offset` places along, as VoiceOver's "Next person" and "Previous person"
+	/// do; nil past either end.
+	private func pageAction(from person: Person, by offset: Int) -> (() -> Void)? {
+		guard let neighbour = presenter.neighbour(of: person.id, by: offset) else { return nil }
+		return {
+			withAnimation(reduceMotion ? nil : .default) { presenter.select(neighbour) }
 		}
 	}
 

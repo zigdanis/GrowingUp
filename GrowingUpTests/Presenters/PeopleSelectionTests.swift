@@ -99,6 +99,19 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertEqual(presenter.selectedID, people[2].id)
 	}
 
+	func testNeighboursFollowTheMosaicOrderAndEndAtEitherEnd() async {
+		let people = makePeople(count: 3)
+		let presenter = await loadedPresenter(people)
+		XCTAssertEqual(presenter.neighbour(of: people[1].id, by: 1), people[2].id)
+		XCTAssertEqual(presenter.neighbour(of: people[1].id, by: -1), people[0].id)
+		XCTAssertNil(presenter.neighbour(of: people[2].id, by: 1))
+		XCTAssertNil(presenter.neighbour(of: people[0].id, by: -1))
+		XCTAssertNil(presenter.neighbour(of: UUID(), by: 1))
+		presenter.view(people[0].id)
+		presenter.select(presenter.neighbour(of: people[0].id, by: 1)!)
+		XCTAssertEqual(presenter.selectedID, people[1].id, "VoiceOver's Next person pages the viewer")
+	}
+
 	func testAWidgetLinkClosesTheEditorAndOpensThePersonOverTheMosaic() async {
 		let people = makePeople(count: 2)
 		let presenter = await loadedPresenter(people)

@@ -111,6 +111,10 @@
 /* VoiceOver action on a person page that returns to the mosaic of everyone. */
 "All people" = "Все люди";
 
+/* VoiceOver actions on a person page that page to the next or previous person in mosaic order. */
+"Next person" = "Следующий";
+"Previous person" = "Предыдущий";
+
 /* Headline of the empty mosaic. */
 "Who is growing up?" = "Кто растёт?";
 

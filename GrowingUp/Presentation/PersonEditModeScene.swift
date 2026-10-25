@@ -25,6 +25,9 @@ struct PersonEditModeScene: View {
 				.frame(maxWidth: columnWidth)
 				.frame(maxWidth: .infinity)
 				.disabled(editor.isBusy || editor.isLoading || mode.isFinishing)
+				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
+				.accessibilityElement(children: .contain)
+				.accessibilityAction(.escape) { mode.cancel() }
 			if let popover = mode.popover {
 				EditModePopoverCard(
 					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
@@ -73,7 +76,16 @@ struct PersonEditModeScene: View {
 	}
 
 	/// The fields at the top and the controls at the bottom, clear of the safe areas, with the middle left to the photo.
+	/// When the largest text sizes leave them no room, as on a small iPhone, they scroll rather than clip.
 	private var controls: some View {
+		ViewThatFits(in: .vertical) {
+			stack
+			ScrollView { stack }
+				.scrollBounceBehavior(.basedOnSize)
+		}
+	}
+
+	private var stack: some View {
 		VStack(spacing: 0) {
 			topBar
 				.padding(.bottom, 16)
@@ -89,6 +101,8 @@ struct PersonEditModeScene: View {
 		.padding(.trailing, safeAreaInsets.trailing)
 	}
 
+	/// Cancel and Done keep to one line, growing up to a size that leaves room for both; beyond it, a long press shows
+	/// them in the large content viewer, as a navigation bar does.
 	private var topBar: some View {
 		HStack {
 			Button {
@@ -103,6 +117,7 @@ struct PersonEditModeScene: View {
 			.modifier(GlassCapsuleButtonChrome(prominent: false))
 			.controlSize(.large)
 			.disabled(!mode.canCancel)
+			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.cancel")
 			Spacer()
 			Button {
@@ -120,8 +135,11 @@ struct PersonEditModeScene: View {
 			.buttonStyle(.plain)
 			.opacity(mode.canSave ? 1 : 0.45)
 			.disabled(!mode.canSave)
+			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.save")
 		}
+		.lineLimit(1)
+		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
 	}
 
 	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.

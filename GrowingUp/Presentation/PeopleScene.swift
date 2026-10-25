@@ -73,7 +73,7 @@ struct PeopleScene: View {
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
 				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view,
 				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
-				onSaveOrder: presenter.saveOrder
+				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
 			)
 			.transition(.opacity)
 		}

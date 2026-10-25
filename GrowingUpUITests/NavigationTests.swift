@@ -57,12 +57,56 @@ final class NavigationTests: XCTestCase {
 	func testLargestTextKeepsTheBirthdayLineWholeOnScreen() {
 		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
 		XCTAssertTrue(app.buttons["person.add"].isHittable)
+		XCTAssertEqual(tile("Alice").label, "Alice, 5 years, 3 months", "VoiceOver reads a tile as its name and age, once")
+		checkpoint("large-text-mosaic")
 		tile("Alice").tap()
 		let countdown = app.staticTexts["birthday.countdown"]
 		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
 		// The line wraps its countdown rather than truncating it and stays on screen.
 		XCTAssertLessThanOrEqual(countdown.frame.maxY, app.frame.maxY)
 		checkpoint("large-text-viewer")
+	}
+
+	func testLargestTextKeepsEveryEditModeControlOnScreen() {
+		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+		tile("Alice").tap()
+		XCTAssertTrue(waitFor(personName, label: "Alice"))
+		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: personName)], timeout: 5)
+		personName.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
+		// Alice has a photo, so all five round controls show.
+		assertOnScreen(editModeControls + ["editor.widgetPhoto.reframe", "editor.remove"])
+		checkpoint("large-text-edit-mode")
+		app.buttons["editor.cancel"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		closeViewer()
+		app.buttons["person.add"].tap()
+		let name = app.textFields["editor.name"]
+		XCTAssertTrue(name.waitForExistence(timeout: 5))
+		// Return hides the keyboard, which covers the round controls while the name is typed.
+		name.typeText("\n")
+		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
+		assertOnScreen(editModeControls)
+		checkpoint("large-text-new-person")
+	}
+
+	/// The edit mode's fields, its Cancel and Done, and the round controls every person has.
+	private var editModeControls: [String] {
+		[
+			"editor.name", "editor.birthDate", "editor.birthTime", "editor.cancel", "editor.save", "editor.appPhoto", "editor.pin",
+			"editor.celebrate"
+		]
+	}
+
+	/// Each control exists, takes a tap and lies whole inside the window.
+	private func assertOnScreen(_ identifiers: [String], file: StaticString = #filePath, line: UInt = #line) {
+		let window = app.windows.firstMatch.frame
+		for identifier in identifiers {
+			let element = app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+			XCTAssertTrue(element.waitForExistence(timeout: 5), identifier, file: file, line: line)
+			XCTAssertTrue(element.isHittable, identifier, file: file, line: line)
+			XCTAssertTrue(window.contains(element.frame), "\(identifier) at \(element.frame) leaves \(window)", file: file, line: line)
+		}
 	}
 
 	private func launch(appearance: UITestAppearance, contentSize: String = "UICTContentSizeCategoryL") {

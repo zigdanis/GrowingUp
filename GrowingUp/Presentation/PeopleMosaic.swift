@@ -23,6 +23,8 @@ struct PeopleMosaic: View {
 	let onFinishReordering: () -> Void
 	/// Moves a person to an index of the mosaic while reordering.
 	let onMove: (UUID, Int) -> Void
+	/// Moves a person some places along the mosaic without reordering, for VoiceOver.
+	let onShift: (UUID, Int) -> Void
 	/// Stores the mosaic's order once a moved tile lands.
 	let onSaveOrder: () async -> Void
 
@@ -99,8 +101,8 @@ struct PeopleMosaic: View {
 			},
 			onDrop: { drop(person.id) },
 			onStartReordering: onStartReordering,
-			onMoveEarlier: index > 0 ? { moveByAccessibility(person.id, to: index - 1) } : nil,
-			onMoveLater: index < persons.count - 1 ? { moveByAccessibility(person.id, to: index + 1) } : nil)
+			onMoveEarlier: index > 0 ? { shift(person.id, by: -1) } : nil,
+			onMoveLater: index < persons.count - 1 ? { shift(person.id, by: 1) } : nil)
 	}
 
 	/// A tap beside or below the tiles, which finishes reordering.
@@ -165,8 +167,8 @@ struct PeopleMosaic: View {
 		Task { await onSaveOrder() }
 	}
 
-	private func moveByAccessibility(_ id: UUID, to index: Int) {
-		onMove(id, index)
+	private func shift(_ id: UUID, by offset: Int) {
+		withAnimation(.snappy(duration: 0.25)) { onShift(id, offset) }
 		Task { await onSaveOrder() }
 	}
 
