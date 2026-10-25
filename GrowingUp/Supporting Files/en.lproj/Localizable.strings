@@ -80,8 +80,6 @@
 /* Message for the alert shown when a tapped photo fails to load */
 "The photo couldn't be loaded. Try again or pick another." = "The photo couldn't be loaded. Try again or pick another.";
 
-"Save" = "Save";
-
 "OK" = "OK";
 
 "Photo" = "Photo";
@@ -119,14 +117,12 @@
 /* Invitation under the headline of the empty mosaic. */
 "Add someone you love and watch their age count up, live to the second." = "Add someone you love and watch their age count up, live to the second.";
 
-/* Person editor. */
+/* Edit mode: the photo menu and the switches. */
 "Change photo" = "Change photo";
 "Add a photo" = "Add a photo";
-"Born" = "Born";
 "On widget" = "On widget";
 "Celebrate birthdays" = "Celebrate birthdays";
 "Widget picture" = "Widget picture";
-"Reframe" = "Reframe";
 /* In-place edit mode of a person page. */
 "Done" = "Done";
 "Widget" = "Widget";

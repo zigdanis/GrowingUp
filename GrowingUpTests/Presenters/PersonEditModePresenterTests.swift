@@ -9,16 +9,18 @@ final class PersonEditModePresenterTests: XCTestCase {
 	private let calendar = Calendar.current
 	private let phone = CGSize(width: 300, height: 600)
 
-	func testATapEditsInPlaceAndNeverOpensTheSheet() async {
+	func testATapEditsInPlaceAndANewPersonReplacesIt() async throws {
 		let (presenter, _) = await viewing(count: 2)
 		let people = presenter.persons
 		presenter.edit(people[0])
-		XCTAssertNotNil(presenter.editMode)
-		XCTAssertTrue(presenter.editMode?.editor === presenter.editor, "The in-place session owns editing")
-		XCTAssertNil(presenter.sheetEditor)
+		let editing = try XCTUnwrap(presenter.editMode)
+		XCTAssertTrue(editing.editor === presenter.editor, "The in-place session owns editing")
+		XCTAssertFalse(editing.isNewPerson)
+		XCTAssertTrue(editing.showsRemoveButton)
 		presenter.add()
-		XCTAssertNil(presenter.editMode, "A new person's session replaces the in-place one")
-		XCTAssertNotNil(presenter.sheetEditor)
+		let adding = try XCTUnwrap(presenter.editMode, "A new person's session replaces the in-place one")
+		XCTAssertFalse(adding === editing)
+		XCTAssertTrue(adding.isNewPerson)
 	}
 
 	func testCancelDropsTheDraftWithoutAQuestion() async throws {
@@ -162,6 +164,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		XCTAssertFalse(mode.isConfirmingRemoval)
 		XCTAssertFalse(presenter.isViewing)
 		XCTAssertNil(presenter.editMode)
+		presenter.coverDidClose()
 		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id])
 	}
 
@@ -195,7 +198,8 @@ final class PersonEditModePresenterTests: XCTestCase {
 		replaced.cancel()
 		XCTAssertNotNil(adding)
 		XCTAssertTrue(presenter.editor === adding)
-		XCTAssertTrue(presenter.sheetEditor === adding)
+		XCTAssertTrue(presenter.editMode?.editor === adding)
+		XCTAssertTrue(presenter.isViewing)
 	}
 
 	func testClosingTheViewerDropsTheDraft() async throws {
@@ -206,7 +210,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		presenter.closeViewer()
 		XCTAssertFalse(presenter.isViewing)
 		XCTAssertNil(presenter.editor)
-		XCTAssertNil(presenter.sheetEditor, "An in-place draft never reappears as the sheet")
+		XCTAssertNil(presenter.editMode)
 	}
 }
 

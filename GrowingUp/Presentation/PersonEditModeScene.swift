@@ -2,7 +2,8 @@ import Core
 import SwiftUI
 
 /// The viewer's page of an existing person, turned editable in place: the photo frames under a thirds grid, the name
-/// becomes a field, the birthday turns into date and time capsules, and round controls line the bottom.
+/// becomes a field, the birthday turns into date and time capsules, and round controls line the bottom. A new person
+/// gets the same screen, empty, with the keyboard up on the name.
 ///
 /// Only Cancel and Done leave it; `PersonViewer` locks its swipes meanwhile.
 struct PersonEditModeScene: View {
@@ -37,6 +38,10 @@ struct PersonEditModeScene: View {
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
 		.task { await editor.load() }
+		// A new person is named first, as soon as the loaded fields take input; the photo can follow.
+		.onChange(of: editor.isLoading) { _, isLoading in
+			if !isLoading, mode.isNewPerson { isNameFocused = true }
+		}
 		.task(id: editor.appImage?.id) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
 		.alert(mode.removalTitle, isPresented: $mode.isConfirmingRemoval) {

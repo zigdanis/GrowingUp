@@ -1,38 +1,51 @@
 import SwiftUI
 
 /// The edit mode's round controls along the bottom, all the same size: the photo's source menu, the widget and birthday
-/// switches, the widget picture's framing and, always last, removal.
+/// switches, the widget picture's framing and, always last, removal. A new person has no removal, and no widget picture
+/// until they have a photo.
 struct EditModeControls: View {
 	let mode: PersonEditModePresenter
 	@Binding var photoRequest: PhotoRequest?
 	let onFrameWidgetPicture: () -> Void
 
 	var body: some View {
-		@Bindable var editor = mode.editor
 		HStack(alignment: .top, spacing: 8) {
-			PersonPhotoMenu(presenter: editor, photoRequest: $photoRequest) {
-				EditModeControlLabel {
-					Text("Photo")
-				} glyph: {
-					Image(systemName: "camera.fill")
-				}
+			settings
+			actions
+		}
+	}
+
+	/// The photo and the two switches, which every person has.
+	@ViewBuilder private var settings: some View {
+		@Bindable var editor = mode.editor
+		PersonPhotoMenu(presenter: editor, photoRequest: $photoRequest) {
+			EditModeControlLabel {
+				Text("Photo")
+			} glyph: {
+				Image(systemName: "camera.fill")
 			}
-			.buttonStyle(.plain)
+		}
+		.buttonStyle(.plain)
+		.frame(maxWidth: .infinity)
+		Toggle(isOn: $editor.isOnWidget) { Text("Widget") }
+			.toggleStyle(EditModeToggleStyle(systemImage: "square.grid.2x2.fill"))
+			.accessibilityLabel(Text("On widget"))
+			.accessibilityIdentifier("editor.pin")
 			.frame(maxWidth: .infinity)
-			Toggle(isOn: $editor.isOnWidget) { Text("Widget") }
-				.toggleStyle(EditModeToggleStyle(systemImage: "square.grid.2x2.fill"))
-				.accessibilityLabel(Text("On widget"))
-				.accessibilityIdentifier("editor.pin")
+		Toggle(isOn: $editor.celebratesBirthdays) { Text("Celebrate") }
+			.toggleStyle(EditModeToggleStyle(systemImage: "birthday.cake.fill"))
+			.accessibilityLabel(Text("Celebrate birthdays"))
+			.accessibilityIdentifier("editor.celebrate")
+			.frame(maxWidth: .infinity)
+	}
+
+	/// The widget picture's framing and removal, when the person has them.
+	@ViewBuilder private var actions: some View {
+		if mode.showsWidgetPictureButton {
+			widgetPictureButton
 				.frame(maxWidth: .infinity)
-			Toggle(isOn: $editor.celebratesBirthdays) { Text("Celebrate") }
-				.toggleStyle(EditModeToggleStyle(systemImage: "birthday.cake.fill"))
-				.accessibilityLabel(Text("Celebrate birthdays"))
-				.accessibilityIdentifier("editor.celebrate")
-				.frame(maxWidth: .infinity)
-			if mode.showsWidgetPictureButton {
-				widgetPictureButton
-					.frame(maxWidth: .infinity)
-			}
+		}
+		if mode.showsRemoveButton {
 			Button {
 				mode.confirmRemoval()
 			} label: {

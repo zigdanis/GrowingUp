@@ -273,7 +273,8 @@ extension SwiftUIPresenterTests {
 		await presenter.load()
 		XCTAssertNotNil(presenter.editor)
 		XCTAssertNil(presenter.editor?.person)
-		presenter.editor = nil
+		XCTAssertTrue(presenter.editMode?.isNewPerson == true, "The link opens the new person's edit mode")
+		presenter.cancelEditing(presenter.editor)
 		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=1")!)
 		XCTAssertEqual(presenter.selectedID, presenter.persons[1].id)
 		XCTAssertNil(presenter.editor)

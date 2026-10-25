@@ -20,7 +20,8 @@ struct EditModePhoto: View {
 				// The monogram the person's tile and page show without a photo, taking the edited name's initial.
 				PersonMonogram(id: person.id, name: mode.editor.name)
 			}
-			// While a saved photo loads, the viewer's page shows through, so the switch into edit mode never flashes.
+			// While a saved photo loads, the viewer's page shows through, so the switch into edit mode never flashes; a new
+			// person's draft lies on the cover's glow, as it gets its own monogram colour only once added.
 		}
 		.frame(width: window.width, height: window.height)
 		.contentShape(Rectangle())

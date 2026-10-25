@@ -4,7 +4,8 @@ import SwiftUI
 /// The home screen's grid of people tiles in mosaic order; a tile opens that person full screen, zooming out of it.
 ///
 /// A long press on a tile starts reordering: the tile lifts and follows the finger, its neighbours make room live, and
-/// the mosaic scrolls when the finger nears its top or bottom edge.
+/// the mosaic scrolls when the finger nears its top or bottom edge. A removed person's tile fades away as its neighbours
+/// slide into the gap, under the animation the change comes with.
 struct PeopleMosaic: View {
 	private static let contentSpace = NamedCoordinateSpace.named("mosaic.content")
 
@@ -44,6 +45,7 @@ struct PeopleMosaic: View {
 						ForEach(persons, id: \.id) { person in
 							tile(person, grid: grid, width: width)
 								.frame(width: grid.tileWidth, height: grid.tileHeight)
+								.transition(.scale(scale: 0.85).combined(with: .opacity))
 								.id(person.id)
 						}
 					}

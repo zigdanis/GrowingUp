@@ -52,15 +52,51 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertEqual(presenter.persons.last?.id, added.id)
 	}
 
-	func testRemovingTheShownPersonReturnsToTheMosaic() async {
+	func testRemovingTheShownPersonReturnsToTheMosaicWhereTheirTileLeaves() async {
 		let people = makePeople(count: 3)
 		let presenter = await loadedPresenter(people)
 		presenter.view(people[1].id)
 		presenter.edit(people[1])
 		presenter.apply(.removed(people[1]), from: presenter.editor)
 		XCTAssertFalse(presenter.isViewing)
+		XCTAssertEqual(presenter.selectedID, people[1].id, "The viewer zooms back into the removed person's tile")
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "The tile waits for the viewer")
+		presenter.view(people[1].id)
+		XCTAssertFalse(presenter.isViewing, "A leaving tile opens nobody")
+		presenter.coverDidClose()
 		XCTAssertNil(presenter.selectedID)
 		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id])
+	}
+
+	func testRemovingTheLastPersonLeavesTheEmptyMosaic() async throws {
+		let people = makePeople(count: 1)
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(people)
+		gateway.removePersonResultToBeReturned = .success(())
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		await presenter.load()
+		presenter.view(people[0].id)
+		presenter.edit(people[0])
+		let mode = try XCTUnwrap(presenter.editMode)
+		await mode.remove()
+		presenter.coverDidClose()
+		XCTAssertTrue(presenter.persons.isEmpty)
+		XCTAssertFalse(presenter.isViewing)
+		XCTAssertNil(presenter.selectedID)
+		XCTAssertTrue(presenter.canAdd, "The empty mosaic still offers Add")
+	}
+
+	func testAViewerOpenedBeforeTheCoverClosedLetsTheRemovedTileLeave() async {
+		let people = makePeople(count: 3)
+		let presenter = await loadedPresenter(people)
+		presenter.view(people[1].id)
+		presenter.edit(people[1])
+		presenter.apply(.removed(people[1]), from: presenter.editor)
+		presenter.view(people[2].id)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id])
+		presenter.coverDidClose()
+		XCTAssertTrue(presenter.isViewing, "The cover that opened again stays")
+		XCTAssertEqual(presenter.selectedID, people[2].id)
 	}
 
 	func testAWidgetLinkClosesTheEditorAndOpensThePersonOverTheMosaic() async {
@@ -130,6 +166,7 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertEqual(presenter.selectedID, people[2].id)
 		presenter.apply(.removed(people[2]), from: removing)
 		XCTAssertFalse(presenter.isViewing, "Nothing is left to show")
+		presenter.coverDidClose()
 		XCTAssertNil(presenter.selectedID)
 		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id])
 	}

@@ -2,8 +2,8 @@ import Core
 import Observation
 import SwiftUI
 
-/// The viewer's in-place edit mode for an existing person: what the screen shows and does while it edits, on top of the
-/// `PersonEditorPresenter` session that holds the draft and saves or removes it.
+/// The in-place edit mode of an existing person's page or of a new, still empty person: what the screen shows and does
+/// while it edits, on top of the `PersonEditorPresenter` session that holds the draft and saves or removes it.
 ///
 /// The mode only ends through Cancel, which drops the draft at once without asking, or Done, which saves it. Leaving the
 /// app keeps the draft as it is. `PeoplePresenter` owns the session, so a widget link or a newer session that replaces
@@ -69,8 +69,14 @@ final class PersonEditModePresenter {
 		String(localized: "Remove \(editor.person?.name ?? editor.name)?", locale: locale)
 	}
 
+	/// Whether the draft is a new person, who is only added by Done.
+	var isNewPerson: Bool { editor.person == nil }
+
 	/// The widget picture's button only makes sense with a main photo to frame it from.
 	var showsWidgetPictureButton: Bool { editor.appImage != nil }
+
+	/// A new person has nobody to remove yet.
+	var showsRemoveButton: Bool { !isNewPerson }
 
 	/// Whether the photo was moved or zoomed away from how the viewer showed it.
 	var hasReframed: Bool { photo != nil && framing != .identity }
@@ -80,7 +86,7 @@ final class PersonEditModePresenter {
 		!isFinishing && (editor.canSave || (hasReframed && editor.isReadyToSave))
 	}
 
-	/// Cancel waits while a save is in flight, like the editor sheet's.
+	/// Cancel waits while a save is in flight.
 	var canCancel: Bool { !isFinishing && !editor.isBusy }
 
 	// MARK: - Actions

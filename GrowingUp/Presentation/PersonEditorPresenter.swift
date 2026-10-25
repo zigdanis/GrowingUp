@@ -4,8 +4,7 @@ import UIKit
 
 @MainActor
 @Observable
-final class PersonEditorPresenter: Identifiable {
-	let id = UUID()
+final class PersonEditorPresenter {
 	let person: Person?
 	let maximumBirthday: Date
 	let loadImage: (PersonImage) async throws -> UIImage
@@ -23,8 +22,6 @@ final class PersonEditorPresenter: Identifiable {
 	/// it along. A widget picture framed separately, or one saved earlier, is never re-derived.
 	private(set) var widgetPictureIsDerived = false
 	private var birthTimeIsKnown: Bool
-	/// The time of day last known before the toggle was turned off; turning it back on restores it.
-	private var rememberedTime: DateComponents?
 	/// The persisted fields as they were when `load()` finished; `isDirty` compares against it.
 	private var baseline: AddPersonParameters?
 	private let addUseCase: AddPersonUseCase
@@ -62,27 +59,10 @@ final class PersonEditorPresenter: Identifiable {
 	/// Whether the time of birth is known.
 	///
 	/// `CoreDataPerson.birthdate` is a single date without a "has time" flag, so an unknown time is stored as
-	/// local midnight (00:00:00) and the editor shows no time. The toggle loads as on only when the stored time
-	/// of day is not exactly midnight. Turning it off resets the time to midnight but remembers the time of day;
-	/// turning it back on restores that time on the current day, or keeps midnight when no time was known until
-	/// one is picked. A picked time stores its hour and minute with zero seconds. A birth time explicitly picked
-	/// as 00:00 therefore reopens with the toggle off.
-	var hasBirthTime: Bool {
-		get { birthTimeIsKnown }
-		set {
-			let calendar = Calendar.current
-			if !newValue {
-				if birthTimeIsKnown { rememberedTime = calendar.dateComponents([.hour, .minute, .second], from: birthday) }
-				birthTimeIsKnown = false
-				birthday = clamped(calendar.startOfDay(for: birthday))
-			} else if !birthTimeIsKnown {
-				birthTimeIsKnown = true
-				if let time = rememberedTime {
-					updateBirthday(day: birthday, hour: time.hour ?? 0, minute: time.minute ?? 0, second: time.second ?? 0)
-				}
-			}
-		}
-	}
+	/// local midnight (00:00:00), which the time capsule shows. The time counts as known only when the stored time
+	/// of day is not exactly midnight, or once a time is picked; a picked time stores its hour and minute with zero
+	/// seconds. A birth time explicitly picked as 00:00 therefore reopens as unknown.
+	var hasBirthTime: Bool { birthTimeIsKnown }
 
 	/// The calendar day of birth; setting it keeps the time of birth.
 	var dayOfBirth: Date {
