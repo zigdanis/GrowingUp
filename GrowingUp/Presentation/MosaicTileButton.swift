@@ -4,9 +4,8 @@ import SwiftUI
 /// A mosaic tile as a control: a tap opens the person, and a long press lifts the tile to reorder the mosaic, carrying on
 /// into a drag without letting go.
 ///
-/// The long press is the only way into reordering, with no context menu. While reordering the tile rocks, and the
-/// accessibility actions start reordering and move the
-/// tile a place earlier or later.
+/// The long press is the only gesture into reordering, with no context menu; VoiceOver has a "Reorder" action instead.
+/// While reordering the tile rocks, and the accessibility actions move it a place earlier or later.
 struct MosaicTileButton: View {
 	/// How long a press waits before it lifts the tile, a little shorter than a context menu's.
 	static let liftDelay: TimeInterval = 0.4
