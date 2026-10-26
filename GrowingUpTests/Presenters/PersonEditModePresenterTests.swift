@@ -216,7 +216,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 
 /// Framing the main photo in place and the region Done saves from it.
 extension PersonEditModePresenterTests {
-	func testFramingKeepsThePhotoCoveringTheScreenWithinTheZoomLimits() async {
+	func testFramingKeepsThePhotoCoveringTheCropFrameWithinTheZoomLimits() async {
 		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
 		await mode.loadPhoto()
 		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
@@ -235,9 +235,9 @@ extension PersonEditModePresenterTests {
 		mode.endDrag()
 		XCTAssertEqual(mode.framing.offset, CGSize(width: 75, height: 0), "The photo never uncovers the screen")
 		XCTAssertTrue(mode.hasReframed)
-		// A 300 × 400 window is just covered by the 3:4 photo, which leaves no play.
+		// The 300 × 400 window saves a 280 × 400 column, leaving 10 pt to move on each side while keeping it covered.
 		mode.updateCanvas(CGSize(width: 300, height: 400), safeAreaInsets: EdgeInsets())
-		XCTAssertEqual(mode.framing.offset, .zero, "A resized window settles the photo again")
+		XCTAssertEqual(mode.framing.offset, CGSize(width: 10, height: 0), "A resized window keeps the crop column covered")
 	}
 
 	func testReloadingTheSamePhotoKeepsItsFraming() async {
