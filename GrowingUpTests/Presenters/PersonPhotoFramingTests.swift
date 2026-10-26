@@ -69,6 +69,49 @@ final class PersonPhotoFramingTests: XCTestCase {
 		XCTAssertEqual(store.files.count, 3, "Only the original and the two current pictures stay stored")
 	}
 
+	func testAWidePickerCropReopensWithoutTighteningAfterAFieldEditOrSmallDrag() async throws {
+		let window = CGSize(width: 1000, height: 700)
+		let original = quadrants()
+		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets())
+		let picked = await picker.output(of: original, scale: picker.minScale, offset: .zero)
+		let editor = configurator.editor(person: nil, onMutation: { _ in })
+		await editor.load()
+		editor.name = "Wide photo"
+		editor.setMainPhoto(picked)
+		var person = try await save(editor)
+		let pictureID = person.appPicId
+		var mode = await editMode(for: person, window: window)
+		assertFraming(mode.framing, scale: 0.525, offset: .zero)
+		XCTAssertFalse(mode.canSave)
+		let photo = try XCTUnwrap(mode.photo)
+		let geometry = try XCTUnwrap(mode.geometry(of: photo))
+		let visible = try XCTUnwrap(geometry.cropRect(scale: mode.framing.scale, offset: mode.framing.offset))
+		XCTAssertEqual(visible.minX, 40, accuracy: 0.001)
+		XCTAssertEqual(visible.width, 1120, accuracy: 0.001)
+		XCTAssertEqual(visible.height, 1600, accuracy: 0.001)
+
+		// Saving only a field preserves the exact image and crop that the editor previews.
+		mode.editor.name = "Wide photo renamed"
+		person = try await done(mode)
+		XCTAssertEqual(person.appPicId, pictureID)
+		XCTAssertEqual(person.appPicCrop, picked.crop)
+		mode = await editMode(for: person, window: window)
+		assertFraming(mode.framing, scale: 0.525, offset: .zero)
+
+		// A small drag moves the accepted wide crop without unexpectedly zooming it in.
+		mode.drag(by: CGSize(width: 1, height: 0))
+		mode.endDrag()
+		assertFraming(mode.framing, scale: 0.525, offset: CGSize(width: 1, height: 0))
+		person = try await done(mode)
+		let moved = try XCTUnwrap(person.appPicCrop).rect(in: CropGeometry.pixelSize(of: original))
+		XCTAssertLessThan(moved.minX, visible.minX)
+		XCTAssertEqual(moved.width, visible.width, accuracy: 0.001)
+		XCTAssertEqual(moved.height, visible.height, accuracy: 0.001)
+		mode = await editMode(for: person, window: window)
+		assertFraming(mode.framing, scale: 0.525, offset: CGSize(width: 1, height: 0))
+		XCTAssertEqual(store.originalWrites, 1)
+	}
+
 	func testAPhotoPickedBeforeOriginalsWereKeptBecomesTheOriginalWhenFramedAgain() async throws {
 		// A stored main picture from an earlier release, with its widget picture, and no original or regions.
 		let legacy = PersonImage(uiImage: quadrants())
@@ -144,11 +187,11 @@ extension PersonPhotoFramingTests {
 		return try XCTUnwrap(people.first { $0.id == id })
 	}
 
-	/// The edit mode of the stored `person` on a phone, as after a relaunch, with its photo loaded.
-	private func editMode(for person: Person) async -> PersonEditModePresenter {
+	/// The edit mode of the stored `person`, as after a relaunch, with its photo loaded; a phone unless a window is given.
+	private func editMode(for person: Person, window: CGSize? = nil) async -> PersonEditModePresenter {
 		let mode = PersonEditModePresenter(editor: configurator.editor(person: person, onMutation: { _ in }), now: Date.init, onCancel: {})
 		await mode.editor.load()
-		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
+		mode.updateCanvas(window ?? phone, safeAreaInsets: EdgeInsets())
 		await mode.loadPhoto()
 		return mode
 	}

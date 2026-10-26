@@ -264,7 +264,7 @@ extension PersonEditModePresenterTests {
 		XCTAssertEqual(mode.framing, .identity)
 	}
 
-	func testAWideWindowKeepsTheWholeWindowCovered() async throws {
+	func testAWideWindowKeepsTheCropColumnCovered() async throws {
 		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
 		await mode.loadPhoto()
 		let window = CGSize(width: 1000, height: 700)
@@ -273,16 +273,15 @@ extension PersonEditModePresenterTests {
 		XCTAssertEqual(geometry.frameRect.width, 490, accuracy: 0.001, "Only the centred portrait column is saved")
 		XCTAssertEqual(geometry.displaySize.width, 1000, accuracy: 0.001)
 		XCTAssertEqual(geometry.displaySize.height, 1333.333, accuracy: 0.001)
-		let columnOnly = CropGeometry(pixelSize: geometry.pixelSize, shape: .rectangle, container: window, insets: EdgeInsets())
-		XCTAssertEqual(columnOnly.minScale, 0.525, accuracy: 0.001, "Covering just the column would leave 475 pt black")
-		XCTAssertEqual(geometry.minScale, 1)
+		XCTAssertEqual(mode.framing, .identity, "A legacy picture with no saved crop starts as the viewer shows it")
+		XCTAssertEqual(geometry.minScale, 0.525, accuracy: 0.001, "The picker and editor cover the same crop column")
 		mode.magnify(by: 0.5)
 		mode.endMagnify()
-		XCTAssertEqual(mode.framing.scale, 1, "The photo never shrinks inside the window")
+		XCTAssertEqual(mode.framing.scale, 0.525, accuracy: 0.001)
 		mode.drag(by: CGSize(width: 400, height: 900))
 		mode.endDrag()
-		XCTAssertEqual(mode.framing.offset.width, 0, accuracy: 0.001)
-		XCTAssertEqual(mode.framing.offset.height, 316.667, accuracy: 0.001)
+		XCTAssertEqual(mode.framing.offset.width, 17.5, accuracy: 0.001)
+		XCTAssertEqual(mode.framing.offset.height, 0, accuracy: 0.001)
 	}
 
 	func testDoneSavesTheVisibleRegionOfTheFraming() async throws {

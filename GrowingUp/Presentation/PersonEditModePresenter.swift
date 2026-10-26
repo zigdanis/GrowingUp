@@ -190,18 +190,19 @@ final class PersonEditModePresenter {
 
 	/// Where the photo shows the region of it the saved main picture shows.
 	private func framingOfSavedPicture(in geometry: CropGeometry) -> PhotoFraming {
-		guard let crop = editor.mainCrop else {
+		// Without a stored source-relative crop, a legacy picture keeps the viewer's aspect-fill placement.
+		guard editor.originalImage != nil, let crop = editor.mainCrop else {
 			let scale = geometry.clampScale(1)
 			return PhotoFraming(scale: scale, offset: geometry.clampOffset(.zero, scale: scale))
 		}
 		return geometry.framing(showing: crop)
 	}
 
-	/// The crop math for `photo` on the current canvas, shared with `CropStep`. The photo is drawn edge to edge while it
-	/// is framed, so it keeps the whole window covered; a wider window still saves only its centred portrait column.
+	/// The crop math shared with `CropStep`: only the crop frame must stay covered, so a saved framing that fits the
+	/// portrait column in a wide window reopens without being forced to zoom in to cover the whole window.
 	func geometry(of photo: UIImage) -> CropGeometry? {
 		guard canvas.width > 0, canvas.height > 0 else { return nil }
-		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets, coversWholeCanvas: true)
+		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets)
 	}
 
 	func drag(by translation: CGSize) {
