@@ -27,6 +27,8 @@ struct PersonViewer: View {
 			}
 			if let editMode {
 				PersonEditModeScene(mode: editMode, layout: layout, window: window, safeAreaInsets: geometry.safeAreaInsets)
+					// A session that replaces the open one, such as from a widget link, starts the scene afresh and loads itself.
+					.id(ObjectIdentifier(editMode))
 					.transition(.opacity)
 			}
 		}
