@@ -43,7 +43,7 @@ enum AppComposition {
 			let clockStarted = Date()
 			let clockRuns = environment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] == "1"
 			return SceneConfigurator(
-				gateway: gateway, loadImage: images.load, loadThumbnail: images.loadThumbnail,
+				gateway: gateway, loadImage: images.load, loadOriginal: images.loadOriginal, loadThumbnail: images.loadThumbnail,
 				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
 				photoFixtures: try photoFixtures(environment: environment))
 		}

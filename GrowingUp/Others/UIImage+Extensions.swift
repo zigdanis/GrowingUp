@@ -6,6 +6,7 @@
 //  Copyright © 2019-2026 Danis Ziganshin.
 //
 
+import Core
 import Foundation
 import UIKit
 
@@ -77,6 +78,37 @@ extension UIImage {
 		return renderer.image { _ in
 			draw(in: CGRect(origin: .zero, size: target))
 		}
+	}
+
+	/// The pixels of `crop`, at the photo's own resolution. Cropping only references the pixels; the app frames upright
+	/// photos, and anything else is drawn upright first so the region means what the photo shows.
+	func cropped(to crop: PhotoCrop) -> UIImage {
+		let photo = imageOrientation == .up && cgImage != nil ? self : upright()
+		guard let pixels = photo.cgImage else { return self }
+		let size = CGSize(width: pixels.width, height: pixels.height)
+		// Each edge goes to its nearest pixel, so a region that lies on pixel edges keeps its exact size.
+		let exact = crop.rect(in: size)
+		let origin = CGPoint(x: exact.minX.rounded(), y: exact.minY.rounded())
+		let rect = CGRect(
+			x: origin.x, y: origin.y, width: max(1, exact.maxX.rounded() - origin.x), height: max(1, exact.maxY.rounded() - origin.y)
+		).intersection(CGRect(origin: .zero, size: size))
+		guard !rect.isEmpty, let cropped = pixels.cropping(to: rect) else { return photo }
+		return UIImage(cgImage: cropped, scale: 1, orientation: .up)
+	}
+
+	/// The pixels of `crop`, scaled down so the longer side is at most `maxPixelSide` pixels. Scaling down redraws, so it
+	/// runs off the main actor.
+	func rendered(_ crop: PhotoCrop, maxPixelSide: CGFloat) async -> UIImage {
+		let cropped = cropped(to: crop)
+		return await Task.detached(priority: .userInitiated) { cropped.downsized(maxPixelSide: maxPixelSide) }.value
+	}
+
+	/// The photo drawn with its orientation applied, at its own pixel size.
+	private func upright() -> UIImage {
+		let format = UIGraphicsImageRendererFormat.default()
+		format.scale = 1
+		let pixelSize = CGSize(width: size.width * scale, height: size.height * scale)
+		return UIGraphicsImageRenderer(size: pixelSize, format: format).image { _ in draw(in: CGRect(origin: .zero, size: pixelSize)) }
 	}
 
 	/// Mirrors pixels horizontally so front-camera capture matches its preview.

@@ -17,6 +17,7 @@
 		C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA33E22728855C1FB098C693 /* PeopleInvitation.swift */; };
 		05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */; };
 		ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */; };
+		ED19498868970179956196EC /* MosaicLiftGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */; };
 		ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */; };
 		ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED183F51000DBDC05872F428 /* MosaicDrag.swift */; };
 		A7F1C2D3E4B5968778695A4B /* MosaicAutoscroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */; };
@@ -41,6 +42,8 @@
 		ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */; };
 		8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */; };
 		4D1A7E0C5B2F9A3E6C8D1B70 /* PersonEditModePictureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1A7E0C5B2F9A3E6C8D1B71 /* PersonEditModePictureTests.swift */; };
+		ED19BC5A322E65E0BBECCF43 /* PersonPhotoFramingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19B9905CFF6412B24B988F /* PersonPhotoFramingTests.swift */; };
+		ED19D880BA4A98AE0ABD40F9 /* FramingSurfaceViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19AC71E3BE9F5A7EB8FCA7 /* FramingSurfaceViewTests.swift */; };
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
 		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
 		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
@@ -89,6 +92,7 @@
 		094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */; };
 		094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */; };
 		094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */; };
+		ED190ED7F13FC0B86A7DA7F2 /* FramedPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED192033BA636D558D58E780 /* FramedPhoto.swift */; };
 		095000D7226DD95800789BED /* NSManagedObjectContext+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165340223ECBC40081FB10 /* NSManagedObjectContext+Utils.swift */; };
 		095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165345223ECBC40081FB10 /* CoreDataPersonsGateway.swift */; };
 		095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165347223ECBC40081FB10 /* CoreDataPerson.swift */; };
@@ -108,6 +112,7 @@
 		0983E767226D9658007EC8D2 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09165322223ECBC40081FB10 /* Person.swift */; };
 		0983E768226D9658007EC8D2 /* AddPersonParameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098798602242B96000A15D90 /* AddPersonParameters.swift */; };
 		0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D26ADD2251091700BF452F /* PersonImage.swift */; };
+		ED1981414917567E7782DD6B /* PhotoCrop.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1943EB1EBBDE9E4424EA94 /* PhotoCrop.swift */; };
 		0983E76A226D9677007EC8D2 /* CoreError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0916532C223ECBC40081FB10 /* CoreError.swift */; };
 		099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099C9164225F4D64005C963C /* FetchPersonsUseCaseTests.swift */; };
 		09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AE1B272263A5F800D6A78B /* AgeCalculatorTests.swift */; };
@@ -147,6 +152,7 @@
 		28239BC170652870856A0011 /* AppLaunchMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBB2FEEC51DA642BC75A89D /* AppLaunchMode.swift */; };
 		28444D354472F58368947D6E /* PersonEditorPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29037B6372771E13BB915F6A /* PersonEditorPresenter.swift */; };
 		28D332C00D1E8246658A85E5 /* IdentifiableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */; };
+		ED199345311DA9BE5BECC765 /* FramedPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED196345E6E7396D5D6B76EF /* FramedPhoto.swift */; };
 		29E4796696FE3EA93DE14E51 /* CameraSourceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */; };
 		2AAA4186076A78050C0CCF3A /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C740FE9D2F12B67A364F32B6 /* CameraPreviewView.swift */; };
 		2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6334C6E14DD2C5C18B135667 /* UITestImageStore.swift */; };
@@ -162,6 +168,7 @@
 		49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */; };
 		2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109645F67F6E710500D9E8DA /* WorkingImageTests.swift */; };
 		CAE3BF5D998385F7E42130E9 /* CropGeometryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */; };
+		ED19DF0909F386F20AD5CAC3 /* PhotoCropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19F7990D20FD632466DD45 /* PhotoCropTests.swift */; };
 		4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */; };
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
@@ -181,10 +188,12 @@
 		8F73C735F0DC92F17D7D1043 /* LimitedAccessHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDAB1D029EDF4BE9071E03E5 /* LimitedAccessHeader.swift */; };
 		9125CA94453C916124E5FBD9 /* SceneError.swift in Sources */ = {isa = PBXBuildFile; fileRef = D709780AF10F557CB4110DF1 /* SceneError.swift */; };
 		93FD87F27D684E64797A6BF5 /* DiskImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */; };
+		ED194B4E97268FAC77C109F3 /* OriginalPhotoFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19A2E6FBDA55F151C773B2 /* OriginalPhotoFile.swift */; };
 		97F12A7FE34A8F3EC06215C7 /* AddPersonUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50D219DBE5023AC85A59C26 /* AddPersonUseCaseImplementation.swift */; };
 		9902F81FF6251AACE29B1E95 /* EditPersonUseCaseImplementation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CFF7E7133C5E71BD9198A6 /* EditPersonUseCaseImplementation.swift */; };
 		A10000000000000000000002 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ImageStore.swift */; };
 		A10000000000000000000004 /* ImageStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* ImageStoreSpy.swift */; };
+		ED19B45C9634A0F497E0CAC5 /* MemoryImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED198DDAAB24671760D5F55B /* MemoryImageStore.swift */; };
 		A20000000000000000000001 /* UITestConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000007 /* UITestConfiguration.swift */; };
 		A20000000000000000000002 /* UITestAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000008 /* UITestAppearance.swift */; };
 		A20000000000000000000003 /* UITestSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000009 /* UITestSeed.swift */; };
@@ -215,6 +224,7 @@
 		D8394461090803E7C9C8C51E /* EmptyWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DBBC2301D979FD19D3228A /* EmptyWidgetView.swift */; };
 		D9CAD945858A939CE1A2A6E5 /* PreviewPhotos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43D7813F4BD212B2A4A194C9 /* PreviewPhotos.swift */; };
 		DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ABEB737086B8C5A490A11D /* JourneyTests.swift */; };
+		ED1992571BDE2A7E068C8041 /* PhotoFramingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED193D5E7744922E6C5F1D1A /* PhotoFramingTests.swift */; };
 		E24E534674F44A03CD1119B4 /* ImageCaptureCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 699F40A42EB1DF729553B0F1 /* ImageCaptureCoordinator.swift */; };
 		E553872E334B6EB9E65DE59C /* PersonMutation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B95C666900961A68BBCB3C5 /* PersonMutation.swift */; };
 		EAE2963EA11113B78E118398 /* AgeWidgetEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0152D8644F410D39D6D67A /* AgeWidgetEntryView.swift */; };
@@ -225,8 +235,12 @@
 		0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */; };
 		2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BED79DB5591DDB2C925728A /* EditModeFields.swift */; };
 		962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */; };
+		ED191ED55CF0E4F56CE97DD5 /* FramingSurfaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19ECBBDF3A68BC896539AA /* FramingSurfaceView.swift */; };
+		ED19B0C9B0FD1664114F56C7 /* FramingSurface.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1929AB89E6E968265340CF /* FramingSurface.swift */; };
 		15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */; };
+		ED199823D684DD702E0022C2 /* EditModeBarButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19547413E70F562C67B3C0 /* EditModeBarButtonStyle.swift */; };
 		AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40165AC65764622424D2E29 /* EditModeControlLabel.swift */; };
+		ED190A5384C57FD6B562F2F6 /* EditModeGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED19E1A5E5389126ADC416E7 /* EditModeGlass.swift */; };
 		26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */; };
 		0579BC523E214B06803F45C2 /* PersonEditPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */; };
 		13DEE217C1C1F4484954606D /* PhotoFraming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */; };
@@ -357,6 +371,7 @@
 		DA33E22728855C1FB098C693 /* PeopleInvitation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleInvitation.swift; sourceTree = "<group>"; };
 		EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTile.swift; sourceTree = "<group>"; };
 		ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTileButton.swift; sourceTree = "<group>"; };
+		ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicLiftGesture.swift; sourceTree = "<group>"; };
 		ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicWiggle.swift; sourceTree = "<group>"; };
 		ED183F51000DBDC05872F428 /* MosaicDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicDrag.swift; sourceTree = "<group>"; };
 		A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicAutoscroll.swift; sourceTree = "<group>"; };
@@ -378,8 +393,11 @@
 		ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorPresenterTests.swift; sourceTree = "<group>"; };
 		B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenterTests.swift; sourceTree = "<group>"; };
 		4D1A7E0C5B2F9A3E6C8D1B71 /* PersonEditModePictureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePictureTests.swift; sourceTree = "<group>"; };
+		ED19B9905CFF6412B24B988F /* PersonPhotoFramingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoFramingTests.swift; sourceTree = "<group>"; };
+		ED19AC71E3BE9F5A7EB8FCA7 /* FramingSurfaceViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingSurfaceViewTests.swift; sourceTree = "<group>"; };
 		ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpCelebrations.xcdatamodel; sourceTree = "<group>"; };
 		ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpDisplayOrder.xcdatamodel; sourceTree = "<group>"; };
+		ED19C0DE0000000000000D02 /* GrowingUpOriginalPhotos.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GrowingUpOriginalPhotos.xcdatamodel; sourceTree = "<group>"; };
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
 		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
 		C51000000000000000000002 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
@@ -432,6 +450,7 @@
 		094DF9CF223ADCF800C331EC /* InMemoryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCoreDataStack.swift; sourceTree = "<group>"; };
 		094DF9D1223ADD6300C331EC /* NSManagedObjectContextSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObjectContextSpy.swift; sourceTree = "<group>"; };
 		094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPersonParameters.swift; sourceTree = "<group>"; };
+		ED192033BA636D558D58E780 /* FramedPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramedPhoto.swift; sourceTree = "<group>"; };
 		095000D1226DD3C100789BED /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		095DEC45226772FE00E74C13 /* EditPersonUseCaseSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseSpy.swift; sourceTree = "<group>"; };
 		095DEC492267B4D100E74C13 /* ImagesCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCache.swift; sourceTree = "<group>"; };
@@ -454,6 +473,7 @@
 		ED185C7762B401E117C92A77 /* ReorderPersonsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderPersonsUseCaseTests.swift; sourceTree = "<group>"; };
 		09CFE6B722709FAB007AB456 /* RemovePersonUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovePersonUseCaseSpy.swift; sourceTree = "<group>"; };
 		09D26ADD2251091700BF452F /* PersonImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImage.swift; sourceTree = "<group>"; };
+		ED1943EB1EBBDE9E4424EA94 /* PhotoCrop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCrop.swift; sourceTree = "<group>"; };
 		09D842892364EB5A008FFD86 /* AccessToWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessToWidget.swift; sourceTree = "<group>"; };
 		09E1C315236F487D00FC884B /* FetchPersonsUseCaseSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchPersonsUseCaseSpy.swift; sourceTree = "<group>"; };
 		09E6F55722569D260059E592 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -467,6 +487,7 @@
 		109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceTests.swift; sourceTree = "<group>"; };
 		109645F67F6E710500D9E8DA /* WorkingImageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkingImageTests.swift; sourceTree = "<group>"; };
 		13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropGeometryTests.swift; sourceTree = "<group>"; };
+		ED19F7990D20FD632466DD45 /* PhotoCropTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCropTests.swift; sourceTree = "<group>"; };
 		12E7C3C28D10E4DA16EF2EFC /* AVAuthorizationStatus+ImageCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AVAuthorizationStatus+ImageCapture.swift"; sourceTree = "<group>"; };
 		137D448D5CF902A194D9AA4E /* AgeWidgetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AgeWidgetProvider.swift; sourceTree = "<group>"; };
 		2352944A067948DFD24D8DFB /* PersonImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonImages.swift; sourceTree = "<group>"; };
@@ -496,6 +517,7 @@
 		B60000000000000000000020 /* LockScreenWidgetPreviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenWidgetPreviews.swift; sourceTree = "<group>"; };
 		490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionExplainerView.swift; sourceTree = "<group>"; };
 		4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableImage.swift; sourceTree = "<group>"; };
+		ED196345E6E7396D5D6B76EF /* FramedPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramedPhoto.swift; sourceTree = "<group>"; };
 		502C13DC235077331724142D /* LightweightPhotoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightweightPhotoPreviewView.swift; sourceTree = "<group>"; };
 		5292F8584945007D5945FF00 /* CameraPreview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		5AFDB4B8E50EBC7CEB4873D0 /* GrowingUpUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowingUpUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -521,11 +543,13 @@
 		DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfettiStyleTests.swift; sourceTree = "<group>"; };
 		96254A372E8172B6422F0CB4 /* LimitedLibraryPickerPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedLibraryPickerPresenter.swift; sourceTree = "<group>"; };
 		97ABEB737086B8C5A490A11D /* JourneyTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JourneyTests.swift; sourceTree = "<group>"; };
+		ED193D5E7744922E6C5F1D1A /* PhotoFramingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhotoFramingTests.swift; sourceTree = "<group>"; };
 		99060B5830237EC7DDBDA31E /* CameraSessionController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionController.swift; sourceTree = "<group>"; };
 		99981D3EA4AC347D5BE6E6BC /* ContinuationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContinuationGate.swift; sourceTree = "<group>"; };
 		9B95C666900961A68BBCB3C5 /* PersonMutation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonMutation.swift; sourceTree = "<group>"; };
 		A10000000000000000000001 /* ImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		A10000000000000000000003 /* ImageStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStoreSpy.swift; sourceTree = "<group>"; };
+		ED198DDAAB24671760D5F55B /* MemoryImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryImageStore.swift; sourceTree = "<group>"; };
 		A20000000000000000000007 /* UITestConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestConfiguration.swift; sourceTree = "<group>"; };
 		A20000000000000000000008 /* UITestAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestAppearance.swift; sourceTree = "<group>"; };
 		A20000000000000000000009 /* UITestSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSeed.swift; sourceTree = "<group>"; };
@@ -540,6 +564,7 @@
 		C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneConfigurator.swift; sourceTree = "<group>"; };
 		C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestStore.swift; sourceTree = "<group>"; };
 		C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskImageStore.swift; sourceTree = "<group>"; };
+		ED19A2E6FBDA55F151C773B2 /* OriginalPhotoFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginalPhotoFile.swift; sourceTree = "<group>"; };
 		C740FE9D2F12B67A364F32B6 /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 		C8886045F47F9DA2385E8F28 /* SelectionProgressOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionProgressOverlay.swift; sourceTree = "<group>"; };
 		CB7506D68F8EDD15535AF218 /* CameraSourceModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSourceModel.swift; sourceTree = "<group>"; };
@@ -562,8 +587,12 @@
 		D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControls.swift; sourceTree = "<group>"; };
 		7BED79DB5591DDB2C925728A /* EditModeFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeFields.swift; sourceTree = "<group>"; };
 		AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePhoto.swift; sourceTree = "<group>"; };
+		ED19ECBBDF3A68BC896539AA /* FramingSurfaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingSurfaceView.swift; sourceTree = "<group>"; };
+		ED1929AB89E6E968265340CF /* FramingSurface.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingSurface.swift; sourceTree = "<group>"; };
 		C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeToggleStyle.swift; sourceTree = "<group>"; };
+		ED19547413E70F562C67B3C0 /* EditModeBarButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeBarButtonStyle.swift; sourceTree = "<group>"; };
 		D40165AC65764622424D2E29 /* EditModeControlLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControlLabel.swift; sourceTree = "<group>"; };
+		ED19E1A5E5389126ADC416E7 /* EditModeGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeGlass.swift; sourceTree = "<group>"; };
 		A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModePresenter.swift; sourceTree = "<group>"; };
 		D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditPopover.swift; sourceTree = "<group>"; };
 		35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFraming.swift; sourceTree = "<group>"; };
@@ -813,6 +842,7 @@
 				09165322223ECBC40081FB10 /* Person.swift */,
 				098798602242B96000A15D90 /* AddPersonParameters.swift */,
 				09D26ADD2251091700BF452F /* PersonImage.swift */,
+				ED1943EB1EBBDE9E4424EA94 /* PhotoCrop.swift */,
 				2352944A067948DFD24D8DFB /* PersonImages.swift */,
 			);
 			path = Entities;
@@ -856,6 +886,7 @@
 			isa = PBXGroup;
 			children = (
 				A10000000000000000000003 /* ImageStoreSpy.swift */,
+				ED198DDAAB24671760D5F55B /* MemoryImageStore.swift */,
 				091BEEB4223D61F600A3D057 /* PersonsGatewaySpy.swift */,
 			);
 			path = Gateways;
@@ -897,6 +928,7 @@
 				095DEC492267B4D100E74C13 /* ImagesCache.swift */,
 				09F6B52523535E26003A1A01 /* MemoryCache.swift */,
 				C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */,
+				ED19A2E6FBDA55F151C773B2 /* OriginalPhotoFile.swift */,
 				8E88731C743E444D0561E0DE /* ValueWrapper.swift */,
 			);
 			path = Cache;
@@ -971,6 +1003,7 @@
 			isa = PBXGroup;
 			children = (
 				094DF9D4223ADF9F00C331EC /* AddPersonParameters.swift */,
+				ED192033BA636D558D58E780 /* FramedPhoto.swift */,
 				09805503223C3C0100E24D40 /* Person.swift */,
 			);
 			path = Creators;
@@ -1008,6 +1041,8 @@
 				ED177D0CF77312D3EDA93672 /* PersonEditorPresenterTests.swift */,
 				B19EC60B34415312A929D53B /* PersonEditModePresenterTests.swift */,
 				4D1A7E0C5B2F9A3E6C8D1B71 /* PersonEditModePictureTests.swift */,
+				ED19B9905CFF6412B24B988F /* PersonPhotoFramingTests.swift */,
+				ED19AC71E3BE9F5A7EB8FCA7 /* FramingSurfaceViewTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
@@ -1130,6 +1165,7 @@
 				DA33E22728855C1FB098C693 /* PeopleInvitation.swift */,
 				EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */,
 				ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */,
+				ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */,
 				ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */,
 				ED183F51000DBDC05872F428 /* MosaicDrag.swift */,
 				A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */,
@@ -1154,8 +1190,12 @@
 				D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */,
 				7BED79DB5591DDB2C925728A /* EditModeFields.swift */,
 				AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */,
+				ED19ECBBDF3A68BC896539AA /* FramingSurfaceView.swift */,
+				ED1929AB89E6E968265340CF /* FramingSurface.swift */,
 				C70EB60836CD9FC4A14BB19E /* EditModeToggleStyle.swift */,
+				ED19547413E70F562C67B3C0 /* EditModeBarButtonStyle.swift */,
 				D40165AC65764622424D2E29 /* EditModeControlLabel.swift */,
+				ED19E1A5E5389126ADC416E7 /* EditModeGlass.swift */,
 				A4C9A5373C33DD1C7E42F58B /* PersonEditModePresenter.swift */,
 				D7A872F082138E548E7CFB42 /* PersonEditPopover.swift */,
 				35D37B08C2A4AE5A4864CA8A /* PhotoFraming.swift */,
@@ -1180,6 +1220,7 @@
 				109650B3B0BDCD1BF9DB420F /* CameraSourceTests.swift */,
 				109645F67F6E710500D9E8DA /* WorkingImageTests.swift */,
 				13B2472DEDED8AA1F6F1251C /* CropGeometryTests.swift */,
+				ED19F7990D20FD632466DD45 /* PhotoCropTests.swift */,
 			);
 			path = ImageCapture;
 			sourceTree = "<group>";
@@ -1210,6 +1251,7 @@
 				99981D3EA4AC347D5BE6E6BC /* ContinuationGate.swift */,
 				DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */,
 				4BC0E15D16991AA33E1D965D /* IdentifiableImage.swift */,
+				ED196345E6E7396D5D6B76EF /* FramedPhoto.swift */,
 				699F40A42EB1DF729553B0F1 /* ImageCaptureCoordinator.swift */,
 				EBE5CE1753B219FDF797F5F7 /* ImageCaptureSelectionOrigin.swift */,
 				0F6D9304984D13833DA1013D /* ImageCaptureSource.swift */,
@@ -1251,6 +1293,7 @@
 			children = (
 				C51000000000000000000002 /* AppStoreScreenshotTests.swift */,
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
+				ED193D5E7744922E6C5F1D1A /* PhotoFramingTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
 				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
@@ -1585,11 +1628,13 @@
 				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
 				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
+				ED1981414917567E7782DD6B /* PhotoCrop.swift in Sources */,
 				09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */,
 				09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */,
 				0983E764226D9652007EC8D2 /* AddPersonUseCase.swift in Sources */,
 				7137377D7FA4F961F833CDFA /* PersonImages.swift in Sources */,
 				93FD87F27D684E64797A6BF5 /* DiskImageStore.swift in Sources */,
+				ED194B4E97268FAC77C109F3 /* OriginalPhotoFile.swift in Sources */,
 				59292205208AA413665CE54F /* ValueWrapper.swift in Sources */,
 				AED00FF147F3E528FB039EE6 /* CoreDataStackImplementation.swift in Sources */,
 				CF6F04B22E594F399E944388 /* SQLiteStoreAccess.swift in Sources */,
@@ -1610,6 +1655,8 @@
 				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
 				8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */,
 				4D1A7E0C5B2F9A3E6C8D1B70 /* PersonEditModePictureTests.swift in Sources */,
+				ED19BC5A322E65E0BBECCF43 /* PersonPhotoFramingTests.swift in Sources */,
+				ED19D880BA4A98AE0ABD40F9 /* FramingSurfaceViewTests.swift in Sources */,
 				ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */,
 				09CFE6B4227035E9007AB456 /* EditPersonUseCaseTests.swift in Sources */,
 				094DF9D2223ADD6300C331EC /* NSManagedObjectContextSpy.swift in Sources */,
@@ -1622,6 +1669,7 @@
 				2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				A10000000000000000000004 /* ImageStoreSpy.swift in Sources */,
+				ED19B45C9634A0F497E0CAC5 /* MemoryImageStore.swift in Sources */,
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
 				CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
@@ -1638,6 +1686,7 @@
 				49014C88F47E9291AB258979 /* CameraSourceTests.swift in Sources */,
 				2013D3B4B5746AC033831D87 /* WorkingImageTests.swift in Sources */,
 				CAE3BF5D998385F7E42130E9 /* CropGeometryTests.swift in Sources */,
+				ED19DF0909F386F20AD5CAC3 /* PhotoCropTests.swift in Sources */,
 				095DEC46226772FE00E74C13 /* EditPersonUseCaseSpy.swift in Sources */,
 				09805504223C3C0100E24D40 /* Person.swift in Sources */,
 				094DF9D0223ADCF800C331EC /* InMemoryCoreDataStack.swift in Sources */,
@@ -1646,6 +1695,7 @@
 				ED182AD7D5ACBDB5B547CADA /* ReorderPersonsUseCaseTests.swift in Sources */,
 				09E1C316236F487D00FC884B /* FetchPersonsUseCaseSpy.swift in Sources */,
 				094DF9D5223ADF9F00C331EC /* AddPersonParameters.swift in Sources */,
+				ED190ED7F13FC0B86A7DA7F2 /* FramedPhoto.swift in Sources */,
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
@@ -1722,6 +1772,7 @@
 				C6EF89C24C43E2CB30771E71 /* PeopleInvitation.swift in Sources */,
 				05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */,
 				ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */,
+				ED19498868970179956196EC /* MosaicLiftGesture.swift in Sources */,
 				ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */,
 				ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */,
 				A7F1C2D3E4B5968778695A4B /* MosaicAutoscroll.swift in Sources */,
@@ -1747,8 +1798,12 @@
 				0D242ABEACAC8727548D9CFF /* EditModeControls.swift in Sources */,
 				2ED04AC0E1A611CC78D2B491 /* EditModeFields.swift in Sources */,
 				962F62D035E1ABDA2F5469CF /* EditModePhoto.swift in Sources */,
+				ED191ED55CF0E4F56CE97DD5 /* FramingSurfaceView.swift in Sources */,
+				ED19B0C9B0FD1664114F56C7 /* FramingSurface.swift in Sources */,
 				15D3C2AB5F1CF808DBE648E8 /* EditModeToggleStyle.swift in Sources */,
+				ED199823D684DD702E0022C2 /* EditModeBarButtonStyle.swift in Sources */,
 				AB1F316B345D7E0D10CEF066 /* EditModeControlLabel.swift in Sources */,
+				ED190A5384C57FD6B562F2F6 /* EditModeGlass.swift in Sources */,
 				26849D0E39AE485B17B073B5 /* PersonEditModePresenter.swift in Sources */,
 				0579BC523E214B06803F45C2 /* PersonEditPopover.swift in Sources */,
 				13DEE217C1C1F4484954606D /* PhotoFraming.swift in Sources */,
@@ -1763,6 +1818,7 @@
 				0858960C48C00017CB65127B /* ContinuationGate.swift in Sources */,
 				4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */,
 				28D332C00D1E8246658A85E5 /* IdentifiableImage.swift in Sources */,
+				ED199345311DA9BE5BECC765 /* FramedPhoto.swift in Sources */,
 				E24E534674F44A03CD1119B4 /* ImageCaptureCoordinator.swift in Sources */,
 				CDD9615EB5FE87A3391FBEE0 /* ImageCaptureSelectionOrigin.swift in Sources */,
 				328D7E241E40B4D1D9C90DD3 /* ImageCaptureSource.swift in Sources */,
@@ -1802,6 +1858,7 @@
 			files = (
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
+				ED1992571BDE2A7E068C8041 /* PhotoFramingTests.swift in Sources */,
 				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,
 				D79B4DD213FD256FBD9F703F /* LockScreenWidgetTests.swift in Sources */,
 				A40000000000000000000001 /* RemovalConfirmationTests.swift in Sources */,
@@ -2375,8 +2432,9 @@
 				A5000000000000000000000D /* GrowingUpSixPeople.xcdatamodel */,
 				ED170C7627DD652806C1CC85 /* GrowingUpCelebrations.xcdatamodel */,
 				ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */,
+				ED19C0DE0000000000000D02 /* GrowingUpOriginalPhotos.xcdatamodel */,
 			);
-			currentVersion = ED18D15010A0DE0000000D01 /* GrowingUpDisplayOrder.xcdatamodel */;
+			currentVersion = ED19C0DE0000000000000D02 /* GrowingUpOriginalPhotos.xcdatamodel */;
 			path = GrowingUp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

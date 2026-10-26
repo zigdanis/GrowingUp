@@ -16,6 +16,11 @@ public class CoreDataPerson: NSManagedObject {
 	@NSManaged public var id: String?
 	@NSManaged public var name: String?
 	@NSManaged public var widgetPicId: String?
+	@NSManaged public var originalPicId: String?
+	/// `PhotoCrop.storedValue` of the main picture's region of the original.
+	@NSManaged public var appPicCrop: String?
+	/// `PhotoCrop.storedValue` of the widget picture's region of the original.
+	@NSManaged public var widgetPicCrop: String?
 	@NSManaged public var createdDate: Date
 	@NSManaged public var celebratesBirthdays: Bool
 	@NSManaged public var displayOrder: Int64
@@ -49,7 +54,10 @@ extension CoreDataPerson {
 			isOnWidget: isOnWidget,
 			createdDate: createdDate,
 			celebratesBirthdays: celebratesBirthdays,
-			displayOrder: Int(displayOrder))
+			displayOrder: Int(displayOrder),
+			originalPicId: UUID(string: originalPicId),
+			appPicCrop: PhotoCrop(storedValue: appPicCrop),
+			widgetPicCrop: PhotoCrop(storedValue: widgetPicCrop))
 	}
 
 	public func populate(with parameters: AddPersonParameters) {
@@ -57,6 +65,9 @@ extension CoreDataPerson {
 		birthdate = parameters.combinedDate()
 		appPicId = parameters.appImage?.id.uuidString
 		widgetPicId = parameters.widgetImage?.id.uuidString
+		originalPicId = parameters.originalImage?.id.uuidString
+		appPicCrop = parameters.appImage?.crop?.storedValue
+		widgetPicCrop = parameters.widgetImage?.crop?.storedValue
 		celebratesBirthdays = parameters.celebratesBirthdays
 	}
 

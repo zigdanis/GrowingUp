@@ -12,6 +12,7 @@ import Foundation
 final class ImageStoreSpy: ImageStore {
 
 	var savedImages = [PersonImage]()
+	var savedOriginals = [PersonImage]()
 	var deletedImages = [PersonImage]()
 	var saveErrorAtCall: Int?
 	var deleteError: Error?
@@ -20,10 +21,18 @@ final class ImageStoreSpy: ImageStore {
 
 	func save(_ image: PersonImage) async throws {
 		onSave?()
-		if saveErrorAtCall == savedImages.count + 1 {
+		if saveErrorAtCall == savedImages.count + savedOriginals.count + 1 {
 			throw CoreError.unknownError
 		}
 		savedImages.append(image)
+	}
+
+	func saveOriginal(_ image: PersonImage) async throws {
+		onSave?()
+		if saveErrorAtCall == savedImages.count + savedOriginals.count + 1 {
+			throw CoreError.unknownError
+		}
+		savedOriginals.append(image)
 	}
 
 	func delete(_ image: PersonImage) async throws {

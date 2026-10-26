@@ -15,6 +15,13 @@ public struct Person: Equatable, Hashable, Sendable {
 	public var birthday: Date
 	public var appPicId: UUID?
 	public var widgetPicId: UUID?
+	/// The photo as it was picked, which both pictures are framed from; nil for a photo picked before originals were
+	/// kept, whose main picture serves as its own original.
+	public var originalPicId: UUID?
+	/// The region of the original the main picture shows; nil without an original.
+	public var appPicCrop: PhotoCrop?
+	/// The region of the original, or of a main picture serving as one, that the widget picture shows; nil when unknown.
+	public var widgetPicCrop: PhotoCrop?
 	public var isOnWidget: Bool
 	public var createdDate: Date
 	/// Whether the overview celebrates this person's birthday with confetti.
@@ -31,7 +38,10 @@ public struct Person: Equatable, Hashable, Sendable {
 		isOnWidget: Bool,
 		createdDate: Date,
 		celebratesBirthdays: Bool = true,
-		displayOrder: Int = 0
+		displayOrder: Int = 0,
+		originalPicId: UUID? = nil,
+		appPicCrop: PhotoCrop? = nil,
+		widgetPicCrop: PhotoCrop? = nil
 	) {
 		self.id = id
 		self.name = name
@@ -42,6 +52,9 @@ public struct Person: Equatable, Hashable, Sendable {
 		self.createdDate = createdDate
 		self.celebratesBirthdays = celebratesBirthdays
 		self.displayOrder = displayOrder
+		self.originalPicId = originalPicId
+		self.appPicCrop = appPicCrop
+		self.widgetPicCrop = widgetPicCrop
 	}
 
 	public var dateComponents: DateComponents {

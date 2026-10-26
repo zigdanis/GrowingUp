@@ -3,7 +3,8 @@ import SwiftUI
 struct ImageCaptureFlowView: View {
 	let cropShape: CropShape
 	let previewImages: [UIImage]?
-	let onComplete: (UIImage) -> Void
+	/// Gets the picked photo whole, with the region framed for the slot and the picture rendered from it.
+	let onComplete: (FramedPhoto) -> Void
 	let onCancel: () -> Void
 	@Environment(\.scenePhase)
 	private var scenePhase
@@ -12,7 +13,7 @@ struct ImageCaptureFlowView: View {
 
 	init(
 		source: ImageCaptureSource, previewImages: [UIImage]? = nil, cropShape: CropShape,
-		onComplete: @escaping (UIImage) -> Void, onCancel: @escaping () -> Void
+		onComplete: @escaping (FramedPhoto) -> Void, onCancel: @escaping () -> Void
 	) {
 		self.cropShape = cropShape
 		self.previewImages = previewImages
@@ -49,7 +50,7 @@ struct ImageCaptureFlowView: View {
 		}
 		.fullScreenCover(
 			item: $coordinator.imageToCrop,
-			onDismiss: { if let image = coordinator.cropDismissed() { onComplete(image) } },
+			onDismiss: { if let framed = coordinator.cropDismissed() { onComplete(framed) } },
 			content: { item in
 				CropStep(
 					image: item.image, shape: cropShape, onComplete: { coordinator.completedCrop(with: $0) },

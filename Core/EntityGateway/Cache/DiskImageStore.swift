@@ -27,6 +27,22 @@ public final class DiskImageStore: @unchecked Sendable, ImageStore {
 		}
 	}
 
+	/// Writes the original without keeping it in the memory cache: at up to 4096 pixels a side it is far larger than a
+	/// picture, and only framing a picture reads it again.
+	public func saveOriginal(_ image: PersonImage) async throws {
+		try await withCheckedThrowingContinuation { continuation in
+			Self.queue.async {
+				do {
+					let file = try OriginalPhotoFile.encode(image)
+					try Disk.save(file.data, to: self.directory, as: file.name)
+					continuation.resume()
+				} catch {
+					continuation.resume(throwing: error)
+				}
+			}
+		}
+	}
+
 	public func delete(_ image: PersonImage) async throws {
 		try await withCheckedThrowingContinuation { continuation in
 			Self.queue.async {
@@ -34,7 +50,7 @@ public final class DiskImageStore: @unchecked Sendable, ImageStore {
 					ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
 				}
 				do {
-					for key in [image.cachingKey, image.legacyCachingKey] where Disk.exists(key, in: self.directory) {
+					for key in image.storedCachingKeys where Disk.exists(key, in: self.directory) {
 						try Disk.remove(key, from: self.directory)
 					}
 					continuation.resume()

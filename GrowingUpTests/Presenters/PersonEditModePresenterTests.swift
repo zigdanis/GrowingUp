@@ -127,7 +127,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		person.widgetPicId = nil
 		let mode = mode(for: person)
 		XCTAssertFalse(mode.showsWidgetPictureButton)
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		XCTAssertTrue(mode.showsWidgetPictureButton)
 		mode.editor.removeMainPhoto()
 		XCTAssertFalse(mode.showsWidgetPictureButton)
@@ -141,7 +141,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		let mode = mode(for: person, gateway: gateway)
 		await mode.editor.load()
 		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		let derived = mode.editor.widgetImage?.id
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, .identity)
@@ -253,7 +253,7 @@ extension PersonEditModePresenterTests {
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, framed)
 		XCTAssertTrue(mode.hasReframed)
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, .identity, "A new photo starts as the viewer would show it")
 		mode.magnify(by: 2)
@@ -343,7 +343,8 @@ extension PersonEditModePresenterTests {
 	private func mode(
 		for person: Person, gateway: PersonsGatewaySpy = PersonsGatewaySpy(), photo: UIImage? = nil, locale: Locale = Locale(identifier: "en_US")
 	) -> PersonEditModePresenter {
-		let configurator = SceneConfigurator(gateway: gateway, loadImage: { _ in photo ?? self.image(width: 600, height: 800) })
+		let load: (PersonImage) async throws -> UIImage = { _ in photo ?? self.image(width: 600, height: 800) }
+		let configurator = SceneConfigurator(gateway: gateway, loadImage: load, loadOriginal: load)
 		let editor = configurator.editor(person: person, onMutation: { _ in })
 		return PersonEditModePresenter(editor: editor, now: Date.init, calendar: calendar, locale: locale, onCancel: {})
 	}

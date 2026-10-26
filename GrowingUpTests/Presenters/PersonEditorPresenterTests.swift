@@ -110,12 +110,16 @@ final class PersonEditorPresenterTests: XCTestCase {
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
 		await presenter.load()
 		let photo = image(width: 900, height: 1200)
-		presenter.setMainPhoto(photo)
+		presenter.setMainPhoto(.whole(photo))
 		XCTAssertTrue(presenter.appImage?.uiImage === photo)
+		XCTAssertTrue(presenter.originalImage?.uiImage === photo, "The photo is kept whole as the original")
+		XCTAssertEqual(presenter.appImage?.crop, .whole)
 		let widgetPixels = presenter.widgetImage?.uiImage?.cgImage
 		XCTAssertEqual(widgetPixels?.width, Int(WidgetPictureDeriver.maxPixelSide))
 		XCTAssertEqual(widgetPixels?.height, Int(WidgetPictureDeriver.maxPixelSide))
+		XCTAssertEqual(presenter.widgetImage?.crop, PhotoCrop(minX: 0, minY: 0.125, width: 1, height: 0.75), "The centred square")
 		XCTAssertNotEqual(presenter.appImage?.id, presenter.widgetImage?.id)
+		XCTAssertNotEqual(presenter.originalImage?.id, presenter.appImage?.id)
 		XCTAssertTrue(presenter.canSave)
 	}
 
@@ -126,6 +130,7 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.removeMainPhoto()
 		XCTAssertNil(presenter.appImage)
 		XCTAssertNil(presenter.widgetImage)
+		XCTAssertNil(presenter.originalImage)
 		XCTAssertTrue(presenter.canSave)
 	}
 
@@ -135,7 +140,7 @@ final class PersonEditorPresenterTests: XCTestCase {
 		person.widgetPicId = nil
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in XCTFail("Unsaved") })
 		await presenter.load()
-		presenter.setMainPhoto(image(width: 900, height: 1200))
+		presenter.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		XCTAssertTrue(presenter.canSave)
 		presenter.removeMainPhoto()
 		XCTAssertFalse(presenter.isDirty)
@@ -149,10 +154,15 @@ final class PersonEditorPresenterTests: XCTestCase {
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
 		await presenter.load()
 		let reframed = image(width: 480, height: 480)
-		presenter.setWidgetPhoto(reframed)
+		let crop = PhotoCrop(minX: 0.1, minY: 0.2, width: 0.5, height: 0.375)
+		presenter.setWidgetPhoto(FramedPhoto(source: image(width: 600, height: 800), crop: crop, picture: reframed))
 		XCTAssertEqual(presenter.appImage?.id, person.appPicId)
 		XCTAssertNotEqual(presenter.widgetImage?.id, person.widgetPicId)
 		XCTAssertTrue(presenter.widgetImage?.uiImage === reframed)
+		XCTAssertEqual(presenter.widgetImage?.crop, crop)
+		XCTAssertEqual(
+			presenter.originalImage?.id, person.appPicId, "A main picture saved before originals were kept now serves as the original")
+		XCTAssertEqual(presenter.mainCrop, .whole, "showing all of itself")
 		XCTAssertTrue(presenter.canSave)
 	}
 
@@ -166,45 +176,52 @@ final class PersonEditorPresenterTests: XCTestCase {
 		XCTAssertFalse(presenter.isDirty)
 	}
 
-	func testMainPhotoForReframingPrefersThePickedImageAndReportsLoadFailures() async {
+	func testThePhotoForFramingPrefersThePickedOriginalAndReportsLoadFailures() async {
 		let stored = image(width: 600, height: 800)
-		var loads = 0
+		var loads: [UUID] = []
 		let loader = SceneConfigurator(
 			gateway: PersonsGatewaySpy(),
-			loadImage: { _ in
-				loads += 1
+			loadOriginal: { image in
+				loads.append(image.id)
 				return stored
 			})
-		let presenter = loader.editor(person: .createPerson(), onMutation: { _ in })
-		let loaded = await presenter.loadMainPhoto()
+		let person = Person.createPerson()
+		let presenter = loader.editor(person: person, onMutation: { _ in })
+		let loaded = await presenter.loadFramingSource()
 		XCTAssertTrue(loaded === stored)
+		XCTAssertEqual(loads, [person.appPicId].compactMap { $0 }, "A photo picked before originals were kept frames from its main picture")
 		let picked = image(width: 900, height: 1200)
-		presenter.setMainPhoto(picked)
-		let reused = await presenter.loadMainPhoto()
-		XCTAssertTrue(reused === picked)
-		XCTAssertEqual(loads, 1)
-		let failing = SceneConfigurator(gateway: PersonsGatewaySpy(), loadImage: { _ in throw CoreError.missingValue })
+		presenter.setMainPhoto(FramedPhoto(source: picked, crop: .whole, picture: image(width: 300, height: 600)))
+		let reused = await presenter.loadFramingSource()
+		XCTAssertTrue(reused === picked, "A new photo frames from its whole original, not the main picture")
+		XCTAssertEqual(loads.count, 1)
+		var saved = Person.createPerson()
+		saved.originalPicId = UUID()
+		let original = loader.editor(person: saved, onMutation: { _ in })
+		_ = await original.loadFramingSource()
+		XCTAssertEqual(loads.last, saved.originalPicId, "A kept original is what is framed")
+		let failing = SceneConfigurator(gateway: PersonsGatewaySpy(), loadOriginal: { _ in throw CoreError.missingValue })
 		let failed = failing.editor(person: .createPerson(), onMutation: { _ in })
-		let missing = await failed.loadMainPhoto()
+		let missing = await failed.loadFramingSource()
 		XCTAssertNil(missing)
 		XCTAssertEqual(failed.error?.message, CoreError.missingValue.message)
 	}
 
-	func testMainPhotoLoadedForReframingIsDiscardedWhenThePhotoChangesMeanwhile() async {
+	func testThePhotoLoadedForFramingIsDiscardedWhenThePhotoChangesMeanwhile() async {
 		let stored = image(width: 600, height: 800)
 		let started = AsyncStream.makeStream(of: Void.self)
 		let gate = AsyncStream.makeStream(of: Void.self)
 		let loader = SceneConfigurator(
 			gateway: PersonsGatewaySpy(),
-			loadImage: { _ in
+			loadOriginal: { _ in
 				started.continuation.yield()
 				for await _ in gate.stream { break }
 				return stored
 			})
 		let presenter = loader.editor(person: .createPerson(), onMutation: { _ in })
-		let task = Task { await presenter.loadMainPhoto() != nil }
+		let task = Task { await presenter.loadFramingSource() != nil }
 		for await _ in started.stream { break }
-		presenter.setMainPhoto(image(width: 900, height: 1200))
+		presenter.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		gate.continuation.yield()
 		let usedStaleImage = await task.value
 		XCTAssertFalse(usedStaleImage)
@@ -249,8 +266,11 @@ extension PersonEditorPresenterTests {
 		let person = Person.createPerson()
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
 		await presenter.load()
-		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		let crop = PhotoCrop(minX: 0.25, minY: 0, width: 0.5, height: 1)
+		presenter.reframeMainPhoto(FramedPhoto(source: image(width: 1200, height: 1200), crop: crop, picture: image(width: 600, height: 1200)))
 		XCTAssertNotEqual(presenter.appImage?.id, person.appPicId)
+		XCTAssertEqual(presenter.appImage?.crop, crop)
+		XCTAssertEqual(presenter.originalImage?.id, person.appPicId, "The main picture it was framed from stays as the original")
 		XCTAssertEqual(presenter.widgetImage?.id, person.widgetPicId, "A widget picture saved earlier may have been framed by hand")
 		XCTAssertTrue(presenter.canSave)
 	}
@@ -259,15 +279,22 @@ extension PersonEditorPresenterTests {
 		let person = Person.createPerson()
 		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
 		await presenter.load()
-		presenter.setMainPhoto(image(width: 900, height: 1200))
+		let photo = image(width: 1200, height: 1200)
+		presenter.setMainPhoto(FramedPhoto(source: photo, crop: .whole, picture: photo))
 		let derived = presenter.widgetImage?.id
+		let original = presenter.originalImage?.id
 		XCTAssertTrue(presenter.widgetPictureIsDerived)
-		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		let left = PhotoCrop(minX: 0, minY: 0, width: 0.5, height: 1)
+		presenter.reframeMainPhoto(FramedPhoto(source: photo, crop: left, picture: image(width: 600, height: 1200)))
 		XCTAssertNotEqual(presenter.widgetImage?.id, derived)
+		XCTAssertEqual(presenter.widgetImage?.crop, PhotoCrop(minX: 0, minY: 0.25, width: 0.5, height: 0.5), "It follows the new framing")
+		XCTAssertEqual(presenter.originalImage?.id, original, "Reframing keeps the original")
 		let framed = image(width: 480, height: 480)
-		presenter.setWidgetPhoto(framed)
+		let circle = PhotoCrop(minX: 0.6, minY: 0.1, width: 0.3, height: 0.3)
+		presenter.setWidgetPhoto(FramedPhoto(source: photo, crop: circle, picture: framed))
 		XCTAssertFalse(presenter.widgetPictureIsDerived)
-		presenter.reframeMainPhoto(image(width: 600, height: 1200))
+		presenter.reframeMainPhoto(FramedPhoto(source: photo, crop: .whole, picture: photo))
 		XCTAssertTrue(presenter.widgetImage?.uiImage === framed, "A widget picture framed by hand stays")
+		XCTAssertEqual(presenter.widgetImage?.crop, circle, "with its own region of the original")
 	}
 }

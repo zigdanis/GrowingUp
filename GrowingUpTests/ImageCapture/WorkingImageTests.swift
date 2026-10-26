@@ -6,6 +6,7 @@
 //  crop of a working image keeps the framed pixels and stores the same picture as a crop of the original would.
 //
 
+import Core
 import ImageIO
 import SwiftUI
 import UniformTypeIdentifiers
@@ -78,8 +79,11 @@ final class WorkingImageTests: XCTestCase {
 		let step = CropStep(image: image, shape: .rectangle, onComplete: { _ in }, onCancel: {})
 		// At 2× zoom on a 300 × 600 pt screen, moved right and down, the frame holds source pixels x 300–700, y 200–1000,
 		// so the quadrants meet at column 300, row 600 of the crop.
-		let cropped = await step.output(
+		let framed = await step.output(
 			container: CGSize(width: 300, height: 600), insets: EdgeInsets(), scale: 2, offset: CGSize(width: 75, height: 150))
+		XCTAssertTrue(framed.source === image, "The working image stays whole")
+		XCTAssertEqual(framed.crop, PhotoCrop(minX: 0.25, minY: 0.125, width: 1.0 / 3, height: 0.5))
+		let cropped = framed.picture
 		try assertPixelSize(cropped, width: 400, height: 800)
 		try assertPixel(red, in: cropped, column: 290, row: 590)
 		try assertPixel(green, in: cropped, column: 310, row: 590)
@@ -113,7 +117,7 @@ final class WorkingImageTests: XCTestCase {
 		let step = CropStep(image: image, shape: shape, onComplete: { _ in }, onCancel: {})
 		let container = CGSize(width: 300, height: 600)
 		let scale = step.minScale(in: container, insets: EdgeInsets())
-		return await step.output(container: container, insets: EdgeInsets(), scale: scale, offset: .zero)
+		return await step.output(container: container, insets: EdgeInsets(), scale: scale, offset: .zero).picture
 	}
 
 	/// A photo split into four quadrants, coloured in reading order.

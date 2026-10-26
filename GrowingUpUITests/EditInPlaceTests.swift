@@ -101,9 +101,10 @@ final class EditInPlaceTests: XCTestCase {
 		openPerson("Boris")
 		enterEditMode()
 		XCTAssertTrue(done.waitForExistence(timeout: 5))
-		// Swiping down or sideways moves the photo now; the viewer neither closes nor pages.
+		// Swiping down or sideways moves the photo now, and pinching in zooms it; the viewer neither closes nor pages.
 		dragDown()
 		app.swipeLeft()
+		app.windows.firstMatch.pinch(withScale: 0.4, velocity: -1)
 		XCTAssertTrue(done.exists)
 		XCTAssertEqual(nameField.value as? String, "Boris")
 		checkpoint("edit-mode-after-swipes")
@@ -116,15 +117,39 @@ final class EditInPlaceTests: XCTestCase {
 		dragDown()
 		XCTAssertTrue(overview.waitForNonExistence(timeout: 5))
 		XCTAssertTrue(tile("Clara").waitForExistence(timeout: 5))
+		// Pinching in closes the viewer too.
+		openPerson("Clara")
+		app.windows.firstMatch.pinch(withScale: 0.4, velocity: -1)
+		XCTAssertTrue(overview.waitForNonExistence(timeout: 5))
+	}
+
+	/// Cancel is the same compact capsule as Done, and the photo's round control lines up with its neighbours, in Russian,
+	/// whose titles run longer.
+	func testRussianTopBarAndControlsLineUp() {
+		launch(language: "ru")
+		openPerson("Alice")
+		enterEditMode()
+		let cancel = app.buttons["editor.cancel"]
+		XCTAssertTrue(cancel.waitForExistence(timeout: 5))
+		XCTAssertEqual(cancel.label, "Отмена")
+		XCTAssertEqual(cancel.frame.height, done.frame.height, accuracy: 1, "Cancel is as compact as Done")
+		XCTAssertEqual(cancel.frame.midY, done.frame.midY, accuracy: 1)
+		let photo = control("editor.appPhoto")
+		// The switches always share the photo's row; the actions may wrap under them on a narrow screen.
+		for neighbour in ["editor.pin", "editor.celebrate"].map(control) {
+			XCTAssertEqual(photo.frame.minY, neighbour.frame.minY, accuracy: 1, neighbour.identifier)
+			XCTAssertEqual(photo.frame.height, neighbour.frame.height, accuracy: 1, neighbour.identifier)
+		}
+		checkpoint("edit-mode-ru")
 	}
 }
 
 extension EditInPlaceTests {
-	private func launch(failNextSave: Bool = false) {
+	private func launch(failNextSave: Bool = false, language: String = "en") {
 		configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: failNextSave, appearance: .dark)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
-			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", "Dark",
+			"-AppleLanguages", "(\(language))", "-AppleLocale", language == "ru" ? "ru_RU" : "en_US", "-AppleInterfaceStyle", "Dark",
 			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
 		]
 		app.launch()

@@ -1,3 +1,4 @@
+import Core
 import SwiftUI
 
 /// The pan and zoom math of framing a picture on a screen-sized canvas, shared by `CropStep` and the viewer's in-place
@@ -162,22 +163,33 @@ struct CropGeometry {
 		var rect = CGRect(x: centerX - cropW / 2, y: centerY - cropH / 2, width: cropW, height: cropH)
 		rect.origin.x = min(max(0, rect.origin.x), pixelSize.width - rect.width)
 		rect.origin.y = min(max(0, rect.origin.y), pixelSize.height - rect.height)
-		return rect.integral
+		return rect
 	}
 
-	/// The framed part of `image` at the shape's stored size. Cropping only references the source's pixels; scaling them
-	/// down redraws, so that runs off the main actor.
-	func output(of image: UIImage, scale: CGFloat, offset: CGSize) async -> UIImage {
-		let cropped = crop(image, scale: scale, offset: offset)
-		let maxPixelSide = shape.maxPixelSize
-		return await Task.detached(priority: .userInitiated) { cropped.downsized(maxPixelSide: maxPixelSide) }.value
+	/// The region of the picture inside the crop frame at `scale` and `offset`, which outlasts the canvas and the
+	/// picture's decoded size.
+	func crop(scale: CGFloat, offset: CGSize) -> PhotoCrop? {
+		cropRect(scale: scale, offset: offset).map { PhotoCrop($0, in: pixelSize) }
 	}
 
-	/// The source pixels inside the crop frame, at the source's resolution.
-	func crop(_ image: UIImage, scale: CGFloat, offset: CGSize) -> UIImage {
-		guard let cgImage = image.cgImage, let rect = cropRect(scale: scale, offset: offset),
-			let cropped = cgImage.cropping(to: rect)
-		else { return image }
-		return UIImage(cgImage: cropped, scale: 1, orientation: .up)
+	/// Where the picture sits to show `crop` in the crop frame: the region fills the frame, centred in it, as near as the
+	/// zoom limits and the covered frame allow. It undoes `crop(scale:offset:)`, so a picture framed again opens as it was
+	/// saved, on any canvas of the same shape.
+	func framing(showing crop: PhotoCrop) -> PhotoFraming {
+		let region = crop.rect(in: pixelSize)
+		let frame = frameRect
+		guard region.width > 0, region.height > 0, frame.width > 0, frame.height > 0 else { return .identity }
+		let scale = clampScale(max(frame.width / region.width, frame.height / region.height) / baseScale)
+		let pointsPerPixel = baseScale * scale
+		let offset = CGSize(
+			width: frame.midX - container.width / 2 - (region.midX - pixelSize.width / 2) * pointsPerPixel,
+			height: frame.midY - container.height / 2 - (region.midY - pixelSize.height / 2) * pointsPerPixel)
+		return PhotoFraming(scale: scale, offset: clampOffset(offset, scale: scale))
+	}
+
+	/// The framed part of `image`: its region, and the picture rendered from that region at the shape's stored size.
+	func output(of image: UIImage, scale: CGFloat, offset: CGSize) async -> FramedPhoto {
+		let crop = crop(scale: scale, offset: offset) ?? .whole
+		return FramedPhoto(source: image, crop: crop, picture: await image.rendered(crop, maxPixelSide: shape.maxPixelSize))
 	}
 }

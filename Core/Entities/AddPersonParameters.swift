@@ -14,6 +14,8 @@ public struct AddPersonParameters: Equatable, Sendable {
 	public var timeOfBirth: Date
 	public var appImage: PersonImage?
 	public var widgetImage: PersonImage?
+	/// The photo as it was picked, which both pictures are framed from through their `crop`; see `Person.originalPicId`.
+	public var originalImage: PersonImage?
 	public var isOnWidget: Bool
 	public var celebratesBirthdays: Bool
 
@@ -24,7 +26,8 @@ public struct AddPersonParameters: Equatable, Sendable {
 		appImage: PersonImage?,
 		widgetImage: PersonImage?,
 		isOnWidget: Bool,
-		celebratesBirthdays: Bool = true
+		celebratesBirthdays: Bool = true,
+		originalImage: PersonImage? = nil
 	) {
 		self.name = name
 		self.dayOfBirth = dayOfBirth
@@ -33,6 +36,7 @@ public struct AddPersonParameters: Equatable, Sendable {
 		self.widgetImage = widgetImage
 		self.isOnWidget = isOnWidget
 		self.celebratesBirthdays = celebratesBirthdays
+		self.originalImage = originalImage
 	}
 }
 

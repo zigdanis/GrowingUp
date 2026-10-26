@@ -27,7 +27,7 @@ final class PersonEditModePictureTests: XCTestCase {
 		mode.endDrag()
 		XCTAssertFalse(mode.hasReframed, "Only a main photo is framed")
 		XCTAssertFalse(mode.canSave)
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		await mode.loadPhoto()
 		XCTAssertNotNil(mode.photo)
 		XCTAssertNil(mode.backdrop)
@@ -78,7 +78,8 @@ final class PersonEditModePictureTests: XCTestCase {
 	}
 
 	private func mode(for person: Person, gateway: PersonsGatewaySpy = PersonsGatewaySpy(), photo: UIImage? = nil) -> PersonEditModePresenter {
-		let configurator = SceneConfigurator(gateway: gateway, loadImage: { _ in photo ?? self.image(width: 600, height: 800) })
+		let load: (PersonImage) async throws -> UIImage = { _ in photo ?? self.image(width: 600, height: 800) }
+		let configurator = SceneConfigurator(gateway: gateway, loadImage: load, loadOriginal: load)
 		let editor = configurator.editor(person: person, onMutation: { _ in })
 		return PersonEditModePresenter(editor: editor, now: Date.init, onCancel: {})
 	}

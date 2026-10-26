@@ -29,15 +29,8 @@ struct EditModeControls: View {
 	/// The photo and the two switches, which every person has.
 	@ViewBuilder private var settings: some View {
 		@Bindable var editor = mode.editor
-		PersonPhotoMenu(presenter: editor, photoRequest: $photoRequest) {
-			EditModeControlLabel {
-				Text("Photo")
-			} glyph: {
-				Image(systemName: "camera.fill")
-			}
-		}
-		.buttonStyle(.plain)
-		.frame(maxWidth: .infinity)
+		photoMenu
+			.frame(maxWidth: .infinity)
 		Toggle(isOn: $editor.isOnWidget) { Text("Widget") }
 			.toggleStyle(EditModeToggleStyle(systemImage: "square.grid.2x2.fill"))
 			.accessibilityLabel(Text("On widget"))
@@ -70,6 +63,28 @@ struct EditModeControls: View {
 			.accessibilityLabel(Text("Remove"))
 			.accessibilityIdentifier("editor.remove")
 			.frame(maxWidth: .infinity)
+		}
+	}
+
+	/// The photo's source menu over its round control, which it covers exactly, title included. The control lies under the
+	/// menu rather than serving as its label: a menu draws glass in its label around the whole label, which centred the
+	/// circle on the title too and pushed it below the glyph.
+	private var photoMenu: some View {
+		EditModeControlLabel {
+			Text("Photo")
+		} glyph: {
+			Image(systemName: "camera.fill")
+		}
+		.accessibilityHidden(true)
+		.overlay {
+			PersonPhotoMenu(presenter: mode.editor, photoRequest: $photoRequest) {
+				Color.clear.contentShape(.rect)
+			}
+			.buttonStyle(.plain)
+			.accessibilityShowsLargeContentViewer {
+				Image(systemName: "camera.fill")
+				Text("Photo")
+			}
 		}
 	}
 

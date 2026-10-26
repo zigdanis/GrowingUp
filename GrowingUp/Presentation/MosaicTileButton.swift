@@ -2,7 +2,7 @@ import Core
 import SwiftUI
 
 /// A mosaic tile as a control: a tap opens the person, and a long press lifts the tile to reorder the mosaic, carrying on
-/// into a drag without letting go.
+/// into a drag without letting go. A swipe that starts on the tile scrolls the mosaic; see `MosaicLiftGesture`.
 ///
 /// The long press is the only gesture into reordering, with no context menu; VoiceOver has a "Reorder" action instead.
 /// While reordering the tile rocks. VoiceOver's "Move earlier" and "Move later" move it a place along at any time, as
@@ -22,15 +22,14 @@ struct MosaicTileButton: View {
 	let contentSpace: NamedCoordinateSpace
 	let onOpen: () -> Void
 	let onLift: () -> Void
-	let onDrag: (DragGesture.Value) -> Void
+	/// Follows the finger carrying the lifted tile, at this point of the mosaic's scroll content.
+	let onDrag: (CGPoint) -> Void
 	let onDrop: () -> Void
 	/// Starts reordering without the long press, for accessibility.
 	let onStartReordering: () -> Void
 	/// Moves the tile a place earlier or later and stores the order; nil at that end of the mosaic.
 	let onMoveEarlier: (() -> Void)?
 	let onMoveLater: (() -> Void)?
-	/// Whether a press lifted the tile and has not ended; the system resets it when it cancels the press too.
-	@GestureState private var isHeld = false
 
 	var body: some View {
 		Button(action: onOpen) {
@@ -39,12 +38,16 @@ struct MosaicTileButton: View {
 				.opacity(isLifted ? 0 : 1)
 				// The empty slot keeps the lifted tile's press alive under the finger.
 				.contentShape(.rect(cornerRadius: MosaicTile.cornerRadius))
+				// Inside the label, the press is the button's child, which goes first: once it lifts the tile, the tap is off.
+				.gesture(
+					MosaicLiftGesture(
+						minimumDuration: Self.liftDelay, coordinateSpace: contentSpace,
+						onLift: { location in
+							onLift()
+							onDrag(location)
+						}, onMove: onDrag, onRelease: onDrop))
 		}
 		.buttonStyle(.plain)
-		.simultaneousGesture(reorderGesture)
-		.onChange(of: isHeld) { _, held in
-			if !held { onDrop() }
-		}
 		// Optional, like the viewer's selection it is matched against.
 		.matchedTransitionSource(id: Optional(person.id), in: zoom) { source in
 			source.clipShape(.rect(cornerRadius: MosaicTile.cornerRadius))
@@ -61,20 +64,5 @@ struct MosaicTileButton: View {
 			}
 		}
 		.accessibilityIdentifier("people.tile")
-	}
-
-	/// A long press that lifts the tile, then a drag from the same touch that carries it.
-	private var reorderGesture: some Gesture {
-		LongPressGesture(minimumDuration: Self.liftDelay)
-			.sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: contentSpace))
-			.updating($isHeld) { value, state, _ in
-				if case .second(true, _) = value { state = true }
-			}
-			.onChanged { value in
-				guard case .second(true, let drag) = value else { return }
-				onLift()
-				if let drag { onDrag(drag) }
-			}
-			.onEnded { _ in onDrop() }
 	}
 }
