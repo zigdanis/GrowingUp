@@ -9,7 +9,8 @@ struct EditModeFields: View {
 	var body: some View {
 		VStack(alignment: .leading, spacing: 16) {
 			nameField
-			// The capsules share a row; at accessibility text sizes the time moves under the date rather than truncating it.
+			// The capsules share a row; at accessibility text sizes the time moves under the date, and then the cake gives way,
+			// rather than truncating either.
 			ViewThatFits(in: .horizontal) {
 				HStack(spacing: 8) {
 					cake
@@ -23,11 +24,17 @@ struct EditModeFields: View {
 					}
 					timeCapsule
 				}
+				VStack(alignment: .leading, spacing: 8) {
+					dateCapsule
+					timeCapsule
+				}
 			}
+			.dynamicTypeSize(...DynamicTypeSize.accessibility2)
 			Text(mode.ageText)
 				.font(.subheadline.weight(.medium))
 				.monospacedDigit()
 				.opacity(0.85)
+				.dynamicTypeSize(...DynamicTypeSize.accessibility2)
 				.accessibilityIdentifier("editor.age")
 		}
 		.foregroundStyle(.white)
@@ -76,6 +83,7 @@ struct EditModeFields: View {
 				.font(.headline)
 				.monospacedDigit()
 				.lineLimit(1)
+				.minimumScaleFactor(0.7)
 				.padding(.horizontal, 12)
 				.padding(.vertical, 8)
 		}

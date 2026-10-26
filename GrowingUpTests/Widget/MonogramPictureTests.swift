@@ -26,6 +26,14 @@ final class MonogramPictureTests: XCTestCase {
 		XCTAssertFalse(CGColorSpaceUsesExtendedRange(try XCTUnwrap(cgImage.colorSpace)))
 	}
 
+	/// The mosaic tile draws the same picture in its portrait shape, in standard range like the widget's square.
+	func testPortraitPictureIsDrawnAtItsSize() throws {
+		let portrait = try XCTUnwrap(MonogramPicture.draw(id: UUID(), name: "Clara", size: CGSize(width: 540, height: 960)).cgImage)
+		XCTAssertEqual(portrait.width, 540)
+		XCTAssertEqual(portrait.height, 960)
+		XCTAssertFalse(CGColorSpaceUsesExtendedRange(try XCTUnwrap(portrait.colorSpace)))
+	}
+
 	/// The monogram stands in for the photo in tiles only; the Lock Screen keeps showing no photo. The final picture, scrims
 	/// included, must stay in standard range like a photo, or archiving it can exceed the extension's memory limit.
 	func testPersonWithoutPhotoGetsAStandardRangeMonogramTilePicture() throws {

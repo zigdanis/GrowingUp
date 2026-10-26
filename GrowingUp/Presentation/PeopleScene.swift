@@ -1,13 +1,15 @@
 import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
-/// open in the full-screen viewer, which swipes down back into the tile. "Add" opens the editor sheet; while a long press
-/// reorders the mosaic, "Done" takes the button's place.
+/// open in the full-screen viewer, which swipes down back into the tile. "Add" zooms open a new person's empty edit mode
+/// the same way; while a long press reorders the mosaic, "Done" takes the button's place.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
 	@State private var pictures: MosaicPicturesPresenter
 	@Namespace private var zoom
+	@Environment(\.accessibilityReduceMotion)
+	private var reduceMotion
 
 	init(presenter: PeoplePresenter, preferredColorScheme: ColorScheme?) {
 		_presenter = Bindable(presenter)
@@ -25,11 +27,17 @@ struct PeopleScene: View {
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
 					if presenter.isReordering {
-						floatingButton(
-							"Done", systemImage: "checkmark", identifier: "people.reorder.done", trailingPane: trailingPane,
-							action: presenter.finishReordering)
+						floating(
+							FloatingCapsuleButton(title: "Done", systemImage: "checkmark", action: presenter.finishReordering)
+								.accessibilityIdentifier("people.reorder.done"),
+							trailingPane: trailingPane)
 					} else if !presenter.isLoading, presenter.canAdd {
-						floatingButton("Add person", systemImage: "plus", identifier: "person.add", trailingPane: trailingPane, action: presenter.add)
+						floating(
+							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: presenter.add)
+								.accessibilityIdentifier("person.add")
+								// A new person's edit mode grows out of the button, which no selected person names.
+								.matchedTransitionSource(id: UUID?.none, in: zoom),
+							trailingPane: trailingPane)
 					}
 				}
 		}
@@ -40,14 +48,12 @@ struct PeopleScene: View {
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
-		.fullScreenCover(isPresented: $presenter.isViewing) {
+		.fullScreenCover(isPresented: $presenter.isViewing, onDismiss: coverDidClose) {
 			PersonViewer(presenter: presenter)
 				.navigationTransition(.zoom(sourceID: presenter.selectedID, in: zoom))
 				// The viewer lies on photos, so it stays dark whatever the mosaic's theme.
 				.preferredColorScheme(.dark)
-				.sheet(item: editor(whileViewing: true), content: editorScene)
 		}
-		.sheet(item: editor(whileViewing: false), content: editorScene)
 		.sceneError($presenter.error)
 	}
 
@@ -58,43 +64,32 @@ struct PeopleScene: View {
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 		} else if presenter.persons.isEmpty {
 			PeopleInvitation()
-				.frame(maxWidth: .infinity)
 				.modifier(trailingPane)
 				.frame(maxHeight: .infinity)
+				.transition(.opacity)
 		} else {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
 				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view,
 				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
-				onSaveOrder: presenter.saveOrder)
+				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
+			)
+			.transition(.opacity)
 		}
 	}
 
 	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window, above the home indicator.
-	private func floatingButton(
-		_ title: LocalizedStringKey, systemImage: String, identifier: String, trailingPane: TrailingPaneOnLandscape,
-		action: @escaping () -> Void
-	) -> some View {
-		FloatingCapsuleButton(title: title, systemImage: systemImage, action: action)
-			.accessibilityIdentifier(identifier)
+	private func floating(_ button: some View, trailingPane: TrailingPaneOnLandscape) -> some View {
+		button
 			.frame(maxWidth: .infinity)
 			.modifier(trailingPane)
 			.padding(.bottom, 8)
 	}
 
-	/// The editor sheet's binding for one presenter of the sheet: the viewer while it is shown, otherwise the mosaic.
-	/// Only a new person opens the sheet; an existing one is edited in place in the viewer.
-	private func editor(whileViewing: Bool) -> Binding<PersonEditorPresenter?> {
-		Binding(
-			get: { presenter.isViewing == whileViewing ? presenter.sheetEditor : nil },
-			set: { editor in
-				guard presenter.isViewing == whileViewing, editor == nil else { return }
-				presenter.cancelEditing(presenter.sheetEditor)
-			})
-	}
-
-	private func editorScene(_ editor: PersonEditorPresenter) -> some View {
-		PersonEditorScene(presenter: editor).preferredColorScheme(preferredColorScheme)
+	/// Once the cover has zoomed back into the mosaic, a removed person's tile leaves and its neighbours close the gap, or
+	/// the invitation takes the place of the last one.
+	private func coverDidClose() {
+		withAnimation(reduceMotion ? nil : .snappy(duration: 0.35)) { presenter.coverDidClose() }
 	}
 
 	/// The whole window, safe areas included, whose shape picks the layout like the viewer's pages.

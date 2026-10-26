@@ -57,6 +57,8 @@ final class NavigationTests: XCTestCase {
 	func testLargestTextKeepsTheBirthdayLineWholeOnScreen() {
 		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
 		XCTAssertTrue(app.buttons["person.add"].isHittable)
+		XCTAssertEqual(tile("Alice").label, "Alice, 5 years, 3 months", "VoiceOver reads a tile as its name and age, once")
+		checkpoint("large-text-mosaic")
 		tile("Alice").tap()
 		let countdown = app.staticTexts["birthday.countdown"]
 		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
@@ -65,16 +67,84 @@ final class NavigationTests: XCTestCase {
 		checkpoint("large-text-viewer")
 	}
 
-	private func launch(appearance: UITestAppearance, contentSize: String = "UICTContentSizeCategoryL") {
+	func testLargestTextKeepsEveryEditModeControlOnScreen() {
+		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
+		tile("Alice").tap()
+		XCTAssertTrue(waitFor(personName, label: "Alice"))
+		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: personName)], timeout: 5)
+		personName.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForExistence(timeout: 5))
+		// Alice has a photo, so all five round controls show.
+		assertOnScreen(editModeControls + ["editor.widgetPhoto.reframe", "editor.remove"])
+		checkpoint("large-text-edit-mode")
+		app.buttons["editor.cancel"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		closeViewer()
+		app.buttons["person.add"].tap()
+		let name = app.textFields["editor.name"]
+		XCTAssertTrue(name.waitForExistence(timeout: 5))
+		// Return hides the keyboard, which covers the round controls while the name is typed.
+		name.typeText("\n")
+		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
+		assertOnScreen(editModeControls)
+		checkpoint("large-text-new-person")
+	}
+
+	func testLargestTextKeepsTheInvitationWholeAboveTheAddButton() {
+		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL", seed: .empty)
+		let add = app.buttons["person.add"]
+		XCTAssertTrue(add.waitForExistence(timeout: 10))
+		let window = app.windows.firstMatch.frame
+		XCTAssertTrue(add.isHittable)
+		XCTAssertTrue(window.contains(add.frame), "Add at \(add.frame) leaves \(window)")
+		// The button stays a one-line capsule rather than a block of wrapped text.
+		XCTAssertGreaterThan(add.frame.width, add.frame.height * 2, "Add at \(add.frame)")
+		checkpoint("large-text-invitation")
+		let title = app.staticTexts["people.invitation.title"]
+		let message = app.staticTexts["people.invitation.message"]
+		XCTAssertTrue(title.waitForExistence(timeout: 5))
+		assertAboveAdd(title, add: add, window: window)
+		// Where the invitation does not fit above the button, it scrolls rather than truncating.
+		if message.frame.maxY > add.frame.minY { title.swipeUp() }
+		assertAboveAdd(message, add: add, window: window)
+	}
+
+	/// The edit mode's fields, its Cancel and Done, and the round controls every person has.
+	private var editModeControls: [String] {
+		[
+			"editor.name", "editor.birthDate", "editor.birthTime", "editor.cancel", "editor.save", "editor.appPhoto", "editor.pin",
+			"editor.celebrate"
+		]
+	}
+
+	/// Each control exists, takes a tap and lies whole inside the window.
+	private func assertOnScreen(_ identifiers: [String], file: StaticString = #filePath, line: UInt = #line) {
+		let window = app.windows.firstMatch.frame
+		for identifier in identifiers {
+			let element = app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+			XCTAssertTrue(element.waitForExistence(timeout: 5), identifier, file: file, line: line)
+			XCTAssertTrue(element.isHittable, identifier, file: file, line: line)
+			XCTAssertTrue(window.contains(element.frame), "\(identifier) at \(element.frame) leaves \(window)", file: file, line: line)
+		}
+	}
+
+	private func launch(appearance: UITestAppearance, contentSize: String = "UICTContentSizeCategoryL", seed: UITestSeed = .sixPinned) {
 		let configuration = UITestConfiguration(
-			identifier: UUID(), resetStore: true, seed: .sixPinned, failNextSave: false, appearance: appearance)
+			identifier: UUID(), resetStore: true, seed: seed, failNextSave: false, appearance: appearance)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", appearance.launchArgumentValue,
 			"-UIPreferredContentSizeCategoryName", contentSize
 		]
 		app.launch()
+		guard seed != .empty else { return }
 		XCTAssertTrue(tiles.firstMatch.waitForExistence(timeout: 10))
+	}
+
+	private func assertAboveAdd(_ element: XCUIElement, add: XCUIElement, window: CGRect) {
+		XCTAssertTrue(window.contains(element.frame), "\(element.identifier) at \(element.frame) leaves \(window)")
+		XCTAssertLessThanOrEqual(
+			element.frame.maxY, add.frame.minY, "\(element.identifier) at \(element.frame) runs under the Add button at \(add.frame)")
 	}
 
 	private func tile(_ name: String) -> XCUIElement {

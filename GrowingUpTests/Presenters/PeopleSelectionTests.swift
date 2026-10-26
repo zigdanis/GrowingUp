@@ -52,15 +52,100 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertEqual(presenter.persons.last?.id, added.id)
 	}
 
-	func testRemovingTheShownPersonReturnsToTheMosaic() async {
+	func testRemovingTheShownPersonReturnsToTheMosaicWhereTheirTileLeaves() async {
 		let people = makePeople(count: 3)
 		let presenter = await loadedPresenter(people)
 		presenter.view(people[1].id)
 		presenter.edit(people[1])
 		presenter.apply(.removed(people[1]), from: presenter.editor)
 		XCTAssertFalse(presenter.isViewing)
+		XCTAssertEqual(presenter.selectedID, people[1].id, "The viewer zooms back into the removed person's tile")
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "The tile waits for the viewer")
+		presenter.view(people[1].id)
+		XCTAssertFalse(presenter.isViewing, "A leaving tile opens nobody")
+		presenter.coverDidClose()
 		XCTAssertNil(presenter.selectedID)
 		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id])
+	}
+
+	func testRemovingTheLastPersonLeavesTheEmptyMosaic() async throws {
+		let people = makePeople(count: 1)
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(people)
+		gateway.removePersonResultToBeReturned = .success(())
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		await presenter.load()
+		presenter.view(people[0].id)
+		presenter.edit(people[0])
+		let mode = try XCTUnwrap(presenter.editMode)
+		await mode.remove()
+		presenter.coverDidClose()
+		XCTAssertTrue(presenter.persons.isEmpty)
+		XCTAssertFalse(presenter.isViewing)
+		XCTAssertNil(presenter.selectedID)
+		XCTAssertTrue(presenter.canAdd, "The empty mosaic still offers Add")
+	}
+
+	func testARemovedTileThatIsStillLeavingNeitherMovesNorIsStored() async {
+		let people = makePeople(count: 3)
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(people)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		await presenter.load()
+		presenter.view(people[1].id)
+		presenter.edit(people[1])
+		presenter.apply(.removed(people[1]), from: presenter.editor)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "The tile waits for the cover to close")
+		presenter.shift(people[1].id, by: 1)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "VoiceOver cannot move the leaving tile")
+		presenter.startReordering()
+		presenter.move(people[1].id, to: 0)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "Nor can a drag")
+		presenter.finishReordering()
+		presenter.shift(people[2].id, by: -1)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id, people[1].id], "Others move past it")
+		await presenter.saveOrder()
+		XCTAssertEqual(gateway.reorderedIDs, [[people[2].id, people[0].id]], "Only the people who stay are stored")
+		XCTAssertNil(presenter.error)
+		presenter.coverDidClose()
+		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id])
+		XCTAssertEqual(presenter.persons.map(\.displayOrder), [1, 2])
+	}
+
+	func testTheLastTileLeavingCannotStartReordering() async {
+		let people = makePeople(count: 1)
+		let presenter = await loadedPresenter(people)
+		presenter.view(people[0].id)
+		presenter.edit(people[0])
+		presenter.apply(.removed(people[0]), from: presenter.editor)
+		presenter.startReordering()
+		XCTAssertFalse(presenter.isReordering)
+	}
+
+	func testAViewerOpenedBeforeTheCoverClosedLetsTheRemovedTileLeave() async {
+		let people = makePeople(count: 3)
+		let presenter = await loadedPresenter(people)
+		presenter.view(people[1].id)
+		presenter.edit(people[1])
+		presenter.apply(.removed(people[1]), from: presenter.editor)
+		presenter.view(people[2].id)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id])
+		presenter.coverDidClose()
+		XCTAssertTrue(presenter.isViewing, "The cover that opened again stays")
+		XCTAssertEqual(presenter.selectedID, people[2].id)
+	}
+
+	func testNeighboursFollowTheMosaicOrderAndEndAtEitherEnd() async {
+		let people = makePeople(count: 3)
+		let presenter = await loadedPresenter(people)
+		XCTAssertEqual(presenter.neighbour(of: people[1].id, by: 1), people[2].id)
+		XCTAssertEqual(presenter.neighbour(of: people[1].id, by: -1), people[0].id)
+		XCTAssertNil(presenter.neighbour(of: people[2].id, by: 1))
+		XCTAssertNil(presenter.neighbour(of: people[0].id, by: -1))
+		XCTAssertNil(presenter.neighbour(of: UUID(), by: 1))
+		presenter.view(people[0].id)
+		presenter.select(presenter.neighbour(of: people[0].id, by: 1)!)
+		XCTAssertEqual(presenter.selectedID, people[1].id, "VoiceOver's Next person pages the viewer")
 	}
 
 	func testAWidgetLinkClosesTheEditorAndOpensThePersonOverTheMosaic() async {
@@ -130,6 +215,7 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertEqual(presenter.selectedID, people[2].id)
 		presenter.apply(.removed(people[2]), from: removing)
 		XCTAssertFalse(presenter.isViewing, "Nothing is left to show")
+		presenter.coverDidClose()
 		XCTAssertNil(presenter.selectedID)
 		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id])
 	}

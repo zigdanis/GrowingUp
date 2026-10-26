@@ -5,7 +5,8 @@ import SwiftUI
 /// into a drag without letting go.
 ///
 /// The long press is the only gesture into reordering, with no context menu; VoiceOver has a "Reorder" action instead.
-/// While reordering the tile rocks, and the accessibility actions move it a place earlier or later.
+/// While reordering the tile rocks. VoiceOver's "Move earlier" and "Move later" move it a place along at any time, as
+/// they need no dragging.
 struct MosaicTileButton: View {
 	/// How long a press waits before it lifts the tile, a little shorter than a context menu's.
 	static let liftDelay: TimeInterval = 0.4
@@ -25,7 +26,7 @@ struct MosaicTileButton: View {
 	let onDrop: () -> Void
 	/// Starts reordering without the long press, for accessibility.
 	let onStartReordering: () -> Void
-	/// Moves the tile a place earlier or later while reordering; nil at that end of the mosaic.
+	/// Moves the tile a place earlier or later and stores the order; nil at that end of the mosaic.
 	let onMoveEarlier: (() -> Void)?
 	let onMoveLater: (() -> Void)?
 	/// Whether a press lifted the tile and has not ended; the system resets it when it cancels the press too.
@@ -52,10 +53,10 @@ struct MosaicTileButton: View {
 			if !isReordering {
 				Button("Reorder", action: onStartReordering)
 			}
-			if isReordering, let onMoveEarlier {
+			if let onMoveEarlier {
 				Button("Move earlier", action: onMoveEarlier)
 			}
-			if isReordering, let onMoveLater {
+			if let onMoveLater {
 				Button("Move later", action: onMoveLater)
 			}
 		}

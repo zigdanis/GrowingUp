@@ -168,9 +168,9 @@ final class JourneyTests: XCTestCase {
 		let field = app.textFields["editor.name"]
 		XCTAssertTrue(field.waitForExistence(timeout: 5))
 		field.tap()
-		// Return dismisses the keyboard so it cannot cover the chips.
+		// Return dismisses the keyboard so it cannot cover the round controls.
 		field.typeText("Seventh\n")
-		let pin = chip("editor.pin")
+		let pin = control("editor.pin")
 		XCTAssertEqual(pin.value as? String, "0")
 		pin.tap()
 		XCTAssertEqual(pin.value as? String, "1")
@@ -277,19 +277,21 @@ extension JourneyTests {
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
-		// Return dismisses the keyboard so it cannot cover the birthday row.
+		// Return dismisses the keyboard so it cannot cover the round controls.
 		name.typeText("Ada\n")
 		if capturePickers {
 			app.buttons["editor.birthDate"].tap()
 			let date = app.datePickers["editor.birthDate.picker"]
 			XCTAssertTrue(date.waitForExistence(timeout: 5))
-			date.pickerWheels.element(boundBy: 1).adjust(toPickerWheelValue: "10")
+			// The fixed clock is January 15, 2027, so the calendar opens on that month.
+			let day = date.buttons.matching(NSPredicate(format: "label ENDSWITH %@", "January 10")).firstMatch
+			XCTAssertTrue(day.waitForExistence(timeout: 5), date.debugDescription)
+			day.tap()
 			checkpoint("editor-date")
-			let time = app.switches["editor.birthTime"]
-			XCTAssertEqual(time.value as? String, "0")
-			// The identifier belongs to the full toggle row; the native switch occupies its trailing edge.
-			time.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.5)).tap()
-			XCTAssertEqual(time.value as? String, "1")
+			closeCard()
+			let time = app.buttons["editor.birthTime"]
+			XCTAssertTrue((time.value as? String ?? "").hasPrefix("12:00"), "An unknown time shows as midnight")
+			time.tap()
 			let timePicker = app.datePickers["editor.birthTime.picker"]
 			XCTAssertTrue(timePicker.waitForExistence(timeout: 5))
 			timePicker.pickerWheels.element(boundBy: 0).adjust(toPickerWheelValue: "11")
@@ -297,19 +299,25 @@ extension JourneyTests {
 			// Adjusting the hour from midnight can roll the native wheel into the previous PM.
 			timePicker.pickerWheels.element(boundBy: 2).adjust(toPickerWheelValue: birthPeriod)
 			let selectedTime = XCTNSPredicateExpectation(
-				predicate: NSPredicate(format: "label CONTAINS %@ AND label CONTAINS %@", "11:20", birthPeriod),
-				object: app.buttons["editor.birthDate"])
+				predicate: NSPredicate(format: "value CONTAINS %@ AND value CONTAINS %@", "11:20", birthPeriod), object: time)
 			XCTAssertEqual(XCTWaiter.wait(for: [selectedTime], timeout: 5), .completed)
 			for wheel in timePicker.pickerWheels.allElementsBoundByIndex {
-				XCTAssertTrue(wheel.isHittable, "The selected time must remain reachable after expanding the wheel")
+				XCTAssertTrue(wheel.isHittable, "The selected time must remain reachable in the centred card")
 			}
 			checkpoint("editor-time")
-			app.buttons["editor.birthDate"].tap()
+			closeCard()
+			XCTAssertEqual(app.buttons["editor.birthDate"].value as? String, "Jan 10, 2027")
 		}
 		app.buttons["editor.save"].tap()
 		// A new person lands on the mosaic as a new tile.
 		XCTAssertTrue(tile("Ada").waitForExistence(timeout: 5))
 		XCTAssertFalse(overview.exists)
+	}
+
+	/// Taps the dim layer below the centred card, which closes it.
+	private func closeCard() {
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+		XCTAssertTrue(app.descendants(matching: .any)["editor.popover"].waitForNonExistence(timeout: 5))
 	}
 
 	private func tile(_ name: String) -> XCUIElement {
@@ -345,8 +353,8 @@ extension JourneyTests {
 		XCTFail("Swiping down did not close the viewer")
 	}
 
-	/// Editor chips and edit-mode switches are buttons that report their state as a "1"/"0" value.
-	private func chip(_ identifier: String) -> XCUIElement {
+	/// Edit-mode switches are buttons that report their state as a "1"/"0" value.
+	private func control(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}
 

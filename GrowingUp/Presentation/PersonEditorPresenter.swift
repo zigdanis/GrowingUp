@@ -4,8 +4,7 @@ import UIKit
 
 @MainActor
 @Observable
-final class PersonEditorPresenter: Identifiable {
-	let id = UUID()
+final class PersonEditorPresenter {
 	let person: Person?
 	let maximumBirthday: Date
 	let loadImage: (PersonImage) async throws -> UIImage
@@ -23,8 +22,6 @@ final class PersonEditorPresenter: Identifiable {
 	/// it along. A widget picture framed separately, or one saved earlier, is never re-derived.
 	private(set) var widgetPictureIsDerived = false
 	private var birthTimeIsKnown: Bool
-	/// The time of day last known before the toggle was turned off; turning it back on restores it.
-	private var rememberedTime: DateComponents?
 	/// The persisted fields as they were when `load()` finished; `isDirty` compares against it.
 	private var baseline: AddPersonParameters?
 	private let addUseCase: AddPersonUseCase
@@ -62,27 +59,10 @@ final class PersonEditorPresenter: Identifiable {
 	/// Whether the time of birth is known.
 	///
 	/// `CoreDataPerson.birthdate` is a single date without a "has time" flag, so an unknown time is stored as
-	/// local midnight (00:00:00) and the editor shows no time. The toggle loads as on only when the stored time
-	/// of day is not exactly midnight. Turning it off resets the time to midnight but remembers the time of day;
-	/// turning it back on restores that time on the current day, or keeps midnight when no time was known until
-	/// one is picked. A picked time stores its hour and minute with zero seconds. A birth time explicitly picked
-	/// as 00:00 therefore reopens with the toggle off.
-	var hasBirthTime: Bool {
-		get { birthTimeIsKnown }
-		set {
-			let calendar = Calendar.current
-			if !newValue {
-				if birthTimeIsKnown { rememberedTime = calendar.dateComponents([.hour, .minute, .second], from: birthday) }
-				birthTimeIsKnown = false
-				birthday = clamped(calendar.startOfDay(for: birthday))
-			} else if !birthTimeIsKnown {
-				birthTimeIsKnown = true
-				if let time = rememberedTime {
-					updateBirthday(day: birthday, hour: time.hour ?? 0, minute: time.minute ?? 0, second: time.second ?? 0)
-				}
-			}
-		}
-	}
+	/// local midnight (00:00:00), which the time capsule shows. The time counts as known only when the stored time
+	/// of day is not exactly midnight, or once a time is picked; a picked time stores its hour and minute with zero
+	/// seconds. A birth time explicitly picked as 00:00 therefore reopens as unknown.
+	var hasBirthTime: Bool { birthTimeIsKnown }
 
 	/// The calendar day of birth; setting it keeps the time of birth.
 	var dayOfBirth: Date {
@@ -118,13 +98,16 @@ final class PersonEditorPresenter: Identifiable {
 
 	/// Whether a change could be saved now: the name is not blank and nothing is loading or saving.
 	var isReadyToSave: Bool {
-		!name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isBusy && !isLoading
+		!trimmedName.isEmpty && !isBusy && !isLoading
 	}
+
+	/// The name as it is saved, without the spaces and line breaks around it; spaces alone are no change to it.
+	private var trimmedName: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
 
 	/// Image identity decides equality here: every newly picked or reframed picture gets a new identifier.
 	private var parameters: AddPersonParameters {
 		AddPersonParameters(
-			name: name, dayOfBirth: birthday, timeOfBirth: birthday, appImage: appImage, widgetImage: widgetImage,
+			name: trimmedName, dayOfBirth: birthday, timeOfBirth: birthday, appImage: appImage, widgetImage: widgetImage,
 			isOnWidget: isOnWidget, celebratesBirthdays: celebratesBirthdays)
 	}
 
@@ -182,6 +165,16 @@ final class PersonEditorPresenter: Identifiable {
 		return nil
 	}
 
+	/// The widget picture the person's page shows while there is no main photo, as `PersonPictureCandidates` picks it;
+	/// `nil` without one or when it does not load, which the page answers silently with the monogram.
+	func loadWidgetPicture() async -> UIImage? {
+		guard let widgetImage else { return nil }
+		if let image = widgetImage.uiImage { return image }
+		let loaded = try? await loadImage(widgetImage)
+		// The picture may have been replaced or removed while loading.
+		return self.widgetImage?.id == widgetImage.id ? loaded : nil
+	}
+
 	func load() async {
 		guard isLoading else { return }
 		defer {
@@ -199,7 +192,7 @@ final class PersonEditorPresenter: Identifiable {
 
 	func save() async {
 		guard isDirty, !isBusy, !isLoading else { return }
-		guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+		guard !trimmedName.isEmpty else {
 			error = SceneError(CoreError.noNameValue)
 			return
 		}
@@ -239,5 +232,4 @@ final class PersonEditorPresenter: Identifiable {
 			self.error = SceneError(error)
 		}
 	}
-
 }

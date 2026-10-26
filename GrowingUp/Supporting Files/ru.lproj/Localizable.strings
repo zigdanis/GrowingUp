@@ -80,8 +80,6 @@
 /* Message for the alert shown when a tapped photo fails to load */
 "The photo couldn't be loaded. Try again or pick another." = "Не удалось загрузить фото. Попробуйте ещё раз или выберите другое.";
 
-"Save" = "Сохранить";
-
 "OK" = "ОК";
 
 "Photo" = "Фото";
@@ -113,20 +111,22 @@
 /* VoiceOver action on a person page that returns to the mosaic of everyone. */
 "All people" = "Все люди";
 
+/* VoiceOver actions on a person page that page to the next or previous person in mosaic order. */
+"Next person" = "Следующий";
+"Previous person" = "Предыдущий";
+
 /* Headline of the empty mosaic. */
 "Who is growing up?" = "Кто растёт?";
 
 /* Invitation under the headline of the empty mosaic. */
 "Add someone you love and watch their age count up, live to the second." = "Добавьте близкого и следите, как растёт его возраст — с точностью до секунды.";
 
-/* Person editor. */
+/* Edit mode: the photo menu and the switches. */
 "Change photo" = "Изменить фото";
 "Add a photo" = "Добавить фото";
-"Born" = "Дата рождения";
 "On widget" = "В виджете";
 "Celebrate birthdays" = "Праздновать дни рождения";
 "Widget picture" = "Фото для виджета";
-"Reframe" = "Кадрировать";
 /* In-place edit mode of a person page. */
 "Done" = "Готово";
 "Widget" = "Виджет";

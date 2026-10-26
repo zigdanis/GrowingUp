@@ -91,7 +91,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		previewMark("editor-open")
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 5))
 		// Make a genuine, keyboard-free change so the native save action is enabled.
-		chip("editor.pin").tap()
+		control("editor.pin").tap()
 		previewMark("editor-change")
 		app.buttons["editor.save"].tap()
 		previewMark("saved")
@@ -148,7 +148,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 			overview.tap()
 			XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 10))
 			XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 10))
-			XCTAssertEqual(chip("editor.pin").value as? String, "1")
+			XCTAssertEqual(control("editor.pin").value as? String, "1")
 			checkpoint("store-\(locale)-persisted-\(index)")
 			dismissEditor()
 		}
@@ -204,21 +204,29 @@ final class AppStoreScreenshotTests: XCTestCase {
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5))
 		name.tap()
-		// Return dismisses the keyboard so it cannot cover the birthday row.
+		// Return dismisses the keyboard so it cannot cover the round controls.
 		name.typeText(names[index] + "\n")
 		app.buttons["editor.birthDate"].tap()
 		let picker = app.datePickers["editor.birthDate.picker"]
 		XCTAssertTrue(picker.waitForExistence(timeout: 5))
+		// The calendar's month header swaps the days for month and year wheels.
+		picker.buttons["DatePicker.Show"].tap()
 		let wheels = picker.pickerWheels
-		XCTAssertEqual(wheels.count, 3)
-		wheels.element(boundBy: 2).adjust(toPickerWheelValue: String(year))
+		XCTAssertTrue(wheels.firstMatch.waitForExistence(timeout: 5))
+		XCTAssertEqual(wheels.count, 2)
 		let formatter = DateFormatter()
 		formatter.locale = Locale(identifier: locale == "ru" ? "ru_RU" : "en_US")
-		let monthName = formatter.monthSymbols[month - 1].capitalized(with: formatter.locale)
-		wheels.element(boundBy: locale == "ru" ? 1 : 0).adjust(toPickerWheelValue: monthName)
-		wheels.element(boundBy: locale == "ru" ? 0 : 1).adjust(toPickerWheelValue: String(day))
-		app.buttons["editor.birthDate"].tap()
-		XCTAssertEqual(chip("editor.pin").value as? String, "1")
+		let monthName = formatter.standaloneMonthSymbols[month - 1].capitalized(with: formatter.locale)
+		wheels.element(boundBy: 1).adjust(toPickerWheelValue: String(year))
+		wheels.element(boundBy: 0).adjust(toPickerWheelValue: monthName)
+		picker.buttons["DatePicker.Hide"].tap()
+		let dayButton = picker.collectionViews.staticTexts[String(day)]
+		XCTAssertTrue(dayButton.waitForExistence(timeout: 5))
+		dayButton.tap()
+		// A tap on the dim layer below the centred calendar closes it.
+		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
+		XCTAssertTrue(picker.waitForNonExistence(timeout: 5))
+		XCTAssertEqual(control("editor.pin").value as? String, "1")
 		app.buttons["editor.appPhoto"].tap()
 		app.buttons["photo.source.photos"].tap()
 		let thumbnails = app.buttons.matching(identifier: "photo.thumbnail")
@@ -265,8 +273,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
 	}
 
-	/// Editor chips and edit-mode switches are buttons that report their state as a "1"/"0" value.
-	private func chip(_ identifier: String) -> XCUIElement {
+	/// Edit-mode switches are buttons that report their state as a "1"/"0" value.
+	private func control(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
 	}
 }

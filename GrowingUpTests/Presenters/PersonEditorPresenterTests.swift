@@ -25,10 +25,26 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.name = "Ada"
 		XCTAssertTrue(presenter.canSave)
 		presenter.name = "   "
-		XCTAssertTrue(presenter.isDirty)
+		XCTAssertFalse(presenter.isDirty, "Spaces alone are no name")
 		XCTAssertFalse(presenter.canSave)
 		presenter.name = ""
 		XCTAssertFalse(presenter.isDirty)
+	}
+
+	func testTheNameIsSavedWithoutTheSpacesAroundIt() async {
+		let gateway = PersonsGatewaySpy()
+		var person = Person.createPerson()
+		person.name = "Ada"
+		gateway.editPersonResultToBeReturned = .success(person)
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.name = "  Ada \n"
+		XCTAssertFalse(presenter.isDirty, "Spaces around the same name are no change")
+		XCTAssertFalse(presenter.canSave)
+		presenter.name = "  Ada Lovelace \n"
+		XCTAssertTrue(presenter.canSave)
+		await presenter.save()
+		XCTAssertEqual(gateway.addPersonParameters.name, "Ada Lovelace")
 	}
 
 	func testExistingPersonBaselineTracksTheCelebrationChoice() async {
@@ -66,14 +82,13 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.dayOfBirth = date(year: 2021, month: 3, day: 4, hour: 9, minute: 15)
 		XCTAssertEqual(presenter.birthday, date(year: 2021, month: 3, day: 4, hour: 0, minute: 0))
 		presenter.dayOfBirth = midnight
-		presenter.hasBirthTime = true
-		XCTAssertEqual(presenter.birthday, midnight, "Turning the time on keeps midnight until a time is picked")
 		XCTAssertFalse(presenter.isDirty)
 		presenter.timeOfBirth = date(year: 2024, month: 5, day: 6, hour: 14, minute: 30).addingTimeInterval(45)
+		XCTAssertTrue(presenter.hasBirthTime)
 		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 2, hour: 14, minute: 30))
 		XCTAssertTrue(presenter.isDirty)
-		presenter.hasBirthTime = false
-		XCTAssertEqual(presenter.birthday, midnight)
+		presenter.timeOfBirth = midnight
+		XCTAssertEqual(presenter.birthday, midnight, "Picking 00:00 stores the unknown time again")
 		XCTAssertFalse(presenter.isDirty)
 	}
 
@@ -86,41 +101,6 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.timeOfBirth = date(year: 2020, month: 1, day: 1, hour: 0, minute: 0)
 		XCTAssertTrue(presenter.hasBirthTime)
 		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 0, minute: 0))
-	}
-
-	func testTogglingTheBirthTimeRestoresTheStoredTime() async {
-		var person = Person.createPerson()
-		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 30)
-		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
-		await presenter.load()
-		presenter.hasBirthTime = false
-		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 0, minute: 0))
-		XCTAssertTrue(presenter.isDirty)
-		presenter.hasBirthTime = true
-		XCTAssertEqual(presenter.birthday, date(year: 2020, month: 1, day: 16, hour: 6, minute: 30))
-		XCTAssertFalse(presenter.isDirty)
-	}
-
-	func testBirthTimeIsRestoredOnTheDayChosenWhileItWasOff() async {
-		var person = Person.createPerson()
-		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 30)
-		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
-		await presenter.load()
-		presenter.hasBirthTime = false
-		presenter.dayOfBirth = date(year: 2019, month: 7, day: 8, hour: 15, minute: 0)
-		presenter.hasBirthTime = true
-		XCTAssertEqual(presenter.birthday, date(year: 2019, month: 7, day: 8, hour: 6, minute: 30))
-	}
-
-	func testTurningOnAnUnknownBirthTimeStaysAtMidnight() async {
-		var person = Person.createPerson()
-		let midnight = date(year: 2020, month: 1, day: 2, hour: 0, minute: 0)
-		person.birthday = midnight
-		let presenter = SceneConfigurator(gateway: PersonsGatewaySpy()).editor(person: person, onMutation: { _ in })
-		await presenter.load()
-		presenter.hasBirthTime = true
-		XCTAssertEqual(presenter.birthday, midnight)
-		XCTAssertFalse(presenter.isDirty)
 	}
 
 	func testPickingAMainPhotoDerivesTheWidgetPicture() async {

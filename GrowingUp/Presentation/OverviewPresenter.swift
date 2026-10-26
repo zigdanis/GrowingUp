@@ -5,7 +5,10 @@ import UIKit
 @MainActor
 @Observable
 final class OverviewPresenter {
+	/// The person's photo, chosen by `PersonPictureCandidates` like their mosaic tile; nil while it loads or without one.
 	private(set) var image: UIImage?
+	/// Whether no photo of the person loads, so the page shows their monogram, as their tile does.
+	private(set) var showsMonogram = false
 	/// The milestone age shown in large type; minutes are its finest unit, so only `tickerText` changes every second.
 	private(set) var summary: AgeSummary?
 	/// "and 3 months" under the milestone, or "Turns 6 years old today 🎂" on a birthday; `nil` without a second unit.
@@ -19,7 +22,6 @@ final class OverviewPresenter {
 	private(set) var birthdayStatus: BirthdayStatus?
 	private(set) var celebrationID = 0
 	private var wasCelebrating = false
-	var error: SceneError?
 	private let loadImage: (PersonImage) async throws -> UIImage
 	private let calendar: Calendar
 	private let locale: Locale
@@ -36,17 +38,25 @@ final class OverviewPresenter {
 	var primaryValue: String { summary?.localizedPrimaryValue(locale: locale) ?? "" }
 	var primaryUnit: String { summary?.localizedPrimaryUnit(locale: locale) ?? "" }
 
+	/// Loads the first of the person's pictures that loads. One that fails gives way to the next, and then to the monogram,
+	/// silently like the tile: the monogram is a finished picture, not an error.
 	func load(person: Person) async {
 		image = nil
-		guard let picture = PersonImage(id: person.appPicId) else { return }
-		do {
-			let loaded = try await loadImage(picture)
-			try Task.checkCancellation()
-			image = loaded
-		} catch is CancellationError {
-		} catch {
-			self.error = SceneError(error)
+		showsMonogram = false
+		for id in PersonPictureCandidates.ids(of: person) {
+			do {
+				let loaded = try await loadImage(PersonImage(id: id, uiImage: nil))
+				try Task.checkCancellation()
+				image = loaded
+				return
+			} catch is CancellationError {
+				return
+			} catch {
+				continue
+			}
 		}
+		guard !Task.isCancelled else { return }
+		showsMonogram = true
 	}
 
 	func tick(person: Person, now: Date, isSelected: Bool = false) {

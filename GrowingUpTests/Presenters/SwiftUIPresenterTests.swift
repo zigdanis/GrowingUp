@@ -112,6 +112,8 @@ final class SwiftUIPresenterTests: XCTestCase {
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in })
 		await presenter.load()
 		presenter.name = "  "
+		// Spaces alone are no change, so another field makes the draft worth saving.
+		presenter.celebratesBirthdays = false
 		XCTAssertFalse(presenter.canSave)
 		await presenter.save()
 		XCTAssertFalse(gateway.addPersonCalled)
@@ -152,9 +154,10 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.birthday, calendar.date(from: DateComponents(year: 2026, month: 10, day: 4, hour: 18, minute: 30))!)
 	}
 
-	func testOverviewAgeUsesProvidedClockAndClearsMissingPicture() async {
+	func testOverviewAgeUsesProvidedClockAndShowsTheMonogramWithoutPictures() async {
 		var person = Person.createPerson()
 		person.appPicId = nil
+		person.widgetPicId = nil
 		let presenter = OverviewPresenter(loadImage: { _ in
 			XCTFail("No image to load"); return UIImage()
 		})
@@ -163,6 +166,7 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.summary, AgeSummary(birthday: person.birthday, now: now, finestUnit: .minutes))
 		await presenter.load(person: person)
 		XCTAssertNil(presenter.image)
+		XCTAssertTrue(presenter.showsMonogram)
 	}
 	func testFourthAndSixthPinsSaveWithAvailableCapacity() async {
 		for count in [3, 5] {
@@ -271,14 +275,15 @@ extension SwiftUIPresenterTests {
 		await presenter.load()
 		XCTAssertNotNil(presenter.editor)
 		XCTAssertNil(presenter.editor?.person)
-		presenter.editor = nil
+		XCTAssertTrue(presenter.editMode?.isNewPerson == true, "The link opens the new person's edit mode")
+		presenter.cancelEditing(presenter.editor)
 		presenter.open(URL(string: "growingup-app://?\(Constants.widgetPersonIndexKey)=1")!)
 		XCTAssertEqual(presenter.selectedID, presenter.persons[1].id)
 		XCTAssertNil(presenter.editor)
 		presenter.open(link)
 		XCTAssertNotNil(presenter.editor)
 		let full = PersonsGatewaySpy()
-		full.fetchPersonsResultToBeReturned = .success((0..<20).map { _ in Person.createPerson() })
+		full.fetchPersonsResultToBeReturned = .success((0..<Constants.peopleLimit).map { _ in Person.createPerson() })
 		let fullPresenter = PeoplePresenter(configurator: SceneConfigurator(gateway: full), reloadWidgets: {})
 		fullPresenter.open(link)
 		await fullPresenter.load()

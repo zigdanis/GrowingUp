@@ -2,8 +2,8 @@ import Core
 import Observation
 import UIKit
 
-/// Loads the pictures of the mosaic tiles once per picture as small thumbnails, preferring the portrait app photo to the
-/// square widget photo, and measures each one's average colour for the ambient background.
+/// Loads the pictures of the mosaic tiles once per picture as small thumbnails, choosing them by
+/// `PersonPictureCandidates` like the viewer, and measures each one's average colour for the ambient background.
 @MainActor
 @Observable
 final class MosaicPicturesPresenter {
@@ -44,7 +44,7 @@ final class MosaicPicturesPresenter {
 		pictures = pictures.filter { listed.contains($0.key) }
 		for person in persons {
 			// A cached fallback must not hide a new preferred picture, and a renamed person needs a new monogram.
-			let candidates = Self.pictureIDs(of: person).filter { !failedPictures.contains($0) }
+			let candidates = PersonPictureCandidates.ids(of: person).filter { !failedPictures.contains($0) }
 			if let current = pictures[person.id], current.pictureID == candidates.first, current.pictureID != nil || current.name == person.name {
 				continue
 			}
@@ -71,16 +71,13 @@ final class MosaicPicturesPresenter {
 				failedPictures.insert(id)
 			}
 		}
-		let monogram = MonogramPicture.draw(id: person.id, name: person.name)
+		// In the tile's portrait shape, so the initial stays whole in its corner as on the person's page.
+		let monogram = MonogramPicture.draw(id: person.id, name: person.name, size: CGSize(width: maxPixelSize * 9 / 16, height: maxPixelSize))
 		return MosaicPicture(pictureID: nil, name: person.name, image: monogram, averageColor: await Self.averageColor(of: monogram))
 	}
 
 	/// Measures off the main actor, so loading many tiles never stalls scrolling.
 	private nonisolated static func averageColor(of image: UIImage) async -> UIColor? {
 		image.averageColor
-	}
-
-	private static func pictureIDs(of person: Person) -> [UUID] {
-		[person.appPicId, person.widgetPicId].compactMap { $0 }
 	}
 }

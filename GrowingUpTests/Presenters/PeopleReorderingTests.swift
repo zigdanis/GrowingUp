@@ -42,6 +42,20 @@ final class PeopleReorderingTests: XCTestCase {
 		XCTAssertEqual(presenter.persons.map(\.id), [people[0].id, people[2].id, people[1].id])
 	}
 
+	func testVoiceOverShiftsATileWithoutReorderingAndStoresTheOrder() async {
+		let people = makePeople(count: 3)
+		let (presenter, gateway) = await loadedPresenter(people)
+		presenter.shift(people[0].id, by: 1)
+		XCTAssertFalse(presenter.isReordering, "Move later needs no reordering")
+		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id, people[0].id, people[2].id])
+		presenter.shift(people[2].id, by: -1)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id, people[2].id, people[0].id])
+		presenter.shift(people[1].id, by: -1)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id, people[2].id, people[0].id], "The first tile stays first")
+		await presenter.saveOrder()
+		XCTAssertEqual(gateway.reorderedIDs, [[people[1].id, people[2].id, people[0].id]])
+	}
+
 	func testSavingStoresTheNewOrderAndReloadsWidgets() async {
 		let people = makePeople(count: 3)
 		var reloads = 0
