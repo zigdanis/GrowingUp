@@ -2,7 +2,8 @@ import SwiftUI
 
 /// The edit mode's photo, filling the window exactly as the viewer's page does until a pinch zooms it or a drag moves it.
 /// The thirds grid over the crop frame shows that the gestures now belong to the photo; double-tapping puts it back.
-/// Without a photo it shows the person's monogram, as their page does.
+/// Without a main photo it shows what the person's page shows: their widget picture, which stays as it is, or else
+/// their monogram.
 struct EditModePhoto: View {
 	let mode: PersonEditModePresenter
 	let window: CGSize
@@ -16,7 +17,9 @@ struct EditModePhoto: View {
 					.accessibilityIdentifier("editor.appPhoto.loaded")
 				guides(geometry.frameRect)
 					.accessibilityHidden(true)
-			} else if mode.editor.appImage == nil, let person = mode.editor.person {
+			} else if let backdrop = mode.backdrop {
+				filling(backdrop)
+			} else if mode.showsMonogram, let person = mode.editor.person {
 				// The monogram the person's tile and page show without a photo, taking the edited name's initial.
 				PersonMonogram(id: person.id, name: mode.editor.name)
 			}
@@ -42,6 +45,16 @@ struct EditModePhoto: View {
 			// Offset zero is the aspect-fill the viewer shows, which the clamp assumes.
 			.frame(width: window.width, height: window.height)
 			.clipped()
+	}
+
+	/// The widget picture filling the window as the viewer's page fills it; the gestures leave it as it is.
+	private func filling(_ picture: UIImage) -> some View {
+		Image(uiImage: picture)
+			.resizable()
+			.scaledToFill()
+			.frame(width: window.width, height: window.height)
+			.clipped()
+			.accessibilityHidden(true)
 	}
 
 	private func guides(_ frame: CGRect) -> some View {

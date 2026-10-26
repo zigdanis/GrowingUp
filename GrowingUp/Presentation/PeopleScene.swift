@@ -64,7 +64,6 @@ struct PeopleScene: View {
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
 		} else if presenter.persons.isEmpty {
 			PeopleInvitation()
-				.frame(maxWidth: .infinity)
 				.modifier(trailingPane)
 				.frame(maxHeight: .infinity)
 				.transition(.opacity)

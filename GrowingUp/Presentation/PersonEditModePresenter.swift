@@ -18,6 +18,12 @@ final class PersonEditModePresenter {
 	var isConfirmingRemoval = false
 	/// The main photo being framed; `nil` without a photo or until it loads.
 	private(set) var photo: UIImage?
+	/// The widget picture shown as it is while no main photo shows, as the person's page shows it: only a main photo
+	/// is framed. `nil` while there is a main photo, without a widget picture, or until it loads.
+	private(set) var backdrop: UIImage?
+	/// Whether no picture of the draft loads, so it shows the person's monogram, as their page does. A new person's draft
+	/// has none, as it gets its own monogram colour only once added.
+	private(set) var showsMonogram: Bool
 	/// Where the photo sits now, rubber-banding while a pinch or drag moves it.
 	private(set) var framing = PhotoFraming.identity
 	/// Whether a pinch or drag is moving the photo.
@@ -41,6 +47,8 @@ final class PersonEditModePresenter {
 		locale: Locale = .autoupdatingCurrent, onCancel: @escaping () -> Void
 	) {
 		self.editor = editor
+		// A person without any picture shows the monogram at once; a picture that is loading never flashes it first.
+		showsMonogram = editor.person != nil && editor.appImage == nil && editor.widgetImage == nil
 		self.now = now
 		self.calendar = calendar
 		self.locale = locale
@@ -132,8 +140,9 @@ final class PersonEditModePresenter {
 
 	// MARK: - Framing
 
-	/// Loads the draft's main photo. A new or removed photo rests as the viewer would show it; the same photo loaded
-	/// again, as when the screen returns from the widget picture's crop, keeps its framing.
+	/// Loads the draft's main photo, else its widget picture as the backdrop, else settles on the monogram: the person's
+	/// page picks the same way. A new or removed photo rests as the viewer would show it; the same photo loaded again, as
+	/// when the screen returns from the widget picture's crop, keeps its framing.
 	func loadPhoto() async {
 		let photoID = editor.appImage?.id
 		let loaded = await editor.loadMainPhoto()
@@ -143,6 +152,15 @@ final class PersonEditModePresenter {
 			resetFraming()
 		}
 		framedPhotoID = loaded == nil ? nil : photoID
+		guard loaded == nil else {
+			backdrop = nil
+			showsMonogram = false
+			return
+		}
+		let widgetPicture = await editor.loadWidgetPicture()
+		guard !Task.isCancelled else { return }
+		backdrop = widgetPicture
+		showsMonogram = widgetPicture == nil && !isNewPerson
 	}
 
 	/// Takes the window's size and safe area, keeping the photo covering the crop frame in a resized window.

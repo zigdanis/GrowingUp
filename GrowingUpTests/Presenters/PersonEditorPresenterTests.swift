@@ -25,10 +25,26 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.name = "Ada"
 		XCTAssertTrue(presenter.canSave)
 		presenter.name = "   "
-		XCTAssertTrue(presenter.isDirty)
+		XCTAssertFalse(presenter.isDirty, "Spaces alone are no name")
 		XCTAssertFalse(presenter.canSave)
 		presenter.name = ""
 		XCTAssertFalse(presenter.isDirty)
+	}
+
+	func testTheNameIsSavedWithoutTheSpacesAroundIt() async {
+		let gateway = PersonsGatewaySpy()
+		var person = Person.createPerson()
+		person.name = "Ada"
+		gateway.editPersonResultToBeReturned = .success(person)
+		let presenter = SceneConfigurator(gateway: gateway).editor(person: person, onMutation: { _ in })
+		await presenter.load()
+		presenter.name = "  Ada \n"
+		XCTAssertFalse(presenter.isDirty, "Spaces around the same name are no change")
+		XCTAssertFalse(presenter.canSave)
+		presenter.name = "  Ada Lovelace \n"
+		XCTAssertTrue(presenter.canSave)
+		await presenter.save()
+		XCTAssertEqual(gateway.addPersonParameters.name, "Ada Lovelace")
 	}
 
 	func testExistingPersonBaselineTracksTheCelebrationChoice() async {

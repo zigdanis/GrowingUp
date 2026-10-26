@@ -45,7 +45,8 @@ struct PersonEditModeScene: View {
 		.onChange(of: editor.isLoading) { _, isLoading in
 			if !isLoading, mode.isNewPerson { isNameFocused = true }
 		}
-		.task(id: editor.appImage?.id) { await mode.loadPhoto() }
+		// Removing a widget picture shown alone changes no main photo, yet it leaves the monogram in its place.
+		.task(id: [editor.appImage?.id, editor.widgetImage?.id]) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
 		.alert(mode.removalTitle, isPresented: $mode.isConfirmingRemoval) {
 			Button("Remove", role: .destructive) { Task { await mode.remove() } }

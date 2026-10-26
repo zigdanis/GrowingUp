@@ -112,6 +112,8 @@ final class SwiftUIPresenterTests: XCTestCase {
 		let presenter = SceneConfigurator(gateway: gateway).editor(person: nil, onMutation: { _ in })
 		await presenter.load()
 		presenter.name = "  "
+		// Spaces alone are no change, so another field makes the draft worth saving.
+		presenter.celebratesBirthdays = false
 		XCTAssertFalse(presenter.canSave)
 		await presenter.save()
 		XCTAssertFalse(gateway.addPersonCalled)
@@ -281,7 +283,7 @@ extension SwiftUIPresenterTests {
 		presenter.open(link)
 		XCTAssertNotNil(presenter.editor)
 		let full = PersonsGatewaySpy()
-		full.fetchPersonsResultToBeReturned = .success((0..<20).map { _ in Person.createPerson() })
+		full.fetchPersonsResultToBeReturned = .success((0..<Constants.peopleLimit).map { _ in Person.createPerson() })
 		let fullPresenter = PeoplePresenter(configurator: SceneConfigurator(gateway: full), reloadWidgets: {})
 		fullPresenter.open(link)
 		await fullPresenter.load()

@@ -86,6 +86,42 @@ final class PeopleSelectionTests: XCTestCase {
 		XCTAssertTrue(presenter.canAdd, "The empty mosaic still offers Add")
 	}
 
+	func testARemovedTileThatIsStillLeavingNeitherMovesNorIsStored() async {
+		let people = makePeople(count: 3)
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(people)
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		await presenter.load()
+		presenter.view(people[1].id)
+		presenter.edit(people[1])
+		presenter.apply(.removed(people[1]), from: presenter.editor)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "The tile waits for the cover to close")
+		presenter.shift(people[1].id, by: 1)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "VoiceOver cannot move the leaving tile")
+		presenter.startReordering()
+		presenter.move(people[1].id, to: 0)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id), "Nor can a drag")
+		presenter.finishReordering()
+		presenter.shift(people[2].id, by: -1)
+		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id, people[1].id], "Others move past it")
+		await presenter.saveOrder()
+		XCTAssertEqual(gateway.reorderedIDs, [[people[2].id, people[0].id]], "Only the people who stay are stored")
+		XCTAssertNil(presenter.error)
+		presenter.coverDidClose()
+		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id])
+		XCTAssertEqual(presenter.persons.map(\.displayOrder), [1, 2])
+	}
+
+	func testTheLastTileLeavingCannotStartReordering() async {
+		let people = makePeople(count: 1)
+		let presenter = await loadedPresenter(people)
+		presenter.view(people[0].id)
+		presenter.edit(people[0])
+		presenter.apply(.removed(people[0]), from: presenter.editor)
+		presenter.startReordering()
+		XCTAssertFalse(presenter.isReordering)
+	}
+
 	func testAViewerOpenedBeforeTheCoverClosedLetsTheRemovedTileLeave() async {
 		let people = makePeople(count: 3)
 		let presenter = await loadedPresenter(people)

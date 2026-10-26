@@ -12,6 +12,8 @@ public enum Constants {
 	public static let bundleIdentifier = "pro.ziganshin.Core"
 	public static let appGroupId = "group.pro.ziganshin.aging"
 	public static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
+	/// The most people the app keeps; the mosaic offers no "Add" beyond it.
+	public static let peopleLimit = 20
 	public static let widgetPeopleLimit = 6
 	public static let widgetPersonIDKey = "personID"
 	public static let widgetPersonIndexKey = "personIndex"

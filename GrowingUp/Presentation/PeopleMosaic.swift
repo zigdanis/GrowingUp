@@ -5,7 +5,7 @@ import SwiftUI
 ///
 /// A long press on a tile starts reordering: the tile lifts and follows the finger, its neighbours make room live, and
 /// the mosaic scrolls when the finger nears its top or bottom edge. A removed person's tile fades away as its neighbours
-/// slide into the gap, under the animation the change comes with.
+/// slide into the gap, under the animation the change comes with. With Reduce Motion, tiles take their new places at once.
 struct PeopleMosaic: View {
 	private static let contentSpace = NamedCoordinateSpace.named("mosaic.content")
 
@@ -33,6 +33,8 @@ struct PeopleMosaic: View {
 	@State private var position = ScrollPosition(idType: UUID.self)
 	/// -1 or 1 while a dragged tile is near the top or bottom edge, which scrolls the mosaic that way; otherwise 0.
 	@State private var autoscrollDirection = 0
+	@Environment(\.accessibilityReduceMotion)
+	private var reduceMotion
 
 	var body: some View {
 		GeometryReader { geometry in
@@ -77,7 +79,7 @@ struct PeopleMosaic: View {
 				)
 				.onChange(of: selectedID) { _, id in
 					guard let id else { return }
-					withAnimation { proxy.scrollTo(id, anchor: .center) }
+					withAnimation(reduceMotion ? nil : .default) { proxy.scrollTo(id, anchor: .center) }
 				}
 				.task(id: autoscrollDirection) {
 					await autoscrollWhileNearAnEdge()
@@ -139,7 +141,7 @@ struct PeopleMosaic: View {
 		if drag?.isSettling == true { drag = nil }
 		guard drag == nil else { return }
 		onStartReordering()
-		withAnimation(.snappy(duration: 0.2)) { drag = MosaicDrag(id: id) }
+		withAnimation(reduceMotion ? nil : .snappy(duration: 0.2)) { drag = MosaicDrag(id: id) }
 	}
 
 	/// Moves the dragged person to the slot under the floating tile's centre, and scrolls when it nears an edge.
@@ -151,7 +153,7 @@ struct PeopleMosaic: View {
 		let centre = CGPoint(x: origin.x + grid.tileWidth / 2, y: origin.y + grid.tileHeight / 2)
 		let slot = grid.slot(at: centre, count: persons.count, width: width)
 		if slot != index {
-			withAnimation(.snappy(duration: 0.25)) { onMove(drag.id, slot) }
+			withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { onMove(drag.id, slot) }
 		}
 		autoscrollDirection = drag.location.flatMap { autoscroll?.direction(at: $0) } ?? 0
 	}
@@ -159,16 +161,21 @@ struct PeopleMosaic: View {
 	private func drop(_ id: UUID) {
 		guard drag?.id == id, drag?.isSettling == false else { return }
 		autoscrollDirection = 0
+		Task { await onSaveOrder() }
+		// With Reduce Motion, the tile lands in its slot at once.
+		guard !reduceMotion else {
+			drag = nil
+			return
+		}
 		withAnimation(.snappy(duration: 0.25)) {
 			drag?.isSettling = true
 		} completion: {
 			if drag?.id == id, drag?.isSettling == true { drag = nil }
 		}
-		Task { await onSaveOrder() }
 	}
 
 	private func shift(_ id: UUID, by offset: Int) {
-		withAnimation(.snappy(duration: 0.25)) { onShift(id, offset) }
+		withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { onShift(id, offset) }
 		Task { await onSaveOrder() }
 	}
 

@@ -98,13 +98,16 @@ final class PersonEditorPresenter {
 
 	/// Whether a change could be saved now: the name is not blank and nothing is loading or saving.
 	var isReadyToSave: Bool {
-		!name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !isBusy && !isLoading
+		!trimmedName.isEmpty && !isBusy && !isLoading
 	}
+
+	/// The name as it is saved, without the spaces and line breaks around it; spaces alone are no change to it.
+	private var trimmedName: String { name.trimmingCharacters(in: .whitespacesAndNewlines) }
 
 	/// Image identity decides equality here: every newly picked or reframed picture gets a new identifier.
 	private var parameters: AddPersonParameters {
 		AddPersonParameters(
-			name: name, dayOfBirth: birthday, timeOfBirth: birthday, appImage: appImage, widgetImage: widgetImage,
+			name: trimmedName, dayOfBirth: birthday, timeOfBirth: birthday, appImage: appImage, widgetImage: widgetImage,
 			isOnWidget: isOnWidget, celebratesBirthdays: celebratesBirthdays)
 	}
 
@@ -162,6 +165,16 @@ final class PersonEditorPresenter {
 		return nil
 	}
 
+	/// The widget picture the person's page shows while there is no main photo, as `PersonPictureCandidates` picks it;
+	/// `nil` without one or when it does not load, which the page answers silently with the monogram.
+	func loadWidgetPicture() async -> UIImage? {
+		guard let widgetImage else { return nil }
+		if let image = widgetImage.uiImage { return image }
+		let loaded = try? await loadImage(widgetImage)
+		// The picture may have been replaced or removed while loading.
+		return self.widgetImage?.id == widgetImage.id ? loaded : nil
+	}
+
 	func load() async {
 		guard isLoading else { return }
 		defer {
@@ -179,7 +192,7 @@ final class PersonEditorPresenter {
 
 	func save() async {
 		guard isDirty, !isBusy, !isLoading else { return }
-		guard !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+		guard !trimmedName.isEmpty else {
 			error = SceneError(CoreError.noNameValue)
 			return
 		}
@@ -219,5 +232,4 @@ final class PersonEditorPresenter {
 			self.error = SceneError(error)
 		}
 	}
-
 }

@@ -49,7 +49,7 @@ final class PeoplePresenter {
 		self.reloadWidgets = reloadWidgets
 	}
 
-	var canAdd: Bool { persons.count < 20 }
+	var canAdd: Bool { persons.count < Constants.peopleLimit }
 
 	/// The cover's in-place edit mode, while its session still owns editing and the cover shows.
 	var editMode: PersonEditModePresenter? {
@@ -138,9 +138,10 @@ final class PeoplePresenter {
 		isViewing = false
 	}
 
-	/// Lets the mosaic's tiles be dragged to new places, as a long press on one does.
+	/// Lets the mosaic's tiles be dragged to new places, as a long press on one does; a removed person's tile that is
+	/// still leaving is no longer among them.
 	func startReordering() {
-		guard !persons.isEmpty else { return }
+		guard persons.contains(where: { $0.id != leavingID }) else { return }
 		isReordering = true
 	}
 
@@ -148,17 +149,21 @@ final class PeoplePresenter {
 	func finishReordering() { isReordering = false }
 
 	/// Moves the person with `id` to `index` of the mosaic while reordering, such as under a dragged tile; `saveOrder()`
-	/// then stores the new order.
+	/// then stores the new order. A removed person's tile that is still leaving stays where it is.
 	func move(_ id: UUID, to index: Int) {
-		guard isReordering else { return }
+		guard isReordering, id != leavingID else { return }
 		place(id, at: index)
 	}
 
 	/// Moves the person with `id` `offset` places along the mosaic, as VoiceOver's "Move earlier" and "Move later" do on
-	/// a tile; unlike a drag it needs no reordering. `saveOrder()` then stores the new order.
+	/// a tile; unlike a drag it needs no reordering. `saveOrder()` then stores the new order. A removed person's tile that
+	/// is still leaving stays where it is, and the others move past it.
 	func shift(_ id: UUID, by offset: Int) {
-		guard let index = persons.firstIndex(where: { $0.id == id }) else { return }
-		place(id, at: index + offset)
+		let staying = persons.filter { $0.id != leavingID }
+		guard let index = staying.firstIndex(where: { $0.id == id }) else { return }
+		let neighbour = staying[min(max(index + offset, 0), staying.count - 1)].id
+		guard let destination = persons.firstIndex(where: { $0.id == neighbour }) else { return }
+		place(id, at: destination)
 	}
 
 	private func place(_ id: UUID, at index: Int) {
@@ -172,12 +177,15 @@ final class PeoplePresenter {
 
 	/// Stores the mosaic's current order, as a dragged tile lands; when the latest save fails, the people return to the order
 	/// that is stored. A failed save that a newer one superseded changes nothing: the newer save stores the whole order.
+	///
+	/// A removed person's tile that is still leaving has no place left to store.
 	func saveOrder() async {
-		let order = persons.map(\.id)
-		guard order != persons.sorted().map(\.id) else { return }
+		let staying = persons.filter { $0.id != leavingID }
+		let order = staying.map(\.id)
+		guard order != staying.sorted().map(\.id) else { return }
 		// The people take their new places at once, so a change saved meanwhile keeps them where they are shown.
-		for index in persons.indices {
-			persons[index].displayOrder = index + 1
+		for (place, index) in persons.indices.filter({ persons[$0].id != leavingID }).enumerated() {
+			persons[index].displayOrder = place + 1
 		}
 		let previous = orderSave
 		let save = Task { [weak self, reorderUseCase = configurator.reorderUseCase] in
