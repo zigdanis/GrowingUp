@@ -38,8 +38,9 @@ struct MosaicTileButton: View {
 				.opacity(isLifted ? 0 : 1)
 				// The empty slot keeps the lifted tile's press alive under the finger.
 				.contentShape(.rect(cornerRadius: MosaicTile.cornerRadius))
-				// Inside the label, the press is the button's child, which goes first: once it lifts the tile, the tap is off.
-				.gesture(
+				// The button's press recognizer must not prevent the long press on iOS 18. A recognized hold enters
+				// reordering before release, so the button action cannot open a person; movement still fails the hold.
+				.simultaneousGesture(
 					MosaicLiftGesture(
 						minimumDuration: Self.liftDelay, coordinateSpace: contentSpace,
 						onLift: { location in

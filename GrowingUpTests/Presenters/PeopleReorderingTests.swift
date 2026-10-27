@@ -102,20 +102,23 @@ final class PeopleReorderingTests: XCTestCase {
 		presenter.startReordering()
 		var releaseFirst: CheckedContinuation<Void, Never>?
 		gateway.onReorder = {
-			guard gateway.reorderedIDs.count == 1 else { return }
-			await withCheckedContinuation { releaseFirst = $0 }
+			if gateway.reorderedIDs.count == 1 {
+				await withCheckedContinuation { releaseFirst = $0 }
+			} else {
+				gateway.reorderResultToBeReturned = .success(())
+			}
 		}
 		gateway.reorderResultToBeReturned = .failure(.coreDataSaveFailed)
 		presenter.move(people[2].id, to: 0)
 		let first = Task { await presenter.saveOrder() }
 		while releaseFirst == nil { await Task.yield() }
 		presenter.move(people[1].id, to: 0)
-		let second = Task { await presenter.saveOrder() }
-		for _ in 0..<20 { await Task.yield() }
-		releaseFirst?.resume()
+		// Call the newer save directly on the main actor: it registers before yielding to the task that releases
+		// the first. A fixed number of Task.yield calls does not guarantee that another task has registered.
+		let release = Task { releaseFirst?.resume() }
+		await presenter.saveOrder()
 		await first.value
-		gateway.reorderResultToBeReturned = .success(())
-		await second.value
+		await release.value
 		XCTAssertEqual(presenter.persons.map(\.id), [people[1].id, people[2].id, people[0].id])
 		XCTAssertNil(presenter.error)
 	}
@@ -153,11 +156,10 @@ final class PeopleReorderingTests: XCTestCase {
 		let first = Task { await presenter.saveOrder() }
 		while releaseFirst == nil { await Task.yield() }
 		presenter.move(people[1].id, to: 0)
-		let second = Task { await presenter.saveOrder() }
-		for _ in 0..<20 { await Task.yield() }
-		releaseFirst?.resume()
-		await second.value
+		let release = Task { releaseFirst?.resume() }
+		await presenter.saveOrder()
 		await first.value
+		await release.value
 		XCTAssertEqual(presenter.persons.map(\.id), [people[2].id, people[0].id, people[1].id], "The first save's order")
 		XCTAssertEqual(presenter.persons.map(\.displayOrder), [1, 2, 3])
 		XCTAssertEqual(presenter.error?.message, CoreError.coreDataSaveFailed.message)
@@ -176,12 +178,13 @@ final class PeopleReorderingTests: XCTestCase {
 		let first = Task { await presenter.saveOrder() }
 		while releaseFirst == nil { await Task.yield() }
 		presenter.move(people[1].id, to: 0)
-		let second = Task { await presenter.saveOrder() }
-		for _ in 0..<20 { await Task.yield() }
-		XCTAssertEqual(gateway.reorderedIDs.count, 1, "The second save waits for the first")
-		releaseFirst?.resume()
+		let release = Task {
+			XCTAssertEqual(gateway.reorderedIDs.count, 1, "The second save waits for the first")
+			releaseFirst?.resume()
+		}
+		await presenter.saveOrder()
 		await first.value
-		await second.value
+		await release.value
 		XCTAssertEqual(
 			gateway.reorderedIDs, [[people[2].id, people[0].id, people[1].id], [people[1].id, people[2].id, people[0].id]])
 	}

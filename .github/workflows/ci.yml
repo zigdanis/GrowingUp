@@ -78,8 +78,9 @@ jobs:
       # the iPhone Duo pass on the shipping toolchain (Xcode 27.1), whose downloaded iOS 27.1
       # runtime only offers that device. The Duo simulator boots
       # folded, so its journeys run on the outer display ("primary"); simctl needs that
-      # display named for video. The iOS 27 and slower, flakier iOS 18 passes run on master
-      # pushes and manual runs only.
+      # display named for video. iOS 18 also runs on PRs: gesture arbitration differs from
+      # newer iOS versions, so a green Glass pass cannot validate our minimum supported OS.
+      # The additional iOS 27 pass runs on master pushes and manual runs only.
       - name: Choose UI devices
         id: ui
         env:
@@ -95,7 +96,7 @@ jobs:
             {"name": "iOS 27", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-0",
              "device": "iPhone-18-Pro", "on_pull_request": false},
             {"name": "iOS 18", "runner": "macos-15", "xcode": "26.3", "runtime": "18-5",
-             "device": "iPhone-16", "on_pull_request": false}
+             "device": "iPhone-16", "on_pull_request": true}
           ]
           JSON
           )
