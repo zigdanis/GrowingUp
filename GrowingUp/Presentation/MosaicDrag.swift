@@ -4,17 +4,18 @@ import Foundation
 /// A mosaic tile lifted for reordering, whose floating copy follows the finger through the mosaic's scroll content.
 struct MosaicDrag: Equatable {
 	let id: UUID
-	/// The finger in the scroll content; nil from the lift until the finger first moves.
+	/// The finger in the scroll content; nil from the lift until the finger is first reported.
 	var location: CGPoint?
-	/// The finger's offset from the floating tile's corner, kept from the first move on.
+	/// The finger's offset from the floating tile's corner, kept from where the press lifted the tile.
 	var grab: CGSize?
 	/// Whether the finger let go and the floating copy glides into the tile's slot.
 	var isSettling = false
 
-	/// Follows the finger at `location`, which started the drag at `start` over the tile whose slot is at `slotOrigin`.
-	mutating func follow(to location: CGPoint, from start: CGPoint, slotOrigin: CGPoint) {
+	/// Follows the finger at `location` over the tile whose slot is at `slotOrigin`; the first location, where the press
+	/// lifted the tile, sets where the finger holds it.
+	mutating func follow(to location: CGPoint, slotOrigin: CGPoint) {
 		if grab == nil {
-			grab = CGSize(width: start.x - slotOrigin.x, height: start.y - slotOrigin.y)
+			grab = CGSize(width: location.x - slotOrigin.x, height: location.y - slotOrigin.y)
 		}
 		self.location = location
 	}

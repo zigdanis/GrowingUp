@@ -9,6 +9,7 @@
 //
 
 import AVFoundation
+import Core
 import UIKit
 import XCTest
 
@@ -35,16 +36,19 @@ final class CameraSourceTests: XCTestCase {
 
 	func testCropResultIsHandedOffOnceAfterDismissal() {
 		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
+		let picked = UIImage()
 		let croppedImage = UIImage()
 		coordinator.choseAllPhotos()
-		coordinator.pickerFinished(with: UIImage())
+		coordinator.pickerFinished(with: picked)
 		coordinator.pickerDismissed()
-		coordinator.completedCrop(with: croppedImage)
+		coordinator.completedCrop(with: FramedPhoto(source: picked, crop: .whole, picture: croppedImage))
 		XCTAssertNil(coordinator.imageToCrop)
 
 		coordinator.imageToCrop = nil
-		coordinator.completedCrop(with: UIImage())
-		XCTAssertTrue(coordinator.cropDismissed() === croppedImage)
+		coordinator.completedCrop(with: .whole(UIImage()))
+		let handedOff = coordinator.cropDismissed()
+		XCTAssertTrue(handedOff?.picture === croppedImage)
+		XCTAssertTrue(handedOff?.source === picked, "The picked photo comes along whole")
 		XCTAssertNil(coordinator.cropDismissed())
 	}
 

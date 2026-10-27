@@ -20,7 +20,7 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	public func add(parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
-		let savedImages = try await save(newImages(in: parameters))
+		let savedImages = try await saveNewImages(of: parameters)
 		do {
 			try Task.checkCancellation()
 			return try await coreDataGateway.add(parameters: parameters)
@@ -40,7 +40,7 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	public func edit(person: Person, with parameters: AddPersonParameters) async throws -> Person {
 		try Task.checkCancellation()
-		let savedImages = try await save(newImages(in: parameters))
+		let savedImages = try await saveNewImages(of: parameters)
 		do {
 			try Task.checkCancellation()
 			let updatedPerson = try await coreDataGateway.edit(person: person, with: parameters)
@@ -64,41 +64,42 @@ public final class CachePersonsGateway: PersonsGateway {
 
 	// MARK: - Images
 
-	private func newImages(in parameters: AddPersonParameters) -> [PersonImage] {
-		[parameters.appImage, parameters.widgetImage].compactMap { image in
-			guard image?.uiImage != nil else { return nil }
-			return image
-		}
-	}
-
+	/// Everything stored for `person`, each file once, whichever roles share it.
 	private func storedImages(for person: Person) -> [PersonImage] {
-		[PersonImage(id: person.appPicId), PersonImage(id: person.widgetPicId)].compactMap { $0 }
+		unique([person.appPicId, person.widgetPicId, person.originalPicId].compactMap { $0 }).map { PersonImage(id: $0) }
 	}
 
+	/// What `person` stored that `parameters` no longer refers to in any role: a main picture that became the
+	/// original, or one shared with the widget picture, stays.
 	private func outdatedImages(for person: Person, parameters: AddPersonParameters) -> [PersonImage] {
-		var images = [PersonImage]()
-		if let stored = PersonImage(id: person.appPicId), stored.id != parameters.appImage?.id {
-			images.append(stored)
-		}
-		if let stored = PersonImage(id: person.widgetPicId), stored.id != parameters.widgetImage?.id {
-			images.append(stored)
-		}
-		return images
+		let kept = Set([parameters.appImage, parameters.widgetImage, parameters.originalImage].compactMap { $0?.id })
+		return storedImages(for: person).filter { !kept.contains($0.id) }
 	}
 
-	private func save(_ images: [PersonImage]) async throws -> [PersonImage] {
+	/// Stores the pictures and the original of `parameters` that are new, held in memory rather than already stored.
+	private func saveNewImages(of parameters: AddPersonParameters) async throws -> [PersonImage] {
 		var savedImages = [PersonImage]()
 		do {
-			for image in images {
+			for picture in [parameters.appImage, parameters.widgetImage].compactMap({ $0 }) where picture.uiImage != nil {
 				try Task.checkCancellation()
-				try await imageStore.save(image)
-				savedImages.append(image)
+				try await imageStore.save(picture)
+				savedImages.append(picture)
+			}
+			if let original = parameters.originalImage, original.uiImage != nil {
+				try Task.checkCancellation()
+				try await imageStore.saveOriginal(original)
+				savedImages.append(original)
 			}
 			return savedImages
 		} catch {
 			await deleteBestEffort(savedImages)
 			throw error
 		}
+	}
+
+	private func unique(_ ids: [UUID]) -> [UUID] {
+		var seen = Set<UUID>()
+		return ids.filter { seen.insert($0).inserted }
 	}
 
 	private func deleteBestEffort(_ images: [PersonImage]) async {

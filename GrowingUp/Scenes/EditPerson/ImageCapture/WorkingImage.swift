@@ -4,7 +4,9 @@
 //
 //  The one way a picked or captured photo enters the app. The photo library, the system picker and the camera hand
 //  over the photo's encoded data, and everything after (crop, saving, the widget picture) works only with the
-//  image decoded here; originals are never decoded at full size or kept.
+//  image decoded here. The library's or camera's own file is never decoded at full size or kept; this working image,
+//  upright and at most `maxPixelSide` pixels long, is what the app keeps as the person's original photo, uncropped and
+//  encoded once (see `OriginalPhotoFile`), so every later framing starts from all of it.
 //
 
 import ImageIO

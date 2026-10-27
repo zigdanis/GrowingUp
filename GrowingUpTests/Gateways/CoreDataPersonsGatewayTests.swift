@@ -148,6 +148,37 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		try assertUpgradePreservesPeople(fromModel: "GrowingUpCelebrations.mom")
 	}
 
+	/// People stored before originals were kept keep their pictures, with no original or regions until framed again.
+	func test_OriginalPhotosUpgradePreservesPeople() throws {
+		try assertUpgradePreservesPeople(fromModel: "GrowingUpDisplayOrder.mom")
+	}
+
+	/// The original and the region of it each picture shows are stored with the person, and leave with the photo.
+	func test_OriginalAndRegionsRoundTrip() async throws {
+		var parameters = AddPersonParameters.createParameters()
+		let mainCrop = PhotoCrop(minX: 0.25, minY: 0.125, width: 1.0 / 3, height: 0.5)
+		let circleCrop = PhotoCrop(minX: 0.6, minY: 0.1, width: 0.3, height: 2.0 / 7)
+		parameters.appImage?.crop = mainCrop
+		parameters.widgetImage?.crop = circleCrop
+		parameters.originalImage = PersonImage()
+		let added = try await inMemoryCoreDataGateway.add(parameters: parameters)
+		let people = try await inMemoryCoreDataGateway.fetchPersons()
+		let fetched = try XCTUnwrap(people.first { $0.id == added.id })
+		XCTAssertEqual(fetched.originalPicId, parameters.originalImage?.id)
+		XCTAssertEqual(fetched.appPicCrop, mainCrop)
+		XCTAssertEqual(fetched.widgetPicCrop, circleCrop, "Regions read back exactly")
+		assert(person: fetched, builtFromParameters: parameters)
+
+		var removed = parameters
+		removed.appImage = nil
+		removed.widgetImage = nil
+		removed.originalImage = nil
+		let edited = try await inMemoryCoreDataGateway.edit(person: fetched, with: removed)
+		XCTAssertNil(edited.originalPicId)
+		XCTAssertNil(edited.appPicCrop)
+		XCTAssertNil(edited.widgetPicCrop)
+	}
+
 	/// People stored before reordering existed keep their creation order, and the next person joins the end.
 	func test_DisplayOrderUpgradeKeepsCreationOrderAndAddsAtTheEnd() async throws {
 		let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -263,6 +294,9 @@ private func assert(
 		file: file, line: line)
 	XCTAssertEqual(person.appPicId, parameters.appImage?.id, "app pic mismatch", file: file, line: line)
 	XCTAssertEqual(person.widgetPicId, parameters.widgetImage?.id, "widget pic mismatch", file: file, line: line)
+	XCTAssertEqual(person.originalPicId, parameters.originalImage?.id, "original mismatch", file: file, line: line)
+	XCTAssertEqual(person.appPicCrop, parameters.appImage?.crop, "main picture region mismatch", file: file, line: line)
+	XCTAssertEqual(person.widgetPicCrop, parameters.widgetImage?.crop, "widget picture region mismatch", file: file, line: line)
 	XCTAssertEqual(person.isOnWidget, parameters.isOnWidget, "fav state mismatch", file: file, line: line)
 	XCTAssertEqual(person.celebratesBirthdays, parameters.celebratesBirthdays, "celebration mismatch", file: file, line: line)
 }

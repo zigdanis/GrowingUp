@@ -12,6 +12,9 @@ import UIKit
 public struct PersonImage: @unchecked Sendable, Equatable {
 	public var id: UUID
 	public var uiImage: UIImage?
+	/// The region of the person's original photo this picture shows; nil for the original itself, and for a picture
+	/// framed before originals were kept, whose region is unknown.
+	public var crop: PhotoCrop?
 	public var cachingKey: String {
 		return id.uuidString + ".png"
 	}
@@ -21,14 +24,26 @@ public struct PersonImage: @unchecked Sendable, Equatable {
 		id.uuidString + ".jpg"
 	}
 
-	public init(id: UUID? = nil, uiImage: UIImage? = nil) {
-		self.id = id ?? UUID()
-		self.uiImage = uiImage
+	/// An original photo is kept as HEIC where the device can encode it; see `OriginalPhotoFile`.
+	var originalCachingKey: String {
+		id.uuidString + ".heic"
 	}
 
-	public init?(id: UUID?) {
+	/// Every key a picture may be stored under, so removing it leaves no file behind.
+	var storedCachingKeys: [String] {
+		[cachingKey, originalCachingKey, legacyCachingKey]
+	}
+
+	public init(id: UUID? = nil, uiImage: UIImage? = nil, crop: PhotoCrop? = nil) {
+		self.id = id ?? UUID()
+		self.uiImage = uiImage
+		self.crop = crop
+	}
+
+	public init?(id: UUID?, crop: PhotoCrop? = nil) {
 		guard let id = id else { return nil }
 		self.id = id
 		self.uiImage = nil
+		self.crop = crop
 	}
 }

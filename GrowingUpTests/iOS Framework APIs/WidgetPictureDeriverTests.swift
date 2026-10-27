@@ -2,16 +2,32 @@ import Core
 import UIKit
 import XCTest
 
+@testable import GrowingUp
+
+/// The widget picture derived from a main picture: the region of the original it shows, and the picture rendered from
+/// the original through that region, as the editor renders it.
 final class WidgetPictureDeriverTests: XCTestCase {
 	private let green: [UInt8] = [0, 255, 0]
 	private let blue: [UInt8] = [0, 0, 255]
+
+	func testTheRegionIsTheMainPicturesCentredSquare() {
+		let portrait = WidgetPictureDeriver.crop(centredIn: .whole, ofPhotoSized: CGSize(width: 900, height: 1200))
+		XCTAssertEqual(portrait, PhotoCrop(minX: 0, minY: 0.125, width: 1, height: 0.75))
+		let landscape = WidgetPictureDeriver.crop(centredIn: .whole, ofPhotoSized: CGSize(width: 1200, height: 900))
+		XCTAssertEqual(landscape, PhotoCrop(minX: 0.125, minY: 0, width: 0.75, height: 1))
+		// A main picture framed off to the left of a square photo, as tall as the photo and half as wide.
+		let framed = PhotoCrop(minX: 0, minY: 0, width: 0.5, height: 1)
+		XCTAssertEqual(
+			WidgetPictureDeriver.crop(centredIn: framed, ofPhotoSized: CGSize(width: 1200, height: 1200)),
+			PhotoCrop(minX: 0, minY: 0.25, width: 0.5, height: 0.5))
+	}
 
 	func testPortraitPhotoKeepsItsCenteredSquare() throws {
 		let photo = image(width: 900, height: 1200) { context in
 			UIColor.blue.setFill()
 			context.fill(CGRect(x: 0, y: 150, width: 900, height: 900))
 		}
-		let derived = WidgetPictureDeriver.derive(from: photo)
+		let derived = derive(from: photo)
 		try assertSquare(derived, side: 480)
 		for point in [10, 240, 470] {
 			try assertPixel(blue, in: derived, column: point, row: point)
@@ -23,7 +39,7 @@ final class WidgetPictureDeriverTests: XCTestCase {
 			UIColor.blue.setFill()
 			context.fill(CGRect(x: 150, y: 0, width: 900, height: 900))
 		}
-		let derived = WidgetPictureDeriver.derive(from: photo)
+		let derived = derive(from: photo)
 		try assertSquare(derived, side: 480)
 		for point in [10, 240, 470] {
 			try assertPixel(blue, in: derived, column: point, row: point)
@@ -35,7 +51,7 @@ final class WidgetPictureDeriverTests: XCTestCase {
 			UIColor.green.setFill()
 			context.fill(CGRect(x: 0, y: 0, width: 300, height: 300))
 		}
-		let derived = WidgetPictureDeriver.derive(from: photo)
+		let derived = derive(from: photo)
 		try assertSquare(derived, side: 300)
 		try assertPixel(green, in: derived, column: 150, row: 150)
 	}
@@ -52,10 +68,16 @@ final class WidgetPictureDeriverTests: XCTestCase {
 		let storedPixels = try XCTUnwrap(stored.cgImage)
 		let photo = UIImage(cgImage: storedPixels, scale: 1, orientation: .right)
 		XCTAssertEqual(photo.size, CGSize(width: 900, height: 1200))
-		let derived = WidgetPictureDeriver.derive(from: photo)
+		let derived = derive(from: photo)
 		try assertSquare(derived, side: 480)
 		try assertPixel(green, in: derived, column: 100, row: 240)
 		try assertPixel(blue, in: derived, column: 380, row: 240)
+	}
+
+	/// The widget picture of a main picture showing all of `photo`, rendered as the editor renders it.
+	private func derive(from photo: UIImage) -> UIImage {
+		let crop = WidgetPictureDeriver.crop(centredIn: .whole, ofPhotoSized: photo.size)
+		return photo.cropped(to: crop).downsized(maxPixelSide: WidgetPictureDeriver.maxPixelSide)
 	}
 
 	private func image(width: Int, height: Int, draw: (UIGraphicsImageRendererContext) -> Void) -> UIImage {

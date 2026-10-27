@@ -81,6 +81,37 @@ final class ReorderingTests: XCTestCase {
 		XCTAssertEqual(mosaicOrder(), ["Alice", "Clara", "Daria", "Evan", "Farah", "Boris"])
 	}
 
+	/// A swipe that starts in the middle of a photo scrolls the mosaic, lifting no tile and opening nobody: at first, while
+	/// reordering after a tile was carried to a new place, and once reordering is done.
+	func testASwipeStartingOnATileScrollsTheMosaic() {
+		launch()
+		let viewer = app.buttons["person.name"]
+		let top = tile("Alice").frame.minY
+		swipe(from: "Clara", by: -320)
+		XCTAssertLessThan(tile("Alice").frame.minY, top - 40, "A swipe up from the middle of a tile scrolls the mosaic")
+		XCTAssertFalse(done.exists, "It lifts no tile")
+		XCTAssertFalse(viewer.exists, "and opens nobody")
+		checkpoint("mosaic-scrolled-from-a-tile")
+		swipe(from: "Clara", by: 600)
+		XCTAssertEqual(tile("Alice").frame.minY, top, accuracy: 2, "A swipe down from a tile scrolls back to the top")
+
+		tile("Alice").press(forDuration: 1, thenDragTo: tile("Boris"))
+		XCTAssertTrue(done.waitForExistence(timeout: 5))
+		let order = mosaicOrder()
+		XCTAssertEqual(order, ["Boris", "Alice", "Clara", "Daria", "Evan", "Farah"])
+		let reorderedTop = tile("Boris").frame.minY
+		swipe(from: "Daria", by: -320)
+		XCTAssertLessThan(tile("Boris").frame.minY, reorderedTop - 40, "A dropped tile leaves the mosaic scrolling")
+		XCTAssertEqual(mosaicOrder(), order, "A swipe while reordering moves no tile")
+		done.tap()
+		XCTAssertTrue(add.waitForExistence(timeout: 5))
+		let scrolledTop = tile("Boris").frame.minY
+		swipe(from: "Daria", by: 320)
+		XCTAssertGreaterThan(tile("Boris").frame.minY, scrolledTop + 40)
+		XCTAssertFalse(viewer.exists)
+		XCTAssertFalse(done.exists)
+	}
+
 	private func launch() {
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
 		app.launchArguments = [
@@ -123,6 +154,15 @@ final class ReorderingTests: XCTestCase {
 	/// takes as covering the tile, so a plain tap would land on its rounded corner.
 	private func tapTile(_ name: String) {
 		tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+	}
+
+	/// Swipes vertically by `distance` from the middle of `name`'s tile, starting to move at once as a scroll does, and
+	/// holds still at the end so the mosaic stops where the finger left it.
+	private func swipe(from name: String, by distance: CGFloat) {
+		let start = tile(name).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+		start.press(
+			forDuration: 0.05, thenDragTo: start.withOffset(CGVector(dx: 0, dy: distance)), withVelocity: .default,
+			thenHoldForDuration: 0.3)
 	}
 
 	private func waitFor(_ element: XCUIElement, label: String) -> Bool {

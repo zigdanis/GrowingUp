@@ -19,7 +19,7 @@ Names below omit the `test` prefix. Existing unit tests are retained unless expl
 | Journey: AddAndRelaunch | Retained, including date/time persistence and explicit PM wheel selection, selected-period verification and reachable time wheels after expansion. |
 | Journey: CancelAndRecoverFromSaveFailure | Retained, including crop cancellation, discard and relaunch. |
 | Journey: DeleteAndRelaunch | Retained; redundant date/time picker interaction removed (covered by AddAndRelaunch). |
-| Journey: EditPhotoReframeAndPersist | Retained, starting from seeded data; also checks removal menu and discarded removal. |
+| Journey: EditPhotoReframeAndPersist | Moved to `PhotoFramingTests`, starting from seeded data: a tight crop reopens on its framing after a relaunch and zooms back out past it, the circle keeps its own framing, and the removal menu and discarded removal are still checked. `PersonPhotoFramingTests` covers the same flow through the real gateways. |
 | Journey: LocalizedPhotoAppearance | Russian form/photo checkpoints merged into `RussianCountdownPhotoAndPinLimit`; English light form/photo covered by editing. |
 | Journey: PhotoRemovalMenuTracksEachImage | Merged into `EditPhotoReframeAndPersist`; empty/removed photo state also covered by presenter unit tests. |
 | Journey: SeventhPinErrorIsLocalizedInRussian | Merged into `RussianCountdownPhotoAndPinLimit`. |

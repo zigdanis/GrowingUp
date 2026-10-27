@@ -96,9 +96,9 @@ struct PeopleMosaic: View {
 			isLifted: drag?.id == person.id, zoom: zoom, contentSpace: Self.contentSpace,
 			onOpen: { onOpen(person.id) },
 			onLift: { lift(person.id) },
-			onDrag: { value in
+			onDrag: { location in
 				guard drag?.id == person.id, let index = persons.firstIndex(where: { $0.id == person.id }) else { return }
-				drag?.follow(to: value.location, from: value.startLocation, slotOrigin: grid.origin(ofSlot: index, width: width))
+				drag?.follow(to: location, slotOrigin: grid.origin(ofSlot: index, width: width))
 				followDrag(grid: grid, width: width)
 			},
 			onDrop: { drop(person.id) },

@@ -109,15 +109,93 @@ final class CachePersonsGatewayTests: XCTestCase {
 		}
 	}
 
-	private func parameters(appImage: PersonImage?, widgetImage: PersonImage?) -> AddPersonParameters {
+	private func parameters(
+		appImage: PersonImage?, widgetImage: PersonImage?, originalImage: PersonImage? = nil
+	) -> AddPersonParameters {
 		AddPersonParameters(
 			name: "John", dayOfBirth: Date(), timeOfBirth: Date(),
-			appImage: appImage, widgetImage: widgetImage, isOnWidget: false)
+			appImage: appImage, widgetImage: widgetImage, isOnWidget: false, originalImage: originalImage)
 	}
 
-	private func person(appPicID: UUID?, widgetPicID: UUID?) -> Person {
+	private func person(appPicID: UUID?, widgetPicID: UUID?, originalPicID: UUID? = nil) -> Person {
 		Person(
 			id: UUID(), name: "John", birthday: Date(), appPicId: appPicID, widgetPicId: widgetPicID,
-			isOnWidget: false, createdDate: Date())
+			isOnWidget: false, createdDate: Date(), originalPicId: originalPicID)
+	}
+}
+
+/// A person's original photo, kept beside the pictures framed from it.
+extension CachePersonsGatewayTests {
+	func testANewPhotoStoresItsOriginalBesideThePicturesBeforeCoreData() async throws {
+		let original = PersonImage(uiImage: UIImage())
+		let parameters = parameters(
+			appImage: PersonImage(uiImage: UIImage(), crop: .whole), widgetImage: PersonImage(uiImage: UIImage()), originalImage: original)
+		coreDataGatewaySpy.addPersonResultToBeReturned = .success(Person.createPerson())
+		var events = [String]()
+		imageStoreSpy.onSave = { events.append("save") }
+		coreDataGatewaySpy.onAdd = { events.append("database") }
+
+		_ = try await sut.add(parameters: parameters)
+		XCTAssertEqual(events, ["save", "save", "save", "database"])
+		XCTAssertEqual(imageStoreSpy.savedImages.map(\.id), [parameters.appImage?.id, parameters.widgetImage?.id].compactMap { $0 })
+		XCTAssertEqual(imageStoreSpy.savedOriginals.map(\.id), [original.id], "The original is stored as an original")
+	}
+
+	func testAFailedOriginalSaveRollsBackThePicturesAndSkipsCoreData() async {
+		let parameters = parameters(
+			appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()),
+			originalImage: PersonImage(uiImage: UIImage()))
+		imageStoreSpy.saveErrorAtCall = 3
+
+		do {
+			_ = try await sut.add(parameters: parameters)
+			XCTFail("Expected image save failure")
+		} catch {
+			XCTAssertFalse(coreDataGatewaySpy.addPersonCalled)
+			XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), imageStoreSpy.savedImages.map(\.id))
+		}
+	}
+
+	func testAMainPictureThatBecameTheOriginalStaysStored() async throws {
+		let legacyAppID = UUID()
+		let widgetID = UUID()
+		let person = person(appPicID: legacyAppID, widgetPicID: widgetID)
+		let reframed = PersonImage(uiImage: UIImage(), crop: PhotoCrop(minX: 0.1, minY: 0.1, width: 0.5, height: 0.8))
+		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
+
+		_ = try await sut.edit(
+			person: person,
+			with: parameters(appImage: reframed, widgetImage: PersonImage(id: widgetID), originalImage: PersonImage(id: legacyAppID)))
+		XCTAssertEqual(imageStoreSpy.savedImages.map(\.id), [reframed.id])
+		XCTAssertTrue(imageStoreSpy.savedOriginals.isEmpty, "The stored main picture is not written again")
+		XCTAssertTrue(imageStoreSpy.deletedImages.isEmpty, "It stays stored as the original")
+	}
+
+	func testReframingKeepsTheOriginalAndReplacingThePhotoRemovesIt() async throws {
+		let appID = UUID()
+		let widgetID = UUID()
+		let originalID = UUID()
+		let person = person(appPicID: appID, widgetPicID: widgetID, originalPicID: originalID)
+		coreDataGatewaySpy.editPersonResultToBeReturned = .success(person)
+		let reframed = PersonImage(uiImage: UIImage(), crop: .whole)
+		_ = try await sut.edit(
+			person: person,
+			with: parameters(appImage: reframed, widgetImage: PersonImage(id: widgetID), originalImage: PersonImage(id: originalID)))
+		XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), [appID], "Only the replaced main picture goes")
+
+		imageStoreSpy.deletedImages = []
+		let replaced = parameters(
+			appImage: PersonImage(uiImage: UIImage()), widgetImage: PersonImage(uiImage: UIImage()),
+			originalImage: PersonImage(uiImage: UIImage()))
+		_ = try await sut.edit(person: person, with: replaced)
+		XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), [appID, widgetID, originalID], "A new photo replaces all three")
+	}
+
+	func testRemovalDeletesEveryStoredFileOnce() async throws {
+		let sharedID = UUID()
+		let originalID = UUID()
+		coreDataGatewaySpy.removePersonResultToBeReturned = .success(())
+		try await sut.remove(person: person(appPicID: sharedID, widgetPicID: sharedID, originalPicID: originalID))
+		XCTAssertEqual(imageStoreSpy.deletedImages.map(\.id), [sharedID, originalID])
 	}
 }

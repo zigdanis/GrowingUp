@@ -43,29 +43,8 @@ struct EditModeControlLabel<Title: View, Glyph: View>: View {
 		if isOn {
 			Circle().fill(.white)
 		} else {
-			glass
+			EditModeGlass(shape: Circle())
 		}
-	}
-
-	@ViewBuilder private var glass: some View {
-		#if compiler(>=6.2)
-			if #available(iOS 26.0, *) {
-				Color.clear.glassEffect(.regular, in: .circle)
-			} else {
-				legacyGlass
-			}
-		#else
-			legacyGlass
-		#endif
-	}
-
-	private var legacyGlass: some View {
-		ZStack {
-			Circle().fill(.black.opacity(0.25))
-			Circle().fill(.ultraThinMaterial)
-		}
-		.overlay { Circle().stroke(.white.opacity(0.5), lineWidth: 1) }
-		.shadow(color: .black.opacity(0.3), radius: 4, y: 1)
 	}
 
 	private var badge: some View {

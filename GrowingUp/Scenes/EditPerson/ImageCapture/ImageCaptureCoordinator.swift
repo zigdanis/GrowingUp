@@ -8,7 +8,7 @@ final class ImageCaptureCoordinator {
 	private var cropImage: IdentifiableImage?
 	@ObservationIgnored private var selectionOrigin: ImageCaptureSelectionOrigin?
 	@ObservationIgnored private var pendingSystemPickerImage: UIImage?
-	@ObservationIgnored private var pendingCroppedImage: UIImage?
+	@ObservationIgnored private var pendingFramedPhoto: FramedPhoto?
 
 	var imageToCrop: IdentifiableImage? {
 		get { cropImage }
@@ -58,15 +58,15 @@ final class ImageCaptureCoordinator {
 		self.selectionOrigin = nil
 	}
 
-	func completedCrop(with image: UIImage) {
+	func completedCrop(with framed: FramedPhoto) {
 		guard cropImage != nil else { return }
-		pendingCroppedImage = image
+		pendingFramedPhoto = framed
 		cropImage = nil
 		selectionOrigin = nil
 	}
 
-	func cropDismissed() -> UIImage? {
-		defer { pendingCroppedImage = nil }
-		return pendingCroppedImage
+	func cropDismissed() -> FramedPhoto? {
+		defer { pendingFramedPhoto = nil }
+		return pendingFramedPhoto
 	}
 }

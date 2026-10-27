@@ -127,7 +127,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		person.widgetPicId = nil
 		let mode = mode(for: person)
 		XCTAssertFalse(mode.showsWidgetPictureButton)
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		XCTAssertTrue(mode.showsWidgetPictureButton)
 		mode.editor.removeMainPhoto()
 		XCTAssertFalse(mode.showsWidgetPictureButton)
@@ -141,7 +141,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 		let mode = mode(for: person, gateway: gateway)
 		await mode.editor.load()
 		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		let derived = mode.editor.widgetImage?.id
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, .identity)
@@ -216,7 +216,7 @@ final class PersonEditModePresenterTests: XCTestCase {
 
 /// Framing the main photo in place and the region Done saves from it.
 extension PersonEditModePresenterTests {
-	func testFramingKeepsThePhotoCoveringTheScreenWithinTheZoomLimits() async {
+	func testFramingKeepsThePhotoCoveringTheCropFrameWithinTheZoomLimits() async {
 		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
 		await mode.loadPhoto()
 		mode.updateCanvas(phone, safeAreaInsets: EdgeInsets())
@@ -235,9 +235,9 @@ extension PersonEditModePresenterTests {
 		mode.endDrag()
 		XCTAssertEqual(mode.framing.offset, CGSize(width: 75, height: 0), "The photo never uncovers the screen")
 		XCTAssertTrue(mode.hasReframed)
-		// A 300 × 400 window is just covered by the 3:4 photo, which leaves no play.
+		// The 300 × 400 window saves a 280 × 400 column, leaving 10 pt to move on each side while keeping it covered.
 		mode.updateCanvas(CGSize(width: 300, height: 400), safeAreaInsets: EdgeInsets())
-		XCTAssertEqual(mode.framing.offset, .zero, "A resized window settles the photo again")
+		XCTAssertEqual(mode.framing.offset, CGSize(width: 10, height: 0), "A resized window keeps the crop column covered")
 	}
 
 	func testReloadingTheSamePhotoKeepsItsFraming() async {
@@ -253,7 +253,7 @@ extension PersonEditModePresenterTests {
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, framed)
 		XCTAssertTrue(mode.hasReframed)
-		mode.editor.setMainPhoto(image(width: 900, height: 1200))
+		mode.editor.setMainPhoto(.whole(image(width: 900, height: 1200)))
 		await mode.loadPhoto()
 		XCTAssertEqual(mode.framing, .identity, "A new photo starts as the viewer would show it")
 		mode.magnify(by: 2)
@@ -264,7 +264,7 @@ extension PersonEditModePresenterTests {
 		XCTAssertEqual(mode.framing, .identity)
 	}
 
-	func testAWideWindowKeepsTheWholeWindowCovered() async throws {
+	func testAWideWindowKeepsTheCropColumnCovered() async throws {
 		let mode = mode(for: Person.createPerson(), photo: image(width: 900, height: 1200))
 		await mode.loadPhoto()
 		let window = CGSize(width: 1000, height: 700)
@@ -273,16 +273,15 @@ extension PersonEditModePresenterTests {
 		XCTAssertEqual(geometry.frameRect.width, 490, accuracy: 0.001, "Only the centred portrait column is saved")
 		XCTAssertEqual(geometry.displaySize.width, 1000, accuracy: 0.001)
 		XCTAssertEqual(geometry.displaySize.height, 1333.333, accuracy: 0.001)
-		let columnOnly = CropGeometry(pixelSize: geometry.pixelSize, shape: .rectangle, container: window, insets: EdgeInsets())
-		XCTAssertEqual(columnOnly.minScale, 0.525, accuracy: 0.001, "Covering just the column would leave 475 pt black")
-		XCTAssertEqual(geometry.minScale, 1)
+		XCTAssertEqual(mode.framing, .identity, "A legacy picture with no saved crop starts as the viewer shows it")
+		XCTAssertEqual(geometry.minScale, 0.525, accuracy: 0.001, "The picker and editor cover the same crop column")
 		mode.magnify(by: 0.5)
 		mode.endMagnify()
-		XCTAssertEqual(mode.framing.scale, 1, "The photo never shrinks inside the window")
+		XCTAssertEqual(mode.framing.scale, 0.525, accuracy: 0.001)
 		mode.drag(by: CGSize(width: 400, height: 900))
 		mode.endDrag()
-		XCTAssertEqual(mode.framing.offset.width, 0, accuracy: 0.001)
-		XCTAssertEqual(mode.framing.offset.height, 316.667, accuracy: 0.001)
+		XCTAssertEqual(mode.framing.offset.width, 17.5, accuracy: 0.001)
+		XCTAssertEqual(mode.framing.offset.height, 0, accuracy: 0.001)
 	}
 
 	func testDoneSavesTheVisibleRegionOfTheFraming() async throws {
@@ -343,7 +342,8 @@ extension PersonEditModePresenterTests {
 	private func mode(
 		for person: Person, gateway: PersonsGatewaySpy = PersonsGatewaySpy(), photo: UIImage? = nil, locale: Locale = Locale(identifier: "en_US")
 	) -> PersonEditModePresenter {
-		let configurator = SceneConfigurator(gateway: gateway, loadImage: { _ in photo ?? self.image(width: 600, height: 800) })
+		let load: (PersonImage) async throws -> UIImage = { _ in photo ?? self.image(width: 600, height: 800) }
+		let configurator = SceneConfigurator(gateway: gateway, loadImage: load, loadOriginal: load)
 		let editor = configurator.editor(person: person, onMutation: { _ in })
 		return PersonEditModePresenter(editor: editor, now: Date.init, calendar: calendar, locale: locale, onCancel: {})
 	}

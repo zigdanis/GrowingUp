@@ -3,15 +3,19 @@
 //  GrowingUp
 //
 //  Pan/zoom cropper: image aspect-fills at min zoom; crop frame is full screen, or a centered portrait column in wider
-//  windows (main), or a circular safe-area guide (widget). The math lives in `CropGeometry`.
+//  windows (main), or a circular safe-area guide (widget). It opens on the region framed before, if any. The math lives
+//  in `CropGeometry`.
 //
 
+import Core
 import SwiftUI
 
 struct CropStep: View {
 	private let source: UIImage
 	private let shape: CropShape
-	private let onComplete: (UIImage) -> Void
+	/// The region framed before, which the picture opens on; nil opens it aspect-filling the screen.
+	private let initialCrop: PhotoCrop?
+	private let onComplete: (FramedPhoto) -> Void
 	private let onCancel: () -> Void
 
 	/// Source pixel dimensions, used to map the on-screen frame back to pixels.
@@ -25,17 +29,21 @@ struct CropStep: View {
 	@State private var safeInsets = EdgeInsets()
 	@State private var isGesturing = false
 	@State private var isFinishing = false
+	/// Whether the picture took its first place on a laid-out screen, on `initialCrop`.
+	@State private var isPlaced = false
 
-	/// `image` is upright: a `WorkingImage` or a picture the app stored. `onComplete` gets the framed part at the slot's
-	/// stored size.
+	/// `image` is upright: a `WorkingImage` or an original the app stored. `onComplete` gets the framed region with the
+	/// picture rendered from it at the slot's stored size.
 	init(
 		image: UIImage,
 		shape: CropShape,
-		onComplete: @escaping (UIImage) -> Void,
+		initialCrop: PhotoCrop? = nil,
+		onComplete: @escaping (FramedPhoto) -> Void,
 		onCancel: @escaping () -> Void
 	) {
 		self.source = image
 		self.shape = shape
+		self.initialCrop = initialCrop
 		self.onComplete = onComplete
 		self.onCancel = onCancel
 		self.pixelSize = CropGeometry.pixelSize(of: image)
@@ -49,6 +57,10 @@ struct CropStep: View {
 					.contentShape(Rectangle())
 					.simultaneousGesture(dragGesture)
 					.simultaneousGesture(zoomGesture)
+					.accessibilityElement(children: .ignore)
+					.accessibilityLabel(Text("Selected photo"))
+					.accessibilityValue(Text(Double(scale), format: .percent.precision(.fractionLength(0))))
+					.accessibilityIdentifier("crop.photo")
 				topBar(insets: safeInsets)
 			}
 			.onAppear { updateContainer(proxy) }
@@ -64,8 +76,17 @@ struct CropStep: View {
 		let insets = Self.windowSafeInsets
 		containerSize = full
 		safeInsets = insets
-		// A resized window (e.g. an iPhone Duo folding) can need more zoom to keep the circular frame covered.
 		let geometry = geometry(in: full, insets: insets)
+		// The first layout opens on the region framed before.
+		if !isPlaced, full.width > 0, full.height > 0 {
+			isPlaced = true
+			if let initialCrop {
+				let framing = geometry.framing(showing: initialCrop)
+				scale = framing.scale
+				offset = framing.offset
+			}
+		}
+		// A resized window (e.g. an iPhone Duo folding) can need more zoom to keep the circular frame covered.
 		let settledScale = geometry.clampScale(scale)
 		let settled = geometry.clampOffset(offset, scale: settledScale)
 		scale = settledScale
@@ -245,8 +266,8 @@ extension CropStep {
 		geometry(in: container, insets: insets).minScale
 	}
 
-	/// The framed part at the slot's stored size.
-	func output(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) async -> UIImage {
+	/// The framed region, with the picture rendered from it at the slot's stored size.
+	func output(container: CGSize, insets: EdgeInsets, scale: CGFloat, offset: CGSize) async -> FramedPhoto {
 		await geometry(in: container, insets: insets).output(of: source, scale: scale, offset: offset)
 	}
 }

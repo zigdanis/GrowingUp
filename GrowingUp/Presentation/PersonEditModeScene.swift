@@ -59,17 +59,18 @@ struct PersonEditModeScene: View {
 			// A new photo lands in the frame, where it can be framed again before Done.
 			ImageCaptureFlowView(
 				source: request.source, previewImages: editor.photoFixtures, cropShape: .rectangle,
-				onComplete: { image in
-					editor.setMainPhoto(image)
+				onComplete: { framed in
+					editor.setMainPhoto(framed)
 					photoRequest = nil
 				}, onCancel: { photoRequest = nil }
 			)
 		}
+		// The circle opens on the region its picture shows, framed from the same photo as the main picture.
 		.fullScreenCover(item: $widgetPictureSource) { item in
 			CropStep(
-				image: item.image, shape: .circle,
-				onComplete: { cropped in
-					editor.setWidgetPhoto(cropped)
+				image: item.image, shape: .circle, initialCrop: editor.widgetImage?.crop,
+				onComplete: { framed in
+					editor.setWidgetPhoto(framed)
 					widgetPictureSource = nil
 				}, onCancel: { widgetPictureSource = nil }
 			)
@@ -102,39 +103,24 @@ struct PersonEditModeScene: View {
 		.padding(.trailing, safeAreaInsets.trailing)
 	}
 
-	/// Cancel and Done keep to one line, growing up to a size that leaves room for both; beyond it, a long press shows
-	/// them in the large content viewer, as a navigation bar does.
+	/// Cancel and Done share one compact capsule, so they line up at any text size and in any language. They keep to one
+	/// line, growing up to a size that leaves room for both; beyond it, a long press shows them in the large content
+	/// viewer, as a navigation bar does.
 	private var topBar: some View {
 		HStack {
-			Button {
+			Button("Cancel") {
 				mode.cancel()
-			} label: {
-				Text("Cancel")
-					.font(.headline)
-					.foregroundStyle(.white)
-					.padding(.horizontal, 6)
-					.frame(minHeight: 32)
 			}
-			.modifier(GlassCapsuleButtonChrome(prominent: false))
-			.controlSize(.large)
+			.buttonStyle(EditModeBarButtonStyle(isProminent: false))
 			.disabled(!mode.canCancel)
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.cancel")
 			Spacer()
-			Button {
+			Button("Done") {
 				isNameFocused = false
 				Task { await mode.done() }
-			} label: {
-				Text("Done")
-					.font(.headline)
-					.foregroundStyle(.black)
-					.padding(.horizontal, 18)
-					.frame(minHeight: 44)
-					.background(.white, in: Capsule())
-					.contentShape(Capsule())
 			}
-			.buttonStyle(.plain)
-			.opacity(mode.canSave ? 1 : 0.45)
+			.buttonStyle(EditModeBarButtonStyle(isProminent: true))
 			.disabled(!mode.canSave)
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.save")

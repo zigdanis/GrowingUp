@@ -16,7 +16,8 @@ final class PersonEditModePresenter {
 	private(set) var popover: PersonEditPopover?
 	/// Whether the removal alert is up.
 	var isConfirmingRemoval = false
-	/// The main photo being framed; `nil` without a photo or until it loads.
+	/// The photo being framed: the person's original, or a main picture saved before originals were kept; `nil` without a
+	/// main picture or until it loads.
 	private(set) var photo: UIImage?
 	/// The widget picture shown as it is while no main photo shows, as the person's page shows it: only a main photo
 	/// is framed. `nil` while there is a main photo, without a widget picture, or until it loads.
@@ -32,7 +33,9 @@ final class PersonEditModePresenter {
 	private(set) var isFinishing = false
 	/// Where the photo rests between gestures; a gesture moves it from here.
 	private var restingFraming = PhotoFraming.identity
-	/// The identity of the main photo `framing` belongs to; a reload of the same photo keeps it.
+	/// Where the photo shows what the saved main picture shows, as the viewer did: Done saves nothing new from here.
+	private(set) var savedFraming = PhotoFraming.identity
+	/// The identity of the photo `framing` belongs to; a reload of the same photo keeps it.
 	private var framedPhotoID: UUID?
 	/// The whole window, safe areas included: the canvas the photo fills, as on the viewer's page.
 	private var canvas = CGSize.zero
@@ -87,7 +90,7 @@ final class PersonEditModePresenter {
 	var showsRemoveButton: Bool { !isNewPerson }
 
 	/// Whether the photo was moved or zoomed away from how the viewer showed it.
-	var hasReframed: Bool { photo != nil && framing != .identity }
+	var hasReframed: Bool { photo != nil && framing != savedFraming }
 
 	/// Done saves a changed draft with a name, a new framing counting as a change.
 	var canSave: Bool {
@@ -117,7 +120,8 @@ final class PersonEditModePresenter {
 		onCancel()
 	}
 
-	/// Renders a new framing into the main photo and saves the draft through the editor, which then closes the mode.
+	/// Renders a new framing of the photo into the main picture and saves the draft through the editor, which then closes
+	/// the mode. The photo itself stays whole, so the next framing can reach back to all of it.
 	func done() async {
 		guard canSave else { return }
 		isFinishing = true
@@ -125,10 +129,10 @@ final class PersonEditModePresenter {
 		if hasReframed, let photo, let geometry = geometry(of: photo) {
 			let framed = await geometry.output(of: photo, scale: framing.scale, offset: framing.offset)
 			editor.reframeMainPhoto(framed)
-			// The framing now lives in the photo itself, which shows the same region at rest.
-			self.photo = framed
-			framedPhotoID = editor.appImage?.id
-			resetFraming()
+			// The main picture now shows this framing.
+			savedFraming = framing
+			restingFraming = framing
+			framedPhotoID = editor.framingSource?.id
 		}
 		await editor.save()
 	}
@@ -140,15 +144,19 @@ final class PersonEditModePresenter {
 
 	// MARK: - Framing
 
-	/// Loads the draft's main photo, else its widget picture as the backdrop, else settles on the monogram: the person's
-	/// page picks the same way. A new or removed photo rests as the viewer would show it; the same photo loaded again, as
-	/// when the screen returns from the widget picture's crop, keeps its framing.
+	/// Loads the photo the draft's main picture is framed from, else its widget picture as the backdrop, else settles on
+	/// the monogram: the person's page picks the same way. The photo opens on the region its main picture shows, as the
+	/// viewer showed it; the same photo loaded again, as when the screen returns from the widget picture's crop, keeps
+	/// its framing.
 	func loadPhoto() async {
-		let photoID = editor.appImage?.id
-		let loaded = await editor.loadMainPhoto()
+		let photoID = editor.framingSource?.id
+		// The same photo stays loaded, and framed as it was, when only a picture framed from it changed.
+		if photoID != nil, photoID == framedPhotoID, photo != nil { return }
+		let loaded = await editor.loadFramingSource()
 		guard !Task.isCancelled else { return }
 		photo = loaded
 		if photoID != framedPhotoID || loaded == nil {
+			savedFraming = loaded.flatMap(geometry(of:)).map(framingOfSavedPicture(in:)) ?? .identity
 			resetFraming()
 		}
 		framedPhotoID = loaded == nil ? nil : photoID
@@ -163,21 +171,38 @@ final class PersonEditModePresenter {
 		showsMonogram = widgetPicture == nil && !isNewPerson
 	}
 
-	/// Takes the window's size and safe area, keeping the photo covering the crop frame in a resized window.
+	/// Takes the window's size and safe area. A photo at rest where the saved picture shows it stays there on the new
+	/// canvas; one moved since keeps covering the crop frame.
 	func updateCanvas(_ size: CGSize, safeAreaInsets: EdgeInsets) {
+		let wasReframed = restingFraming != savedFraming
 		canvas = size
 		self.safeAreaInsets = safeAreaInsets
 		guard let geometry = photo.flatMap(geometry(of:)) else { return }
+		savedFraming = framingOfSavedPicture(in: geometry)
+		guard wasReframed else {
+			resetFraming()
+			return
+		}
 		let scale = geometry.clampScale(restingFraming.scale)
 		restingFraming = PhotoFraming(scale: scale, offset: geometry.clampOffset(restingFraming.offset, scale: scale))
 		framing = restingFraming
 	}
 
-	/// The crop math for `photo` on the current canvas, shared with `CropStep`. The photo is drawn edge to edge while it
-	/// is framed, so it keeps the whole window covered; a wider window still saves only its centred portrait column.
+	/// Where the photo shows the region of it the saved main picture shows.
+	private func framingOfSavedPicture(in geometry: CropGeometry) -> PhotoFraming {
+		// Without a stored source-relative crop, a legacy picture keeps the viewer's aspect-fill placement.
+		guard editor.originalImage != nil, let crop = editor.mainCrop else {
+			let scale = geometry.clampScale(1)
+			return PhotoFraming(scale: scale, offset: geometry.clampOffset(.zero, scale: scale))
+		}
+		return geometry.framing(showing: crop)
+	}
+
+	/// The crop math shared with `CropStep`: only the crop frame must stay covered, so a saved framing that fits the
+	/// portrait column in a wide window reopens without being forced to zoom in to cover the whole window.
 	func geometry(of photo: UIImage) -> CropGeometry? {
 		guard canvas.width > 0, canvas.height > 0 else { return nil }
-		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets, coversWholeCanvas: true)
+		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets)
 	}
 
 	func drag(by translation: CGSize) {
@@ -212,7 +237,7 @@ final class PersonEditModePresenter {
 
 	/// Puts the photo back as the viewer showed it.
 	func resetFraming() {
-		framing = .identity
-		restingFraming = .identity
+		framing = savedFraming
+		restingFraming = savedFraming
 	}
 }

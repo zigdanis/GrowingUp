@@ -26,7 +26,10 @@ final class ImagesCacheTests: XCTestCase {
 
 	func testAppAndWidgetPhotosAreStoredAsLosslessPNG() async throws {
 		let original = photo()
-		for photo in [original, WidgetPictureDeriver.derive(from: original)] {
+		let square = UIGraphicsImageRenderer(size: CGSize(width: 400, height: 400), format: original.imageRendererFormat).image { _ in
+			original.draw(at: CGPoint(x: -100, y: 0))
+		}
+		for photo in [original, square] {
 			let image = PersonImage(uiImage: photo)
 			let url = try storedURL(for: image.cachingKey)
 			defer {
@@ -84,6 +87,49 @@ final class ImagesCacheTests: XCTestCase {
 		try await DiskImageStore().delete(image)
 		XCTAssertFalse(FileManager.default.fileExists(atPath: pngURL.path))
 		XCTAssertFalse(FileManager.default.fileExists(atPath: legacyURL.path))
+	}
+
+	/// An original is written once in a compact format, read back at its full size without the memory cache, and removed
+	/// with its picture; a picture saved before originals were kept reads as its own original.
+	func testOriginalsAreStoredCompactlyAndLoadAtFullSizeWithoutCaching() async throws {
+		let size = CGSize(width: 1200, height: 1600)
+		let picked = UIGraphicsImageRenderer(size: size, format: photo().imageRendererFormat).image { context in
+			UIColor.red.setFill()
+			context.fill(CGRect(origin: .zero, size: size))
+			UIColor.blue.setFill()
+			context.fill(CGRect(x: 600, y: 800, width: 600, height: 800))
+		}
+		let image = PersonImage(uiImage: picked)
+		let names = OriginalPhotoFile.names(for: image)
+		defer { for name in names { try? FileManager.default.removeItem(at: storedURL(for: name)) } }
+		try await DiskImageStore().saveOriginal(image)
+		let stored = try names.filter { try FileManager.default.fileExists(atPath: storedURL(for: $0).path) }
+		let name = try XCTUnwrap(stored.first)
+		XCTAssertEqual(stored.count, 1)
+		let data = try Data(contentsOf: storedURL(for: name))
+		if name == image.originalCachingKey {
+			XCTAssertEqual(String(bytes: data[4..<8], encoding: .ascii), "ftyp", "HEIC where the device encodes it")
+		} else {
+			XCTAssertEqual(name, image.cachingKey)
+			XCTAssertEqual(Array(data.prefix(8)), [137, 80, 78, 71, 13, 10, 26, 10], "else lossless PNG")
+		}
+		XCTAssertNil(ImagesCache.memoryCache.value(forKey: image.cachingKey), "An original is not kept in memory")
+
+		let loaded = try await ImagesCache.loadOriginal(image: PersonImage(id: image.id))
+		XCTAssertEqual(loaded.cgImage?.width, 1200, "Full size")
+		XCTAssertEqual(loaded.cgImage?.height, 1600)
+		XCTAssertNil(ImagesCache.memoryCache.value(forKey: image.cachingKey))
+		try await DiskImageStore().delete(image)
+		for name in names { XCTAssertFalse(FileManager.default.fileExists(atPath: try storedURL(for: name).path)) }
+
+		let legacy = PersonImage(uiImage: photo())
+		defer {
+			ImagesCache.memoryCache.removeValue(forKey: legacy.cachingKey)
+			try? FileManager.default.removeItem(at: storedURL(for: legacy.cachingKey))
+		}
+		try await DiskImageStore().save(legacy)
+		let legacyOriginal = try await ImagesCache.loadOriginal(image: PersonImage(id: legacy.id))
+		XCTAssertEqual(try pixels(of: legacyOriginal), try pixels(of: XCTUnwrap(legacy.uiImage)))
 	}
 
 	private func storedURL(for key: String) throws -> URL {
