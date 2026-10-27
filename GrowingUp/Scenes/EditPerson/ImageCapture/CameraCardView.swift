@@ -3,7 +3,7 @@
 //  GrowingUp
 //
 //  The inline in-app camera card: a full-bleed live preview with shutter, flip,
-//  flash (off / auto / on) and close controls. Close returns to the grid; a
+//  flash (off / auto / on) and close controls. Close dismisses photo selection; a
 //  capture is reported upward to feed the same crop step as the photo path.
 //
 
@@ -83,6 +83,7 @@ struct CameraCardView: View {
 				.background(.black.opacity(0.35), in: Circle())
 		}
 		.accessibilityLabel(Text("Close camera"))
+		.accessibilityIdentifier("camera.back")
 	}
 
 	private var shutterButton: some View {

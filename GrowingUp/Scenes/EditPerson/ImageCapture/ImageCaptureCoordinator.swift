@@ -20,16 +20,16 @@ final class ImageCaptureCoordinator {
 		set { if !newValue, stage == .systemPhotoPicker { pickerFinished(with: nil) } }
 	}
 
-	init(stage: ImageCaptureStage = .sourceMenu) { self.stage = stage }
-	func choseCamera() { stage = .camera }
-	func chosePhotos() { stage = .photoPreview }
+	init(stage: ImageCaptureStage) { self.stage = stage }
 	func choseAllPhotos() { stage = .systemPhotoPicker }
 
-	func wentBack() {
+	/// Steps back one level. Returns true when Back leaves the flow, from the camera or the photo preview it opened on.
+	func wentBack() -> Bool {
 		switch stage {
-		case .camera, .photoPreview: stage = .sourceMenu
-		case .systemPhotoPicker: stage = .photoPreview
-		case .sourceMenu: break
+		case .camera, .photoPreview: return true
+		case .systemPhotoPicker:
+			stage = .photoPreview
+			return false
 		}
 	}
 

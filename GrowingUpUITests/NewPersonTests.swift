@@ -77,6 +77,28 @@ final class NewPersonTests: XCTestCase {
 		XCTAssertEqual(tiles.count, 3)
 	}
 
+	func testBackFromPhotosAndCameraKeepsTheNewPersonsDraft() {
+		launch(seed: .pinned)
+		add.tap()
+		XCTAssertTrue(nameField.waitForExistence(timeout: 5))
+		nameField.typeText("Ada\n")
+		for (source, back) in [("photo.source.photos", "photo.back"), ("photo.source.camera", "camera.back")] {
+			app.buttons["editor.appPhoto"].tap()
+			app.buttons[source].tap()
+			XCTAssertTrue(app.buttons[back].waitForExistence(timeout: 5))
+			app.buttons[back].tap()
+			XCTAssertTrue(app.buttons[back].waitForNonExistence(timeout: 5), "Back closes the whole sheet")
+			XCTAssertFalse(app.buttons["Camera"].exists)
+			XCTAssertFalse(app.buttons["Photos"].exists)
+			XCTAssertTrue(nameField.isHittable, "The new person's editor is back")
+			XCTAssertEqual(nameField.value as? String, "Ada")
+			XCTAssertTrue(done.isEnabled)
+		}
+		checkpoint("new-person-after-back")
+		done.tap()
+		XCTAssertTrue(tile("Ada").waitForExistence(timeout: 5))
+	}
+
 	func testRemovingTheLastPersonShowsTheInvitation() {
 		launch(seed: .onePerson)
 		XCTAssertEqual(tiles.count, 1)

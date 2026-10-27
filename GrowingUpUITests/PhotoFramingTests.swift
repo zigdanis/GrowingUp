@@ -57,9 +57,54 @@ final class PhotoFramingTests: XCTestCase {
 		XCTAssertFalse(save.isEnabled)
 		checkRemovalMenu()
 	}
+
+	/// Back from Photos or the camera closes the whole sheet at once, with no source menu in between, and the editor
+	/// underneath keeps its unsaved change and can open either source again.
+	func testBackFromPhotosAndCameraReturnsStraightToTheEditor() {
+		launch()
+		openEditor(of: "Alice")
+		let celebrate = control("editor.celebrate")
+		let initial = celebrate.value as? String
+		celebrate.tap()
+		XCTAssertNotEqual(celebrate.value as? String, initial)
+		let draft = celebrate.value as? String
+		XCTAssertTrue(save.isEnabled)
+
+		choosePhoto()
+		checkpoint("photos-before-back")
+		app.buttons["photo.back"].tap()
+		assertEditorRestored(draft: draft, closing: app.buttons["photo.back"])
+
+		app.buttons["editor.appPhoto"].tap()
+		app.buttons["photo.source.camera"].tap()
+		XCTAssertTrue(app.buttons["camera.back"].waitForExistence(timeout: 5))
+		checkpoint("camera-before-back")
+		app.buttons["camera.back"].tap()
+		assertEditorRestored(draft: draft, closing: app.buttons["camera.back"])
+		checkpoint("editor-after-back")
+
+		choosePhoto()
+		dismissPhotos()
+	}
 }
 
 extension PhotoFramingTests {
+	/// The sheet is gone with no Camera/Photos/Cancel page behind it, and the editor still holds its unsaved change.
+	private func assertEditorRestored(draft: String?, closing backButton: XCUIElement) {
+		XCTAssertTrue(backButton.waitForNonExistence(timeout: 5), "Back closes the whole sheet")
+		XCTAssertFalse(app.buttons["Camera"].exists)
+		XCTAssertFalse(app.buttons["Photos"].exists)
+		XCTAssertTrue(app.buttons["editor.appPhoto"].waitForExistence(timeout: 5))
+		XCTAssertTrue(app.buttons["editor.appPhoto"].isHittable, "The editor is back under the dismissed sheet")
+		XCTAssertEqual(control("editor.celebrate").value as? String, draft)
+		XCTAssertTrue(save.isEnabled, "The unsaved change survives")
+	}
+
+	/// Edit-mode switches are buttons that report their state as a "1"/"0" value.
+	private func control(_ identifier: String) -> XCUIElement {
+		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+
 	/// Picks the first photo and crops it tightly around its sun, in the top-right corner; returns the crop's zoom.
 	private func cropTightly() -> String {
 		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
