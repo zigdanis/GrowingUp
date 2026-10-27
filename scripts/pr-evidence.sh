@@ -8,14 +8,17 @@ REPO=$(gh api 'repos/{owner}/{repo}' --jq .full_name)
 PR=$(gh api "repos/$REPO/pulls/$1")
 NUMBER=$(jq -r .number <<< "$PR")
 HEAD_SHA=$(jq -r .head.sha <<< "$PR")
-RUN=$(gh run list --repo "$REPO" --workflow ci.yml --event pull_request \
+RUN=$(gh run list --repo "$REPO" --workflow ci.yml \
   --commit "$HEAD_SHA" --limit 1 --json databaseId,url | jq -c '.[0] // empty')
 test -n "$RUN" || { echo "No PR CI run for $HEAD_SHA yet; retry after GitHub starts CI." >&2; exit 1; }
 RUN_ID=$(jq -r .databaseId <<< "$RUN")
 echo "PR #$NUMBER at $HEAD_SHA: $(jq -r .url <<< "$RUN")"
 
 CI_STATUS=0
-gh run watch "$RUN_ID" --repo "$REPO" --exit-status --interval 15 || CI_STATUS=$?
+RUN_STATE=$(gh api "repos/$REPO/actions/runs/$RUN_ID")
+test "$(jq -r .status <<< "$RUN_STATE")" = completed \
+  || { echo 'CI is still running; return after its completion notification to inspect exported evidence.' >&2; exit 2; }
+test "$(jq -r .conclusion <<< "$RUN_STATE")" = success || CI_STATUS=1
 CURRENT_HEAD=$(gh api "repos/$REPO/pulls/$NUMBER" --jq .head.sha)
 test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed; rerun for the new commit.' >&2; exit 1; }
 RUN_ATTEMPT=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .run_attempt)
@@ -35,7 +38,7 @@ test "$CURRENT_HEAD" = "$HEAD_SHA" || { echo 'PR head changed during download; r
 CURRENT_ATTEMPT=$(gh api "repos/$REPO/actions/runs/$RUN_ID" --jq .run_attempt)
 test "$CURRENT_ATTEMPT" = "$RUN_ATTEMPT" || { echo 'CI attempt changed during download; rerun for the new attempt.' >&2; exit 1; }
 trap - EXIT
-echo "Inspect attachments/*.png, attachments/manifest.json, test-summary.json and journeys.mp4."
-echo "For video review on Linux: ffmpeg -i PATH/journeys.mp4 -vf fps=1/2 PATH/frame-%04d.png"
+echo "Inspect attachments/*.png, attachments/manifest.json and test-summary.json."
+echo "Video is opt-in for motion review; inspect journeys.mp4 only when it was requested."
 echo "Remove $EVIDENCE_DIR after review. CI exit status: $CI_STATUS"
 exit "$CI_STATUS"

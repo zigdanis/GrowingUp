@@ -19,6 +19,13 @@ spec.loader.exec_module(commands)
 
 
 class UnifiedCommandTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory(prefix='growingup-unified-test-')
+        self.addCleanup(directory.cleanup)
+        active = patch.object(commands, 'ACTIVE_RELEASE', Path(directory.name) / 'active.json')
+        active.start()
+        self.addCleanup(active.stop)
+
     def test_deploy_requires_executor_and_never_silently_dispatches_cloud(self):
         with (patch.object(sys, 'argv', ['testflight.py', 'deploy']), patch.object(commands, 'gh') as gh,
               contextlib.redirect_stderr(io.StringIO())):

@@ -15,6 +15,13 @@ spec.loader.exec_module(testflight)
 
 
 class TestflightNotesTest(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory(prefix='growingup-cloud-test-')
+        self.addCleanup(directory.cleanup)
+        active = patch.object(testflight, 'ACTIVE_RELEASE', Path(directory.name) / 'active.json')
+        active.start()
+        self.addCleanup(active.stop)
+
     def test_prepare_notes_uses_latest_processed_build_and_never_dispatches(self):
         source = 'b' * 40
         base = 'a' * 40
@@ -178,3 +185,97 @@ class TestflightNotesTest(unittest.TestCase):
                 path.write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
                 with self.assertRaises(ValueError):
                     testflight.read_notes(path)
+
+    def test_cloud_deploy_queues_without_locally_waiting_for_ci_and_remembers_identity(self):
+        calls = []
+
+        def gh(*args, data=None):
+            calls.append((args, data))
+            if args[0] == 'run':
+                self.assertNotIn('--commit', args, 'Cloud source CI is gated in Actions, not by an idle agent')
+                return '[]'
+            return '{"html_url":"https://example.test/run/123","workflow_run_id":123}'
+
+        with tempfile.TemporaryDirectory() as directory:
+            notes = Path(directory) / 'notes.json'
+            notes.write_text('{"en":"Photo fix","ru":"Исправление фото"}')
+            with (patch.object(sys, 'argv', ['testflight.py', 'deploy', 'next', 'master', str(notes)]),
+                  patch.object(testflight, 'readiness'), patch.object(testflight, 'api', return_value={'sha': 'b' * 40}),
+                  patch.object(testflight, 'gh', side_effect=gh), contextlib.redirect_stdout(io.StringIO()) as output):
+                testflight.main()
+        active = json.loads(testflight.ACTIVE_RELEASE.read_text())
+        self.assertEqual('123', active['run_id'])
+        self.assertEqual('123', active['release_id'])
+        self.assertEqual('b' * 40, active['source_sha'])
+        self.assertIn('progress 123', output.getvalue())
+        self.assertEqual(1, sum(data is not None for args, data in calls))
+
+    def test_progress_reads_existing_jobs_and_receipt_without_dispatch_or_credentials(self):
+        testflight.ACTIVE_RELEASE.write_text('{"run_id":"123","release_id":"100","source_sha":"old"}')
+        jobs = [{'name': 'Archive, upload and distribute', 'status': 'in_progress', 'conclusion': None,
+                 'html_url': 'https://example.test/job', 'steps': [{'name': 'Run release operation', 'status': 'in_progress'}]}]
+
+        def api(path):
+            return {'jobs': jobs} if '/jobs?' in path else {'html_url': 'https://example.test/run/123',
+                                                           'status': 'in_progress', 'conclusion': None}
+
+        recorded = {'release_id': '100', 'source_sha': 'a' * 40, 'phase': 'uploading',
+                    'version': '2.2.4', 'build_number': '37'}
+        with (patch.object(testflight, 'api', side_effect=api),
+              patch.object(testflight, 'release_receipts', return_value=[{'body': json.dumps(recorded)}]),
+              patch.object(testflight, 'readiness') as readiness, patch.object(testflight, 'gh') as gh):
+            progress = testflight.cloud_progress()
+        readiness.assert_not_called()
+        gh.assert_not_called()
+        self.assertEqual('uploading', progress['phase'])
+        self.assertEqual('37', progress['build_number'])
+        self.assertEqual('Run release operation', progress['active'][0]['steps'][0])
+
+    def test_progress_shows_ci_blocker_before_any_build_is_reserved(self):
+        with (patch.object(testflight, 'api', side_effect=[
+                {'html_url': 'https://example.test/run/123', 'status': 'completed', 'conclusion': 'failure'},
+                {'jobs': [{'name': 'Wait for source CI', 'status': 'completed', 'conclusion': 'failure',
+                           'html_url': 'https://example.test/gate'}]}]),
+              patch.object(testflight, 'release_receipts', return_value=[])):
+            progress = testflight.cloud_progress('123')
+        self.assertEqual('blocked_by_ci', progress['phase'])
+        self.assertEqual('https://example.test/gate', progress['failed'][0]['url'])
+        self.assertIsNone(progress['build_number'])
+
+    def test_progress_recovers_resumed_release_on_another_machine_from_shared_receipt(self):
+        recorded = {'release_id': '100', 'workflow_url': 'https://example.test/run/456',
+                    'source_sha': 'a' * 40, 'phase': 'available', 'version': '2.2.4', 'build_number': '37'}
+        with (patch.object(testflight, 'api', side_effect=[
+                {'html_url': 'https://example.test/run/456', 'status': 'completed', 'conclusion': 'success'},
+                {'jobs': []}]),
+              patch.object(testflight, 'release_receipts', return_value=[{'body': json.dumps(recorded)}])):
+            progress = testflight.cloud_progress('456')
+        self.assertEqual('available', progress['phase'])
+        self.assertEqual('37', progress['build_number'])
+
+    def test_progress_uses_durable_run_title_before_resume_updates_receipt(self):
+        recorded = {'release_id': '100', 'workflow_url': 'https://example.test/run/100',
+                    'source_sha': 'a' * 40, 'phase': 'uploaded', 'version': '2.2.4', 'build_number': '37'}
+        with (patch.object(testflight, 'api', side_effect=[
+                {'html_url': 'https://example.test/run/456', 'status': 'in_progress', 'conclusion': None,
+                 'display_title': 'TestFlight resume — source ' + 'a' * 40 + ' — release 100'}, {'jobs': []}]),
+              patch.object(testflight, 'release_receipts', return_value=[{'body': json.dumps(recorded)}])):
+            progress = testflight.cloud_progress('456')
+        self.assertEqual('uploaded', progress['phase'])
+        self.assertEqual('37', progress['build_number'])
+
+    def test_terminal_run_without_receipt_never_claims_to_be_preparing(self):
+        with (patch.object(testflight, 'api', side_effect=[
+                {'html_url': 'https://example.test/run/456', 'status': 'completed', 'conclusion': 'failure'},
+                {'jobs': []}]), patch.object(testflight, 'release_receipts', return_value=[])):
+            progress = testflight.cloud_progress('456')
+        self.assertEqual('receipt_unavailable', progress['phase'])
+
+    def test_dispatch_record_failure_still_reports_accepted_run_without_retry(self):
+        with (patch.object(Path, 'mkdir', side_effect=PermissionError),
+              contextlib.redirect_stdout(io.StringIO()) as output,
+              contextlib.redirect_stderr(io.StringIO()) as warning):
+            testflight.remember_dispatch({'workflow_run_id': 123, 'html_url': 'https://example.test/run/123'},
+                                         {'source_sha': 'a' * 40, 'operation': 'deploy'})
+        self.assertIn('https://example.test/run/123', output.getvalue())
+        self.assertIn('already queued', warning.getvalue())

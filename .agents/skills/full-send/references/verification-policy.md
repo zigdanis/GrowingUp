@@ -4,7 +4,8 @@
 
 - **Every PR:** Secret Patterns, Release Tools, Swift Format, SwiftLint and Build & Test (unit tests). These five are the required checks. They finish in about 12 minutes, or about a minute when only docs, agent skills or tooling changed.
 - **PRs that touch app or UI-test code:** UI Tests — Glass also runs, starting with the unit tests. It produces the PR screenshots. `scripts/ci-scope.py` decides when it runs.
-- **Master pushes and manual runs only:** UI Tests — iOS 18. Manual only: App Store Screenshots. Neither gates a PR.
+- **UI changes:** iOS 18, Glass and Duo run on PRs; the extra iOS 27 pass runs on master/manual runs. Manual only: App Store Screenshots.
+- **Evidence:** XCTest screenshots are the default. Enable `record_ui_video` for a manual CI run only when the change requires motion review. Routine checks must not depend on a video recorder starting or finalizing.
 - **To run everything on a branch:** `gh workflow run ci.yml --ref BRANCH`.
 
 ## Merge gate
@@ -25,10 +26,11 @@
 
 - **Batch:** run local checks and integrate known fixes before pushing. Never rerun a green check for an unchanged commit.
 - **Classify failures:** app bug, test bug, or CI/simulator problem. A timeout-shaped UI failure in a journey the PR didn't touch is usually the simulator. Rerun only that job once with `gh run rerun RUN_ID --failed`.
-- **Limit:** three CI runs per PR. After that, or after the same failure twice, stop. Put the diagnosis in the PR status line and ask the developer.
+- **No blind retry loops:** after the same failure twice, change the diagnosis/implementation or reproduce it in isolation; do not launch another unchanged run. Concrete fixes and their required CI remain authorized within the task; a run count alone is not a reason to stop for permission. Record the failure classification and next action in the PR status line.
 
 ## Waiting
 
-- Wait for checks with `gh pr checks PR --watch --required` (run it in the background when the harness re-invokes on exit). It can return early right after a push, so confirm nothing is still `pending` before acting. T3 `watch_pull_request` hasn't reliably woken threads, so don't depend on it alone.
+- Use the runtime's supported PR watch while the PR is open. Do not use sleep/poll loops or assume a PR watch follows merged-master or TestFlight runs.
+- After a release-authorized merge, dispatch TestFlight immediately. Its Actions source-CI gate performs the durable wait without an agent turn or a macOS signing runner. The release CLI prints the live URL and saves the run identity; `progress RUN_ID` reads current jobs and the existing receipt.
 - Apple processing and beta review are normal waiting states.
 - When blocked, say what's done, what's pending and what would unblock it.

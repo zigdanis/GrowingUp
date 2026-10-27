@@ -38,7 +38,7 @@ class PublicationTests(unittest.TestCase):
             html_url="https://github.com/owner/repo/pull/42",
         )
         self.run = dict(
-            status="completed", conclusion="success", run_attempt=2,
+            status="completed", conclusion="success", run_attempt=2, event="pull_request", head_sha="current-head",
             html_url="https://github.com/owner/repo/actions/runs/123",
         )
         self.edits = []
@@ -59,6 +59,7 @@ class PublicationTests(unittest.TestCase):
         if args == ("api", "repos/{owner}/{repo}"):
             return json.dumps({"full_name": "owner/repo", "id": 1234})
         if args[:2] == ("run", "list"):
+            self.assertNotIn("--event", args, "A manually requested current-head video run must be discoverable")
             self.queried_workflows.append(args[args.index("--workflow") + 1])
             return json.dumps([{"databaseId": 123}])
         if args == ("api", "repos/owner/repo/pulls/42"):
@@ -142,6 +143,23 @@ class PublicationTests(unittest.TestCase):
     def test_ci_publication_keeps_the_existing_workflow(self):
         self.publish()
         self.assertEqual(self.queried_workflows, ["ci.yml"] * 2)
+
+    def test_manual_current_head_run_can_publish_its_opt_in_video(self):
+        self.run["event"] = "workflow_dispatch"
+        self.publish()
+        self.assertIn("user-attachments/assets/demo-mp4", self.pr["body"])
+
+    def test_unrelated_workflow_event_is_rejected_before_upload(self):
+        self.run["event"] = "push"
+        with self.assertRaisesRegex(ValueError, "PR or manually requested"):
+            self.publish()
+        self.assertEqual([], self.uploads)
+
+    def test_manual_run_for_another_commit_is_rejected_before_upload(self):
+        self.run.update(event="workflow_dispatch", head_sha="other-head")
+        with self.assertRaisesRegex(ValueError, "current PR head"):
+            self.publish()
+        self.assertEqual([], self.uploads)
 
     def test_capture_requires_every_stage_before_upload(self):
         self.capture_metadata()

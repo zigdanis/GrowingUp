@@ -18,16 +18,18 @@ directory = Path(os.environ["ARTIFACT_DIR"])
 if Path(sys.argv[0]).name == "xcodebuild":
     if sys.argv[1] == "build-for-testing":
         sys.exit(int(os.environ.get("MOCK_BUILD_STATUS", "0")))
-    if not (directory / "recording-started").exists():
+    if os.environ.get("UI_RECORD_VIDEO") == "1" and not (directory / "recording-started").exists():
         sys.exit(99)
+    (directory / "tests-started").touch()
     sys.exit(int(os.environ.get("MOCK_TEST_STATUS", "0")))
 else:
     if os.environ.get("MOCK_RECORD_STATUS") == "1":
         sys.exit(1)
     def finish(signum, frame):
-        Path(sys.argv[-1]).write_bytes(b"finalized-mp4")
-        sys.exit(0)
-    signal.signal(signal.SIGINT, finish)
+        partial = os.environ.get("MOCK_RECORD_STATUS") == "3"
+        Path(sys.argv[-1]).write_bytes(b"partial-mp4" if partial else b"finalized-mp4")
+        sys.exit(1 if partial else 0)
+    signal.signal(signal.SIGINT, signal.SIG_IGN if os.environ.get("MOCK_RECORD_STATUS") == "2" else finish)
     time.sleep(0.1)
     (directory / "recording-started").touch()
     print("Recording started", flush=True)
@@ -54,7 +56,11 @@ elif arguments[:2] == ["run", "list"]:
 elif arguments[:2] == ["run", "watch"]:
     sys.exit(int(os.environ.get("MOCK_CI_STATUS", "0")))
 elif arguments[:2] == ["api", "repos/owner/repository/actions/runs/123"]:
-    print("2")
+    if arguments[-1] == ".run_attempt":
+        print("2")
+    else:
+        print(json.dumps({"status": "in_progress" if os.environ.get("MOCK_CI_STATUS") == "2" else "completed",
+                          "conclusion": "success" if os.environ.get("MOCK_CI_STATUS") == "0" else "failure"}))
 elif arguments[:2] == ["run", "download"]:
     if arguments[arguments.index("--pattern") + 1] != "ui-*-attempt-2":
         sys.exit(98)
@@ -105,6 +111,14 @@ class EvidenceTests(unittest.TestCase):
             self.assertIn(b"Report:", result.stdout)
             self.assertEqual(len(list(directory.glob("growingup-pr-*/ui-*/index.html"))), 1)
 
+    def test_pending_ci_returns_without_waiting_or_downloading(self):
+        with tempfile.TemporaryDirectory(prefix="growingup-pr-test-") as temporary:
+            directory = Path(temporary)
+            result = self.run_pr_evidence(directory, ci_status=2)
+            self.assertEqual(result.returncode, 2)
+            self.assertIn(b"CI is still running", result.stderr)
+            self.assertEqual(list(directory.glob("growingup-pr-*")), [])
+
     def test_rejected_artifact_is_removed(self):
         with tempfile.TemporaryDirectory(prefix="growingup-pr-test-") as temporary:
             directory = Path(temporary)
@@ -119,7 +133,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0)
             self.assertEqual(list(directory.glob("growingup-pr-*")), [])
 
-    def run_journeys(self, build_status=0, test_status=0, record_status=0):
+    def run_journeys(self, build_status=0, test_status=0, record_status=0, video=True):
         with tempfile.TemporaryDirectory(prefix="growingup-evidence-test-") as temporary:
             directory = Path(temporary)
             for command in ["xcodebuild", "xcrun"]:
@@ -134,10 +148,11 @@ class EvidenceTests(unittest.TestCase):
                 MOCK_BUILD_STATUS=str(build_status),
                 MOCK_TEST_STATUS=str(test_status),
                 MOCK_RECORD_STATUS=str(record_status),
+                UI_RECORD_VIDEO="1" if video else "0",
             )
             result = subprocess.run(
                 ["bash", str(SCRIPTS / "run-ui-journeys.sh")],
-                env=environment, capture_output=True, timeout=10,
+                env=environment, capture_output=True, timeout=20,
             )
             video = directory / "journeys.mp4"
             return result.returncode, video.read_bytes() if video.exists() else None
@@ -153,6 +168,19 @@ class EvidenceTests(unittest.TestCase):
 
     def test_failed_recorder_does_not_start_journeys(self):
         self.assertEqual(self.run_journeys(record_status=1), (1, None))
+
+    def test_default_screenshots_do_not_depend_on_simulator_video(self):
+        self.assertEqual(self.run_journeys(record_status=1, video=False), (0, None))
+
+    def test_screenshot_only_journeys_preserve_test_failures(self):
+        self.assertEqual(self.run_journeys(test_status=65, video=False), (65, None))
+
+    def test_unresponsive_recorder_is_killed_instead_of_hanging_cleanup(self):
+        self.assertNotEqual(self.run_journeys(record_status=2)[0], 0)
+
+    def test_partial_video_with_failed_recorder_does_not_pass_ci(self):
+        self.assertEqual(self.run_journeys(record_status=3), (1, b"partial-mp4"))
+        self.assertEqual(self.run_journeys(record_status=3, test_status=65), (65, b"partial-mp4"))
 
     def test_report_links_exported_images_and_escapes_labels(self):
         with tempfile.TemporaryDirectory(prefix="growingup-report-test-") as temporary:

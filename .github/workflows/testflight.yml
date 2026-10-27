@@ -1,5 +1,5 @@
 name: TestFlight
-run-name: TestFlight ${{ inputs.operation }} — ${{ inputs.marketing_version || inputs.resume_run_id || 'account preflight' }}
+run-name: TestFlight ${{ inputs.operation }} — source ${{ inputs.source_sha }} — release ${{ inputs.resume_run_id || 'new' }}
 
 on:
   workflow_dispatch:
@@ -35,8 +35,30 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  source-ci:
+    name: Wait for source CI
+    if: github.ref == 'refs/heads/master' && (inputs.operation == 'deploy' || inputs.operation == 'archive')
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - name: Wait for the selected master commit's CI
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: python3 scripts/testflight-ci-gate.py "$SOURCE_SHA"
+
   release:
-    if: github.ref == 'refs/heads/master'
+    name: Archive, upload and distribute
+    needs: source-ci
+    if: >-
+      always() && !cancelled() && github.ref == 'refs/heads/master' &&
+      (needs.source-ci.result == 'success' || needs.source-ci.result == 'skipped')
     runs-on: xcode-27
     timeout-minutes: 75
     environment: testflight

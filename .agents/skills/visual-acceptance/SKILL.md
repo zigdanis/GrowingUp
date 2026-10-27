@@ -12,5 +12,6 @@ The developer wants to see the feature while the PR is open, not after it merges
 - **Video:** only when the change is motion itself (an animation or transition) and screenshots can't show it. Don't record or review video otherwise.
 - **Check:** confirm that the screenshots show the requested behavior, publish them with `scripts/pr-visual-evidence.py` and check that they display clearly in the PR.
 - **Clean up:** remove temporary downloads after publishing.
+- **Device panels:** close task-owned connections as soon as interactive verification finishes, fails or is handed off. State the check and purpose while a connection stays open. Leave a shared simulator running unless shutdown is requested or it was created solely for this task.
 
 For non-UI changes, report the functional checks instead.

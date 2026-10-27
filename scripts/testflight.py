@@ -3,6 +3,7 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tempfile
@@ -10,6 +11,7 @@ import tempfile
 REPO = 'zigdanis/GrowingUp'
 ENVIRONMENT = 'testflight'
 DEFAULT_NOTES = Path(__file__).resolve().parents[1] / 'build/testflight/notes.json'
+ACTIVE_RELEASE = DEFAULT_NOTES.with_name('cloud-active.json')
 REQUIRED_SECRETS = {'ASC_PRIVATE_KEY', 'ASC_KEY_ID', 'ASC_ISSUER_ID', 'MATCH_PASSWORD', 'MATCH_GIT_PRIVATE_KEY'}
 
 
@@ -51,6 +53,67 @@ def receipt(run_id):
     if len(matches) != 1:
         raise RuntimeError('No unique release receipt for that original run ID')
     return json.loads(matches[0]['body'])
+
+
+def remember_dispatch(run, payload):
+    """Persist the actual run ID before handing an asynchronous release back."""
+    state = {'run_id': str(run['workflow_run_id']), 'url': run['html_url'],
+             'source_sha': payload['source_sha'], 'operation': payload['operation'],
+             'release_id': payload.get('resume_run_id') or str(run['workflow_run_id'])}
+    print('Release queued: ' + state['url'])
+    print('Source: ' + state['source_sha'])
+    print('Progress: python3 scripts/testflight.py progress ' + state['run_id'])
+    print('Uploading starts only after the selected source CI passes; Apple processing/review follows upload.')
+    try:
+        ACTIVE_RELEASE.parent.mkdir(parents=True, exist_ok=True)
+        temporary = ACTIVE_RELEASE.with_suffix('.tmp')
+        temporary.write_text(json.dumps(state, indent=2) + '\n')
+        temporary.replace(ACTIVE_RELEASE)
+    except OSError:
+        print('Warning: could not save the local dispatch record. The release is already queued; '
+              'keep the URL/run ID above and do not dispatch another upload.', file=sys.stderr)
+
+
+def cloud_progress(run_id=None):
+    state = json.loads(ACTIVE_RELEASE.read_text()) if ACTIVE_RELEASE.exists() else {}
+    run_id = run_id or state.get('run_id')
+    if not run_id or not run_id.isdecimal():
+        raise ValueError('Specify a numeric workflow run ID, or dispatch a cloud release first')
+    if state.get('run_id') != run_id:
+        state = {'run_id': run_id, 'release_id': run_id}
+    run = api('actions/runs/' + run_id)
+    jobs = api('actions/runs/' + run_id + '/jobs?filter=latest&per_page=100')['jobs']
+    records = [json.loads(item['body']) for item in release_receipts()]
+    # A resume/status run has its own workflow ID but keeps the original release ID. The shared receipt and
+    # run title recover that relationship on another machine, even before this run updates its receipt.
+    original = re.search(r'\brelease (\d+)\b', run.get('display_title', ''))
+    source = re.search(r'\bsource ([0-9a-f]{40})\b', run.get('display_title', ''))
+    if original:
+        state['release_id'] = original[1]
+    recorded = next((item for item in records if item.get('workflow_url') == run['html_url']), None)
+    if recorded is None:
+        recorded = next((item for item in records if str(item.get('release_id')) == state['release_id']), {})
+    phase = recorded.get('phase')
+    if not phase:
+        gate = next((job for job in jobs if job['name'] == 'Wait for source CI'), None)
+        if gate and gate.get('conclusion') in ('failure', 'cancelled', 'timed_out'):
+            phase = 'blocked_by_ci'
+        elif gate and gate['status'] != 'completed':
+            phase = 'waiting_for_ci'
+        else:
+            phase = ('receipt_unavailable' if run['status'] == 'completed' else
+                     'queued' if run['status'] in ('queued', 'pending', 'waiting') else 'preparing')
+    return {'run_id': run_id, 'url': run['html_url'],
+            'source_sha': recorded.get('source_sha') or state.get('source_sha') or (source[1] if source else None),
+            'status': run['status'], 'conclusion': run.get('conclusion'), 'phase': phase,
+            'version': recorded.get('version'), 'build_number': recorded.get('build_number'),
+            'processing_status': recorded.get('processing_status'),
+            'distribution_status': recorded.get('distribution_status'),
+            'active': [{'job': job['name'], 'steps': [step['name'] for step in job.get('steps', [])
+                                                    if step['status'] == 'in_progress']}
+                       for job in jobs if job['status'] == 'in_progress'],
+            'failed': [{'job': job['name'], 'url': job['html_url'], 'conclusion': job.get('conclusion')}
+                       for job in jobs if job.get('conclusion') in ('failure', 'cancelled', 'timed_out')]}
 
 
 def read_notes(path):
@@ -200,7 +263,7 @@ def unified_main(argv):
         path = args.notes or DEFAULT_NOTES
         notes = notes_for_source(path, source, regenerate=args.operation != 'update-notes')
 
-    if args.operation in ('deploy', 'archive'):
+    if args.operation in ('deploy', 'archive') and args.target == 'local':
         ci = json.loads(gh('run', 'list', '--repo', REPO, '--workflow', 'ci.yml', '--commit', source,
                            '--limit', '1', '--json', 'status,conclusion'))
         if not ci or ci[0]['status'] != 'completed' or ci[0]['conclusion'] != 'success':
@@ -222,12 +285,18 @@ def unified_main(argv):
     result = json.loads(gh('api', f'repos/{REPO}/actions/workflows/testflight.yml/dispatches', '--method', 'POST',
                            '--input', '-', '--header', 'X-GitHub-Api-Version: 2026-03-10',
                            data={'ref': 'master', 'inputs': payload}))
-    print('Cloud ' + args.operation + ': ' + result['html_url'])
-    print('Monitor: gh run watch ' + str(result['workflow_run_id']) + ' --repo ' + REPO + ' --exit-status')
+    remember_dispatch(result, payload)
 
 
 def main():
     argv = sys.argv[1:]
+    if argv and argv[0] == 'progress':
+        parser = argparse.ArgumentParser(description='Read cloud release progress without dispatching work or loading signing keys.')
+        parser.add_argument('operation')
+        parser.add_argument('run_id', nargs='?')
+        args = parser.parse_args(argv)
+        print(json.dumps(cloud_progress(args.run_id), indent=2))
+        return
     if (not argv or argv[0] in ('--help', '-h', 'setup', 'check', 'archive', 'update-notes')
             or (argv[0] == 'notes' and (len(argv) == 1 or argv[1].startswith('--')))
             or (argv[0] in ('deploy', 'status', 'resume')
@@ -278,19 +347,13 @@ def main():
         payload['source_sha'] = source
         if args.operation == 'deploy':
             payload.update(notes_for_source(args.notes, source))
-            ci = json.loads(gh('run', 'list', '--repo', REPO, '--workflow', 'ci.yml', '--commit', source,
-                               '--limit', '1', '--json', 'status,conclusion'))
-            if not ci or ci[0]['status'] != 'completed' or ci[0]['conclusion'] != 'success':
-                raise RuntimeError('The latest CI run for the selected source must pass before deployment')
             payload['marketing_version'] = args.version
     # The current REST API returns the exact run ID/URL, avoiding polling races.
     result = gh('api', f'repos/{REPO}/actions/workflows/testflight.yml/dispatches', '--method', 'POST', '--input', '-',
                 '--header', 'X-GitHub-Api-Version: 2026-03-10',
                 data={'ref': 'master', 'inputs': payload})
     run = json.loads(result)
-    print('Dispatched TestFlight ' + args.operation + ' for source ' + payload['source_sha'])
-    print(run['html_url'])
-    print('Monitor: gh run watch ' + str(run['workflow_run_id']) + ' --repo ' + REPO + ' --exit-status')
+    remember_dispatch(run, payload)
 
 
 if __name__ == '__main__':
