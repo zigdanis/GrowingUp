@@ -11,12 +11,15 @@ struct PhotoPreviewControls: View {
 					Button(action: onBack) {
 						Image(systemName: "chevron.left").foregroundStyle(.white)
 							.shadow(color: .black.opacity(0.6), radius: 2).frame(width: 44, height: 44)
+							.contentShape(Rectangle())
 					}
 					.buttonStyle(.plain).glassEffect(.clear.interactive()).accessibilityLabel(Text("Back"))
+					.accessibilityIdentifier("photo.back")
 					Spacer()
 					Button(action: onAllPhotos) {
 						Text("All Photos").font(.headline).foregroundStyle(.white)
 							.shadow(color: .black.opacity(0.6), radius: 2).padding(.horizontal, 20).frame(height: 44)
+							.contentShape(Rectangle())
 					}
 					.buttonStyle(.plain).glassEffect(.clear.interactive())
 				}
@@ -30,7 +33,7 @@ struct PhotoPreviewControls: View {
 	private var controls: some View {
 		HStack {
 			Button(action: onBack) { Image(systemName: "chevron.left").foregroundStyle(Color.primary) }
-				.accessibilityLabel(Text("Back"))
+				.accessibilityLabel(Text("Back")).accessibilityIdentifier("photo.back")
 			Spacer()
 			Button(action: onAllPhotos) { Text("All Photos").font(.headline).foregroundStyle(Color.primary) }
 		}

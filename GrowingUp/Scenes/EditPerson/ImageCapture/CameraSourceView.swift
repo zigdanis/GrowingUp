@@ -17,6 +17,7 @@ struct CameraSourceView: View {
 					Image(systemName: "chevron.left").font(.title3.weight(.semibold)).padding(16)
 				}
 				.accessibilityLabel(Text("Back"))
+				.accessibilityIdentifier("camera.back")
 			}
 		}
 	}

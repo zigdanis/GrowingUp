@@ -74,22 +74,24 @@ final class CameraSourceTests: XCTestCase {
 		}
 	}
 
-	func testSourceMenuCanOpenCameraAndPhotosAndReturn() {
-		let coordinator = ImageCaptureCoordinator()
-		XCTAssertEqual(coordinator.stage, .sourceMenu)
-		coordinator.choseCamera()
-		XCTAssertEqual(coordinator.stage, .camera)
-		coordinator.wentBack()
-		XCTAssertEqual(coordinator.stage, .sourceMenu)
-		coordinator.chosePhotos()
+	func testBackFromTheCameraOrPhotoPreviewLeavesTheFlow() {
+		for stage in [ImageCaptureStage.camera, .photoPreview] {
+			let coordinator = ImageCaptureCoordinator(stage: stage)
+			XCTAssertTrue(coordinator.wentBack())
+			XCTAssertEqual(coordinator.stage, stage)
+		}
+	}
+
+	func testBackFromTheSystemPickerReturnsToThePhotoPreview() {
+		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
+		coordinator.choseAllPhotos()
+		XCTAssertFalse(coordinator.wentBack())
 		XCTAssertEqual(coordinator.stage, .photoPreview)
-		coordinator.wentBack()
-		XCTAssertEqual(coordinator.stage, .sourceMenu)
+		XCTAssertTrue(coordinator.wentBack())
 	}
 
 	func testSystemPickerCancellationDoesNotStartCrop() {
-		let coordinator = ImageCaptureCoordinator()
-		coordinator.chosePhotos()
+		let coordinator = ImageCaptureCoordinator(stage: .photoPreview)
 		coordinator.choseAllPhotos()
 		coordinator.isSystemPickerPresented = false
 		coordinator.pickerFinished(with: nil)

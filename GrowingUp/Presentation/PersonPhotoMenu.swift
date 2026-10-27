@@ -12,6 +12,7 @@ struct PersonPhotoMenu<MenuLabel: View>: View {
 			Button("Photos", systemImage: "photo") { photoRequest = PhotoRequest(source: .photos) }
 				.accessibilityIdentifier("photo.source.photos")
 			Button("Camera", systemImage: "camera") { photoRequest = PhotoRequest(source: .camera) }
+				.accessibilityIdentifier("photo.source.camera")
 			if hasPhoto {
 				Button("Remove", systemImage: "trash", role: .destructive) { presenter.removeMainPhoto() }
 					.accessibilityIdentifier("photo.source.remove")

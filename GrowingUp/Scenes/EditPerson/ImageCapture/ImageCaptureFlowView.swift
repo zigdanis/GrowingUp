@@ -27,15 +27,13 @@ struct ImageCaptureFlowView: View {
 		@Bindable var coordinator = self.coordinator
 		Group {
 			switch coordinator.stage {
-			case .sourceMenu:
-				ImageSourceSelectionView(onCamera: openCamera, onPhotos: coordinator.chosePhotos, onCancel: onCancel)
 			case .camera:
 				CameraSourceView(
-					cameraModel: cameraModel, onCapture: { coordinator.selectedImage($0, from: .camera) }, onBack: coordinator.wentBack)
+					cameraModel: cameraModel, onCapture: { coordinator.selectedImage($0, from: .camera) }, onBack: goBack)
 			case .photoPreview, .systemPhotoPicker:
 				LightweightPhotoPreviewView(
 					previewImages: previewImages, onPicked: { coordinator.selectedImage($0, from: .photoPreview) },
-					onBack: coordinator.wentBack, onAllPhotos: coordinator.choseAllPhotos)
+					onBack: goBack, onAllPhotos: coordinator.choseAllPhotos)
 			}
 		}
 		.presentationDetents(coordinator.stage == .camera ? [.large] : [.medium, .large])
@@ -58,11 +56,9 @@ struct ImageCaptureFlowView: View {
 			})
 	}
 
-	private func openCamera() {
-		Task {
-			await cameraModel.requestIfNeeded()
-			coordinator.choseCamera()
-		}
+	/// Back from the camera or the photo preview closes the whole flow, back to the editor underneath.
+	private func goBack() {
+		if coordinator.wentBack() { onCancel() }
 	}
 }
 
