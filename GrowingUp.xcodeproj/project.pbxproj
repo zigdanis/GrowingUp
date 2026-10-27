@@ -18,6 +18,7 @@
 		05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */; };
 		ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */; };
 		ED19498868970179956196EC /* MosaicLiftGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */; };
+		FA1000010261027000000001 /* MosaicLiftGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA1000010261027000000002 /* MosaicLiftGestureDelegate.swift */; };
 		ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */; };
 		ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED183F51000DBDC05872F428 /* MosaicDrag.swift */; };
 		A7F1C2D3E4B5968778695A4B /* MosaicAutoscroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */; };
@@ -372,6 +373,7 @@
 		EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTile.swift; sourceTree = "<group>"; };
 		ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicTileButton.swift; sourceTree = "<group>"; };
 		ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicLiftGesture.swift; sourceTree = "<group>"; };
+		FA1000010261027000000002 /* MosaicLiftGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicLiftGestureDelegate.swift; sourceTree = "<group>"; };
 		ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicWiggle.swift; sourceTree = "<group>"; };
 		ED183F51000DBDC05872F428 /* MosaicDrag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicDrag.swift; sourceTree = "<group>"; };
 		A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicAutoscroll.swift; sourceTree = "<group>"; };
@@ -1166,6 +1168,7 @@
 				EFC4AE73A4C7AF69CB928A6C /* MosaicTile.swift */,
 				ED18774FF5B29EB166498F86 /* MosaicTileButton.swift */,
 				ED193C0A4F5226336672343A /* MosaicLiftGesture.swift */,
+				FA1000010261027000000002 /* MosaicLiftGestureDelegate.swift */,
 				ED1857CA9756EA5FA7BB20AE /* MosaicWiggle.swift */,
 				ED183F51000DBDC05872F428 /* MosaicDrag.swift */,
 				A7F1C2D3E4B5968778695A4C /* MosaicAutoscroll.swift */,
@@ -1773,6 +1776,7 @@
 				05D25C7BE9DE48FB2246AF97 /* MosaicTile.swift in Sources */,
 				ED18B6DEAB01CB92125A6C5C /* MosaicTileButton.swift in Sources */,
 				ED19498868970179956196EC /* MosaicLiftGesture.swift in Sources */,
+				FA1000010261027000000001 /* MosaicLiftGestureDelegate.swift in Sources */,
 				ED187976BA78E429365C3E65 /* MosaicWiggle.swift in Sources */,
 				ED187ECEA7E0A6264DB098C0 /* MosaicDrag.swift in Sources */,
 				A7F1C2D3E4B5968778695A4B /* MosaicAutoscroll.swift in Sources */,

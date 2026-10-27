@@ -19,9 +19,14 @@ struct MosaicLiftGesture: UIGestureRecognizerRepresentable {
 	/// The finger let go, or the system took the touch away.
 	let onRelease: () -> Void
 
+	func makeCoordinator(converter: CoordinateSpaceConverter) -> MosaicLiftGestureDelegate {
+		MosaicLiftGestureDelegate()
+	}
+
 	func makeUIGestureRecognizer(context: Context) -> UILongPressGestureRecognizer {
 		let recognizer = UILongPressGestureRecognizer()
 		recognizer.minimumPressDuration = minimumDuration
+		recognizer.delegate = context.coordinator
 		return recognizer
 	}
 
