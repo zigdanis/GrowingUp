@@ -72,8 +72,14 @@ final class PhotoFramingTests: XCTestCase {
 
 		choosePhoto()
 		checkpoint("photos-before-back")
-		app.buttons["photo.back"].tap()
+		let back = app.buttons["photo.back"]
+		if #available(iOS 26.0, *) {
+			XCTAssertGreaterThanOrEqual(back.frame.width, 44, "The whole glass button receives taps")
+			XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+		}
+		back.tap()
 		assertEditorRestored(draft: draft, closing: app.buttons["photo.back"])
+		checkpoint("editor-after-photos-back")
 
 		app.buttons["editor.appPhoto"].tap()
 		app.buttons["photo.source.camera"].tap()
