@@ -8,6 +8,11 @@ on:
     branches: [master]
   pull_request:
   workflow_dispatch:
+    inputs:
+      record_ui_video:
+        description: Record UI video only when motion itself needs review
+        type: boolean
+        default: false
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -264,6 +269,7 @@ jobs:
           SIM_UDID: ${{ steps.simulator.outputs.udid }}
           SIM_DISPLAY: ${{ matrix.display }}
           ARTIFACT_DIR: ${{ steps.evidence.outputs.directory }}
+          UI_RECORD_VIDEO: ${{ inputs.record_ui_video && '1' || '0' }}
         run: scripts/run-ui-journeys.sh
       - name: Export evidence for Linux review
         id: export

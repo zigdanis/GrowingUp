@@ -496,7 +496,18 @@ class TestflightRelease
   def write_report
     path = @env.fetch('RELEASE_RECEIPT')
     File.write(path, JSON.pretty_generate(record.merge('preflight' => inventory)) + "\n")
+    phases = { 'planned' => 'Readiness checked', 'reserved' => 'Archiving the build',
+               'archived' => 'Archive ready', 'uploading' => 'Uploading to Apple', 'uploaded' => 'Apple processing',
+               'processing_failed' => 'Apple processing failed', 'distribution_failed' => 'Tester distribution failed',
+               'awaiting_apple_review' => 'Waiting for Apple beta review', 'available' => 'Available to testers' }
+    phase = phases.fetch(record['phase'], record['phase'] || 'Preparing')
+    puts "TestFlight: #{phase} | #{record['version']} (#{record['build_number']}) | source #{record['source_sha']}"
     return unless @env['GITHUB_STEP_SUMMARY']
-    File.write(@env['GITHUB_STEP_SUMMARY'], "### GrowingUp TestFlight\n\n```json\n#{JSON.pretty_generate(record.merge('preflight' => inventory))}\n```\n\nDevice receipt still requires Danis's confirmation.\n")
+    summary = "### GrowingUp TestFlight\n\nStatus: **#{phase}**\n\n"
+    summary += "Build: #{record['version']} (#{record['build_number']})\n\nSource: `#{record['source_sha']}`\n\n"
+    summary += "Apple processing: #{record['processing_status'] || 'pending'}\n\n"
+    summary += "Distribution: #{record['distribution_status'] || 'pending'}\n\n"
+    summary += "[Release run](#{record['workflow_url']})\n\nDetailed receipt is retained as a workflow artifact.\n"
+    File.write(@env['GITHUB_STEP_SUMMARY'], summary)
   end
 end

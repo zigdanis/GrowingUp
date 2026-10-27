@@ -33,7 +33,7 @@ def render(directory):
         'img,video{max-width:100%;max-height:720px}figcaption{overflow-wrap:anywhere}</style>',
         '<h1>GrowingUp simulator evidence</h1>',
         '<p>Automated assertion results are reported below. '
-        'Inspect the screenshots and recording before accepting the change.</p>',
+        'Inspect the screenshots before accepting the change. Video is optional for motion review.</p>',
         '<h2>Source and environment</h2>',
         f'<pre>{html.escape(json.dumps(metadata, indent=2))}</pre>',
         '<h2>Test results</h2>',
