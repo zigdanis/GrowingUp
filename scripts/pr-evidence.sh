@@ -8,7 +8,7 @@ REPO=$(gh api 'repos/{owner}/{repo}' --jq .full_name)
 PR=$(gh api "repos/$REPO/pulls/$1")
 NUMBER=$(jq -r .number <<< "$PR")
 HEAD_SHA=$(jq -r .head.sha <<< "$PR")
-RUN=$(gh run list --repo "$REPO" --workflow ci.yml --event pull_request \
+RUN=$(gh run list --repo "$REPO" --workflow ci.yml \
   --commit "$HEAD_SHA" --limit 1 --json databaseId,url | jq -c '.[0] // empty')
 test -n "$RUN" || { echo "No PR CI run for $HEAD_SHA yet; retry after GitHub starts CI." >&2; exit 1; }
 RUN_ID=$(jq -r .databaseId <<< "$RUN")

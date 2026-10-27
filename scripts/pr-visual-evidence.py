@@ -129,12 +129,16 @@ def checked_run(repo, sha, metadata):
     if workflow not in ("ci.yml", "app-store-screenshots.yml"):
         raise ValueError("Evidence must come from CI or App Store Screenshots.")
     runs = json.loads(gh(
-        "run", "list", "--repo", repo, "--workflow", workflow, "--event", "pull_request",
+        "run", "list", "--repo", repo, "--workflow", workflow,
         "--commit", sha, "--limit", "1", "--json", "databaseId",
     ))
     if not runs or str(runs[0]["databaseId"]) != str(metadata["run_id"]):
-        raise ValueError("Evidence is not from the latest PR CI run.")
+        raise ValueError("Evidence is not from the latest current-head workflow run.")
     run = json.loads(gh("api", f"repos/{repo}/actions/runs/{metadata['run_id']}"))
+    if run.get("head_sha") != sha:
+        raise ValueError("Workflow source does not match the current PR head.")
+    if run.get("event") not in ("pull_request", "workflow_dispatch"):
+        raise ValueError("Evidence must come from a PR or manually requested workflow run.")
     if (run["status"] != "completed" or run["conclusion"] != "success"
             or str(run["run_attempt"]) != str(metadata["run_attempt"])):
         raise ValueError("The latest CI attempt must pass and match the downloaded evidence.")
