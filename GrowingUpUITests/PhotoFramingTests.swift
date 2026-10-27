@@ -74,10 +74,12 @@ final class PhotoFramingTests: XCTestCase {
 		checkpoint("photos-before-back")
 		let back = app.buttons["photo.back"]
 		if #available(iOS 26.0, *) {
-			XCTAssertGreaterThanOrEqual(back.frame.width, 44, "The whole glass button receives taps")
-			XCTAssertGreaterThanOrEqual(back.frame.height, 44)
+			// The whole glass circle receives taps, not just the 8×14 chevron at its centre. The sheet draws its controls
+			// slightly scaled down, so tap off the chevron inside the glass rather than measuring the 44-point frame.
+			back.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).withOffset(CGVector(dx: -12, dy: 12)).tap()
+		} else {
+			back.tap()
 		}
-		back.tap()
 		assertEditorRestored(draft: draft, closing: app.buttons["photo.back"])
 		checkpoint("editor-after-photos-back")
 
