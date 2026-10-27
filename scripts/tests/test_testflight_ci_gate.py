@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
+import subprocess
 import unittest
+from unittest.mock import patch
 
 
 spec = importlib.util.spec_from_file_location('ci_gate', Path(__file__).parents[1] / 'testflight-ci-gate.py')
@@ -10,6 +12,25 @@ SHA = 'a' * 40
 
 
 class SourceCIGateTests(unittest.TestCase):
+    def test_transient_reads_and_timeouts_retry_without_uploading_or_releasing(self):
+        errors = [subprocess.CalledProcessError(1, ['gh']), subprocess.TimeoutExpired(['gh'], 60)]
+        result = subprocess.CompletedProcess(['gh'], 0, '{"status":"in_progress"}', '')
+        with (patch.object(gate.subprocess, 'run', side_effect=[*errors, result]) as run,
+              patch.object(gate.time, 'sleep') as pause):
+            self.assertEqual({'status': 'in_progress'}, gate.api('owner/repo', 'actions/runs/123'))
+        self.assertEqual(3, run.call_count)
+        self.assertEqual([5, 10], [call.args[0] for call in pause.call_args_list])
+        self.assertTrue(all(call.args[0] == ['gh', 'api', 'repos/owner/repo/actions/runs/123']
+                            for call in run.call_args_list))
+
+    def test_persistent_read_failure_is_bounded_and_keeps_gate_closed(self):
+        with (patch.object(gate.subprocess, 'run', side_effect=subprocess.TimeoutExpired(['gh'], 60)) as run,
+              patch.object(gate.time, 'sleep') as pause):
+            with self.assertRaises(subprocess.TimeoutExpired):
+                gate.api('owner/repo', 'actions/runs/123')
+        self.assertEqual(3, run.call_count)
+        self.assertEqual(2, pause.call_count)
+
     def run_gate(self, states, source=SHA, ancestor=SHA, timeout=100):
         states = iter(states)
         now = [0]

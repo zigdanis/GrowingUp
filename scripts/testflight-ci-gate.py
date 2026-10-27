@@ -10,9 +10,15 @@ import time
 
 
 def api(repo, path):
-    result = subprocess.run(['gh', 'api', f'repos/{repo}/{path}'],
-                            check=True, capture_output=True, text=True, timeout=60)
-    return json.loads(result.stdout)
+    for attempt in range(3):
+        try:
+            result = subprocess.run(['gh', 'api', f'repos/{repo}/{path}'],
+                                    check=True, capture_output=True, text=True, timeout=60)
+            return json.loads(result.stdout)
+        except subprocess.SubprocessError:
+            if attempt == 2:
+                raise
+            time.sleep(5 * (attempt + 1))
 
 
 def wait_for_ci(repo, source, timeout=5400, interval=30, fetch=api, clock=time.monotonic,
