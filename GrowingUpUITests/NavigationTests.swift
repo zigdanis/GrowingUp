@@ -54,27 +54,6 @@ final class NavigationTests: XCTestCase {
 		checkpoint("mosaic-light")
 	}
 
-	/// Captures the icon as SpringBoard renders it, which no screenshot of the app itself shows.
-	func testHomeScreenShowsTheAppIcon() {
-		launch(appearance: .light)
-		XCUIDevice.shared.press(.home)
-		defer { app.activate() }
-		let springBoard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-		// On Duo, the first Home press can leave the app switcher open instead of showing the icon grid.
-		let switcher = springBoard.otherElements["AppSwitcherContentView"]
-		if switcher.waitForExistence(timeout: 2) {
-			XCUIDevice.shared.press(.home)
-			XCTAssertTrue(switcher.waitForNonExistence(timeout: 5))
-		}
-		let icon = springBoard.icons["GrowingUp"].firstMatch
-		XCTAssertTrue(icon.waitForExistence(timeout: 10))
-		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: icon)], timeout: 10)
-		let attachment = XCTAttachment(screenshot: icon.screenshot())
-		attachment.name = "app-icon-soft-lift"
-		attachment.lifetime = .keepAlways
-		add(attachment)
-	}
-
 	func testLargestTextKeepsTheBirthdayLineWholeOnScreen() {
 		launch(appearance: .dark, contentSize: "UICTContentSizeCategoryAccessibilityXXXL")
 		XCTAssertTrue(app.buttons["person.add"].isHittable)

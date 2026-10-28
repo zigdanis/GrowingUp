@@ -46,6 +46,13 @@ no alpha or transparency chunk, and no animation. No App Store upload is
 needed separately for the icon; App Store Connect reads it from a future
 uploaded build. This PR does not upload or release a build.
 
+For a PR's compiled-icon preview, download its matching Simulator App artifact
+with `scripts/simulator-app.sh PR_NUMBER`. Inspect the app's `Info.plist`
+(`CFBundleIcons` / `CFBundlePrimaryIcon`) and the named `AppIcon*.png` files.
+`xcrun assetutil --info PATH_TO_APP/Assets.car` reports the opaque 1024x1024
+sRGB rendition. This verifies the actual bundle without depending on
+SpringBoard's Home Screen navigation or icon layout.
+
 ## Apple references
 
 - [Configuring your app icon](https://developer.apple.com/documentation/xcode/configuring-your-app-icon)
