@@ -5,7 +5,7 @@ description: Deliver features, fixes and new builds through implementation, revi
 
 # Full send
 
-A PR should open early and show reviewed screenshots while it is open. A requested TestFlight delivery ends at its actual Apple/tester status, not at merge. Any loop that repeats without new information is a bug in the process: diagnose it and report the blocker.
+A PR should open early. UI tests and captures run only when the developer requests them; ordinary delivery does not dispatch Duo UI journeys or wait for their screenshots. A requested TestFlight delivery ends at its actual Apple/tester status, not at merge. Any loop that repeats without new information is a bug in the process: diagnose it and report the blocker.
 
 ## Roles
 
@@ -27,9 +27,9 @@ A PR should open early and show reviewed screenshots while it is open. A request
 2. **Implement:** make the change with focused tests, then run the Linux checks: `python3 -m unittest discover -s scripts/tests` and `scripts/check-secrets.sh`.
 3. **Review once:** have the Codex reviewer check correctness and the requested behavior. Fix confirmed issues before pushing.
 4. **Open the PR early:** push and open the PR, as a draft if work remains. Write the description for the developer (see below). One push per batch of fixes.
-5. **Show:** once the Glass UI job finishes, publish 1–3 screenshots with `scripts/pr-visual-evidence.py` while the PR is open.
+5. **Show when requested:** publish 1–3 reviewed screenshots from the requested UI verification or native capture task while the PR is open. Use `scripts/pr-visual-evidence.py` for requested CI evidence. Do not dispatch Duo UI tests just to satisfy a routine PR evidence gate.
 6. **Bot comments:** handle the bots' first review in one batch (see the [verification policy](references/verification-policy.md)). Don't ask for another bot review.
-7. **Merge:** once review fixes are pushed and screenshots are published, run `gh pr merge PR --auto --merge` so GitHub merges when the required checks pass. A behind-master branch doesn't need an update unless it conflicts.
+7. **Merge:** once review fixes are pushed and any explicitly requested visual verification is complete, run `gh pr merge PR --auto --merge` so GitHub merges when the required checks pass. Automatic Duo UI tests and screenshots are not a merge gate. A behind-master branch doesn't need an update unless it conflicts.
    - **Stacks:** avoid stacked PRs. If you stack anyway, retarget each child to `master` before deleting its base branch. Deleting the base closes the children for good.
 8. **Release:** when authorized, prepare notes before merge and dispatch the cloud release immediately after merge. Its visible Actions job waits for source CI and continues automatically; never rely on a merged PR watch to restart the agent. Follow the steps below.
 

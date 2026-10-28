@@ -107,8 +107,10 @@ jobs:
               manifest = json.loads((source / 'attachments/manifest.json').read_text())
               attachments = [item for test in manifest for item in test['attachments']]
               export_suffix = re.compile(r'_\d+_[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$')
-              for checkpoint in ('mia', 'leo-celebration', 'mango', 'teddy',
-                                 'widget-small', 'widget-medium', 'widget-large'):
+              fireworks = tuple(f'leo-fireworks-{delay}' for delay in (1500, 1700, 1900, 2100, 2300, 2500))
+              checkpoints = ('mosaic', 'mia', 'editor', 'mango', 'teddy',
+                             'widget-small', 'widget-medium', 'widget-large') + fireworks
+              for checkpoint in checkpoints:
                   name = f'store-{locale}-{checkpoint}'
                   matches = [item for item in attachments
                              if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == name]
@@ -122,6 +124,13 @@ jobs:
                       expected = {'widget-small': (510, 510), 'widget-medium': (1092, 510),
                                   'widget-large': (1092, 1146)}[checkpoint]
                       assert dimensions == expected, f'{name}: unexpected widget crop {dimensions}'
+              timing_name = f'store-{locale}-leo-fireworks-timing'
+              matches = [item for item in attachments
+                         if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.json')) == timing_name]
+              assert len(matches) == 1, f'{timing_name}: expected one timing attachment'
+              timing = json.loads((source / 'attachments' / matches[0]['exportedFileName']).read_text())
+              assert [frame['name'] for frame in timing['frames']] == [f'store-{locale}-{name}' for name in fireworks]
+              assert timing['celebration'] % 3 == 0, f'{timing_name}: expected the fireworks celebration'
           PY
       - name: Compose approved App Store frames from real captures
         id: compose
@@ -134,7 +143,19 @@ jobs:
           "$ARTIFACT_DIR/render-venv/bin/python" scripts/render-app-store-screenshots.py \
             "$ARTIFACT_DIR" --output "$ARTIFACT_DIR/final"
           test -s "$ARTIFACT_DIR/final/source.json"
-          test "$(find "$ARTIFACT_DIR/final/en-US" "$ARTIFACT_DIR/final/ru" -name '*.png' | wc -l | tr -d ' ')" = 8
+          python3 - <<'PY'
+          import json
+          import os
+          import runpy
+          from pathlib import Path
+
+          directory = Path(os.environ['ARTIFACT_DIR']) / 'final'
+          files = runpy.run_path('scripts/app-store-metadata.py')['FILES']
+          expected = {f'{locale}/{name}' for locale in ('en-US', 'ru') for name in files}
+          actual = {str(path.relative_to(directory)) for path in directory.rglob('*.png')}
+          source = json.loads((directory / 'source.json').read_text())
+          assert actual == expected == set(source['outputs']), 'Composed PNGs differ from the current screenshot contract'
+          PY
       - name: Create portable capture reports
         if: always() && steps.evidence.outputs.directory != ''
         env:
@@ -192,7 +213,7 @@ jobs:
             echo
             echo "[Download RU/EN screenshots, journey recordings and test results]($ARTIFACT_URL)"
             echo
-            echo 'Includes native simulator inputs and eight composed screenshots in final/. Inspect both locales before publication.'
+            echo 'Includes native simulator inputs and six composed screenshots per locale in final/. Inspect both locales before publication.'
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Shut down capture simulator
         if: always() && steps.simulator.outputs.udid != ''

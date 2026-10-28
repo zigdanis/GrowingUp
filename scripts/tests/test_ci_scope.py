@@ -35,18 +35,21 @@ class CIScopeTests(unittest.TestCase):
         self.git("commit", "-qm", "fixture")
         return self.git("rev-parse", "HEAD")
 
-    def outputs(self, event="pull_request", base=None, head=None):
-        result = subprocess.run([sys.executable, str(SCRIPT), "--event", event,
-                                 "--base", self.base if base is None else base,
-                                 "--head", self.git("rev-parse", "HEAD") if head is None else head],
+    def outputs(self, event="pull_request", base=None, head=None, requested=False):
+        command = [sys.executable, str(SCRIPT), "--event", event,
+                   "--base", self.base if base is None else base,
+                   "--head", self.git("rev-parse", "HEAD") if head is None else head]
+        if requested:
+            command.append("--run-duo-ui-tests")
+        result = subprocess.run(command,
                                 cwd=self.root, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         return result.stdout.decode().splitlines()
 
     def classify(self, event="pull_request", base=None, head=None):
         return self.outputs(event, base, head)[0]
 
-    def classify_ui(self, event="pull_request", base=None, head=None):
-        return self.outputs(event, base, head)[1]
+    def classify_ui(self, event="pull_request", base=None, head=None, requested=False):
+        return self.outputs(event, base, head, requested)[1]
 
     def test_uploader_tests_docs_and_committed_screenshots_need_only_tool_checks(self):
         for path in ("scripts/app-store-metadata.py", "scripts/tests/test_app_store_metadata.py",
@@ -115,7 +118,7 @@ class CIScopeTests(unittest.TestCase):
         self.assertEqual(self.classify("pull_request", base_tip, head), "ios_required=false")
         self.assertEqual(self.classify("push", base_tip, head), "ios_required=true")
 
-    def test_pr_runs_ui_journeys_only_for_their_inputs(self):
+    def test_automatic_events_skip_ui_journeys_even_for_app_changes(self):
         for path in ("GrowingUp/App.swift", "Core/Person.swift", "Widget/Widget.swift",
                      "GrowingUpUITests/Journey.swift", "GrowingUp.xcodeproj/project.pbxproj",
                      "scripts/run-ui-journeys.sh"):
@@ -123,20 +126,18 @@ class CIScopeTests(unittest.TestCase):
                 self.git("reset", "--hard", self.base)
                 self.write(path)
                 self.commit()
-                self.assertEqual(self.classify_ui(), "ui_required=true")
-        for path in ("GrowingUpTests/PersonTests.swift", ".github/workflows/ci.yml", "Gemfile", "scripts/testflight.py"):
-            with self.subTest(path=path):
-                self.git("reset", "--hard", self.base)
-                self.write(path)
-                self.commit()
-                self.assertEqual(self.outputs(), ["ios_required=true", "ui_required=false"])
+                for event in ("pull_request", "push"):
+                    self.assertEqual(self.classify_ui(event), "ui_required=false")
 
-    def test_push_manual_and_unreadable_changes_run_ui_journeys(self):
+    def test_ui_journeys_require_manual_event_and_explicit_request(self):
         self.write("GrowingUpTests/PersonTests.swift")
         self.commit()
-        for event, base in (("push", self.base), ("workflow_dispatch", self.base), ("pull_request", "")):
-            with self.subTest(event=event, base=base):
-                self.assertEqual(self.classify_ui(event, base), "ui_required=true")
+        for event in ("pull_request", "push", "workflow_dispatch", "unknown"):
+            for requested in (False, True):
+                with self.subTest(event=event, requested=requested):
+                    expected = event == "workflow_dispatch" and requested
+                    self.assertEqual(self.classify_ui(event, base="", requested=requested),
+                                     f"ui_required={str(expected).lower()}")
 
     def test_tool_only_changes_skip_ui_journeys(self):
         self.write("docs/guide.md")

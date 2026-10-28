@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "upload": false,
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "version": "2.2.2",
+  "groups": [],
+  "deleted_placements": [],
+  "validated": [
+    {
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro"
+    }
+  ]
+}

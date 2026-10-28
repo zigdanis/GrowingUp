@@ -22,7 +22,7 @@ import urllib.request
 
 API_URL = "https://api.appstoreconnect.apple.com"
 BUNDLE_ID = "pro.ziganshin.GrowingUp"
-FILES = ("01-mia.png", "02-leo-celebration.png", "03-mango-teddy.png", "04-widgets.png")
+FILES = ("01-mosaic.png", "02-mia.png", "03-leo-birthday.png", "04-editor.png", "05-pets.png", "06-widgets.png")
 LOCALES = ("en-US", "ru")
 LIVE_STATES = {"READY_FOR_SALE", "READY_FOR_DISTRIBUTION"}
 READY_ASSETS = {"PREPARE_FOR_SUBMISSION", "APPROVED"}
@@ -310,7 +310,8 @@ def prepare_image(api, library_id, image, spec_id):
         api.request("PATCH", f"/v1/appAssetLibraryImages/{asset_id}", {"data": {
             "type": "appAssetLibraryImages", "id": asset_id, "attributes": {"uploaded": True},
         }})
-    deadline = time.monotonic() + 300
+    # A newly uploaded PNG can take slightly over five minutes in Apple's processing queue.
+    deadline = time.monotonic() + 600
     while True:
         asset = api.resource(f"/v1/appAssetLibraryImages/{asset_id}")
         if asset["attributes"]["state"] in READY_ASSETS:

@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Skip iOS checks only for changes confined to known standalone tooling and docs.
 
-PRs run simulator UI journeys only when they touch what the journeys exercise.
-Pushes to master, manual runs and anything unreadable run them in full.
+Simulator UI journeys run only for an explicitly opted-in manual workflow.
 """
 
 import argparse
@@ -15,10 +14,6 @@ NON_IOS_FILES = {
     "AGENTS.md", "CLAUDE.md", "README.md", ".coderabbit.yaml",
     "scripts/app-store-metadata.py", "scripts/tests/test_app_store_metadata.py",
 }
-
-
-UI_INPUTS = ("GrowingUp/", "Core/", "Widget/", "GrowingUpUITests/", "GrowingUp.xcodeproj/",
-             "scripts/run-ui-journeys.sh", "scripts/ui-evidence-report.py")
 
 
 def non_ios_file(path):
@@ -54,12 +49,8 @@ def ios_required(files):
     return files is None or not all(non_ios_file(path) for path in files)
 
 
-def ui_required(event, files):
-    if not ios_required(files):
-        return False
-    if files is None or event != "pull_request":
-        return True
-    return any(path.startswith(UI_INPUTS) for path in files)
+def ui_required(event, requested=False):
+    return event == "workflow_dispatch" and requested
 
 
 def main():
@@ -67,10 +58,12 @@ def main():
     parser.add_argument("--event", required=True)
     parser.add_argument("--base", default="")
     parser.add_argument("--head", default="")
+    parser.add_argument("--run-duo-ui-tests", action="store_true",
+                        help="Opt in to Duo UI journeys for a manual workflow only")
     args = parser.parse_args()
     files = changed_files(args.event, args.base, args.head)
     print(f"ios_required={str(ios_required(files)).lower()}")
-    print(f"ui_required={str(ui_required(args.event, files)).lower()}")
+    print(f"ui_required={str(ui_required(args.event, args.run_duo_ui_tests)).lower()}")
 
 
 if __name__ == "__main__":

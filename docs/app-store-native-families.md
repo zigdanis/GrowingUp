@@ -1,41 +1,35 @@
-# Native App Store screenshots — captured 2026-10-13, verified 2026-10-14
+# Native App Store screenshots — 2026-10-28
 
-Captured locally on MacBook Pro M2 Pro (Mac14,9), Xcode 26.6 / iOS 26.5 (23F77). App source commit: `0d60b645b4bf42d98f5c294079b9e59c10a730ca`.
+Captured on MacPro with Xcode 27.1. Production app source matches master `217843fc9ce0ff5f0590afcdd7560460c52201c3` (PR105 merged); no app code changed for capture.
 
-| Apple group | Native simulator | Native PNG size | Own placements |
-| --- | --- | --- | --- |
-| Dynamic Island medium — required | iPhone 17 Pro | 1206×2622 | 4 EN + 4 RU, ACTIVE |
-| Dynamic Island large | iPhone 17 Pro Max, approved capture reused | 1320×2868 | 4 EN + 4 RU, ACTIVE |
-| Face ID large | iPhone 14 Plus | 1284×2778 | 4 EN + 4 RU, ACTIVE |
-| Home Button medium | iPhone SE 3 | 750×1334 | 4 EN + 4 RU, ACTIVE |
+| Screenshot set | Persistent simulator | Runtime | Native PNG size | Final placements |
+|---|---|---|---|---|
+| Dynamic Island medium | iPhone 17 Pro | iOS 27.0 | 1206 × 2622 | 6 EN + 6 RU |
+| Face ID large | iPhone 14 Plus | iOS 27.0 | 1284 × 2778 | 6 EN + 6 RU |
+| Home Button medium | iPhone SE (3rd generation) | iOS 27.0 | 750 × 1334 | 6 EN + 6 RU |
+| Duo outer, folded | iPhone Duo | iOS 27.1 | 1398 × 2034 | 6 EN + 6 RU |
 
-Danis canceled the Home Button large requirement and authorized SE 3 on iOS 26.5. SE has independent native UI captures and its rectangular LCD, physical Home button and distinct shorter composition. No legacy 8 Plus capture or simulated compatibility was used.
+Apple requires Dynamic Island medium. When Dynamic Island large is omitted, Face ID large is also required. Home Button medium and Duo outer are the additional sets requested by Danis. [Apple screenshot requirements](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/).
 
-All 32 final cards were inspected: Mia age, Leo birthday confetti/popover, Mango + Teddy, production widget examples. The new sets use native UI from their corresponding devices. The widget card arranges actual production widget element captures in the approved illustrative layout. Native widget crops and hashes are retained; SE crops use scale 2, DI/Face ID scale 3, including up to two pixels of XCTest edge rounding. The renderer's SE addition did not change any of the 16 already uploaded DI medium / Face ID large PNG hashes. Approved DI large assets and their app/photo inputs remain valid.
+The installed iOS 27.1 runtime supports only Duo. All three other models, including SE 3, use their newest compatible installed runtime, iOS 27.0. No iOS 18 tests or captures were run. The four simulators remain installed and are the shared pool for all projects. The screenshot skill and Fleet instructions now allow creating a missing required pool device and keeping it.
 
-Six focused screenshot-only UI tests passed (three devices × EN/RU); no videos captured in this task. Uploader checks: 31 tests passed, including included-image pagination/fallback and selected-group preservation. No new cloud CI, push, TestFlight or App Review submission. The handed-off budget remains at least 17 earlier CI attempts and 9 earlier capture runs; this continuation adds six focused local capture tests.
+Each locale has six cards: mosaic, child age, birthday fireworks, in-place editor, pets and Home Screen widgets. Every native app screen came from its corresponding simulator through the real UI. The widget card arranges genuine production widget element captures on an illustrative Home Screen. All 48 final PNGs were visually inspected; all are RGB at the family's native output size.
 
-CLI upload/read-back: draft 2.1.0 `4dccceea-13f4-4f10-8153-d1106ec1731c` remains `PREPARE_FOR_SUBMISSION`. All four groups have four ordered, explicit ACTIVE placements per locale. Required DI medium therefore owns its screenshots. The first SE attempt stopped during read-only checks on an Apple API network failure, before transferring any new PNG. Danis authorized one additional CLI attempt. That attempt targeted only SE medium, transferred exactly eight new PNGs, preserved all 24 prior placement/image IDs, and deleted zero placements. Earlier, after explicit resume approval, an interrupted upload reused two already stored PNGs and sent the remaining 14; the original eight DI large assets were preserved.
+The capture navigates to production celebration number 3 (fireworks), captures six candidates 1.5–2.5 seconds after the return swipe, and records actual timing. The selected frame is 1700 ms in both locales for all four families, showing separate, widely spread bursts. Retained native frames and timing JSON accompany the card hashes.
 
-Files:
+Eight localized capture runs passed. Duo Russian initially failed because the photo picker did not open; one focused Russian-only retry using the identical compiled app passed. Passing English evidence was preserved. MacPro had spare CPU capacity at the failure, so there was no evidence of resource pressure. The first Dynamic Island Russian run passed but Xcode stalled collecting diagnostics; its completed passing result was exported without recapture. The runner now disables diagnostic collection.
 
-- [Review all 32 EN/RU cards](app-store-hardware-preview.html).
-- [Group manifest](../marketing/app-store/screenshots/families.json).
-- [Fresh Apple CLI inventory](../marketing/app-store/screenshots/apple-verified-inventory.json).
-- [Upload receipt](../marketing/app-store/screenshots/apple-upload-receipt.json).
-- [Earlier SE network stop, zero PNG transfers](../marketing/app-store/screenshots/apple-se3-network-stop.json).
-- New final PNGs and source receipts: `marketing/app-store/screenshots/families/{dynamic-island-medium,face-id-large,home-button-medium}/`.
-- Retained native inputs, source metadata and passing summaries: `marketing/app-store/native-captures/{dynamic-island-medium,face-id-large,home-button-medium}/`.
-- DerivedData, xcresult, capture logs and previous upload receipts: `~/Library/Logs/GrowingUpScreenshots-20261013/`.
+App Store Connect draft **2.2.2** (`411ee0b0-bd37-4c01-95f3-1e231c972ec9`) has 48 ordered, explicit ACTIVE screenshots: six per set per locale. All six preview placements were removed. No redundant Dynamic Island large screenshots remain: four English placements were already absent at cleanup preflight; cleanup removed the four remaining Russian placements. Underlying library assets, archived repository media, and unrelated creative placements were preserved. No App Review submission, TestFlight build or version creation was performed.
 
-Inheritance limitation: the official placements API exposes explicit placements and has no inherited/scaled-source field or query parameter. Actual fallback sources in smaller groups have not been confirmed. Browser and Computer Use were prohibited, so this report does not claim that every smaller group inherits only its matching hardware family. All four requested primary groups are independently populated. This is the only remaining verification limitation; there is no pending screenshot upload.
+Apple processing exceeded the original five-minute deadline on newly uploaded images. The timeout is now ten minutes; resumed uploads reused existing asset IDs. Apple HTTP 500 responses interrupted Home Button finalization after its replacements were ACTIVE; fresh read-back confirmed the draft and existing placements before resuming removal of the old cards. The interrupted receipt is retained.
 
-Apple references: [screenshot specifications](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/), [iOS 26 compatible models](https://support.apple.com/guide/iphone/iphone-models-compatible-with-ios-26-iphe3fa5df43/26/ios/26).
+- [Browse all current EN/RU cards](app-store-hardware-preview.html).
+- [Current manifest](../marketing/app-store/screenshots/families.json).
+- [Combined upload receipt](../marketing/app-store/screenshots/apple-upload-receipt-20261028.json).
+- [Preview removal receipt](../marketing/app-store/screenshots/apple-preview-removal-receipt-20261028.json).
+- [Redundant set removal and final read-back](../marketing/app-store/screenshots/apple-cleanup-receipt-20261028.json).
+- [Fresh Apple inventory](../marketing/app-store/screenshots/apple-verified-inventory-20261028.json).
 
-Screenshot simulator ownership (all Shutdown after captures):
+Rebuild instructions are in `.agents/skills/app-store-screenshots/SKILL.md`. Retained inputs and passing summaries live under `marketing/app-store/native-captures/*-20261028/`; final PNGs and source hashes live under `marketing/app-store/screenshots/families/*-20261028/`. Previous undated assets and receipts are historical, not the current manifest.
 
-- DI medium: `ED72CBAC-470D-460C-98C5-7D65236D2E22`.
-- Face ID large: `1358FC89-2E2B-46AB-8C74-741A7E6B33AE`.
-- SE 3: `8F1F3EB7-4247-41C9-85AD-9238318F69B0`.
-
-At the SE handback, live `simctl` showed no booted devices and no `xcodebuild`. The video thread was notified before its next DI window. Its Pro Max `DD1B22DD-179E-41FE-813A-91AEAB2B522B` was not used or modified by this task. Screenshot caffeinate processes ended; the SE launchctl entry was removed. The additional bounded CLI-upload caffeinate PID 78622 was stopped when upload/read-back completed. Separate bound worktrees; no video/APP_PREVIEW changes in this task. No further screenshot simulator boots planned.
+Local verification: independent Codex review found no issues; 48 focused screenshot-tool tests passed, along with strict SwiftLint, swift-format and Swift parsing of the capture test. The full local script suite had 137 passes and one existing FFmpeg video-duration failure (0.0667 s difference), unrelated to screenshot changes; PR CI supplies the Linux result. No extra capture or iOS compatibility tests were added.

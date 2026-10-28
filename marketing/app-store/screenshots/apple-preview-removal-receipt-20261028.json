@@ -1,0 +1,144 @@
+{
+  "success": true,
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "version": "2.2.2",
+  "deleted_placements": [
+    {
+      "locale": "en-US",
+      "id": "69c00005-71fb-8cec-8f34-468297d9cc82",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE"
+    },
+    {
+      "locale": "en-US",
+      "id": "cb000005-71fb-8cec-8f00-7d941af4655c",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE"
+    },
+    {
+      "locale": "en-US",
+      "id": "40400005-71fb-8cec-8f35-ed6a6bc428e6",
+      "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE"
+    },
+    {
+      "locale": "ru",
+      "id": "6c000005-71fb-8cec-8f02-fc2ade921062",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE"
+    },
+    {
+      "locale": "ru",
+      "id": "20800005-71fb-8cec-8f04-3a8f8668ddee",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE"
+    },
+    {
+      "locale": "ru",
+      "id": "96c00005-71fb-8cec-8f00-2c0aee140e7f",
+      "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE"
+    }
+  ],
+  "backups": {
+    "en-US": [
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "69c00005-71fb-8cec-8f34-468297d9cc82",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/69c00005-71fb-8cec-8f34-468297d9cc82"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "cb000005-71fb-8cec-8f00-7d941af4655c",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/cb000005-71fb-8cec-8f00-7d941af4655c"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "40400005-71fb-8cec-8f35-ed6a6bc428e6",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/40400005-71fb-8cec-8f35-ed6a6bc428e6"
+        }
+      }
+    ],
+    "ru": [
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "6c000005-71fb-8cec-8f02-fc2ade921062",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/6c000005-71fb-8cec-8f02-fc2ade921062"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "20800005-71fb-8cec-8f04-3a8f8668ddee",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/20800005-71fb-8cec-8f04-3a8f8668ddee"
+        }
+      },
+      {
+        "type": "appAssetLibraryPlacements",
+        "id": "96c00005-71fb-8cec-8f00-2c0aee140e7f",
+        "attributes": {
+          "mediaType": "VIDEO",
+          "placementType": "APP_PREVIEW",
+          "placementGroup": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
+          "createdDate": "2026-10-23T08:51:43.374764Z",
+          "lastModifiedDate": "2026-10-23T08:51:43.374764Z",
+          "state": "ACTIVE",
+          "stateDetails": null
+        },
+        "links": {
+          "self": "https://api.appstoreconnect.apple.com/v1/appAssetLibraryPlacements/96c00005-71fb-8cec-8f00-2c0aee140e7f"
+        }
+      }
+    ]
+  },
+  "started_at": "2026-10-28T13:40:28.938229+00:00",
+  "remaining_previews": 0,
+  "screenshots_and_other_placements_preserved": true,
+  "library_video_files_preserved": true,
+  "finished_at": "2026-10-28T13:40:43.237574+00:00"
+}

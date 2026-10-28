@@ -1,0 +1,62 @@
+{
+  "success": false,
+  "upload": true,
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "version": "2.2.2",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "size": [
+        750,
+        1334
+      ],
+      "device": "iPhone-SE-3rd-generation",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "75ddd17e04e83f1c365b939275fccfb13732350309eea007f959083c3c53702e",
+          "placement_id": "11400005-71fb-8cec-8f2f-f1e842c7f281",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "4ae41b3b749207088a3b2b8a6b4e34eafc35432dfa52cecf5e365b2fabee5064",
+          "placement_id": "63400005-71fb-8cec-8f35-b0e4be9db041",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "468d9a0aaf57b616b0964c603ccb7102e17b87cd2533fd7bf75060087c28e8af",
+          "placement_id": "e8400005-71fb-8cec-8f0b-4abab6e26db2",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "a54e78c3a95cf6f0118aa53de57c3ea65a67f0e30d607ece1640559da805a9e8",
+          "placement_id": "21000005-71fb-8cec-8f0c-bce723e1cab4",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "c73ed3b0c67590c29883350e1b4a5d66903cb1e357091f66c9b2edf1c624bcf8",
+          "placement_id": "54000005-71fb-8cec-8f08-0caa9f7b6299",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "89516e06f51275ff6adf8dca355906121bb40b7f73321e5b2c469539407aa291",
+          "placement_id": "13800005-71fb-8cec-8f1d-88ca86588fff",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [
+    "2d000005-71fb-8cec-8f0b-7b6150002571",
+    "4b800005-71fb-8cec-8f2b-6ed157561d34",
+    "5cc00005-71fb-8cec-8f35-9a48540c8b70",
+    "e0800005-71fb-8cec-8f0b-1cc532cc5202"
+  ],
+  "error": "Apple GET /v1/appStoreVersions/411ee0b0-bd37-4c01-95f3-1e231c972ec9: HTTP 500, codes ['UNEXPECTED_ERROR']"
+}

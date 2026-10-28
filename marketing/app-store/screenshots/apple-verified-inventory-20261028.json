@@ -1,0 +1,326 @@
+{
+  "success": true,
+  "app_id": "1461697772",
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "version": "2.2.2",
+  "state": "PREPARE_FOR_SUBMISSION",
+  "checked_at": "2026-10-28T14:17:34.806975+00:00",
+  "locales": {
+    "en-US": {
+      "id": "950e0b29-cd2a-490a-8525-b94661b539a8",
+      "placements": [
+        {
+          "id": "f5800005-71fb-8cec-8f06-5929e6ee1ece",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "15400005-71fb-8cec-8f3d-084318976720",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "89800005-71fb-8cec-8f0f-01107f7252ba",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "dc000005-71fb-8cec-8f29-7fdf6e896e06",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "5e800005-71fb-8cec-8f1d-e0d0ef864c2e",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "59400005-71fb-8cec-8f26-40bbd2b07960",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "11400005-71fb-8cec-8f2f-f1e842c7f281",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "63400005-71fb-8cec-8f35-b0e4be9db041",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "e8400005-71fb-8cec-8f0b-4abab6e26db2",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "21000005-71fb-8cec-8f0c-bce723e1cab4",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "54000005-71fb-8cec-8f08-0caa9f7b6299",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "13800005-71fb-8cec-8f1d-88ca86588fff",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "a5000005-71fb-8cec-8f37-56b88b1e1949",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "53400005-71fb-8cec-8f08-27c1839e42d4",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "f3000005-71fb-8cec-8f3d-cb6861680ffd",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "2ac00005-71fb-8cec-8f3b-e83152337670",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "ecc00005-71fb-8cec-8f3a-e4b77055eb2c",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "06000005-71fb-8cec-8f01-9c527a058298",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "db000005-71fb-8cec-8f1c-bac69494037d",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "6a400005-71fb-8cec-8f39-4cc63091721f",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "37c00005-71fb-8cec-8f00-c817ebfc8ce0",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "1a800005-71fb-8cec-8f06-baba88586b7a",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "dd400005-71fb-8cec-8f38-57a02a0612c9",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "00400005-71fb-8cec-8f2d-00580314f527",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "34c00005-71fb-8cec-8f16-9ba0c5ee96a5",
+          "type": "APP_STORE_SEARCH_RESULTS_ASSET",
+          "group": "DEFAULT_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "d0800005-71fb-8cec-8f34-8bdb13c28b8d",
+          "type": "PRODUCT_PAGE_HEADER_ASSET",
+          "group": "DEFAULT_PROFILE",
+          "state": "ACTIVE"
+        }
+      ],
+      "screenshots": 24,
+      "previews": 0,
+      "unrelated_placements_preserved": true
+    },
+    "ru": {
+      "id": "4f2445da-04a1-43cf-ab5a-6b8edb76436c",
+      "placements": [
+        {
+          "id": "36400005-71fb-8cec-8f39-36a7b1d436fd",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "df000005-71fb-8cec-8f21-776c66ecc23d",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "ff400005-71fb-8cec-8f13-a3a35b1f8674",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "32c00005-71fb-8cec-8f3c-01cdfa921592",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "bf000005-71fb-8cec-8f0d-396032e637be",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "6e800005-71fb-8cec-8f01-318060b2fd37",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DUO_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "a8c00005-71fb-8cec-8f16-1551b843b9b4",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "5fc00005-71fb-8cec-8f39-2ffed59c1819",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "d4400005-71fb-8cec-8f07-03e86cb754a8",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "15800005-71fb-8cec-8f38-02663872248a",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "ac800005-71fb-8cec-8f10-92933ec6794d",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "97400005-71fb-8cec-8f00-de9766730a3d",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "c3800005-71fb-8cec-8f2d-6feb0748a6cf",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "81c00005-71fb-8cec-8f36-0ad5d4b33e94",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "c4400005-71fb-8cec-8f36-7d42aafe89c6",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "bb400005-71fb-8cec-8f28-24afd60d2b4c",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "72000005-71fb-8cec-8f1e-4e79184aa118",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "ef400005-71fb-8cec-8f16-207208e890dc",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "08800005-71fb-8cec-8f35-3abec0b74756",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "08000005-71fb-8cec-8f0a-5ac9e37569f6",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "51c00005-71fb-8cec-8f14-d170e1623732",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "c0800005-71fb-8cec-8f15-07ff08516e14",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "47400005-71fb-8cec-8f2d-74f47d87db81",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        },
+        {
+          "id": "ac400005-71fb-8cec-8f05-f237b443eff2",
+          "type": "APP_SCREENSHOT",
+          "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+          "state": "ACTIVE"
+        }
+      ],
+      "screenshots": 24,
+      "previews": 0,
+      "unrelated_placements_preserved": true
+    }
+  }
+}

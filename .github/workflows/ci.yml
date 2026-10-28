@@ -9,6 +9,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      run_duo_ui_tests:
+        description: Run iPhone Duo UI journeys only when explicitly requested
+        type: boolean
+        default: false
       record_ui_video:
         description: Record UI video only when motion itself needs review
         type: boolean
@@ -76,23 +80,25 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          RUN_DUO_UI_TESTS: ${{ inputs.run_duo_ui_tests }}
         run: |
-          python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" >> "$GITHUB_OUTPUT"
+          UI_ARGS=()
+          if [ "$RUN_DUO_UI_TESTS" = true ]; then
+            UI_ARGS+=(--run-duo-ui-tests)
+          fi
+          python3 scripts/ci-scope.py --event "$EVENT_NAME" --base "$BASE_SHA" --head "$HEAD_SHA" "${UI_ARGS[@]}" >> "$GITHUB_OUTPUT"
 
-      # UI journeys run on the newest available iOS runtime (Xcode 27.1 / iOS 27.1).
+      # Developer-requested UI journeys use Xcode 27.1 / iOS 27.1.
       # That runtime currently supports only iPhone Duo, which boots folded. Journeys run
       # on its outer display ("primary"); simctl needs that display named for video.
       # iOS 18 remains supported by the app, but is not tested in CI.
       - name: Choose UI devices
         id: ui
-        env:
-          EVENT_NAME: ${{ github.event_name }}
         run: |
-          MATRIX=$(jq -c --arg event "$EVENT_NAME" \
-            '[.[] | select($event != "pull_request" or .on_pull_request) | del(.on_pull_request)]' <<'JSON'
+          MATRIX=$(jq -c '.' <<'JSON'
           [
             {"name": "iPhone Duo", "runner": "xcode-27", "xcode": "27.1", "runtime": "27-1",
-             "device": "iPhone-Duo", "display": "primary", "on_pull_request": true}
+             "device": "iPhone-Duo", "display": "primary"}
           ]
           JSON
           )
@@ -194,9 +200,9 @@ jobs:
 
   ui-tests:
     name: UI Tests — ${{ matrix.name }}
-    # Starts beside Build & Test so screenshots arrive about ten minutes sooner.
+    # Opt-in only: automatic PR and master CI never start Duo UI journeys.
     needs: changes
-    if: ${{ !cancelled() && needs.changes.outputs.ui_required == 'true' }}
+    if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' && inputs.run_duo_ui_tests && needs.changes.outputs.ui_required == 'true' }}
     strategy:
       fail-fast: false
       matrix:
