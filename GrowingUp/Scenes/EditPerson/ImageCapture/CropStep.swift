@@ -50,30 +50,47 @@ struct CropStep: View {
 	}
 
 	var body: some View {
-		// `.ignoresSafeArea()` → `proxy.size` is the real screen (one coordinate space for image/clamp/crop); insets from the window.
-		GeometryReader { proxy in
+		// The outer reader keeps the safe area: its insets are the real, current ones, for the circle frame and the toolbar.
+		GeometryReader { safeArea in
 			ZStack {
-				cropContent
-					.contentShape(Rectangle())
-					.simultaneousGesture(dragGesture)
-					.simultaneousGesture(zoomGesture)
-					.accessibilityElement(children: .ignore)
-					.accessibilityLabel(Text("Selected photo"))
-					.accessibilityValue(Text(Double(scale), format: .percent.precision(.fractionLength(0))))
-					.accessibilityIdentifier("crop.photo")
-				topBar(insets: safeInsets)
+				// `.ignoresSafeArea()` → `proxy.size` is the real screen (one coordinate space for image/clamp/crop).
+				GeometryReader { proxy in
+					cropContent
+						.contentShape(Rectangle())
+						.simultaneousGesture(dragGesture)
+						.simultaneousGesture(zoomGesture)
+						.accessibilityElement(children: .ignore)
+						.accessibilityLabel(Text("Selected photo"))
+						.accessibilityValue(Text(Double(scale), format: .percent.precision(.fractionLength(0))))
+						.accessibilityIdentifier("crop.photo")
+						.onAppear { updateContainer(proxy.size, insets: safeArea.safeAreaInsets) }
+						.onChange(of: proxy.size) { _, size in updateContainer(size, insets: safeArea.safeAreaInsets) }
+				}
+				.ignoresSafeArea()
+				// Turning a window between landscape sides swaps the insets and keeps the size.
+				.onChange(of: safeArea.safeAreaInsets) { _, insets in updateContainer(containerSize, insets: insets) }
+				// Laid out inside the safe area, so a notch, camera or status column never covers the buttons.
+				topBar
 			}
-			.onAppear { updateContainer(proxy) }
-			.onChange(of: proxy.size) { _, _ in updateContainer(proxy) }
 		}
-		.ignoresSafeArea()
 		.statusBarHidden()
+		#if DEBUG
+			.safeAreaPadding(.horizontal, uiTestSideSafeArea)
+		#endif
 	}
 
-	/// Capture the true screen size plus real window insets, then re-settle.
-	private func updateContainer(_ proxy: GeometryProxy) {
-		let full = proxy.size
-		let insets = Self.windowSafeInsets
+	#if DEBUG
+		/// Exercise camera-sized side exclusions even on a portrait-only CI device.
+		private var uiTestSideSafeArea: CGFloat {
+			guard case .uiTest = AppLaunchMode.current,
+				ProcessInfo.processInfo.environment["GROWINGUP_CROP_SIDE_SAFE_AREA"] == "1"
+			else { return 0 }
+			return 80
+		}
+	#endif
+
+	/// Capture the true screen size plus the safe-area insets, then re-settle.
+	private func updateContainer(_ full: CGSize, insets: EdgeInsets) {
 		containerSize = full
 		safeInsets = insets
 		let geometry = geometry(in: full, insets: insets)
@@ -93,16 +110,6 @@ struct CropStep: View {
 		lastScale = settledScale
 		offset = settled
 		lastOffset = settled
-	}
-
-	/// The active window's safe-area insets, read straight from UIKit.
-	private static var windowSafeInsets: EdgeInsets {
-		let windows = UIApplication.shared.connectedScenes
-			.compactMap { $0 as? UIWindowScene }
-			.flatMap { $0.windows }
-		let window = windows.first(where: { $0.isKeyWindow }) ?? windows.first
-		let inset = window?.safeAreaInsets ?? .zero
-		return EdgeInsets(top: inset.top, leading: inset.left, bottom: inset.bottom, trailing: inset.right)
 	}
 
 	// MARK: - Layers
@@ -171,7 +178,7 @@ struct CropStep: View {
 		}
 	}
 
-	private func topBar(insets: EdgeInsets) -> some View {
+	private var topBar: some View {
 		VStack {
 			HStack {
 				glassButton(systemImage: "xmark", prominent: false, action: onCancel)
@@ -184,9 +191,23 @@ struct CropStep: View {
 			}
 			.disabled(isFinishing)
 			.padding(.horizontal, 20)
-			.padding(.top, insets.top + 8)  // ZStack ignores the safe area; clear the notch manually.
+			.padding(.top, 8)
 			Spacer()
 		}
+		.background { safeAreaMarker }
+	}
+
+	/// The safe area as UI tests see it, to check the toolbar against.
+	@ViewBuilder private var safeAreaMarker: some View {
+		#if DEBUG
+			if case .uiTest = AppLaunchMode.current {
+				Color.clear
+					.allowsHitTesting(false)
+					.accessibilityElement(children: .ignore)
+					.accessibilityLabel(Text(verbatim: "Safe area"))
+					.accessibilityIdentifier("crop.safeArea")
+			}
+		#endif
 	}
 
 	/// Hands over the framed part once it is scaled down; both buttons wait meanwhile.
