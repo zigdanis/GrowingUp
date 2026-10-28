@@ -60,6 +60,12 @@ final class NavigationTests: XCTestCase {
 		XCUIDevice.shared.press(.home)
 		defer { app.activate() }
 		let springBoard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+		// On Duo, the first Home press can leave the app switcher open instead of showing the icon grid.
+		let switcher = springBoard.otherElements["AppSwitcherContentView"]
+		if switcher.waitForExistence(timeout: 2) {
+			XCUIDevice.shared.press(.home)
+			XCTAssertTrue(switcher.waitForNonExistence(timeout: 5))
+		}
 		let icon = springBoard.icons["GrowingUp"].firstMatch
 		XCTAssertTrue(icon.waitForExistence(timeout: 10))
 		wait(for: [expectation(for: NSPredicate(format: "hittable == true"), evaluatedWith: icon)], timeout: 10)
