@@ -41,6 +41,31 @@ final class BirthdayAndEditingTests: XCTestCase {
 		checkpoint("birthday-edited-date-stays-current")
 	}
 
+	func testBirthdayCountdownFollowsSavedCelebrationChoice() {
+		launch(clock: "2027-01-15T08:00:00Z")
+		let countdown = app.staticTexts["birthday.countdown"]
+		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+		let originalCountdown = countdown.label
+		overview.tap()
+		let celebrate = app.descendants(matching: .any).matching(identifier: "editor.celebrate").firstMatch
+		XCTAssertEqual(celebrate.value as? String, "1")
+		celebrate.tap()
+		XCTAssertEqual(celebrate.value as? String, "0")
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(overview.waitForExistence(timeout: 5))
+		XCTAssertTrue(countdown.waitForNonExistence(timeout: 5))
+		checkpoint("birthday-countdown-disabled")
+		overview.tap()
+		XCTAssertEqual(celebrate.value as? String, "0", "The saved birthday choice must remain off when editing again")
+		celebrate.tap()
+		app.buttons["editor.save"].tap()
+		XCTAssertTrue(app.buttons["editor.save"].waitForNonExistence(timeout: 5))
+		XCTAssertTrue(countdown.waitForExistence(timeout: 5))
+		XCTAssertEqual(countdown.label, originalCountdown)
+		checkpoint("birthday-countdown-enabled")
+	}
+
 }
 
 extension BirthdayAndEditingTests {

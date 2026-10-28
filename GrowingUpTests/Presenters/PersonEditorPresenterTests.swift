@@ -227,7 +227,7 @@ final class PersonEditorPresenterTests: XCTestCase {
 		XCTAssertFalse(usedStaleImage)
 	}
 
-	func testOptedOutBirthdayKeepsTheIndicatorWithoutConfetti() {
+	func testOptedOutBirthdayHidesTheCountdownWithoutConfetti() {
 		var person = Person.createPerson()
 		person.birthday = date(year: 2020, month: 1, day: 16, hour: 6, minute: 0)
 		person.celebratesBirthdays = false
@@ -238,6 +238,7 @@ final class PersonEditorPresenterTests: XCTestCase {
 		presenter.tick(person: person, now: birthday.addingTimeInterval(120), isSelected: true)
 		XCTAssertEqual(presenter.celebrationID, 0)
 		XCTAssertEqual(presenter.birthdayStatus?.isToday, true)
+		XCTAssertEqual(presenter.birthdayText, "")
 		person.celebratesBirthdays = true
 		presenter.tick(person: person, now: birthday.addingTimeInterval(180), isSelected: true)
 		XCTAssertEqual(presenter.celebrationID, 1, "Turning celebrations back on celebrates the visible birthday")

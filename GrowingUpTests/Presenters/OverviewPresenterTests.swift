@@ -163,6 +163,25 @@ final class OverviewPresenterTests: XCTestCase {
 		}
 	}
 
+	func testBirthdayTrackingCanBeTurnedOffAndBackOnWithoutChangingTheAge() {
+		let presenter = makePresenter()
+		var child = person(born: date(2020, 6, 3, 8))
+		let now = date(2025, 9, 15, 12, 7, 33)
+		presenter.tick(person: child, now: now)
+		let summary = presenter.summary
+		let ticker = presenter.tickerText
+		child.celebratesBirthdays = false
+		presenter.tick(person: child, now: now)
+		XCTAssertEqual(presenter.birthdayText, "")
+		XCTAssertEqual(presenter.accessibilityAge, "5 years and 3 months")
+		XCTAssertEqual(presenter.summary, summary)
+		XCTAssertEqual(presenter.tickerText, ticker)
+		child.celebratesBirthdays = true
+		presenter.tick(person: child, now: now)
+		XCTAssertEqual(presenter.birthdayText, "Birthday in 261 days")
+		XCTAssertEqual(presenter.accessibilityAge, "5 years and 3 months, Birthday in 261 days")
+	}
+
 	private func makePresenter() -> OverviewPresenter {
 		OverviewPresenter(loadImage: { _ in UIImage() }, calendar: calendar, locale: Locale(identifier: "en"))
 	}
