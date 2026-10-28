@@ -3,15 +3,15 @@
 ## What CI runs
 
 - **Every PR:** Secret Patterns, Release Tools, Swift Format, SwiftLint and Build & Test (unit tests). These five are the required checks. They finish in about 12 minutes, or about a minute when only docs, agent skills or tooling changed.
-- **PRs that touch app or UI-test code:** UI Tests — Glass also runs, starting with the unit tests. It produces the PR screenshots. `scripts/ci-scope.py` decides when it runs.
-- **UI changes:** iOS 18, Glass and Duo run on PRs; the extra iOS 27 pass runs on master/manual runs. Manual only: App Store Screenshots.
+- **Duo UI journeys:** manual opt-in only, with `run_duo_ui_tests=true` on `workflow_dispatch`. Automatic PR and master runs never start them, including when app or UI-test files change. A manual run without the opt-in also skips them.
+- **Captures:** App Store Screenshots remains manual. Run UI tests/captures only when the developer explicitly requests them; do not launch extra Duo journeys to satisfy ordinary PR delivery. iOS 18 is not tested in CI.
 - **Evidence:** XCTest screenshots are the default. Enable `record_ui_video` for a manual CI run only when the change requires motion review. Routine checks must not depend on a video recorder starting or finalizing.
-- **To run everything on a branch:** `gh workflow run ci.yml --ref BRANCH`.
+- **To request Duo UI tests:** `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`. Enable video separately only when needed.
 
 ## Merge gate
 
 - The five required checks pass.
-- Glass UI journeys pass if they ran. For a UI change, screenshots are published and inspected.
+- Explicitly requested UI verification must pass and its screenshots must be inspected. Use reviewed native captures when they are the requested task's evidence. Routine PRs do not wait for Duo UI tests or CI screenshot publication.
 - Bot findings classified as correctness issues are fixed. Everything else has a one-line reply.
 - An out-of-date branch is fine (branch protection doesn't require it). Master CI checks the merged result, and a red master is fixed first.
 - Unresolved bot threads no longer block merging, but each one still gets a reply.

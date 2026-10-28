@@ -1,9 +1,10 @@
 ## Standing Rules
 
 - Deliver changes with the `full-send` skill in `.agents/skills/`: its roles, merge gate, bot-review and CI-budget rules apply to every PR, including PR-only work.
-- On Linux, validate iOS changes through the PR's macOS CI and `scripts/pr-evidence.sh PR_NUMBER`. Inspect the exported screenshots for the latest head, fix concrete failures on the same PR, and remove downloaded evidence after review.
+- On Linux, validate iOS changes through the PR's macOS build/unit CI. If the developer explicitly requested UI verification, inspect its exported screenshots with `scripts/pr-evidence.sh PR_NUMBER`, fix concrete failures on the same PR, and remove downloaded evidence after review.
 - To drive the app interactively from Linux, follow the `cloud-simulator` skill in `.agents/skills/`: it installs the CI simulator build from `scripts/simulator-app.sh [PR_NUMBER]` on an Expo cloud simulator.
-- For user-visible changes, publish 1–3 reviewed CI screenshots with `scripts/pr-visual-evidence.py` while the PR is open. Use video only when the change is motion itself. For non-UI changes, report functional checks instead.
+- Duo UI journeys are manual opt-in only: `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`. Run them only when the developer explicitly requests UI tests or captures. Routine PRs and master pushes must not launch them or wait for their screenshots before merge. App Store screenshot capture remains manual.
+- When UI verification is requested, publish 1–3 reviewed screenshots while the PR is open. Use `scripts/pr-visual-evidence.py` for requested CI evidence, or link reviewed native captures from the requested capture task. Use video only when the change is motion itself. Otherwise report functional checks.
 - A requested TestFlight release continues after merge: dispatch it immediately for the selected merged SHA, share its live Actions URL and phase, and retain the run/receipt identity. A merged PR or completed agent turn is not a completed release; PR watches do not monitor TestFlight. Use `scripts/testflight.py progress RUN_ID` for read-only status.
 - Close task-owned Device panel connections after interactive verification, on failure and before handoff. Keep one open only for an explicitly stated active check or at the user's request.
 

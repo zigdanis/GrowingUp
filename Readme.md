@@ -57,9 +57,11 @@ no Carthage or CocoaPods step is required:
   builds fill both iPhone Duo displays instead of running letterboxed; the
   archive check rejects older SDKs. CI runs Xcode 27.1 on GitHub's `xcode-27`
   runners.
-- iOS 18.1+ deployment target. CI's UI journeys cover iPhone 17 Pro (iOS 26.5)
-  and iPhone Duo (iOS 27.1, Xcode 27.1) on every app change, plus iPhone 18 Pro
-  (iOS 27.0) and iPhone 16 (iOS 18.5) on master.
+- iOS 18.1+ deployment target. Automatic PR/master CI runs build and unit checks;
+  Duo UI journeys run only on an explicitly opted-in manual dispatch:
+  `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`.
+  The manual UI job uses iPhone Duo / iOS 27.1 / Xcode 27.1. App Store
+  screenshot capture also remains manual. iOS 18 is not tested in CI.
 
 ## Tooling
 
