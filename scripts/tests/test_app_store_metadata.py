@@ -67,7 +67,7 @@ class ScreenshotAPI:
                       if placement["attributes"]["placementType"] == query["filter[placementType]"]
                       and (not query.get("filter[placementGroup]") or placement["attributes"]["placementGroup"] == query["filter[placementGroup]"])]
             self.events.append(("read", localization, query.get("filter[placementGroup]"), len(result)))
-            if localization == "draft-en-US" and len(result) == 4 and self.placement_states:
+            if localization == "draft-en-US" and len(result) == len(metadata.FILES) and self.placement_states:
                 state = self.placement_states.pop(0) if len(self.placement_states) > 1 else self.placement_states[0]
                 result = [{**p, "attributes": {**p["attributes"], "state": state}} for p in result]
             return result
@@ -201,7 +201,7 @@ class AppStoreMetadataTests(unittest.TestCase):
             self.run_screenshot_upload(api, receipt)
         sleep.assert_called_once_with(5)
         self.assertEqual(receipt["verified_state"], "PREPARE_FOR_SUBMISSION")
-        reads = [event for event in api.events if event == ("read", "draft-en-US", "primary", 4)]
+        reads = [event for event in api.events if event == ("read", "draft-en-US", "primary", len(metadata.FILES))]
         self.assertGreaterEqual(len(reads), 2)
         self.assertFalse(any(event[0] == "delete" for event in api.events))
 

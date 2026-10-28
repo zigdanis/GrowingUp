@@ -22,7 +22,7 @@ import urllib.request
 
 API_URL = "https://api.appstoreconnect.apple.com"
 BUNDLE_ID = "pro.ziganshin.GrowingUp"
-FILES = ("01-mia.png", "02-leo-celebration.png", "03-mango-teddy.png", "04-widgets.png")
+FILES = ("01-mosaic.png", "02-mia.png", "03-leo-birthday.png", "04-editor.png", "05-pets.png", "06-widgets.png")
 LOCALES = ("en-US", "ru")
 LIVE_STATES = {"READY_FOR_SALE", "READY_FOR_DISTRIBUTION"}
 READY_ASSETS = {"PREPARE_FOR_SUBMISSION", "APPROVED"}

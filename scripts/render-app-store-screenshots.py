@@ -17,29 +17,59 @@ PROFILES = {
     'iPhone-14-Plus': ((1284, 2778), 'face-id'),
     'iPhone-SE-3rd-generation': ((750, 1334), 'home-button'),
 }
-NAMES = ('mia', 'leo-celebration', 'mango', 'teddy', 'widget-small', 'widget-medium', 'widget-large')
+# Leo's fireworks are shot at these delays (ms after the swipe back to his page); one frame per locale is used.
+FIREWORKS_FRAMES = (1500, 1700, 1900, 2100, 2300, 2500)
+FIREWORKS = 1900
+NAMES = ('mosaic', 'mia', 'editor', 'mango', 'teddy', 'widget-small', 'widget-medium', 'widget-large')
+# One card per main screen, in store order; FILES and COPY follow it.
+CARDS = ('mosaic', 'mia', 'leo-birthday', 'editor', 'pets', 'widgets')
+WIDGETS = CARDS.index('widgets')
 COPY = {
     'ru': [
+        ('Вся семья\nсразу', 'Дети и питомцы, возраст тикает.'),
         ('Возраст вашего\nребёнка', 'С точностью до секунды.'),
         ('С днём\nрождения!', 'Празднуйте вместе с GrowingUp.'),
+        ('Правка\nпрямо на фото', 'Коснитесь экрана: имя, дата, кадр.'),
         ('Возраст вашего\nпитомца', ''),
         ('Возраст на\nглавном экране', 'Три размера для семьи и питомцев.'),
     ],
     'en': [
+        ('Everyone\nat a glance', 'Kids and pets, ages ticking.'),
         ('Your child’s\nage', 'Down to the second.'),
         ('Happy\nbirthday!', 'Celebrate with GrowingUp.'),
+        ('Edit right\non the photo', 'Tap the screen: name, date, framing.'),
         ('Your pet’s\nage', ''),
         ('Home Screen\nwidgets', 'Three sizes for your family and pets.'),
     ],
 }
-FILES = ('01-mia.png', '02-leo-celebration.png', '03-mango-teddy.png', '04-widgets.png')
+FILES = tuple(f'{index:02}-{card}.png' for index, card in enumerate(CARDS, 1))
+
+
+def fireworks_name(delay):
+    if delay not in FIREWORKS_FRAMES:
+        raise ValueError(f'No fireworks frame is shot {delay} ms after the swipe')
+    return f'leo-fireworks-{delay}'
+
+
+def fireworks_choice(value):
+    """`1900` for both locales, or `en=1900,ru=2100`."""
+    if '=' not in value:
+        return {'en': int(value), 'ru': int(value)}
+    choice = {'en': FIREWORKS, 'ru': FIREWORKS}
+    for part in value.split(','):
+        locale, delay = part.split('=')
+        if locale not in choice:
+            raise ValueError(f'Unknown fireworks locale {locale}')
+        choice[locale] = int(delay)
+    return choice
 
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def native_inputs(directory, locale):
+def native_inputs(directory, locale, fireworks=FIREWORKS):
+    """The checkpoints the cards use, keyed by checkpoint name; Leo's card is the chosen fireworks frame."""
     source = directory / locale
     summary = json.loads((source / 'test-summary.json').read_text())
     if summary.get('passedTests', 0) < 1 or summary.get('failedTests', 0) != 0:
@@ -49,10 +79,10 @@ def native_inputs(directory, locale):
     entries = [item for test in manifest for item in test['attachments']]
     result = {}
     export_suffix = re.compile(r'_\d+_[0-9A-Fa-f]{8}(?:-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}$')
-    for name in NAMES:
+    for name in NAMES + (fireworks_name(fireworks),):
         checkpoint = f'store-{locale}-{name}'
-        matches = [item for item in entries
-                   if export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == checkpoint]
+        matches = [item for item in entries if item['suggestedHumanReadableName'].endswith('.png')
+                   and export_suffix.sub('', item['suggestedHumanReadableName'].removesuffix('.png')) == checkpoint]
         if len(matches) != 1:
             raise ValueError(f'{checkpoint}: expected exactly one native checkpoint')
         path = (attachments / matches[0]['exportedFileName']).resolve()
@@ -73,8 +103,25 @@ def native_inputs(directory, locale):
     return result
 
 
+def fireworks_timing(directory, locale):
+    """The measured delays of the fireworks frames, as the capture recorded them; None if it was not exported."""
+    attachments = directory / locale / 'attachments'
+    entries = [item for test in json.loads((attachments / 'manifest.json').read_text()) for item in test['attachments']]
+    found = [item for item in entries if item['suggestedHumanReadableName'].startswith(f'store-{locale}-leo-fireworks-timing')]
+    if len(found) != 1:
+        return None
+    path = (attachments / found[0]['exportedFileName']).resolve()
+    if path.parent != attachments.resolve():
+        raise ValueError('Attachment path escapes its capture directory')
+    return json.loads(path.read_text())
+
+
+def leo(inputs):
+    return next(image for name, (image, _) in inputs.items() if name.startswith('leo-fireworks-'))
+
+
 def background(index):
-    base = [(16, 36, 43), (22, 34, 41), (23, 42, 40), (24, 58, 66)][index]
+    base = [(20, 33, 44), (16, 36, 43), (22, 34, 41), (19, 38, 46), (23, 42, 40), (24, 58, 66)][index]
     glow = (38, 117, 132)
     small = Image.new('RGB', (132, 287))
     pixels = []
@@ -227,26 +274,46 @@ def widget_screen(inputs):
     return screen
 
 
+def full_phone(canvas, screenshot, top, bottom):
+    """An upright device sized so the whole screen fits between `top` and `bottom` (reference pixels), centred.
+
+    The mosaic and the edit mode keep their controls at the bottom edge, so these cards never crop the device."""
+    if FAMILY == 'home-button':
+        # The SE body is 138.4 x 67.3 mm; its LCD and Home button sit inside that outline.
+        width = round((bottom - top) * 67.3 / 138.4)
+        phone(canvas, screenshot, (SIZE[0] - width) // 2, top, width, 0, native_layout=True)
+        return
+    top, bottom = sy(top), sy(bottom)
+    # Frame height is the screen's height plus a border of 2% of the width on each side.
+    width = round((bottom - top) / (.96 * screenshot.height / screenshot.width + .04))
+    phone(canvas, screenshot, (SIZE[0] - width) // 2, top, width, 0, native_layout=True)
+
+
 def compose_image(inputs, locale, index):
     canvas = background(index)
     marketing_copy(canvas, locale, index)
+    card = CARDS[index]
     if FAMILY == 'home-button':
         # Shorter LCD needs a distinct layout; keep the physical Home button visible.
-        if index == 0:
+        if card in ('mosaic', 'editor'):
+            full_phone(canvas, inputs[card][0], 350, 1310)
+        elif card == 'mia':
             phone(canvas, inputs['mia'][0], 167, 408, 415, -4, native_layout=True)
-        elif index == 1:
-            phone(canvas, inputs['leo-celebration'][0], 167, 408, 415, 4, native_layout=True)
-        elif index == 2:
+        elif card == 'leo-birthday':
+            phone(canvas, leo(inputs), 167, 408, 415, 4, native_layout=True)
+        elif card == 'pets':
             phone(canvas, inputs['teddy'][0], 20, 570, 300, -9, native_layout=True)
             phone(canvas, inputs['mango'][0], 270, 408, 410, 5, native_layout=True)
         else:
             phone(canvas, widget_screen(inputs), 162, 385, 425, 0, native_layout=True)
         return canvas.convert('RGB')
-    if index == 0:
+    if card in ('mosaic', 'editor'):
+        full_phone(canvas, inputs[card][0], 800, 2790)
+    elif card == 'mia':
         phone(canvas, inputs['mia'][0], 119, 1004, 1135, -4)
-    elif index == 1:
-        phone(canvas, inputs['leo-celebration'][0], 92, 1004, 1135, 4)
-    elif index == 2:
+    elif card == 'leo-birthday':
+        phone(canvas, leo(inputs), 92, 1004, 1135, 4)
+    elif card == 'pets':
         phone(canvas, inputs['teddy'][0], -106, 1233, 766, -9)
         phone(canvas, inputs['mango'][0], 158, 1004, 1000, 5)
     else:
@@ -254,7 +321,7 @@ def compose_image(inputs, locale, index):
     return canvas.convert('RGB')
 
 
-def compose(directory, output):
+def compose(directory, output, fireworks=None):
     global SIZE, FAMILY
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
@@ -270,10 +337,12 @@ def compose(directory, output):
     if output.exists() and any(output.iterdir()):
         raise ValueError('Output directory must be empty to avoid stale screenshots')
     output.mkdir(parents=True, exist_ok=True)
+    fireworks = fireworks or {'en': FIREWORKS, 'ru': FIREWORKS}
     receipt = {'capture': metadata, 'size': list(SIZE), 'family': FAMILY,
-               'renderer_sha256': sha256(Path(__file__)), 'inputs': {}, 'input_sizes': {}, 'outputs': {}}
+               'renderer_sha256': sha256(Path(__file__)), 'fireworks': {}, 'inputs': {}, 'input_sizes': {}, 'outputs': {}}
     for locale, store_locale in [('en', 'en-US'), ('ru', 'ru')]:
-        inputs = native_inputs(directory, locale)
+        inputs = native_inputs(directory, locale, fireworks[locale])
+        receipt['fireworks'][store_locale] = fireworks_receipt(directory, locale, fireworks[locale])
         receipt['inputs'][store_locale] = {name: sha256(path) for name, (_, path) in inputs.items()}
         receipt['input_sizes'][store_locale] = {name: list(image.size) for name, (image, _) in inputs.items()}
         destination = output / store_locale
@@ -283,12 +352,23 @@ def compose(directory, output):
             compose_image(inputs, locale, index).save(path, optimize=True)
             receipt['outputs'][f'{store_locale}/{name}'] = sha256(path)
     (output / 'source.json').write_text(json.dumps(receipt, ensure_ascii=False, indent=2) + '\n')
-    print(f'Composed 8 native-backed App Store PNGs in {output}')
+    print(f'Composed {len(receipt["outputs"])} native-backed App Store PNGs in {output}')
+
+
+def fireworks_receipt(directory, locale, delay):
+    """Which fireworks frame the birthday card shows, with its measured timing when the capture exported it."""
+    name = f'store-{locale}-{fireworks_name(delay)}'
+    timing = fireworks_timing(directory, locale)
+    frame = next((item for item in (timing or {}).get('frames', []) if item.get('name') == name), None)
+    return {'checkpoint': name, 'celebration': (timing or {}).get('celebration'), 'timing': frame}
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('capture', type=Path)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--fireworks', type=fireworks_choice, default=None,
+                        help=f'Fireworks frame in ms after the swipe, e.g. 2100 or en=1900,ru=2100 (default {FIREWORKS}; '
+                             f'shot: {", ".join(map(str, FIREWORKS_FRAMES))})')
     args = parser.parse_args()
-    compose(args.capture.resolve(), args.output.resolve())
+    compose(args.capture.resolve(), args.output.resolve(), args.fireworks)

@@ -12,6 +12,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var tiles: XCUIElementQuery { app.buttons.matching(identifier: "people.tile") }
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 	private var birthdayToday: String { locale == "ru" ? "Сегодня день рождения 🎂" : "Birthday today 🎂" }
+	/// Leo's fireworks frames, in milliseconds after the swipe that returns to his page; the renderer picks one by name.
+	private let fireworksFrames = [1500, 1700, 1900, 2100, 2300, 2500]
 
 	func testCaptureAppStoreScreenshots() throws {
 		let environment = ProcessInfo.processInfo.environment
@@ -27,8 +29,11 @@ final class AppStoreScreenshotTests: XCTestCase {
 		addPerson(index: 2, year: 2024, month: 10, day: 16)
 		addPerson(index: 3, year: 2026, month: 1, day: 15)
 		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T08:24:12Z"
+		relaunch()
+		captureMosaic()
 		verifyPersistence()
 		capturePeople()
+		try captureFireworks()
 		captureWidgets()
 		app.terminate()
 	}
@@ -40,6 +45,7 @@ final class AppStoreScreenshotTests: XCTestCase {
 		addPerson(index: 1, year: 2023, month: 1, day: 16)
 		addPerson(index: 2, year: 2024, month: 10, day: 16)
 		addPerson(index: 3, year: 2026, month: 1, day: 15)
+		relaunch()
 		verifyPersistence()
 		selectPerson(0)
 		previewMark("fixture-persisted")
@@ -141,8 +147,18 @@ final class AppStoreScreenshotTests: XCTestCase {
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 10))
 	}
 
+	/// The home screen after a relaunch: every saved person is a tile on the mosaic.
+	private func captureMosaic() {
+		for name in names {
+			XCTAssertTrue(tiles.matching(NSPredicate(format: "label BEGINSWITH %@", name + ",")).firstMatch.waitForExistence(timeout: 5))
+		}
+		XCTAssertEqual(tiles.count, names.count)
+		// Tile pictures load asynchronously and expose no loaded marker; give them a moment to appear.
+		Thread.sleep(forTimeInterval: 1.5)
+		checkpoint("store-\(locale)-mosaic")
+	}
+
 	private func verifyPersistence() {
-		relaunch()
 		for index in names.indices {
 			selectPerson(index)
 			overview.tap()
@@ -150,6 +166,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 			XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 10))
 			XCTAssertEqual(control("editor.pin").value as? String, "1")
 			checkpoint("store-\(locale)-persisted-\(index)")
+			// Mia's in-place edit mode, with both of her saved photos loaded, is the edit card.
+			if index == 0 { checkpoint("store-\(locale)-editor") }
 			dismissEditor()
 		}
 	}
@@ -161,20 +179,6 @@ final class AppStoreScreenshotTests: XCTestCase {
 		checkpoint("store-\(locale)-mango")
 		selectPerson(3)
 		checkpoint("store-\(locale)-teddy")
-		// Navigate before midnight so XCTest synchronization cannot consume the burst.
-		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-15T23:59:20Z"
-		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "1"
-		relaunch()
-		selectPerson(1)
-		XCTAssertTrue(confetti.waitForExistence(timeout: 60), "The production midnight transition must start the birthday animation.")
-		// The production birthday card demonstrates native Liquid Glass while the burst is running.
-		checkpoint("store-\(locale)-leo-celebration")
-		checkpoint("store-\(locale)-leo-celebration-frame-2")
-		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
-		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, birthdayToday)
-		checkpoint("store-\(locale)-birthday-confirmed")
-		app.launchEnvironment["GROWINGUP_BIRTHDAY_NOW"] = "2027-01-16T08:24:12Z"
-		app.launchEnvironment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] = "0"
 	}
 
 	private func captureWidgets() {
@@ -276,6 +280,63 @@ final class AppStoreScreenshotTests: XCTestCase {
 	/// Edit-mode switches are buttons that report their state as a "1"/"0" value.
 	private func control(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+}
+
+extension AppStoreScreenshotTests {
+	/// Leo's birthday celebrations rotate poppers, rain and fireworks, one per arrival on his page, so the test pages
+	/// between Mango and Leo until the next arrival is a fireworks one, then shoots that burst at fixed delays.
+	private func captureFireworks() throws {
+		// A fresh pager starts Leo's rotation afresh; opening Mango first keeps the deep link off Leo's page.
+		relaunch()
+		selectPerson(2)
+		var celebration = 0
+		// Each pass must raise the count, and a failed assertion stops the test, so this ends within three passes.
+		while (celebration + 1) % 3 != 0 {
+			app.swipeRight(velocity: .fast)
+			XCTAssertTrue(confetti.waitForExistence(timeout: 3), "Every arrival on a birthday page starts a celebration.")
+			let shown = Int(confetti.value as? String ?? "") ?? 0
+			XCTAssertGreaterThan(shown, celebration, "Leo's page must keep its celebration count while Mango is shown.")
+			celebration = shown
+			XCTAssertTrue(confetti.waitForNonExistence(timeout: 6))
+			app.swipeLeft(velocity: .fast)
+			XCTAssertEqual(app.buttons["person.name"].label, names[2])
+		}
+		XCTAssertEqual((celebration + 1) % 3, 0, "The next arrival must be the rotation's fireworks.")
+		try shootFireworks(after: celebration + 1)
+		XCTAssertTrue(confetti.waitForNonExistence(timeout: 5))
+		XCTAssertEqual(app.buttons["person.name"].label, names[1])
+		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, birthdayToday)
+		checkpoint("store-\(locale)-birthday-confirmed")
+	}
+
+	/// Returns to Leo's page and shoots the fireworks `fireworksFrames` after the swipe, with their measured timing.
+	private func shootFireworks(after celebration: Int) throws {
+		let swiped = Date()
+		app.swipeRight(velocity: .fast)
+		let arrived = Date()
+		// The burst starts when the page settles, between the swipe's start and its return; both offsets are recorded.
+		var timing: [[String: Any]] = []
+		for delay in fireworksFrames {
+			Thread.sleep(forTimeInterval: max(0, Double(delay) / 1000 - Date().timeIntervalSince(arrived)))
+			let before = Date()
+			let name = "store-\(locale)-leo-fireworks-\(delay)"
+			checkpoint(name)
+			timing.append([
+				"name": name, "after_swipe_start": before.timeIntervalSince(swiped), "after_swipe_return": before.timeIntervalSince(arrived),
+				"capture_duration": Date().timeIntervalSince(before)
+			])
+		}
+		XCTAssertTrue(confetti.exists, "The fireworks must still be running after the last frame.")
+		XCTAssertEqual(confetti.value as? String, String(celebration))
+		let evidence = XCTAttachment(
+			data: try JSONSerialization.data(withJSONObject: [
+				"celebration": celebration, "swipe_duration": arrived.timeIntervalSince(swiped), "frames": timing
+			]),
+			uniformTypeIdentifier: "public.json")
+		evidence.name = "store-\(locale)-leo-fireworks-timing"
+		evidence.lifetime = .keepAlways
+		add(evidence)
 	}
 }
 

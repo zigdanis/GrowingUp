@@ -3,7 +3,7 @@
 
 The older families are rendered by render-app-store-screenshots.py. This module reuses its capture
 reader, copy and background, and adds the foldable's card layout: the folded Duo's outer display,
-1398x2034, four cards per locale.
+1398x2034, six cards per locale.
 """
 import argparse
 import importlib.util
@@ -29,16 +29,20 @@ WIDGET_POINTS = {'widget-small': (170, 170), 'widget-medium': (364, 170), 'widge
 
 # Card layout in reference pixels (the display size), so cards stay exact at 1:1. A device is
 # (native input, centre x, centre y, width, tilt in degrees); the frame's height follows the capture's
-# aspect ratio. The cards bleed off the bottom, with the cut kept above the avatar strip and bar (about
-# 72% of the screen shows), so the devices give a top edge instead of a centre.
+# aspect ratio. The person cards bleed off the bottom, with the cut kept above the birthday line (about
+# 72% of the screen shows), so the devices give a top edge instead of a centre. The mosaic and the edit
+# mode keep controls at the bottom edge, so their devices show the whole screen above FULL_BOTTOM.
 TEXT = {'left': 100, 'kicker': (118, 34), 'title': (185, 104, 14), 'body': (480, 40), 'body_widgets': 462, 'width': 1198}
 CARDS = [
+    [('mosaic', 699, None, None, 0)],
     [('mia', 699, None, 1240, -3)],
-    [('leo-celebration', 699, None, 1240, 3)],
+    [('leo', 699, None, 1240, 3)],
+    [('editor', 699, None, None, 0)],
     [('teddy', 580, None, 1000, -6), ('mango', 800, None, 1000, 4)],
     [('widgets', 699, None, 1000, 0)],
 ]
-TOPS = {'mia': 735, 'leo-celebration': 735, 'teddy': 640, 'mango': 1010, 'widgets': 545}
+TOPS = {'mosaic': 580, 'mia': 735, 'leo': 735, 'editor': 580, 'teddy': 640, 'mango': 1010, 'widgets': 545}
+FULL_BOTTOM = 1985
 # Faux Home Screen, in points: widget scale, the centre of the column left of the 84 pt status column,
 # and each widget's left (None: centred) and top.
 HOME_SCREEN = {'scale': .8, 'center': 191, 'positions': ((None, 24), (None, 176), (None, 328))}
@@ -85,12 +89,19 @@ def marketing_copy(canvas, image, locale, index, text):
             else:
                 line = candidate
         wrapped.append(line)
-        top = text['body_widgets'] if index == 3 else body_top
+        top = text['body_widgets'] if index == base.WIDGETS else body_top
         draw.multiline_text((left, canvas.sy(top)), '\n'.join(wrapped), font=body_font, fill='#b7cbd0', spacing=canvas.sy(12))
+
+
+def full_width(canvas, screenshot, top):
+    """The frame width whose whole screen fits between `top` and FULL_BOTTOM; the border is 1.8% of it per side."""
+    return round((FULL_BOTTOM - top) / (.964 * screenshot.height / screenshot.width + .036))
 
 
 def device(canvas, image, screenshot, center_x, center_y, width, angle, top=None):
     """Draw a framed Duo screen: no notch or island, the native capture already holds the status column."""
+    if width is None:
+        width = full_width(canvas, screenshot, top)
     center_x, width = canvas.sx(center_x), canvas.sx(width)
     border = round(width * .018)
     inner_width = width - border * 2
@@ -141,12 +152,17 @@ def compose_image(canvas, inputs, locale, index):
     image = base.background(index)
     marketing_copy(canvas, image, locale, index, TEXT)
     for name, center_x, center_y, width, angle in CARDS[index]:
-        screen = widget_screen(canvas, inputs) if name == 'widgets' else inputs[name][0]
+        if name == 'widgets':
+            screen = widget_screen(canvas, inputs)
+        elif name == 'leo':
+            screen = base.leo(inputs)
+        else:
+            screen = inputs[name][0]
         device(canvas, image, screen, center_x, center_y, width, angle, TOPS.get(name))
     return image.convert('RGB')
 
 
-def read_capture(directory):
+def read_capture(directory, fireworks):
     """Validate the outer run's metadata and read its native inputs, per locale."""
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
@@ -157,7 +173,8 @@ def read_capture(directory):
         raise ValueError('Native capture dimensions do not match the outer display')
     # The base reader checks the 3x widget crops and the display-sized cards against these globals.
     base.SIZE, base.FAMILY = SIZE, FAMILY
-    return metadata, {store: base.native_inputs(directory, locale) for locale, store in (('en', 'en-US'), ('ru', 'ru'))}
+    return metadata, {store: base.native_inputs(directory, locale, fireworks[locale])
+                      for locale, store in (('en', 'en-US'), ('ru', 'ru'))}
 
 
 def retain(directory, inputs, destination):
@@ -172,14 +189,17 @@ def retain(directory, inputs, destination):
             shutil.copy2(inputs[store][name][1], folder / f'{name}.png')
 
 
-def compose(capture, output, retained=None):
+def compose(capture, output, retained=None, fireworks=None):
     if output.exists() and any(output.iterdir()):
         raise ValueError('Output directory must be empty to avoid stale screenshots')
     output.mkdir(parents=True, exist_ok=True)
-    metadata, inputs = read_capture(capture)
+    fireworks = fireworks or {'en': base.FIREWORKS, 'ru': base.FIREWORKS}
+    metadata, inputs = read_capture(capture, fireworks)
     receipt = {'renderer': 'scripts/render-duo-app-store-screenshots.py',
                'renderer_sha256': base.sha256(Path(__file__)),
                'base_renderer_sha256': base.sha256(Path(base.__file__)), 'capture': metadata, 'size': list(SIZE),
+               'fireworks': {store: base.fireworks_receipt(capture, locale, fireworks[locale])
+                             for locale, store in (('en', 'en-US'), ('ru', 'ru'))},
                'inputs': {store: {name: base.sha256(found[name][1]) for name in found} for store, found in inputs.items()},
                'input_sizes': {store: {name: list(found[name][0].size) for name in found} for store, found in inputs.items()},
                'outputs': {}}
@@ -201,5 +221,7 @@ if __name__ == '__main__':
     parser.add_argument('capture', type=Path, help='Capture directory of the folded run')
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--retain', type=Path, help='Copy the native inputs here (marketing/app-store/native-captures/iphone-duo)')
+    parser.add_argument('--fireworks', type=base.fireworks_choice, default=None,
+                        help=f'Fireworks frame in ms after the swipe, e.g. 2100 or en=1900,ru=2100 (default {base.FIREWORKS})')
     args = parser.parse_args()
-    compose(args.capture.resolve(), args.output.resolve(), args.retain and args.retain.resolve())
+    compose(args.capture.resolve(), args.output.resolve(), args.retain and args.retain.resolve(), args.fireworks)

@@ -57,7 +57,7 @@ class FamilyReplacementTests(unittest.TestCase):
         for locale in f.m.LOCALES:
             old_id=f'draft-{locale}-target-old-{locale}'
             deletion=api.events.index(('delete',old_id))
-            verification=api.events.index(('read',f'draft-{locale}',GROUP,5))
+            verification=api.events.index(('read',f'draft-{locale}',GROUP,len(f.m.FILES)+1))
             self.assertLess(verification,deletion)
             kept={p['id'] for p in api.localizations[f'draft-{locale}']}
             for p in ('tablet','preview'):
@@ -170,7 +170,7 @@ class DuoSetTests(unittest.TestCase):
         _, sets = f.read_sets(self.manifest, CATALOG, [DUO])
         self.assertEqual([s['group'] for s in sets], [DUO])
         for locale in f.m.LOCALES:
-            self.assertEqual([i['spec'] for i in sets[0]['images'][locale]], ['outer-spec'] * 4)
+            self.assertEqual([i['spec'] for i in sets[0]['images'][locale]], ['outer-spec'] * len(f.m.FILES))
 
     def test_selected_group_does_not_revalidate_stale_older_families(self):
         self.write_manifest(old_set=True)
