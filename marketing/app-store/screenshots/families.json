@@ -1,60 +1,59 @@
 {
   "app_id": "1461697772",
-  "version": "2.1.0",
-  "version_id": "4dccceea-13f4-4f10-8153-d1106ec1731c",
+  "version": "2.2.2",
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "source_master_sha": "217843fc9ce0ff5f0590afcdd7560460c52201c3",
+  "capture_host": "MacPro",
   "sets": [
     {
-      "slug": "dynamic-island-medium",
-      "path": "families/dynamic-island-medium",
+      "slug": "dynamic-island-medium-20261028",
+      "path": "families/dynamic-island-medium-20261028",
       "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
       "device": "iPhone-17-Pro",
-      "runtime": "26-5",
+      "runtime": "27-0",
       "size": [
         1206,
         2622
       ]
     },
     {
-      "slug": "dynamic-island-large",
-      "path": ".",
-      "group": "IPHONE_DYNAMIC_ISLAND_LARGE_PROFILE",
-      "device": "iPhone-17-Pro-Max",
-      "runtime": "26-5",
-      "size": [
-        1320,
-        2868
-      ]
-    },
-    {
-      "slug": "face-id-large",
-      "path": "families/face-id-large",
+      "slug": "face-id-large-20261028",
+      "path": "families/face-id-large-20261028",
       "group": "IPHONE_FACE_ID_LARGE_PROFILE",
       "device": "iPhone-14-Plus",
-      "runtime": "26-5",
+      "runtime": "27-0",
       "size": [
         1284,
         2778
       ]
     },
     {
-      "slug": "home-button-medium",
-      "path": "families/home-button-medium",
+      "slug": "home-button-medium-20261028",
+      "path": "families/home-button-medium-20261028",
       "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
       "device": "iPhone-SE-3rd-generation",
-      "runtime": "26-5",
+      "runtime": "27-0",
       "size": [
         750,
         1334
       ]
+    },
+    {
+      "slug": "iphone-duo-20261028",
+      "path": "families/iphone-duo-20261028",
+      "group": "IPHONE_DUO_PROFILE",
+      "device": "iPhone-Duo",
+      "runtime": "27-1",
+      "size": [
+        1398,
+        2034
+      ]
     }
   ],
-  "inheritance_verification": {
-    "status": "not_confirmed",
-    "reason": "Official related-placements API lists explicit placements and has no inherited/scaled source field or query parameter. No browser verification after user prohibited Browser/Computer Use."
-  },
-  "home_button_scope": {
-    "decision": "User canceled Home Button large and authorized native SE 3 medium capture/upload.",
-    "capture_status": "en_ru_passed_pngs_inspected_uploaded_ACTIVE",
-    "upload_verified_at_utc": "2026-10-14T04:07:03.932112+00:00"
+  "selection": {
+    "dynamic_island": "medium_only",
+    "duo": "outer_only",
+    "app_previews": "remove_all_EN_RU_placements",
+    "apple_specifications": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   }
 }

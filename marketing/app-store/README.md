@@ -1,12 +1,12 @@
 # App Store media
 
-- `screenshots/`: 32 загруженных PNG — четыре карточки EN/RU для DI medium,
-  DI large, Face ID large и Home Button medium (SE 3). Группы и native sizes —
-  `screenshots/families.json`; источник каждого набора — его `source.json`.
-- `native-captures/`: сохранённые PNG и passing summaries новых локальных
-  screenshot captures. DI large использует прежний утверждённый набор.
-- `previews/`: шесть загруженных MP4 EN/RU для DI large, Face ID large и SE 3;
-  исходные записи, монтаж, музыка и скрипты сохранены рядом.
+- Текущие наборы перечислены в `screenshots/families.json`: шесть карточек
+  EN/RU для Dynamic Island medium, Face ID large, Home Button medium (SE 3)
+  и внешнего экрана Duo. Источник и хеши каждого набора — его `source.json`.
+- `native-captures/*-20261028/`: настоящие PNG с MacPro, passing summaries
+  и замеры времени для выбранного кадра фейерверка.
+- `previews/` и прежние папки скриншотов: архив предыдущих материалов.
+  Наличие MP4 в Git не означает, что видео размещено в App Store.
 
 Короткая инструкция для следующего агента:
 [запись и изменение видео](previews/RECORDING.md).
@@ -15,7 +15,8 @@ PNG формируют `scripts/run-local-app-store-screenshots.py` и
 `scripts/app-store-families.py`. Производные версии сохраняй отдельно и
 обновляй provenance после проверки. Загрузку в Apple выполняй только по поручению.
 
-Receipts фиксируют draft 2.1.0 и состояние Apple на момент последней проверки;
-они не означают App Review submission. Ключи, DerivedData, xcresult и venv
-не входят в архив. Симуляторы запускай по одному; удержание сна требует
-нового разрешения Даниса.
+Обзор текущих материалов и receipts: [native capture report](../../docs/app-store-native-families.md).
+Receipts с датой `20261028` относятся к draft 2.2.2; старые receipts описывают
+предыдущие версии. Это не App Review submission. Ключи, DerivedData, xcresult
+и venv не входят в архив. Симуляторы запускай по одному из постоянного
+общего пула; не удаляй их после съёмки. Удержание сна требует нового разрешения Даниса.

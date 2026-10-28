@@ -74,7 +74,8 @@ def main():
         configuration = plistlib.loads(configuration_path.read_bytes())
     base=['xcodebuild','-project','GrowingUp.xcodeproj','-scheme','GrowingUpUI',
           '-derivedDataPath',str(args.derived_data.resolve()),'-destination',f'id={args.udid}',
-          '-parallel-testing-enabled','NO','-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots',
+          '-parallel-testing-enabled','NO','-collect-test-diagnostics','never',
+          '-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots',
           'GROWINGUP_APP_STORE_CAPTURE=1',f'GROWINGUP_APP_STORE_PHOTOS={ROOT}/docs/app-store-demo-photos',
           'CODE_SIGNING_ALLOWED=NO']
     for locale in ('en','ru'):
@@ -90,7 +91,7 @@ def main():
         print(f'{args.device}: {locale} capture started',flush=True)
         if products:
             test = ['xcodebuild','test-without-building','-xctestrun',str(configuration_path),
-                    '-destination',f'id={args.udid}','-parallel-testing-enabled','NO',
+                    '-destination',f'id={args.udid}','-parallel-testing-enabled','NO','-collect-test-diagnostics','never',
                     '-only-testing:GrowingUpUITests/AppStoreScreenshotTests/testCaptureAppStoreScreenshots']
         else:
             test = base[:1]+['test-without-building']+base[1:]+[f'GROWINGUP_APP_STORE_LOCALE={locale}']

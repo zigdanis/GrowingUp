@@ -310,7 +310,8 @@ def prepare_image(api, library_id, image, spec_id):
         api.request("PATCH", f"/v1/appAssetLibraryImages/{asset_id}", {"data": {
             "type": "appAssetLibraryImages", "id": asset_id, "attributes": {"uploaded": True},
         }})
-    deadline = time.monotonic() + 300
+    # A newly uploaded PNG can take slightly over five minutes in Apple's processing queue.
+    deadline = time.monotonic() + 600
     while True:
         asset = api.resource(f"/v1/appAssetLibraryImages/{asset_id}")
         if asset["attributes"]["state"] in READY_ASSETS:

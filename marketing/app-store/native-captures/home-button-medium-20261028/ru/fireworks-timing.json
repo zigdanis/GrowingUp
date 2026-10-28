@@ -1,0 +1,42 @@
+{
+  "celebration": 3,
+  "frames": [
+    {
+      "after_swipe_return": 1.5050309896469116,
+      "after_swipe_start": 2.050922989845276,
+      "name": "store-ru-leo-fireworks-1500",
+      "capture_duration": 0.1168830394744873
+    },
+    {
+      "after_swipe_start": 2.2509130239486694,
+      "name": "store-ru-leo-fireworks-1700",
+      "capture_duration": 0.09957695007324219,
+      "after_swipe_return": 1.7050210237503052
+    },
+    {
+      "after_swipe_return": 1.9050159454345703,
+      "name": "store-ru-leo-fireworks-1900",
+      "capture_duration": 0.09569001197814941,
+      "after_swipe_start": 2.4509079456329346
+    },
+    {
+      "after_swipe_start": 2.650925040245056,
+      "name": "store-ru-leo-fireworks-2100",
+      "after_swipe_return": 2.105033040046692,
+      "capture_duration": 0.09854292869567871
+    },
+    {
+      "after_swipe_start": 2.850912928581238,
+      "name": "store-ru-leo-fireworks-2300",
+      "capture_duration": 0.09725606441497803,
+      "after_swipe_return": 2.3050209283828735
+    },
+    {
+      "after_swipe_start": 3.0507439374923706,
+      "name": "store-ru-leo-fireworks-2500",
+      "capture_duration": 0.10812699794769287,
+      "after_swipe_return": 2.5048519372940063
+    }
+  ],
+  "swipe_duration": 0.5458920001983643
+}

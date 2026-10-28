@@ -26,18 +26,18 @@ CARDS = ('mosaic', 'mia', 'leo-birthday', 'editor', 'pets', 'widgets')
 WIDGETS = CARDS.index('widgets')
 COPY = {
     'ru': [
-        ('Вся семья\nсразу', 'Дети и питомцы, возраст тикает.'),
+        ('Вся семья\nсразу', 'Дети и питомцы на одном экране.'),
         ('Возраст вашего\nребёнка', 'С точностью до секунды.'),
         ('С днём\nрождения!', 'Празднуйте вместе с GrowingUp.'),
-        ('Правка\nпрямо на фото', 'Коснитесь экрана: имя, дата, кадр.'),
+        ('Правка\nпрямо на фото', 'Имя, день рождения и кадрирование.'),
         ('Возраст вашего\nпитомца', ''),
         ('Возраст на\nглавном экране', 'Три размера для семьи и питомцев.'),
     ],
     'en': [
-        ('Everyone\nat a glance', 'Kids and pets, ages ticking.'),
+        ('Everyone\nat a glance', 'Kids and pets in one place.'),
         ('Your child’s\nage', 'Down to the second.'),
         ('Happy\nbirthday!', 'Celebrate with GrowingUp.'),
-        ('Edit right\non the photo', 'Tap the screen: name, date, framing.'),
+        ('Edit right\non the photo', 'Name, birthday and photo framing.'),
         ('Your pet’s\nage', ''),
         ('Home Screen\nwidgets', 'Three sizes for your family and pets.'),
     ],

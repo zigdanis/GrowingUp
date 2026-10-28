@@ -1,0 +1,114 @@
+{
+  "success": true,
+  "upload": true,
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "version": "2.2.2",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "d94d80e201d604ad4f098116e2175798d9ca76cdbd5909da46fb66c611603748",
+          "placement_id": "a5000005-71fb-8cec-8f37-56b88b1e1949",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "69202f23af1bffcbe3aa3be1f71bffd427ec32b54ef3a4ae289000d0c633fbaa",
+          "placement_id": "53400005-71fb-8cec-8f08-27c1839e42d4",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "6b2e7355177136f9dfcc71feb5803af8a2de36b65b9a0f7eae9b50b14d14f1ec",
+          "placement_id": "f3000005-71fb-8cec-8f3d-cb6861680ffd",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "09f9ee19d0620220129bf55051c44f2cbc6a26fd689b113e96bbff5ba3620d44",
+          "placement_id": "2ac00005-71fb-8cec-8f3b-e83152337670",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "05fb7bf662533a2f389cfbae2c3f7f574bef8c90478bb76bafcd67bf4cbe275b",
+          "placement_id": "ecc00005-71fb-8cec-8f3a-e4b77055eb2c",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "10287e651a1cd3459b135ab4fd8e396a6f1e2138d7a7aebe0bfdeb625e6fb5fb",
+          "placement_id": "06000005-71fb-8cec-8f01-9c527a058298",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "5bf4ff46f3697f833477dd6dba50eac0a7c471bb5fdc6c8b315b76af52700a1a",
+          "placement_id": "c3800005-71fb-8cec-8f2d-6feb0748a6cf",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "f5a038b73c942cb54469b6610433efb2a1982bbd2987e2d9b9d6d56affe6d571",
+          "placement_id": "81c00005-71fb-8cec-8f36-0ad5d4b33e94",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "095a78370f41354d7364b0249b520d046944ab9da857eaad02c98be692788071",
+          "placement_id": "c4400005-71fb-8cec-8f36-7d42aafe89c6",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "efe7a870e31cfc77ba35848393e1e58d4cb4e902a42a34445ee905a3ee865be1",
+          "placement_id": "bb400005-71fb-8cec-8f28-24afd60d2b4c",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "c5541fd7bd4e93f4cf840c5f0a98c7a297a59cff86cd1668c39580cdd6818386",
+          "placement_id": "72000005-71fb-8cec-8f1e-4e79184aa118",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "10478386bea803cfd910dcb15601a327871b6af4b3bbd6fc61e5d00d155c64c6",
+          "placement_id": "ef400005-71fb-8cec-8f16-207208e890dc",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [
+    "a1c00005-71fb-8cec-8f13-32eac8c0612f",
+    "3c000005-71fb-8cec-8f01-5654736ad83a",
+    "2f400005-71fb-8cec-8f18-603e7805583c",
+    "ed000005-71fb-8cec-8f3f-bd8d73234702",
+    "11c00005-71fb-8cec-8f3d-3ef22969503c",
+    "a2400005-71fb-8cec-8f23-029a1dae3dd5",
+    "d2400005-71fb-8cec-8f3d-c8cb232bf389",
+    "c0000005-71fb-8cec-8f2a-94f17fd9aec9"
+  ],
+  "verified_state": "PREPARE_FOR_SUBMISSION",
+  "other_groups_preserved": true
+}

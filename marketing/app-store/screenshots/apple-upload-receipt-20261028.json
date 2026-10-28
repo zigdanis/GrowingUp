@@ -1,0 +1,423 @@
+{
+  "success": true,
+  "upload": true,
+  "app_id": "1461697772",
+  "version": "2.2.2",
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "source_master_sha": "217843fc9ce0ff5f0590afcdd7560460c52201c3",
+  "capture_host": "MacPro",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "d94d80e201d604ad4f098116e2175798d9ca76cdbd5909da46fb66c611603748",
+          "placement_id": "a5000005-71fb-8cec-8f37-56b88b1e1949",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "69202f23af1bffcbe3aa3be1f71bffd427ec32b54ef3a4ae289000d0c633fbaa",
+          "placement_id": "53400005-71fb-8cec-8f08-27c1839e42d4",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "6b2e7355177136f9dfcc71feb5803af8a2de36b65b9a0f7eae9b50b14d14f1ec",
+          "placement_id": "f3000005-71fb-8cec-8f3d-cb6861680ffd",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "09f9ee19d0620220129bf55051c44f2cbc6a26fd689b113e96bbff5ba3620d44",
+          "placement_id": "2ac00005-71fb-8cec-8f3b-e83152337670",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "05fb7bf662533a2f389cfbae2c3f7f574bef8c90478bb76bafcd67bf4cbe275b",
+          "placement_id": "ecc00005-71fb-8cec-8f3a-e4b77055eb2c",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "10287e651a1cd3459b135ab4fd8e396a6f1e2138d7a7aebe0bfdeb625e6fb5fb",
+          "placement_id": "06000005-71fb-8cec-8f01-9c527a058298",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+      "size": [
+        1206,
+        2622
+      ],
+      "device": "iPhone-17-Pro",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "5bf4ff46f3697f833477dd6dba50eac0a7c471bb5fdc6c8b315b76af52700a1a",
+          "placement_id": "c3800005-71fb-8cec-8f2d-6feb0748a6cf",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "f5a038b73c942cb54469b6610433efb2a1982bbd2987e2d9b9d6d56affe6d571",
+          "placement_id": "81c00005-71fb-8cec-8f36-0ad5d4b33e94",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "095a78370f41354d7364b0249b520d046944ab9da857eaad02c98be692788071",
+          "placement_id": "c4400005-71fb-8cec-8f36-7d42aafe89c6",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "efe7a870e31cfc77ba35848393e1e58d4cb4e902a42a34445ee905a3ee865be1",
+          "placement_id": "bb400005-71fb-8cec-8f28-24afd60d2b4c",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "c5541fd7bd4e93f4cf840c5f0a98c7a297a59cff86cd1668c39580cdd6818386",
+          "placement_id": "72000005-71fb-8cec-8f1e-4e79184aa118",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "10478386bea803cfd910dcb15601a327871b6af4b3bbd6fc61e5d00d155c64c6",
+          "placement_id": "ef400005-71fb-8cec-8f16-207208e890dc",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+      "size": [
+        1284,
+        2778
+      ],
+      "device": "iPhone-14-Plus",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "ed32685a0893e841623ce438336fd76985854aadc07243f29741ad6bc262af33",
+          "placement_id": "db000005-71fb-8cec-8f1c-bac69494037d",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "93ab718d50fd0b9a7203630a7c82ee3e2d2cc2626f6d1033f1fad4463bcd4599",
+          "placement_id": "6a400005-71fb-8cec-8f39-4cc63091721f",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "8d768f671d4fe739720d93aae03e4cab3329c201900f1b30d2ffc5fcfc70b6c1",
+          "placement_id": "37c00005-71fb-8cec-8f00-c817ebfc8ce0",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "5abaea30ba3895b6b372a1e5cca4d48750190a277f91bded6aa1ca0cdd9ba6fb",
+          "placement_id": "1a800005-71fb-8cec-8f06-baba88586b7a",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "ca6c075f0ff4d5c5ed61a15b6c360cc591ab95b6bf77b2c40caa9fcece8dd6aa",
+          "placement_id": "dd400005-71fb-8cec-8f38-57a02a0612c9",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "dc1c5801d0a2c51111cc9e53a5b8d9393439de1a24b136ceb818a9df4a95fefc",
+          "placement_id": "00400005-71fb-8cec-8f2d-00580314f527",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_FACE_ID_LARGE_PROFILE",
+      "size": [
+        1284,
+        2778
+      ],
+      "device": "iPhone-14-Plus",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "e9fe7d97604e545b7ba98c1a97087700e53f120ecef77c392d64d62428bc55ea",
+          "placement_id": "08800005-71fb-8cec-8f35-3abec0b74756",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "826e6a10e5496c9707d10ac32d690c7e188e9df38f422434a38f51cc6e974546",
+          "placement_id": "08000005-71fb-8cec-8f0a-5ac9e37569f6",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "7d4f99e12f341121663b788f1d9f495690b04d71bbcbda89b0777540ea32609d",
+          "placement_id": "51c00005-71fb-8cec-8f14-d170e1623732",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "b4a1266e5ff40ffdf9b75a4a0ae73e11ced1706f4467af691f605ac1a687dce8",
+          "placement_id": "c0800005-71fb-8cec-8f15-07ff08516e14",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "07251ff304ec0f89bc6ad7bcd6f87934b6c646c5f0d08cd558e066e39657ac32",
+          "placement_id": "47400005-71fb-8cec-8f2d-74f47d87db81",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "ffddbba29b1054214fcc87d808ae7773e375b5cb062aa3eb02fadf54dcd31175",
+          "placement_id": "ac400005-71fb-8cec-8f05-f237b443eff2",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "size": [
+        750,
+        1334
+      ],
+      "device": "iPhone-SE-3rd-generation",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "75ddd17e04e83f1c365b939275fccfb13732350309eea007f959083c3c53702e",
+          "placement_id": "11400005-71fb-8cec-8f2f-f1e842c7f281",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "4ae41b3b749207088a3b2b8a6b4e34eafc35432dfa52cecf5e365b2fabee5064",
+          "placement_id": "63400005-71fb-8cec-8f35-b0e4be9db041",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "468d9a0aaf57b616b0964c603ccb7102e17b87cd2533fd7bf75060087c28e8af",
+          "placement_id": "e8400005-71fb-8cec-8f0b-4abab6e26db2",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "a54e78c3a95cf6f0118aa53de57c3ea65a67f0e30d607ece1640559da805a9e8",
+          "placement_id": "21000005-71fb-8cec-8f0c-bce723e1cab4",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "c73ed3b0c67590c29883350e1b4a5d66903cb1e357091f66c9b2edf1c624bcf8",
+          "placement_id": "54000005-71fb-8cec-8f08-0caa9f7b6299",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "89516e06f51275ff6adf8dca355906121bb40b7f73321e5b2c469539407aa291",
+          "placement_id": "13800005-71fb-8cec-8f1d-88ca86588fff",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_HOME_BUTTON_MEDIUM_PROFILE",
+      "size": [
+        750,
+        1334
+      ],
+      "device": "iPhone-SE-3rd-generation",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "868a53636727a214544dd4acfda00726281118fa25c81fcc906847d799c89b78",
+          "placement_id": "a8c00005-71fb-8cec-8f16-1551b843b9b4",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "8a242ae547aaaf8d85760b28d9fc78e62ae630cdcb6d95333124f12d47ea7826",
+          "placement_id": "5fc00005-71fb-8cec-8f39-2ffed59c1819",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "3ce223cd2ec3dbcfd9c5907d4e46f386e2c45529a4dd38ea26d6ef2a20af1da6",
+          "placement_id": "d4400005-71fb-8cec-8f07-03e86cb754a8",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "49ce4bb58934e7bec2cab6ec6e0e9642bc6ab8222783057f1e3a1257f27aa7fc",
+          "placement_id": "15800005-71fb-8cec-8f38-02663872248a",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "feb9857785c7adee0b0e04adc64727127adf99a4b5d7613d5adcdd2dc4d78e90",
+          "placement_id": "ac800005-71fb-8cec-8f10-92933ec6794d",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "91af20346f98622fa379b7c94434b2b22d1031955c4648bc9565d0aebe35448c",
+          "placement_id": "97400005-71fb-8cec-8f00-de9766730a3d",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "group": "IPHONE_DUO_PROFILE",
+      "size": [
+        1398,
+        2034
+      ],
+      "device": "iPhone-Duo",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "1549aa6d51d8cbbf0a150622dc30da8ee7edef4c8c8ec3939cd566b8302945f2",
+          "placement_id": "f5800005-71fb-8cec-8f06-5929e6ee1ece",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "e3a42a9290989a90d5304f5b1d33b3f2c3bbceef9db684b29b9cc845e6a37854",
+          "placement_id": "15400005-71fb-8cec-8f3d-084318976720",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "cfcfff1aebbde7850dfcac87cfb84aac0c66847b77aff070091b42620614d5c3",
+          "placement_id": "89800005-71fb-8cec-8f0f-01107f7252ba",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "845a802acb41f663dc41d149df134de4645cd7cb8da1fd9ca292d8dbfc3bcba4",
+          "placement_id": "dc000005-71fb-8cec-8f29-7fdf6e896e06",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "747ec13ec36c1fb27041b9544655b1fa25ad8285d22f5cb80d22e627b7a467fb",
+          "placement_id": "5e800005-71fb-8cec-8f1d-e0d0ef864c2e",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "865a3c59a4b1ec31b01872fa96e22fc05ff780c344f9bcd93759aa4ee96a1f5d",
+          "placement_id": "59400005-71fb-8cec-8f26-40bbd2b07960",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPHONE_DUO_PROFILE",
+      "size": [
+        1398,
+        2034
+      ],
+      "device": "iPhone-Duo",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "181527514230f46e0138c8829a5e3af695e055f302ccc77d19217a448245d8cf",
+          "placement_id": "36400005-71fb-8cec-8f39-36a7b1d436fd",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "3a23693ceab3be5700e9e6f68d298c8f604e7d7a013ef0f374334fae4f75f837",
+          "placement_id": "df000005-71fb-8cec-8f21-776c66ecc23d",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "1e484b7fea7353e00c0b4c08a1092c74239eb19665636630fd1b2ae5ec68410e",
+          "placement_id": "ff400005-71fb-8cec-8f13-a3a35b1f8674",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "bb00c20895316b655e21381ae054a838f09ac138eb9455db0f506431a0137a0d",
+          "placement_id": "32c00005-71fb-8cec-8f3c-01cdfa921592",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "06548e0d184660ba4e66a48bb924abdd7bf9abb8c14ca06bf50907e182bd94bd",
+          "placement_id": "bf000005-71fb-8cec-8f0d-396032e637be",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "e179a6c01723ee57b237c12665bd0c409843570d0aab5c5c9eb55f00aea10b44",
+          "placement_id": "6e800005-71fb-8cec-8f01-318060b2fd37",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [
+    "0b400005-71fb-8cec-8f35-096f78a0b00b",
+    "11c00005-71fb-8cec-8f3d-3ef22969503c",
+    "22c00005-71fb-8cec-8f26-a07b2c8f0c6a",
+    "2d000005-71fb-8cec-8f0b-7b6150002571",
+    "2f400005-71fb-8cec-8f18-603e7805583c",
+    "3c000005-71fb-8cec-8f01-5654736ad83a",
+    "44c00005-71fb-8cec-8f3d-01b77d25d7d3",
+    "46000005-71fb-8cec-8f10-f0a4017d8bbe",
+    "4b800005-71fb-8cec-8f2b-6ed157561d34",
+    "55c00005-71fb-8cec-8f29-e4f96099f31d",
+    "5cc00005-71fb-8cec-8f35-9a48540c8b70",
+    "6dc00005-71fb-8cec-8f24-0efc3aee76dd",
+    "71000005-71fb-8cec-8f2e-904b35dcb1b1",
+    "a1c00005-71fb-8cec-8f13-32eac8c0612f",
+    "a2400005-71fb-8cec-8f23-029a1dae3dd5",
+    "c0000005-71fb-8cec-8f2a-94f17fd9aec9",
+    "d2400005-71fb-8cec-8f3d-c8cb232bf389",
+    "d4000005-71fb-8cec-8f31-94cffffdb910",
+    "dc400005-71fb-8cec-8f1d-b83f10bdc838",
+    "e0800005-71fb-8cec-8f0b-1cc532cc5202",
+    "e0c00005-71fb-8cec-8f39-34c76ffea315",
+    "eb400005-71fb-8cec-8f2e-f1486870ab63",
+    "ed000005-71fb-8cec-8f3f-bd8d73234702",
+    "f8000005-71fb-8cec-8f29-9bb3c44042eb"
+  ],
+  "verified_state": "PREPARE_FOR_SUBMISSION",
+  "other_groups_preserved": true,
+  "assembled_at": "2026-10-28T14:13:44.958720+00:00",
+  "family_receipts": [
+    "upload-receipts-20261028/dynamic-island-medium.json",
+    "upload-receipts-20261028/face-id-large.json",
+    "upload-receipts-20261028/home-button-medium.json",
+    "upload-receipts-20261028/iphone-duo.json"
+  ],
+  "interrupted_receipt": "upload-receipts-20261028/home-button-medium-interrupted.json"
+}

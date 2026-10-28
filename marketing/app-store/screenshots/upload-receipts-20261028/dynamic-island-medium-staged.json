@@ -1,0 +1,91 @@
+{
+  "success": true,
+  "group": "IPHONE_DYNAMIC_ISLAND_MEDIUM_PROFILE",
+  "version_id": "411ee0b0-bd37-4c01-95f3-1e231c972ec9",
+  "assets": [
+    {
+      "locale": "en-US",
+      "file": "01-mosaic.png",
+      "id": "bfc00005-71fb-8cec-8017-cb93c3d9e0ce",
+      "sha256": "d94d80e201d604ad4f098116e2175798d9ca76cdbd5909da46fb66c611603748",
+      "state": "PREPARE_FOR_SUBMISSION"
+    },
+    {
+      "locale": "en-US",
+      "file": "02-mia.png",
+      "id": "92c00005-71fb-8cec-802d-5408c52460a2",
+      "sha256": "69202f23af1bffcbe3aa3be1f71bffd427ec32b54ef3a4ae289000d0c633fbaa",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "en-US",
+      "file": "03-leo-birthday.png",
+      "id": "6b800005-71fb-8cec-8017-902740862aaa",
+      "sha256": "6b2e7355177136f9dfcc71feb5803af8a2de36b65b9a0f7eae9b50b14d14f1ec",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "en-US",
+      "file": "04-editor.png",
+      "id": "87400005-71fb-8cec-801b-5e01aad672c7",
+      "sha256": "09f9ee19d0620220129bf55051c44f2cbc6a26fd689b113e96bbff5ba3620d44",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "en-US",
+      "file": "05-pets.png",
+      "id": "a9400005-71fb-8cec-8016-3098e6ecfa09",
+      "sha256": "05fb7bf662533a2f389cfbae2c3f7f574bef8c90478bb76bafcd67bf4cbe275b",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "en-US",
+      "file": "06-widgets.png",
+      "id": "08800005-71fb-8cec-8018-41139fd77cb1",
+      "sha256": "10287e651a1cd3459b135ab4fd8e396a6f1e2138d7a7aebe0bfdeb625e6fb5fb",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "01-mosaic.png",
+      "id": "c2c00005-71fb-8cec-8008-b6baa147f5ad",
+      "sha256": "5bf4ff46f3697f833477dd6dba50eac0a7c471bb5fdc6c8b315b76af52700a1a",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "02-mia.png",
+      "id": "fb400005-71fb-8cec-8034-d728bca2ffe4",
+      "sha256": "f5a038b73c942cb54469b6610433efb2a1982bbd2987e2d9b9d6d56affe6d571",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "03-leo-birthday.png",
+      "id": "cd000005-71fb-8cec-803b-80f189e018c5",
+      "sha256": "095a78370f41354d7364b0249b520d046944ab9da857eaad02c98be692788071",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "04-editor.png",
+      "id": "a3800005-71fb-8cec-8023-b78af243a8b8",
+      "sha256": "efe7a870e31cfc77ba35848393e1e58d4cb4e902a42a34445ee905a3ee865be1",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "05-pets.png",
+      "id": "c8000005-71fb-8cec-8038-ecb29aa045b6",
+      "sha256": "c5541fd7bd4e93f4cf840c5f0a98c7a297a59cff86cd1668c39580cdd6818386",
+      "state": "UPLOAD_COMPLETE"
+    },
+    {
+      "locale": "ru",
+      "file": "06-widgets.png",
+      "id": "12000005-71fb-8cec-8039-b037006b862a",
+      "sha256": "10478386bea803cfd910dcb15601a327871b6af4b3bbd6fc61e5d00d155c64c6",
+      "state": "UPLOAD_COMPLETE"
+    }
+  ]
+}
