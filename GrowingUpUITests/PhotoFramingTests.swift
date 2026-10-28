@@ -94,6 +94,16 @@ final class PhotoFramingTests: XCTestCase {
 		choosePhoto()
 		dismissPhotos()
 	}
+
+	func testCropToolbarStaysInsideSafeArea() {
+		checkCropToolbars(sideSafeArea: false)
+	}
+
+	/// A portrait-only app cannot rely on device rotation to reproduce a camera or status column at a side. This launch
+	/// adds 80-point side safe areas through SwiftUI, then uses the real crop flows and taps their controls.
+	func testCropToolbarStaysInsideSideSafeAreas() {
+		checkCropToolbars(sideSafeArea: true)
+	}
 }
 
 extension PhotoFramingTests {
@@ -148,6 +158,44 @@ extension PhotoFramingTests {
 		return circle
 	}
 
+	private func checkCropToolbars(sideSafeArea: Bool) {
+		launch(sideSafeArea: sideSafeArea)
+		openEditor(of: "Alice")
+		choosePhoto()
+		app.buttons.matching(identifier: "photo.thumbnail").firstMatch.tap()
+		assertToolbarInsideSafeArea(sideSafeArea: sideSafeArea)
+		if sideSafeArea { checkpoint("main-crop-toolbar-side-safe-areas") }
+		app.buttons["crop.use"].tap()
+		XCTAssertTrue(app.buttons["crop.use"].waitForNonExistence(timeout: 5))
+
+		XCTAssertTrue(app.images["editor.widgetPhoto.loaded"].waitForExistence(timeout: 5))
+		reframe.tap()
+		assertToolbarInsideSafeArea(sideSafeArea: sideSafeArea)
+		if sideSafeArea { checkpoint("widget-crop-toolbar-side-safe-areas") }
+		app.buttons["crop.cancel"].tap()
+		XCTAssertTrue(app.buttons["crop.cancel"].waitForNonExistence(timeout: 5))
+	}
+
+	private func assertToolbarInsideSafeArea(sideSafeArea: Bool) {
+		XCTAssertTrue(app.buttons["crop.use"].waitForExistence(timeout: 5))
+		let safeArea = control("crop.safeArea")
+		XCTAssertTrue(safeArea.waitForExistence(timeout: 5))
+		XCTAssertGreaterThan(safeArea.frame.width, 0)
+		XCTAssertGreaterThan(safeArea.frame.height, 0)
+		if sideSafeArea {
+			// Check the fixture took effect independently of the toolbar's own padding.
+			let canvas = cropPhoto.frame
+			XCTAssertGreaterThanOrEqual(safeArea.frame.minX - canvas.minX, 79)
+			XCTAssertGreaterThanOrEqual(canvas.maxX - safeArea.frame.maxX, 79)
+		}
+		for button in [app.buttons["crop.cancel"], app.buttons["crop.use"]] {
+			XCTAssertTrue(
+				safeArea.frame.contains(button.frame),
+				"\(button.identifier) at \(button.frame) must lie inside the safe area \(safeArea.frame)")
+			XCTAssertTrue(button.isHittable, "\(button.identifier) must remain tappable")
+		}
+	}
+
 	/// Opens the circle's crop, checks the zoom it opens at, and cancels it.
 	private func assertCircle(opensAt zoom: String, _ message: String, checkpoint name: String? = nil) {
 		reframe.tap()
@@ -183,9 +231,10 @@ extension PhotoFramingTests {
 		XCTAssertFalse(save.isEnabled)
 	}
 
-	private func launch() {
+	private func launch(sideSafeArea: Bool = false) {
 		configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: .pinned, failNextSave: false, appearance: .light)
 		app.launchEnvironment = [UITestConfiguration.environmentKey: configuration.encoded, "TZ": "UTC"]
+		if sideSafeArea { app.launchEnvironment["GROWINGUP_CROP_SIDE_SAFE_AREA"] = "1" }
 		app.launchArguments = [
 			"-AppleLanguages", "(en)", "-AppleLocale", "en_US", "-AppleInterfaceStyle", configuration.appearance.launchArgumentValue,
 			"-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"
