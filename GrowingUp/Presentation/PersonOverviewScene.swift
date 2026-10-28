@@ -86,6 +86,10 @@ struct PersonOverviewScene: View {
 		.onChange(of: isSelected) { _, selected in
 			if selected { isAgeFocused = true }
 		}
+		.onChange(of: person) { _, changedPerson in
+			// Neighbouring pages also need fresh age and accessibility text after a saved change.
+			presenter.tick(person: changedPerson, now: now(), isSelected: isSelected)
+		}
 		.onDisappear {
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
