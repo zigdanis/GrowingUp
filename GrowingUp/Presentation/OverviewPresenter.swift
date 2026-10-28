@@ -15,7 +15,7 @@ final class OverviewPresenter {
 	private(set) var secondaryText: String?
 	/// The exact remainder, such as "12 days · 04:07:33".
 	private(set) var tickerText = ""
-	/// The next birthday, such as "Birthday in 14 days".
+	/// The next birthday, such as "Birthday in 14 days"; empty when birthday tracking is disabled.
 	private(set) var birthdayText = ""
 	/// The age and next birthday as one spoken phrase, such as "5 years and 3 months, Birthday in 12 days".
 	private(set) var accessibilityAge = ""
@@ -62,7 +62,7 @@ final class OverviewPresenter {
 	func tick(person: Person, now: Date, isSelected: Bool = false) {
 		let status = BirthdayStatus(birthday: person.birthday, now: now, calendar: calendar)
 		// A visible birthday starts a new celebration on every page arrival, at midnight, and when the person's
-		// celebrations are turned back on. People who opted out keep the indicator but get no confetti.
+		// celebrations are turned back on. People who opted out get neither the countdown nor confetti.
 		let isCelebrating = isSelected && status.isToday && person.celebratesBirthdays
 		if isCelebrating, !wasCelebrating {
 			celebrationID += 1
@@ -78,7 +78,7 @@ final class OverviewPresenter {
 		let summary = AgeSummary(birthday: person.birthday, now: now, finestUnit: .minutes, calendar: calendar)
 		self.summary = summary
 		tickerText = AgeTicker.text(birthday: person.birthday, now: now, summary: summary, calendar: calendar, locale: locale)
-		birthdayText = BirthdayCountdown.text(for: status, locale: locale)
+		birthdayText = person.celebratesBirthdays ? BirthdayCountdown.text(for: status, locale: locale) : ""
 		let age = summary.primary.localizedString(locale: locale)
 		// The day someone is born is not a birthday they turn an age on.
 		let turning = calendar.component(.year, from: status.date) - calendar.component(.year, from: person.birthday)
@@ -90,7 +90,8 @@ final class OverviewPresenter {
 		} else {
 			let secondary = summary.localizedSecondary(locale: locale).map { String(localized: "and \($0)", locale: locale) }
 			secondaryText = secondary
-			accessibilityAge = [age, secondary].compactMap { $0 }.joined(separator: " ") + ", \(birthdayText)"
+			accessibilityAge = [age, secondary].compactMap { $0 }.joined(separator: " ")
+			if person.celebratesBirthdays { accessibilityAge += ", \(birthdayText)" }
 		}
 	}
 }

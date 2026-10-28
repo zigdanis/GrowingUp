@@ -86,6 +86,10 @@ struct PersonOverviewScene: View {
 		.onChange(of: isSelected) { _, selected in
 			if selected { isAgeFocused = true }
 		}
+		.onChange(of: person) { _, changedPerson in
+			// Neighbouring pages also need fresh age and accessibility text after a saved change.
+			presenter.tick(person: changedPerson, now: now(), isSelected: isSelected)
+		}
 		.onDisappear {
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
@@ -111,12 +115,14 @@ struct PersonOverviewScene: View {
 			// Second after the card: the age takes the height the card leaves, scrolling when it does not fit.
 			.layoutPriority(1)
 			Spacer(minLength: 24)
-			// At the largest text sizes the countdown wraps and the line grows rather than truncating it.
-			BirthdayLine(birthdayText: presenter.birthdayText, isShown: isSelected)
-				.padding(.horizontal, 24)
-				.padding(.bottom, 16)
-				// The line gets its full height first, ahead of the age above it.
-				.layoutPriority(2)
+			if person.celebratesBirthdays {
+				// At the largest text sizes the countdown wraps and the line grows rather than truncating it.
+				BirthdayLine(birthdayText: presenter.birthdayText, isShown: isSelected)
+					.padding(.horizontal, 24)
+					.padding(.bottom, 16)
+					// The line gets its full height first, ahead of the age above it.
+					.layoutPriority(2)
+			}
 		}
 		.padding(.top, safeAreaInsets.top + 16)
 		.padding(.bottom, safeAreaInsets.bottom)
