@@ -1,0 +1,50 @@
+{
+  "created_on": "2026-10-28",
+  "generator": "built-in image_gen",
+  "model_version": "not exposed by tool",
+  "uploaded_to_apple": true,
+  "uploaded_by": "Danis, manually in App Store Connect",
+  "uploaded_on": "2026-10-28",
+  "files": [
+    {
+      "file": "header_3840x1646.png",
+      "width": 3840,
+      "height": 1646,
+      "bit_depth": 8,
+      "mode": "RGB",
+      "alpha": false,
+      "color_profile": "sRGB IEC61966-2.1",
+      "png_chunks": [
+        "IHDR",
+        "sRGB",
+        "eXIf",
+        "IDAT",
+        "IEND"
+      ],
+      "bytes": 5792656,
+      "sha256": "ff534f6d9c9e82f0994d3d2f49a7671ed6e9bdc9cc1aa4ddd2d4bcbe82c5e227",
+      "png_crc": "pass",
+      "reviewed_composition": "all faces and main artwork visible; no text; header crop inspected"
+    },
+    {
+      "file": "search_3840x2560.png",
+      "width": 3840,
+      "height": 2560,
+      "bit_depth": 8,
+      "mode": "RGB",
+      "alpha": false,
+      "color_profile": "sRGB IEC61966-2.1",
+      "png_chunks": [
+        "IHDR",
+        "sRGB",
+        "eXIf",
+        "IDAT",
+        "IEND"
+      ],
+      "bytes": 8565835,
+      "sha256": "f59ff40d26a016f0fbc88ec50dad18ce8ebfe55052486346e56139c3999530c7",
+      "png_crc": "pass",
+      "reviewed_composition": "all faces and main artwork visible; no text; header crop inspected"
+    }
+  ]
+}
