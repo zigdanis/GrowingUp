@@ -59,6 +59,28 @@ final class PersonEditorAnalyticsTests: XCTestCase {
 		XCTAssertEqual(analytics.events.filter { $0 == .photoReframed }.count, 1, "The retry stored the framing")
 	}
 
+	func testAReframeThatNeverLandsIsDroppedWithItsPhoto() async {
+		let person = Person.createPerson()
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success([person])
+		gateway.editPersonResultToBeReturned = .failure(.coreDataSaveFailed)
+		let (mode, analytics) = makeMode(person: person, gateway: gateway)
+		await mode.editor.load()
+		mode.updateCanvas(CGSize(width: 300, height: 600), safeAreaInsets: EdgeInsets())
+		await mode.loadPhoto()
+		mode.drag(by: CGSize(width: 40, height: 0))
+		mode.endDrag()
+		await mode.done()
+		mode.editor.error = nil
+		mode.editor.removeMainPhoto()
+		await mode.loadPhoto()
+		gateway.editPersonResultToBeReturned = .success(person)
+		await mode.done()
+		XCTAssertNil(mode.editor.error)
+		XCTAssertNil(gateway.addPersonParameters.appImage, "The retry stored the removal")
+		XCTAssertFalse(analytics.events.contains(.photoReframed), "The stored change removed the photo; no framing landed")
+	}
+
 	func testASeventhPinnedPersonIsNoFailure() async {
 		let gateway = PersonsGatewaySpy()
 		let pinned = (0..<Constants.widgetPeopleLimit).map { _ in

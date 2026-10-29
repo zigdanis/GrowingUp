@@ -44,6 +44,10 @@ final class MonitoringConfigurationTests: XCTestCase {
 		let debugSimulator = Monitoring.makeAnalytics(
 			configuration: configuration(postHogAPIKey: "phc_key", isDebugBuild: true, isSimulator: true))
 		XCTAssertTrue(debugSimulator is LoggingAnalyticsGateway, "Debug builds only log on the Simulator")
+		let verificationOnDevice = Monitoring.makeAnalytics(
+			configuration: configuration(
+				postHogAPIKey: "phc_key", sentryDSN: "https://key@o1.ingest.de.sentry.io/2", isVerificationLaunch: true))
+		XCTAssertTrue(verificationOnDevice is NoopAnalyticsGateway, "A verification launch on a device never starts an SDK")
 	}
 
 	private func configuration(

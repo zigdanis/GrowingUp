@@ -176,6 +176,8 @@ final class PersonEditModePresenter {
 		if photoID != framedPhotoID || loaded == nil {
 			savedFraming = loaded.flatMap(geometry(of:)).map(framingOfSavedPicture(in:)) ?? .identity
 			resetFraming()
+			// A new or removed photo leaves no framing of the old one to store.
+			hasUnsavedReframe = false
 		}
 		framedPhotoID = loaded == nil ? nil : photoID
 		guard loaded == nil else {
