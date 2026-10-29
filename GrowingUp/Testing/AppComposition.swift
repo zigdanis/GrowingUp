@@ -7,7 +7,8 @@ enum AppComposition {
 	static func make(for launchMode: AppLaunchMode) -> SceneConfigurator {
 		switch launchMode {
 		case .live:
-			return .live()
+			// Monitoring starts before the store loads, so a failure there is already reported.
+			return .live(analytics: Monitoring.makeAnalytics(configuration: .current()))
 		#if DEBUG
 			case let .uiTest(configuration):
 				do {

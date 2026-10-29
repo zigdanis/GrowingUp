@@ -11,6 +11,7 @@ final class PersonEditorPresenter {
 	/// Decodes a stored original at its full size; see `ImagesCache.loadOriginal(image:)`.
 	let loadOriginal: (PersonImage) async throws -> UIImage
 	let photoFixtures: [UIImage]?
+	let analytics: AnalyticsGateway
 	var name: String
 	private(set) var birthday: Date
 	var isOnWidget: Bool
@@ -41,7 +42,8 @@ final class PersonEditorPresenter {
 		removeUseCase: RemovePersonUseCase, fetchUseCase: FetchPersonsUseCase,
 		now: Date = Date(), loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
-		photoFixtures: [UIImage]? = nil, onMutation: @escaping (PersonMutation) -> Void
+		photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
+		onMutation: @escaping (PersonMutation) -> Void
 	) {
 		let calendar = Calendar.current
 		let birthday = person?.birthday ?? calendar.startOfDay(for: now)
@@ -50,6 +52,7 @@ final class PersonEditorPresenter {
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
 		self.photoFixtures = photoFixtures
+		self.analytics = analytics
 		name = person?.name ?? ""
 		self.birthday = birthday
 		birthTimeIsKnown = birthday != calendar.startOfDay(for: birthday)
@@ -169,6 +172,7 @@ final class PersonEditorPresenter {
 		widgetImage = nil
 		originalImage = nil
 		widgetPictureIsDerived = false
+		analytics.track(.photoRemoved)
 	}
 
 	/// Replaces only the widget picture with a new framing of `framingSource`.
@@ -190,6 +194,7 @@ final class PersonEditorPresenter {
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
+			analytics.report(AnalyticsFailure(operation: "load_photo", error: error))
 		}
 		return nil
 	}
@@ -231,6 +236,7 @@ final class PersonEditorPresenter {
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
+			analytics.report(AnalyticsFailure(operation: "load_widget_people", error: error))
 		}
 	}
 
@@ -261,6 +267,10 @@ final class PersonEditorPresenter {
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
+			// A seventh pinned person is a rule the alert explains, not a failure.
+			if error as? CoreError != .widgetPeopleLimitReached {
+				analytics.report(AnalyticsFailure(operation: "save_person", error: error))
+			}
 		}
 	}
 
@@ -274,6 +284,7 @@ final class PersonEditorPresenter {
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
+			analytics.report(AnalyticsFailure(operation: "remove_person", error: error))
 		}
 	}
 }

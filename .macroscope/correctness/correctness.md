@@ -52,3 +52,7 @@ Review for concrete correctness, data-loss, concurrency, localization, target-co
 - Repository validation is defined by `scripts/check-formatting.sh`, `scripts/lint-swift.sh`, and the `GrowingUp` scheme tests. Treat those scripts and `.github/workflows/ci.yml` as the source of truth for proposed validation changes.
 
 - UI journeys run through the `GrowingUpUI` scheme with isolated DEBUG-only SQLite/image fixtures. Checkpoints are XCTest screenshot attachments for human review; no pixel comparisons or reference images are used. Keep screenshot and video export working.
+
+## Outbound data
+
+- People, photos and birthdays stay on the device and in the shared App Group. The only outbound channel is anonymous analytics and crash reporting through the single `AnalyticsGateway` (`GrowingUp/Analytics/`, PostHog and Sentry, app target only), described in `docs/analytics.md`. Events and failures carry only the fixed categories, flags and counts of `AnalyticsEvent`, `AnalyticsContext` and `AnalyticsFailure.sanitizedError`. Flag anything that could put a name, birthday, age, photo, widget content or a raw `Error`/`userInfo` into an event, breadcrumb or report; an event whose timing reveals a birthday; SDK calls outside the gateway; SDK options that capture screens, taps, labels, IP-derived location or screenshots; reporting from the widget, the Simulator, XCTest or `GROWINGUP_` verification launches; and collected data the privacy manifest does not declare.

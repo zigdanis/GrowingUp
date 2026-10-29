@@ -158,6 +158,39 @@ jobs:
             notes) bundle exec fastlane ios release_notes ;;
             deploy|resume) bundle exec fastlane ios app_store ;;
           esac
+      - name: Keep debug symbols for a later Sentry upload
+        if: always() && env.RELEASE_TEMP != '' && (env.OPERATION == 'deploy' || env.OPERATION == 'resume')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: dsyms-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.RELEASE_TEMP }}/GrowingUp.xcarchive/dSYMs
+          if-no-files-found: ignore
+          retention-days: 90
+      - name: Upload debug symbols to Sentry
+        # A build that reached Apple keeps its symbols even when a later distribution step failed.
+        if: always() && env.RELEASE_TEMP != '' && (env.OPERATION == 'deploy' || env.OPERATION == 'resume')
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+          SENTRY_CLI_VERSION: '3.8.2'
+          SENTRY_CLI_SHA256: 2d1b118fa46960ba5e8e0cca9a6e197366905776a0ddc5a89c7d05a3908b77db
+        run: |
+          if [ -z "$SENTRY_AUTH_TOKEN" ] || [ -z "$SENTRY_ORG" ] || [ -z "$SENTRY_PROJECT" ]; then
+            echo 'Sentry symbol upload skipped: set the SENTRY_AUTH_TOKEN secret and SENTRY_ORG, SENTRY_PROJECT variables'
+            exit 0
+          fi
+          dsyms="$RELEASE_TEMP/GrowingUp.xcarchive/dSYMs"
+          if [ ! -d "$dsyms" ]; then
+            echo 'Sentry symbol upload skipped: this run did not archive a new build'
+            exit 0
+          fi
+          cli="$RUNNER_TEMP/sentry-cli"
+          curl -sSL --retry 3 -o "$cli" \
+            "https://github.com/getsentry/sentry-cli/releases/download/$SENTRY_CLI_VERSION/sentry-cli-Darwin-universal"
+          echo "$SENTRY_CLI_SHA256  $cli" | shasum -a 256 -c -
+          chmod +x "$cli"
+          "$cli" debug-files upload --wait "$dsyms"
       - name: Keep archive-only output
         if: success() && inputs.operation == 'archive'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

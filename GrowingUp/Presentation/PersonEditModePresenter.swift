@@ -105,6 +105,7 @@ final class PersonEditModePresenter {
 	func show(_ popover: PersonEditPopover) {
 		isConfirmingRemoval = false
 		self.popover = popover
+		editor.analytics.track(.birthdayPickerOpened(popover))
 	}
 
 	func dismissPopover() { popover = nil }
@@ -129,6 +130,7 @@ final class PersonEditModePresenter {
 		if hasReframed, let photo, let geometry = geometry(of: photo) {
 			let framed = await geometry.output(of: photo, scale: framing.scale, offset: framing.offset)
 			editor.reframeMainPhoto(framed)
+			editor.analytics.track(.photoReframed)
 			// The main picture now shows this framing.
 			savedFraming = framing
 			restingFraming = framing
@@ -140,6 +142,18 @@ final class PersonEditModePresenter {
 	func remove() async {
 		isConfirmingRemoval = false
 		await editor.remove()
+	}
+
+	/// Places a newly picked photo from `source`, framed in the photo flow, as the main photo.
+	func placePhoto(_ framed: FramedPhoto, from source: ImageCaptureSource) {
+		editor.setMainPhoto(framed)
+		editor.analytics.track(.photoPicked(source: source))
+	}
+
+	/// Places a separately framed circle as the widget picture.
+	func placeWidgetPicture(_ framed: FramedPhoto) {
+		editor.setWidgetPhoto(framed)
+		editor.analytics.track(.widgetPictureFramed)
 	}
 
 	// MARK: - Framing
