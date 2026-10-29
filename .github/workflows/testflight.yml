@@ -160,6 +160,8 @@ jobs:
           esac
       - name: Keep debug symbols for a later Sentry upload
         if: always() && env.RELEASE_TEMP != '' && (env.OPERATION == 'deploy' || env.OPERATION == 'resume')
+        # Symbols never fail a release that reached Apple; a failure shows as a warning on this step.
+        continue-on-error: true
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: dsyms-${{ github.run_id }}-${{ github.run_attempt }}
@@ -167,8 +169,11 @@ jobs:
           if-no-files-found: ignore
           retention-days: 90
       - name: Upload debug symbols to Sentry
-        # A build that reached Apple keeps its symbols even when a later distribution step failed.
+        # A build that reached Apple keeps its symbols even when a later distribution step failed, and an upload
+        # failure never fails the release: the dSYMs artifact above allows a manual upload.
         if: always() && env.RELEASE_TEMP != '' && (env.OPERATION == 'deploy' || env.OPERATION == 'resume')
+        continue-on-error: true
+        timeout-minutes: 10
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ vars.SENTRY_ORG }}

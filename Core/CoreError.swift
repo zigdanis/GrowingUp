@@ -15,6 +15,10 @@ public struct CoreError: Error, Equatable {
 	public var localizedDescription: String { return message }
 	public var title = ""
 	public var message = ""
+	/// The domain and code of the error this one wraps, if any. They name the cause for crash reports without the
+	/// message, which can quote the record that failed.
+	public private(set) var underlyingDomain: String?
+	public private(set) var underlyingCode: Int?
 
 	public init(title: String = "Error", message: String) {
 		self.title = NSLocalizedString(title, bundle: bundle, comment: "Error Title")
@@ -24,7 +28,19 @@ public struct CoreError: Error, Equatable {
 	public init(error: Error) {
 		self.title = "Error"
 		self.message = error.localizedDescription
+		if let wrapped = error as? CoreError {
+			underlyingDomain = wrapped.underlyingDomain
+			underlyingCode = wrapped.underlyingCode
+		} else {
+			underlyingDomain = (error as NSError).domain
+			underlyingCode = (error as NSError).code
+		}
 		checkForSpecificCoreDataError()
+	}
+
+	/// Errors are equal when they tell the user the same; the wrapped cause does not count.
+	public static func == (lhs: CoreError, rhs: CoreError) -> Bool {
+		lhs.title == rhs.title && lhs.message == rhs.message
 	}
 
 	private mutating func checkForSpecificCoreDataError() {

@@ -11,22 +11,20 @@ enum PersonMutation {
 		}
 	}
 
-	/// The product events of this change once it landed: `previous` is the person as stored before it and `people` are
-	/// everyone stored after it. A change that closed `closedEditor`, the open editing session, also ends that session.
-	func analyticsEvents(previous: Person?, people: [Person], closedEditor: PersonEditorPresenter?) -> [AnalyticsEvent] {
-		var events: [AnalyticsEvent]
-		let outcome: PersonEditorOutcome
+	/// The product event of this change once it landed: `previous` is the person as stored before it and `people` are
+	/// everyone stored after it.
+	func analyticsEvent(previous: Person?, people: [Person]) -> AnalyticsEvent {
 		switch self {
-		case .saved(let person):
-			events = [.personSaved(PersonSavedProperties(saved: person, previous: previous, people: people))]
-			outcome = .saved
-		case .removed:
-			events = [.personRemoved(peopleCount: people.count)]
-			outcome = .removed
+		case .saved(let person): .personSaved(PersonSavedProperties(saved: person, previous: previous, people: people))
+		case .removed: .personRemoved(peopleCount: people.count)
 		}
-		if let closedEditor {
-			events.append(.personEditorClosed(isNewPerson: closedEditor.person == nil, outcome: outcome))
+	}
+
+	/// How the editing session that made this change ends.
+	var editorOutcome: PersonEditorOutcome {
+		switch self {
+		case .saved: .saved
+		case .removed: .removed
 		}
-		return events
 	}
 }

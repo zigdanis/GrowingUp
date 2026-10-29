@@ -72,7 +72,8 @@ final class PeopleAnalyticsTests: XCTestCase {
 	}
 
 	func testARemovedPersonLeavesTheCountsBeforeTheirTileLeaves() async throws {
-		let people = makePeople(count: 3)
+		var people = makePeople(count: 3)
+		people[1].isOnWidget = true
 		let gateway = PersonsGatewaySpy()
 		let (presenter, analytics) = await loadedPresenter(people, gateway: gateway)
 		gateway.removePersonResultToBeReturned = .success(())
@@ -83,7 +84,30 @@ final class PeopleAnalyticsTests: XCTestCase {
 		XCTAssertEqual(
 			analytics.events.suffix(2),
 			[.personRemoved(peopleCount: 2), .personEditorClosed(isNewPerson: false, outcome: .removed)])
-		XCTAssertEqual(analytics.contexts.last, AnalyticsContext(peopleCount: 2, widgetPeopleCount: 0))
+		let afterRemoval = AnalyticsContext(peopleCount: 2, widgetPeopleCount: 0)
+		XCTAssertEqual(analytics.contextsAtEvents.suffix(2), [afterRemoval, afterRemoval], "The events carry the new counts")
+	}
+
+	func testAWidgetLinkClosesTheOpenEditorAsReplaced() async throws {
+		let people = makePeople(count: 2)
+		let (presenter, analytics) = await loadedPresenter(people)
+		presenter.view(people[0].id)
+		presenter.edit(people[0])
+		presenter.open(try XCTUnwrap(URL(string: "growingup-app://?personID=\(people[1].id.uuidString)")))
+		XCTAssertEqual(
+			analytics.events.suffix(3),
+			[
+				.widgetLinkOpened(target: .person), .personEditorClosed(isNewPerson: false, outcome: .replaced),
+				.personViewed(source: .widget)
+			])
+		presenter.add()
+		presenter.open(try XCTUnwrap(URL(string: "growingup-app://add-person")))
+		XCTAssertEqual(
+			analytics.events.suffix(3),
+			[
+				.widgetLinkOpened(target: .addPerson), .personEditorClosed(isNewPerson: true, outcome: .replaced),
+				.personEditorOpened(isNewPerson: true, source: .widget)
+			])
 	}
 
 	func testTheWidgetsAddLinkOpensTheEditorFromTheWidget() async throws {

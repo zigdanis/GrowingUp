@@ -1,8 +1,8 @@
 import PostHog
 
 /// Product analytics through PostHog. Events carry only the categories and counts in `AnalyticsEvent`; the SDK adds its
-/// anonymous installation ID, device model, OS and app version, and its own "Application Opened / Backgrounded /
-/// Installed / Updated" lifecycle events.
+/// anonymous installation ID, device model and screen size, OS and app version, language, time zone, network type and
+/// whether this is a TestFlight install, and its own "Application Opened / Backgrounded / Installed / Updated" events.
 @MainActor
 final class PostHogAnalyticsGateway: AnalyticsGateway {
 	init(apiKey: String, host: String, environment: String) {
@@ -16,6 +16,8 @@ final class PostHogAnalyticsGateway: AnalyticsGateway {
 		config.captureElementInteractions = false
 		config.rageClickConfig.enabled = false
 		config.sessionReplay = false
+		// Surveys would ask for free text.
+		config.surveys = false
 		config.capturePushNotificationSubscriptions = false
 		config.capturePushNotificationOpened = false
 		// Sentry owns crash reports.
@@ -27,8 +29,17 @@ final class PostHogAnalyticsGateway: AnalyticsGateway {
 		config.personProfiles = .identifiedOnly
 		// PostHog would otherwise derive a city from each event's IP address.
 		config.disableGeoIp = true
+		// Every event names the build it came from, the lifecycle events setup itself captures included.
+		config.setBeforeSend(Self.tagging(environment: environment))
 		PostHogSDK.shared.setup(config)
-		PostHogSDK.shared.register(["app_environment": environment])
+	}
+
+	/// Adds `app_environment` to an event; PostHog calls it on its own queue before an event is stored or sent.
+	nonisolated static func tagging(environment: String) -> BeforeSendBlock {
+		{ event in
+			event.properties["app_environment"] = environment
+			return event
+		}
 	}
 
 	func track(_ event: AnalyticsEvent) {

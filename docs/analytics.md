@@ -18,36 +18,49 @@ every name, key and text value a snake_case word.
 | `person_viewed` | `source` tile/widget/swipe | The viewer shows a person: a mosaic tile, a widget link, or a swipe (or VoiceOver next/previous) to a neighbour |
 | `widget_link_opened` | `target` person/add_person | A Home or Lock Screen widget opened the app |
 | `person_editor_opened` | `mode` create/edit, `source` add_button/widget/viewer | The in-place edit mode opens |
-| `person_editor_closed` | `mode`, `outcome` saved/cancelled/removed | The edit mode ends through Done, Cancel or Remove |
+| `person_editor_closed` | `mode`, `outcome` saved/cancelled/removed/replaced | The edit mode ends through Done, Cancel or Remove, or a widget link or new session takes the cover over |
 | `birthday_picker_opened` | `field` date/time | The date or time card opens |
 | `photo_picked` | `source` photos/camera | A newly picked photo is framed and placed |
 | `photo_removed` | – | Remove in the photo menu |
-| `photo_reframed` | – | Done saves a pinch or drag of the photo |
+| `photo_reframed` | – | Done applies a pinch or drag of the photo |
 | `widget_picture_framed` | – | The widget circle is framed separately |
 | `person_saved` | `mode`, `has_photo`, `photo_changed`, `has_birth_time`, `on_widget`, `celebrates_birthdays`, `people_count`, `widget_people_count` | A person is stored |
 | `person_removed` | `people_count` | A person is removed |
 | `people_reordered` | `people_count` | A new mosaic order is stored |
 
-PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events (app version
-and build only) and attaches these super properties to everything: `app_environment`
-(debug/testflight/appstore), `people_count`, `widget_people_count`. The same counts travel to Sentry
+PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events and, to every
+event, its anonymous installation ID, device model and screen size, OS and app version, language,
+time zone, network type and `$is_testflight`. A `beforeSend` hook adds `app_environment`
+(debug/production) to every event, the lifecycle events setup itself captures included; the counts
+are super properties registered once the people load: `people_count`,
+`widget_people_count`. TestFlight and App Store installs share
+`production`; filter them with PostHog's own `$is_testflight` property and Sentry's `app.build_type`
+context (`test` for TestFlight, `app store`). The same counts travel to Sentry
 as the `app_state` context, and every product event becomes a Sentry breadcrumb.
 
 Handled failures (`AnalyticsFailure`) go to Sentry only, tagged with `operation`: `load_people`,
 `save_order`, `load_widget_people`, `save_person`, `remove_person`, `load_photo`. Only the error's
 domain, code and Swift type travel (`AnalyticsFailure.sanitizedError`): a Core Data error can carry
-the failing record, and a `CoreError` message can quote one. Cancellation and the six-person widget
+the failing record, and a `CoreError` message can quote one. A `CoreError` keeps the domain and code
+of the error it wraps (`underlyingDomain`, `underlyingCode`), so different causes stay apart. Cancellation and the six-person widget
 limit, which the alert explains, are not reported.
 
 Switched off on purpose:
 
 - PostHog: every swizzling integration (`enableSwizzling = false`): screen views, element and SwiftUI
-  autocapture, rage clicks (they read element text), session replay, push. Also GeoIP enrichment
-  (`disableGeoIp`), crash autocapture (Sentry owns crashes), feature flags and person profiles; the
-  app never calls `identify`.
+  autocapture, rage clicks (they read element text), session replay, surveys, push. Also GeoIP
+  enrichment (`disableGeoIp`), crash autocapture (Sentry owns crashes), feature flags and person
+  profiles; the app never calls `identify`. PostHog still receives the request's IP address: turn on
+  Project settings → "Discard client IP data" so it is not stored.
 - Sentry: automatic breadcrumbs (they record view titles and accessibility labels, which name
-  people), network breadcrumbs, failed-request capture, screenshots, view hierarchies and default
-  PII (IP address, device name). Tracing, profiling and replay stay off (no sample rates are set).
+  people), swizzling (view, tap and network tracking), screenshots, view hierarchies and default PII
+  (IP address, device name). Tracing, profiling and replay stay off (no sample rates are set). Turn
+  on Settings → Security & Privacy → "Prevent Storing of IP Addresses" as well.
+- Sentry crash text: a `beforeSend` hook (`SentryCrashReportingGateway.scrubbed`) removes an
+  exception's value and mechanism description, Swift `crash_info_messages` and the `user info`
+  context from every report except handled failures, whose sanitized value it keeps. An exception's
+  reason, a runtime message, a string Sentry reads from memory near the crash or its `userInfo` can
+  each hold a name; the type, mechanism and symbolicated stack are what explain a crash.
 
 ## The widget
 
@@ -87,7 +100,9 @@ through the tracked `Package.resolved`, so release builds use the same versions.
 
 The TestFlight workflow keeps the archive's dSYMs as the `dsyms-RUN_ID-ATTEMPT` artifact for 90 days
 and uploads them to Sentry whenever a `deploy` or `resume` run archived a build, even if a later
-distribution step failed. It downloads the pinned `sentry-cli` release binary and checks its
+distribution step failed. Both steps are non-blocking (`continue-on-error`, a 10-minute timeout for
+the upload): a Sentry outage or an expired token shows as a failed step but never fails a release
+that reached Apple. It downloads the pinned `sentry-cli` release binary and checks its
 SHA-256 before running it. It needs, in the `testflight` environment:
 
 - secret `SENTRY_AUTH_TOKEN`, an organization token of `denis-ganshin` (`org:ci`);

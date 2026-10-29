@@ -328,6 +328,7 @@
 		A7A100000000000000000032 /* AnalyticsGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A100000000000000000031 /* AnalyticsGatewaySpy.swift */; };
 		A7A100000000000000000035 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = A7A100000000000000000034 /* PostHog */; };
 		A7A100000000000000000038 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = A7A100000000000000000037 /* Sentry */; };
+		A7A10000000000000000003A /* CrashReportScrubbingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A100000000000000000039 /* CrashReportScrubbingTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -699,6 +700,7 @@
 		A7A10000000000000000002D /* PeopleAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleAnalyticsTests.swift; sourceTree = "<group>"; };
 		A7A10000000000000000002F /* PersonEditorAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditorAnalyticsTests.swift; sourceTree = "<group>"; };
 		A7A100000000000000000031 /* AnalyticsGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsGatewaySpy.swift; sourceTree = "<group>"; };
+		A7A100000000000000000039 /* CrashReportScrubbingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrashReportScrubbingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1390,6 +1392,7 @@
 			isa = PBXGroup;
 			children = (
 				A7A100000000000000000029 /* AnalyticsEventTests.swift */,
+				A7A100000000000000000039 /* CrashReportScrubbingTests.swift */,
 				A7A10000000000000000002B /* MonitoringConfigurationTests.swift */,
 				A7A10000000000000000002D /* PeopleAnalyticsTests.swift */,
 				A7A10000000000000000002F /* PersonEditorAnalyticsTests.swift */,
@@ -1813,6 +1816,7 @@
 				014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */,
 				090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */,
 				A7A10000000000000000002A /* AnalyticsEventTests.swift in Sources */,
+				A7A10000000000000000003A /* CrashReportScrubbingTests.swift in Sources */,
 				A7A10000000000000000002C /* MonitoringConfigurationTests.swift in Sources */,
 				A7A10000000000000000002E /* PeopleAnalyticsTests.swift in Sources */,
 				A7A100000000000000000030 /* PersonEditorAnalyticsTests.swift in Sources */,

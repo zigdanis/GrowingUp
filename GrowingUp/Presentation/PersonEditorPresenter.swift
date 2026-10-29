@@ -240,11 +240,13 @@ final class PersonEditorPresenter {
 		}
 	}
 
-	func save() async {
-		guard isDirty, !isBusy, !isLoading else { return }
+	/// Saves the draft; true when the change landed.
+	@discardableResult
+	func save() async -> Bool {
+		guard isDirty, !isBusy, !isLoading else { return false }
 		guard !trimmedName.isEmpty else {
 			error = SceneError(CoreError.noNameValue)
-			return
+			return false
 		}
 		isBusy = true
 		defer { isBusy = false }
@@ -264,6 +266,7 @@ final class PersonEditorPresenter {
 			// The draft now matches what is stored, so the same change cannot be saved twice.
 			baseline = parameters
 			onMutation(.saved(saved))
+			return true
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
@@ -272,6 +275,7 @@ final class PersonEditorPresenter {
 				analytics.report(AnalyticsFailure(operation: "save_person", error: error))
 			}
 		}
+		return false
 	}
 
 	func remove() async {

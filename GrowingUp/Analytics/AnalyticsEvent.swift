@@ -42,9 +42,9 @@ enum AnalyticsEvent: Equatable {
 		case .personEditorClosed(let isNewPerson, let outcome):
 			["mode": Self.mode(isNewPerson), "outcome": .string(outcome.rawValue)]
 		case .birthdayPickerOpened(let popover):
-			["field": .string(popover == .date ? "date" : "time")]
+			["field": .string(Self.field(popover))]
 		case .photoPicked(let source):
-			["source": .string(source == .camera ? "camera" : "photos")]
+			["source": .string(Self.source(source))]
 		case .photoRemoved, .photoReframed, .widgetPictureFramed:
 			[:]
 		case .personSaved(let person):
@@ -65,5 +65,19 @@ enum AnalyticsEvent: Equatable {
 
 	private static func mode(_ isNewPerson: Bool) -> AnalyticsValue {
 		.string(isNewPerson ? "create" : "edit")
+	}
+
+	private static func field(_ popover: PersonEditPopover) -> String {
+		switch popover {
+		case .date: "date"
+		case .time: "time"
+		}
+	}
+
+	private static func source(_ source: ImageCaptureSource) -> String {
+		switch source {
+		case .camera: "camera"
+		case .photos: "photos"
+		}
 	}
 }

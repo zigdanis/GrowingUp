@@ -3,4 +3,6 @@ enum PersonEditorOutcome: String, Equatable {
 	case saved
 	case cancelled
 	case removed
+	/// A widget link or a newer session took the cover over.
+	case replaced
 }

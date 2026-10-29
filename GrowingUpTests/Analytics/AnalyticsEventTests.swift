@@ -83,6 +83,21 @@ final class AnalyticsEventTests: XCTestCase {
 		XCTAssertTrue(coreError.localizedDescription.contains("CoreError"))
 	}
 
+	func testAWrappedErrorKeepsTheCauseItWrapsWithoutItsText() {
+		let cause = NSError(
+			domain: NSCocoaErrorDomain, code: NSPersistentStoreSaveConflictsError,
+			userInfo: [NSLocalizedDescriptionKey: "Ada Lovelace conflicts", "conflictList": ["Ada Lovelace"]])
+		let wrapped = CoreError(error: CoreError(error: cause))
+		let sameText = NSError(domain: "Other", code: 7, userInfo: [NSLocalizedDescriptionKey: "Ada Lovelace conflicts"])
+		XCTAssertEqual(CoreError(error: cause), CoreError(error: sameText), "Equality is what the user is told")
+		let sanitized = AnalyticsFailure(operation: "save_person", error: wrapped).sanitizedError
+		XCTAssertEqual(sanitized.domain, NSCocoaErrorDomain)
+		XCTAssertEqual(sanitized.code, NSPersistentStoreSaveConflictsError, "Different causes stay apart in crash reports")
+		XCTAssertEqual(Array(sanitized.userInfo.keys), [NSLocalizedDescriptionKey])
+		XCTAssertFalse(sanitized.localizedDescription.contains("Ada"))
+		XCTAssertTrue(sanitized.localizedDescription.contains("CoreError"))
+	}
+
 	func testContextCarriesCountsOnly() {
 		XCTAssertEqual(
 			AnalyticsContext(peopleCount: 4, widgetPeopleCount: 2).properties,

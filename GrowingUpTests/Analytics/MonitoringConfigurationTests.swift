@@ -8,16 +8,13 @@ final class MonitoringConfigurationTests: XCTestCase {
 	func testKeysAreReadFromTheInfoDictionaryAndEmptyMeansOff() {
 		let configured = MonitoringConfiguration.current(
 			info: ["PostHogAPIKey": " phc_key ", "PostHogHost": "", "SentryDSN": "https://key@o1.ingest.de.sentry.io/2"],
-			launchEnvironment: [:], receiptURL: URL(fileURLWithPath: "/receipt/sandboxReceipt"))
+			launchEnvironment: [:])
 		XCTAssertEqual(configured.postHogAPIKey, "phc_key")
 		XCTAssertEqual(configured.postHogHost, "https://eu.i.posthog.com", "An empty host means the EU cloud")
 		XCTAssertEqual(configured.sentryDSN, "https://key@o1.ingest.de.sentry.io/2")
-		XCTAssertTrue(configured.isTestFlight)
-		let empty = MonitoringConfiguration.current(
-			info: ["PostHogAPIKey": "", "SentryDSN": "  "], launchEnvironment: [:], receiptURL: nil)
+		let empty = MonitoringConfiguration.current(info: ["PostHogAPIKey": "", "SentryDSN": "  "], launchEnvironment: [:])
 		XCTAssertNil(empty.postHogAPIKey)
 		XCTAssertNil(empty.sentryDSN)
-		XCTAssertFalse(empty.isTestFlight)
 	}
 
 	func testChecksCapturesAndTestsNeverReport() {
@@ -35,8 +32,7 @@ final class MonitoringConfigurationTests: XCTestCase {
 
 	func testEnvironmentNames() {
 		XCTAssertEqual(configuration(isDebugBuild: true).environmentName, "debug")
-		XCTAssertEqual(configuration(isTestFlight: true).environmentName, "testflight")
-		XCTAssertEqual(configuration().environmentName, "appstore")
+		XCTAssertEqual(configuration().environmentName, "production")
 	}
 
 	func testWithoutReportingOrKeysNoServiceStarts() {
@@ -52,10 +48,10 @@ final class MonitoringConfigurationTests: XCTestCase {
 
 	private func configuration(
 		postHogAPIKey: String? = nil, sentryDSN: String? = nil, isDebugBuild: Bool = false, isSimulator: Bool = false,
-		isVerificationLaunch: Bool = false, isTestFlight: Bool = false
+		isVerificationLaunch: Bool = false
 	) -> MonitoringConfiguration {
 		MonitoringConfiguration(
 			postHogAPIKey: postHogAPIKey, sentryDSN: sentryDSN, isDebugBuild: isDebugBuild, isSimulator: isSimulator,
-			isVerificationLaunch: isVerificationLaunch, isTestFlight: isTestFlight)
+			isVerificationLaunch: isVerificationLaunch)
 	}
 }

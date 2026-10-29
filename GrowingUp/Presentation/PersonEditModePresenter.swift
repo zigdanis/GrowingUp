@@ -35,6 +35,8 @@ final class PersonEditModePresenter {
 	private var restingFraming = PhotoFraming.identity
 	/// Where the photo shows what the saved main picture shows, as the viewer did: Done saves nothing new from here.
 	private(set) var savedFraming = PhotoFraming.identity
+	/// Whether Done applied a new framing that no save has stored yet; it counts once one lands, a retry's included.
+	private var hasUnsavedReframe = false
 	/// The identity of the photo `framing` belongs to; a reload of the same photo keeps it.
 	private var framedPhotoID: UUID?
 	/// The whole window, safe areas included: the canvas the photo fills, as on the viewer's page.
@@ -130,13 +132,15 @@ final class PersonEditModePresenter {
 		if hasReframed, let photo, let geometry = geometry(of: photo) {
 			let framed = await geometry.output(of: photo, scale: framing.scale, offset: framing.offset)
 			editor.reframeMainPhoto(framed)
-			editor.analytics.track(.photoReframed)
+			hasUnsavedReframe = true
 			// The main picture now shows this framing.
 			savedFraming = framing
 			restingFraming = framing
 			framedPhotoID = editor.framingSource?.id
 		}
-		await editor.save()
+		guard await editor.save(), hasUnsavedReframe else { return }
+		hasUnsavedReframe = false
+		editor.analytics.track(.photoReframed)
 	}
 
 	func remove() async {

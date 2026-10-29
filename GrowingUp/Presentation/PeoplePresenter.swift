@@ -97,10 +97,8 @@ final class PeoplePresenter {
 	/// A new person has nothing to return to, so the cover closes with their draft.
 	func cancelEditing(_ session: PersonEditorPresenter?) {
 		guard let session, session === editor else { return }
-		editor = nil
-		inPlaceEditMode = nil
+		endEditing(.cancelled)
 		if session.person == nil { isViewing = false }
-		configurator.analytics.track(.personEditorClosed(isNewPerson: session.person == nil, outcome: .cancelled))
 	}
 
 	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile; tiles open nothing while
@@ -262,14 +260,14 @@ final class PeoplePresenter {
 		}
 		guard let target else { return }
 		// The person opens over the mosaic, so closing the viewer lands on the mosaic like a tile tap would.
-		editor = nil
-		inPlaceEditMode = nil
+		endEditing(.replaced)
 		isReordering = false
 		view(target, from: .widget)
 	}
 
 	/// Opens an editing session for `person`, or a new person, as the cover's in-place edit mode.
 	private func startEditing(person: Person?, from source: PersonEditorSource) {
+		endEditing(.replaced)
 		// The "Add person" link of a widget may arrive while reordering, which editing ends.
 		isReordering = false
 		weak var session: PersonEditorPresenter?
@@ -281,6 +279,14 @@ final class PeoplePresenter {
 		inPlaceEditMode = PersonEditModePresenter(
 			editor: editor, now: configurator.now, onCancel: { [weak self, weak editor] in self?.cancelEditing(editor) })
 		configurator.analytics.track(.personEditorOpened(isNewPerson: person == nil, source: source))
+	}
+
+	/// Ends the open session, if any, as `outcome` without moving the navigation.
+	private func endEditing(_ outcome: PersonEditorOutcome) {
+		guard let editor else { return }
+		self.editor = nil
+		inPlaceEditMode = nil
+		configurator.analytics.track(.personEditorClosed(isNewPerson: editor.person == nil, outcome: outcome))
 	}
 
 	/// Lets the removed person whose tile waited for the viewer leave the mosaic.
@@ -329,15 +335,12 @@ final class PeoplePresenter {
 				if ownsNavigation || selectedID == person.id { selectedID = nil }
 			}
 		}
-		if ownsNavigation {
-			editor = nil
-			inPlaceEditMode = nil
-		}
-		reloadWidgets()
 		// Everyone the store holds now: a removed person whose tile is still leaving is gone already.
 		let stored = persons.filter { $0.id != leavingID }
-		let events = mutation.analyticsEvents(previous: previous, people: stored, closedEditor: ownsNavigation ? session : nil)
-		events.forEach(configurator.analytics.track)
+		// The counts change first, so the events of this change carry the new ones.
 		configurator.analytics.update(AnalyticsContext(people: stored))
+		configurator.analytics.track(mutation.analyticsEvent(previous: previous, people: stored))
+		if ownsNavigation { endEditing(mutation.editorOutcome) }
+		reloadWidgets()
 	}
 }
