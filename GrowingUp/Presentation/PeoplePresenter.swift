@@ -62,6 +62,7 @@ final class PeoplePresenter {
 			persons = try await configurator.fetchUseCase.fetchPersons().sorted()
 			storedOrders = Dictionary(persons.map { ($0.id, $0.displayOrder) }, uniquingKeysWith: { first, _ in first })
 			isLoading = false
+			configurator.analytics.update(AnalyticsContext(people: persons))
 			selectWidgetPerson()
 			if pendingAdd { addFromWidget() }
 		} catch is CancellationError {
@@ -72,15 +73,16 @@ final class PeoplePresenter {
 			pendingWidgetIndex = nil
 			pendingWidgetID = nil
 			self.error = SceneError(error)
+			configurator.analytics.report(AnalyticsFailure(operation: "load_people", error: error))
 		}
 	}
 
 	/// Opens a new person's empty edit mode in the cover, grown out of the "Add" button; Done adds them to the end of the
 	/// mosaic, Cancel drops them without a question.
-	func add() {
+	func add(from source: PersonEditorSource = .addButton) {
 		guard canAdd else { return }
 		finishLeaving()
-		startEditing(person: nil)
+		startEditing(person: nil, from: source)
 		selectedID = nil
 		isAddingPerson = true
 		isViewing = true
@@ -88,31 +90,33 @@ final class PeoplePresenter {
 
 	/// Turns the viewer's page of `person` into its in-place edit mode.
 	func edit(_ person: Person) {
-		startEditing(person: person)
+		startEditing(person: person, from: .viewer)
 	}
 
 	/// Drops the draft of `session` when it is still the open one; a session that was replaced has nothing left to close.
 	/// A new person has nothing to return to, so the cover closes with their draft.
 	func cancelEditing(_ session: PersonEditorPresenter?) {
 		guard let session, session === editor else { return }
-		editor = nil
-		inPlaceEditMode = nil
+		endEditing(.cancelled)
 		if session.person == nil { isViewing = false }
 	}
 
 	/// Opens the full-screen viewer on the person with `id`, such as from their mosaic tile; tiles open nothing while
 	/// reordering, and a removed person's tile that is still leaving opens nobody.
-	func view(_ id: UUID) {
+	func view(_ id: UUID, from source: PersonViewSource = .tile) {
 		guard !isReordering, id != leavingID, persons.contains(where: { $0.id == id }) else { return }
 		finishLeaving()
 		isAddingPerson = false
 		selectedID = id
 		isViewing = true
+		configurator.analytics.track(.personViewed(source: source))
 	}
 
 	/// Follows the viewer's pager to the person with `id`, so the viewer closes into that person's tile.
 	func select(_ id: UUID) {
 		guard persons.contains(where: { $0.id == id }) else { return }
+		// The pager also reports the page it already shows, as when it first appears.
+		if id != selectedID, isViewing, !isAddingPerson { configurator.analytics.track(.personViewed(source: .swipe)) }
 		selectedID = id
 	}
 
@@ -198,6 +202,7 @@ final class PeoplePresenter {
 		do {
 			try await save.value
 			reloadWidgets()
+			configurator.analytics.track(.peopleReordered(peopleCount: staying.count))
 		} catch {
 			guard orderSave == save else { return }
 			// Saves are all or nothing and run in turn, so the store holds the order of the last one that succeeded.
@@ -206,11 +211,13 @@ final class PeoplePresenter {
 			}
 			persons.sort()
 			self.error = SceneError(error)
+			configurator.analytics.report(AnalyticsFailure(operation: "save_order", error: error))
 		}
 	}
 
 	func open(_ url: URL) {
 		if URLComponents(url: url, resolvingAgainstBaseURL: false)?.host == Constants.widgetAddPersonHost {
+			configurator.analytics.track(.widgetLinkOpened(target: .addPerson))
 			// Waits for the people, like a person link, so the editor only opens while there is room for one more.
 			pendingAdd = true
 			if !isLoading { addFromWidget() }
@@ -228,12 +235,13 @@ final class PeoplePresenter {
 			pendingWidgetIndex = index
 			pendingWidgetID = nil
 		}
+		configurator.analytics.track(.widgetLinkOpened(target: .person))
 		if !isLoading { selectWidgetPerson() }
 	}
 
 	private func addFromWidget() {
 		pendingAdd = false
-		add()
+		add(from: .widget)
 	}
 
 	private func selectWidgetPerson() {
@@ -252,14 +260,14 @@ final class PeoplePresenter {
 		}
 		guard let target else { return }
 		// The person opens over the mosaic, so closing the viewer lands on the mosaic like a tile tap would.
-		editor = nil
-		inPlaceEditMode = nil
+		endEditing(.replaced)
 		isReordering = false
-		view(target)
+		view(target, from: .widget)
 	}
 
 	/// Opens an editing session for `person`, or a new person, as the cover's in-place edit mode.
-	private func startEditing(person: Person?) {
+	private func startEditing(person: Person?, from source: PersonEditorSource) {
+		endEditing(.replaced)
 		// The "Add person" link of a widget may arrive while reordering, which editing ends.
 		isReordering = false
 		weak var session: PersonEditorPresenter?
@@ -270,6 +278,15 @@ final class PeoplePresenter {
 		self.editor = editor
 		inPlaceEditMode = PersonEditModePresenter(
 			editor: editor, now: configurator.now, onCancel: { [weak self, weak editor] in self?.cancelEditing(editor) })
+		configurator.analytics.track(.personEditorOpened(isNewPerson: person == nil, source: source))
+	}
+
+	/// Ends the open session, if any, as `outcome` without moving the navigation.
+	private func endEditing(_ outcome: PersonEditorOutcome) {
+		guard let editor else { return }
+		self.editor = nil
+		inPlaceEditMode = nil
+		configurator.analytics.track(.personEditorClosed(isNewPerson: editor.person == nil, outcome: outcome))
 	}
 
 	/// Lets the removed person whose tile waited for the viewer leave the mosaic.
@@ -287,6 +304,7 @@ final class PeoplePresenter {
 	/// showing the updated person; a saved new person becomes their own page, which shrinks into their new tile.
 	func apply(_ mutation: PersonMutation, from session: PersonEditorPresenter?) {
 		let ownsNavigation = session != nil && session === editor
+		let previous = persons.first { $0.id == mutation.person.id }
 		switch mutation {
 		case .saved(let person):
 			storedOrders[person.id] = person.displayOrder
@@ -317,10 +335,12 @@ final class PeoplePresenter {
 				if ownsNavigation || selectedID == person.id { selectedID = nil }
 			}
 		}
-		if ownsNavigation {
-			editor = nil
-			inPlaceEditMode = nil
-		}
+		// Everyone the store holds now: a removed person whose tile is still leaving is gone already.
+		let stored = persons.filter { $0.id != leavingID }
+		// The counts change first, so the events of this change carry the new ones.
+		configurator.analytics.update(AnalyticsContext(people: stored))
+		configurator.analytics.track(mutation.analyticsEvent(previous: previous, people: stored))
+		if ownsNavigation { endEditing(mutation.editorOutcome) }
 		reloadWidgets()
 	}
 }

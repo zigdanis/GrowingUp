@@ -15,13 +15,16 @@ struct SceneConfigurator {
 	let loadThumbnail: (PersonImage, Int) async throws -> UIImage
 	let now: () -> Date
 	let photoFixtures: [UIImage]?
+	/// Product events and handled failures; silent in tests, previews and UI-test launches.
+	let analytics: AnalyticsGateway
 
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
-		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil
+		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway()
 	) {
+		self.analytics = analytics
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
 		self.loadThumbnail = loadThumbnail
@@ -40,11 +43,12 @@ struct SceneConfigurator {
 		PersonEditorPresenter(
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
-			now: now(), loadImage: loadImage, loadOriginal: loadOriginal, photoFixtures: photoFixtures, onMutation: onMutation)
+			now: now(), loadImage: loadImage, loadOriginal: loadOriginal, photoFixtures: photoFixtures, analytics: analytics,
+			onMutation: onMutation)
 	}
 
-	static func live() -> SceneConfigurator {
+	static func live(analytics: AnalyticsGateway) -> SceneConfigurator {
 		let gateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		return SceneConfigurator(gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()))
+		return SceneConfigurator(gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics)
 	}
 }

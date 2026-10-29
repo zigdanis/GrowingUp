@@ -60,7 +60,7 @@ struct PersonEditModeScene: View {
 			ImageCaptureFlowView(
 				source: request.source, previewImages: editor.photoFixtures, cropShape: .rectangle,
 				onComplete: { framed in
-					editor.setMainPhoto(framed)
+					mode.placePhoto(framed, from: request.source)
 					photoRequest = nil
 				}, onCancel: { photoRequest = nil }
 			)
@@ -70,7 +70,7 @@ struct PersonEditModeScene: View {
 			CropStep(
 				image: item.image, shape: .circle, initialCrop: editor.widgetImage?.crop,
 				onComplete: { framed in
-					editor.setWidgetPhoto(framed)
+					mode.placeWidgetPicture(framed)
 					widgetPictureSource = nil
 				}, onCancel: { widgetPictureSource = nil }
 			)

@@ -35,6 +35,8 @@ final class PersonEditModePresenter {
 	private var restingFraming = PhotoFraming.identity
 	/// Where the photo shows what the saved main picture shows, as the viewer did: Done saves nothing new from here.
 	private(set) var savedFraming = PhotoFraming.identity
+	/// Whether Done applied a new framing that no save has stored yet; it counts once one lands, a retry's included.
+	private var hasUnsavedReframe = false
 	/// The identity of the photo `framing` belongs to; a reload of the same photo keeps it.
 	private var framedPhotoID: UUID?
 	/// The whole window, safe areas included: the canvas the photo fills, as on the viewer's page.
@@ -105,6 +107,7 @@ final class PersonEditModePresenter {
 	func show(_ popover: PersonEditPopover) {
 		isConfirmingRemoval = false
 		self.popover = popover
+		editor.analytics.track(.birthdayPickerOpened(popover))
 	}
 
 	func dismissPopover() { popover = nil }
@@ -129,17 +132,32 @@ final class PersonEditModePresenter {
 		if hasReframed, let photo, let geometry = geometry(of: photo) {
 			let framed = await geometry.output(of: photo, scale: framing.scale, offset: framing.offset)
 			editor.reframeMainPhoto(framed)
+			hasUnsavedReframe = true
 			// The main picture now shows this framing.
 			savedFraming = framing
 			restingFraming = framing
 			framedPhotoID = editor.framingSource?.id
 		}
-		await editor.save()
+		guard await editor.save(), hasUnsavedReframe else { return }
+		hasUnsavedReframe = false
+		editor.analytics.track(.photoReframed)
 	}
 
 	func remove() async {
 		isConfirmingRemoval = false
 		await editor.remove()
+	}
+
+	/// Places a newly picked photo from `source`, framed in the photo flow, as the main photo.
+	func placePhoto(_ framed: FramedPhoto, from source: ImageCaptureSource) {
+		editor.setMainPhoto(framed)
+		editor.analytics.track(.photoPicked(source: source))
+	}
+
+	/// Places a separately framed circle as the widget picture.
+	func placeWidgetPicture(_ framed: FramedPhoto) {
+		editor.setWidgetPhoto(framed)
+		editor.analytics.track(.widgetPictureFramed)
 	}
 
 	// MARK: - Framing
@@ -158,6 +176,8 @@ final class PersonEditModePresenter {
 		if photoID != framedPhotoID || loaded == nil {
 			savedFraming = loaded.flatMap(geometry(of:)).map(framingOfSavedPicture(in:)) ?? .identity
 			resetFraming()
+			// A new or removed photo leaves no framing of the old one to store.
+			hasUnsavedReframe = false
 		}
 		framedPhotoID = loaded == nil ? nil : photoID
 		guard loaded == nil else {

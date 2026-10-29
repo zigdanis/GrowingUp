@@ -33,7 +33,7 @@ struct PeopleScene: View {
 							trailingPane: trailingPane)
 					} else if !presenter.isLoading, presenter.canAdd {
 						floating(
-							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: presenter.add)
+							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: { presenter.add() })
 								.accessibilityIdentifier("person.add")
 								// A new person's edit mode grows out of the button, which no selected person names.
 								.matchedTransitionSource(id: UUID?.none, in: zoom),
@@ -70,7 +70,7 @@ struct PeopleScene: View {
 		} else {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
-				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: presenter.view,
+				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: { presenter.view($0) },
 				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
 			)

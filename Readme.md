@@ -35,6 +35,9 @@ The project follows **MVP + Clean Architecture**.
   state, and `SceneConfigurator` injects Core use cases. `Scenes/EditPerson/ImageCapture/`
   contains the shared photo, crop and camera views and platform adapters.
 - **`Widget`** — the WidgetKit extension (SwiftUI), reusing `Core` for its data.
+- **Analytics** — `GrowingUp/Analytics/` holds one `AnalyticsGateway` in front of PostHog (anonymous
+  product events) and Sentry (crashes and handled failures); the widget reports nothing. See
+  [analytics and crash reporting](docs/analytics.md) for what is sent and when nothing is.
 
 ### Persistence
 
@@ -50,6 +53,8 @@ Managed with **Swift Package Manager** and resolved automatically by Xcode —
 no Carthage or CocoaPods step is required:
 
 - [Disk](https://github.com/saoudrizwan/Disk) — file/image persistence.
+- [PostHog iOS](https://github.com/PostHog/posthog-ios) — anonymous product analytics (app only).
+- [Sentry Cocoa](https://github.com/getsentry/sentry-cocoa) — crash reporting (app only).
 
 ## Requirements
 
