@@ -51,6 +51,25 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(MosaicGridLayout(size: size, count: 3).columns, 3)
 	}
 
+	func testIPadTilesStayLargerAndAddColumnsAcrossItsWindows() {
+		assertPadGrid(CGSize(width: 1032, height: 1270), columns: 4, tileWidth: 243, "13-inch portrait")
+		assertPadGrid(CGSize(width: 1376, height: 930), columns: 6, tileWidth: 215.33, "13-inch landscape")
+		assertPadGrid(CGSize(width: 820, height: 1080), columns: 3, tileWidth: 257.33, "11-inch portrait")
+		assertPadGrid(CGSize(width: 744, height: 1030), columns: 3, tileWidth: 232, "mini portrait")
+		assertPadGrid(CGSize(width: 678, height: 930), columns: 3, tileWidth: 210, "13-inch half")
+	}
+
+	func testANarrowIPadWindowGetsThePhonesTwoColumns() {
+		let pad = MosaicGridLayout.tileWidths(idiom: .pad)
+		XCTAssertEqual(MosaicGridLayout.tileWidths(idiom: .phone), 160...240)
+		for width in [320, 375, 440] as [CGFloat] {
+			let size = CGSize(width: width, height: 930)
+			let grid = MosaicGridLayout(size: size, count: 20, minimumTileWidth: pad.lowerBound, maximumTileWidth: pad.upperBound)
+			XCTAssertEqual(grid, MosaicGridLayout(size: size, count: 20), "\(width) pt")
+			XCTAssertEqual(grid.columns, 2, "\(width) pt")
+		}
+	}
+
 	func testSlotsSitCentredInRowsBelowTheMargin() {
 		let grid = MosaicGridLayout(size: CGSize(width: 393, height: 700), count: 5)
 		XCTAssertEqual(grid.origin(ofSlot: 0, width: 393), CGPoint(x: 12, y: 12))
@@ -111,5 +130,14 @@ final class MosaicGridLayoutTests: XCTestCase {
 		let empty = grid.origin(ofSlot: 3, width: 951)
 		let centre = CGPoint(x: empty.x + grid.tileWidth / 2, y: empty.y + grid.tileHeight / 2)
 		XCTAssertEqual(grid.slot(at: centre, count: 3, width: 951), 2)
+	}
+
+	private func assertPadGrid(
+		_ size: CGSize, columns: Int, tileWidth: CGFloat, _ name: String, file: StaticString = #filePath, line: UInt = #line
+	) {
+		let widths = MosaicGridLayout.tileWidths(idiom: .pad)
+		let grid = MosaicGridLayout(size: size, count: 20, minimumTileWidth: widths.lowerBound, maximumTileWidth: widths.upperBound)
+		XCTAssertEqual(grid.columns, columns, name, file: file, line: line)
+		XCTAssertEqual(grid.tileWidth, tileWidth, accuracy: 0.01, name, file: file, line: line)
 	}
 }

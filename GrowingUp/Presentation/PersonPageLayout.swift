@@ -1,13 +1,14 @@
-import CoreGraphics
+import UIKit
 
-/// How a person page arranges itself in its window, measured from the window and never from the device.
+/// How a person page arranges itself in its window, measured from the window and never from the device; only whether
+/// the window spans a fold comes from the device.
 ///
 /// Every supported iPhone is at most 440 pt wide, so it always gets `phone`; the wider shapes come from iPhone Duo,
-/// whose window can change shape mid-session when it folds or unfolds.
+/// whose window can change shape mid-session when it folds or unfolds, and from iPad.
 enum PersonPageLayout: Equatable {
 	/// One column over a full-bleed photo, as on every iPhone; also narrow Split View.
 	case phone
-	/// A wide upright window, such as either iPhone Duo display held in portrait: the phone layout in a centered column.
+	/// A wide upright window, such as either iPhone Duo display held in portrait or an iPad: the phone layout in a column.
 	case widePortrait
 	/// A window at least as wide as it is tall: the photo on the leading half, the age and controls on the trailing half.
 	case landscape
@@ -32,5 +33,11 @@ enum PersonPageLayout: Equatable {
 		} else {
 			self = .widePortrait
 		}
+	}
+
+	/// Whether a window of this layout may span a fold: a wide window on a phone is an iPhone Duo's, which folds down its
+	/// middle, while an iPad's never folds.
+	func spansFold(idiom: UIUserInterfaceIdiom) -> Bool {
+		self != .phone && idiom == .phone
 	}
 }

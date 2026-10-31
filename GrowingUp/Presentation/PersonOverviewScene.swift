@@ -47,10 +47,17 @@ struct PersonOverviewScene: View {
 			switch layout {
 			case .phone:
 				pageContent()
-			case .widePortrait:
+			case .widePortrait where layout.spansFold(idiom: UIDevice.current.userInterfaceIdiom):
 				// Keeps the age above the middle, where a partly folded iPhone Duo bends.
 				pageContent(maxAgeHeight: pageSize.height * 0.42)
 					.frame(maxWidth: layout.columnWidth)
+					.padding(.leading, safeAreaInsets.leading)
+					.padding(.trailing, safeAreaInsets.trailing)
+			case .widePortrait:
+				// No fold crosses an iPad: the whole photo shows, with the age in a column along the leading edge.
+				pageContent()
+					.frame(maxWidth: layout.columnWidth)
+					.frame(maxWidth: .infinity, alignment: .leading)
 					.padding(.leading, safeAreaInsets.leading)
 					.padding(.trailing, safeAreaInsets.trailing)
 			case .landscape:

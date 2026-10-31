@@ -21,7 +21,8 @@ struct PeopleScene: View {
 		GeometryReader { geometry in
 			let window = windowSize(of: geometry)
 			let layout = PersonPageLayout(window: window)
-			let trailingPane = TrailingPaneOnLandscape(layout: layout, window: window, trailingInset: geometry.safeAreaInsets.trailing)
+			let trailingPane = TrailingPaneOnLandscape(
+				layout: layout, spansFold: layout.spansFold(idiom: idiom), window: window, trailingInset: geometry.safeAreaInsets.trailing)
 			home(layout: layout, trailingPane: trailingPane)
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
 				// The list's last row always scrolls clear of the button.
@@ -69,7 +70,8 @@ struct PeopleScene: View {
 				.transition(.opacity)
 		} else {
 			PeopleMosaic(
-				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID, evenColumns: layout == .landscape,
+				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID,
+				evenColumns: layout == .landscape && layout.spansFold(idiom: idiom), tileWidths: MosaicGridLayout.tileWidths(idiom: idiom),
 				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: { presenter.view($0) },
 				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
@@ -78,7 +80,10 @@ struct PeopleScene: View {
 		}
 	}
 
-	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window, above the home indicator.
+	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+
+	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window that may span a fold,
+	/// above the home indicator.
 	private func floating(_ button: some View, trailingPane: TrailingPaneOnLandscape) -> some View {
 		button
 			.frame(maxWidth: .infinity)

@@ -1,4 +1,4 @@
-import CoreGraphics
+import UIKit
 
 /// The columns and tile size of the people mosaic, chosen from the space it has.
 ///
@@ -6,11 +6,11 @@ import CoreGraphics
 struct MosaicGridLayout: Equatable {
 	/// The gap between tiles and the margin at the mosaic's sides.
 	static let spacing: CGFloat = 12
-	/// The narrowest a tile gets before the mosaic adds a column; below two columns tiles narrow instead.
+	/// The narrowest a tile gets by default before the mosaic adds a column; below two columns tiles narrow instead.
 	static let minimumTileWidth: CGFloat = 160
 	/// The fewest columns, so even the narrowest window, such as a 320 pt Slide Over, shows people side by side.
 	static let minimumColumns = 2
-	/// The widest a tile gets, so wide windows add columns instead of ever-larger tiles.
+	/// The widest a tile gets by default, so wide windows add columns instead of ever-larger tiles.
 	static let maximumTileWidth: CGFloat = 240
 	/// The tallest a tile gets as a share of the visible height, so a short window still shows a whole tile.
 	static let maximumHeightShare: CGFloat = 0.8
@@ -19,6 +19,12 @@ struct MosaicGridLayout: Equatable {
 	let tileWidth: CGFloat
 	var tileHeight: CGFloat { tileWidth * 16 / 9 }
 
+	/// The narrowest and widest tiles on `idiom`: an iPad's, seen from further away, stay larger; its narrow windows
+	/// still get the phone's two columns.
+	static func tileWidths(idiom: UIUserInterfaceIdiom) -> ClosedRange<CGFloat> {
+		idiom == .pad ? 200...280 : minimumTileWidth...maximumTileWidth
+	}
+
 	/// - Parameters:
 	///   - size: the space the mosaic scrolls in.
 	///   - count: how many people it shows; fewer people than columns get only as many columns, centred, so one
@@ -26,11 +32,16 @@ struct MosaicGridLayout: Equatable {
 	///   - evenColumns: keeps an even number of columns, so the gap between the middle columns, not a tile, sits on
 	///     the window's centre, where a landscape iPhone Duo folds; an odd number of people leaves the last column's
 	///     slot empty rather than putting a tile on the fold.
-	init(size: CGSize, count: Int, evenColumns: Bool = false) {
+	///   - minimumTileWidth: the narrowest a tile gets before the mosaic adds a column.
+	///   - maximumTileWidth: the widest a tile gets.
+	init(
+		size: CGSize, count: Int, evenColumns: Bool = false, minimumTileWidth: CGFloat = Self.minimumTileWidth,
+		maximumTileWidth: CGFloat = Self.maximumTileWidth
+	) {
 		let width = max(0, size.width - 2 * Self.spacing)
 		let heightLimit = size.height * Self.maximumHeightShare * 9 / 16
-		let widest = max(1, min(Self.maximumTileWidth, heightLimit))
-		let narrowest = min(Self.minimumTileWidth, widest)
+		let widest = max(1, min(maximumTileWidth, heightLimit))
+		let narrowest = min(minimumTileWidth, widest)
 		var fitting = max(Self.minimumColumns, Int((width + Self.spacing) / (narrowest + Self.spacing)))
 		if evenColumns, fitting > 1 { fitting -= fitting % 2 }
 		let wanted = evenColumns ? count + count % 2 : count

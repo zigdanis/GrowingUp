@@ -15,6 +15,8 @@ struct PeopleMosaic: View {
 	let selectedID: UUID?
 	/// Gives the mosaic an even number of columns, so no tile straddles the fold of a landscape iPhone Duo.
 	let evenColumns: Bool
+	/// The narrowest and widest tiles, larger on iPad; see `MosaicGridLayout.tileWidths(idiom:)`.
+	let tileWidths: ClosedRange<CGFloat>
 	let isReordering: Bool
 	let zoom: Namespace.ID
 	let now: () -> Date
@@ -38,7 +40,9 @@ struct PeopleMosaic: View {
 
 	var body: some View {
 		GeometryReader { geometry in
-			let grid = MosaicGridLayout(size: geometry.size, count: persons.count, evenColumns: evenColumns)
+			let grid = MosaicGridLayout(
+				size: geometry.size, count: persons.count, evenColumns: evenColumns, minimumTileWidth: tileWidths.lowerBound,
+				maximumTileWidth: tileWidths.upperBound)
 			let width = geometry.size.width
 			ScrollViewReader { proxy in
 				ScrollView {
