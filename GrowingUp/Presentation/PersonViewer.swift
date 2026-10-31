@@ -89,6 +89,8 @@ struct PersonViewer: View {
 		if presenter.editMode == nil, !presenter.isAddingPerson,
 			let person = presenter.persons.first(where: { $0.id == presenter.selectedID })
 		{
+			KeyboardFocusAnchor()
+				.frame(width: 0, height: 0)
 			// The arrows follow the pager, which runs the other way in a right-to-left language.
 			let forward: KeyEquivalent = layoutDirection == .rightToLeft ? .leftArrow : .rightArrow
 			let backward: KeyEquivalent = layoutDirection == .rightToLeft ? .rightArrow : .leftArrow

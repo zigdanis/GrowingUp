@@ -39,6 +39,10 @@ struct PersonEditModeScene: View {
 			if editor.isBusy || mode.isFinishing { ProgressView() }
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.background {
+			// Escape and Command-Return reach the edit mode while the name field has no keyboard.
+			if !isNameFocused { KeyboardFocusAnchor().frame(width: 0, height: 0) }
+		}
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
 		.task { await editor.load() }
