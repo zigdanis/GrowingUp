@@ -12,6 +12,8 @@ struct PersonViewer: View {
 	private var reduceMotion
 	@Environment(\.layoutDirection)
 	private var layoutDirection
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		let editMode = presenter.editMode
@@ -60,7 +62,7 @@ struct PersonViewer: View {
 				LazyHStack(spacing: 0) {
 					ForEach(presenter.persons, id: \.id) { person in
 						PersonOverviewScene(
-							person: person, isSelected: presenter.selectedID == person.id, configurator: presenter.configurator,
+							person: person, isSelected: presenter.selectedID == person.id, isEditing: isEditing, configurator: presenter.configurator,
 							safeAreaInsets: safeAreaInsets, layout: layout, pageSize: window, windowControlsWidth: windowControlsWidth,
 							onEdit: { presenter.edit(person) },
 							onClose: presenter.closeViewer,
@@ -104,7 +106,13 @@ struct PersonViewer: View {
 					title: String(localized: "Previous person"),
 					input: isRightToLeft ? UIKeyCommand.inputRightArrow : UIKeyCommand.inputLeftArrow,
 					action: { pageAction(from: person, by: -1)?() }),
-				KeyboardCommand(title: String(localized: "Edit"), input: "\r", action: { presenter.edit(person) }),
+				KeyboardCommand(
+					title: String(localized: "Edit"), input: "\r",
+					action: {
+						// As a tap on the page does.
+						haptics.play(.editEntered)
+						presenter.edit(person)
+					}),
 				KeyboardCommand(title: String(localized: "All people"), input: UIKeyCommand.inputEscape, action: presenter.closeViewer)
 			])
 			.frame(width: 0, height: 0)

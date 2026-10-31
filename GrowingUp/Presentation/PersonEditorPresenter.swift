@@ -278,17 +278,21 @@ final class PersonEditorPresenter {
 		return false
 	}
 
-	func remove() async {
-		guard let person, !isBusy else { return }
+	/// Removes the person; true when the removal landed.
+	@discardableResult
+	func remove() async -> Bool {
+		guard let person, !isBusy else { return false }
 		isBusy = true
 		defer { isBusy = false }
 		do {
 			try await removeUseCase.remove(person: person)
 			onMutation(.removed(person))
+			return true
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
 			analytics.report(AnalyticsFailure(operation: "remove_person", error: error))
 		}
+		return false
 	}
 }

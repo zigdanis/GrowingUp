@@ -14,6 +14,8 @@ struct PhotoGridView: View {
 	let onPicked: (UIImage) -> Void
 
 	@State private var showLimitedPicker = false
+	@Environment(\.haptics)
+	private var haptics
 
 	private let spacing: CGFloat = 2
 	/// Wider windows, such as an unfolded iPhone Duo, get more columns rather than ever-larger thumbnails.
@@ -40,6 +42,7 @@ struct PhotoGridView: View {
 				}
 			)
 			.background(Color(.secondarySystemBackground))
+			.modifier(SceneErrorHaptics(isShown: viewModel.selectionFailed))
 	}
 
 	private var errorBinding: Binding<Bool> {
@@ -78,6 +81,7 @@ struct PhotoGridView: View {
 							side: side,
 							viewModel: viewModel
 						) {
+							haptics.play(.selectionChanged)
 							viewModel.select(asset, completion: onPicked)
 						}
 					}

@@ -7,6 +7,8 @@ struct RemovalConfirmation: ViewModifier {
 	@Bindable var mode: PersonEditModePresenter
 	/// Whether it sits on the Remove button, whose dialog iPad shows; the scene's carries the alert.
 	let isOnButton: Bool
+	@Environment(\.haptics)
+	private var haptics
 
 	func body(content: Content) -> some View {
 		let isPresented = Binding(
@@ -28,7 +30,13 @@ struct RemovalConfirmation: ViewModifier {
 	}
 
 	@ViewBuilder private var actions: some View {
-		Button("Remove", role: .destructive) { Task { await mode.remove() } }
+		Button("Remove", role: .destructive) {
+			// Read now: the scene is gone once the removal lands.
+			let feedback = haptics
+			Task {
+				if await mode.remove() { feedback.play(.removed) }
+			}
+		}
 		Button("Cancel", role: .cancel) {}
 	}
 

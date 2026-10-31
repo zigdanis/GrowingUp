@@ -10,6 +10,8 @@ struct PeopleScene: View {
 	@Namespace private var zoom
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
+	@Environment(\.haptics)
+	private var haptics
 
 	init(presenter: PeoplePresenter, preferredColorScheme: ColorScheme?) {
 		_presenter = Bindable(presenter)
@@ -29,12 +31,12 @@ struct PeopleScene: View {
 				.safeAreaInset(edge: .bottom, spacing: 12) {
 					if presenter.isReordering {
 						floating(
-							FloatingCapsuleButton(title: "Done", systemImage: "checkmark", action: presenter.finishReordering)
+							FloatingCapsuleButton(title: "Done", systemImage: "checkmark", action: finishReordering)
 								.accessibilityIdentifier("people.reorder.done"),
 							trailingPane: trailingPane)
 					} else if !presenter.isLoading, presenter.canAdd {
 						floating(
-							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: { presenter.add() })
+							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: add)
 								.keyboardShortcut("n", modifiers: .command)
 								.accessibilityIdentifier("person.add")
 								// A new person's edit mode grows out of the button, which no selected person names.
@@ -73,8 +75,8 @@ struct PeopleScene: View {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID,
 				evenColumns: layout == .landscape && layout.spansFold(idiom: idiom), tileWidths: MosaicGridLayout.tileWidths(idiom: idiom),
-				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: { presenter.view($0) },
-				onStartReordering: presenter.startReordering, onFinishReordering: presenter.finishReordering, onMove: presenter.move,
+				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
+				onStartReordering: presenter.startReordering, onFinishReordering: finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
 			)
 			.transition(.opacity)
@@ -82,6 +84,23 @@ struct PeopleScene: View {
 	}
 
 	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+
+	/// Opens the person with `id` in the viewer, with a light tap when their tile did open them.
+	private func openPerson(_ id: UUID) {
+		presenter.view(id)
+		if presenter.isViewing { haptics.play(.tileOpened) }
+	}
+
+	private func add() {
+		presenter.add()
+		if presenter.isAddingPerson { haptics.play(.addPerson) }
+	}
+
+	private func finishReordering() {
+		guard presenter.isReordering else { return }
+		haptics.play(.reorderFinished)
+		presenter.finishReordering()
+	}
 
 	/// The floating capsule spread across the mosaic, in the trailing pane of a landscape window that may span a fold,
 	/// above the home indicator.

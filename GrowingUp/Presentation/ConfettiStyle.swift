@@ -12,6 +12,10 @@ enum ConfettiStyle: CaseIterable {
 
 	/// Every style finishes within this time, so the overlay can be removed afterwards.
 	static let duration: TimeInterval = 4
+	/// When each firework shell bursts, one after another; the birthday haptics tap on the same beats.
+	static let fireworkBursts: [TimeInterval] = [0.5, 0.95, 1.4, 1.85]
+	/// How long a firework's rocket climbs before its shell bursts.
+	static let fireworkClimb: TimeInterval = 0.45
 
 	private static let palette: [Color] = [
 		Color(red: 1, green: 0.30, blue: 0.43), Color(red: 1, green: 0.72, blue: 0.01), Color(red: 0.23, green: 0.53, blue: 1),
@@ -69,11 +73,9 @@ enum ConfettiStyle: CaseIterable {
 			(CGPoint(x: 0.50, y: 0.48), Color(red: 0.30, green: 0.79, blue: 0.94)),
 			(CGPoint(x: 0.28, y: 0.62), Color(red: 0.78, green: 0.49, blue: 1))
 		]
-		let climb: TimeInterval = 0.45
+		let climb = fireworkClimb
 		let rocketDrag = 5.0
-		return shells.indices.flatMap { index -> [ConfettiParticle] in
-			let shell = shells[index]
-			let burst = 0.5 + Double(index) * 0.45
+		return zip(shells, fireworkBursts).flatMap { shell, burst -> [ConfettiParticle] in
 			// Drag-only motion covers velocity / drag * decay, so solve for the launch speed that stops at the shell.
 			let decay = 1 - exp(-rocketDrag * climb)
 			let rocket = ConfettiParticle(

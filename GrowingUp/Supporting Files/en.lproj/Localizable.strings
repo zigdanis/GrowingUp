@@ -74,6 +74,33 @@
 /* Message shown when photo access is restricted and cannot be changed */
 "Photo access is restricted on this device and can't be changed." = "Photo access is restricted on this device and can't be changed.";
 
+/* Title shown before the system camera permission prompt */
+"Take a photo" = "Take a photo";
+
+/* Message shown before the system camera permission prompt, explaining what the camera is used for */
+"GrowingUp uses your camera to take a picture for this person." = "GrowingUp uses your camera to take a picture for this person.";
+
+/* Button that continues to the system camera permission prompt */
+"Continue" = "Continue";
+
+/* Title shown when camera access has been denied */
+"Camera access blocked" = "Camera access blocked";
+
+/* Message shown when camera access has been denied */
+"Enable camera access in Settings to take a picture." = "Enable camera access in Settings to take a picture.";
+
+/* Title shown when camera access is restricted by a profile/parental controls */
+"Camera access restricted" = "Camera access restricted";
+
+/* Message shown when camera access is restricted and cannot be changed */
+"Camera access is restricted on this device and can't be changed." = "Camera access is restricted on this device and can't be changed.";
+
+/* Title shown when the device has no camera */
+"Camera unavailable" = "Camera unavailable";
+
+/* Message shown when the device has no camera */
+"No camera is available on this device. Choose a photo from your library instead." = "No camera is available on this device. Choose a photo from your library instead.";
+
 /* Title for the alert shown when a tapped photo fails to load (e.g. an iCloud download error) */
 "Couldn't load photo" = "Couldn't load photo";
 

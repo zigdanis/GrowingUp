@@ -15,6 +15,8 @@ struct PersonEditModeScene: View {
 	@State private var photoRequest: PhotoRequest?
 	@State private var widgetPictureSource: IdentifiableImage?
 	@FocusState private var isNameFocused: Bool
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		@Bindable var editor = mode.editor
@@ -27,7 +29,7 @@ struct PersonEditModeScene: View {
 				.disabled(editor.isBusy || editor.isLoading || mode.isFinishing)
 				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
 				.accessibilityElement(children: .contain)
-				.accessibilityAction(.escape) { mode.cancel() }
+				.accessibilityAction(.escape, cancel)
 			// iPad pops the pickers over their capsules instead.
 			if let popover = mode.popover, UIDevice.current.userInterfaceIdiom != .pad {
 				EditModePopoverCard(
@@ -54,6 +56,9 @@ struct PersonEditModeScene: View {
 		.task(id: [editor.appImage?.id, editor.widgetImage?.id]) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
 		.modifier(RemovalConfirmation(mode: mode, isOnButton: false))
+		.onChange(of: mode.isConfirmingRemoval) { _, isConfirming in
+			if isConfirming { haptics.play(.removalConfirmationShown) }
+		}
 		.sceneError($editor.error)
 		.sheet(item: $photoRequest) { request in
 			// A new photo lands in the frame, where it can be framed again before Done.
@@ -110,7 +115,7 @@ struct PersonEditModeScene: View {
 	private var topBar: some View {
 		HStack {
 			Button("Cancel") {
-				mode.cancel()
+				cancel()
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: false))
 			.disabled(!mode.canCancel)
@@ -129,7 +134,11 @@ struct PersonEditModeScene: View {
 
 	private func done() {
 		isNameFocused = false
-		Task { await mode.done() }
+		// Read now: the scene is gone once the save lands.
+		let feedback = haptics
+		Task {
+			if await mode.done() { feedback.play(.saved) }
+		}
 	}
 
 	private var keyboardCommands: [KeyboardCommand] {
@@ -137,8 +146,8 @@ struct PersonEditModeScene: View {
 			KeyboardCommand(title: String(localized: "Cancel"), input: UIKeyCommand.inputEscape) {
 				if mode.popover != nil {
 					mode.dismissPopover()
-				} else if mode.canCancel {
-					mode.cancel()
+				} else {
+					cancel()
 				}
 			},
 			KeyboardCommand(title: String(localized: "Done"), input: "\r", modifiers: .command) {
@@ -169,6 +178,12 @@ struct PersonEditModeScene: View {
 		)
 		.allowsHitTesting(false)
 		.accessibilityHidden(true)
+	}
+
+	private func cancel() {
+		guard mode.canCancel else { return }
+		haptics.play(.cancelled)
+		mode.cancel()
 	}
 
 	private func frameWidgetPicture() {
