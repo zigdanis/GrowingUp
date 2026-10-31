@@ -51,9 +51,14 @@ struct CameraCardView: View {
 
 	@ViewBuilder private var preview: some View {
 		if let standIn {
-			Image(uiImage: standIn)
-				.resizable()
-				.scaledToFill()
+			// Fills the card like the live preview, without growing it to the still's own shape.
+			Color.clear
+				.overlay {
+					Image(uiImage: standIn)
+						.resizable()
+						.scaledToFill()
+				}
+				.clipped()
 		} else {
 			CameraPreview(session: controller.session, isMirrored: controller.isFront, onPreviewLayer: controller.attachPreview)
 		}
