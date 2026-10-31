@@ -3,7 +3,7 @@ import XCTest
 /// Opt-in captures of the app's screens on the demo people, written as PNGs for a layout review on each device size.
 ///
 /// `GROWINGUP_LAYOUT_CAPTURE` names the directory for the PNGs and their `captures.json`; `GROWINGUP_LAYOUT_DEVICE` the
-/// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`; and
+/// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`, or `current`; and
 /// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens; and `GROWINGUP_LAYOUT_MULTITASKING` an iPad multitasking
 /// mode to choose in Settings first, such as `Full Screen Apps`. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
 @MainActor
@@ -30,9 +30,11 @@ final class LayoutCaptureTests: XCTestCase {
 		if let multitasking = environment["GROWINGUP_LAYOUT_MULTITASKING"], !multitasking.isEmpty {
 			chooseMultitasking(multitasking)
 		}
-		for name in (environment["GROWINGUP_LAYOUT_ORIENTATIONS"] ?? "portrait").split(separator: ",").map(String.init) {
+		let orientations = (environment["GROWINGUP_LAYOUT_ORIENTATIONS"] ?? "portrait").split(separator: ",").map(String.init)
+		for name in orientations {
 			orientation = name
-			XCUIDevice.shared.orientation = name == "landscape" ? .landscapeLeft : .portrait
+			// `current` leaves the device, and a window sized by hand, as they are.
+			if name != "current" { XCUIDevice.shared.orientation = name == "landscape" ? .landscapeLeft : .portrait }
 			captureDemoPeople()
 			if wants("mosaic-one") {
 				launch(seed: .demoMia)
@@ -50,7 +52,7 @@ final class LayoutCaptureTests: XCTestCase {
 				capture("widget-\(family)", note: "UITestWidgetPreview, \(family)")
 			}
 		}
-		XCUIDevice.shared.orientation = .portrait
+		if orientations != ["current"] { XCUIDevice.shared.orientation = .portrait }
 		let index = directory.appendingPathComponent("captures-\(device).json")
 		try JSONSerialization.data(withJSONObject: captures, options: [.prettyPrinted, .sortedKeys]).write(to: index)
 	}
