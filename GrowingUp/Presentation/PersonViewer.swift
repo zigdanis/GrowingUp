@@ -24,8 +24,11 @@ struct PersonViewer: View {
 				AmbientBackground(seeds: [])
 					.transition(.opacity)
 			} else {
-				pager(window: window, layout: layout, safeAreaInsets: geometry.safeAreaInsets, isEditing: editMode != nil)
-					.transition(.opacity)
+				pager(
+					window: window, layout: layout, safeAreaInsets: geometry.safeAreaInsets,
+					windowControlsWidth: windowControlsWidth(of: geometry), isEditing: editMode != nil
+				)
+				.transition(.opacity)
 			}
 			if let editMode {
 				PersonEditModeScene(mode: editMode, layout: layout, window: window, safeAreaInsets: geometry.safeAreaInsets)
@@ -47,7 +50,9 @@ struct PersonViewer: View {
 		.interactiveDismissDisabled(editMode != nil)
 	}
 
-	private func pager(window: CGSize, layout: PersonPageLayout, safeAreaInsets: EdgeInsets, isEditing: Bool) -> some View {
+	private func pager(
+		window: CGSize, layout: PersonPageLayout, safeAreaInsets: EdgeInsets, windowControlsWidth: CGFloat, isEditing: Bool
+	) -> some View {
 		// A paging scroll view rather than a page-style TabView, whose UIKit pager insets its pages by a
 		// horizontal safe area (the iPhone Duo's side status bar) and so snaps them off the window.
 		ScrollViewReader { proxy in
@@ -56,7 +61,7 @@ struct PersonViewer: View {
 					ForEach(presenter.persons, id: \.id) { person in
 						PersonOverviewScene(
 							person: person, isSelected: presenter.selectedID == person.id, configurator: presenter.configurator,
-							safeAreaInsets: safeAreaInsets, layout: layout, pageSize: window,
+							safeAreaInsets: safeAreaInsets, layout: layout, pageSize: window, windowControlsWidth: windowControlsWidth,
 							onEdit: { presenter.edit(person) },
 							onClose: presenter.closeViewer,
 							onNext: pageAction(from: person, by: 1),
@@ -123,6 +128,13 @@ struct PersonViewer: View {
 				guard let id else { return }
 				presenter.select(id)
 			})
+	}
+
+	/// How far an iPad window's close, minimize and tile controls reach into its top-leading corner; zero without them,
+	/// as full screen. The pages read it here, as the paging scroll view hides the window's corners from their content.
+	private func windowControlsWidth(of geometry: GeometryProxy) -> CGFloat {
+		guard #available(iOS 26, *), UIDevice.current.userInterfaceIdiom == .pad else { return 0 }
+		return geometry.containerCornerInsets.topLeading.width
 	}
 
 	/// The whole window: the pages draw under the safe areas, so their layout is chosen from the full shape.

@@ -15,6 +15,8 @@ struct PersonOverviewScene: View {
 	let layout: PersonPageLayout
 	/// The whole window, safe areas included, since the page draws edge to edge.
 	let pageSize: CGSize
+	/// How far a window's controls reach into its top-leading corner, which the age keeps clear of where it sits there.
+	let windowControlsWidth: CGFloat
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
 	@State private var burstStarted: Date?
@@ -25,7 +27,7 @@ struct PersonOverviewScene: View {
 
 	init(
 		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
-		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void, onNext: (() -> Void)?,
+		pageSize: CGSize, windowControlsWidth: CGFloat, onEdit: @escaping () -> Void, onClose: @escaping () -> Void, onNext: (() -> Void)?,
 		onPrevious: (() -> Void)?
 	) {
 		self.person = person
@@ -37,6 +39,7 @@ struct PersonOverviewScene: View {
 		self.safeAreaInsets = safeAreaInsets
 		self.layout = layout
 		self.pageSize = pageSize
+		self.windowControlsWidth = windowControlsWidth
 		now = configurator.now
 		_presenter = State(initialValue: OverviewPresenter(loadImage: configurator.loadImage))
 	}
@@ -226,6 +229,7 @@ struct PersonOverviewScene: View {
 		.accessibilityAction(.escape, onClose)
 		.accessibilityFocused($isAgeFocused)
 		.padding(.horizontal, 24)
-		.modifier(WindowControlsClearance(edges: .leading))
+		// Beside a window's controls, as the age starts in the window's top-leading corner except on the landscape pane.
+		.padding(.leading, layout == .landscape ? 0 : max(0, windowControlsWidth + 8 - 24))
 	}
 }
