@@ -18,7 +18,7 @@ final class PersonPhotoFramingTests: XCTestCase {
 	func testATightCropReopensAndZoomsOutToWhatItLeftOut() async throws {
 		// A new person's photo, framed tightly inside its red quadrant, as the crop after picking saves it.
 		let original = quadrants()
-		let pickCrop = CropGeometry(image: original, shape: .rectangle, container: phone, insets: EdgeInsets())
+		let pickCrop = CropGeometry(image: original, shape: .rectangle, container: phone, insets: EdgeInsets(), idiom: .phone)
 		let tight = await pickCrop.output(of: original, scale: 3, offset: CGSize(width: 337.5, height: 450))
 		try assertColor(red, of: tight.picture, at: [CGPoint(x: 0.05, y: 0.05), CGPoint(x: 0.95, y: 0.95)])
 		let newPerson = configurator.editor(person: nil, onMutation: { _ in })
@@ -72,7 +72,7 @@ final class PersonPhotoFramingTests: XCTestCase {
 	func testAWidePickerCropReopensWithoutTighteningAfterAFieldEditOrSmallDrag() async throws {
 		let window = CGSize(width: 1000, height: 700)
 		let original = quadrants()
-		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets())
+		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets(), idiom: .phone)
 		let picked = await picker.output(of: original, scale: picker.minScale, offset: .zero)
 		let editor = configurator.editor(person: nil, onMutation: { _ in })
 		await editor.load()

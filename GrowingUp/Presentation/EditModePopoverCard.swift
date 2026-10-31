@@ -1,6 +1,7 @@
 import SwiftUI
 
-/// The calendar or the time wheels in a card centred on the screen over a dim layer; a tap outside the card closes it.
+/// The calendar or the time wheels in a card centred on the screen over a dim layer, as phones show them; a tap outside
+/// the card closes it. iPad pops them over their capsules instead; see `EditModeFields`.
 struct EditModePopoverCard: View {
 	let mode: PersonEditModePresenter
 	let popover: PersonEditPopover
@@ -25,35 +26,13 @@ struct EditModePopoverCard: View {
 	}
 
 	private var card: some View {
-		@Bindable var editor = mode.editor
-		return VStack(alignment: .leading, spacing: 8) {
-			switch popover {
-			case .date:
-				DatePicker("Day of birth", selection: $editor.dayOfBirth, in: ...editor.maximumBirthday, displayedComponents: .date)
-					.datePickerStyle(.graphical)
-					.labelsHidden()
-					.tint(Color(uiColor: .appColor))
-					.accessibilityIdentifier("editor.birthDate.picker")
-			case .time:
-				HStack(alignment: .firstTextBaseline) {
-					Text("Time of birth").font(.headline)
-					Spacer()
-					Text("If known").font(.subheadline).foregroundStyle(.secondary)
-				}
-				.padding(.horizontal, 8)
-				DatePicker("Time of birth", selection: $editor.timeOfBirth, in: ...editor.maximumBirthday, displayedComponents: .hourAndMinute)
-					.datePickerStyle(.wheel)
-					.labelsHidden()
-					.frame(maxWidth: .infinity)
-					.accessibilityIdentifier("editor.birthTime.picker")
-			}
-		}
-		.padding(12)
-		.background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
-		.shadow(color: .black.opacity(0.5), radius: 30, y: 10)
-		.accessibilityElement(children: .contain)
-		.accessibilityAddTraits(.isModal)
-		.accessibilityAction(.escape) { mode.dismissPopover() }
-		.accessibilityIdentifier("editor.popover")
+		EditModePicker(mode: mode, popover: popover)
+			.padding(12)
+			.background(.regularMaterial, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+			.shadow(color: .black.opacity(0.5), radius: 30, y: 10)
+			.accessibilityElement(children: .contain)
+			.accessibilityAddTraits(.isModal)
+			.accessibilityAction(.escape) { mode.dismissPopover() }
+			.accessibilityIdentifier("editor.popover")
 	}
 }

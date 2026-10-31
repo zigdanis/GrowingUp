@@ -15,6 +15,38 @@ final class CropGeometryTests: XCTestCase {
 		XCTAssertEqual(wide.height, 700)
 	}
 
+	func testPhonesAndIPhoneDuoKeepTheirFramesExactly() {
+		// iPhone 17 Pro Max, iPhone Duo's outer display, and its inner display upright and on its side.
+		XCTAssertEqual(rectangle(CGSize(width: 440, height: 956), .phone), CGRect(x: 0, y: 0, width: 440, height: 956))
+		XCTAssertEqual(rectangle(CGSize(width: 466, height: 678), .phone), CGRect(x: 0, y: 0, width: 466, height: 678))
+		XCTAssertEqual(rectangle(CGSize(width: 669, height: 951), .phone), column(in: CGSize(width: 669, height: 951), width: 951 * CropGeometry.maxMainAspect))
+		XCTAssertEqual(rectangle(CGSize(width: 951, height: 669), .phone), column(in: CGSize(width: 951, height: 669), width: 669 * CropGeometry.maxMainAspect))
+		// Every phone window frames as before the iPad rule: the whole window, or a column `maxMainAspect` of its height.
+		for width in stride(from: CGFloat(280), through: 1400, by: 7) {
+			for height in stride(from: CGFloat(300), through: 1400, by: 9) {
+				let size = CGSize(width: width, height: height)
+				let before =
+					width / height > CropGeometry.maxMainAspect
+					? CGRect(x: (width - height * 0.7) / 2, y: 0, width: height * 0.7, height: height)
+					: CGRect(origin: .zero, size: size)
+				XCTAssertEqual(rectangle(size, .phone), before, "\(size)")
+			}
+		}
+	}
+
+	func testIPadKeepsDimmedBarsBesideTheColumn() {
+		XCTAssertEqual(rectangle(CGSize(width: 1032, height: 1376), .pad), column(in: CGSize(width: 1032, height: 1376), width: 936))
+		XCTAssertEqual(rectangle(CGSize(width: 820, height: 1180), .pad), column(in: CGSize(width: 820, height: 1180), width: 724))
+		XCTAssertEqual(rectangle(CGSize(width: 744, height: 1133), .pad), column(in: CGSize(width: 744, height: 1133), width: 648))
+		let landscape = CGSize(width: 1376, height: 1032)
+		XCTAssertEqual(rectangle(landscape, .pad), rectangle(landscape, .phone), "A landscape column already leaves wide bars")
+		XCTAssertEqual(rectangle(CGSize(width: 375, height: 1032), .pad), CGRect(x: 0, y: 0, width: 375, height: 1032), "A phone-sized window")
+		let circle = CGSize(width: 1032, height: 1376)
+		XCTAssertEqual(
+			CropGeometry.frameRect(for: .circle, in: circle, insets: EdgeInsets(), idiom: .pad),
+			CropGeometry.frameRect(for: .circle, in: circle, insets: EdgeInsets(), idiom: .phone), "The circle keeps its frame")
+	}
+
 	func testThePhotoAspectFillsTheWindowAtScaleOne() {
 		let geometry = geometry(container: phone)
 		XCTAssertEqual(geometry.baseScale, 0.5)
@@ -57,7 +89,8 @@ final class CropGeometryTests: XCTestCase {
 
 	func testACircleOpensOnTheRegionItWasFramedOn() throws {
 		let insets = EdgeInsets(top: 50, leading: 0, bottom: 30, trailing: 0)
-		let circle = CropGeometry(pixelSize: CGSize(width: 900, height: 1200), shape: .circle, container: phone, insets: insets)
+		let circle = CropGeometry(
+			pixelSize: CGSize(width: 900, height: 1200), shape: .circle, container: phone, insets: insets, idiom: .phone)
 		let offset = CGSize(width: -40, height: 60)
 		XCTAssertEqual(circle.clampOffset(offset, scale: 1.7), offset, "An off-centre framing the circle allows")
 		let crop = try XCTUnwrap(circle.crop(scale: 1.7, offset: offset))
@@ -83,6 +116,14 @@ final class CropGeometryTests: XCTestCase {
 	}
 
 	private func geometry(container: CGSize) -> CropGeometry {
-		CropGeometry(pixelSize: CGSize(width: 900, height: 1200), shape: .rectangle, container: container, insets: EdgeInsets())
+		CropGeometry(pixelSize: CGSize(width: 900, height: 1200), shape: .rectangle, container: container, insets: EdgeInsets(), idiom: .phone)
+	}
+
+	private func rectangle(_ container: CGSize, _ idiom: UIUserInterfaceIdiom) -> CGRect {
+		CropGeometry.frameRect(for: .rectangle, in: container, insets: EdgeInsets(), idiom: idiom)
+	}
+
+	private func column(in container: CGSize, width: CGFloat) -> CGRect {
+		CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
 	}
 }

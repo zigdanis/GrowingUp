@@ -28,7 +28,8 @@ struct PersonEditModeScene: View {
 				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
 				.accessibilityElement(children: .contain)
 				.accessibilityAction(.escape) { mode.cancel() }
-			if let popover = mode.popover {
+			// iPad pops the pickers over their capsules instead.
+			if let popover = mode.popover, UIDevice.current.userInterfaceIdiom != .pad {
 				EditModePopoverCard(
 					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
 					safeAreaInsets: safeAreaInsets
@@ -48,12 +49,7 @@ struct PersonEditModeScene: View {
 		// Removing a widget picture shown alone changes no main photo, yet it leaves the monogram in its place.
 		.task(id: [editor.appImage?.id, editor.widgetImage?.id]) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
-		.alert(mode.removalTitle, isPresented: $mode.isConfirmingRemoval) {
-			Button("Remove", role: .destructive) { Task { await mode.remove() } }
-			Button("Cancel", role: .cancel) {}
-		} message: {
-			Text("Their photo, birthday and settings will disappear from the app and the widget.")
-		}
+		.modifier(RemovalConfirmation(mode: mode, isOnButton: false))
 		.sceneError($editor.error)
 		.sheet(item: $photoRequest) { request in
 			// A new photo lands in the frame, where it can be framed again before Done.
@@ -132,7 +128,9 @@ struct PersonEditModeScene: View {
 	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.
 	private var columnWidth: CGFloat? {
 		guard layout != .phone else { return nil }
-		let column = CropGeometry.frameRect(for: .rectangle, in: window, insets: safeAreaInsets).width
+		let column = CropGeometry.frameRect(
+			for: .rectangle, in: window, insets: safeAreaInsets, idiom: UIDevice.current.userInterfaceIdiom
+		).width
 		return min(column, layout.columnWidth ?? column)
 	}
 

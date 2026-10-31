@@ -276,7 +276,7 @@ struct CropStep: View {
 
 extension CropStep {
 	func geometry(in container: CGSize, insets: EdgeInsets) -> CropGeometry {
-		CropGeometry(pixelSize: pixelSize, shape: shape, container: container, insets: insets)
+		CropGeometry(pixelSize: pixelSize, shape: shape, container: container, insets: insets, idiom: UIDevice.current.userInterfaceIdiom)
 	}
 
 	/// The current canvas's geometry.

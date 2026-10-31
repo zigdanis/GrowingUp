@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// The edit mode's fields in the top third, where the keyboard never covers them: the name, the date and time capsules
-/// and the age they give.
+/// and the age they give. On iPad, a capsule's picker pops over it.
 struct EditModeFields: View {
 	let mode: PersonEditModePresenter
 	var isNameFocused: FocusState<Bool>.Binding
@@ -91,5 +91,22 @@ struct EditModeFields: View {
 		.accessibilityLabel(label)
 		.accessibilityValue(Text(text))
 		.accessibilityIdentifier(identifier)
+		.popover(isPresented: isPoppedOver(popover), attachmentAnchor: .rect(.bounds), arrowEdge: .top) {
+			EditModePicker(mode: mode, popover: popover)
+				.frame(width: 320)
+				.padding(12)
+				.accessibilityIdentifier("editor.popover")
+				// Even a narrow iPad window keeps the small picker beside its capsule rather than in a sheet.
+				.presentationCompactAdaptation(.popover)
+		}
+	}
+
+	/// Whether `popover` shows over its capsule, as on iPad; phones show it in `EditModePopoverCard`.
+	private func isPoppedOver(_ popover: PersonEditPopover) -> Binding<Bool> {
+		Binding(
+			get: { UIDevice.current.userInterfaceIdiom == .pad && mode.popover == popover },
+			set: { isShown in
+				if !isShown, mode.popover == popover { mode.dismissPopover() }
+			})
 	}
 }

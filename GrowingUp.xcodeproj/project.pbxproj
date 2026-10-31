@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		877DAA2DA9D795971C68483E /* RemovalConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */; };
+		6CEBC4A8DEF4993EAA035EF9 /* EditModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E37EA12DCBBFD79EA35238 /* EditModePicker.swift */; };
 		AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */; };
 		20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */; };
 		A7F1C2D3E4B5968778695A4D /* MosaicAutoscrollTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */; };
@@ -612,6 +614,8 @@
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
 		715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModeScene.swift; sourceTree = "<group>"; };
 		2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePopoverCard.swift; sourceTree = "<group>"; };
+		39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovalConfirmation.swift; sourceTree = "<group>"; };
+		19E37EA12DCBBFD79EA35238 /* EditModePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePicker.swift; sourceTree = "<group>"; };
 		D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeControls.swift; sourceTree = "<group>"; };
 		7BED79DB5591DDB2C925728A /* EditModeFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeFields.swift; sourceTree = "<group>"; };
 		AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePhoto.swift; sourceTree = "<group>"; };
@@ -1248,6 +1252,8 @@
 				B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */,
 				715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */,
 				2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */,
+				39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */,
+				19E37EA12DCBBFD79EA35238 /* EditModePicker.swift */,
 				D22B8FB0D510B9DF79C71845 /* EditModeControls.swift */,
 				7BED79DB5591DDB2C925728A /* EditModeFields.swift */,
 				AC92EEF8E7217C3713B28C3E /* EditModePhoto.swift */,
@@ -1831,6 +1837,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				877DAA2DA9D795971C68483E /* RemovalConfirmation.swift in Sources */,
+				6CEBC4A8DEF4993EAA035EF9 /* EditModePicker.swift in Sources */,
 				ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */,
 				ACE8F4BF5B048818C6A2AA13 /* PersonPictureCandidates.swift in Sources */,
 				717652D8E842D301AAE46EA7 /* PersonMonogram.swift in Sources */,

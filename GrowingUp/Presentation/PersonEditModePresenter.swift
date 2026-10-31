@@ -45,11 +45,14 @@ final class PersonEditModePresenter {
 	private let now: () -> Date
 	private let calendar: Calendar
 	private let locale: Locale
+	/// The device, whose iPad windows keep dimmed bars beside the crop frame; see `CropGeometry.padSideBar`.
+	private let idiom: UIUserInterfaceIdiom
 	private let onCancel: () -> Void
 
 	init(
 		editor: PersonEditorPresenter, now: @escaping () -> Date, calendar: Calendar = .autoupdatingCurrent,
-		locale: Locale = .autoupdatingCurrent, onCancel: @escaping () -> Void
+		locale: Locale = .autoupdatingCurrent, idiom: UIUserInterfaceIdiom = UIDevice.current.userInterfaceIdiom,
+		onCancel: @escaping () -> Void
 	) {
 		self.editor = editor
 		// A person without any picture shows the monogram at once; a picture that is loading never flashes it first.
@@ -57,6 +60,7 @@ final class PersonEditModePresenter {
 		self.now = now
 		self.calendar = calendar
 		self.locale = locale
+		self.idiom = idiom
 		self.onCancel = onCancel
 	}
 
@@ -222,7 +226,7 @@ final class PersonEditModePresenter {
 	/// portrait column in a wide window reopens without being forced to zoom in to cover the whole window.
 	func geometry(of photo: UIImage) -> CropGeometry? {
 		guard canvas.width > 0, canvas.height > 0 else { return nil }
-		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets)
+		return CropGeometry(image: photo, shape: .rectangle, container: canvas, insets: safeAreaInsets, idiom: idiom)
 	}
 
 	func drag(by translation: CGSize) {
