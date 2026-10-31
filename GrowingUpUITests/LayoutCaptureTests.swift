@@ -3,9 +3,10 @@ import XCTest
 /// Opt-in captures of the app's screens on the demo people, written as PNGs for a layout review on each device size.
 ///
 /// `GROWINGUP_LAYOUT_CAPTURE` names the directory for the PNGs and their `captures.json`; `GROWINGUP_LAYOUT_DEVICE` the
-/// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`, or `current`; and
+/// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`, or `current`;
 /// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens; and `GROWINGUP_LAYOUT_MULTITASKING` an iPad multitasking
-/// mode to choose in Settings first, such as `Full Screen Apps`. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
+/// mode to choose in Settings first, such as `Full Screen Apps`; and `GROWINGUP_LAYOUT_WINDOW` a window size to drag a
+/// windowed app to, such as `{800,600}`. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
 @MainActor
 final class LayoutCaptureTests: XCTestCase {
 	private let app = XCUIApplication()
@@ -29,6 +30,10 @@ final class LayoutCaptureTests: XCTestCase {
 		continueAfterFailure = false
 		if let multitasking = environment["GROWINGUP_LAYOUT_MULTITASKING"], !multitasking.isEmpty {
 			chooseMultitasking(multitasking)
+		}
+		if let window = environment["GROWINGUP_LAYOUT_WINDOW"].map(NSCoder.cgSize(for:)), window != .zero {
+			launch(seed: .empty)
+			resizeWindow(to: window)
 		}
 		let orientations = (environment["GROWINGUP_LAYOUT_ORIENTATIONS"] ?? "portrait").split(separator: ",").map(String.init)
 		for name in orientations {
@@ -159,6 +164,20 @@ final class LayoutCaptureTests: XCTestCase {
 	}
 
 	// MARK: - Steps
+
+	/// Resizes a windowed app's window to about `size` by dragging its bottom-trailing corner, which resizes the window
+	/// about its centre; the window keeps the size when the app relaunches.
+	private func resizeWindow(to size: CGSize) {
+		let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard").coordinate(withNormalizedOffset: .zero)
+		for _ in 0..<4 {
+			let frame = app.windows.firstMatch.frame
+			let change = CGVector(dx: (size.width - frame.width) / 2, dy: (size.height - frame.height) / 2)
+			guard abs(change.dx) > 4 || abs(change.dy) > 4 else { return }
+			let corner = screen.withOffset(CGVector(dx: frame.maxX - 8, dy: frame.maxY - 8))
+			corner.press(forDuration: 0.4, thenDragTo: corner.withOffset(change))
+			Thread.sleep(forTimeInterval: 1.5)
+		}
+	}
 
 	/// Chooses an iPad multitasking mode, such as `Full Screen Apps` or `Windowed Apps`, in Settings.
 	private func chooseMultitasking(_ mode: String) {
