@@ -18,10 +18,16 @@ struct PersonOverviewScene: View {
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
 	@State private var burstStarted: Date?
+	/// Whether this page plays the birthday haptics, so only the page that started them stops them.
+	@State private var isPlayingCelebration = false
 	/// VoiceOver lands on the age of a page the pager arrives at, such as after its "Next person" action.
 	@AccessibilityFocusState private var isAgeFocused: Bool
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
+	@Environment(\.haptics)
+	private var haptics
+	@Environment(\.scenePhase)
+	private var scenePhase
 
 	init(
 		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
@@ -73,24 +79,38 @@ struct PersonOverviewScene: View {
 		.ignoresSafeArea(.container)
 		// The whole page is the way into edit mode; a tap never competes with the pager's swipes or the zoom's drag down.
 		.contentShape(Rectangle())
-		.onTapGesture(perform: onEdit)
-		.onChange(of: presenter.celebrationID) { _, _ in
-			burstStarted = reduceMotion ? nil : Date()
+		.onTapGesture(perform: edit)
+		.onChange(of: presenter.celebrationID) { _, celebration in
+			let started = reduceMotion ? nil : Date()
+			burstStarted = started
+			// The confetti's own style and start, so every pop and burst is felt as it is seen.
+			if let started, isSelected {
+				haptics.celebrate(ConfettiStyle(celebration: celebration), startedAt: started)
+				isPlayingCelebration = true
+			} else {
+				stopCelebrating()
+			}
 		}
 		.task(id: burstStarted) {
 			guard burstStarted != nil else { return }
 			do { try await Task.sleep(for: .seconds(ConfettiStyle.duration)) } catch { return }
 			burstStarted = nil
+			stopCelebrating()
 		}
 		.task(id: PersonPictureCandidates.ids(of: person)) { await presenter.load(person: person) }
 		.onChange(of: isSelected) { _, selected in
-			if selected { isAgeFocused = true }
+			if selected { isAgeFocused = true } else { stopCelebrating() }
 		}
 		.onChange(of: person) { _, changedPerson in
+			if !changedPerson.celebratesBirthdays { stopCelebrating() }
 			// Neighbouring pages also need fresh age and accessibility text after a saved change.
 			presenter.tick(person: changedPerson, now: now(), isSelected: isSelected)
 		}
+		.onChange(of: scenePhase) { _, phase in
+			if phase != .active { stopCelebrating() }
+		}
 		.onDisappear {
+			stopCelebrating()
 			presenter.tick(person: person, now: now(), isSelected: false)
 		}
 		// Restart with every saved change so the ticking loop never reads a stale birthday or celebration choice.
@@ -101,6 +121,19 @@ struct PersonOverviewScene: View {
 				do { try await Task.sleep(for: .seconds(1)) } catch { break }
 			}
 		}
+	}
+
+	/// Turns the page into its edit mode, which the celebration does not carry into.
+	private func edit() {
+		stopCelebrating()
+		haptics.play(.editEntered)
+		onEdit()
+	}
+
+	private func stopCelebrating() {
+		guard isPlayingCelebration else { return }
+		isPlayingCelebration = false
+		haptics.stopCelebrating()
 	}
 
 	/// The age at the top and the birthday card at the bottom, with the middle left to the photo.
@@ -205,8 +238,8 @@ struct PersonOverviewScene: View {
 		)
 		// VoiceOver reaches edit mode and the mosaic through the age, the page's main element; activating it edits,
 		// like a tap anywhere on the page.
-		.accessibilityAction(.default, onEdit)
-		.accessibilityAction(named: Text("Edit"), onEdit)
+		.accessibilityAction(.default, edit)
+		.accessibilityAction(named: Text("Edit"), edit)
 		.accessibilityActions {
 			if let onNext {
 				Button("Next person", action: onNext)

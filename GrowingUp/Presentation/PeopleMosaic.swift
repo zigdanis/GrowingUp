@@ -35,6 +35,8 @@ struct PeopleMosaic: View {
 	@State private var autoscrollDirection = 0
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		GeometryReader { geometry in
@@ -86,7 +88,6 @@ struct PeopleMosaic: View {
 				}
 			}
 		}
-		.sensoryFeedback(.impact(weight: .medium), trigger: drag?.id) { _, id in id != nil }
 	}
 
 	private func tile(_ person: Person, grid: MosaicGridLayout, width: CGFloat) -> some View {
@@ -141,6 +142,7 @@ struct PeopleMosaic: View {
 		if drag?.isSettling == true { drag = nil }
 		guard drag == nil else { return }
 		onStartReordering()
+		haptics.play(.reorderLifted)
 		withAnimation(reduceMotion ? nil : .snappy(duration: 0.2)) { drag = MosaicDrag(id: id) }
 	}
 
@@ -153,6 +155,7 @@ struct PeopleMosaic: View {
 		let centre = CGPoint(x: origin.x + grid.tileWidth / 2, y: origin.y + grid.tileHeight / 2)
 		let slot = grid.slot(at: centre, count: persons.count, width: width)
 		if slot != index {
+			haptics.play(.slotSwapped)
 			withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { onMove(drag.id, slot) }
 		}
 		autoscrollDirection = drag.location.flatMap { autoscroll?.direction(at: $0) } ?? 0
@@ -161,6 +164,7 @@ struct PeopleMosaic: View {
 	private func drop(_ id: UUID) {
 		guard drag?.id == id, drag?.isSettling == false else { return }
 		autoscrollDirection = 0
+		haptics.play(.dropped)
 		Task { await onSaveOrder() }
 		// With Reduce Motion, the tile lands in its slot at once.
 		guard !reduceMotion else {
@@ -175,6 +179,7 @@ struct PeopleMosaic: View {
 	}
 
 	private func shift(_ id: UUID, by offset: Int) {
+		haptics.play(.slotSwapped)
 		withAnimation(reduceMotion ? nil : .snappy(duration: 0.25)) { onShift(id, offset) }
 		Task { await onSaveOrder() }
 	}

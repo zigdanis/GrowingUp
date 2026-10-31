@@ -11,6 +11,9 @@ import Core
 import SwiftUI
 
 struct CropStep: View {
+	/// How far past where it may rest, in points, the picture is pulled before the edge is felt.
+	private static let edgeOvershoot: CGFloat = 6
+
 	private let source: UIImage
 	private let shape: CropShape
 	/// The region framed before, which the picture opens on; nil opens it aspect-filling the screen.
@@ -31,6 +34,10 @@ struct CropStep: View {
 	@State private var isFinishing = false
 	/// Whether the picture took its first place on a laid-out screen, on `initialCrop`.
 	@State private var isPlaced = false
+	/// Whether the current drag or pinch has pulled the picture past the crop frame's edge; it is felt once per gesture.
+	@State private var hasHitEdge = false
+	@Environment(\.haptics)
+	private var haptics
 
 	/// `image` is upright: a `WorkingImage` or an original the app stored. `onComplete` gets the framed region with the
 	/// picture rendered from it at the slot's stored size.
@@ -212,6 +219,7 @@ struct CropStep: View {
 
 	/// Hands over the framed part once it is scaled down; both buttons wait meanwhile.
 	private func finish() {
+		haptics.play(.cropConfirmed)
 		isFinishing = true
 		Task {
 			onComplete(await output(container: containerSize, insets: safeInsets, scale: scale, offset: offset))
@@ -239,8 +247,11 @@ struct CropStep: View {
 					height: lastOffset.height + value.translation.height
 				)
 				offset = geometry.rubberBandOffset(raw, scale: scale)
+				let clamped = geometry.clampOffset(raw, scale: scale)
+				feelEdge(overshoot: max(abs(raw.width - clamped.width), abs(raw.height - clamped.height)))
 			}
 			.onEnded { _ in
+				hasHitEdge = false
 				let settled = geometry.clampOffset(offset, scale: scale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
 					offset = settled
@@ -254,11 +265,16 @@ struct CropStep: View {
 		MagnifyGesture()
 			.onChanged { value in
 				isGesturing = true
-				let newScale = geometry.rubberBandedScale(lastScale * value.magnification)
+				let rawScale = lastScale * value.magnification
+				let newScale = geometry.rubberBandedScale(rawScale)
 				scale = newScale
 				offset = geometry.rubberBandOffset(offset, scale: newScale)
+				// A scale past its limit moves the picture's edges by half the size it gains or loses.
+				let display = geometry.displaySize
+				feelEdge(overshoot: abs(rawScale - geometry.clampScale(rawScale)) * max(display.width, display.height) / 2)
 			}
 			.onEnded { _ in
+				hasHitEdge = false
 				let settledScale = geometry.clampScale(scale)
 				let settledOffset = geometry.clampOffset(offset, scale: settledScale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
@@ -269,6 +285,13 @@ struct CropStep: View {
 				lastOffset = settledOffset
 				isGesturing = false
 			}
+	}
+
+	/// Taps once per gesture, the first time the picture is pulled further than `edgeOvershoot` past where it may rest.
+	private func feelEdge(overshoot: CGFloat) {
+		guard !hasHitEdge, overshoot > Self.edgeOvershoot else { return }
+		hasHitEdge = true
+		haptics.play(.cropEdgeHit)
 	}
 }
 

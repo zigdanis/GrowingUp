@@ -15,6 +15,8 @@ struct CameraCardView: View {
 	let onClose: () -> Void
 
 	@State private var captureFailed = false
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		ZStack {
@@ -50,6 +52,7 @@ struct CameraCardView: View {
 
 	private var flashButton: some View {
 		Button {
+			haptics.play(.selectionChanged)
 			controller.cycleFlash()
 		} label: {
 			Image(systemName: controller.flashMode.systemImage)
@@ -105,6 +108,7 @@ struct CameraCardView: View {
 	@ViewBuilder private var flipButton: some View {
 		if controller.canFlip {
 			Button {
+				haptics.play(.selectionChanged)
 				controller.flip()
 			} label: {
 				Image(systemName: "arrow.triangle.2.circlepath.camera.fill")
@@ -128,6 +132,8 @@ struct CameraCardView: View {
 	}
 
 	private func capture() {
+		guard !controller.isCapturing else { return }
+		haptics.play(.shutter)
 		controller.capturePhoto { image in
 			if let image {
 				onCapture(image)

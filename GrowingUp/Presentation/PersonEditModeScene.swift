@@ -15,6 +15,8 @@ struct PersonEditModeScene: View {
 	@State private var photoRequest: PhotoRequest?
 	@State private var widgetPictureSource: IdentifiableImage?
 	@FocusState private var isNameFocused: Bool
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		@Bindable var editor = mode.editor
@@ -27,7 +29,7 @@ struct PersonEditModeScene: View {
 				.disabled(editor.isBusy || editor.isLoading || mode.isFinishing)
 				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
 				.accessibilityElement(children: .contain)
-				.accessibilityAction(.escape) { mode.cancel() }
+				.accessibilityAction(.escape, cancel)
 			if let popover = mode.popover {
 				EditModePopoverCard(
 					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
@@ -49,10 +51,19 @@ struct PersonEditModeScene: View {
 		.task(id: [editor.appImage?.id, editor.widgetImage?.id]) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
 		.alert(mode.removalTitle, isPresented: $mode.isConfirmingRemoval) {
-			Button("Remove", role: .destructive) { Task { await mode.remove() } }
+			Button("Remove", role: .destructive) {
+				// Read now: the scene is gone once the removal lands.
+				let feedback = haptics
+				Task {
+					if await mode.remove() { feedback.play(.removed) }
+				}
+			}
 			Button("Cancel", role: .cancel) {}
 		} message: {
 			Text("Their photo, birthday and settings will disappear from the app and the widget.")
+		}
+		.onChange(of: mode.isConfirmingRemoval) { _, isConfirming in
+			if isConfirming { haptics.play(.removalConfirmationShown) }
 		}
 		.sceneError($editor.error)
 		.sheet(item: $photoRequest) { request in
@@ -109,7 +120,7 @@ struct PersonEditModeScene: View {
 	private var topBar: some View {
 		HStack {
 			Button("Cancel") {
-				mode.cancel()
+				cancel()
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: false))
 			.disabled(!mode.canCancel)
@@ -118,7 +129,11 @@ struct PersonEditModeScene: View {
 			Spacer()
 			Button("Done") {
 				isNameFocused = false
-				Task { await mode.done() }
+				// Read now: the scene is gone once the save lands.
+				let feedback = haptics
+				Task {
+					if await mode.done() { feedback.play(.saved) }
+				}
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: true))
 			.disabled(!mode.canSave)
@@ -149,6 +164,12 @@ struct PersonEditModeScene: View {
 		)
 		.allowsHitTesting(false)
 		.accessibilityHidden(true)
+	}
+
+	private func cancel() {
+		guard mode.canCancel else { return }
+		haptics.play(.cancelled)
+		mode.cancel()
 	}
 
 	private func frameWidgetPicture() {

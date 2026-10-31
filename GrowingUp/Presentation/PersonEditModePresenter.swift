@@ -124,9 +124,10 @@ final class PersonEditModePresenter {
 	}
 
 	/// Renders a new framing of the photo into the main picture and saves the draft through the editor, which then closes
-	/// the mode. The photo itself stays whole, so the next framing can reach back to all of it.
-	func done() async {
-		guard canSave else { return }
+	/// the mode; true when the save landed. The photo itself stays whole, so the next framing can reach back to all of it.
+	@discardableResult
+	func done() async -> Bool {
+		guard canSave else { return false }
 		isFinishing = true
 		defer { isFinishing = false }
 		if hasReframed, let photo, let geometry = geometry(of: photo) {
@@ -138,14 +139,19 @@ final class PersonEditModePresenter {
 			restingFraming = framing
 			framedPhotoID = editor.framingSource?.id
 		}
-		guard await editor.save(), hasUnsavedReframe else { return }
-		hasUnsavedReframe = false
-		editor.analytics.track(.photoReframed)
+		guard await editor.save() else { return false }
+		if hasUnsavedReframe {
+			hasUnsavedReframe = false
+			editor.analytics.track(.photoReframed)
+		}
+		return true
 	}
 
-	func remove() async {
+	/// Removes the person; true when the removal landed.
+	@discardableResult
+	func remove() async -> Bool {
 		isConfirmingRemoval = false
-		await editor.remove()
+		return await editor.remove()
 	}
 
 	/// Places a newly picked photo from `source`, framed in the photo flow, as the main photo.

@@ -55,10 +55,11 @@ final class PersonEditModePresenterTests: XCTestCase {
 		XCTAssertFalse(mode.canSave, "A blank name cannot be saved")
 		mode.editor.name = "Edited"
 		XCTAssertTrue(mode.canSave)
-		async let first: Void = mode.done()
-		async let second: Void = mode.done()
-		_ = await (first, second)
+		async let first = mode.done()
+		async let second = mode.done()
+		let saved = await [first, second]
 		XCTAssertEqual(saves, 1)
+		XCTAssertEqual(saved.filter { $0 }.count, 1, "Only the Done that saved reports it")
 		XCTAssertNil(presenter.editMode)
 		XCTAssertTrue(presenter.isViewing)
 		XCTAssertEqual(presenter.selectedID, edited.id)
@@ -73,7 +74,8 @@ final class PersonEditModePresenterTests: XCTestCase {
 		let mode = try XCTUnwrap(presenter.editMode)
 		await mode.editor.load()
 		mode.editor.isOnWidget = true
-		await mode.done()
+		let saved = await mode.done()
+		XCTAssertFalse(saved)
 		XCTAssertNotNil(mode.editor.error)
 		XCTAssertTrue(presenter.editMode === mode, "The draft stays open to fix")
 	}
@@ -160,7 +162,8 @@ final class PersonEditModePresenterTests: XCTestCase {
 		let mode = try XCTUnwrap(presenter.editMode)
 		XCTAssertTrue(mode.removalTitle.contains(people[1].name))
 		mode.confirmRemoval()
-		await mode.remove()
+		let removed = await mode.remove()
+		XCTAssertTrue(removed)
 		XCTAssertFalse(mode.isConfirmingRemoval)
 		XCTAssertFalse(presenter.isViewing)
 		XCTAssertNil(presenter.editMode)
