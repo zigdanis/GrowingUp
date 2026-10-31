@@ -83,7 +83,8 @@ final class ReorderingTests: XCTestCase {
 
 	/// A swipe that starts in the middle of a photo scrolls the mosaic, lifting no tile and opening nobody: at first, while
 	/// reordering after a tile was carried to a new place, and once reordering is done.
-	func testASwipeStartingOnATileScrollsTheMosaic() {
+	func testASwipeStartingOnATileScrollsTheMosaic() throws {
+		try XCTSkipIf(UIDevice.current.userInterfaceIdiom == .pad, "Six people fit an iPad's mosaic, which has nothing to scroll")
 		launch()
 		let viewer = app.buttons["person.name"]
 		let top = tile("Alice").frame.minY
