@@ -1,10 +1,12 @@
 import SwiftUI
 
 /// The edit mode's fields in the top third, where the keyboard never covers them: the name, the date and time capsules
-/// and the age they give. On iPad, a capsule's picker pops over it.
+/// and the age they give. In a tall enough iPad window, a capsule's picker pops over it.
 struct EditModeFields: View {
 	let mode: PersonEditModePresenter
 	var isNameFocused: FocusState<Bool>.Binding
+	/// Whether a capsule's picker pops over it, as in a tall enough iPad window; otherwise `EditModePopoverCard` shows it.
+	let popsOver: Bool
 	@Environment(\.haptics)
 	private var haptics
 
@@ -106,10 +108,10 @@ struct EditModeFields: View {
 		}
 	}
 
-	/// Whether `popover` shows over its capsule, as on iPad; phones show it in `EditModePopoverCard`.
+	/// Whether `popover` shows over its capsule; see `popsOver`.
 	private func isPoppedOver(_ popover: PersonEditPopover) -> Binding<Bool> {
 		Binding(
-			get: { UIDevice.current.userInterfaceIdiom == .pad && mode.popover == popover },
+			get: { popsOver && mode.popover == popover },
 			set: { isShown in
 				if !isShown, mode.popover == popover { mode.dismissPopover() }
 			})

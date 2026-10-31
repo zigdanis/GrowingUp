@@ -30,8 +30,8 @@ struct PersonEditModeScene: View {
 				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
 				.accessibilityElement(children: .contain)
 				.accessibilityAction(.escape, cancel)
-			// iPad pops the pickers over their capsules instead.
-			if let popover = mode.popover, UIDevice.current.userInterfaceIdiom != .pad {
+			// A tall enough iPad window pops the pickers over their capsules instead.
+			if let popover = mode.popover, !popsOverCapsules {
 				EditModePopoverCard(
 					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
 					safeAreaInsets: safeAreaInsets
@@ -97,7 +97,7 @@ struct PersonEditModeScene: View {
 			topBar
 				.modifier(WindowControlsClearance(edges: .leading))
 				.padding(.bottom, 16)
-			EditModeFields(mode: mode, isNameFocused: $isNameFocused)
+			EditModeFields(mode: mode, isNameFocused: $isNameFocused, popsOver: popsOverCapsules)
 			Spacer(minLength: 24)
 			EditModeControls(mode: mode, photoRequest: $photoRequest, onFrameWidgetPicture: frameWidgetPicture)
 				.padding(.bottom, 16)
@@ -130,6 +130,11 @@ struct PersonEditModeScene: View {
 		}
 		.lineLimit(1)
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
+	}
+
+	/// Whether the pickers pop over their capsules: on iPad, in a window tall enough to hold the calendar beside them.
+	private var popsOverCapsules: Bool {
+		UIDevice.current.userInterfaceIdiom == .pad && window.height >= EditModePopoverCard.minimumPopoverWindowHeight
 	}
 
 	private func done() {

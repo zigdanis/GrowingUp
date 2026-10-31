@@ -1,8 +1,12 @@
 import SwiftUI
 
-/// The calendar or the time wheels in a card centred on the screen over a dim layer, as phones show them; a tap outside
-/// the card closes it. iPad pops them over their capsules instead; see `EditModeFields`.
+/// The calendar or the time wheels in a card centred on the screen over a dim layer, as phones and short iPad windows
+/// show them; a tap outside the card closes it. Taller iPad windows pop them over their capsules; see `EditModeFields`.
 struct EditModePopoverCard: View {
+	/// An iPad window shorter than this has no room for the calendar beside its capsule, which a popover would clip, so it
+	/// shows the card too.
+	static let minimumPopoverWindowHeight: CGFloat = 580
+
 	let mode: PersonEditModePresenter
 	let popover: PersonEditPopover
 	/// The widest the card gets, padding included; it must fit between the safe-area sides, as the time wheels cannot shrink.
