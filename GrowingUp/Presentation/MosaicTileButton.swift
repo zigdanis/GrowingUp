@@ -49,6 +49,9 @@ struct MosaicTileButton: View {
 						}, onMove: onDrag, onRelease: onDrop))
 		}
 		.buttonStyle(.plain)
+		// A pointer, as on iPad with a trackpad, lifts the tile it rests on.
+		.contentShape(.hoverEffect, .rect(cornerRadius: MosaicTile.cornerRadius))
+		.hoverEffect(.lift)
 		// Optional, like the viewer's selection it is matched against.
 		.matchedTransitionSource(id: Optional(person.id), in: zoom) { source in
 			source.clipShape(.rect(cornerRadius: MosaicTile.cornerRadius))

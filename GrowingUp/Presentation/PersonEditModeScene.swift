@@ -114,6 +114,8 @@ struct PersonEditModeScene: View {
 				mode.cancel()
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: false))
+			// Escape cancels, unless it is closing a picker first.
+			.keyboardShortcut(mode.popover == nil ? .cancelAction : nil)
 			.disabled(!mode.canCancel)
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.cancel")
@@ -123,6 +125,7 @@ struct PersonEditModeScene: View {
 				Task { await mode.done() }
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: true))
+			.keyboardShortcut(.return, modifiers: .command)
 			.disabled(!mode.canSave)
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.save")

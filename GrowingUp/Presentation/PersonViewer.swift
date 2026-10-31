@@ -10,6 +10,8 @@ struct PersonViewer: View {
 	let presenter: PeoplePresenter
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
+	@Environment(\.layoutDirection)
+	private var layoutDirection
 
 	var body: some View {
 		let editMode = presenter.editMode
@@ -32,6 +34,7 @@ struct PersonViewer: View {
 					.transition(.opacity)
 			}
 		}
+		.background { keyboardShortcuts }
 		.animation(.easeInOut(duration: 0.25), value: editMode != nil)
 		.animation(.easeInOut(duration: 0.25), value: presenter.isAddingPerson)
 		// The edit mode's name field sits in the top third, clear of the keyboard, so the keyboard never moves the photo;
@@ -77,6 +80,31 @@ struct PersonViewer: View {
 			// A freshly presented pager starts on its first page whatever its position says, so it moves to the tapped person
 			// before the zoom reveals it.
 			.onAppear { proxy.scrollTo(presenter.selectedID) }
+		}
+	}
+
+	/// A hardware keyboard's keys for the shown page, as hidden buttons: the arrows page through people, Return edits the
+	/// shown person and Escape returns to the mosaic. Edit mode takes the keys over while it is open.
+	@ViewBuilder private var keyboardShortcuts: some View {
+		if presenter.editMode == nil, !presenter.isAddingPerson,
+			let person = presenter.persons.first(where: { $0.id == presenter.selectedID })
+		{
+			// The arrows follow the pager, which runs the other way in a right-to-left language.
+			let forward: KeyEquivalent = layoutDirection == .rightToLeft ? .leftArrow : .rightArrow
+			let backward: KeyEquivalent = layoutDirection == .rightToLeft ? .rightArrow : .leftArrow
+			Group {
+				Button("Next person") { pageAction(from: person, by: 1)?() }
+					.keyboardShortcut(forward, modifiers: [])
+				Button("Previous person") { pageAction(from: person, by: -1)?() }
+					.keyboardShortcut(backward, modifiers: [])
+				Button("Edit") { presenter.edit(person) }
+					.keyboardShortcut(.return, modifiers: [])
+				Button("All people", action: presenter.closeViewer)
+					.keyboardShortcut(.escape, modifiers: [])
+			}
+			.opacity(0)
+			.allowsHitTesting(false)
+			.accessibilityHidden(true)
 		}
 	}
 
