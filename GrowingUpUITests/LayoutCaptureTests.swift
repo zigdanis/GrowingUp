@@ -226,9 +226,15 @@ final class LayoutCaptureTests: XCTestCase {
 		XCTAssertTrue(wait(for: overview, label: name))
 	}
 
-	/// Closes the open card or popover with a tap on the photo below it, clear of the controls along the bottom.
+	/// Closes the open popover with a tap beside it, or the open card with a tap on the photo below it, clear of the
+	/// controls along the bottom.
 	private func dismissOverlay() {
-		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.8)).tap()
+		let beside = app.otherElements["PopoverDismissRegion"]
+		if beside.exists {
+			beside.tap()
+		} else {
+			app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.8)).tap()
+		}
 	}
 
 	private func wants(_ screen: String) -> Bool {
