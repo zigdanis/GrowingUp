@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		2C645D6291566FE25F62F54E /* KeyboardShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A06E17FB553285EE3F2B50 /* KeyboardShortcutTests.swift */; };
 		83D9F4E750E49F9604D5CA24 /* ImageCaptureSheetSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5599C3AE15D20D6009CE1407 /* ImageCaptureSheetSize.swift */; };
 		877DAA2DA9D795971C68483E /* RemovalConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */; };
 		6CEBC4A8DEF4993EAA035EF9 /* EditModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E37EA12DCBBFD79EA35238 /* EditModePicker.swift */; };
@@ -661,6 +662,7 @@
 		32DAA5842EE458E988A419CC /* AgeTickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTickerTests.swift; sourceTree = "<group>"; };
 		7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPresenterTests.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		79A06E17FB553285EE3F2B50 /* KeyboardShortcutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardShortcutTests.swift; sourceTree = "<group>"; };
 		94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCaptureTests.swift; sourceTree = "<group>"; };
 		ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderingTests.swift; sourceTree = "<group>"; };
 		00FF40512DE725DE755692A6 /* NewPersonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonTests.swift; sourceTree = "<group>"; };
@@ -1367,6 +1369,7 @@
 				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 				508A5E39114E5FF4A37059BB /* NavigationTests.swift */,
+				79A06E17FB553285EE3F2B50 /* KeyboardShortcutTests.swift */,
 				94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */,
 				ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */,
 				00FF40512DE725DE755692A6 /* NewPersonTests.swift */,
@@ -1997,6 +2000,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C645D6291566FE25F62F54E /* KeyboardShortcutTests.swift in Sources */,
 				AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */,
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
