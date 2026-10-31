@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1A000000000000000000003 /* HapticImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000002 /* HapticImpact.swift */; };
+		B1A000000000000000000005 /* HapticNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000004 /* HapticNotification.swift */; };
+		B1A000000000000000000007 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000006 /* HapticFeedback.swift */; };
+		B1A000000000000000000009 /* HapticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000008 /* HapticEvent.swift */; };
+		B1A00000000000000000000B /* HapticThrottle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000000A /* HapticThrottle.swift */; };
+		B1A00000000000000000000D /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000000C /* Haptics.swift */; };
+		B1A00000000000000000000F /* NoHaptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000000E /* NoHaptics.swift */; };
+		B1A000000000000000000011 /* SystemHaptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000010 /* SystemHaptics.swift */; };
+		B1A000000000000000000013 /* EnvironmentValues+Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000012 /* EnvironmentValues+Haptics.swift */; };
+		B1A000000000000000000015 /* HapticPulse.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000014 /* HapticPulse.swift */; };
+		B1A000000000000000000017 /* BirthdayHapticPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000016 /* BirthdayHapticPattern.swift */; };
+		B1A000000000000000000019 /* BirthdayHapticEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000018 /* BirthdayHapticEngine.swift */; };
+		B1A00000000000000000001B /* SceneErrorHaptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000001A /* SceneErrorHaptics.swift */; };
+		B1A00000000000000000001D /* HapticEventTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000001C /* HapticEventTests.swift */; };
+		B1A00000000000000000001F /* HapticThrottleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A00000000000000000001E /* HapticThrottleTests.swift */; };
+		B1A000000000000000000021 /* BirthdayHapticPatternTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000020 /* BirthdayHapticPatternTests.swift */; };
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
 		20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */; };
 		A7F1C2D3E4B5968778695A4D /* MosaicAutoscrollTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */; };
@@ -388,6 +404,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B1A000000000000000000002 /* HapticImpact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticImpact.swift; sourceTree = "<group>"; };
+		B1A000000000000000000004 /* HapticNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticNotification.swift; sourceTree = "<group>"; };
+		B1A000000000000000000006 /* HapticFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedback.swift; sourceTree = "<group>"; };
+		B1A000000000000000000008 /* HapticEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEvent.swift; sourceTree = "<group>"; };
+		B1A00000000000000000000A /* HapticThrottle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticThrottle.swift; sourceTree = "<group>"; };
+		B1A00000000000000000000C /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		B1A00000000000000000000E /* NoHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoHaptics.swift; sourceTree = "<group>"; };
+		B1A000000000000000000010 /* SystemHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemHaptics.swift; sourceTree = "<group>"; };
+		B1A000000000000000000012 /* EnvironmentValues+Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Haptics.swift"; sourceTree = "<group>"; };
+		B1A000000000000000000014 /* HapticPulse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticPulse.swift; sourceTree = "<group>"; };
+		B1A000000000000000000016 /* BirthdayHapticPattern.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayHapticPattern.swift; sourceTree = "<group>"; };
+		B1A000000000000000000018 /* BirthdayHapticEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayHapticEngine.swift; sourceTree = "<group>"; };
+		B1A00000000000000000001A /* SceneErrorHaptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneErrorHaptics.swift; sourceTree = "<group>"; };
+		B1A00000000000000000001C /* HapticEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticEventTests.swift; sourceTree = "<group>"; };
+		B1A00000000000000000001E /* HapticThrottleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticThrottleTests.swift; sourceTree = "<group>"; };
+		B1A000000000000000000020 /* BirthdayHapticPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayHapticPatternTests.swift; sourceTree = "<group>"; };
 		D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPaletteTests.swift; sourceTree = "<group>"; };
 		EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayoutTests.swift; sourceTree = "<group>"; };
 		A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicAutoscrollTests.swift; sourceTree = "<group>"; };
@@ -748,6 +780,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B1A000000000000000000001 /* Haptics */ = {
+			isa = PBXGroup;
+			children = (
+				B1A000000000000000000002 /* HapticImpact.swift */,
+				B1A000000000000000000004 /* HapticNotification.swift */,
+				B1A000000000000000000006 /* HapticFeedback.swift */,
+				B1A000000000000000000008 /* HapticEvent.swift */,
+				B1A00000000000000000000A /* HapticThrottle.swift */,
+				B1A00000000000000000000C /* Haptics.swift */,
+				B1A00000000000000000000E /* NoHaptics.swift */,
+				B1A000000000000000000010 /* SystemHaptics.swift */,
+				B1A000000000000000000012 /* EnvironmentValues+Haptics.swift */,
+				B1A000000000000000000014 /* HapticPulse.swift */,
+				B1A000000000000000000016 /* BirthdayHapticPattern.swift */,
+				B1A000000000000000000018 /* BirthdayHapticEngine.swift */,
+			);
+			path = Haptics;
+			sourceTree = "<group>";
+		};
 		09051B3C21C558DB008A99C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -838,6 +889,7 @@
 				499D6EF315D5CC57361D1497 /* Presentation */,
 				6EAF7AFE19C3D2DCA662652E /* Testing */,
 				A7A100000000000000000001 /* Analytics */,
+				B1A000000000000000000001 /* Haptics */,
 			);
 			path = GrowingUp;
 			sourceTree = "<group>";
@@ -1103,6 +1155,9 @@
 				ED19AC71E3BE9F5A7EB8FCA7 /* FramingSurfaceViewTests.swift */,
 				92C321C8BA47F991AF815F47 /* SwiftUIPresenterTests.swift */,
 				DB43F35BAFC726473126C639 /* ConfettiStyleTests.swift */,
+				B1A000000000000000000020 /* BirthdayHapticPatternTests.swift */,
+				B1A00000000000000000001E /* HapticThrottleTests.swift */,
+				B1A00000000000000000001C /* HapticEventTests.swift */,
 				A795EAFED1EDD08B45255D8C /* PersonTileContentTests.swift */,
 				B1C2D3E4F5061728394A5B6F /* PhotoScrimTests.swift */,
 				0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */,
@@ -1262,6 +1317,7 @@
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
+				B1A00000000000000000001A /* SceneErrorHaptics.swift */,
 				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
@@ -1801,6 +1857,9 @@
 				091BEEB2223D614E00A3D057 /* AddPersonUseCaseTests.swift in Sources */,
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
+				B1A00000000000000000001D /* HapticEventTests.swift in Sources */,
+				B1A00000000000000000001F /* HapticThrottleTests.swift in Sources */,
+				B1A000000000000000000021 /* BirthdayHapticPatternTests.swift in Sources */,
 				1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */,
 				B1C2D3E4F5061728394A5B70 /* PhotoScrimTests.swift in Sources */,
 				311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */,
@@ -1959,6 +2018,19 @@
 				FD5281911EFC9D3357CFDD5B /* GlassCapsuleButtonChrome.swift in Sources */,
 				A7A100000000000000000003 /* AnalyticsContext.swift in Sources */,
 				A7A100000000000000000005 /* AnalyticsEvent.swift in Sources */,
+				B1A000000000000000000003 /* HapticImpact.swift in Sources */,
+				B1A000000000000000000005 /* HapticNotification.swift in Sources */,
+				B1A000000000000000000007 /* HapticFeedback.swift in Sources */,
+				B1A000000000000000000009 /* HapticEvent.swift in Sources */,
+				B1A00000000000000000000B /* HapticThrottle.swift in Sources */,
+				B1A00000000000000000000D /* Haptics.swift in Sources */,
+				B1A00000000000000000000F /* NoHaptics.swift in Sources */,
+				B1A000000000000000000011 /* SystemHaptics.swift in Sources */,
+				B1A000000000000000000013 /* EnvironmentValues+Haptics.swift in Sources */,
+				B1A000000000000000000015 /* HapticPulse.swift in Sources */,
+				B1A000000000000000000017 /* BirthdayHapticPattern.swift in Sources */,
+				B1A000000000000000000019 /* BirthdayHapticEngine.swift in Sources */,
+				B1A00000000000000000001B /* SceneErrorHaptics.swift in Sources */,
 				A7A100000000000000000007 /* AnalyticsFailure.swift in Sources */,
 				A7A100000000000000000009 /* AnalyticsGateway.swift in Sources */,
 				A7A10000000000000000000B /* AnalyticsValue.swift in Sources */,

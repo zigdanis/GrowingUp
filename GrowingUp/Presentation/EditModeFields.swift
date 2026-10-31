@@ -5,6 +5,8 @@ import SwiftUI
 struct EditModeFields: View {
 	let mode: PersonEditModePresenter
 	var isNameFocused: FocusState<Bool>.Binding
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		VStack(alignment: .leading, spacing: 16) {
@@ -77,6 +79,7 @@ struct EditModeFields: View {
 	private func capsule(_ text: String, popover: PersonEditPopover, label: Text, identifier: String) -> some View {
 		Button {
 			isNameFocused.wrappedValue = false
+			haptics.play(.selectionChanged)
 			mode.show(popover)
 		} label: {
 			Text(text)

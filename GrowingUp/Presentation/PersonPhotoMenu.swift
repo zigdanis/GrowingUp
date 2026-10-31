@@ -6,6 +6,8 @@ struct PersonPhotoMenu<MenuLabel: View>: View {
 	let presenter: PersonEditorPresenter
 	@Binding var photoRequest: PhotoRequest?
 	@ViewBuilder let label: () -> MenuLabel
+	@Environment(\.haptics)
+	private var haptics
 
 	var body: some View {
 		Menu {
@@ -14,8 +16,11 @@ struct PersonPhotoMenu<MenuLabel: View>: View {
 			Button("Camera", systemImage: "camera") { photoRequest = PhotoRequest(source: .camera) }
 				.accessibilityIdentifier("photo.source.camera")
 			if hasPhoto {
-				Button("Remove", systemImage: "trash", role: .destructive) { presenter.removeMainPhoto() }
-					.accessibilityIdentifier("photo.source.remove")
+				Button("Remove", systemImage: "trash", role: .destructive) {
+					presenter.removeMainPhoto()
+					haptics.play(.photoRemoved)
+				}
+				.accessibilityIdentifier("photo.source.remove")
 			}
 		} label: {
 			label()

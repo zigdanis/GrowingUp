@@ -11,11 +11,13 @@ import SwiftUI
 struct GrowingUpApp: App {
 	@State private var presenter: PeoplePresenter
 	private let preferredColorScheme: ColorScheme?
+	private let haptics: any Haptics
 
 	init() {
 		let launchMode = AppLaunchMode.current
 		preferredColorScheme = launchMode.preferredColorScheme
 		_presenter = State(initialValue: PeoplePresenter(configurator: AppComposition.make(for: launchMode)))
+		haptics = launchMode.playsHaptics ? SystemHaptics() : NoHaptics()
 	}
 
 	var body: some Scene {
@@ -29,10 +31,12 @@ struct GrowingUpApp: App {
 				} else {
 					PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
 						.tint(Color(uiColor: .appColor))
+						.environment(\.haptics, haptics)
 				}
 			#else
 				PeopleScene(presenter: presenter, preferredColorScheme: preferredColorScheme)
 					.tint(Color(uiColor: .appColor))
+					.environment(\.haptics, haptics)
 			#endif
 		}
 	}

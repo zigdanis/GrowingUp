@@ -12,5 +12,6 @@ extension View {
 		} message: {
 			Text(error.wrappedValue?.message ?? "")
 		}
+		.modifier(SceneErrorHaptics(isShown: error.wrappedValue != nil))
 	}
 }

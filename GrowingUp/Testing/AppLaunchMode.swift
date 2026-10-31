@@ -22,6 +22,18 @@ enum AppLaunchMode {
 		#endif
 	}
 
+	/// UI tests drive the app on simulators and CI, where the Taptic Engine has nothing to confirm.
+	var playsHaptics: Bool {
+		switch self {
+		case .live:
+			return true
+		#if DEBUG
+			case .uiTest:
+				return false
+		#endif
+		}
+	}
+
 	var preferredColorScheme: ColorScheme? {
 		switch self {
 		case .live:

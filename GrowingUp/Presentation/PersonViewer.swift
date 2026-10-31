@@ -52,7 +52,7 @@ struct PersonViewer: View {
 				LazyHStack(spacing: 0) {
 					ForEach(presenter.persons, id: \.id) { person in
 						PersonOverviewScene(
-							person: person, isSelected: presenter.selectedID == person.id, configurator: presenter.configurator,
+							person: person, isSelected: presenter.selectedID == person.id, isEditing: isEditing, configurator: presenter.configurator,
 							safeAreaInsets: safeAreaInsets, layout: layout, pageSize: window,
 							onEdit: { presenter.edit(person) },
 							onClose: presenter.closeViewer,
