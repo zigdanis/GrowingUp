@@ -26,6 +26,10 @@ final class KeyboardShortcutTests: XCTestCase {
 		XCTAssertTrue(name.waitForExistence(timeout: 5), "Command-N adds a person")
 		// Return puts the keyboard away, as the name field's Done does; then the edit mode's own keys answer again.
 		name.typeText("Kim\n")
+		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
+		XCTAssertTrue(save.isEnabled)
+		// The edit mode takes the keyboard's keys back on the next turn of the run loop.
+		Thread.sleep(forTimeInterval: 1)
 		app.typeKey(.return, modifierFlags: .command)
 		XCTAssertTrue(save.waitForNonExistence(timeout: 10), "Command-Return saves")
 		XCTAssertTrue(tile("Kim").waitForExistence(timeout: 5))
