@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		3CA40D66589C284C6FA696C7 /* KeyboardCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670425D8D9D4BA6215DD518B /* KeyboardCommand.swift */; };
 		7448CA777075A389C41453AC /* KeyboardFocusAnchorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6898FEBE5BB98005FAFF911D /* KeyboardFocusAnchorView.swift */; };
 		D11C2C3E917016ED16AAD8D8 /* KeyboardFocusAnchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87873AB818C11CCD26F50CF /* KeyboardFocusAnchor.swift */; };
 		2C645D6291566FE25F62F54E /* KeyboardShortcutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A06E17FB553285EE3F2B50 /* KeyboardShortcutTests.swift */; };
@@ -619,6 +620,7 @@
 		B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonPhotoMenu.swift; sourceTree = "<group>"; };
 		715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditModeScene.swift; sourceTree = "<group>"; };
 		2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModePopoverCard.swift; sourceTree = "<group>"; };
+		670425D8D9D4BA6215DD518B /* KeyboardCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardCommand.swift; sourceTree = "<group>"; };
 		6898FEBE5BB98005FAFF911D /* KeyboardFocusAnchorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardFocusAnchorView.swift; sourceTree = "<group>"; };
 		C87873AB818C11CCD26F50CF /* KeyboardFocusAnchor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardFocusAnchor.swift; sourceTree = "<group>"; };
 		39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemovalConfirmation.swift; sourceTree = "<group>"; };
@@ -1260,6 +1262,7 @@
 				B44B371DB48B473794D00D69 /* PersonPhotoMenu.swift */,
 				715B172F4143CBBC0385CBBC /* PersonEditModeScene.swift */,
 				2BFDAE4753DD72B3122D30FD /* EditModePopoverCard.swift */,
+				670425D8D9D4BA6215DD518B /* KeyboardCommand.swift */,
 				6898FEBE5BB98005FAFF911D /* KeyboardFocusAnchorView.swift */,
 				C87873AB818C11CCD26F50CF /* KeyboardFocusAnchor.swift */,
 				39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */,
@@ -1849,6 +1852,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3CA40D66589C284C6FA696C7 /* KeyboardCommand.swift in Sources */,
 				7448CA777075A389C41453AC /* KeyboardFocusAnchorView.swift in Sources */,
 				D11C2C3E917016ED16AAD8D8 /* KeyboardFocusAnchor.swift in Sources */,
 				83D9F4E750E49F9604D5CA24 /* ImageCaptureSheetSize.swift in Sources */,

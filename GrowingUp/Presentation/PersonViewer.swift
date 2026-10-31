@@ -34,7 +34,7 @@ struct PersonViewer: View {
 					.transition(.opacity)
 			}
 		}
-		.background { keyboardShortcuts }
+		.background { keyboardCommands }
 		.animation(.easeInOut(duration: 0.25), value: editMode != nil)
 		.animation(.easeInOut(duration: 0.25), value: presenter.isAddingPerson)
 		// The edit mode's name field sits in the top third, clear of the keyboard, so the keyboard never moves the photo;
@@ -83,30 +83,26 @@ struct PersonViewer: View {
 		}
 	}
 
-	/// A hardware keyboard's keys for the shown page, as hidden buttons: the arrows page through people, Return edits the
-	/// shown person and Escape returns to the mosaic. Edit mode takes the keys over while it is open.
-	@ViewBuilder private var keyboardShortcuts: some View {
+	/// A hardware keyboard's keys for the shown page: the arrows page through people, Return edits the shown person and
+	/// Escape returns to the mosaic. Edit mode takes the keys over while it is open.
+	@ViewBuilder private var keyboardCommands: some View {
 		if presenter.editMode == nil, !presenter.isAddingPerson,
 			let person = presenter.persons.first(where: { $0.id == presenter.selectedID })
 		{
-			KeyboardFocusAnchor()
-				.frame(width: 0, height: 0)
 			// The arrows follow the pager, which runs the other way in a right-to-left language.
-			let forward: KeyEquivalent = layoutDirection == .rightToLeft ? .leftArrow : .rightArrow
-			let backward: KeyEquivalent = layoutDirection == .rightToLeft ? .rightArrow : .leftArrow
-			Group {
-				Button("Next person") { pageAction(from: person, by: 1)?() }
-					.keyboardShortcut(forward, modifiers: [])
-				Button("Previous person") { pageAction(from: person, by: -1)?() }
-					.keyboardShortcut(backward, modifiers: [])
-				Button("Edit") { presenter.edit(person) }
-					.keyboardShortcut(.return, modifiers: [])
-				Button("All people", action: presenter.closeViewer)
-					.keyboardShortcut(.escape, modifiers: [])
-			}
-			.opacity(0)
-			.allowsHitTesting(false)
-			.accessibilityHidden(true)
+			let isRightToLeft = layoutDirection == .rightToLeft
+			KeyboardFocusAnchor(commands: [
+				KeyboardCommand(
+					title: String(localized: "Next person"), input: isRightToLeft ? UIKeyCommand.inputLeftArrow : UIKeyCommand.inputRightArrow,
+					action: { pageAction(from: person, by: 1)?() }),
+				KeyboardCommand(
+					title: String(localized: "Previous person"),
+					input: isRightToLeft ? UIKeyCommand.inputRightArrow : UIKeyCommand.inputLeftArrow,
+					action: { pageAction(from: person, by: -1)?() }),
+				KeyboardCommand(title: String(localized: "Edit"), input: "\r", action: { presenter.edit(person) }),
+				KeyboardCommand(title: String(localized: "All people"), input: UIKeyCommand.inputEscape, action: presenter.closeViewer)
+			])
+			.frame(width: 0, height: 0)
 		}
 	}
 

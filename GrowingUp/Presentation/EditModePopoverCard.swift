@@ -17,12 +17,6 @@ struct EditModePopoverCard: View {
 				.contentShape(Rectangle())
 				.onTapGesture { mode.dismissPopover() }
 				.accessibilityHidden(true)
-			// Escape on a hardware keyboard closes the card, as a tap outside it does.
-			Button("Close", action: mode.dismissPopover)
-				.keyboardShortcut(.cancelAction)
-				.opacity(0)
-				.allowsHitTesting(false)
-				.accessibilityHidden(true)
 			card
 				.padding(24)
 				.frame(maxWidth: maxWidth)

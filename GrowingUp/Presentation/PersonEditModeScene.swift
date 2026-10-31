@@ -40,8 +40,8 @@ struct PersonEditModeScene: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background {
-			// Escape and Command-Return reach the edit mode while the name field has no keyboard.
-			if !isNameFocused { KeyboardFocusAnchor().frame(width: 0, height: 0) }
+			// While the name field has no keyboard, Escape closes a picker or else cancels, and Command-Return saves.
+			if !isNameFocused { KeyboardFocusAnchor(commands: keyboardCommands).frame(width: 0, height: 0) }
 		}
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
@@ -112,24 +112,38 @@ struct PersonEditModeScene: View {
 				mode.cancel()
 			}
 			.buttonStyle(EditModeBarButtonStyle(isProminent: false))
-			// Escape cancels, unless it is closing a picker first.
-			.keyboardShortcut(mode.popover == nil ? .cancelAction : nil)
 			.disabled(!mode.canCancel)
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.cancel")
 			Spacer()
-			Button("Done") {
-				isNameFocused = false
-				Task { await mode.done() }
-			}
-			.buttonStyle(EditModeBarButtonStyle(isProminent: true))
-			.keyboardShortcut(.return, modifiers: .command)
-			.disabled(!mode.canSave)
-			.accessibilityShowsLargeContentViewer()
-			.accessibilityIdentifier("editor.save")
+			Button("Done", action: done)
+				.buttonStyle(EditModeBarButtonStyle(isProminent: true))
+				.disabled(!mode.canSave)
+				.accessibilityShowsLargeContentViewer()
+				.accessibilityIdentifier("editor.save")
 		}
 		.lineLimit(1)
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
+	}
+
+	private func done() {
+		isNameFocused = false
+		Task { await mode.done() }
+	}
+
+	private var keyboardCommands: [KeyboardCommand] {
+		[
+			KeyboardCommand(title: String(localized: "Cancel"), input: UIKeyCommand.inputEscape) {
+				if mode.popover != nil {
+					mode.dismissPopover()
+				} else if mode.canCancel {
+					mode.cancel()
+				}
+			},
+			KeyboardCommand(title: String(localized: "Done"), input: "\r", modifiers: .command) {
+				if mode.canSave { done() }
+			}
+		]
 	}
 
 	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.

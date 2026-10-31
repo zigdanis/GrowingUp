@@ -27,8 +27,8 @@ final class KeyboardShortcutTests: XCTestCase {
 		app.typeKey("n", modifierFlags: .command)
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5), "Command-N adds a person")
-		name.tap()
-		name.typeText("Kim")
+		// Return puts the keyboard away, as the name field's Done does; then the edit mode's own keys answer again.
+		name.typeText("Kim\n")
 		app.typeKey(.return, modifierFlags: .command)
 		XCTAssertTrue(save.waitForNonExistence(timeout: 10), "Command-Return saves")
 		XCTAssertTrue(tile("Kim").waitForExistence(timeout: 5))
