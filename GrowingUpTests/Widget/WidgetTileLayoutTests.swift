@@ -18,6 +18,15 @@ final class WidgetTileLayoutTests: XCTestCase {
 		}
 	}
 
+	func testExtraLargeWidgetSplitsItsPeopleLikeTheLargeOne() {
+		for count in 0...8 {
+			XCTAssertEqual(
+				WidgetTileLayout.rows(count: count, family: .systemExtraLarge), WidgetTileLayout.rows(count: count, family: .systemLarge),
+				"\(count) people")
+		}
+		XCTAssertEqual(WidgetTileLayout.capacity(of: .systemExtraLarge), WidgetTileLayout.capacity(of: .systemLarge))
+	}
+
 	func testMediumWidgetShowsUpToThreePeopleInOneRow() {
 		XCTAssertEqual(WidgetTileLayout.rows(count: 1, family: .systemMedium), [0..<1])
 		XCTAssertEqual(WidgetTileLayout.rows(count: 2, family: .systemMedium), [0..<2])
@@ -29,14 +38,14 @@ final class WidgetTileLayoutTests: XCTestCase {
 	}
 
 	func testNobodyPinnedHasNoRows() {
-		for family in [WidgetFamily.systemSmall, .systemMedium, .systemLarge] {
+		for family in [WidgetFamily.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge] {
 			XCTAssertEqual(WidgetTileLayout.rows(count: 0, family: family), [])
 		}
 	}
 
 	/// Rows cover the shown people exactly once and in pinned order, so every tile keeps its deep link.
 	func testRowsCoverThePeopleInOrderWithoutGaps() {
-		for family in [WidgetFamily.systemSmall, .systemMedium, .systemLarge] {
+		for family in [WidgetFamily.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge] {
 			for count in 0...8 {
 				let indices = WidgetTileLayout.rows(count: count, family: family).flatMap { Array($0) }
 				XCTAssertEqual(indices, Array(0..<min(count, WidgetTileLayout.capacity(of: family))), "\(family) \(count)")

@@ -16,6 +16,7 @@
 			switch familyName {
 			case "small": .systemSmall
 			case "medium": .systemMedium
+			case "extraLarge": .systemExtraLarge
 			case "circular": .accessoryCircular
 			case "rectangular": .accessoryRectangular
 			case "inline": .accessoryInline
@@ -25,6 +26,16 @@
 
 		private var isLockScreen: Bool {
 			[.accessoryCircular, .accessoryRectangular, .accessoryInline].contains(family)
+		}
+
+		/// Home Screen widget sizes of a 6.3-inch iPhone; the extra large one, iPad's only, of an 11-inch iPad.
+		private var homeScreenSize: CGSize {
+			switch family {
+			case .systemSmall: CGSize(width: 170, height: 170)
+			case .systemMedium: CGSize(width: 364, height: 170)
+			case .systemExtraLarge: CGSize(width: 715, height: 342)
+			default: CGSize(width: 364, height: 382)
+			}
 		}
 
 		/// Lock Screen widget sizes of a 6.3-inch iPhone.
@@ -70,7 +81,7 @@
 				// Outside WidgetKit there is no container background, so the widget background is drawn directly.
 				// Like the widget, which disables content margins, the tiles reach the rounded edges.
 				AgeWidgetContentView(entry: entry, family: family)
-					.frame(width: family == .systemSmall ? 170 : 364, height: family == .systemLarge ? 382 : 170)
+					.frame(width: homeScreenSize.width, height: homeScreenSize.height)
 					.background { AgeWidgetBackground(entry: entry, family: family) }
 					.background(.background)
 					.clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
