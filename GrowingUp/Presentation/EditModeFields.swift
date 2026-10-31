@@ -94,7 +94,8 @@ struct EditModeFields: View {
 		.accessibilityLabel(label)
 		.accessibilityValue(Text(text))
 		.accessibilityIdentifier(identifier)
-		.popover(isPresented: isPoppedOver(popover), attachmentAnchor: .rect(.bounds), arrowEdge: .top) {
+		// The system picks the side with room, such as beside or above the capsule in a short window.
+		.popover(isPresented: isPoppedOver(popover), attachmentAnchor: .rect(.bounds)) {
 			EditModePicker(mode: mode, popover: popover)
 				.frame(width: 320)
 				.padding(12)
