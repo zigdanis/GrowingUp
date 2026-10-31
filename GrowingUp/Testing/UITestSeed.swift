@@ -11,4 +11,6 @@ enum UITestSeed: String, Codable {
 	case demo
 	/// Mia alone, as in `demo`, for a mosaic of one.
 	case demoMia
+	/// Mia and Leo, as in `demo`, for a mosaic of two.
+	case demoPair
 }

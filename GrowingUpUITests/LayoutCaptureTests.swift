@@ -41,11 +41,7 @@ final class LayoutCaptureTests: XCTestCase {
 			// `current` leaves the device, and a window sized by hand, as they are.
 			if name != "current" { XCUIDevice.shared.orientation = name == "landscape" ? .landscapeLeft : .portrait }
 			captureDemoPeople()
-			if wants("mosaic-one") {
-				launch(seed: .demoMia)
-				Thread.sleep(forTimeInterval: 2)
-				capture("mosaic-one", note: "Mia alone")
-			}
+			captureOtherMosaics()
 			if wants("empty") {
 				launch(seed: .empty)
 				capture("empty", note: "The invitation and Add person")
@@ -78,6 +74,17 @@ final class LayoutCaptureTests: XCTestCase {
 		if wants("viewer") { capture("viewer", note: "Mia") }
 		if wants("birthday") { captureBirthday() }
 		if editing.contains(where: wants) { captureEditMode() }
+	}
+
+	/// Mosaics of one, two and six people, as many as the seeds give.
+	private func captureOtherMosaics() {
+		for (screen, seed) in [("mosaic-one", UITestSeed.demoMia), ("mosaic-two", .demoPair), ("mosaic-six", .sixPinned)]
+		where wants(screen) {
+			launch(seed: seed)
+			// Tile pictures load asynchronously and expose no loaded marker.
+			Thread.sleep(forTimeInterval: 3)
+			capture(screen, note: ["mosaic-one": "Mia alone", "mosaic-two": "Mia and Leo"][screen] ?? "Six people, two without a photo")
+		}
 	}
 
 	private func captureBirthday() {

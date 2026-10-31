@@ -36,7 +36,7 @@ enum AppComposition {
 			let photoFixtures = try photoFixtures(environment: environment)
 			if configuration.resetStore, configuration.seed != .empty {
 				// The demo people wear the App Store demo photos, in the order the capture adds them.
-				let isDemo = configuration.seed == .demo || configuration.seed == .demoMia
+				let isDemo = [.demo, .demoPair, .demoMia].contains(configuration.seed)
 				for (index, picture) in try stack.seed(configuration.seed, now: clockDate).enumerated() {
 					try images.store(PersonImage(id: picture, uiImage: isDemo ? photoFixtures[index] : fixture(index)))
 				}

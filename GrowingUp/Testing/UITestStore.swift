@@ -21,7 +21,8 @@
 		/// Seeds the people of `seed` and returns the widget picture IDs whose images the caller stores, in seeding order.
 		@discardableResult
 		func seed(_ seed: UITestSeed = .pinned, now: Date = Date()) throws -> [UUID] {
-			if seed == .demo || seed == .demoMia { return try seedDemo(count: seed == .demo ? 4 : 1) }
+			let demoCounts: [UITestSeed: Int] = [.demo: 4, .demoPair: 2, .demoMia: 1]
+			if let count = demoCounts[seed] { return try seedDemo(count: count) }
 			let context = persistentContainer.viewContext
 			var widgetPictures: [UUID] = []
 			try context.performAndWait {
