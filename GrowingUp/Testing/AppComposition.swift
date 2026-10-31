@@ -33,9 +33,12 @@ enum AppComposition {
 			let clockDate = environment["GROWINGUP_BIRTHDAY_NOW"].flatMap(ISO8601DateFormatter().date(from:)) ?? fixedDate
 			let stack = try UITestStore(url: root.appendingPathComponent("people.sqlite"))
 			let images = UITestImageStore(root: root)
+			let photoFixtures = try photoFixtures(environment: environment)
 			if configuration.resetStore, configuration.seed != .empty {
+				// The demo people wear the App Store demo photos, in the order the capture adds them.
+				let isDemo = configuration.seed == .demo || configuration.seed == .demoMia
 				for (index, picture) in try stack.seed(configuration.seed, now: clockDate).enumerated() {
-					try images.store(PersonImage(id: picture, uiImage: fixture(index)))
+					try images.store(PersonImage(id: picture, uiImage: isDemo ? photoFixtures[index] : fixture(index)))
 				}
 			}
 			let persistentGateway = CoreDataPersonsGateway(coreDataStack: stack)
@@ -46,7 +49,7 @@ enum AppComposition {
 			return SceneConfigurator(
 				gateway: gateway, loadImage: images.load, loadOriginal: images.loadOriginal, loadThumbnail: images.loadThumbnail,
 				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
-				photoFixtures: try photoFixtures(environment: environment))
+				photoFixtures: photoFixtures)
 		}
 
 		private static func photoFixtures(environment: [String: String]) throws -> [UIImage] {

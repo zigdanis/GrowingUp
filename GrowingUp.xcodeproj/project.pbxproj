@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */; };
 		20CC3A6582FFD5AA6C0D0C14 /* MosaicGridLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */; };
 		A7F1C2D3E4B5968778695A4D /* MosaicAutoscrollTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */; };
 		2A4C24DFC6617D3A116F55F7 /* UIImage+AverageColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */; };
@@ -654,6 +655,7 @@
 		32DAA5842EE458E988A419CC /* AgeTickerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeTickerTests.swift; sourceTree = "<group>"; };
 		7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewPresenterTests.swift; sourceTree = "<group>"; };
 		508A5E39114E5FF4A37059BB /* NavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTests.swift; sourceTree = "<group>"; };
+		94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCaptureTests.swift; sourceTree = "<group>"; };
 		ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReorderingTests.swift; sourceTree = "<group>"; };
 		00FF40512DE725DE755692A6 /* NewPersonTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPersonTests.swift; sourceTree = "<group>"; };
 		1999E3EB786E5386AE6C84EC /* EditInPlaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInPlaceTests.swift; sourceTree = "<group>"; };
@@ -1356,6 +1358,7 @@
 				E9EE35B1D5195EF8512DD5AE /* LockScreenWidgetTests.swift */,
 				A40000000000000000000002 /* RemovalConfirmationTests.swift */,
 				508A5E39114E5FF4A37059BB /* NavigationTests.swift */,
+				94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */,
 				ED18BC3C59157C18F80965C3 /* ReorderingTests.swift */,
 				00FF40512DE725DE755692A6 /* NewPersonTests.swift */,
 				1999E3EB786E5386AE6C84EC /* EditInPlaceTests.swift */,
@@ -1982,6 +1985,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */,
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
 				ED1992571BDE2A7E068C8041 /* PhotoFramingTests.swift in Sources */,

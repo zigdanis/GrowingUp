@@ -21,6 +21,7 @@
 		/// Seeds the people of `seed` and returns the widget picture IDs whose images the caller stores, in seeding order.
 		@discardableResult
 		func seed(_ seed: UITestSeed = .pinned, now: Date = Date()) throws -> [UUID] {
+			if seed == .demo || seed == .demoMia { return try seedDemo(count: seed == .demo ? 4 : 1) }
 			let context = persistentContainer.viewContext
 			var widgetPictures: [UUID] = []
 			try context.performAndWait {
@@ -55,6 +56,37 @@
 			}
 			return widgetPictures
 		}
+
+		/// Seeds the first `count` App Store demo people, each pinned with a photo, and returns their picture IDs in order.
+		private func seedDemo(count: Int) throws -> [UUID] {
+			let context = persistentContainer.viewContext
+			var pictures: [UUID] = []
+			try context.performAndWait {
+				let access = try AccessToWidget.sharedInstance(in: context)
+				for (index, demo) in Self.demoPeople.prefix(count).enumerated() {
+					let person = CoreDataPerson(context: context)
+					let picture = UUID()
+					person.id = String(format: "00000000-0000-0000-0000-%012d", index + 1)
+					person.name = demo.name
+					person.birthdate = Calendar.current.date(from: demo.birthday)!
+					person.widgetPicId = picture.uuidString
+					person.appPicId = picture.uuidString
+					person.createdDate = Date(timeIntervalSince1970: Double(index))
+					person.accessToWidget = access
+					pictures.append(picture)
+				}
+				try context.save()
+			}
+			return pictures
+		}
+
+		/// The App Store demo people with the birthdays its capture enters; on 16 January 2027 Leo has his birthday.
+		private static let demoPeople = [
+			(name: "Mia", birthday: DateComponents(year: 2026, month: 7, day: 16)),
+			(name: "Leo", birthday: DateComponents(year: 2021, month: 1, day: 16)),
+			(name: "Mango", birthday: DateComponents(year: 2024, month: 10, day: 16)),
+			(name: "Teddy", birthday: DateComponents(year: 2026, month: 1, day: 15))
+		]
 
 		/// Offsets from `now` that show each widget tile: years with months, months with days, a newborn,
 		/// a birthday today, a birthday in three days, and an adult.

@@ -7,4 +7,8 @@ enum UITestSeed: String, Codable {
 	case birthdays
 	/// Alice alone, without a photo, so removing her empties the mosaic.
 	case onePerson
+	/// The App Store demo people, Mia, Leo, Mango and Teddy, pinned with the demo photos, for layout captures.
+	case demo
+	/// Mia alone, as in `demo`, for a mosaic of one.
+	case demoMia
 }
