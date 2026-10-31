@@ -226,15 +226,20 @@ final class LayoutCaptureTests: XCTestCase {
 		XCTAssertTrue(wait(for: overview, label: name))
 	}
 
-	/// Closes the open popover with a tap beside it, or the open card with a tap on the photo below it, clear of the
-	/// controls along the bottom.
+	/// Closes the open popover with a tap beside it, or the open card with a tap on the dim layer outside it: on the photo
+	/// below the card, clear of the controls along the bottom, or beside the card where it fills a short window.
 	private func dismissOverlay() {
 		let beside = app.otherElements["PopoverDismissRegion"]
-		if beside.exists {
+		guard !beside.exists else {
 			beside.tap()
-		} else {
-			app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.8)).tap()
+			return
 		}
+		let window = app.windows.firstMatch.frame
+		let card = app.descendants(matching: .any)["editor.popover"].frame
+		var point = CGPoint(x: window.midX, y: window.minY + window.height * 0.8)
+		if card.contains(point) { point = CGPoint(x: (window.minX + card.minX) / 2, y: window.midY) }
+		let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard").coordinate(withNormalizedOffset: .zero)
+		screen.withOffset(CGVector(dx: point.x, dy: point.y)).tap()
 	}
 
 	private func wants(_ screen: String) -> Bool {
