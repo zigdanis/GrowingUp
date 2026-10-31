@@ -130,7 +130,7 @@ final class LayoutCaptureTests: XCTestCase {
 		app.buttons["photo.source.camera"].tap()
 		XCTAssertTrue(app.buttons["camera.back"].waitForExistence(timeout: 5))
 		Thread.sleep(forTimeInterval: 1)
-		capture("camera", note: "Camera sheet")
+		capture("camera", note: "Camera sheet with a still standing in for the Simulator's missing camera")
 		app.buttons["camera.back"].tap()
 		XCTAssertTrue(app.buttons["camera.back"].waitForNonExistence(timeout: 5))
 	}
@@ -159,7 +159,7 @@ final class LayoutCaptureTests: XCTestCase {
 		app.launchEnvironment = [
 			UITestConfiguration.environmentKey: configuration.encoded,
 			"GROWINGUP_APP_STORE_CAPTURE": "1", "GROWINGUP_APP_STORE_PHOTOS": photos,
-			"GROWINGUP_BIRTHDAY_NOW": "2027-01-16T08:24:12Z", "TZ": "UTC"
+			"GROWINGUP_BIRTHDAY_NOW": "2027-01-16T08:24:12Z", "TZ": "UTC", "GROWINGUP_CAMERA_STAND_IN": "1"
 		]
 		app.launchEnvironment["GROWINGUP_WIDGET_PREVIEW"] = widgetFamily
 		app.launchArguments = [
