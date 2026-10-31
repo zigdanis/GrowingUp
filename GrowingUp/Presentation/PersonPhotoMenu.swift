@@ -20,7 +20,7 @@ struct PersonPhotoMenu<MenuLabel: View>: View {
 					presenter.removeMainPhoto()
 					haptics.play(.photoRemoved)
 				}
-					.accessibilityIdentifier("photo.source.remove")
+				.accessibilityIdentifier("photo.source.remove")
 			}
 		} label: {
 			label()
