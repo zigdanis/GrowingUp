@@ -90,6 +90,7 @@ struct PersonEditModeScene: View {
 	private var stack: some View {
 		VStack(spacing: 0) {
 			topBar
+				.modifier(WindowControlsClearance(edges: .leading))
 				.padding(.bottom, 16)
 			EditModeFields(mode: mode, isNameFocused: $isNameFocused)
 			Spacer(minLength: 24)

@@ -226,5 +226,6 @@ struct PersonOverviewScene: View {
 		.accessibilityAction(.escape, onClose)
 		.accessibilityFocused($isAgeFocused)
 		.padding(.horizontal, 24)
+		.modifier(WindowControlsClearance(edges: .leading))
 	}
 }

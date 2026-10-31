@@ -90,6 +90,8 @@ struct PeopleMosaic: View {
 				}
 			}
 		}
+		// The first row's names stay clear of a window's controls.
+		.modifier(WindowControlsClearance(edges: .top))
 		.sensoryFeedback(.impact(weight: .medium), trigger: drag?.id) { _, id in id != nil }
 	}
 

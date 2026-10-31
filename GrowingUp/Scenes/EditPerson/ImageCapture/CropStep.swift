@@ -192,6 +192,7 @@ struct CropStep: View {
 			.disabled(isFinishing)
 			.padding(.horizontal, 20)
 			.padding(.top, 8)
+			.modifier(WindowControlsClearance(edges: .leading))
 			Spacer()
 		}
 		.background { safeAreaMarker }
