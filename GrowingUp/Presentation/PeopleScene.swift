@@ -75,6 +75,7 @@ struct PeopleScene: View {
 			PeopleMosaic(
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID,
 				evenColumns: layout == .landscape && layout.spansFold(idiom: idiom), tileWidths: MosaicGridLayout.tileWidths(idiom: idiom),
+				fillsWindow: idiom == .pad,
 				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
 				onStartReordering: presenter.startReordering, onFinishReordering: finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder

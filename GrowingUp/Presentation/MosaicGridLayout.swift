@@ -18,11 +18,13 @@ struct MosaicGridLayout: Equatable {
 	let columns: Int
 	let tileWidth: CGFloat
 	var tileHeight: CGFloat { tileWidth * 16 / 9 }
+	/// The space above the first row: `spacing`, or more where the tiles sit centred in a window they fill.
+	let topMargin: CGFloat
 
-	/// The narrowest and widest tiles on `idiom`: an iPad's, seen from further away, stay larger; its narrow windows
-	/// still get the phone's two columns.
+	/// The narrowest and widest tiles on `idiom`: an iPad's, seen from further away, stay larger, up to a few people
+	/// filling its screen; its narrow windows still get the phone's two columns.
 	static func tileWidths(idiom: UIUserInterfaceIdiom) -> ClosedRange<CGFloat> {
-		idiom == .pad ? 200...280 : minimumTileWidth...maximumTileWidth
+		idiom == .pad ? 200...400 : minimumTileWidth...maximumTileWidth
 	}
 
 	/// - Parameters:
@@ -34,9 +36,11 @@ struct MosaicGridLayout: Equatable {
 	///     slot empty rather than putting a tile on the fold.
 	///   - minimumTileWidth: the narrowest a tile gets before the mosaic adds a column.
 	///   - maximumTileWidth: the widest a tile gets.
+	///   - fillsWindow: lets few enough people to fit at `minimumTileWidth` or wider fill the window, as on iPad: the
+	///     columns that give the largest tiles, all in view and centred in it; more people scroll as usual.
 	init(
 		size: CGSize, count: Int, evenColumns: Bool = false, minimumTileWidth: CGFloat = Self.minimumTileWidth,
-		maximumTileWidth: CGFloat = Self.maximumTileWidth
+		maximumTileWidth: CGFloat = Self.maximumTileWidth, fillsWindow: Bool = false
 	) {
 		let width = max(0, size.width - 2 * Self.spacing)
 		let heightLimit = size.height * Self.maximumHeightShare * 9 / 16
@@ -44,28 +48,58 @@ struct MosaicGridLayout: Equatable {
 		let narrowest = min(minimumTileWidth, widest)
 		var fitting = max(Self.minimumColumns, Int((width + Self.spacing) / (narrowest + Self.spacing)))
 		if evenColumns, fitting > 1 { fitting -= fitting % 2 }
+		let area = CGSize(width: width, height: max(0, size.height - 2 * Self.spacing))
+		if fillsWindow,
+			let fit = Self.largestFit(
+				in: area, count: count, fitting: fitting, evenColumns: evenColumns, maximumTileWidth: maximumTileWidth),
+			fit.width >= minimumTileWidth
+		{
+			let rows = CGFloat((count + fit.columns - 1) / fit.columns)
+			columns = fit.columns
+			tileWidth = fit.width
+			topMargin = Self.spacing + (area.height - rows * fit.width * 16 / 9 - (rows - 1) * Self.spacing) / 2
+			return
+		}
 		let wanted = evenColumns ? count + count % 2 : count
 		let columns = max(1, min(fitting, wanted))
 		let filled = (width - CGFloat(fitting - 1) * Self.spacing) / CGFloat(fitting)
 		self.columns = columns
 		tileWidth = max(0, min(widest, filled))
+		topMargin = Self.spacing
+	}
+
+	/// The number of columns, up to `fitting` and even with `evenColumns`, that shows `count` people at the largest tile
+	/// with every row inside `area`, and that tile's width; a strict tie goes to fewer columns.
+	private static func largestFit(
+		in area: CGSize, count: Int, fitting: Int, evenColumns: Bool, maximumTileWidth: CGFloat
+	) -> (columns: Int, width: CGFloat)? {
+		guard count > 0, area.width > 0, area.height > 0 else { return nil }
+		var best: (columns: Int, width: CGFloat)?
+		for columns in 1...max(1, fitting) where !evenColumns || columns % 2 == 0 {
+			let rows = (count + columns - 1) / columns
+			let byWidth = (area.width - CGFloat(columns - 1) * spacing) / CGFloat(columns)
+			let byHeight = (area.height - CGFloat(rows - 1) * spacing) / CGFloat(rows) * 9 / 16
+			let width = min(maximumTileWidth, byWidth, byHeight)
+			if width > (best?.width ?? 0) { best = (columns, width) }
+		}
+		return best
 	}
 
 	// MARK: - Slots
 
 	/// The top-leading corner of the tile in slot `index` of the mosaic's scroll content, `width` wide: the columns sit
-	/// centred, below a `spacing` margin.
+	/// centred, below `topMargin`.
 	func origin(ofSlot index: Int, width: CGFloat) -> CGPoint {
 		CGPoint(
 			x: leadingMargin(width: width) + CGFloat(index % columns) * (tileWidth + Self.spacing),
-			y: Self.spacing + CGFloat(index / columns) * (tileHeight + Self.spacing))
+			y: topMargin + CGFloat(index / columns) * (tileHeight + Self.spacing))
 	}
 
 	/// The slot of `count` tiles whose cell, the tile with half the gap around it, holds `point` of the scroll content,
 	/// `width` wide; a point beyond the tiles takes the nearest one, and past the last tile the last slot.
 	func slot(at point: CGPoint, count: Int, width: CGFloat) -> Int {
 		let cellX = (point.x - leadingMargin(width: width) + Self.spacing / 2) / (tileWidth + Self.spacing)
-		let cellY = (point.y - Self.spacing / 2) / (tileHeight + Self.spacing)
+		let cellY = (point.y - topMargin + Self.spacing / 2) / (tileHeight + Self.spacing)
 		let column = min(max(Int(cellX.rounded(.down)), 0), columns - 1)
 		let row = max(Int(cellY.rounded(.down)), 0)
 		return max(0, min(row * columns + column, count - 1))
