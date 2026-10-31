@@ -95,6 +95,7 @@ struct EditModeFields: View {
 			EditModePicker(mode: mode, popover: popover)
 				.frame(width: 320)
 				.padding(12)
+				.accessibilityElement(children: .contain)
 				.accessibilityIdentifier("editor.popover")
 				// Even a narrow iPad window keeps the small picker beside its capsule rather than in a sheet.
 				.presentationCompactAdaptation(.popover)
