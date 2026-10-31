@@ -194,4 +194,37 @@ class DuoSetTests(unittest.TestCase):
             f.read_sets(self.manifest, CATALOG, [DUO])
 
 
+
+def ipad_catalog():
+    """Apple's iPad groups as the live catalog lists them: 2048x2732 is shared by 13-inch and 12.9-inch."""
+    sizes = {'ipad-13-landscape': (2752, 2064), 'ipad-13-portrait': (2064, 2752), 'ipad-129-portrait': (2048, 2732)}
+    return {
+        'features': [{'featureId': 'APP_STORE_VERSIONS', 'placementPolicies': [{
+            'placementType': 'APP_SCREENSHOT', 'groupLimits': [{'groupIds': ['IPAD_13_PROFILE', 'IPAD_129_PROFILE'], 'maxCount': 10}]}]}],
+        'placementTypes': [{'placementTypeId': 'APP_SCREENSHOT', 'acceptsAssetCategories': ['APP_SCREENSHOTS_AND_PREVIEWS'],
+                            'specMappings': [{'placementGroupId': 'IPAD_13_PROFILE', 'specs': list(sizes)},
+                                             {'placementGroupId': 'IPAD_129_PROFILE', 'specs': ['ipad-129-portrait']}]}],
+        'imageSpecs': [{'specId': spec, 'dimensions': {'minWidth': w, 'maxWidth': w, 'minHeight': h, 'maxHeight': h},
+                        'fileExtensions': ['.png'], 'maxFileSize': 10**9} for spec, (w, h) in sizes.items()],
+        'placementProfileGroups': [{'placementProfileGroupId': group, 'platform': 'IPAD_APP_STORE'}
+                                   for group in ('IPAD_13_PROFILE', 'IPAD_129_PROFILE')],
+    }
+
+
+class IPadSpecTests(unittest.TestCase):
+    """The 13-inch iPad set resolves to its own group; the phone-only uploader never picks an iPad group."""
+
+    def test_landscape_13_inch_cards_resolve_to_the_13_inch_group(self):
+        image = {'width': 2752, 'height': 2064, 'content': b'png'}
+        self.assertEqual(f.m.resolve_spec(ipad_catalog(), image, f.PLATFORMS), ('IPAD_13_PROFILE', 'ipad-13-landscape'))
+
+    def test_phone_uploader_ignores_ipad_groups(self):
+        with self.assertRaisesRegex(ValueError, 'found 0'):
+            f.m.resolve_spec(ipad_catalog(), {'width': 2752, 'height': 2064, 'content': b'png'})
+
+    def test_size_shared_with_12_9_inch_is_ambiguous(self):
+        with self.assertRaisesRegex(ValueError, 'found 2'):
+            f.m.resolve_spec(ipad_catalog(), {'width': 2048, 'height': 2732, 'content': b'png'}, f.PLATFORMS)
+
+
 if __name__=='__main__':unittest.main()

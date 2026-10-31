@@ -14,6 +14,9 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var birthdayToday: String { locale == "ru" ? "Сегодня день рождения 🎂" : "Birthday today 🎂" }
 	/// Leo's fireworks frames, in milliseconds after the swipe that returns to his page; the renderer picks one by name.
 	private let fireworksFrames = [1500, 1700, 1900, 2100, 2300, 2500]
+	/// An iPad shoots the mosaic, the edit mode and the people's pages in landscape, where the viewer puts the photo
+	/// beside the age; the pets' pages, the widgets and the steps between stay in portrait.
+	private var isPad: Bool { UIDevice.current.userInterfaceIdiom == .pad }
 
 	func testCaptureAppStoreScreenshots() throws {
 		let environment = ProcessInfo.processInfo.environment
@@ -22,6 +25,11 @@ final class AppStoreScreenshotTests: XCTestCase {
 		locale = try XCTUnwrap(environment["GROWINGUP_APP_STORE_LOCALE"])
 		XCTAssertTrue(["en", "ru"].contains(locale))
 		let photos = try XCTUnwrap(environment["GROWINGUP_APP_STORE_PHOTOS"])
+		if isPad {
+			// Windowed Apps would open the app in a window smaller than the screen.
+			IPadMultitasking.choose("Full Screen Apps")
+			XCUIDevice.shared.orientation = .portrait
+		}
 		launchCapture(photos: photos)
 		// Dates are entered using the native wheel editor, never injected into persistence.
 		addPerson(index: 0, year: 2026, month: 7, day: 16)
@@ -153,9 +161,11 @@ final class AppStoreScreenshotTests: XCTestCase {
 			XCTAssertTrue(tiles.matching(NSPredicate(format: "label BEGINSWITH %@", name + ",")).firstMatch.waitForExistence(timeout: 5))
 		}
 		XCTAssertEqual(tiles.count, names.count)
+		turn(landscape: true)
 		// Tile pictures load asynchronously and expose no loaded marker; give them a moment to appear.
 		Thread.sleep(forTimeInterval: 1.5)
 		checkpoint("store-\(locale)-mosaic")
+		turn(landscape: false)
 	}
 
 	private func verifyPersistence() {
@@ -167,39 +177,24 @@ final class AppStoreScreenshotTests: XCTestCase {
 			XCTAssertEqual(control("editor.pin").value as? String, "1")
 			checkpoint("store-\(locale)-persisted-\(index)")
 			// Mia's in-place edit mode, with both of her saved photos loaded, is the edit card.
-			if index == 0 { checkpoint("store-\(locale)-editor") }
+			if index == 0 {
+				turn(landscape: true)
+				checkpoint("store-\(locale)-editor")
+				turn(landscape: false)
+			}
 			dismissEditor()
 		}
 	}
 
 	private func capturePeople() {
 		selectPerson(0)
+		turn(landscape: true)
 		checkpoint("store-\(locale)-mia")
+		turn(landscape: false)
 		selectPerson(2)
 		checkpoint("store-\(locale)-mango")
 		selectPerson(3)
 		checkpoint("store-\(locale)-teddy")
-	}
-
-	private func captureWidgets() {
-		for (family, count) in [("small", 1), ("medium", 3), ("large", 4)] {
-			relaunch(widgetFamily: family)
-			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
-			XCTAssertTrue(widget.waitForExistence(timeout: 10))
-			let nominal = CGSize(width: family == "small" ? 170 : 364, height: family == "large" ? 382 : 170)
-			// iPhone Duo's accessibility frame can extend past the drawn widget; the capture crops it to the real size.
-			XCTAssertGreaterThanOrEqual(widget.frame.width, nominal.width - 0.5)
-			XCTAssertGreaterThanOrEqual(widget.frame.height, nominal.height - 0.5)
-			for (index, name) in names.enumerated() {
-				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
-				if index < count {
-					XCTAssertTrue(person.waitForExistence(timeout: 5))
-				} else {
-					XCTAssertFalse(person.exists)
-				}
-			}
-			checkpoint("store-\(locale)-widget-\(family)", element: widget, croppedTo: nominal)
-		}
 	}
 
 	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
@@ -290,6 +285,7 @@ extension AppStoreScreenshotTests {
 		// A fresh pager starts Leo's rotation afresh; opening Mango first keeps the deep link off Leo's page.
 		relaunch()
 		selectPerson(2)
+		turn(landscape: true)
 		var celebration = 0
 		// Each pass must raise the count, and a failed assertion stops the test, so this ends within three passes.
 		while (celebration + 1) % 3 != 0 {
@@ -308,6 +304,7 @@ extension AppStoreScreenshotTests {
 		XCTAssertEqual(app.buttons["person.name"].label, names[1])
 		XCTAssertEqual(app.staticTexts["birthday.countdown"].label, birthdayToday)
 		checkpoint("store-\(locale)-birthday-confirmed")
+		turn(landscape: false)
 	}
 
 	/// Returns to Leo's page and shoots the fireworks `fireworksFrames` after the swipe, with their measured timing.
@@ -337,6 +334,56 @@ extension AppStoreScreenshotTests {
 		evidence.name = "store-\(locale)-leo-fireworks-timing"
 		evidence.lifetime = .keepAlways
 		add(evidence)
+	}
+}
+
+extension AppStoreScreenshotTests {
+	private func captureWidgets() {
+		var families = [("small", 1), ("medium", 3), ("large", 4)]
+		// The extra large widget is iPad's only.
+		if isPad { families.append(("extraLarge", 4)) }
+		for (family, count) in families {
+			relaunch(widgetFamily: family)
+			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
+			XCTAssertTrue(widget.waitForExistence(timeout: 10))
+			let nominal = previewSize(of: family)
+			// iPhone Duo's accessibility frame can extend past the drawn widget; the capture crops it to the real size.
+			XCTAssertGreaterThanOrEqual(widget.frame.width, nominal.width - 0.5)
+			XCTAssertGreaterThanOrEqual(widget.frame.height, nominal.height - 0.5)
+			for (index, name) in names.enumerated() {
+				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+				if index < count {
+					XCTAssertTrue(person.waitForExistence(timeout: 5))
+				} else {
+					XCTAssertFalse(person.exists)
+				}
+			}
+			checkpoint("store-\(locale)-widget-\(family)", element: widget, croppedTo: nominal)
+		}
+	}
+
+	/// The point size of a Home Screen widget in the app's preview: a 6.3-inch iPhone's, the extra large one an 11-inch iPad's.
+	private func previewSize(of family: String) -> CGSize {
+		switch family {
+		case "small": CGSize(width: 170, height: 170)
+		case "medium": CGSize(width: 364, height: 170)
+		case "extraLarge": CGSize(width: 715, height: 342)
+		default: CGSize(width: 364, height: 382)
+		}
+	}
+
+	/// Turns an iPad to landscape or back to portrait, and waits for the app's window to follow.
+	private func turn(landscape: Bool) {
+		guard isPad else { return }
+		XCUIDevice.shared.orientation = landscape ? .landscapeLeft : .portrait
+		let window = app.windows.firstMatch
+		let deadline = Date().addingTimeInterval(5)
+		while (window.frame.width > window.frame.height) != landscape, Date() < deadline {
+			Thread.sleep(forTimeInterval: 0.2)
+		}
+		XCTAssertEqual(window.frame.width > window.frame.height, landscape, "The app's window must follow the iPad's turn.")
+		// The rotation animation ends after the window takes its new size.
+		Thread.sleep(forTimeInterval: 1)
 	}
 }
 

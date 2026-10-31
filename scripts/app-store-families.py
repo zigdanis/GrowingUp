@@ -19,6 +19,8 @@ m = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(m)
 APP_INPUTS = ('GrowingUp', 'Core', 'Widget', 'GrowingUpUITests', 'GrowingUp.xcodeproj',
               'docs/app-store-demo-photos', 'marketing/fonts')
+# Families place iPhone sets and the 13-inch iPad set; a size resolves to exactly one group of these platforms.
+PLATFORMS = ('IPHONE_APP_STORE', 'IPAD_APP_STORE')
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -44,7 +46,7 @@ def read_sets(manifest, catalog, only_groups=None):
             for image in files:
                 if [image['width'],image['height']] != entry['size']:
                     raise ValueError('Screenshot dimensions differ from native device dimensions')
-                group,spec = m.resolve_spec(catalog,image)
+                group,spec = m.resolve_spec(catalog,image,PLATFORMS)
                 if group != entry['group']:
                     raise ValueError('Apple catalog resolved a different hardware group')
                 image['spec'] = spec

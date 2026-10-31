@@ -56,6 +56,7 @@
 		ED170EE2746999EED14FF199 /* WidgetPictureDeriverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */; };
 		ED175D4D32F71BE73BBF1A60 /* WidgetPictureDeriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */; };
 		C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000002 /* AppStoreScreenshotTests.swift */; };
+		C51000000000000000000003 /* IPadMultitasking.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51000000000000000000004 /* IPadMultitasking.swift */; };
 		CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */; };
 		A5000000000000000000000F /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
 		A50000000000000000000001 /* AgeWidgetContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5000000000000000000000E /* AgeWidgetContentView.swift */; };
@@ -437,6 +438,7 @@
 		ED1705D3A85E4551B772E485 /* WidgetPictureDeriverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriverTests.swift; sourceTree = "<group>"; };
 		ED17078BC3765638A3B78521 /* WidgetPictureDeriver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPictureDeriver.swift; sourceTree = "<group>"; };
 		C51000000000000000000002 /* AppStoreScreenshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotTests.swift; sourceTree = "<group>"; };
+		C51000000000000000000004 /* IPadMultitasking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPadMultitasking.swift; sourceTree = "<group>"; };
 		CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesCacheTests.swift; sourceTree = "<group>"; };
 		A5000000000000000000000E /* AgeWidgetContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgeWidgetContentView.swift; sourceTree = "<group>"; };
 		A50000000000000000000008 /* UITestWidgetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestWidgetPreview.swift; sourceTree = "<group>"; };
@@ -1372,6 +1374,7 @@
 			isa = PBXGroup;
 			children = (
 				C51000000000000000000002 /* AppStoreScreenshotTests.swift */,
+				C51000000000000000000004 /* IPadMultitasking.swift */,
 				97ABEB737086B8C5A490A11D /* JourneyTests.swift */,
 				ED193D5E7744922E6C5F1D1A /* PhotoFramingTests.swift */,
 				3564E9887F474D5D96B7CDEA /* BirthdayAndEditingTests.swift */,
@@ -2015,6 +2018,7 @@
 				2C645D6291566FE25F62F54E /* KeyboardShortcutTests.swift in Sources */,
 				AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */,
 				C51000000000000000000001 /* AppStoreScreenshotTests.swift in Sources */,
+				C51000000000000000000003 /* IPadMultitasking.swift in Sources */,
 				DA5ADAD9BAAD778F3FC5C30B /* JourneyTests.swift in Sources */,
 				ED1992571BDE2A7E068C8041 /* PhotoFramingTests.swift in Sources */,
 				9979F5C4DEEB47C684C61F00 /* BirthdayAndEditingTests.swift in Sources */,

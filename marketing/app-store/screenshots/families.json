@@ -53,6 +53,7 @@
   "selection": {
     "dynamic_island": "medium_only",
     "duo": "outer_only",
+    "ipad": "13_inch_landscape_only",
     "app_previews": "remove_all_EN_RU_placements",
     "apple_specifications": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
   }
