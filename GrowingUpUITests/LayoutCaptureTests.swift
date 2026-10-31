@@ -4,7 +4,8 @@ import XCTest
 ///
 /// `GROWINGUP_LAYOUT_CAPTURE` names the directory for the PNGs and their `captures.json`; `GROWINGUP_LAYOUT_DEVICE` the
 /// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`; and
-/// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
+/// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens; and `GROWINGUP_LAYOUT_MULTITASKING` an iPad multitasking
+/// mode to choose in Settings first, such as `Full Screen Apps`. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
 @MainActor
 final class LayoutCaptureTests: XCTestCase {
 	private let app = XCUIApplication()
@@ -26,6 +27,9 @@ final class LayoutCaptureTests: XCTestCase {
 		photos = try XCTUnwrap(environment["GROWINGUP_APP_STORE_PHOTOS"])
 		screens = environment["GROWINGUP_LAYOUT_SCREENS"].flatMap { $0.isEmpty ? nil : Set($0.split(separator: ",").map(String.init)) }
 		continueAfterFailure = false
+		if let multitasking = environment["GROWINGUP_LAYOUT_MULTITASKING"], !multitasking.isEmpty {
+			chooseMultitasking(multitasking)
+		}
 		for name in (environment["GROWINGUP_LAYOUT_ORIENTATIONS"] ?? "portrait").split(separator: ",").map(String.init) {
 			orientation = name
 			XCUIDevice.shared.orientation = name == "landscape" ? .landscapeLeft : .portrait
@@ -152,6 +156,19 @@ final class LayoutCaptureTests: XCTestCase {
 	}
 
 	// MARK: - Steps
+
+	/// Chooses an iPad multitasking mode, such as `Full Screen Apps` or `Windowed Apps`, in Settings.
+	private func chooseMultitasking(_ mode: String) {
+		let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
+		settings.launch()
+		let section = settings.staticTexts["Multitasking & Gestures"].firstMatch
+		XCTAssertTrue(section.waitForExistence(timeout: 10))
+		section.tap()
+		let option = settings.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", mode + ",")).firstMatch
+		XCTAssertTrue(option.waitForExistence(timeout: 5))
+		option.tap()
+		settings.terminate()
+	}
 
 	private func launch(seed: UITestSeed, widgetFamily: String? = nil) {
 		app.terminate()
