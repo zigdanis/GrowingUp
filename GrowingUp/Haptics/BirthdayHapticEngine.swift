@@ -81,9 +81,12 @@ final class BirthdayHapticEngine {
 		var patterns = remaining.filter { !$0.isTransient }.map(Self.rumblePattern)
 		if !taps.isEmpty { patterns.append(try? CHHapticPattern(events: taps, parameters: [])) }
 		do {
-			for case let pattern? in patterns {
-				let player = try engine.makePlayer(with: pattern)
-				try player.start(atTime: CHHapticTimeImmediate)
+			// Every player is made before any starts, then all start at one engine time: starting them one by one would
+			// shift each pattern by the time its predecessors took to make, and the taps would drift off the rumbles.
+			let ready = try patterns.compactMap { $0 }.map { try engine.makePlayer(with: $0) }
+			let startTime = engine.currentTime
+			for player in ready {
+				try player.start(atTime: startTime)
 				players.append(player)
 			}
 		} catch {

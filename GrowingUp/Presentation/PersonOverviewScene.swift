@@ -4,6 +4,8 @@ import SwiftUI
 struct PersonOverviewScene: View {
 	let person: Person
 	let isSelected: Bool
+	/// Whether the viewer's edit mode lies over the pages, which the birthday haptics keep out of.
+	let isEditing: Bool
 	/// Turns the page into its in-place edit mode; a tap anywhere on the page does it, as there is no visible button.
 	let onEdit: () -> Void
 	/// Returns to the mosaic, for VoiceOver's escape gesture and actions.
@@ -30,12 +32,13 @@ struct PersonOverviewScene: View {
 	private var scenePhase
 
 	init(
-		person: Person, isSelected: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
+		person: Person, isSelected: Bool, isEditing: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
 		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void, onNext: (() -> Void)?,
 		onPrevious: (() -> Void)?
 	) {
 		self.person = person
 		self.isSelected = isSelected
+		self.isEditing = isEditing
 		self.onEdit = onEdit
 		self.onClose = onClose
 		self.onNext = onNext
@@ -84,7 +87,7 @@ struct PersonOverviewScene: View {
 			let started = reduceMotion ? nil : Date()
 			burstStarted = started
 			// The confetti's own style and start, so every pop and burst is felt as it is seen.
-			if let started, isSelected {
+			if let started, isSelected, !isEditing {
 				haptics.celebrate(ConfettiStyle(celebration: celebration), startedAt: started)
 				isPlayingCelebration = true
 			} else {
@@ -105,6 +108,9 @@ struct PersonOverviewScene: View {
 			if !changedPerson.celebratesBirthdays { stopCelebrating() }
 			// Neighbouring pages also need fresh age and accessibility text after a saved change.
 			presenter.tick(person: changedPerson, now: now(), isSelected: isSelected)
+		}
+		.onChange(of: isEditing) { _, editing in
+			if editing { stopCelebrating() }
 		}
 		.onChange(of: scenePhase) { _, phase in
 			if phase != .active { stopCelebrating() }

@@ -42,6 +42,7 @@ struct PhotoGridView: View {
 				}
 			)
 			.background(Color(.secondarySystemBackground))
+			.modifier(SceneErrorHaptics(isShown: viewModel.selectionFailed))
 	}
 
 	private var errorBinding: Binding<Bool> {

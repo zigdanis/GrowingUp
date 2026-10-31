@@ -39,6 +39,7 @@ struct CameraCardView: View {
 		} message: {
 			Text("The photo couldn't be captured. Try again.")
 		}
+		.modifier(SceneErrorHaptics(isShown: captureFailed))
 	}
 
 	private var flashBar: some View {

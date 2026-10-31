@@ -34,8 +34,10 @@ struct CropStep: View {
 	@State private var isFinishing = false
 	/// Whether the picture took its first place on a laid-out screen, on `initialCrop`.
 	@State private var isPlaced = false
-	/// Whether the current drag or pinch has pulled the picture past the crop frame's edge; it is felt once per gesture.
-	@State private var hasHitEdge = false
+	/// Whether the current drag, or the current pinch, has pulled the picture past the crop frame's edge. Each gesture clears
+	/// only its own flag, so letting go of one finger's pinch mid-drag does not make the same drag tap again.
+	@State private var dragHitEdge = false
+	@State private var pinchHitEdge = false
 	@Environment(\.haptics)
 	private var haptics
 
@@ -248,10 +250,10 @@ struct CropStep: View {
 				)
 				offset = geometry.rubberBandOffset(raw, scale: scale)
 				let clamped = geometry.clampOffset(raw, scale: scale)
-				feelEdge(overshoot: max(abs(raw.width - clamped.width), abs(raw.height - clamped.height)))
+				feelEdge(overshoot: max(abs(raw.width - clamped.width), abs(raw.height - clamped.height)), hitBy: $dragHitEdge)
 			}
 			.onEnded { _ in
-				hasHitEdge = false
+				dragHitEdge = false
 				let settled = geometry.clampOffset(offset, scale: scale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
 					offset = settled
@@ -271,10 +273,10 @@ struct CropStep: View {
 				offset = geometry.rubberBandOffset(offset, scale: newScale)
 				// A scale past its limit moves the picture's edges by half the size it gains or loses.
 				let display = geometry.displaySize
-				feelEdge(overshoot: abs(rawScale - geometry.clampScale(rawScale)) * max(display.width, display.height) / 2)
+				feelEdge(overshoot: abs(rawScale - geometry.clampScale(rawScale)) * max(display.width, display.height) / 2, hitBy: $pinchHitEdge)
 			}
 			.onEnded { _ in
-				hasHitEdge = false
+				pinchHitEdge = false
 				let settledScale = geometry.clampScale(scale)
 				let settledOffset = geometry.clampOffset(offset, scale: settledScale)
 				withAnimation(.spring(response: 0.35, dampingFraction: 0.82)) {
@@ -287,10 +289,11 @@ struct CropStep: View {
 			}
 	}
 
-	/// Taps once per gesture, the first time the picture is pulled further than `edgeOvershoot` past where it may rest.
-	private func feelEdge(overshoot: CGFloat) {
-		guard !hasHitEdge, overshoot > Self.edgeOvershoot else { return }
-		hasHitEdge = true
+	/// Taps once per gesture, the first time the picture is pulled further than `edgeOvershoot` past where it may rest,
+	/// and not again while the other gesture's tap is still under way.
+	private func feelEdge(overshoot: CGFloat, hitBy flag: Binding<Bool>) {
+		guard !dragHitEdge, !pinchHitEdge, overshoot > Self.edgeOvershoot else { return }
+		flag.wrappedValue = true
 		haptics.play(.cropEdgeHit)
 	}
 }
