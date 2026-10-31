@@ -1,16 +1,15 @@
 import XCTest
 
-/// A hardware keyboard, as on an iPad with one attached, pages through people, adds a person and saves.
+/// A hardware keyboard, as on an iPad with one attached, pages through people and adds a person.
 ///
-/// XCUITest delivers Return and Escape on their own only to text input, so the viewer's Return and Escape and edit
-/// mode's Escape are left to a check with a real keyboard.
+/// XCUITest delivers the Return and Escape keys only to text input, even with Command held, so the viewer's Return and
+/// Escape and edit mode's Escape and Command-Return are left to a check with a real keyboard.
 @MainActor
 final class KeyboardShortcutTests: XCTestCase {
 	private let app = XCUIApplication()
 	private var personName: XCUIElement { app.buttons["person.name"] }
-	private var save: XCUIElement { app.buttons["editor.save"] }
 
-	func testTheArrowsPageAndCommandKeysAddAndSave() {
+	func testTheArrowsPageAndCommandNAdds() {
 		continueAfterFailure = false
 		launch()
 		tile("Alice").tap()
@@ -24,15 +23,8 @@ final class KeyboardShortcutTests: XCTestCase {
 		app.typeKey("n", modifierFlags: .command)
 		let name = app.textFields["editor.name"]
 		XCTAssertTrue(name.waitForExistence(timeout: 5), "Command-N adds a person")
-		// Return puts the keyboard away, as the name field's Done does; then the edit mode's own keys answer again.
-		name.typeText("Kim\n")
-		XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
-		XCTAssertTrue(save.isEnabled)
-		// The edit mode takes the keyboard's keys back on the next turn of the run loop.
-		Thread.sleep(forTimeInterval: 1)
-		app.typeKey(.return, modifierFlags: .command)
-		XCTAssertTrue(save.waitForNonExistence(timeout: 10), "Command-Return saves")
-		XCTAssertTrue(tile("Kim").waitForExistence(timeout: 5))
+		app.buttons["editor.cancel"].tap()
+		XCTAssertTrue(name.waitForNonExistence(timeout: 5))
 	}
 
 	/// Drags the viewer down, which zooms it back into the shown person's tile.
