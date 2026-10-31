@@ -74,6 +74,33 @@
 /* Message shown when photo access is restricted and cannot be changed */
 "Photo access is restricted on this device and can't be changed." = "Доступ к фото ограничен на этом устройстве и не может быть изменён.";
 
+/* Title shown before the system camera permission prompt */
+"Take a photo" = "Сделать фото";
+
+/* Message shown before the system camera permission prompt, explaining what the camera is used for */
+"GrowingUp uses your camera to take a picture for this person." = "GrowingUp использует камеру, чтобы сделать фото для этого человека.";
+
+/* Button that continues to the system camera permission prompt */
+"Continue" = "Продолжить";
+
+/* Title shown when camera access has been denied */
+"Camera access blocked" = "Доступ к камере закрыт";
+
+/* Message shown when camera access has been denied */
+"Enable camera access in Settings to take a picture." = "Включите доступ к камере в Настройках, чтобы сделать фото.";
+
+/* Title shown when camera access is restricted by a profile/parental controls */
+"Camera access restricted" = "Доступ к камере ограничен";
+
+/* Message shown when camera access is restricted and cannot be changed */
+"Camera access is restricted on this device and can't be changed." = "Доступ к камере ограничен на этом устройстве и не может быть изменён.";
+
+/* Title shown when the device has no camera */
+"Camera unavailable" = "Камера недоступна";
+
+/* Message shown when the device has no camera */
+"No camera is available on this device. Choose a photo from your library instead." = "На этом устройстве нет камеры. Выберите фото из медиатеки.";
+
 /* Title for the alert shown when a tapped photo fails to load (e.g. an iCloud download error) */
 "Couldn't load photo" = "Не удалось загрузить фото";
 

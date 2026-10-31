@@ -12,9 +12,11 @@ struct PermissionExplainerConfig {
 	static let photosRestricted = PermissionExplainerConfig(
 		icon: "lock.fill", title: "Photo access restricted",
 		message: "Photo access is restricted on this device and can't be changed.", primaryButtonTitle: nil)
+	/// Shown before the system camera prompt. App Review (guideline 5.1.1(iv)) requires neutral copy here: the button
+	/// only continues to the system prompt, and must not read as granting access.
 	static let cameraNeeded = PermissionExplainerConfig(
-		icon: "camera.fill", title: "Camera access needed",
-		message: "Allow access to your camera to take a picture.", primaryButtonTitle: "Allow Camera")
+		icon: "camera.fill", title: "Take a photo",
+		message: "GrowingUp uses your camera to take a picture for this person.", primaryButtonTitle: "Continue")
 	static let cameraDenied = PermissionExplainerConfig(
 		icon: "camera.fill", title: "Camera access blocked",
 		message: "Enable camera access in Settings to take a picture.", primaryButtonTitle: "Open Settings")
