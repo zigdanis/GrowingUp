@@ -5,12 +5,16 @@
 //  The inline in-app camera card: a full-bleed live preview with shutter, flip,
 //  flash (off / auto / on) and close controls. Close dismisses photo selection; a
 //  capture is reported upward to feed the same crop step as the photo path.
+//  An upright card keeps its controls along the bottom; a card wider than tall,
+//  such as an iPad sheet on its side, keeps them in a column along the trailing edge.
 //
 
 import SwiftUI
 
 struct CameraCardView: View {
 	let controller: CameraSessionController
+	/// A still shown and captured in place of the live preview, for UI tests on the Simulator, which has no camera.
+	var standIn: UIImage?
 	let onCapture: (UIImage) -> Void
 	let onClose: () -> Void
 
@@ -19,16 +23,22 @@ struct CameraCardView: View {
 	var body: some View {
 		ZStack {
 			Color.black.ignoresSafeArea()
-			CameraPreview(session: controller.session, isMirrored: controller.isFront)
+			preview
 				.ignoresSafeArea()
-			VStack {
-				flashBar
-				Spacer()
-				controls
+			GeometryReader { geometry in
+				if geometry.size.width > geometry.size.height {
+					landscapeControls
+				} else {
+					VStack {
+						flashBar
+						Spacer()
+						controls
+					}
+				}
 			}
 		}
 		.task {
-			controller.start()
+			if standIn == nil { controller.start() }
 		}
 		.onDisappear {
 			controller.stop()
@@ -37,6 +47,37 @@ struct CameraCardView: View {
 		} message: {
 			Text("The photo couldn't be captured. Try again.")
 		}
+	}
+
+	@ViewBuilder private var preview: some View {
+		if let standIn {
+			Image(uiImage: standIn)
+				.resizable()
+				.scaledToFill()
+		} else {
+			CameraPreview(session: controller.session, isMirrored: controller.isFront, onPreviewLayer: controller.attachPreview)
+		}
+	}
+
+	/// The controls in a column along the trailing edge: flash at the top, the shutter in the middle with flip below it,
+	/// and back in the bottom-leading corner.
+	private var landscapeControls: some View {
+		ZStack {
+			VStack(spacing: 24) {
+				// Balances flip below the shutter, so the shutter sits in the middle.
+				Color.clear.frame(width: 64, height: 64)
+				shutterButton
+				flipButton
+			}
+			.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .trailing)
+			flashButton
+				.frame(width: 74)
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+			backButton
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+		}
+		.padding(.horizontal, 32)
+		.padding(.vertical, 28)
 	}
 
 	private var flashBar: some View {
@@ -128,6 +169,10 @@ struct CameraCardView: View {
 	}
 
 	private func capture() {
+		if let standIn {
+			onCapture(standIn)
+			return
+		}
 		controller.capturePhoto { image in
 			if let image {
 				onCapture(image)

@@ -15,11 +15,14 @@ struct CameraPreview: UIViewRepresentable {
 	let session: AVCaptureSession
 	/// When true (front camera), the preview is horizontally mirrored.
 	var isMirrored: Bool = false
+	/// Gets the preview layer once, so the session can keep it upright as the window turns.
+	var onPreviewLayer: (AVCaptureVideoPreviewLayer) -> Void = { _ in }
 
 	func makeUIView(context: Context) -> CameraPreviewView {
 		let view = CameraPreviewView()
 		view.videoPreviewLayer.session = session
 		view.videoPreviewLayer.videoGravity = .resizeAspectFill
+		onPreviewLayer(view.videoPreviewLayer)
 		return view
 	}
 

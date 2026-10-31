@@ -2,7 +2,9 @@
 //  CameraSessionWorker.swift
 //  GrowingUp
 //
-//  Serial-queue AVFoundation worker behind CameraSessionController.
+//  Serial-queue AVFoundation worker behind CameraSessionController. A rotation
+//  coordinator keeps the preview upright in its window and photos level with the
+//  horizon, whichever way the device is held.
 //
 
 import AVFoundation
@@ -15,11 +17,15 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 	private var videoInput: AVCaptureDeviceInput?
 	private var configured = false
 	private var captureCompletion: (@Sendable (Data?) -> Void)?
+	private var previewLayer: AVCaptureVideoPreviewLayer?
+	private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
+	private var previewRotation: NSKeyValueObservation?
 
 	func start(onStateChange: @escaping @Sendable (CameraSessionState) -> Void) {
 		sessionQueue.async { [weak self] in
 			guard let self else { return }
 			self.configureIfNeeded()
+			self.coordinateRotation()
 			if !self.session.isRunning {
 				self.session.startRunning()
 			}
@@ -55,7 +61,17 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 				self.session.addInput(current)
 			}
 			self.session.commitConfiguration()
+			self.coordinateRotation()
 			onPositionChange(self.videoInput?.device.position == .front)
+		}
+	}
+
+	/// Takes the live preview's layer, whose window decides which way is up for the preview.
+	func attachPreview(_ layer: AVCaptureVideoPreviewLayer) {
+		sessionQueue.async { [weak self] in
+			guard let self else { return }
+			self.previewLayer = layer
+			self.coordinateRotation()
 		}
 	}
 
@@ -72,6 +88,12 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 				return
 			}
 
+			// The photo comes out level with the horizon, as the device is held now.
+			if let angle = self.rotationCoordinator?.videoRotationAngleForHorizonLevelCapture,
+				connection.isVideoRotationAngleSupported(angle)
+			{
+				connection.videoRotationAngle = angle
+			}
 			let settings = AVCapturePhotoSettings()
 			if self.photoOutput.supportedFlashModes.contains(flash) {
 				settings.flashMode = flash
@@ -113,6 +135,23 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 			photoOutput.maxPhotoQualityPrioritization = .quality
 		}
 		session.commitConfiguration()
+	}
+
+	/// Follows the current camera's rotation for its preview layer: the preview turns with the window, and a capture
+	/// reads the coordinator's angle for the photo.
+	private func coordinateRotation() {
+		guard let device = videoInput?.device, let previewLayer else { return }
+		let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
+		rotationCoordinator = coordinator
+		let rotate = { [weak previewLayer] (angle: CGFloat) in
+			DispatchQueue.main.async {
+				guard let connection = previewLayer?.connection, connection.isVideoRotationAngleSupported(angle) else { return }
+				connection.videoRotationAngle = angle
+			}
+		}
+		previewRotation = coordinator.observe(\.videoRotationAngleForHorizonLevelPreview, options: [.initial, .new]) { coordinator, _ in
+			rotate(coordinator.videoRotationAngleForHorizonLevelPreview)
+		}
 	}
 
 	private func currentState() -> CameraSessionState {

@@ -29,7 +29,8 @@ struct ImageCaptureFlowView: View {
 			switch coordinator.stage {
 			case .camera:
 				CameraSourceView(
-					cameraModel: cameraModel, onCapture: { coordinator.selectedImage($0, from: .camera) }, onBack: goBack)
+					cameraModel: cameraModel, standIn: cameraStandIn, onCapture: { coordinator.selectedImage($0, from: .camera) },
+					onBack: goBack)
 			case .photoPreview, .systemPhotoPicker:
 				LightweightPhotoPreviewView(
 					previewImages: previewImages, onPicked: { coordinator.selectedImage($0, from: .photoPreview) },
@@ -54,6 +55,18 @@ struct ImageCaptureFlowView: View {
 					image: item.image, shape: cropShape, onComplete: { coordinator.completedCrop(with: $0) },
 					onCancel: coordinator.cancelledCrop)
 			})
+	}
+
+	/// The last preview photo in place of the live camera, when a UI test asks for it, as the Simulator has no camera.
+	private var cameraStandIn: UIImage? {
+		#if DEBUG
+			guard case .uiTest = AppLaunchMode.current,
+				ProcessInfo.processInfo.environment["GROWINGUP_CAMERA_STAND_IN"] == "1"
+			else { return nil }
+			return previewImages?.last
+		#else
+			return nil
+		#endif
 	}
 
 	/// Back from the camera or the photo preview closes the whole flow, back to the editor underneath.

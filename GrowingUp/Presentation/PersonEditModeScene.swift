@@ -53,13 +53,19 @@ struct PersonEditModeScene: View {
 		.sceneError($editor.error)
 		.sheet(item: $photoRequest) { request in
 			// A new photo lands in the frame, where it can be framed again before Done.
-			ImageCaptureFlowView(
+			let flow = ImageCaptureFlowView(
 				source: request.source, previewImages: editor.photoFixtures, cropShape: .rectangle,
 				onComplete: { framed in
 					mode.placePhoto(framed, from: request.source)
 					photoRequest = nil
 				}, onCancel: { photoRequest = nil }
 			)
+			// iPad gives the photos and the camera a page-sized sheet over the edit mode.
+			if UIDevice.current.userInterfaceIdiom == .pad {
+				flow.presentationSizing(.page)
+			} else {
+				flow
+			}
 		}
 		// The circle opens on the region its picture shows, framed from the same photo as the main picture.
 		.fullScreenCover(item: $widgetPictureSource) { item in

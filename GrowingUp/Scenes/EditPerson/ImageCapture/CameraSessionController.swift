@@ -65,6 +65,11 @@ final class CameraSessionController {
 		}
 	}
 
+	/// Hands the live preview's layer to the session, which keeps the preview and photos upright with it.
+	func attachPreview(_ layer: AVCaptureVideoPreviewLayer) {
+		worker.attachPreview(layer)
+	}
+
 	// MARK: - Controls
 
 	/// Swaps the active camera input between back and front.
