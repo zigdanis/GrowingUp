@@ -37,7 +37,7 @@ struct ImageCaptureFlowView: View {
 					onBack: goBack, onAllPhotos: coordinator.choseAllPhotos)
 			}
 		}
-		.presentationDetents(coordinator.stage == .camera ? [.large] : [.medium, .large])
+		.modifier(sheetSize)
 		.onChange(of: scenePhase) { _, newPhase in
 			guard newPhase == .active else { return }
 			cameraModel.refresh()
@@ -55,6 +55,12 @@ struct ImageCaptureFlowView: View {
 					image: item.image, shape: cropShape, onComplete: { coordinator.completedCrop(with: $0) },
 					onCancel: coordinator.cancelledCrop)
 			})
+	}
+
+	/// iPad shows the photos and the camera in a page-sized sheet; a phone's sheet opens the photos halfway and the
+	/// camera in full.
+	private var sheetSize: some ViewModifier {
+		ImageCaptureSheetSize(isPage: UIDevice.current.userInterfaceIdiom == .pad, isCamera: coordinator.stage == .camera)
 	}
 
 	/// The last preview photo in place of the live camera, when a UI test asks for it, as the Simulator has no camera.

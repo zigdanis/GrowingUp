@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8030B1ABAA016F36DEB899FE /* AmbientPaletteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */; };
+		83D9F4E750E49F9604D5CA24 /* ImageCaptureSheetSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5599C3AE15D20D6009CE1407 /* ImageCaptureSheetSize.swift */; };
 		877DAA2DA9D795971C68483E /* RemovalConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC1D588F8FD690875E1D00 /* RemovalConfirmation.swift */; };
 		6CEBC4A8DEF4993EAA035EF9 /* EditModePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E37EA12DCBBFD79EA35238 /* EditModePicker.swift */; };
 		AFDFAF4D165619851DBA5757 /* LayoutCaptureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BB3FB79299A1CBCCB8DA32 /* LayoutCaptureTests.swift */; };
@@ -529,6 +530,7 @@
 		39CFF7E7133C5E71BD9198A6 /* EditPersonUseCaseImplementation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPersonUseCaseImplementation.swift; sourceTree = "<group>"; };
 		3B395D62EC8CB036A4D33657 /* CameraSourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraSourceView.swift; sourceTree = "<group>"; };
 		3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageCaptureFlowView.swift; sourceTree = "<group>"; };
+		5599C3AE15D20D6009CE1407 /* ImageCaptureSheetSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCaptureSheetSize.swift; sourceTree = "<group>"; };
 		41A01AE5DBF9E2D0608649AC /* UITestFailureGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestFailureGateway.swift; sourceTree = "<group>"; };
 		424408FAA2E5E6B62DE1C986 /* CameraCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraCardView.swift; sourceTree = "<group>"; };
 		433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PersonOverviewScene.swift; sourceTree = "<group>"; };
@@ -1306,6 +1308,7 @@
 				F2469A79AAB54B9DED980854 /* ThirdsGrid.swift */,
 				92269C64A60057B4E5573DED /* CropGeometry.swift */,
 				3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */,
+				5599C3AE15D20D6009CE1407 /* ImageCaptureSheetSize.swift */,
 				490F862FFF09FCB1C34DD314 /* PermissionExplainerView.swift */,
 				EDE7546BFE10608147B0CB77 /* PhotoAuthState.swift */,
 				7FE31C219E76B32FEB38B0CC /* PhotoGridView.swift */,
@@ -1837,6 +1840,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83D9F4E750E49F9604D5CA24 /* ImageCaptureSheetSize.swift in Sources */,
 				877DAA2DA9D795971C68483E /* RemovalConfirmation.swift in Sources */,
 				6CEBC4A8DEF4993EAA035EF9 /* EditModePicker.swift in Sources */,
 				ED172752AA2F2C63FDB9C0D0 /* PersonImageLoader.swift in Sources */,
