@@ -208,7 +208,7 @@ struct PersonOverviewScene: View {
 		PersonAgeCard(
 			name: person.name, primaryValue: presenter.primaryValue, primaryUnit: presenter.primaryUnit,
 			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge,
-			isShown: isSelected
+			isShown: isSelected, isLarge: layout != .phone && UIDevice.current.userInterfaceIdiom == .pad
 		)
 		// VoiceOver reaches edit mode and the mosaic through the age, the page's main element; activating it edits,
 		// like a tap anywhere on the page.
