@@ -161,10 +161,13 @@ final class LayoutCaptureTests: XCTestCase {
 	private func chooseMultitasking(_ mode: String) {
 		let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
 		settings.launch()
-		let section = settings.staticTexts["Multitasking & Gestures"].firstMatch
-		XCTAssertTrue(section.waitForExistence(timeout: 10))
-		section.tap()
 		let option = settings.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", mode + ",")).firstMatch
+		// Settings reopens on the page it last showed; otherwise the sidebar leads there.
+		if !option.waitForExistence(timeout: 3) {
+			let section = settings.descendants(matching: .any).matching(NSPredicate(format: "label == 'Multitasking & Gestures'")).firstMatch
+			XCTAssertTrue(section.waitForExistence(timeout: 10))
+			section.tap()
+		}
 		XCTAssertTrue(option.waitForExistence(timeout: 5))
 		option.tap()
 		settings.terminate()
