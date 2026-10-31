@@ -36,6 +36,7 @@ final class LayoutCaptureTests: XCTestCase {
 			captureDemoPeople()
 			if wants("mosaic-one") {
 				launch(seed: .demoMia)
+				Thread.sleep(forTimeInterval: 2)
 				capture("mosaic-one", note: "Mia alone")
 			}
 			if wants("empty") {
@@ -59,8 +60,8 @@ final class LayoutCaptureTests: XCTestCase {
 	private func captureDemoPeople() {
 		launch(seed: .demo)
 		if wants("mosaic") {
-			// Tile pictures load asynchronously and expose no loaded marker.
-			Thread.sleep(forTimeInterval: 1.5)
+			// Tile pictures load asynchronously and expose no loaded marker; a busy Simulator needs a few seconds.
+			Thread.sleep(forTimeInterval: 4)
 			capture("mosaic", note: "Four demo people")
 		}
 		let editing = ["edit", "date", "time", "remove", "photos", "crop", "circle", "camera"]
