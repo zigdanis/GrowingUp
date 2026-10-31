@@ -149,7 +149,8 @@ struct CameraCardView: View {
 	}
 
 	@ViewBuilder private var flipButton: some View {
-		if controller.canFlip {
+		// The stand-in shows every control, so their layout can be reviewed on the Simulator.
+		if controller.canFlip || standIn != nil {
 			Button {
 				controller.flip()
 			} label: {
