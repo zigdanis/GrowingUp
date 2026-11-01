@@ -159,16 +159,14 @@ struct PersonEditModeScene: View {
 	}
 
 	private var keyboardCommands: [KeyboardCommand] {
-		[
-			KeyboardCommand(title: String(localized: "Cancel"), input: UIKeyCommand.inputEscape) {
+		KeyboardCommand.editMode(
+			escape: {
 				if mode.popover != nil {
 					mode.dismissPopover()
 				} else {
 					cancel()
 				}
-			},
-			KeyboardCommand(title: String(localized: "Done"), input: "\r", modifiers: .command, action: saveFromKeyboard)
-		]
+			}, save: saveFromKeyboard)
 	}
 
 	private var columnWidth: CGFloat? {

@@ -98,23 +98,16 @@ struct PersonViewer: View {
 		{
 			// The arrows follow the pager, which runs the other way in a right-to-left language.
 			let isRightToLeft = layoutDirection == .rightToLeft
-			KeyboardFocusAnchor(commands: [
-				KeyboardCommand(
-					title: String(localized: "Next person"), input: isRightToLeft ? UIKeyCommand.inputLeftArrow : UIKeyCommand.inputRightArrow,
-					action: { pageAction(from: person, by: 1)?() }),
-				KeyboardCommand(
-					title: String(localized: "Previous person"),
-					input: isRightToLeft ? UIKeyCommand.inputRightArrow : UIKeyCommand.inputLeftArrow,
-					action: { pageAction(from: person, by: -1)?() }),
-				KeyboardCommand(
-					title: String(localized: "Edit"), input: "\r",
-					action: {
+			KeyboardFocusAnchor(
+				commands: KeyboardCommand.viewer(
+					isRightToLeft: isRightToLeft, next: { pageAction(from: person, by: 1)?() },
+					previous: { pageAction(from: person, by: -1)?() },
+					edit: {
 						// As a tap on the page does.
 						haptics.play(.editEntered)
 						presenter.edit(person)
-					}),
-				KeyboardCommand(title: String(localized: "All people"), input: UIKeyCommand.inputEscape, action: presenter.closeViewer)
-			])
+					}, close: presenter.closeViewer)
+			)
 			.frame(width: 0, height: 0)
 		}
 	}
