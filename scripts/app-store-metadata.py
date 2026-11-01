@@ -193,7 +193,8 @@ def resolve_spec(catalog, image):
     for mapping in placement_type["specMappings"]:
         group = mapping["placementGroupId"]
         profile = next((p for p in catalog["placementProfileGroups"] if p["placementProfileGroupId"] == group), {})
-        if profile.get("platform") != "IPHONE_APP_STORE":
+        # iPhone and iPad screenshot groups; their native sizes never overlap.
+        if profile.get("platform") not in ("IPHONE_APP_STORE", "IPAD_APP_STORE"):
             continue
         matching = set(mapping["specs"]) & set(specs)
         for policy in features[0]["placementPolicies"]:
@@ -202,7 +203,7 @@ def resolve_spec(catalog, image):
                     if group in limit["groupIds"] and limit["maxCount"] >= len(FILES) and len(matching) == 1:
                         groups.append((group, next(iter(matching))))
     if len(groups) != 1:
-        raise ValueError(f"Expected one iPhone screenshot placement group for {image['width']}x{image['height']}; found {len(groups)}")
+        raise ValueError(f"Expected one iPhone or iPad screenshot placement group for {image['width']}x{image['height']}; found {len(groups)}")
     return groups[0]
 
 
