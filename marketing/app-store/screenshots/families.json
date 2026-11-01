@@ -48,12 +48,24 @@
         1398,
         2034
       ]
+    },
+    {
+      "slug": "ipad-13-20261101",
+      "path": "families/ipad-13-20261101",
+      "group": "IPAD_13_PROFILE",
+      "device": "iPad-Pro-13-inch-M5",
+      "runtime": "27-0",
+      "size": [
+        2064,
+        2752
+      ]
     }
   ],
   "selection": {
     "dynamic_island": "medium_only",
     "duo": "outer_only",
     "app_previews": "remove_all_EN_RU_placements",
-    "apple_specifications": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/"
+    "apple_specifications": "https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/",
+    "ipad": "13_inch_only"
   }
 }

@@ -33,3 +33,17 @@ Apple processing exceeded the original five-minute deadline on newly uploaded im
 Rebuild instructions are in `.agents/skills/app-store-screenshots/SKILL.md`. Retained inputs and passing summaries live under `marketing/app-store/native-captures/*-20261028/`; final PNGs and source hashes live under `marketing/app-store/screenshots/families/*-20261028/`. Previous undated assets and receipts are historical, not the current manifest.
 
 Local verification: independent Codex review found no issues; 48 focused screenshot-tool tests passed, along with strict SwiftLint, swift-format and Swift parsing of the capture test. The full local script suite had 137 passes and one existing FFmpeg video-duration failure (0.0667 s difference), unrelated to screenshot changes; PR CI supplies the Linux result. No extra capture or iOS compatibility tests were added.
+
+## 13-inch iPad — 2026-11-01
+
+GrowingUp runs on iPad since PR #112, so App Store Connect needs the 13-inch iPad set (`IPAD_13_PROFILE`, 2064 × 2752 portrait); Apple scales it for 11-inch iPads. It was captured on MacPro with Xcode 27.1 on the pool's GU iPad Pro 13 (M5), iOS 27.0, from the same capture test through the real iPad UI: the date popovers, the Photos sheet and the circle crop. Both locales passed.
+
+| Screenshot set | Persistent simulator | Runtime | Native PNG size | Placements |
+|---|---|---|---|---|
+| 13-inch iPad | GU iPad Pro 13 (M5) | iOS 27.0 | 2064 × 2752 | 6 EN + 6 RU composed, not uploaded |
+
+The cards keep the iPhone story and copy, drawn by `scripts/render-ipad-app-store-screenshots.py`: whole iPad frames under the headline, and a Home Screen card with iPad's extra large widget above the large, medium and small ones ("Four sizes" instead of "Three sizes"). A full iPad screenshot takes 0.35–0.5 s (six frames overran the 4 s burst on the first try), so the capture shoots fireworks at 1500, 1900 and 2300 ms (measured 1.50, 1.91 and 2.31 s after the return swipe) and the cards use 1500 ms, the brightest burst. On iPad the fireworks are small against the large photo, because the celebration's particles keep their iPhone size; the app was not changed for the capture.
+
+Upload is waiting: version 3.0.0 is in review and App Store Connect has no editable version for the iPad build yet. A read-only run of `scripts/app-store-families.py --group IPAD_13_PROFILE` against Apple's live catalog resolved all twelve PNGs to `IPAD_13_PROFILE` and stopped at the missing draft. Once a draft exists, set its `version` and `version_id` in `families.json` and upload with `--group IPAD_13_PROFILE --upload`; the other groups are left untouched.
+
+Retained inputs and passing summaries live under `marketing/app-store/native-captures/ipad-13-20261101/`; the cards and source hashes under `marketing/app-store/screenshots/families/ipad-13-20261101/`.
