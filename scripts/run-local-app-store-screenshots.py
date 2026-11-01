@@ -36,7 +36,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--udid', required=True)
     parser.add_argument('--device', required=True)
-    parser.add_argument('--family', required=True, choices=('dynamic-island', 'face-id', 'home-button', 'duo-outer'))
+    parser.add_argument('--family', required=True, choices=('dynamic-island', 'face-id', 'home-button', 'duo-outer', 'ipad-13'))
     parser.add_argument('--runtime', help='Simulator runtime such as 27-1; defaults to the runtime of --udid')
     parser.add_argument('--xcode', help='Xcode version recorded as evidence; defaults to the active Xcode')
     parser.add_argument('--width', required=True, type=int)
