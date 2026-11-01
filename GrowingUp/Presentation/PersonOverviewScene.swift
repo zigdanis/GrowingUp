@@ -67,10 +67,10 @@ struct PersonOverviewScene: View {
 					.padding(.leading, safeAreaInsets.leading)
 					.padding(.trailing, safeAreaInsets.trailing)
 			case .widePortrait:
-				// No fold crosses an iPad: the whole photo shows, with the age in a column along the leading edge.
+				// No fold crosses an iPad: the whole photo shows, with the age in a centred column.
 				pageContent()
 					.frame(maxWidth: layout.columnWidth)
-					.frame(maxWidth: .infinity, alignment: .leading)
+					.frame(maxWidth: .infinity)
 					.padding(.leading, safeAreaInsets.leading)
 					.padding(.trailing, safeAreaInsets.trailing)
 			case .landscape:
@@ -214,6 +214,14 @@ struct PersonOverviewScene: View {
 		}
 	}
 
+	/// How much further in the age starts, beside a window's controls: as far as they reach past its column's own inset,
+	/// none on the landscape pane, which starts mid-window.
+	private var windowControlsClearance: CGFloat {
+		guard layout != .landscape else { return 0 }
+		let columnInset = layout.columnWidth.map { max(0, (pageSize.width - $0) / 2) } ?? 0
+		return max(0, windowControlsWidth + 8 - 24 - columnInset)
+	}
+
 	/// The photo, or the monogram once no photo loads; black while one loads, so a photo never flashes the monogram first.
 	@ViewBuilder private var photoOrMonogram: some View {
 		if let image = presenter.image {
@@ -269,7 +277,6 @@ struct PersonOverviewScene: View {
 		.accessibilityAction(.escape, onClose)
 		.accessibilityFocused($isAgeFocused)
 		.padding(.horizontal, 24)
-		// Beside a window's controls, as the age starts in the window's top-leading corner except on the landscape pane.
-		.padding(.leading, layout == .landscape ? 0 : max(0, windowControlsWidth + 8 - 24))
+		.padding(.leading, windowControlsClearance)
 	}
 }
