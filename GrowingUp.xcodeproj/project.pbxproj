@@ -12,7 +12,6 @@
 		C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000007 /* ReviewPromptMode.swift */; };
 		C2B00000000000000000000A /* ReviewPromptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000009 /* ReviewPromptStore.swift */; };
 		C2B00000000000000000000C /* ReviewPrompter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000B /* ReviewPrompter.swift */; };
-		C2B00000000000000000000E /* ReviewPromptAnalyticsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */; };
 		C2B000000000000000000010 /* ReviewPromptPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000F /* ReviewPromptPolicyTests.swift */; };
 		C2B000000000000000000012 /* ReviewPrompterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000011 /* ReviewPrompterTests.swift */; };
 		C2B000000000000000000014 /* PeopleReviewPromptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000013 /* PeopleReviewPromptTests.swift */; };
@@ -430,7 +429,6 @@
 		C2B000000000000000000007 /* ReviewPromptMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptMode.swift; sourceTree = "<group>"; };
 		C2B000000000000000000009 /* ReviewPromptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptStore.swift; sourceTree = "<group>"; };
 		C2B00000000000000000000B /* ReviewPrompter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPrompter.swift; sourceTree = "<group>"; };
-		C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptAnalyticsGateway.swift; sourceTree = "<group>"; };
 		C2B00000000000000000000F /* ReviewPromptPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptPolicyTests.swift; sourceTree = "<group>"; };
 		C2B000000000000000000011 /* ReviewPrompterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPrompterTests.swift; sourceTree = "<group>"; };
 		C2B000000000000000000013 /* PeopleReviewPromptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleReviewPromptTests.swift; sourceTree = "<group>"; };
@@ -830,7 +828,6 @@
 				C2B000000000000000000007 /* ReviewPromptMode.swift */,
 				C2B000000000000000000009 /* ReviewPromptStore.swift */,
 				C2B00000000000000000000B /* ReviewPrompter.swift */,
-				C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */,
 			);
 			path = ReviewPrompt;
 			sourceTree = "<group>";
@@ -2128,7 +2125,6 @@
 				C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */,
 				C2B00000000000000000000A /* ReviewPromptStore.swift in Sources */,
 				C2B00000000000000000000C /* ReviewPrompter.swift in Sources */,
-				C2B00000000000000000000E /* ReviewPromptAnalyticsGateway.swift in Sources */,
 				A7A100000000000000000007 /* AnalyticsFailure.swift in Sources */,
 				A7A100000000000000000009 /* AnalyticsGateway.swift in Sources */,
 				A7A10000000000000000000B /* AnalyticsValue.swift in Sources */,

@@ -11,9 +11,11 @@ final class ReviewPrompter {
 	private let version: String
 	private let now: () -> Date
 	private let calendar: Calendar
-	/// When the open viewer began showing people; nil while none is open.
+	/// When the open viewer began showing people, or the app last came back to it; nil while none is open.
 	private var viewerOpened: Date?
-	/// A failed operation or a removal this session: not a moment to ask.
+	/// The state of a forced check, which never reaches the store.
+	private var forcedState = ReviewPromptState()
+	/// An alert or a removal this session: not a moment to ask.
 	private(set) var hadSetbackThisSession = false
 	private var requestedThisSession = false
 
@@ -35,6 +37,8 @@ final class ReviewPrompter {
 	}
 
 	func appBecameActive() {
+		// Time away from the app is no time spent looking at someone.
+		if viewerOpened != nil { viewerOpened = now() }
 		update { policy.recordingActiveDay($0, now: now(), calendar: calendar) }
 	}
 
@@ -73,19 +77,16 @@ final class ReviewPrompter {
 			return true
 		case .policy:
 			return !requestedThisSession
-				&& policy.shouldRequest(store.state, now: closed, calendar: calendar, version: version, people: people)
+				&& policy.shouldRequest(state, now: closed, calendar: calendar, version: version, people: people)
 		}
 	}
 
-	/// Records a request handed to the system and returns its analytics event; a forced check stores nothing.
+	/// Records a request handed to the system and returns its analytics event.
 	func recordRequest(people: [Person]) -> AnalyticsEvent {
 		let date = now()
-		var state = store.state
-		state = policy.recordingRequest(state, now: date, version: version)
-		if mode == .policy {
-			requestedThisSession = true
-			store.state = state
-		}
+		if mode == .policy { requestedThisSession = true }
+		update { policy.recordingRequest($0, now: date, version: version) }
+		let state = self.state
 		return .reviewPromptRequested(
 			activeDays: state.activeDays,
 			daysSinceFirstActive: policy.daysSinceFirstActive(state, now: date, calendar: calendar),
@@ -94,7 +95,15 @@ final class ReviewPrompter {
 			requestNumber: state.requestCount)
 	}
 
+	/// The stored state, or a forced check's own, which starts from nothing and never reaches the store.
+	private var state: ReviewPromptState {
+		get { mode == .forced ? forcedState : store.state }
+		set {
+			if mode == .forced { forcedState = newValue } else { store.state = newValue }
+		}
+	}
+
 	private func update(_ change: (ReviewPromptState) -> ReviewPromptState) {
-		store.state = change(store.state)
+		state = change(state)
 	}
 }

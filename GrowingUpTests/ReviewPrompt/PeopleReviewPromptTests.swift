@@ -11,7 +11,7 @@ final class PeopleReviewPromptTests: XCTestCase {
 	/// A new, empty suite for every test.
 	private let defaults = UserDefaults(suiteName: "PeopleReviewPromptTests.\(UUID().uuidString)")!
 
-	func testAClosedViewerAsksOnceTheMosaicShowsAgain() async {
+	func testAClosedViewerAsksOnceTheMosaicShowsAgain() async throws {
 		let people = makePeople()
 		let (presenter, analytics) = await loadedPresenter(people)
 		presenter.view(people[0].id)
@@ -19,47 +19,59 @@ final class PeopleReviewPromptTests: XCTestCase {
 		presenter.closeViewer()
 		XCTAssertNil(presenter.pendingReviewRequest, "Nothing is asked while the cover still shows")
 		presenter.coverDidClose()
-		XCTAssertNotNil(presenter.pendingReviewRequest)
-		XCTAssertTrue(presenter.takeReviewRequest())
+		let request = try XCTUnwrap(presenter.pendingReviewRequest)
+		XCTAssertTrue(presenter.takeReviewRequest(request))
 		XCTAssertNil(presenter.pendingReviewRequest)
 		XCTAssertEqual(analytics.events.last?.name, "review_prompt_requested")
 		XCTAssertEqual(ReviewPromptStore(defaults: defaults).state.requestCount, 1)
-		XCTAssertFalse(presenter.takeReviewRequest(), "One request per closed viewer")
+		XCTAssertFalse(presenter.takeReviewRequest(request), "One request per closed viewer")
 	}
 
-	func testARequestWaitsForTheMosaicToBeFreeAndTheAppActive() async {
+	func testARequestWaitsForTheMosaicToBeFreeAndTheAppActive() async throws {
 		let people = makePeople()
 		let (presenter, _) = await loadedPresenter(people)
-		visit(people[0], in: presenter)
+		let reopened = try visit(people[0], in: presenter)
 		presenter.view(people[1].id)
-		XCTAssertFalse(presenter.takeReviewRequest(), "The viewer opened again during the pause")
+		XCTAssertFalse(presenter.takeReviewRequest(reopened), "The viewer opened again during the pause")
 		now += 5
 		presenter.closeViewer()
 		presenter.coverDidClose()
+		let covered = try XCTUnwrap(presenter.pendingReviewRequest)
 		presenter.sceneDidResignActive()
-		XCTAssertFalse(presenter.takeReviewRequest(), "Control Center or a notification is over the app")
+		XCTAssertNil(presenter.pendingReviewRequest, "Control Center or a notification over the app drops the request")
 		presenter.sceneDidBecomeActive()
-		visit(people[1], in: presenter)
+		XCTAssertFalse(presenter.takeReviewRequest(covered))
+		let added = try visit(people[1], in: presenter)
 		presenter.add()
-		XCTAssertFalse(presenter.takeReviewRequest(), "A new person's page opened during the pause")
+		XCTAssertFalse(presenter.takeReviewRequest(added), "A new person's page opened during the pause")
 		XCTAssertEqual(ReviewPromptStore(defaults: defaults).state.requestCount, 0)
 	}
 
-	func testAFailureOrARemovalKeepsTheRequestAway() async {
+	func testAnAlertOrARemovalKeepsTheRequestAwayForTheSession() async throws {
 		let people = makePeople(count: 3)
 		let (presenter, _) = await loadedPresenter(people)
-		visit(people[0], in: presenter)
-		// An editor reports its failures through the same gateway, while the request waits.
-		presenter.configurator.analytics.report(AnalyticsFailure(operation: "save_person", error: CoreError.coreDataSaveFailed))
-		XCTAssertFalse(presenter.takeReviewRequest())
-		presenter.sceneDidEnterBackground()
-		presenter.sceneDidBecomeActive()
+		let request = try visit(people[0], in: presenter)
+		presenter.error = SceneError(CoreError.coreDataSaveFailed)
+		presenter.error = nil
+		XCTAssertFalse(presenter.takeReviewRequest(request), "An alert shown during the pause")
+		startNewSession(presenter)
+		presenter.view(people[1].id)
+		presenter.edit(people[1])
+		presenter.editor?.error = SceneError(CoreError.coreDataSaveFailed)
+		presenter.editor?.error = nil
+		presenter.cancelEditing(presenter.editor)
+		now += 5
+		presenter.closeViewer()
+		presenter.coverDidClose()
+		XCTAssertNil(presenter.pendingReviewRequest, "An edit mode's alert")
+		startNewSession(presenter)
 		presenter.view(people[2].id)
 		presenter.edit(people[2])
 		now += 5
 		presenter.apply(.removed(people[2]), from: presenter.editor)
 		presenter.coverDidClose()
-		XCTAssertNil(presenter.pendingReviewRequest, "A removal is no moment to ask")
+		XCTAssertNil(presenter.pendingReviewRequest, "A removal")
+		XCTAssertEqual(ReviewPromptStore(defaults: defaults).state.requestCount, 0)
 	}
 
 	func testANewPersonsPageIsNoVisit() async {
@@ -88,12 +100,18 @@ final class PeopleReviewPromptTests: XCTestCase {
 	}
 
 	/// Shows `person` for five seconds and returns to the mosaic, which starts a request.
-	private func visit(_ person: Person, in presenter: PeoplePresenter) {
+	private func visit(_ person: Person, in presenter: PeoplePresenter) throws -> UUID {
 		presenter.view(person.id)
 		now += 5
 		presenter.closeViewer()
 		presenter.coverDidClose()
-		XCTAssertNotNil(presenter.pendingReviewRequest)
+		return try XCTUnwrap(presenter.pendingReviewRequest)
+	}
+
+	/// Leaves the app and comes back, which starts a session with no setbacks.
+	private func startNewSession(_ presenter: PeoplePresenter) {
+		presenter.sceneDidEnterBackground()
+		presenter.sceneDidBecomeActive()
 	}
 
 	private var calendar: Calendar {

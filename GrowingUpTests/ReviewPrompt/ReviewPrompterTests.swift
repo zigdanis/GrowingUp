@@ -60,6 +60,18 @@ final class ReviewPrompterTests: XCTestCase {
 		XCTAssertEqual(store().state.activeDays, 3)
 	}
 
+	func testTimeAwayFromTheAppIsNoTimeInTheViewer() {
+		let prompter = makePrompter()
+		prompter.viewerOpened()
+		now += 1
+		prompter.appEnteredBackground()
+		now += 60
+		prompter.appBecameActive()
+		now += 1
+		XCTAssertFalse(prompter.viewerClosed(people: people()))
+		XCTAssertEqual(store().state.viewerVisits, 0)
+	}
+
 	func testANewPersonsPageIsNoVisit() {
 		let prompter = makePrompter()
 		prompter.viewerOpened()
@@ -69,12 +81,12 @@ final class ReviewPrompterTests: XCTestCase {
 		XCTAssertEqual(store().state.viewerVisits, 0)
 	}
 
-	func testAForcedCheckAsksOnEveryVisitAndStoresNoRequest() {
+	func testAForcedCheckAsksOnEveryVisitAndStoresNothing() {
 		let prompter = makePrompter(mode: .forced)
 		XCTAssertTrue(visit(prompter))
 		_ = prompter.recordRequest(people: people())
 		XCTAssertTrue(visit(prompter))
-		XCTAssertEqual(store().state.requestCount, 0)
+		XCTAssertEqual(store().state, ReviewPromptState(), "Nothing a forced check counts reaches the store")
 		prompter.noteSetback()
 		XCTAssertFalse(visit(prompter), "Setbacks still keep it away")
 	}

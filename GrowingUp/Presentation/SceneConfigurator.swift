@@ -27,8 +27,7 @@ struct SceneConfigurator {
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
 		reviewPrompter: ReviewPrompter? = nil
 	) {
-		// Failures and removals reach the prompter as they are reported, from the mosaic and every editor alike.
-		self.analytics = reviewPrompter.map { ReviewPromptAnalyticsGateway(base: analytics, prompter: $0) } ?? analytics
+		self.analytics = analytics
 		self.reviewPrompter = reviewPrompter
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
@@ -49,7 +48,7 @@ struct SceneConfigurator {
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
 			now: now(), loadImage: loadImage, loadOriginal: loadOriginal, photoFixtures: photoFixtures, analytics: analytics,
-			onMutation: onMutation)
+			onError: { [weak reviewPrompter] in reviewPrompter?.noteSetback() }, onMutation: onMutation)
 	}
 
 	static func live(analytics: AnalyticsGateway) -> SceneConfigurator {

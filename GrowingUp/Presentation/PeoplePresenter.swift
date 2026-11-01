@@ -21,7 +21,10 @@ final class PeoplePresenter {
 	/// The open editing session, a new or an existing person's, which the cover shows as its in-place edit mode. Only this
 	/// session moves the navigation when its change lands; see `apply(_:from:)`.
 	private(set) var editor: PersonEditorPresenter?
-	var error: SceneError?
+	/// The alert the mosaic shows; after one, the session is no moment to ask for a rating.
+	var error: SceneError? {
+		didSet { if error != nil { configurator.reviewPrompter?.noteSetback() } }
+	}
 	private(set) var isLoading = true
 	/// Whether a long press put the mosaic in reordering, where tiles drag to new places instead of opening the viewer.
 	private(set) var isReordering = false
@@ -148,20 +151,22 @@ final class PeoplePresenter {
 		configurator.reviewPrompter?.appBecameActive()
 	}
 
+	/// Control Center, a notification or the app switcher covers the app: a waiting rating request is dropped.
 	func sceneDidResignActive() {
 		isSceneActive = false
+		pendingReviewRequest = nil
 	}
 
 	func sceneDidEnterBackground() {
-		isSceneActive = false
+		sceneDidResignActive()
 		configurator.reviewPrompter?.appEnteredBackground()
 	}
 
-	/// Ends the pause a closed viewer started and says whether to ask for the rating now: only while the app is active,
-	/// the mosaic shows with nothing over it, and nothing went wrong meanwhile. A request that may not go is dropped, and a
-	/// later visit can try again; one that goes is recorded here.
-	func takeReviewRequest() -> Bool {
-		guard pendingReviewRequest != nil else { return false }
+	/// Ends the pause `request` started and says whether to ask for the rating now: only while it is still the waiting
+	/// request, the app is active, the mosaic shows with nothing over it, and nothing went wrong meanwhile. A request that
+	/// may not go is dropped, and a later visit can try again; one that goes is recorded here.
+	func takeReviewRequest(_ request: UUID) -> Bool {
+		guard pendingReviewRequest == request else { return false }
 		pendingReviewRequest = nil
 		guard let prompter = configurator.reviewPrompter, isSceneActive, !isLoading, !isViewing, editor == nil, !isReordering,
 			error == nil, !prompter.hadSetbackThisSession
@@ -356,6 +361,7 @@ final class PeoplePresenter {
 			persons.sort()
 			if ownsNavigation { selectedID = person.id }
 		case .removed(let person):
+			configurator.reviewPrompter?.noteSetback()
 			storedOrders[person.id] = nil
 			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it. A viewer
 			// a widget link opened on the removed person closes too, as nothing is left to show.

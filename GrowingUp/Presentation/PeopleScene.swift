@@ -73,9 +73,9 @@ struct PeopleScene: View {
 		}
 		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
 		.task(id: presenter.pendingReviewRequest) {
-			guard presenter.pendingReviewRequest != nil else { return }
+			guard let request = presenter.pendingReviewRequest else { return }
 			do { try await Task.sleep(for: .seconds(2)) } catch { return }
-			if presenter.takeReviewRequest() { requestReview() }
+			if presenter.takeReviewRequest(request) { requestReview() }
 		}
 	}
 
