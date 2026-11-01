@@ -20,6 +20,9 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 	private var previewLayer: AVCaptureVideoPreviewLayer?
 	private var rotationCoordinator: AVCaptureDevice.RotationCoordinator?
 	private var previewRotation: NSKeyValueObservation?
+	/// The coordinator whose angles the preview takes; read and written on the main queue only, so an angle a replaced
+	/// coordinator queued earlier lands nowhere.
+	private var previewCoordinator: AVCaptureDevice.RotationCoordinator?
 
 	func start(onStateChange: @escaping @Sendable (CameraSessionState) -> Void) {
 		sessionQueue.async { [weak self] in
@@ -143,9 +146,13 @@ final class CameraSessionWorker: NSObject, AVCapturePhotoCaptureDelegate, @unche
 		guard let device = videoInput?.device, let previewLayer else { return }
 		let coordinator = AVCaptureDevice.RotationCoordinator(device: device, previewLayer: previewLayer)
 		rotationCoordinator = coordinator
-		let rotate = { [weak previewLayer] (angle: CGFloat) in
+		// Queued ahead of the coordinator's first angle, so from here on only its angles reach the preview.
+		DispatchQueue.main.async { [weak self] in self?.previewCoordinator = coordinator }
+		let rotate = { [weak self, weak previewLayer, weak coordinator] (angle: CGFloat) in
 			DispatchQueue.main.async {
-				guard let connection = previewLayer?.connection, connection.isVideoRotationAngleSupported(angle) else { return }
+				guard let self, let coordinator, self.previewCoordinator === coordinator,
+					let connection = previewLayer?.connection, connection.isVideoRotationAngleSupported(angle)
+				else { return }
 				connection.videoRotationAngle = angle
 			}
 		}
