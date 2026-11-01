@@ -194,4 +194,60 @@ class DuoSetTests(unittest.TestCase):
             f.read_sets(self.manifest, CATALOG, [DUO])
 
 
+
+IPAD = 'IPAD_13_PROFILE'
+IPAD_SIZE = (2064, 2752)
+IPAD_CATALOG = {
+    'features': [{'featureId': 'APP_STORE_VERSIONS', 'placementPolicies': [{
+        'placementType': 'APP_SCREENSHOT', 'groupLimits': [{'groupIds': [IPAD, 'IMESSAGE_IPAD_13_PROFILE'], 'maxCount': 10}]}]}],
+    'placementTypes': [{'placementTypeId': 'APP_SCREENSHOT', 'acceptsAssetCategories': ['APP_SCREENSHOTS_AND_PREVIEWS'],
+                        'specMappings': [{'placementGroupId': IPAD, 'specs': ['ipad-spec']},
+                                         {'placementGroupId': 'IMESSAGE_IPAD_13_PROFILE', 'specs': ['ipad-spec']}]}],
+    'imageSpecs': [{'specId': 'ipad-spec', 'dimensions': {'minWidth': IPAD_SIZE[0], 'maxWidth': IPAD_SIZE[0],
+                                                          'minHeight': IPAD_SIZE[1], 'maxHeight': IPAD_SIZE[1]},
+                    'fileExtensions': ['.png'], 'maxFileSize': 10**9}],
+    'placementProfileGroups': [{'placementProfileGroupId': IPAD, 'platform': 'IPAD_APP_STORE'},
+                               {'placementProfileGroupId': 'IMESSAGE_IPAD_13_PROFILE'}],
+}
+
+
+class IPadSetTests(unittest.TestCase):
+    """A 13-inch iPad set resolves to the iPad App Store group, never to the iMessage one of the same size."""
+
+    def test_ipad_group_is_read_with_its_spec(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            with patch.object(f, 'ROOT', root):
+                (root / 'scripts').mkdir()
+                (root / 'scripts/render-app-store-screenshots.py').write_text('base')
+                (root / 'scripts/render-ipad-app-store-screenshots.py').write_text('ipad')
+                screenshots = root / 'marketing/app-store/screenshots'
+                folder = screenshots / 'families/ipad-13'
+                digest = lambda content: hashlib.sha256(content).hexdigest()
+                outputs, inputs = {}, {}
+                for locale in f.m.LOCALES:
+                    native = root / 'marketing/app-store/native-captures/ipad-13' / locale
+                    native.mkdir(parents=True)
+                    (native / 'mia.png').write_bytes(locale.encode())
+                    inputs[locale] = {'mia': digest(locale.encode())}
+                    (folder / locale).mkdir(parents=True)
+                    for index, file in enumerate(f.m.FILES):
+                        content = solid_png(*IPAD_SIZE, index)
+                        (folder / locale / file).write_bytes(content)
+                        outputs[f'{locale}/{file}'] = digest(content)
+                (folder / 'source.json').write_text(json.dumps({
+                    'renderer': 'scripts/render-ipad-app-store-screenshots.py', 'renderer_sha256': digest(b'ipad'),
+                    'base_renderer_sha256': digest(b'base'), 'size': list(IPAD_SIZE), 'outputs': outputs, 'inputs': inputs,
+                    'capture': {'workflow': 'local-screenshot-only', 'device': 'iPad-Pro-13-inch-M5', 'runtime': '27-0',
+                                'capture_input_hashes': {}}}))
+                manifest = screenshots / 'families.json'
+                manifest.write_text(json.dumps({'app_id': '1461697772', 'version': '3.1.0', 'version_id': 'v', 'sets': [{
+                    'slug': 'ipad-13', 'path': 'families/ipad-13', 'group': IPAD, 'device': 'iPad-Pro-13-inch-M5',
+                    'runtime': '27-0', 'size': list(IPAD_SIZE)}]}))
+                _, sets = f.read_sets(manifest, IPAD_CATALOG, [IPAD])
+        self.assertEqual([s['group'] for s in sets], [IPAD])
+        for locale in f.m.LOCALES:
+            self.assertEqual([i['spec'] for i in sets[0]['images'][locale]], ['ipad-spec'] * len(f.m.FILES))
+
+
 if __name__=='__main__':unittest.main()
