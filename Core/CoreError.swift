@@ -26,7 +26,7 @@ public struct CoreError: Error, Equatable {
 	}
 
 	public init(error: Error) {
-		self.title = "Error"
+		self.title = NSLocalizedString("Error", bundle: bundle, comment: "Error Title")
 		self.message = error.localizedDescription
 		if let wrapped = error as? CoreError {
 			underlyingDomain = wrapped.underlyingDomain

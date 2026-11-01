@@ -107,6 +107,33 @@
 /* Message for the alert shown when a tapped photo fails to load */
 "The photo couldn't be loaded. Try again or pick another." = "Не удалось загрузить фото. Попробуйте ещё раз или выберите другое.";
 
+/* Title for the alert shown when the in-app camera fails to capture a photo */
+"Couldn't take photo" = "Не удалось сделать снимок";
+
+/* Message for the alert shown when the in-app camera fails to capture a photo */
+"The photo couldn't be captured. Try again." = "Не удалось сделать снимок. Попробуйте ещё раз.";
+
+/* VoiceOver label of the in-app camera's flash button */
+"Flash" = "Вспышка";
+
+/* VoiceOver value of the flash button: flash is off */
+"Off" = "Выкл.";
+
+/* VoiceOver value of the flash button: flash fires when needed */
+"Auto" = "Авто";
+
+/* VoiceOver value of the flash button: flash always fires */
+"On" = "Вкл.";
+
+/* VoiceOver label of the button that closes the in-app camera */
+"Close camera" = "Закрыть камеру";
+
+/* VoiceOver label of the in-app camera's shutter button */
+"Take photo" = "Сделать снимок";
+
+/* VoiceOver label of the button that switches between the front and back camera */
+"Flip camera" = "Сменить камеру";
+
 "OK" = "ОК";
 
 "Photo" = "Фото";

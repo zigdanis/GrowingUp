@@ -17,3 +17,11 @@
 
 /* Sample person in the Lock Screen widget gallery */
 "Leo" = "Leo";
+
+/* Sample people in the Home Screen widget gallery and placeholder */
+"Alice" = "Alice";
+"Boris" = "Boris";
+"Clara" = "Clara";
+"Daria" = "Daria";
+"Evan" = "Evan";
+"Farah" = "Farah";

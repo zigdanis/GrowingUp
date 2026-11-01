@@ -1,0 +1,22 @@
+{
+  "app_id": "1461697772",
+  "comment": "Search fields of the App Store listing per localization. Why each storefront reads which localization: docs/app-store-localization.md. Apply with scripts/app-store-listing.py once a version is editable.",
+  "localizations": {
+    "en-US": {
+      "name": "GrowingUp Watcher",
+      "subtitle": "Exact age & birthday widgets",
+      "keywords": "baby,kids,toddler,newborn,pet,dog,cat,countdown,how old,calculator,family,lock screen,milestone,days"
+    },
+    "en-GB": {
+      "mirror": "en-US",
+      "name": "GrowingUp Watcher",
+      "subtitle": "Kids' age & birthday countdown",
+      "keywords": "возраст,детей,ребенка,ребенок,сколько,лет,день,рождения,малыш,виджет,калькулятор,отсчет,baby,widget"
+    },
+    "ru": {
+      "name": "GrowingUp: возраст детей",
+      "subtitle": "Дни рождения и виджеты с фото",
+      "keywords": "ребенок,малыш,новорожденный,сколько,лет,питомец,кошка,собака,отсчет,семья,калькулятор,день,др,трекер"
+    }
+  }
+}
