@@ -43,8 +43,11 @@ struct PersonEditModeScene: View {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background {
 			// While the name field has no keyboard, Escape closes a picker or else cancels, and Command-Return saves; the
-			// field answers Command-Return itself while it has the keyboard.
-			if !isNameFocused { KeyboardFocusAnchor(commands: keyboardCommands).frame(width: 0, height: 0) }
+			// field answers Command-Return itself while it has the keyboard. A sheet, cover or confirmation shown over
+			// edit mode keeps its own keys, so the anchor leaves until it closes.
+			if !isNameFocused, photoRequest == nil, widgetPictureSource == nil, !mode.isConfirmingRemoval {
+				KeyboardFocusAnchor(commands: keyboardCommands).frame(width: 0, height: 0)
+			}
 		}
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
