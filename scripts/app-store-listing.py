@@ -108,10 +108,12 @@ def plan(listing, state):
                 if mirror not in locs:
                     raise ValueError(f"{mirror} is missing in App Store Connect; it is the source of {locale}")
                 source = locs[mirror]["attributes"]
-                wanted.update({f: source.get(f) for f in mirrored if source.get(f) is not None})
+                # Keep cleared fields: a null clears the copy too, so a text removed in the source never lingers.
+                wanted.update({f: source.get(f) for f in mirrored})
             current = locs.get(locale)
             if current is None:
-                changes.append(("create", kind, None, locale, {"locale": locale, **wanted}))
+                created = {f: v for f, v in wanted.items() if v is not None}
+                changes.append(("create", kind, None, locale, {"locale": locale, **created}))
             else:
                 diff = {f: v for f, v in wanted.items() if current["attributes"].get(f) != v}
                 if diff:

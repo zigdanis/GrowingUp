@@ -114,6 +114,15 @@ class ListingTests(unittest.TestCase):
                        {"appStoreVersion": {"data": {"type": "appStoreVersions", "id": "v31"}}}), api.calls)
         self.assertEqual(listing_tool.plan(self.listing, listing_tool.read_state(api)), [])
 
+    def test_clearing_a_mirrored_text_clears_the_copy(self):
+        api = FakeAPI()
+        state = listing_tool.read_state(api)
+        listing_tool.apply(api, self.listing, state, listing_tool.plan(self.listing, state))
+        source = next(i for i in api.locs["appStoreVersionLocalizations"] if i["attributes"]["locale"] == "en-US")
+        source["attributes"]["promotionalText"] = None
+        changes = listing_tool.plan(self.listing, listing_tool.read_state(api))
+        self.assertEqual([(c[0], c[3], c[4]) for c in changes], [("update", "en-GB", {"promotionalText": None})])
+
     def test_refuses_without_an_editable_version(self):
         api = FakeAPI()
         api.versions[1]["attributes"]["appStoreState"] = "WAITING_FOR_REVIEW"
