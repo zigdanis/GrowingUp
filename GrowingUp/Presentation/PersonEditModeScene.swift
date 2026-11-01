@@ -102,7 +102,7 @@ struct PersonEditModeScene: View {
 			EditModeControls(mode: mode, photoRequest: $photoRequest, onFrameWidgetPicture: frameWidgetPicture)
 				.padding(.bottom, 16)
 		}
-		.padding(.horizontal, 20)
+		.padding(.horizontal, Self.chromeMargin)
 		.padding(.top, safeAreaInsets.top + 8)
 		.padding(.bottom, safeAreaInsets.bottom)
 		.padding(.leading, safeAreaInsets.leading)
@@ -161,13 +161,28 @@ struct PersonEditModeScene: View {
 		]
 	}
 
-	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.
 	private var columnWidth: CGFloat? {
+		Self.columnWidth(layout: layout, window: window, insets: safeAreaInsets, idiom: UIDevice.current.userInterfaceIdiom)
+	}
+
+	/// The margin at the sides of the fields and controls.
+	static let chromeMargin: CGFloat = 20
+
+	/// The narrowest the fields and controls get on iPad, even beside a narrower crop column, so at the default text size
+	/// the controls keep to one row and the date and time share one.
+	static let padMinimumChromeWidth: CGFloat = 420
+
+	/// The width of the fields' and controls' column, its margins and the safe areas included: the window on a
+	/// phone-sized window, else the crop frame's centred portrait column up to the layout's column. On iPad the column
+	/// keeps `padMinimumChromeWidth` for the controls, or the whole window when narrower, while the photo keeps the crop
+	/// frame.
+	static func columnWidth(layout: PersonPageLayout, window: CGSize, insets: EdgeInsets, idiom: UIUserInterfaceIdiom) -> CGFloat? {
 		guard layout != .phone else { return nil }
-		let column = CropGeometry.frameRect(
-			for: .rectangle, in: window, insets: safeAreaInsets, idiom: UIDevice.current.userInterfaceIdiom
-		).width
-		return min(column, layout.columnWidth ?? column)
+		let crop = CropGeometry.frameRect(for: .rectangle, in: window, insets: insets, idiom: idiom).width
+		let column = min(crop, layout.columnWidth ?? crop)
+		guard idiom == .pad else { return column }
+		let margins = 2 * chromeMargin + insets.leading + insets.trailing
+		return max(column, min(window.width, padMinimumChromeWidth + margins))
 	}
 
 	/// Darkens the top behind the fields and the bottom behind the controls, so white text stays readable on light photos.

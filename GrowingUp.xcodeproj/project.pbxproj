@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B1A000000000000000000003 /* HapticImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000002 /* HapticImpact.swift */; };
+		679B15AFB5E3B561F4904DFC /* EditModeColumnWidthTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A9E5F97AFF616FDBB5AB79 /* EditModeColumnWidthTests.swift */; };
 		B1A000000000000000000005 /* HapticNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000004 /* HapticNotification.swift */; };
 		B1A000000000000000000007 /* HapticFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000006 /* HapticFeedback.swift */; };
 		B1A000000000000000000009 /* HapticEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000008 /* HapticEvent.swift */; };
@@ -431,6 +432,7 @@
 		B1A000000000000000000020 /* BirthdayHapticPatternTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayHapticPatternTests.swift; sourceTree = "<group>"; };
 		D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientPaletteTests.swift; sourceTree = "<group>"; };
 		EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGridLayoutTests.swift; sourceTree = "<group>"; };
+		A6A9E5F97AFF616FDBB5AB79 /* EditModeColumnWidthTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditModeColumnWidthTests.swift; sourceTree = "<group>"; };
 		A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicAutoscrollTests.swift; sourceTree = "<group>"; };
 		FF9EF834D54930F3456DC636 /* UIImage+AverageColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+AverageColor.swift"; sourceTree = "<group>"; };
 		D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrailingPaneOnLandscape.swift; sourceTree = "<group>"; };
@@ -1187,6 +1189,7 @@
 				ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */,
 				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
 				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
+				A6A9E5F97AFF616FDBB5AB79 /* EditModeColumnWidthTests.swift */,
 				A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */,
 				32DAA5842EE458E988A419CC /* AgeTickerTests.swift */,
 				7035C4F37290A09CDC20ADE0 /* OverviewPresenterTests.swift */,
@@ -1837,6 +1840,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				679B15AFB5E3B561F4904DFC /* EditModeColumnWidthTests.swift in Sources */,
 				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
 				8E72D36D9FA553223A9BFCAC /* PersonEditModePresenterTests.swift in Sources */,
 				4D1A7E0C5B2F9A3E6C8D1B70 /* PersonEditModePictureTests.swift in Sources */,
