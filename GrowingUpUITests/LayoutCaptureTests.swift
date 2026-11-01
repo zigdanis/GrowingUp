@@ -4,11 +4,21 @@ import XCTest
 ///
 /// `GROWINGUP_LAYOUT_CAPTURE` names the directory for the PNGs and their `captures.json`; `GROWINGUP_LAYOUT_DEVICE` the
 /// device in their names; `GROWINGUP_LAYOUT_ORIENTATIONS` the orientations, such as `portrait,landscape`, or `current`;
-/// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens; and `GROWINGUP_LAYOUT_MULTITASKING` an iPad multitasking
+/// `GROWINGUP_LAYOUT_SCREENS` an optional subset of the screens, by the names their PNGs carry, such as
+/// `edit-date,viewer-birthday`; and `GROWINGUP_LAYOUT_MULTITASKING` an iPad multitasking
 /// mode to choose in Settings first, such as `Full Screen Apps`; and `GROWINGUP_LAYOUT_WINDOW` a window size to drag a
 /// windowed app to, such as `{800,600}`. Pass them with xcodebuild's `TEST_RUNNER_` prefix.
 @MainActor
 final class LayoutCaptureTests: XCTestCase {
+	/// Every screen the capture takes, by the name its PNG carries.
+	private static let screenNames = Set(
+		[
+			"mosaic", "mosaic-one", "mosaic-two", "mosaic-six", "empty", "viewer", "viewer-birthday", "edit", "edit-date",
+			"edit-time", "edit-remove", "crop-circle", "camera", "photos", "crop"
+		] + widgetFamilies.map { "widget-\($0)" })
+	private static let widgetFamilies = ["small", "medium", "large", "extraLarge"]
+	/// One store for every launch, emptied as each launch reseeds it, rather than a new one left behind each time.
+	private static let fixtureIdentifier = UUID(uuidString: "CA97E000-2026-4000-8000-000000000001")!
 	private let app = XCUIApplication()
 	private var directory: URL!
 	private var device = ""
@@ -26,8 +36,8 @@ final class LayoutCaptureTests: XCTestCase {
 		try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
 		device = environment["GROWINGUP_LAYOUT_DEVICE"] ?? "device"
 		photos = try XCTUnwrap(environment["GROWINGUP_APP_STORE_PHOTOS"])
-		screens = environment["GROWINGUP_LAYOUT_SCREENS"].flatMap { $0.isEmpty ? nil : Set($0.split(separator: ",").map(String.init)) }
 		continueAfterFailure = false
+		screens = screenFilter(environment["GROWINGUP_LAYOUT_SCREENS"])
 		if let multitasking = environment["GROWINGUP_LAYOUT_MULTITASKING"], !multitasking.isEmpty {
 			chooseMultitasking(multitasking)
 		}
@@ -46,7 +56,7 @@ final class LayoutCaptureTests: XCTestCase {
 				launch(seed: .empty)
 				capture("empty", note: "The invitation and Add person")
 			}
-			for family in ["small", "medium", "large", "extraLarge"] where wants("widget-\(family)") {
+			for family in Self.widgetFamilies where wants("widget-\(family)") {
 				launch(seed: .demo, widgetFamily: family)
 				XCTAssertTrue(app.otherElements["widget.preview"].waitForExistence(timeout: 10))
 				Thread.sleep(forTimeInterval: 1)
@@ -54,6 +64,7 @@ final class LayoutCaptureTests: XCTestCase {
 			}
 		}
 		if orientations != ["current"] { XCUIDevice.shared.orientation = .portrait }
+		guard !captures.isEmpty else { return XCTFail("GROWINGUP_LAYOUT_SCREENS selected no screen") }
 		let index = directory.appendingPathComponent("captures-\(device).json")
 		try JSONSerialization.data(withJSONObject: captures, options: [.prettyPrinted, .sortedKeys]).write(to: index)
 	}
@@ -67,12 +78,12 @@ final class LayoutCaptureTests: XCTestCase {
 			Thread.sleep(forTimeInterval: 4)
 			capture("mosaic", note: "Four demo people")
 		}
-		let editing = ["edit", "date", "time", "remove", "photos", "crop", "circle", "camera"]
-		guard wants("viewer") || wants("birthday") || editing.contains(where: wants) else { return }
+		let editing = ["edit", "edit-date", "edit-time", "edit-remove", "crop-circle", "camera", "photos", "crop"]
+		guard wants("viewer") || wants("viewer-birthday") || editing.contains(where: wants) else { return }
 		open(person: 0, named: "Mia")
 		Thread.sleep(forTimeInterval: 1)
 		if wants("viewer") { capture("viewer", note: "Mia") }
-		if wants("birthday") { captureBirthday() }
+		if wants("viewer-birthday") { captureBirthday() }
 		if editing.contains(where: wants) { captureEditMode() }
 	}
 
@@ -103,10 +114,10 @@ final class LayoutCaptureTests: XCTestCase {
 		XCTAssertTrue(app.images["editor.appPhoto.loaded"].waitForExistence(timeout: 10))
 		Thread.sleep(forTimeInterval: 0.5)
 		if wants("edit") { capture("edit", note: "Mia's edit mode") }
-		if wants("date") { capturePopover(capsule: "editor.birthDate", picker: "editor.birthDate.picker", screen: "edit-date") }
-		if wants("time") { capturePopover(capsule: "editor.birthTime", picker: "editor.birthTime.picker", screen: "edit-time") }
-		if wants("remove") { captureRemoval() }
-		if wants("circle") { captureCircle() }
+		if wants("edit-date") { capturePopover(capsule: "editor.birthDate", picker: "editor.birthDate.picker", screen: "edit-date") }
+		if wants("edit-time") { capturePopover(capsule: "editor.birthTime", picker: "editor.birthTime.picker", screen: "edit-time") }
+		if wants("edit-remove") { captureRemoval() }
+		if wants("crop-circle") { captureCircle() }
 		if wants("camera") { captureCamera() }
 		if wants("photos") || wants("crop") { capturePhotosAndCrop() }
 		app.buttons["editor.cancel"].tap()
@@ -204,7 +215,8 @@ final class LayoutCaptureTests: XCTestCase {
 
 	private func launch(seed: UITestSeed, widgetFamily: String? = nil) {
 		app.terminate()
-		let configuration = UITestConfiguration(identifier: UUID(), resetStore: true, seed: seed, failNextSave: false, appearance: .dark)
+		let configuration = UITestConfiguration(
+			identifier: Self.fixtureIdentifier, resetStore: true, seed: seed, failNextSave: false, appearance: .dark)
 		app.launchEnvironment = [
 			UITestConfiguration.environmentKey: configuration.encoded,
 			"GROWINGUP_APP_STORE_CAPTURE": "1", "GROWINGUP_APP_STORE_PHOTOS": photos,
@@ -240,6 +252,18 @@ final class LayoutCaptureTests: XCTestCase {
 		if card.contains(point) { point = CGPoint(x: (window.minX + card.minX) / 2, y: window.midY) }
 		let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard").coordinate(withNormalizedOffset: .zero)
 		screen.withOffset(CGVector(dx: point.x, dy: point.y)).tap()
+	}
+
+	/// The screens `value` names, or nil for every screen; a name no screen carries fails the capture, rather than
+	/// leaving it with nothing to take.
+	private func screenFilter(_ value: String?) -> Set<String>? {
+		guard let value, !value.isEmpty else { return nil }
+		let names = Set(value.split(separator: ",").map(String.init))
+		let unknown = names.subtracting(Self.screenNames)
+		if !unknown.isEmpty {
+			XCTFail("GROWINGUP_LAYOUT_SCREENS names no screen \(unknown.sorted()); the screens are \(Self.screenNames.sorted())")
+		}
+		return names
 	}
 
 	private func wants(_ screen: String) -> Bool {
