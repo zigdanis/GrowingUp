@@ -136,9 +136,11 @@ struct PersonEditModeScene: View {
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
 	}
 
-	/// Whether the pickers pop over their capsules: on iPad, in a window tall enough to hold the calendar beside them.
+	/// Whether the pickers pop over their capsules: on iPad, in a window wider than a phone's and tall enough to hold the
+	/// calendar beside them. A phone-sized window shows the card, as a phone does.
 	private var popsOverCapsules: Bool {
-		UIDevice.current.userInterfaceIdiom == .pad && window.height >= EditModePopoverCard.minimumPopoverWindowHeight
+		UIDevice.current.userInterfaceIdiom == .pad && layout != .phone
+			&& window.height >= EditModePopoverCard.minimumPopoverWindowHeight
 	}
 
 	private func done() {
