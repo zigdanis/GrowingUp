@@ -115,6 +115,18 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(padGrid(CGSize(width: 744, height: 1000), count: 7).topMargin, 12)
 	}
 
+	func testANarrowIPadWindowNeverStacksTwoOrMorePeopleInOneColumn() {
+		let narrow = CGSize(width: 320, height: 930)
+		let two = padGrid(narrow, count: 2)
+		XCTAssertEqual(two.columns, 2, "Two people keep the mosaic's two columns")
+		XCTAssertEqual(two.tileWidth, 142, accuracy: 0.01)
+		XCTAssertEqual(two.topMargin, MosaicGridLayout.spacing, "Too narrow to fill, so it lays out as on a phone")
+		XCTAssertEqual(padGrid(narrow, count: 3).columns, 2)
+		let one = padGrid(narrow, count: 1)
+		XCTAssertEqual(one.columns, 1, "One person may still fill a single column")
+		XCTAssertEqual(one.tileWidth, 296, accuracy: 0.01)
+	}
+
 	func testPhonesNeverFillTheirWindow() {
 		for size in [CGSize(width: 440, height: 800), CGSize(width: 466, height: 600), CGSize(width: 951, height: 560)] {
 			for count in 1...6 {

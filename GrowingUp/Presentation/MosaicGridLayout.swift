@@ -69,13 +69,16 @@ struct MosaicGridLayout: Equatable {
 	}
 
 	/// The number of columns, up to `fitting` and even with `evenColumns`, that shows `count` people at the largest tile
-	/// with every row inside `area`, and that tile's width; a strict tie goes to fewer columns.
+	/// with every row inside `area`, and that tile's width; a strict tie goes to fewer columns. Two or more people get at
+	/// least `minimumColumns`, as everywhere else in the mosaic; only one person may fill a single column.
 	private static func largestFit(
 		in area: CGSize, count: Int, fitting: Int, evenColumns: Bool, maximumTileWidth: CGFloat
 	) -> (columns: Int, width: CGFloat)? {
 		guard count > 0, area.width > 0, area.height > 0 else { return nil }
 		var best: (columns: Int, width: CGFloat)?
-		for columns in 1...max(1, fitting) where !evenColumns || columns % 2 == 0 {
+		let fewest = count < minimumColumns ? 1 : minimumColumns
+		guard fitting >= fewest else { return nil }
+		for columns in fewest...fitting where !evenColumns || columns % 2 == 0 {
 			let rows = (count + columns - 1) / columns
 			let byWidth = (area.width - CGFloat(columns - 1) * spacing) / CGFloat(columns)
 			let byHeight = (area.height - CGFloat(rows - 1) * spacing) / CGFloat(rows) * 9 / 16
