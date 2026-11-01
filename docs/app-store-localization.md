@@ -67,7 +67,7 @@ review). After the current version is released and the next one exists in App St
 ```sh
 python3 scripts/app-store-listing.py check          # offline
 python3 scripts/app-store-listing.py plan           # read-only diff against App Store Connect
-python3 scripts/app-store-listing.py apply --confirm 3.1   # writes, then reads back
+python3 scripts/app-store-listing.py apply --confirm 3.1.0 # writes, then reads back
 ```
 
 The script uses `ASC_KEY_PATH`/`ASC_KEY_ID`/`ASC_ISSUER_ID` or the Fleet team key and never creates a version,
