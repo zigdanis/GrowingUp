@@ -24,6 +24,9 @@ SIZE = (2064, 2752)
 FAMILY = 'ipad-13'
 DEVICE = 'iPad-Pro-13-inch-M5'
 SCALE = 2
+# A full iPad shot takes about half a second, so the capture takes every other fireworks frame of the iPhone's list.
+FIREWORKS_FRAMES = (1500, 1900, 2300)
+FIREWORKS = 1900
 # UITestWidgetPreview's sizes in points: a 6.3-inch iPhone's, and an 11-inch iPad's extra large one.
 WIDGET_POINTS = {'widget-small': (170, 170), 'widget-medium': (364, 170), 'widget-large': (364, 382),
                  'widget-extraLarge': (715, 342)}
@@ -217,6 +220,9 @@ def native_inputs(directory, locale, fireworks):
 
 def read_capture(directory, fireworks):
     """Validate the iPad run's metadata and read its native inputs, per store locale."""
+    for locale, delay in fireworks.items():
+        if delay not in FIREWORKS_FRAMES:
+            raise ValueError(f'{locale}: the iPad capture shoots fireworks only at {FIREWORKS_FRAMES} ms, not {delay}')
     metadata = json.loads((directory / 'metadata.json').read_text())
     if not re.fullmatch('[0-9a-f]{40}', metadata['head_sha']):
         raise ValueError('Capture metadata needs the full source head SHA')
@@ -244,7 +250,7 @@ def compose(capture, output, retained=None, fireworks=None):
     if output.exists() and any(output.iterdir()):
         raise ValueError('Output directory must be empty to avoid stale screenshots')
     output.mkdir(parents=True, exist_ok=True)
-    fireworks = fireworks or {'en': base.FIREWORKS, 'ru': base.FIREWORKS}
+    fireworks = fireworks or {'en': FIREWORKS, 'ru': FIREWORKS}
     metadata, inputs = read_capture(capture, fireworks)
     receipt = {'renderer': 'scripts/render-ipad-app-store-screenshots.py',
                'renderer_sha256': base.sha256(Path(__file__)),
@@ -272,6 +278,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--retain', type=Path, help='Copy the native inputs here (marketing/app-store/native-captures/<slug>)')
     parser.add_argument('--fireworks', type=base.fireworks_choice, default=None,
-                        help=f'Fireworks frame in ms after the swipe, e.g. 2100 or en=1900,ru=2100 (default {base.FIREWORKS})')
+                        help=f'Fireworks frame in ms after the swipe, e.g. 1500 or en=1500,ru=1900 (default {FIREWORKS}; '
+                             f'shot: {", ".join(map(str, FIREWORKS_FRAMES))})')
     args = parser.parse_args()
     compose(args.capture.resolve(), args.output.resolve(), args.retain and args.retain.resolve(), args.fireworks)

@@ -99,6 +99,13 @@ class IPadCardTests(unittest.TestCase):
                 self.assertFalse(overlaps, f'{name} overlaps {other}')
         self.assertEqual({name for name, _ in boxes}, set(self.ipad.WIDGET_POINTS))
 
+    def test_only_a_fireworks_frame_the_ipad_shoots_is_accepted(self):
+        self.assertTrue(set(self.ipad.FIREWORKS_FRAMES) <= set(self.ipad.base.FIREWORKS_FRAMES))
+        self.assertIn(self.ipad.FIREWORKS, self.ipad.FIREWORKS_FRAMES)
+        with tempfile.TemporaryDirectory() as folder:
+            with self.assertRaisesRegex(ValueError, 'only at'):
+                self.ipad.read_capture(Path(folder), {'en': 1500, 'ru': 2100})
+
     def test_composition_refuses_a_stale_output_folder(self):
         with tempfile.TemporaryDirectory() as folder:
             (Path(folder) / 'old.png').write_bytes(b'x')
