@@ -7,6 +7,8 @@ struct EditModeFields: View {
 	var isNameFocused: FocusState<Bool>.Binding
 	/// Whether a capsule's picker pops over it, as in a tall enough iPad window; otherwise `EditModePopoverCard` shows it.
 	let popsOver: Bool
+	/// Saves as Done does, for Command-Return typed in the name field.
+	let onSave: () -> Void
 	@Environment(\.haptics)
 	private var haptics
 
@@ -53,9 +55,14 @@ struct EditModeFields: View {
 			.textFieldStyle(.plain)
 			.textContentType(.name)
 			.textInputAutocapitalization(.words)
-			// Return only hides the keyboard; the white Done in the corner saves.
+			// Return only hides the keyboard; the white Done in the corner saves, as Command-Return on a keyboard does.
 			.submitLabel(.done)
 			.focused(isNameFocused)
+			.onKeyPress(.return, phases: .down) { press in
+				guard press.modifiers.contains(.command) else { return .ignored }
+				onSave()
+				return .handled
+			}
 			.padding(.bottom, 4)
 			.overlay(alignment: .bottom) {
 				Rectangle().fill(.white.opacity(0.9)).frame(height: 2)

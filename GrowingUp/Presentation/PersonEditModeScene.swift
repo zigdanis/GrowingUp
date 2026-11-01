@@ -42,7 +42,8 @@ struct PersonEditModeScene: View {
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background {
-			// While the name field has no keyboard, Escape closes a picker or else cancels, and Command-Return saves.
+			// While the name field has no keyboard, Escape closes a picker or else cancels, and Command-Return saves; the
+			// field answers Command-Return itself while it has the keyboard.
 			if !isNameFocused { KeyboardFocusAnchor(commands: keyboardCommands).frame(width: 0, height: 0) }
 		}
 		.ignoresSafeArea(.container)
@@ -97,7 +98,7 @@ struct PersonEditModeScene: View {
 			topBar
 				.modifier(WindowControlsClearance(edges: .leading))
 				.padding(.bottom, 16)
-			EditModeFields(mode: mode, isNameFocused: $isNameFocused, popsOver: popsOverCapsules)
+			EditModeFields(mode: mode, isNameFocused: $isNameFocused, popsOver: popsOverCapsules, onSave: saveFromKeyboard)
 			Spacer(minLength: 24)
 			EditModeControls(mode: mode, photoRequest: $photoRequest, onFrameWidgetPicture: frameWidgetPicture)
 				.padding(.bottom, 16)
@@ -146,6 +147,12 @@ struct PersonEditModeScene: View {
 		}
 	}
 
+	/// Saves from a keyboard shortcut whenever Done would take a tap: enabled, with no load or save under way.
+	private func saveFromKeyboard() {
+		guard mode.canSave, !mode.editor.isBusy, !mode.editor.isLoading, !mode.isFinishing else { return }
+		done()
+	}
+
 	private var keyboardCommands: [KeyboardCommand] {
 		[
 			KeyboardCommand(title: String(localized: "Cancel"), input: UIKeyCommand.inputEscape) {
@@ -155,9 +162,7 @@ struct PersonEditModeScene: View {
 					cancel()
 				}
 			},
-			KeyboardCommand(title: String(localized: "Done"), input: "\r", modifiers: .command) {
-				if mode.canSave { done() }
-			}
+			KeyboardCommand(title: String(localized: "Done"), input: "\r", modifiers: .command, action: saveFromKeyboard)
 		]
 	}
 
