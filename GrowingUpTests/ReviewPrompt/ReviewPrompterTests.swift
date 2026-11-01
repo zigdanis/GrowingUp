@@ -72,6 +72,18 @@ final class ReviewPrompterTests: XCTestCase {
 		XCTAssertEqual(store().state.viewerVisits, 0)
 	}
 
+	func testOpeningTheViewerAgainDropsAWaitingRequest() throws {
+		let prompter = makePrompter(mode: .forced)
+		prompter.appBecameActive()
+		XCTAssertTrue(visit(prompter))
+		let request = try XCTUnwrap(prompter.pendingRequest)
+		prompter.viewerOpened()
+		XCTAssertNil(prompter.pendingRequest)
+		now += 1
+		XCTAssertFalse(prompter.viewerClosed(people: people()), "Too short to ask again")
+		XCTAssertFalse(prompter.takeRequest(request))
+	}
+
 	func testANewPersonsPageIsNoVisit() {
 		let prompter = makePrompter()
 		prompter.viewerOpened()
@@ -99,6 +111,11 @@ final class ReviewPrompterTests: XCTestCase {
 		XCTAssertEqual(store().state, state)
 		defaults.set(Data("not json".utf8), forKey: ReviewPromptStore.key)
 		XCTAssertEqual(store().state, ReviewPromptState())
+		// A value from another version, without some fields, keeps its request history.
+		defaults.set(Data(#"{"requestCount": 1, "requestDates": [0], "lastRequestVersion": "3.1"}"#.utf8), forKey: ReviewPromptStore.key)
+		XCTAssertEqual(store().state.requestCount, 1)
+		XCTAssertEqual(store().state.lastRequestVersion, "3.1")
+		XCTAssertEqual(store().state.requestDates.count, 1)
 	}
 
 	func testVerificationLaunchesNeverAskUnlessForced() {

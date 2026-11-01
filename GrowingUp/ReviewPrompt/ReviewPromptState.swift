@@ -17,4 +17,20 @@ struct ReviewPromptState: Codable, Equatable {
 	var lastRequestVersion: String?
 	/// `activeDays` at the last request, so asking again needs new days of use.
 	var activeDaysAtLastRequest = 0
+
+	init() {}
+
+	/// Reads each value on its own, so a value stored by another version, with fields missing or added, keeps the request
+	/// history and its limits rather than starting over.
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		activeDays = try container.decodeIfPresent(Int.self, forKey: .activeDays) ?? 0
+		lastActiveDay = try container.decodeIfPresent(String.self, forKey: .lastActiveDay)
+		firstActiveDate = try container.decodeIfPresent(Date.self, forKey: .firstActiveDate)
+		viewerVisits = try container.decodeIfPresent(Int.self, forKey: .viewerVisits) ?? 0
+		requestDates = try container.decodeIfPresent([Date].self, forKey: .requestDates) ?? []
+		requestCount = try container.decodeIfPresent(Int.self, forKey: .requestCount) ?? 0
+		lastRequestVersion = try container.decodeIfPresent(String.self, forKey: .lastRequestVersion)
+		activeDaysAtLastRequest = try container.decodeIfPresent(Int.self, forKey: .activeDaysAtLastRequest) ?? 0
+	}
 }

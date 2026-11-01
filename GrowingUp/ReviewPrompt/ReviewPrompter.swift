@@ -69,11 +69,14 @@ final class ReviewPrompter {
 
 	/// The viewer began showing people, from a tile or a widget link.
 	func viewerOpened(replacingNewPerson: Bool = false) {
+		// A request still waiting for its pause is no longer the moment: the user moved on.
+		pendingRequest = nil
 		if visitStarted == nil || replacingNewPerson { visitStarted = now() }
 	}
 
 	/// The cover turned into a new person's empty page, which is no visit to anyone.
 	func viewerLeftForNewPerson() {
+		pendingRequest = nil
 		visitStarted = nil
 	}
 
