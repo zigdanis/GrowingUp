@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2B000000000000000000016 /* PeoplePresenter+ReviewPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */; };
 		C2B000000000000000000004 /* ReviewPromptState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000003 /* ReviewPromptState.swift */; };
 		C2B000000000000000000006 /* ReviewPromptPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000005 /* ReviewPromptPolicy.swift */; };
 		C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000007 /* ReviewPromptMode.swift */; };
@@ -424,6 +425,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+ReviewPrompt.swift"; sourceTree = "<group>"; };
 		C2B000000000000000000003 /* ReviewPromptState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptState.swift; sourceTree = "<group>"; };
 		C2B000000000000000000005 /* ReviewPromptPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptPolicy.swift; sourceTree = "<group>"; };
 		C2B000000000000000000007 /* ReviewPromptMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptMode.swift; sourceTree = "<group>"; };
@@ -1391,6 +1393,7 @@
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
 				B1A00000000000000000001A /* SceneErrorHaptics.swift */,
+				C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */,
 				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
@@ -2125,6 +2128,7 @@
 				C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */,
 				C2B00000000000000000000A /* ReviewPromptStore.swift in Sources */,
 				C2B00000000000000000000C /* ReviewPrompter.swift in Sources */,
+				C2B000000000000000000016 /* PeoplePresenter+ReviewPrompt.swift in Sources */,
 				A7A100000000000000000007 /* AnalyticsFailure.swift in Sources */,
 				A7A100000000000000000009 /* AnalyticsGateway.swift in Sources */,
 				A7A10000000000000000000B /* AnalyticsValue.swift in Sources */,

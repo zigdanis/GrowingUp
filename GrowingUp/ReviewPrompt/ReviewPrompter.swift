@@ -1,9 +1,11 @@
 import Core
 import Foundation
+import Observation
 
 /// Counts days of use and visits to the viewer, notes setbacks, and decides when the app asks for an App Store rating.
 /// The decision rules live in `ReviewPromptPolicy`; this keeps the stored state and the session.
 @MainActor
+@Observable
 final class ReviewPrompter {
 	private let store: ReviewPromptStore
 	private let policy: ReviewPromptPolicy
@@ -12,12 +14,17 @@ final class ReviewPrompter {
 	private let now: () -> Date
 	private let calendar: Calendar
 	/// When the open viewer began showing people, or the app last came back to it; nil while none is open.
-	private var viewerOpened: Date?
+	private var visitStarted: Date?
 	/// The state of a forced check, which never reaches the store.
 	private var forcedState = ReviewPromptState()
 	/// An alert or a removal this session: not a moment to ask.
 	private(set) var hadSetbackThisSession = false
 	private var requestedThisSession = false
+	/// Whether the app is in the foreground, as the scene last reported.
+	private var isAppActive = false
+	/// A request a closed viewer started, which the scene makes after a pause; see `takeRequest(_:)`. Every request is a
+	/// new value, so the scene's wait restarts with it.
+	private(set) var pendingRequest: UUID?
 
 	init(
 		store: ReviewPromptStore, mode: ReviewPromptMode = .policy, policy: ReviewPromptPolicy = ReviewPromptPolicy(),
@@ -37,13 +44,21 @@ final class ReviewPrompter {
 	}
 
 	func appBecameActive() {
+		isAppActive = true
 		// Time away from the app is no time spent looking at someone.
-		if viewerOpened != nil { viewerOpened = now() }
+		if visitStarted != nil { visitStarted = now() }
 		update { policy.recordingActiveDay($0, now: now(), calendar: calendar) }
+	}
+
+	/// Control Center, a notification or the app switcher covers the app: a waiting request is dropped.
+	func appResignedActive() {
+		isAppActive = false
+		pendingRequest = nil
 	}
 
 	/// The app left the screen; the next foreground use is a new session.
 	func appEnteredBackground() {
+		appResignedActive()
 		hadSetbackThisSession = false
 		requestedThisSession = false
 	}
@@ -54,19 +69,34 @@ final class ReviewPrompter {
 
 	/// The viewer began showing people, from a tile or a widget link.
 	func viewerOpened(replacingNewPerson: Bool = false) {
-		if viewerOpened == nil || replacingNewPerson { viewerOpened = now() }
+		if visitStarted == nil || replacingNewPerson { visitStarted = now() }
 	}
 
 	/// The cover turned into a new person's empty page, which is no visit to anyone.
 	func viewerLeftForNewPerson() {
-		viewerOpened = nil
+		visitStarted = nil
 	}
 
-	/// Counts a closed viewer that showed someone long enough and reports whether this is the moment to ask, with
-	/// `people` everyone stored now.
+	/// Counts a closed viewer that showed someone long enough and, when this is the moment to ask, starts a request and
+	/// returns true; `people` are everyone stored now.
+	@discardableResult
 	func viewerClosed(people: [Person]) -> Bool {
-		guard let opened = viewerOpened else { return false }
-		viewerOpened = nil
+		let asks = isMoment(people: people)
+		if asks { pendingRequest = UUID() }
+		return asks
+	}
+
+	/// Ends the pause `request` started and says whether it may still go: only while it is the waiting request, the app
+	/// is active and nothing went wrong meanwhile. Either way it is no longer waiting.
+	func takeRequest(_ request: UUID) -> Bool {
+		guard pendingRequest == request else { return false }
+		pendingRequest = nil
+		return isAppActive && !hadSetbackThisSession
+	}
+
+	private func isMoment(people: [Person]) -> Bool {
+		guard let opened = visitStarted else { return false }
+		visitStarted = nil
 		let closed = now()
 		guard policy.isVisit(from: opened, to: closed) else { return false }
 		// A session that runs past midnight is already on the next day of use.

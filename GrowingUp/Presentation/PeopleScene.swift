@@ -65,15 +65,16 @@ struct PeopleScene: View {
 		}
 		.sceneError($presenter.error)
 		.onChange(of: scenePhase, initial: true) { _, phase in
+			guard let prompter = presenter.configurator.reviewPrompter else { return }
 			switch phase {
-			case .active: presenter.sceneDidBecomeActive()
-			case .background: presenter.sceneDidEnterBackground()
-			default: presenter.sceneDidResignActive()
+			case .active: prompter.appBecameActive()
+			case .background: prompter.appEnteredBackground()
+			default: prompter.appResignedActive()
 			}
 		}
 		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
-		.task(id: presenter.pendingReviewRequest) {
-			guard let request = presenter.pendingReviewRequest else { return }
+		.task(id: presenter.configurator.reviewPrompter?.pendingRequest) {
+			guard let request = presenter.configurator.reviewPrompter?.pendingRequest else { return }
 			do { try await Task.sleep(for: .seconds(2)) } catch { return }
 			if presenter.takeReviewRequest(request) { requestReview() }
 		}
