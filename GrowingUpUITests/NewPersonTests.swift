@@ -110,7 +110,8 @@ final class NewPersonTests: XCTestCase {
 		let remove = app.buttons["editor.remove"]
 		XCTAssertTrue(remove.waitForExistence(timeout: 5))
 		remove.tap()
-		let confirmation = app.alerts.buttons["Remove"]
+		// iPad asks in a dialog popping over the button; a phone asks in an alert.
+		let confirmation = (UIDevice.current.userInterfaceIdiom == .pad ? app.sheets : app.alerts).buttons["Remove"]
 		XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
 		confirmation.tap()
 		XCTAssertTrue(app.staticTexts["Who is growing up?"].waitForExistence(timeout: 5), "The empty mosaic invites the next person")

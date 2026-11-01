@@ -18,7 +18,7 @@ final class PersonPhotoFramingTests: XCTestCase {
 	func testATightCropReopensAndZoomsOutToWhatItLeftOut() async throws {
 		// A new person's photo, framed tightly inside its red quadrant, as the crop after picking saves it.
 		let original = quadrants()
-		let pickCrop = CropGeometry(image: original, shape: .rectangle, container: phone, insets: EdgeInsets())
+		let pickCrop = CropGeometry(image: original, shape: .rectangle, container: phone, insets: EdgeInsets(), idiom: .phone)
 		let tight = await pickCrop.output(of: original, scale: 3, offset: CGSize(width: 337.5, height: 450))
 		try assertColor(red, of: tight.picture, at: [CGPoint(x: 0.05, y: 0.05), CGPoint(x: 0.95, y: 0.95)])
 		let newPerson = configurator.editor(person: nil, onMutation: { _ in })
@@ -72,7 +72,7 @@ final class PersonPhotoFramingTests: XCTestCase {
 	func testAWidePickerCropReopensWithoutTighteningAfterAFieldEditOrSmallDrag() async throws {
 		let window = CGSize(width: 1000, height: 700)
 		let original = quadrants()
-		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets())
+		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets(), idiom: .phone)
 		let picked = await picker.output(of: original, scale: picker.minScale, offset: .zero)
 		let editor = configurator.editor(person: nil, onMutation: { _ in })
 		await editor.load()
@@ -140,6 +140,38 @@ final class PersonPhotoFramingTests: XCTestCase {
 		XCTAssertEqual(mode.framing, .identity)
 	}
 
+	func testAnUprightIPadCropReopensWhereItWasFramed() async throws {
+		let window = CGSize(width: 820, height: 1180)
+		let original = quadrants()
+		// The column keeps 48 pt dimmed on each side: 724 pt of the 820 pt window.
+		let picker = CropGeometry(image: original, shape: .rectangle, container: window, insets: EdgeInsets(), idiom: .pad)
+		XCTAssertEqual(picker.frameRect, CGRect(x: 48, y: 0, width: 724, height: 1180))
+		let picked = await picker.output(of: original, scale: picker.minScale, offset: .zero)
+		let editor = configurator.editor(person: nil, onMutation: { _ in })
+		await editor.load()
+		editor.name = "Upright iPad"
+		editor.setMainPhoto(picked)
+		var person = try await save(editor)
+		let saved = try XCTUnwrap(person.appPicCrop)
+		XCTAssertEqual(saved, picked.crop)
+		XCTAssertEqual(saved.minY, 0, accuracy: 1e-9)
+		XCTAssertEqual(saved.height, 1, accuracy: 1e-9)
+		XCTAssertEqual(saved.width, 724 / 0.7375 / 1200, accuracy: 1e-6, "The column's share of the photo's width")
+		XCTAssertEqual(saved.minX + saved.width / 2, 0.5, accuracy: 1e-6, "Centred")
+		var mode = await editMode(for: person, window: window, idiom: .pad)
+		assertFraming(mode.framing, scale: 1, offset: .zero)
+		XCTAssertFalse(mode.canSave, "Reopening changes nothing")
+
+		// A zoom saves a tighter region, which reopens at the same zoom.
+		mode.magnify(by: 2)
+		mode.endMagnify()
+		person = try await done(mode)
+		let tighter = try XCTUnwrap(person.appPicCrop)
+		XCTAssertEqual(tighter.width, saved.width / 2, accuracy: 1e-6)
+		mode = await editMode(for: person, window: window, idiom: .pad)
+		assertFraming(mode.framing, scale: 2, offset: .zero)
+	}
+
 	func testCancelLeavesTheStoredPhotoAsItWas() async throws {
 		let original = quadrants()
 		let editor = configurator.editor(person: nil, onMutation: { _ in })
@@ -188,8 +220,11 @@ extension PersonPhotoFramingTests {
 	}
 
 	/// The edit mode of the stored `person`, as after a relaunch, with its photo loaded; a phone unless a window is given.
-	private func editMode(for person: Person, window: CGSize? = nil) async -> PersonEditModePresenter {
-		let mode = PersonEditModePresenter(editor: configurator.editor(person: person, onMutation: { _ in }), now: Date.init, onCancel: {})
+	private func editMode(
+		for person: Person, window: CGSize? = nil, idiom: UIUserInterfaceIdiom = .phone
+	) async -> PersonEditModePresenter {
+		let mode = PersonEditModePresenter(
+			editor: configurator.editor(person: person, onMutation: { _ in }), now: Date.init, idiom: idiom, onCancel: {})
 		await mode.editor.load()
 		mode.updateCanvas(window ?? phone, safeAreaInsets: EdgeInsets())
 		await mode.loadPhoto()

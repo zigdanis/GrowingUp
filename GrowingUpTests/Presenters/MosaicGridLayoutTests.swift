@@ -51,6 +51,104 @@ final class MosaicGridLayoutTests: XCTestCase {
 		XCTAssertEqual(MosaicGridLayout(size: size, count: 3).columns, 3)
 	}
 
+	func testIPadTilesStayLargerAndAddColumnsAcrossItsWindows() {
+		assertPadGrid(CGSize(width: 1032, height: 1270), columns: 4, tileWidth: 243, "13-inch portrait")
+		assertPadGrid(CGSize(width: 1376, height: 930), columns: 6, tileWidth: 215.33, "13-inch landscape")
+		assertPadGrid(CGSize(width: 820, height: 1080), columns: 3, tileWidth: 257.33, "11-inch portrait")
+		assertPadGrid(CGSize(width: 744, height: 1030), columns: 3, tileWidth: 232, "mini portrait")
+		assertPadGrid(CGSize(width: 678, height: 930), columns: 3, tileWidth: 210, "13-inch half")
+	}
+
+	func testANarrowIPadWindowGetsThePhonesTwoColumns() {
+		let pad = MosaicGridLayout.tileWidths(idiom: .pad)
+		XCTAssertEqual(MosaicGridLayout.tileWidths(idiom: .phone), 160...240)
+		for width in [320, 375, 440] as [CGFloat] {
+			let size = CGSize(width: width, height: 930)
+			let grid = MosaicGridLayout(size: size, count: 20, minimumTileWidth: pad.lowerBound, maximumTileWidth: pad.upperBound)
+			XCTAssertEqual(grid, MosaicGridLayout(size: size, count: 20), "\(width) pt")
+			XCTAssertEqual(grid.columns, 2, "\(width) pt")
+		}
+	}
+
+	func testFewPeopleFillAnIPadWindowAtTheLargestTile() {
+		// The mosaic's scroll area on the Simulator: the window less the safe areas and the Add button's inset.
+		let portrait = CGSize(width: 1032, height: 1221 + 24), landscape = CGSize(width: 1376, height: 876 + 24)
+		let mini = CGSize(width: 744, height: 976 + 24)
+		assertPadFill(portrait, count: 1, columns: 1, tileWidth: 400)
+		assertPadFill(portrait, count: 2, columns: 2, tileWidth: 400)
+		assertPadFill(portrait, count: 3, columns: 2, tileWidth: 340.03)
+		assertPadFill(portrait, count: 4, columns: 2, tileWidth: 340.03)
+		assertPadFill(portrait, count: 6, columns: 3, tileWidth: 328)
+		assertPadFill(landscape, count: 1, columns: 1, tileWidth: 400)
+		assertPadFill(landscape, count: 2, columns: 2, tileWidth: 400)
+		assertPadFill(landscape, count: 3, columns: 3, tileWidth: 400)
+		assertPadFill(landscape, count: 4, columns: 4, tileWidth: 329)
+		assertPadFill(landscape, count: 6, columns: 3, tileWidth: 243)
+		assertPadFill(mini, count: 1, columns: 1, tileWidth: 400)
+		assertPadFill(mini, count: 2, columns: 2, tileWidth: 354)
+		assertPadFill(mini, count: 3, columns: 2, tileWidth: 271.13)
+		assertPadFill(mini, count: 4, columns: 2, tileWidth: 271.13)
+		assertPadFill(mini, count: 6, columns: 3, tileWidth: 232)
+	}
+
+	func testAFilledIPadMosaicSitsCentredAndNeverScrolls() {
+		let size = CGSize(width: 1032, height: 1245)
+		for count in 1...12 {
+			let grid = padGrid(size, count: count)
+			let rows = CGFloat((count + grid.columns - 1) / grid.columns)
+			let height = rows * grid.tileHeight + (rows - 1) * MosaicGridLayout.spacing
+			XCTAssertEqual(grid.topMargin, 12 + (1221 - height) / 2, accuracy: 0.01, "\(count) people")
+			XCTAssertLessThanOrEqual(grid.topMargin + height + 12, size.height + 0.01, "\(count) people fit the window")
+		}
+		XCTAssertEqual(padGrid(size, count: 1).topMargin, 12 + (1221 - 400 * 16 / 9) / 2, accuracy: 0.01)
+	}
+
+	func testMorePeopleThanFitScrollAsBefore() {
+		let portrait = padGrid(CGSize(width: 1032, height: 1245), count: 13)
+		XCTAssertEqual(portrait.columns, 4)
+		XCTAssertEqual(portrait.tileWidth, 243, accuracy: 0.01)
+		XCTAssertEqual(portrait.topMargin, 12)
+		let landscape = padGrid(CGSize(width: 1376, height: 900), count: 13)
+		XCTAssertEqual(landscape.columns, 6)
+		XCTAssertEqual(landscape.tileWidth, 215.33, accuracy: 0.01)
+		XCTAssertEqual(padGrid(CGSize(width: 744, height: 1000), count: 7).columns, 3, "A mini scrolls from seven people")
+		XCTAssertEqual(padGrid(CGSize(width: 744, height: 1000), count: 7).topMargin, 12)
+	}
+
+	func testANarrowIPadWindowNeverStacksTwoOrMorePeopleInOneColumn() {
+		let narrow = CGSize(width: 320, height: 930)
+		let two = padGrid(narrow, count: 2)
+		XCTAssertEqual(two.columns, 2, "Two people keep the mosaic's two columns")
+		XCTAssertEqual(two.tileWidth, 142, accuracy: 0.01)
+		XCTAssertEqual(two.topMargin, MosaicGridLayout.spacing, "Too narrow to fill, so it lays out as on a phone")
+		XCTAssertEqual(padGrid(narrow, count: 3).columns, 2)
+		let one = padGrid(narrow, count: 1)
+		XCTAssertEqual(one.columns, 1, "One person may still fill a single column")
+		XCTAssertEqual(one.tileWidth, 296, accuracy: 0.01)
+	}
+
+	func testPhonesNeverFillTheirWindow() {
+		for size in [CGSize(width: 440, height: 800), CGSize(width: 466, height: 600), CGSize(width: 951, height: 560)] {
+			for count in 1...6 {
+				let grid = MosaicGridLayout(size: size, count: count, evenColumns: size.width > 900)
+				XCTAssertEqual(grid.topMargin, MosaicGridLayout.spacing, "\(size) \(count)")
+				XCTAssertLessThanOrEqual(grid.tileWidth, MosaicGridLayout.maximumTileWidth)
+			}
+		}
+	}
+
+	func testAFilledMosaicsSlotsStartBelowItsCentringMargin() {
+		let grid = padGrid(CGSize(width: 1032, height: 1245), count: 3)
+		XCTAssertEqual(grid.origin(ofSlot: 0, width: 1032).y, grid.topMargin, accuracy: 0.001)
+		for index in 0..<3 {
+			let origin = grid.origin(ofSlot: index, width: 1032)
+			let centre = CGPoint(x: origin.x + grid.tileWidth / 2, y: origin.y + grid.tileHeight / 2)
+			XCTAssertEqual(grid.slot(at: centre, count: 3, width: 1032), index)
+			XCTAssertEqual(grid.slot(ofTileAt: centre, count: 3, width: 1032, cornerRadius: 22), index)
+		}
+		XCTAssertNil(grid.slot(ofTileAt: CGPoint(x: 516, y: grid.topMargin - 6), count: 3, width: 1032, cornerRadius: 22), "Above the tiles")
+	}
+
 	func testSlotsSitCentredInRowsBelowTheMargin() {
 		let grid = MosaicGridLayout(size: CGSize(width: 393, height: 700), count: 5)
 		XCTAssertEqual(grid.origin(ofSlot: 0, width: 393), CGPoint(x: 12, y: 12))
@@ -111,5 +209,28 @@ final class MosaicGridLayoutTests: XCTestCase {
 		let empty = grid.origin(ofSlot: 3, width: 951)
 		let centre = CGPoint(x: empty.x + grid.tileWidth / 2, y: empty.y + grid.tileHeight / 2)
 		XCTAssertEqual(grid.slot(at: centre, count: 3, width: 951), 2)
+	}
+
+	private func assertPadGrid(
+		_ size: CGSize, columns: Int, tileWidth: CGFloat, _ name: String, file: StaticString = #filePath, line: UInt = #line
+	) {
+		let widths = MosaicGridLayout.tileWidths(idiom: .pad)
+		let grid = MosaicGridLayout(size: size, count: 20, minimumTileWidth: widths.lowerBound, maximumTileWidth: widths.upperBound)
+		XCTAssertEqual(grid.columns, columns, name, file: file, line: line)
+		XCTAssertEqual(grid.tileWidth, tileWidth, accuracy: 0.01, name, file: file, line: line)
+	}
+
+	private func padGrid(_ size: CGSize, count: Int) -> MosaicGridLayout {
+		let widths = MosaicGridLayout.tileWidths(idiom: .pad)
+		return MosaicGridLayout(
+			size: size, count: count, minimumTileWidth: widths.lowerBound, maximumTileWidth: widths.upperBound, fillsWindow: true)
+	}
+
+	private func assertPadFill(
+		_ size: CGSize, count: Int, columns: Int, tileWidth: CGFloat, file: StaticString = #filePath, line: UInt = #line
+	) {
+		let grid = padGrid(size, count: count)
+		XCTAssertEqual(grid.columns, columns, "\(size) \(count) people", file: file, line: line)
+		XCTAssertEqual(grid.tileWidth, tileWidth, accuracy: 0.01, "\(size) \(count) people", file: file, line: line)
 	}
 }

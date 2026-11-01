@@ -279,6 +279,12 @@ extension PhotoFramingTests {
 	}
 
 	private func dismissPhotos() {
+		// iPad's page sheet has no grabber; its back button closes it.
+		guard UIDevice.current.userInterfaceIdiom != .pad else {
+			app.buttons["photo.back"].tap()
+			XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
+			return
+		}
 		let grabber = app.buttons["Sheet Grabber"].firstMatch
 		XCTAssertTrue(grabber.waitForExistence(timeout: 5))
 		grabber.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).press(

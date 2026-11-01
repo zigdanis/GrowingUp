@@ -20,17 +20,28 @@ final class RemovalConfirmationTests: XCTestCase {
 			XCTAssertTrue(remove.waitForExistence(timeout: 5))
 			XCTAssertEqual(remove.label, locale == "ru" ? "Удалить" : "Remove", "VoiceOver names the control, not its glyph")
 			remove.tap()
-			let alert = app.alerts.firstMatch
-			XCTAssertTrue(alert.waitForExistence(timeout: 5))
-			XCTAssertEqual(alert.label, locale == "ru" ? "Удалить Alice?" : "Remove Alice?")
-			XCTAssertTrue(alert.buttons[locale == "ru" ? "Удалить" : "Remove"].exists)
+			// iPad asks in a dialog popping over the button, which a tap beside it declines; a phone asks in an alert.
+			let isPad = UIDevice.current.userInterfaceIdiom == .pad
+			let title = locale == "ru" ? "Удалить Alice?" : "Remove Alice?"
+			let dialog = isPad ? app.sheets.firstMatch : app.alerts.firstMatch
+			XCTAssertTrue(dialog.waitForExistence(timeout: 5))
+			if isPad {
+				XCTAssertTrue(dialog.staticTexts[title].exists)
+			} else {
+				XCTAssertEqual(dialog.label, title)
+			}
+			XCTAssertTrue(dialog.buttons[locale == "ru" ? "Удалить" : "Remove"].exists)
 			let screenshot = app.screenshot()
 			let attachment = XCTAttachment(screenshot: screenshot)
 			attachment.name = "remove-confirmation-\(locale)-\(appearance.launchArgumentValue)"
 			attachment.lifetime = .keepAlways
 			add(attachment)
-			alert.buttons[locale == "ru" ? "Отмена" : "Cancel"].tap()
-			XCTAssertTrue(alert.waitForNonExistence(timeout: 5))
+			if isPad {
+				app.otherElements["PopoverDismissRegion"].tap()
+			} else {
+				dialog.buttons[locale == "ru" ? "Отмена" : "Cancel"].tap()
+			}
+			XCTAssertTrue(dialog.waitForNonExistence(timeout: 5))
 			XCTAssertTrue(app.buttons["editor.save"].exists, "Declining the removal stays in edit mode")
 			app.terminate()
 		}

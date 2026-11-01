@@ -13,6 +13,8 @@ struct PersonAgeCard: View {
 	/// Whether the pager shows this page. The paging scroll view keeps neighbouring pages loaded, so only the shown
 	/// page carries the identifiers UI tests look up.
 	var isShown = true
+	/// Larger type for a wide iPad window, read from further away; the name keeps its size.
+	var isLarge = false
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 
@@ -34,10 +36,10 @@ struct PersonAgeCard: View {
 			}
 			// A blank line keeps the ticker in place while there is no second unit to show.
 			Text(secondaryText ?? " ")
-				.font(.title3.weight(.semibold))
+				.font((isLarge ? Font.title2 : .title3).weight(.semibold))
 				.monospacedDigit()
 			Text(tickerText)
-				.font(.subheadline.weight(.medium).monospacedDigit())
+				.font((isLarge ? Font.body : .subheadline).weight(.medium).monospacedDigit())
 				.foregroundStyle(.white.opacity(0.8))
 				.padding(.top, 6)
 		}
@@ -53,7 +55,7 @@ struct PersonAgeCard: View {
 
 	private var value: some View {
 		Text(primaryValue)
-			.font(.system(size: 84, weight: .bold, design: .rounded))
+			.font(.system(size: isLarge ? 108 : 84, weight: .bold, design: .rounded))
 			.monospacedDigit()
 			.lineLimit(1)
 			.minimumScaleFactor(0.5)
@@ -63,6 +65,6 @@ struct PersonAgeCard: View {
 
 	private var unit: some View {
 		Text(primaryUnit)
-			.font(.title.weight(.semibold))
+			.font((isLarge ? Font.largeTitle : .title).weight(.semibold))
 	}
 }

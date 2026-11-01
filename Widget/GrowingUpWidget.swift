@@ -19,7 +19,7 @@ struct GrowingUpWidget: Widget {
 		}
 		.configurationDisplayName("GrowingUp")
 		.description("See up to six pinned people and their live age.")
-		.supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+		.supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
 		.contentMarginsDisabled()
 	}
 }

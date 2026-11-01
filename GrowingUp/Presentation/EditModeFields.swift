@@ -1,10 +1,14 @@
 import SwiftUI
 
 /// The edit mode's fields in the top third, where the keyboard never covers them: the name, the date and time capsules
-/// and the age they give.
+/// and the age they give. In a tall enough iPad window, a capsule's picker pops over it.
 struct EditModeFields: View {
 	let mode: PersonEditModePresenter
 	var isNameFocused: FocusState<Bool>.Binding
+	/// Whether a capsule's picker pops over it, as in a tall enough iPad window; otherwise `EditModePopoverCard` shows it.
+	let popsOver: Bool
+	/// Saves as Done does, for Command-Return typed in the name field.
+	let onSave: () -> Void
 	@Environment(\.haptics)
 	private var haptics
 
@@ -51,9 +55,14 @@ struct EditModeFields: View {
 			.textFieldStyle(.plain)
 			.textContentType(.name)
 			.textInputAutocapitalization(.words)
-			// Return only hides the keyboard; the white Done in the corner saves.
+			// Return only hides the keyboard; the white Done in the corner saves, as Command-Return on a keyboard does.
 			.submitLabel(.done)
 			.focused(isNameFocused)
+			.onKeyPress(.return, phases: .down) { press in
+				guard press.modifiers.contains(.command) else { return .ignored }
+				onSave()
+				return .handled
+			}
 			.padding(.bottom, 4)
 			.overlay(alignment: .bottom) {
 				Rectangle().fill(.white.opacity(0.9)).frame(height: 2)
@@ -94,5 +103,24 @@ struct EditModeFields: View {
 		.accessibilityLabel(label)
 		.accessibilityValue(Text(text))
 		.accessibilityIdentifier(identifier)
+		// The system picks the side with room, such as beside or above the capsule in a short window.
+		.popover(isPresented: isPoppedOver(popover), attachmentAnchor: .rect(.bounds)) {
+			EditModePicker(mode: mode, popover: popover)
+				.frame(width: 320)
+				.padding(12)
+				.accessibilityElement(children: .contain)
+				.accessibilityIdentifier("editor.popover")
+				// Even a narrow iPad window keeps the small picker beside its capsule rather than in a sheet.
+				.presentationCompactAdaptation(.popover)
+		}
+	}
+
+	/// Whether `popover` shows over its capsule; see `popsOver`.
+	private func isPoppedOver(_ popover: PersonEditPopover) -> Binding<Bool> {
+		Binding(
+			get: { popsOver && mode.popover == popover },
+			set: { isShown in
+				if !isShown, mode.popover == popover { mode.dismissPopover() }
+			})
 	}
 }

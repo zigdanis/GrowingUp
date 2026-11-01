@@ -17,6 +17,8 @@ struct PersonOverviewScene: View {
 	let layout: PersonPageLayout
 	/// The whole window, safe areas included, since the page draws edge to edge.
 	let pageSize: CGSize
+	/// How far a window's controls reach into its top-leading corner, which the age keeps clear of where it sits there.
+	let windowControlsWidth: CGFloat
 	let now: () -> Date
 	@State private var presenter: OverviewPresenter
 	@State private var burstStarted: Date?
@@ -32,8 +34,9 @@ struct PersonOverviewScene: View {
 	private var scenePhase
 
 	init(
-		person: Person, isSelected: Bool, isEditing: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets, layout: PersonPageLayout,
-		pageSize: CGSize, onEdit: @escaping () -> Void, onClose: @escaping () -> Void, onNext: (() -> Void)?,
+		person: Person, isSelected: Bool, isEditing: Bool, configurator: SceneConfigurator, safeAreaInsets: EdgeInsets,
+		layout: PersonPageLayout, pageSize: CGSize, windowControlsWidth: CGFloat, onEdit: @escaping () -> Void,
+		onClose: @escaping () -> Void, onNext: (() -> Void)?,
 		onPrevious: (() -> Void)?
 	) {
 		self.person = person
@@ -46,6 +49,7 @@ struct PersonOverviewScene: View {
 		self.safeAreaInsets = safeAreaInsets
 		self.layout = layout
 		self.pageSize = pageSize
+		self.windowControlsWidth = windowControlsWidth
 		now = configurator.now
 		_presenter = State(initialValue: OverviewPresenter(loadImage: configurator.loadImage))
 	}
@@ -56,10 +60,17 @@ struct PersonOverviewScene: View {
 			switch layout {
 			case .phone:
 				pageContent()
-			case .widePortrait:
+			case .widePortrait where layout.spansFold(idiom: UIDevice.current.userInterfaceIdiom):
 				// Keeps the age above the middle, where a partly folded iPhone Duo bends.
 				pageContent(maxAgeHeight: pageSize.height * 0.42)
 					.frame(maxWidth: layout.columnWidth)
+					.padding(.leading, safeAreaInsets.leading)
+					.padding(.trailing, safeAreaInsets.trailing)
+			case .widePortrait:
+				// No fold crosses an iPad: the whole photo shows, with the age in a centred column.
+				pageContent()
+					.frame(maxWidth: layout.columnWidth)
+					.frame(maxWidth: .infinity)
 					.padding(.leading, safeAreaInsets.leading)
 					.padding(.trailing, safeAreaInsets.trailing)
 			case .landscape:
@@ -203,6 +214,14 @@ struct PersonOverviewScene: View {
 		}
 	}
 
+	/// How much further in the age starts, beside a window's controls: as far as they reach past its column's own inset,
+	/// none on the landscape pane, which starts mid-window.
+	private var windowControlsClearance: CGFloat {
+		guard layout != .landscape else { return 0 }
+		let columnInset = layout.columnWidth.map { max(0, (pageSize.width - $0) / 2) } ?? 0
+		return max(0, windowControlsWidth + 8 - 24 - columnInset)
+	}
+
 	/// The photo, or the monogram once no photo loads; black while one loads, so a photo never flashes the monogram first.
 	@ViewBuilder private var photoOrMonogram: some View {
 		if let image = presenter.image {
@@ -240,7 +259,7 @@ struct PersonOverviewScene: View {
 		PersonAgeCard(
 			name: person.name, primaryValue: presenter.primaryValue, primaryUnit: presenter.primaryUnit,
 			secondaryText: presenter.secondaryText, tickerText: presenter.tickerText, accessibilityAge: presenter.accessibilityAge,
-			isShown: isSelected
+			isShown: isSelected, isLarge: layout != .phone && UIDevice.current.userInterfaceIdiom == .pad
 		)
 		// VoiceOver reaches edit mode and the mosaic through the age, the page's main element; activating it edits,
 		// like a tap anywhere on the page.
@@ -258,5 +277,6 @@ struct PersonOverviewScene: View {
 		.accessibilityAction(.escape, onClose)
 		.accessibilityFocused($isAgeFocused)
 		.padding(.horizontal, 24)
+		.padding(.leading, windowControlsClearance)
 	}
 }

@@ -29,4 +29,20 @@ final class PersonPageLayoutTests: XCTestCase {
 	func testAnUnmeasuredWindowStartsAsAPhone() {
 		XCTAssertEqual(PersonPageLayout(window: .zero), .phone)
 	}
+
+	func testIPadWindowsTakeTheSameLayoutsByShape() {
+		XCTAssertEqual(PersonPageLayout(window: CGSize(width: 1032, height: 1376)), .widePortrait, "13-inch portrait")
+		XCTAssertEqual(PersonPageLayout(window: CGSize(width: 1376, height: 1032)), .landscape, "13-inch landscape")
+		XCTAssertEqual(PersonPageLayout(window: CGSize(width: 744, height: 1133)), .widePortrait, "mini portrait")
+		XCTAssertEqual(PersonPageLayout(window: CGSize(width: 375, height: 1032)), .phone, "A narrow Split View window")
+	}
+
+	func testOnlyAPhonesWideWindowsSpanAFold() {
+		XCTAssertFalse(PersonPageLayout.phone.spansFold(idiom: .phone))
+		XCTAssertTrue(PersonPageLayout.widePortrait.spansFold(idiom: .phone), "iPhone Duo upright")
+		XCTAssertTrue(PersonPageLayout.landscape.spansFold(idiom: .phone), "iPhone Duo unfolded")
+		for layout in [PersonPageLayout.phone, .widePortrait, .landscape] {
+			XCTAssertFalse(layout.spansFold(idiom: .pad), "\(layout) on iPad")
+		}
+	}
 }

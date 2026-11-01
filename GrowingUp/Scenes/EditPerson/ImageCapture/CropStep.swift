@@ -201,6 +201,7 @@ struct CropStep: View {
 			.disabled(isFinishing)
 			.padding(.horizontal, 20)
 			.padding(.top, 8)
+			.modifier(WindowControlsClearance(edges: .leading))
 			Spacer()
 		}
 		.background { safeAreaMarker }
@@ -302,7 +303,7 @@ struct CropStep: View {
 
 extension CropStep {
 	func geometry(in container: CGSize, insets: EdgeInsets) -> CropGeometry {
-		CropGeometry(pixelSize: pixelSize, shape: shape, container: container, insets: insets)
+		CropGeometry(pixelSize: pixelSize, shape: shape, container: container, insets: insets, idiom: UIDevice.current.userInterfaceIdiom)
 	}
 
 	/// The current canvas's geometry.

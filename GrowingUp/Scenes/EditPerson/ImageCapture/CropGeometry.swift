@@ -14,6 +14,9 @@ struct CropGeometry {
 	/// The widest width-to-height ratio of a main picture. iPhone screens and the closed iPhone Duo crop full screen;
 	/// wider windows crop a centered column, so every main picture stays portrait.
 	static let maxMainAspect: CGFloat = 0.7
+	/// The narrowest dimmed bar beside a main picture's column on an iPad window wider than a phone's, so its large
+	/// screen always shows the frame as a frame. Phones, iPhone Duo included, keep no minimum.
+	static let padSideBar: CGFloat = 48
 
 	/// The picture's pixel dimensions.
 	let pixelSize: CGSize
@@ -21,21 +24,31 @@ struct CropGeometry {
 	/// The whole canvas, safe areas included, in points.
 	let container: CGSize
 	let insets: EdgeInsets
+	/// The device, which decides whether a main picture's column keeps `padSideBar` beside it.
+	let idiom: UIUserInterfaceIdiom
 	/// Whether the picture must keep the whole canvas covered rather than only the crop frame, as where it is drawn edge
 	/// to edge while being framed in place. The crop still takes only the frame.
 	let coversWholeCanvas: Bool
 
-	init(pixelSize: CGSize, shape: CropShape, container: CGSize, insets: EdgeInsets, coversWholeCanvas: Bool = false) {
+	init(
+		pixelSize: CGSize, shape: CropShape, container: CGSize, insets: EdgeInsets, idiom: UIUserInterfaceIdiom,
+		coversWholeCanvas: Bool = false
+	) {
 		self.pixelSize = pixelSize
 		self.shape = shape
 		self.container = container
 		self.insets = insets
+		self.idiom = idiom
 		self.coversWholeCanvas = coversWholeCanvas
 	}
 
-	init(image: UIImage, shape: CropShape, container: CGSize, insets: EdgeInsets, coversWholeCanvas: Bool = false) {
+	init(
+		image: UIImage, shape: CropShape, container: CGSize, insets: EdgeInsets, idiom: UIUserInterfaceIdiom,
+		coversWholeCanvas: Bool = false
+	) {
 		self.init(
-			pixelSize: Self.pixelSize(of: image), shape: shape, container: container, insets: insets, coversWholeCanvas: coversWholeCanvas)
+			pixelSize: Self.pixelSize(of: image), shape: shape, container: container, insets: insets, idiom: idiom,
+			coversWholeCanvas: coversWholeCanvas)
 	}
 
 	static func pixelSize(of image: UIImage) -> CGSize {
@@ -45,19 +58,22 @@ struct CropGeometry {
 		return CGSize(width: image.size.width * image.scale, height: image.size.height * image.scale)
 	}
 
-	/// Region that stays covered and gets cropped; see `frameRect(for:in:insets:)`.
-	var frameRect: CGRect { Self.frameRect(for: shape, in: container, insets: insets) }
+	/// Region that stays covered and gets cropped; see `frameRect(for:in:insets:idiom:)`.
+	var frameRect: CGRect { Self.frameRect(for: shape, in: container, insets: insets, idiom: idiom) }
 
-	/// Region that stays covered and gets cropped, which depends only on the canvas. Rectangle: full screen, or a
-	/// full-height column centred in windows wider than `maxMainAspect`. Circle: a square centred in the safe area.
-	static func frameRect(for shape: CropShape, in container: CGSize, insets: EdgeInsets) -> CGRect {
+	/// Region that stays covered and gets cropped, which depends only on the canvas and the device. Rectangle: full
+	/// screen, or a full-height column centred in windows wider than `maxMainAspect`; an iPad window wider than a phone's
+	/// always crops a column, with at least `padSideBar` dimmed on each side. Circle: a square centred in the safe area.
+	static func frameRect(for shape: CropShape, in container: CGSize, insets: EdgeInsets, idiom: UIUserInterfaceIdiom) -> CGRect {
 		guard container.width > 0, container.height > 0 else { return .zero }
 		guard shape.isCircular else {
+			if idiom == .pad, container.width >= PersonPageLayout.phoneWidthLimit {
+				return column(min(container.height * maxMainAspect, container.width - 2 * padSideBar), in: container)
+			}
 			guard container.width / container.height > maxMainAspect else {
 				return CGRect(origin: .zero, size: container)
 			}
-			let width = container.height * maxMainAspect
-			return CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
+			return column(container.height * maxMainAspect, in: container)
 		}
 		let availX = insets.leading + framePadding
 		let availY = insets.top + framePadding
@@ -66,6 +82,11 @@ struct CropGeometry {
 		let side = min(availW, availH)
 		guard side > 0 else { return .zero }
 		return CGRect(x: availX + (availW - side) / 2, y: availY + (availH - side) / 2, width: side, height: side)
+	}
+
+	/// A full-height column `width` wide, centred in `container`.
+	private static func column(_ width: CGFloat, in container: CGSize) -> CGRect {
+		CGRect(x: (container.width - width) / 2, y: 0, width: width, height: container.height)
 	}
 
 	/// Points per source pixel, so the picture aspect-fills the canvas at scale 1.

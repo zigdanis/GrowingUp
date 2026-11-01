@@ -15,6 +15,10 @@ struct PeopleMosaic: View {
 	let selectedID: UUID?
 	/// Gives the mosaic an even number of columns, so no tile straddles the fold of a landscape iPhone Duo.
 	let evenColumns: Bool
+	/// The narrowest and widest tiles, larger on iPad; see `MosaicGridLayout.tileWidths(idiom:)`.
+	let tileWidths: ClosedRange<CGFloat>
+	/// Lets few people fill the window, centred in it, as on iPad; see `MosaicGridLayout`.
+	let fillsWindow: Bool
 	let isReordering: Bool
 	let zoom: Namespace.ID
 	let now: () -> Date
@@ -40,7 +44,9 @@ struct PeopleMosaic: View {
 
 	var body: some View {
 		GeometryReader { geometry in
-			let grid = MosaicGridLayout(size: geometry.size, count: persons.count, evenColumns: evenColumns)
+			let grid = MosaicGridLayout(
+				size: geometry.size, count: persons.count, evenColumns: evenColumns, minimumTileWidth: tileWidths.lowerBound,
+				maximumTileWidth: tileWidths.upperBound, fillsWindow: fillsWindow)
 			let width = geometry.size.width
 			ScrollViewReader { proxy in
 				ScrollView {
@@ -56,7 +62,8 @@ struct PeopleMosaic: View {
 						}
 					}
 					.frame(maxWidth: .infinity)
-					.padding(.vertical, MosaicGridLayout.spacing)
+					.padding(.top, grid.topMargin)
+					.padding(.bottom, MosaicGridLayout.spacing)
 					// Fills the visible mosaic, so a tap beside or below the tiles finishes reordering.
 					.frame(minHeight: geometry.size.height, alignment: .top)
 					.contentShape(.rect)
@@ -88,6 +95,8 @@ struct PeopleMosaic: View {
 				}
 			}
 		}
+		// The first row's names stay clear of a window's controls.
+		.modifier(WindowControlsClearance(edges: .top))
 	}
 
 	private func tile(_ person: Person, grid: MosaicGridLayout, width: CGFloat) -> some View {

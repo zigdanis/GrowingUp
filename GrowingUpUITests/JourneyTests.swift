@@ -135,7 +135,8 @@ final class JourneyTests: XCTestCase {
 		let remove = app.buttons["editor.remove"]
 		XCTAssertTrue(remove.waitForExistence(timeout: 5))
 		remove.tap()
-		let confirmation = app.alerts.buttons["Remove"]
+		// iPad asks in a dialog popping over the button; a phone asks in an alert.
+		let confirmation = (UIDevice.current.userInterfaceIdiom == .pad ? app.sheets : app.alerts).buttons["Remove"]
 		XCTAssertTrue(confirmation.waitForExistence(timeout: 5))
 		confirmation.tap()
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
@@ -305,6 +306,12 @@ extension JourneyTests {
 	}
 
 	private func dismissPhotos() {
+		// iPad's page sheet has no grabber; its back button closes it.
+		guard UIDevice.current.userInterfaceIdiom != .pad else {
+			app.buttons["photo.back"].tap()
+			XCTAssertTrue(app.buttons.matching(identifier: "photo.thumbnail").firstMatch.waitForNonExistence(timeout: 5))
+			return
+		}
 		let grabber = app.buttons["Sheet Grabber"].firstMatch
 		XCTAssertTrue(grabber.waitForExistence(timeout: 5))
 		grabber.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).press(

@@ -30,7 +30,8 @@ struct PersonEditModeScene: View {
 				// VoiceOver's escape gesture cancels, like the Cancel in the corner.
 				.accessibilityElement(children: .contain)
 				.accessibilityAction(.escape, cancel)
-			if let popover = mode.popover {
+			// A tall enough iPad window pops the pickers over their capsules instead.
+			if let popover = mode.popover, !popsOverCapsules {
 				EditModePopoverCard(
 					mode: mode, popover: popover, maxWidth: min(window.width - safeAreaInsets.leading - safeAreaInsets.trailing, 440),
 					safeAreaInsets: safeAreaInsets
@@ -40,6 +41,14 @@ struct PersonEditModeScene: View {
 			if editor.isBusy || mode.isFinishing { ProgressView() }
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.background {
+			// While the name field has no keyboard, Escape closes a picker or else cancels, and Command-Return saves; the
+			// field answers Command-Return itself while it has the keyboard. A sheet, cover or confirmation shown over
+			// edit mode keeps its own keys, so the anchor leaves until it closes.
+			if !isNameFocused, photoRequest == nil, widgetPictureSource == nil, !mode.isConfirmingRemoval {
+				KeyboardFocusAnchor(commands: keyboardCommands).frame(width: 0, height: 0)
+			}
+		}
 		.ignoresSafeArea(.container)
 		.animation(.easeOut(duration: 0.2), value: mode.popover)
 		.task { await editor.load() }
@@ -50,18 +59,7 @@ struct PersonEditModeScene: View {
 		// Removing a widget picture shown alone changes no main photo, yet it leaves the monogram in its place.
 		.task(id: [editor.appImage?.id, editor.widgetImage?.id]) { await mode.loadPhoto() }
 		.onChange(of: window, initial: true) { _, size in mode.updateCanvas(size, safeAreaInsets: safeAreaInsets) }
-		.alert(mode.removalTitle, isPresented: $mode.isConfirmingRemoval) {
-			Button("Remove", role: .destructive) {
-				// Read now: the scene is gone once the removal lands.
-				let feedback = haptics
-				Task {
-					if await mode.remove() { feedback.play(.removed) }
-				}
-			}
-			Button("Cancel", role: .cancel) {}
-		} message: {
-			Text("Their photo, birthday and settings will disappear from the app and the widget.")
-		}
+		.modifier(RemovalConfirmation(mode: mode, isOnButton: false))
 		.onChange(of: mode.isConfirmingRemoval) { _, isConfirming in
 			if isConfirming { haptics.play(.removalConfirmationShown) }
 		}
@@ -101,13 +99,14 @@ struct PersonEditModeScene: View {
 	private var stack: some View {
 		VStack(spacing: 0) {
 			topBar
+				.modifier(WindowControlsClearance(edges: .leading))
 				.padding(.bottom, 16)
-			EditModeFields(mode: mode, isNameFocused: $isNameFocused)
+			EditModeFields(mode: mode, isNameFocused: $isNameFocused, popsOver: popsOverCapsules, onSave: saveFromKeyboard)
 			Spacer(minLength: 24)
 			EditModeControls(mode: mode, photoRequest: $photoRequest, onFrameWidgetPicture: frameWidgetPicture)
 				.padding(.bottom, 16)
 		}
-		.padding(.horizontal, 20)
+		.padding(.horizontal, Self.chromeMargin)
 		.padding(.top, safeAreaInsets.top + 8)
 		.padding(.bottom, safeAreaInsets.bottom)
 		.padding(.leading, safeAreaInsets.leading)
@@ -127,28 +126,71 @@ struct PersonEditModeScene: View {
 			.accessibilityShowsLargeContentViewer()
 			.accessibilityIdentifier("editor.cancel")
 			Spacer()
-			Button("Done") {
-				isNameFocused = false
-				// Read now: the scene is gone once the save lands.
-				let feedback = haptics
-				Task {
-					if await mode.done() { feedback.play(.saved) }
-				}
-			}
-			.buttonStyle(EditModeBarButtonStyle(isProminent: true))
-			.disabled(!mode.canSave)
-			.accessibilityShowsLargeContentViewer()
-			.accessibilityIdentifier("editor.save")
+			Button("Done", action: done)
+				.buttonStyle(EditModeBarButtonStyle(isProminent: true))
+				.disabled(!mode.canSave)
+				.accessibilityShowsLargeContentViewer()
+				.accessibilityIdentifier("editor.save")
 		}
 		.lineLimit(1)
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
 	}
 
-	/// The crop frame's width: the window on a phone, a centred portrait column in wider windows.
+	/// Whether the pickers pop over their capsules: on iPad, in a window wider than a phone's and tall enough to hold the
+	/// calendar beside them. A phone-sized window shows the card, as a phone does.
+	private var popsOverCapsules: Bool {
+		UIDevice.current.userInterfaceIdiom == .pad && layout != .phone
+			&& window.height >= EditModePopoverCard.minimumPopoverWindowHeight
+	}
+
+	private func done() {
+		isNameFocused = false
+		// Read now: the scene is gone once the save lands.
+		let feedback = haptics
+		Task {
+			if await mode.done() { feedback.play(.saved) }
+		}
+	}
+
+	/// Saves from a keyboard shortcut whenever Done would take a tap: enabled, with no load or save under way.
+	private func saveFromKeyboard() {
+		guard mode.canSave, !mode.editor.isBusy, !mode.editor.isLoading, !mode.isFinishing else { return }
+		done()
+	}
+
+	private var keyboardCommands: [KeyboardCommand] {
+		KeyboardCommand.editMode(
+			escape: {
+				if mode.popover != nil {
+					mode.dismissPopover()
+				} else {
+					cancel()
+				}
+			}, save: saveFromKeyboard)
+	}
+
 	private var columnWidth: CGFloat? {
+		Self.columnWidth(layout: layout, window: window, insets: safeAreaInsets, idiom: UIDevice.current.userInterfaceIdiom)
+	}
+
+	/// The margin at the sides of the fields and controls.
+	static let chromeMargin: CGFloat = 20
+
+	/// The narrowest the fields and controls get on iPad, even beside a narrower crop column, so at the default text size
+	/// the controls keep to one row and the date and time share one.
+	static let padMinimumChromeWidth: CGFloat = 420
+
+	/// The width of the fields' and controls' column, its margins and the safe areas included: the window on a
+	/// phone-sized window, else the crop frame's centred portrait column up to the layout's column. On iPad the column
+	/// keeps `padMinimumChromeWidth` for the controls, or the whole window when narrower, while the photo keeps the crop
+	/// frame.
+	static func columnWidth(layout: PersonPageLayout, window: CGSize, insets: EdgeInsets, idiom: UIUserInterfaceIdiom) -> CGFloat? {
 		guard layout != .phone else { return nil }
-		let column = CropGeometry.frameRect(for: .rectangle, in: window, insets: safeAreaInsets).width
-		return min(column, layout.columnWidth ?? column)
+		let crop = CropGeometry.frameRect(for: .rectangle, in: window, insets: insets, idiom: idiom).width
+		let column = min(crop, layout.columnWidth ?? crop)
+		guard idiom == .pad else { return column }
+		let margins = 2 * chromeMargin + insets.leading + insets.trailing
+		return max(column, min(window.width, padMinimumChromeWidth + margins))
 	}
 
 	/// Darkens the top behind the fields and the bottom behind the controls, so white text stays readable on light photos.

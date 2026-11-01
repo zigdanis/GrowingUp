@@ -62,6 +62,7 @@ struct EditModeControls: View {
 			.buttonStyle(.plain)
 			.accessibilityLabel(Text("Remove"))
 			.accessibilityIdentifier("editor.remove")
+			.modifier(RemovalConfirmation(mode: mode, isOnButton: true))
 			.frame(maxWidth: .infinity)
 		}
 	}
