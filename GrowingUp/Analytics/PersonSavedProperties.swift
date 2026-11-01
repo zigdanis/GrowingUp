@@ -17,8 +17,7 @@ struct PersonSavedProperties: Equatable {
 	/// the save.
 	init(saved: Person, previous: Person?, people: [Person], calendar: Calendar = .current) {
 		isNewPerson = previous == nil
-		// A widget picture alone stands in for the photo on the person's page, so it counts as one.
-		hasPhoto = saved.appPicId != nil || saved.widgetPicId != nil
+		hasPhoto = saved.hasPhoto
 		photoChanged = saved.appPicId != previous?.appPicId || saved.widgetPicId != previous?.widgetPicId
 		// An unknown time of birth is stored as local midnight; see `PersonEditorPresenter.hasBirthTime`.
 		hasBirthTime = saved.birthday != calendar.startOfDay(for: saved.birthday)

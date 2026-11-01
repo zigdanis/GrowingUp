@@ -25,6 +25,11 @@ final class PeoplePresenter {
 	private(set) var isLoading = true
 	/// Whether a long press put the mosaic in reordering, where tiles drag to new places instead of opening the viewer.
 	private(set) var isReordering = false
+	/// A rating request a closed viewer started, which the scene makes after a pause; see `takeReviewRequest()`. Every
+	/// request is a new value, so the scene's wait restarts with it.
+	private(set) var pendingReviewRequest: UUID?
+	/// Whether the app is in the foreground, as the scene last reported.
+	@ObservationIgnored private var isSceneActive = false
 	/// The latest order being stored; each save waits for the one before, so the store ends in the last order shown.
 	@ObservationIgnored private var orderSave: Task<Void, Error>?
 	/// The `displayOrder` of each person as the store holds it, which a failed save puts the mosaic back to.
@@ -82,6 +87,7 @@ final class PeoplePresenter {
 	func add(from source: PersonEditorSource = .addButton) {
 		guard canAdd else { return }
 		finishLeaving()
+		configurator.reviewPrompter?.viewerLeftForNewPerson()
 		startEditing(person: nil, from: source)
 		selectedID = nil
 		isAddingPerson = true
@@ -106,6 +112,7 @@ final class PeoplePresenter {
 	func view(_ id: UUID, from source: PersonViewSource = .tile) {
 		guard !isReordering, id != leavingID, persons.contains(where: { $0.id == id }) else { return }
 		finishLeaving()
+		configurator.reviewPrompter?.viewerOpened(replacingNewPerson: isAddingPerson)
 		isAddingPerson = false
 		selectedID = id
 		isViewing = true
@@ -133,6 +140,34 @@ final class PeoplePresenter {
 		guard !isViewing else { return }
 		isAddingPerson = false
 		finishLeaving()
+		if configurator.reviewPrompter?.viewerClosed(people: persons) == true { pendingReviewRequest = UUID() }
+	}
+
+	func sceneDidBecomeActive() {
+		isSceneActive = true
+		configurator.reviewPrompter?.appBecameActive()
+	}
+
+	func sceneDidResignActive() {
+		isSceneActive = false
+	}
+
+	func sceneDidEnterBackground() {
+		isSceneActive = false
+		configurator.reviewPrompter?.appEnteredBackground()
+	}
+
+	/// Ends the pause a closed viewer started and says whether to ask for the rating now: only while the app is active,
+	/// the mosaic shows with nothing over it, and nothing went wrong meanwhile. A request that may not go is dropped, and a
+	/// later visit can try again; one that goes is recorded here.
+	func takeReviewRequest() -> Bool {
+		guard pendingReviewRequest != nil else { return false }
+		pendingReviewRequest = nil
+		guard let prompter = configurator.reviewPrompter, isSceneActive, !isLoading, !isViewing, editor == nil, !isReordering,
+			error == nil, !prompter.hadSetbackThisSession
+		else { return false }
+		configurator.analytics.track(prompter.recordRequest(people: persons))
+		return true
 	}
 
 	/// Returns from the viewer to the mosaic. Edit mode locks the viewer's swipe, so only an accessibility action can get

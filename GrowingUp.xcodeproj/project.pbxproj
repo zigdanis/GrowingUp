@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C2B000000000000000000004 /* ReviewPromptState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000003 /* ReviewPromptState.swift */; };
+		C2B000000000000000000006 /* ReviewPromptPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000005 /* ReviewPromptPolicy.swift */; };
+		C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000007 /* ReviewPromptMode.swift */; };
+		C2B00000000000000000000A /* ReviewPromptStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000009 /* ReviewPromptStore.swift */; };
+		C2B00000000000000000000C /* ReviewPrompter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000B /* ReviewPrompter.swift */; };
+		C2B00000000000000000000E /* ReviewPromptAnalyticsGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */; };
+		C2B000000000000000000010 /* ReviewPromptPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B00000000000000000000F /* ReviewPromptPolicyTests.swift */; };
+		C2B000000000000000000012 /* ReviewPrompterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000011 /* ReviewPrompterTests.swift */; };
+		C2B000000000000000000014 /* PeopleReviewPromptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000013 /* PeopleReviewPromptTests.swift */; };
 		B1A000000000000000000003 /* HapticImpact.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A000000000000000000002 /* HapticImpact.swift */; };
 		A265EA47490FD78244DF9232 /* KeyboardCommandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5554FA6520391E07FE91343 /* KeyboardCommandTests.swift */; };
 		D83B0424086BCA2C03D4F456 /* KeyboardCommand+Lists.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCC9BD4F4BF48C8B2340F3A6 /* KeyboardCommand+Lists.swift */; };
@@ -416,6 +425,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C2B000000000000000000003 /* ReviewPromptState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptState.swift; sourceTree = "<group>"; };
+		C2B000000000000000000005 /* ReviewPromptPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptPolicy.swift; sourceTree = "<group>"; };
+		C2B000000000000000000007 /* ReviewPromptMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptMode.swift; sourceTree = "<group>"; };
+		C2B000000000000000000009 /* ReviewPromptStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptStore.swift; sourceTree = "<group>"; };
+		C2B00000000000000000000B /* ReviewPrompter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPrompter.swift; sourceTree = "<group>"; };
+		C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptAnalyticsGateway.swift; sourceTree = "<group>"; };
+		C2B00000000000000000000F /* ReviewPromptPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptPolicyTests.swift; sourceTree = "<group>"; };
+		C2B000000000000000000011 /* ReviewPrompterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPrompterTests.swift; sourceTree = "<group>"; };
+		C2B000000000000000000013 /* PeopleReviewPromptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleReviewPromptTests.swift; sourceTree = "<group>"; };
 		B1A000000000000000000002 /* HapticImpact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticImpact.swift; sourceTree = "<group>"; };
 		B1A000000000000000000004 /* HapticNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticNotification.swift; sourceTree = "<group>"; };
 		B1A000000000000000000006 /* HapticFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticFeedback.swift; sourceTree = "<group>"; };
@@ -804,6 +822,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C2B000000000000000000001 /* ReviewPrompt */ = {
+			isa = PBXGroup;
+			children = (
+				C2B000000000000000000003 /* ReviewPromptState.swift */,
+				C2B000000000000000000005 /* ReviewPromptPolicy.swift */,
+				C2B000000000000000000007 /* ReviewPromptMode.swift */,
+				C2B000000000000000000009 /* ReviewPromptStore.swift */,
+				C2B00000000000000000000B /* ReviewPrompter.swift */,
+				C2B00000000000000000000D /* ReviewPromptAnalyticsGateway.swift */,
+			);
+			path = ReviewPrompt;
+			sourceTree = "<group>";
+		};
+		C2B000000000000000000002 /* ReviewPrompt */ = {
+			isa = PBXGroup;
+			children = (
+				C2B00000000000000000000F /* ReviewPromptPolicyTests.swift */,
+				C2B000000000000000000011 /* ReviewPrompterTests.swift */,
+				C2B000000000000000000013 /* PeopleReviewPromptTests.swift */,
+			);
+			path = ReviewPrompt;
+			sourceTree = "<group>";
+		};
 		B1A000000000000000000001 /* Haptics */ = {
 			isa = PBXGroup;
 			children = (
@@ -914,6 +955,7 @@
 				6EAF7AFE19C3D2DCA662652E /* Testing */,
 				A7A100000000000000000001 /* Analytics */,
 				B1A000000000000000000001 /* Haptics */,
+				C2B000000000000000000001 /* ReviewPrompt */,
 			);
 			path = GrowingUp;
 			sourceTree = "<group>";
@@ -1090,6 +1132,7 @@
 				094DF9CD223ADCD400C331EC /* Helpers */,
 				094DF9C4223AB35D00C331EC /* Info.plist */,
 				A7A100000000000000000028 /* Analytics */,
+				C2B000000000000000000002 /* ReviewPrompt */,
 			);
 			path = GrowingUpTests;
 			sourceTree = "<group>";
@@ -1896,6 +1939,9 @@
 				C2901A135EC494E10D02145E /* SwiftUIPresenterTests.swift in Sources */,
 				C3C8A61C4F1E25ED7731B827 /* ConfettiStyleTests.swift in Sources */,
 				B1A00000000000000000001D /* HapticEventTests.swift in Sources */,
+				C2B000000000000000000010 /* ReviewPromptPolicyTests.swift in Sources */,
+				C2B000000000000000000012 /* ReviewPrompterTests.swift in Sources */,
+				C2B000000000000000000014 /* PeopleReviewPromptTests.swift in Sources */,
 				B1A00000000000000000001F /* HapticThrottleTests.swift in Sources */,
 				B1A000000000000000000021 /* BirthdayHapticPatternTests.swift in Sources */,
 				1D5C694CC1B47E2AD5CEFE92 /* PersonTileContentTests.swift in Sources */,
@@ -2077,6 +2123,12 @@
 				B1A000000000000000000017 /* BirthdayHapticPattern.swift in Sources */,
 				B1A000000000000000000019 /* BirthdayHapticEngine.swift in Sources */,
 				B1A00000000000000000001B /* SceneErrorHaptics.swift in Sources */,
+				C2B000000000000000000004 /* ReviewPromptState.swift in Sources */,
+				C2B000000000000000000006 /* ReviewPromptPolicy.swift in Sources */,
+				C2B000000000000000000008 /* ReviewPromptMode.swift in Sources */,
+				C2B00000000000000000000A /* ReviewPromptStore.swift in Sources */,
+				C2B00000000000000000000C /* ReviewPrompter.swift in Sources */,
+				C2B00000000000000000000E /* ReviewPromptAnalyticsGateway.swift in Sources */,
 				A7A100000000000000000007 /* AnalyticsFailure.swift in Sources */,
 				A7A100000000000000000009 /* AnalyticsGateway.swift in Sources */,
 				A7A10000000000000000000B /* AnalyticsValue.swift in Sources */,

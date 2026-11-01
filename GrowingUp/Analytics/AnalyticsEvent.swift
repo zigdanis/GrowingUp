@@ -13,6 +13,9 @@ enum AnalyticsEvent: Equatable {
 	case personSaved(PersonSavedProperties)
 	case personRemoved(peopleCount: Int)
 	case peopleReordered(peopleCount: Int)
+	/// The app asked iOS for the App Store rating sheet; iOS alone decides whether it shows.
+	case reviewPromptRequested(
+		activeDays: Int, daysSinceFirstActive: Int, viewerVisits: Int, peopleWithPhotoCount: Int, requestNumber: Int)
 
 	var name: String {
 		switch self {
@@ -28,6 +31,7 @@ enum AnalyticsEvent: Equatable {
 		case .personSaved: "person_saved"
 		case .personRemoved: "person_removed"
 		case .peopleReordered: "people_reordered"
+		case .reviewPromptRequested: "review_prompt_requested"
 		}
 	}
 
@@ -60,6 +64,14 @@ enum AnalyticsEvent: Equatable {
 			]
 		case .personRemoved(let peopleCount), .peopleReordered(let peopleCount):
 			["people_count": .int(peopleCount)]
+		case .reviewPromptRequested(let activeDays, let daysSinceFirstActive, let viewerVisits, let peopleWithPhotoCount, let requestNumber):
+			[
+				"active_days": .int(activeDays),
+				"days_since_first_active": .int(daysSinceFirstActive),
+				"viewer_visits": .int(viewerVisits),
+				"people_with_photo_count": .int(peopleWithPhotoCount),
+				"request_number": .int(requestNumber)
+			]
 		}
 	}
 

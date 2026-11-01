@@ -27,6 +27,7 @@ every name, key and text value a snake_case word.
 | `person_saved` | `mode`, `has_photo`, `photo_changed`, `has_birth_time`, `on_widget`, `celebrates_birthdays`, `people_count`, `widget_people_count` | A person is stored |
 | `person_removed` | `people_count` | A person is removed |
 | `people_reordered` | `people_count` | A new mosaic order is stored |
+| `review_prompt_requested` | `active_days`, `days_since_first_active`, `viewer_visits`, `people_with_photo_count`, `request_number` | The app asked iOS for the App Store rating sheet; iOS decides whether it shows ([rating prompt](rating-prompt.md)) |
 
 PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events and, to every
 event, its anonymous installation ID, device model and screen size, OS and app version, language,
