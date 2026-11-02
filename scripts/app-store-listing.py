@@ -2,9 +2,9 @@
 """Check, plan or apply the App Store search fields in marketing/app-store/listing.json.
 
 `check` validates the file offline. `plan` reads the editable version from App Store Connect and prints what
-`apply` would change. `apply --confirm VERSION` sets name, subtitle and keywords of the existing localizations
-and reads them back. It never creates a version or a localization, touches texts or screenshots, or submits
-anything. Scheme: docs/app-store-localization.md.
+`apply` would change. `apply --confirm VERSION` sets name, subtitle and keywords of the existing localizations,
+copies the en-US texts into en-GB, and reads them back. It never creates a version or a localization, edits the
+en-US or ru texts, touches screenshots, or submits anything. Scheme: docs/app-store-localization.md.
 """
 
 import argparse
@@ -23,10 +23,12 @@ FLEET_CREDENTIALS = Path("~/.config/app-store-connect/fleet.json").expanduser()
 # Name and subtitle live on the appInfo, keywords and texts on the version; both are editable only in these states.
 EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"}
 INFO_FIELDS = ("name", "subtitle")
-# Kazakhstan, Belarus, Uzbekistan and the rest of the CIS index only English (U.K.), which falls back to the primary
-# en-US without an en-GB localization, so en-US keywords must carry the words of the Russian name. `ru` is indexed
-# only in Russia, Ukraine and the United States.
-CIS_INDEX, RUSSIAN = "en-US", "ru"
+# en-GB exists for its Russian keywords; English readers outside the US must see the same texts as en-US.
+MIRRORED_TEXTS = ("description", "whatsNew", "promotionalText", "supportUrl", "marketingUrl")
+# Kazakhstan, Belarus, Uzbekistan and the rest of the CIS index only English (U.K.), so en-GB keywords are Russian and
+# must carry the words of the Russian name. `ru` is indexed only in Russia, Ukraine and the United States. en-US is
+# searched only in the storefronts without English (U.K.), the United States, Canada and Japan, so it stays English.
+PRIMARY, CIS_INDEX, RUSSIAN = "en-US", "en-GB", "ru"
 
 
 def words(text):
@@ -38,7 +40,7 @@ def validate(listing):
     """Return a list of problems with the listing; empty when Apple would accept it and the scheme holds."""
     problems = []
     locales = listing["localizations"]
-    for locale in (CIS_INDEX, RUSSIAN):
+    for locale in (PRIMARY, CIS_INDEX, RUSSIAN):
         if locale not in locales:
             problems.append(f"{locale}: localization is missing")
     for locale, fields in locales.items():
@@ -59,12 +61,20 @@ def validate(listing):
         if repeated:
             problems.append(f"{locale}: keywords repeat words of the name or subtitle: {', '.join(repeated)}")
     if CIS_INDEX in locales and RUSSIAN in locales:
-        carried = {w for term in locales[CIS_INDEX]["keywords"].split(",") for w in words(term)}
-        carried |= set(words(locales[CIS_INDEX]["name"] + " " + locales[CIS_INDEX]["subtitle"]))
+        cis = locales[CIS_INDEX]
+        carried = {w for term in cis.get("keywords", "").split(",") for w in words(term)}
+        carried |= set(words(cis.get("name", "") + " " + cis.get("subtitle", "")))
         # One-letter words such as «и» are not worth keyword room.
-        missing = [w for w in words(locales[RUSSIAN]["name"]) if len(w) > 1 and w not in carried]
+        missing = [w for w in words(locales[RUSSIAN].get("name", "")) if len(w) > 1 and w not in carried]
         if missing:
             problems.append(f"{CIS_INDEX}: keywords must carry the Russian name for CIS search: {', '.join(missing)}")
+    if PRIMARY in locales and CIS_INDEX in locales:
+        # English readers in en-GB storefronts must see the same name and subtitle as in the US.
+        for field in INFO_FIELDS:
+            if locales[CIS_INDEX].get(field) != locales[PRIMARY].get(field):
+                problems.append(f"{CIS_INDEX}: {field} must match {PRIMARY}")
+    if PRIMARY in locales and not locales[PRIMARY].get("keywords", "").isascii():
+        problems.append(f"{PRIMARY}: keywords must be English; Russian keywords belong in {CIS_INDEX}")
     return problems
 
 
@@ -97,10 +107,14 @@ def read_state(api):
 def plan(listing, state):
     """Updates as (resource type, id, locale, attributes), in the order apply sends them."""
     changes = []
+    primary = state["version_locs"].get(PRIMARY)
     for locale, fields in listing["localizations"].items():
+        version_fields = {"keywords": fields["keywords"]}
+        if locale == CIS_INDEX and primary is not None:
+            version_fields.update({f: primary["attributes"].get(f) for f in MIRRORED_TEXTS})
         for kind, locs, wanted in (
             ("appInfoLocalizations", state["info_locs"], {f: fields[f] for f in INFO_FIELDS}),
-            ("appStoreVersionLocalizations", state["version_locs"], {"keywords": fields["keywords"]}),
+            ("appStoreVersionLocalizations", state["version_locs"], version_fields),
         ):
             current = locs.get(locale)
             if current is None:
