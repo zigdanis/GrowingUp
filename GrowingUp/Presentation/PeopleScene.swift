@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
@@ -12,6 +13,10 @@ struct PeopleScene: View {
 	private var reduceMotion
 	@Environment(\.haptics)
 	private var haptics
+	@Environment(\.scenePhase)
+	private var scenePhase
+	@Environment(\.requestReview)
+	private var requestReview
 
 	init(presenter: PeoplePresenter, preferredColorScheme: ColorScheme?) {
 		_presenter = Bindable(presenter)
@@ -59,6 +64,20 @@ struct PeopleScene: View {
 				.preferredColorScheme(.dark)
 		}
 		.sceneError($presenter.error)
+		.onChange(of: scenePhase, initial: true) { _, phase in
+			guard let prompter = presenter.configurator.reviewPrompter else { return }
+			switch phase {
+			case .active: prompter.appBecameActive()
+			case .background: prompter.appEnteredBackground()
+			default: prompter.appResignedActive()
+			}
+		}
+		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
+		.task(id: presenter.configurator.reviewPrompter?.pendingRequest) {
+			guard let request = presenter.configurator.reviewPrompter?.pendingRequest else { return }
+			do { try await Task.sleep(for: .seconds(2)) } catch { return }
+			if presenter.takeReviewRequest(request) { requestReview() }
+		}
 	}
 
 	@ViewBuilder
