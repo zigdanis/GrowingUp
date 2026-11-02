@@ -67,6 +67,13 @@ class ListingTests(unittest.TestCase):
         broken["localizations"]["en-US"]["keywords"] = "baby,widget"
         self.assertTrue(any("Russian name" in p for p in listing_tool.validate(broken)))
 
+    def test_requires_both_localizations(self):
+        for locale in ("en-US", "ru"):
+            broken = copy.deepcopy(self.listing)
+            del broken["localizations"][locale]
+            self.assertIn(f"{locale}: localization is missing", listing_tool.validate(broken))
+        self.assertEqual(len(listing_tool.validate({"app_id": listing_tool.APP_ID, "localizations": {}})), 2)
+
     def test_rejects_apple_limit_and_keyword_format_violations(self):
         broken = copy.deepcopy(self.listing)
         fields = broken["localizations"]["ru"]

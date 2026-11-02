@@ -38,6 +38,9 @@ def validate(listing):
     """Return a list of problems with the listing; empty when Apple would accept it and the scheme holds."""
     problems = []
     locales = listing["localizations"]
+    for locale in (CIS_INDEX, RUSSIAN):
+        if locale not in locales:
+            problems.append(f"{locale}: localization is missing")
     for locale, fields in locales.items():
         for field, limit in (("name", 30), ("subtitle", 30), ("keywords", 100)):
             value = fields.get(field, "")
