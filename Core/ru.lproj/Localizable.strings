@@ -23,6 +23,8 @@
 "Missing value" = "Отсутствует параметр";
 "Unknown error occured" = "Неизвестная ошибка";
 "Unable to add more than 6 persons" = "В виджет можно добавить не больше 6 человек.";
+"Failed initializing Core Data stack" = "Не удалось открыть хранилище данных";
+"Failed to get App Group URL" = "Не удалось открыть общее хранилище приложения и виджета";
 
 /* Lock Screen inline widget: the person's name and age, such as "Leo · 5 years" */
 "%@ · %@" = "%@ · %@";

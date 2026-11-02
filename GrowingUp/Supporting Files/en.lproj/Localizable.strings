@@ -107,6 +107,33 @@
 /* Message for the alert shown when a tapped photo fails to load */
 "The photo couldn't be loaded. Try again or pick another." = "The photo couldn't be loaded. Try again or pick another.";
 
+/* Title for the alert shown when the in-app camera fails to capture a photo */
+"Couldn't take photo" = "Couldn't take photo";
+
+/* Message for the alert shown when the in-app camera fails to capture a photo */
+"The photo couldn't be captured. Try again." = "The photo couldn't be captured. Try again.";
+
+/* VoiceOver label of the in-app camera's flash button */
+"Flash" = "Flash";
+
+/* VoiceOver value of the flash button: flash is off */
+"Off" = "Off";
+
+/* VoiceOver value of the flash button: flash fires when needed */
+"Auto" = "Auto";
+
+/* VoiceOver value of the flash button: flash always fires */
+"On" = "On";
+
+/* VoiceOver label of the button that closes the in-app camera */
+"Close camera" = "Close camera";
+
+/* VoiceOver label of the in-app camera's shutter button */
+"Take photo" = "Take photo";
+
+/* VoiceOver label of the button that switches between the front and back camera */
+"Flip camera" = "Flip camera";
+
 "OK" = "OK";
 
 "Photo" = "Photo";

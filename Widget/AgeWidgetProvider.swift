@@ -63,12 +63,12 @@ struct AgeWidgetProvider: TimelineProvider {
 	private static func samplePersons() -> [WidgetPerson] {
 		let now = Date()
 		let ages: [(String, DateComponents)] = [
-			("Alice", DateComponents(year: -5, month: -3, day: -12)),
-			("Boris", DateComponents(month: -11, day: -4)),
-			("Clara", DateComponents(day: -2, hour: -4)),
-			("Daria", DateComponents(year: -8)),
-			("Evan", DateComponents(year: -4, day: 3)),
-			("Farah", DateComponents(year: -30, month: -5))
+			(String(localized: "Alice", table: "Widget"), DateComponents(year: -5, month: -3, day: -12)),
+			(String(localized: "Boris", table: "Widget"), DateComponents(month: -11, day: -4)),
+			(String(localized: "Clara", table: "Widget"), DateComponents(day: -2, hour: -4)),
+			(String(localized: "Daria", table: "Widget"), DateComponents(year: -8)),
+			(String(localized: "Evan", table: "Widget"), DateComponents(year: -4, day: 3)),
+			(String(localized: "Farah", table: "Widget"), DateComponents(year: -30, month: -5))
 		]
 		return ages.enumerated().map { index, sample in
 			let birthday = Calendar.current.date(byAdding: sample.1, to: now) ?? now
