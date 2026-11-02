@@ -73,6 +73,9 @@ The script uses `ASC_KEY_PATH`/`ASC_KEY_ID`/`ASC_ISSUER_ID` or the Fleet team ke
 subtitle and keywords of existing localizations, and never creates a version, touches texts or screenshots, or
 submits.
 
+Applied to 3.1.0 on 2026-11-02 (read back matched). On a machine without PyJWT, run the script from a venv with
+`pyjwt` and `cryptography`.
+
 **After release** (indexing takes hours to two days), check per storefront, a few seconds apart:
 `https://itunes.apple.com/search?term=сколько+лет+и+дней&country=kz&entity=software` should list `1461697772`,
 as should «возраст» and «счетчик дней» in kz, by and ge. On a Kazakhstan Apple ID with a Russian iPhone, the

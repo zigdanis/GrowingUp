@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "upload": true,
+  "version_id": "97911d30-61b8-4b01-a2af-54725a039c9d",
+  "version": "3.1.0",
+  "groups": [
+    {
+      "locale": "en-US",
+      "group": "IPAD_13_PROFILE",
+      "size": [
+        2064,
+        2752
+      ],
+      "device": "iPad-Pro-13-inch-M5",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "b05289cc14b7b37cf524e5080297ec18e622ebc71f1914f566b6862989fac377",
+          "placement_id": "df000005-71fb-8cec-8f28-b3089d70e28e",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "85fa59706e3ce9e1377c128f293f54b0d3f3aac0d58307dafbbfef380f0fb1f2",
+          "placement_id": "8a000005-71fb-8cec-8f00-bb24715207c2",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "20d6018e8d3102b6803e5a7474b0b16db4ce1ff02c837cf763737eb2ef5b2314",
+          "placement_id": "3d400005-71fb-8cec-8f3f-f3f224b25bef",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "7a972ea25cdce9044368697e1866e2348cda2eb44d099a8730873b6ae8310c74",
+          "placement_id": "74c00005-71fb-8cec-8f1e-a31d79d924cf",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "f9c65192a95b0efcb803d1abe916510ceca52136a164de19d91e51822673a4b7",
+          "placement_id": "46800005-71fb-8cec-8f15-985f359dd424",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "61946d31a30cde5aef8c89b7936a8031a71ef6b561acbfaeccd24284296df63d",
+          "placement_id": "fd800005-71fb-8cec-8f2e-6c7b248fcce8",
+          "state": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "locale": "ru",
+      "group": "IPAD_13_PROFILE",
+      "size": [
+        2064,
+        2752
+      ],
+      "device": "iPad-Pro-13-inch-M5",
+      "screenshots": [
+        {
+          "file": "01-mosaic.png",
+          "sha256": "13d20e42dafdd2bc13827fdb5955739cd5d520372b1ddc9ba01daf420879ba34",
+          "placement_id": "d0000005-71fb-8cec-8f10-10381c26e4a8",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "02-mia.png",
+          "sha256": "6d78616444c6aaa69960edfd817a1ec33a649a773c973c8347eb31fefd9c2ff9",
+          "placement_id": "9ac00005-71fb-8cec-8f09-146cfd508007",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "03-leo-birthday.png",
+          "sha256": "234971f7cd608ccff1511d4dcb8e1a987d696e461f78a069fe4ea0165c5d219d",
+          "placement_id": "de800005-71fb-8cec-8f32-6a8817b0cbd3",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "04-editor.png",
+          "sha256": "43665a590de4050808d538a34b298e6af1e1599b3dab2e903e04b0da859932e3",
+          "placement_id": "3dc00005-71fb-8cec-8f1c-a9d0f135251d",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "05-pets.png",
+          "sha256": "8df9f84c7af33cb8bfad3620b6d7cdbb683b522519f1fa6daf427f79cbc44321",
+          "placement_id": "64800005-71fb-8cec-8f3e-d9db88369a77",
+          "state": "ACTIVE"
+        },
+        {
+          "file": "06-widgets.png",
+          "sha256": "8ebd8837eb332662bc2e062ba1bfc729995781c957405e76bd6f44e7cfee6b5b",
+          "placement_id": "29800005-71fb-8cec-8f24-88add6a94112",
+          "state": "ACTIVE"
+        }
+      ]
+    }
+  ],
+  "deleted_placements": [],
+  "verified_state": "PREPARE_FOR_SUBMISSION",
+  "other_groups_preserved": true
+}
