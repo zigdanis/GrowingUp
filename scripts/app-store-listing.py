@@ -61,12 +61,20 @@ def validate(listing):
         if repeated:
             problems.append(f"{locale}: keywords repeat words of the name or subtitle: {', '.join(repeated)}")
     if CIS_INDEX in locales and RUSSIAN in locales:
-        carried = {w for term in locales[CIS_INDEX]["keywords"].split(",") for w in words(term)}
-        carried |= set(words(locales[CIS_INDEX]["name"] + " " + locales[CIS_INDEX]["subtitle"]))
+        cis = locales[CIS_INDEX]
+        carried = {w for term in cis.get("keywords", "").split(",") for w in words(term)}
+        carried |= set(words(cis.get("name", "") + " " + cis.get("subtitle", "")))
         # One-letter words such as «и» are not worth keyword room.
-        missing = [w for w in words(locales[RUSSIAN]["name"]) if len(w) > 1 and w not in carried]
+        missing = [w for w in words(locales[RUSSIAN].get("name", "")) if len(w) > 1 and w not in carried]
         if missing:
             problems.append(f"{CIS_INDEX}: keywords must carry the Russian name for CIS search: {', '.join(missing)}")
+    if PRIMARY in locales and CIS_INDEX in locales:
+        # English readers in en-GB storefronts must see the same name and subtitle as in the US.
+        for field in INFO_FIELDS:
+            if locales[CIS_INDEX].get(field) != locales[PRIMARY].get(field):
+                problems.append(f"{CIS_INDEX}: {field} must match {PRIMARY}")
+    if PRIMARY in locales and not locales[PRIMARY].get("keywords", "").isascii():
+        problems.append(f"{PRIMARY}: keywords must be English; Russian keywords belong in {CIS_INDEX}")
     return problems
 
 

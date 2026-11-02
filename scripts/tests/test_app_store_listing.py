@@ -107,16 +107,38 @@ class ListingTests(unittest.TestCase):
                          {"keywords": self.listing["localizations"]["en-GB"]["keywords"]})
 
     def test_en_gb_mirrors_the_en_us_texts(self):
-        api = FakeAPI()
-        api.locs["appStoreVersionLocalizations"][0]["attributes"]["whatsNew"] = "Now on iPad."
-        changes = listing_tool.plan(self.listing, listing_tool.read_state(api))
-        gb = next(attributes for kind, _, locale, attributes in changes
-                  if kind == "appStoreVersionLocalizations" and locale == "en-GB")
-        self.assertEqual(gb["whatsNew"], "Now on iPad.")
-        self.assertNotIn("description", gb, "an equal text is not patched")
-        us = next(attributes for kind, _, locale, attributes in changes
-                  if kind == "appStoreVersionLocalizations" and locale == "en-US")
-        self.assertEqual(set(us), {"keywords"}, "en-US texts are never written")
+        mirrored = ("description", "whatsNew", "promotionalText", "supportUrl", "marketingUrl")
+        for field in mirrored:
+            with self.subTest(field=field):
+                api = FakeAPI()
+                api.locs["appStoreVersionLocalizations"][0]["attributes"][field] = f"Changed {field}."
+                changes = listing_tool.plan(self.listing, listing_tool.read_state(api))
+                gb = next(attributes for kind, _, locale, attributes in changes
+                          if kind == "appStoreVersionLocalizations" and locale == "en-GB")
+                self.assertEqual(gb[field], f"Changed {field}.")
+                self.assertEqual(set(gb) & set(mirrored), {field}, "equal texts are not patched")
+                us = next(attributes for kind, _, locale, attributes in changes
+                          if kind == "appStoreVersionLocalizations" and locale == "en-US")
+                self.assertEqual(set(us), {"keywords"}, "en-US texts are never written")
+
+    def test_en_gb_name_and_subtitle_match_en_us(self):
+        for field in ("name", "subtitle"):
+            broken = copy.deepcopy(self.listing)
+            broken["localizations"]["en-GB"][field] = "GrowingUp UK"
+            self.assertIn(f"en-GB: {field} must match en-US", listing_tool.validate(broken))
+
+    def test_en_us_rejects_russian_keywords(self):
+        broken = copy.deepcopy(self.listing)
+        broken["localizations"]["en-US"]["keywords"] += ",возраст"
+        self.assertTrue(any("en-US: keywords must be English" in p for p in listing_tool.validate(broken)))
+
+    def test_missing_fields_are_reported_not_raised(self):
+        broken = copy.deepcopy(self.listing)
+        del broken["localizations"]["en-GB"]["keywords"]
+        del broken["localizations"]["ru"]["name"]
+        problems = listing_tool.validate(broken)
+        self.assertIn("en-GB: keywords is empty", problems)
+        self.assertIn("ru: name is empty", problems)
 
     def test_apply_patches_then_reads_back_nothing_left(self):
         api = FakeAPI()
