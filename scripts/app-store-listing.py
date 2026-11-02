@@ -2,9 +2,9 @@
 """Check, plan or apply the App Store search fields in marketing/app-store/listing.json.
 
 `check` validates the file offline. `plan` reads the editable version from App Store Connect and prints what
-`apply` would change. `apply --confirm VERSION` creates missing localizations (en-GB), sets name, subtitle and
-keywords, copies the texts of a `mirror` localization, and reads everything back. It never creates a version,
-touches screenshots or submits anything. Scheme: docs/app-store-localization.md.
+`apply` would change. `apply --confirm VERSION` sets name, subtitle and keywords of the existing localizations
+and reads them back. It never creates a version or a localization, touches texts or screenshots, or submits
+anything. Scheme: docs/app-store-localization.md.
 """
 
 import argparse
@@ -23,12 +23,10 @@ FLEET_CREDENTIALS = Path("~/.config/app-store-connect/fleet.json").expanduser()
 # Name and subtitle live on the appInfo, keywords and texts on the version; both are editable only in these states.
 EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"}
 INFO_FIELDS = ("name", "subtitle")
-MIRRORED_VERSION_FIELDS = ("description", "promotionalText", "whatsNew", "supportUrl", "marketingUrl")
-MIRRORED_INFO_FIELDS = ("privacyPolicyUrl", "privacyChoicesUrl")
-# Kazakhstan, Belarus, Uzbekistan and the rest of the CIS index only English (U.K.), so this localization must
-# carry the words of the Russian name; `ru` is indexed only in Russia, Ukraine and the United States.
-CIS_INDEX, RUSSIAN = "en-GB", "ru"
-BRAND = "growingup"
+# Kazakhstan, Belarus, Uzbekistan and the rest of the CIS index only English (U.K.), which falls back to the primary
+# en-US without an en-GB localization, so en-US keywords must carry the words of the Russian name. `ru` is indexed
+# only in Russia, Ukraine and the United States.
+CIS_INDEX, RUSSIAN = "en-US", "ru"
 
 
 def words(text):
@@ -57,13 +55,11 @@ def validate(listing):
         repeated = sorted({w for term in terms for w in words(term) if w in shown})
         if repeated:
             problems.append(f"{locale}: keywords repeat words of the name or subtitle: {', '.join(repeated)}")
-        mirror = fields.get("mirror")
-        if mirror is not None and (mirror not in locales or locales[mirror].get("mirror")):
-            problems.append(f"{locale}: mirror must name a localization that is not itself a mirror")
     if CIS_INDEX in locales and RUSSIAN in locales:
         carried = {w for term in locales[CIS_INDEX]["keywords"].split(",") for w in words(term)}
         carried |= set(words(locales[CIS_INDEX]["name"] + " " + locales[CIS_INDEX]["subtitle"]))
-        missing = [w for w in words(locales[RUSSIAN]["name"]) if w != BRAND and w not in carried]
+        # One-letter words such as «и» are not worth keyword room.
+        missing = [w for w in words(locales[RUSSIAN]["name"]) if len(w) > 1 and w not in carried]
         if missing:
             problems.append(f"{CIS_INDEX}: keywords must carry the Russian name for CIS search: {', '.join(missing)}")
     return problems
@@ -96,42 +92,27 @@ def read_state(api):
 
 
 def plan(listing, state):
-    """Changes as (action, resource type, id or None, locale, attributes), in the order apply sends them."""
+    """Updates as (resource type, id, locale, attributes), in the order apply sends them."""
     changes = []
     for locale, fields in listing["localizations"].items():
-        mirror = fields.get("mirror")
-        for kind, locs, wanted, mirrored in (
-            ("appInfoLocalizations", state["info_locs"], {f: fields[f] for f in INFO_FIELDS}, MIRRORED_INFO_FIELDS),
-            ("appStoreVersionLocalizations", state["version_locs"], {"keywords": fields["keywords"]}, MIRRORED_VERSION_FIELDS),
+        for kind, locs, wanted in (
+            ("appInfoLocalizations", state["info_locs"], {f: fields[f] for f in INFO_FIELDS}),
+            ("appStoreVersionLocalizations", state["version_locs"], {"keywords": fields["keywords"]}),
         ):
-            if mirror is not None:
-                if mirror not in locs:
-                    raise ValueError(f"{mirror} is missing in App Store Connect; it is the source of {locale}")
-                source = locs[mirror]["attributes"]
-                # Keep cleared fields: a null clears the copy too, so a text removed in the source never lingers.
-                wanted.update({f: source.get(f) for f in mirrored})
             current = locs.get(locale)
             if current is None:
-                created = {f: v for f, v in wanted.items() if v is not None}
-                changes.append(("create", kind, None, locale, {"locale": locale, **created}))
-            else:
-                diff = {f: v for f, v in wanted.items() if current["attributes"].get(f) != v}
-                if diff:
-                    changes.append(("update", kind, current["id"], locale, diff))
+                raise ValueError(f"{locale} is missing in {kind}; adding a localization needs a separate decision")
+            diff = {f: v for f, v in wanted.items() if current["attributes"].get(f) != v}
+            if diff:
+                changes.append((kind, current["id"], locale, diff))
     return changes
 
 
 def apply(api, listing, state, changes):
-    owners = {"appInfoLocalizations": ("appInfo", "appInfos", state["info"]["id"]),
-              "appStoreVersionLocalizations": ("appStoreVersion", "appStoreVersions", state["version"]["id"])}
-    for action, kind, identifier, locale, attributes in changes:
-        print(f"{locale}: {action} {kind} {sorted(attributes)}", flush=True)
-        if action == "create":
-            name, owner_type, owner_id = owners[kind]
-            api.create(kind, attributes, {name: {"data": {"type": owner_type, "id": owner_id}}})
-        else:
-            api.request("PATCH", f"/v1/{kind}/{identifier}",
-                        {"data": {"type": kind, "id": identifier, "attributes": attributes}})
+    for kind, identifier, locale, attributes in changes:
+        print(f"{locale}: update {kind} {sorted(attributes)}", flush=True)
+        api.request("PATCH", f"/v1/{kind}/{identifier}",
+                    {"data": {"type": kind, "id": identifier, "attributes": attributes}})
     after = read_state(api)
     if after["version"]["id"] != state["version"]["id"] or plan(listing, after):
         raise ValueError("App Store Connect does not match the listing after apply; run plan and inspect")
@@ -174,8 +155,8 @@ def main():
     version = state["version"]["attributes"]["versionString"]
     changes = plan(listing, state)
     print(f"Editable version {version} ({state['version']['attributes']['appStoreState']}): {len(changes)} changes")
-    for action, kind, _, locale, attributes in changes:
-        print(f"  {locale} {action} {kind}: " + json.dumps(attributes, ensure_ascii=False)[:400])
+    for kind, _, locale, attributes in changes:
+        print(f"  {locale} {kind}: " + json.dumps(attributes, ensure_ascii=False)[:400])
     if args.operation == "plan" or not changes:
         return 0
     if args.confirm != version:

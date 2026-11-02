@@ -5,18 +5,12 @@
     "en-US": {
       "name": "GrowingUp Watcher",
       "subtitle": "Exact age & birthday widgets",
-      "keywords": "baby,kids,toddler,newborn,pet,dog,cat,countdown,how old,calculator,family,lock screen,milestone,days"
-    },
-    "en-GB": {
-      "mirror": "en-US",
-      "name": "GrowingUp Watcher",
-      "subtitle": "Kids' age & birthday countdown",
-      "keywords": "возраст,детей,ребенка,ребенок,сколько,лет,день,рождения,малыш,виджет,калькулятор,отсчет,baby,widget"
+      "keywords": "сколько,лет,дней,возраст,счетчик,рождения,baby,kids,pet,dog,cat,countdown,how old,family,days,sober"
     },
     "ru": {
-      "name": "GrowingUp: возраст детей",
-      "subtitle": "Дни рождения и виджеты с фото",
-      "keywords": "ребенок,малыш,новорожденный,сколько,лет,питомец,кошка,собака,отсчет,семья,калькулятор,день,др,трекер"
+      "name": "GrowingUp: сколько лет и дней",
+      "subtitle": "Возраст близких и дни рождения",
+      "keywords": "ребенок,малыш,дети,родные,питомец,собака,кошка,счетчик,отсчет,день,др,виджет,семья,не курю,трезвость"
     }
   }
 }
