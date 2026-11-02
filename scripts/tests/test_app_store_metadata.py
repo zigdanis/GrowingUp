@@ -294,6 +294,19 @@ class AppStoreMetadataTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "found 0"):
             metadata.resolve_spec(catalog, image)
 
+    def test_resolve_an_ipad_group_but_not_an_imessage_one(self):
+        catalog = {"features": [{"featureId": "APP_STORE_VERSIONS", "placementPolicies": [{
+            "placementType": "APP_SCREENSHOT", "groupLimits": [{"groupIds": ["IPAD_13_PROFILE", "IMESSAGE_IPAD_13_PROFILE"], "maxCount": 10}],
+        }]}], "placementTypes": [{"placementTypeId": "APP_SCREENSHOT", "acceptsAssetCategories": ["APP_SCREENSHOTS_AND_PREVIEWS"],
+                                  "specMappings": [{"placementGroupId": "IPAD_13_PROFILE", "specs": ["ipad"]},
+                                                   {"placementGroupId": "IMESSAGE_IPAD_13_PROFILE", "specs": ["ipad"]}]}],
+                   "placementProfileGroups": [{"placementProfileGroupId": "IPAD_13_PROFILE", "platform": "IPAD_APP_STORE"},
+                                              {"placementProfileGroupId": "IMESSAGE_IPAD_13_PROFILE"}],
+                   "imageSpecs": [{"specId": "ipad", "dimensions": {"minWidth": 2064, "maxWidth": 2064, "minHeight": 2752, "maxHeight": 2752},
+                                   "fileExtensions": [".png"], "maxFileSize": 100}]}
+        image = {"width": 2064, "height": 2752, "content": b"png"}
+        self.assertEqual(metadata.resolve_spec(catalog, image), ("IPAD_13_PROFILE", "ipad"))
+
     def test_refuses_unrelated_draft_images_but_allows_inherited_live(self):
         old = {"image": {"id": "old", "attributes": {"referenceName": "old marketing"}}}
         managed = {"image": {"id": "ours", "attributes": {"referenceName": metadata.MANAGED_PREFIX + "ru:01-mia:hash"}}}

@@ -11,7 +11,15 @@ Use this workflow for explicitly requested UI verification or captures. Duo UI j
 - **Limit:** use 1–3 screenshots by default. Skip duplicates and unrelated screens.
 - **Video:** only when the change is motion itself (an animation or transition) and screenshots can't show it. Don't record or review video otherwise.
 - **Check:** confirm that the screenshots show the requested behavior and display clearly in the PR. Publish requested CI evidence with `scripts/pr-visual-evidence.py`; link reviewed native captures directly for a native screenshot task.
-- **Clean up:** remove temporary downloads after publishing.
-- **Device panels:** close task-owned connections as soon as interactive verification finishes, fails or is handed off. State the check and purpose while a connection stays open. Leave a shared simulator running unless shutdown is requested or it was created solely for this task.
+- **Device:** everything about the simulator (which pool device, the queue, reaching MacPro from Linux, installing, data left by other threads, the cloud fallback and releasing it afterwards) is in the Fleet `simulator-queue` skill (`~/myai/fleet/skills/simulator-queue/SKILL.md`); follow it. For an interactive check, install the CI build from `scripts/simulator-app.sh [PR_NUMBER]`; the bundle ID is `pro.ziganshin.GrowingUp`. While a Device panel stays open, state the check it is for.
+- **Clean up:** release the simulator as the `simulator-queue` skill says, and remove temporary downloads after publishing.
+
+## What a fresh install shows
+
+- The app starts at the empty state with an **Add person** button. The editor's photo control is **Add a photo**, which opens a menu with Camera and Photos.
+- Photos first asks for library access: press **Allow Full Access**. The simulator includes sample photos.
+- The simulator has no camera, so Camera shows **Camera access needed**.
+- An element hidden behind the keyboard can't be tapped; run agent-device's `keyboard enter` first.
+- The photo sheet's controls render about 4% smaller than their nominal size: a 44-point glass button measures 42.25 points.
 
 For non-UI changes, report the functional checks instead.

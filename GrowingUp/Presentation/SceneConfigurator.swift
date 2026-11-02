@@ -17,14 +17,18 @@ struct SceneConfigurator {
 	let photoFixtures: [UIImage]?
 	/// Product events and handled failures; silent in tests, previews and UI-test launches.
 	let analytics: AnalyticsGateway
+	/// Times the App Store rating request; nil where the app never asks: tests, previews and verification launches.
+	let reviewPrompter: ReviewPrompter?
 
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
-		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway()
+		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
+		reviewPrompter: ReviewPrompter? = nil
 	) {
 		self.analytics = analytics
+		self.reviewPrompter = reviewPrompter
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
 		self.loadThumbnail = loadThumbnail
@@ -44,11 +48,14 @@ struct SceneConfigurator {
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
 			now: now(), loadImage: loadImage, loadOriginal: loadOriginal, photoFixtures: photoFixtures, analytics: analytics,
-			onMutation: onMutation)
+			onError: { [weak reviewPrompter] in reviewPrompter?.noteSetback() }, onMutation: onMutation)
 	}
 
 	static func live(analytics: AnalyticsGateway) -> SceneConfigurator {
 		let gateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		return SceneConfigurator(gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics)
+		let reviewPrompter = ReviewPromptMode.current().map { ReviewPrompter(store: ReviewPromptStore(), mode: $0) }
+		return SceneConfigurator(
+			gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics,
+			reviewPrompter: reviewPrompter)
 	}
 }

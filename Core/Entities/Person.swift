@@ -57,6 +57,11 @@ public struct Person: Equatable, Hashable, Sendable {
 		self.widgetPicCrop = widgetPicCrop
 	}
 
+	/// Whether the person has a photo; a widget picture alone stands in for it on their page, so it counts as one.
+	public var hasPhoto: Bool {
+		appPicId != nil || widgetPicId != nil
+	}
+
 	public var dateComponents: DateComponents {
 		return dateComponents(at: Date())
 	}

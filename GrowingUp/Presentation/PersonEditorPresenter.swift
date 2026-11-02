@@ -22,7 +22,11 @@ final class PersonEditorPresenter {
 	var widgetImage: PersonImage?
 	/// The photo as it was picked; nil for a photo picked before originals were kept, until it is first framed again.
 	var originalImage: PersonImage?
-	var error: SceneError?
+	/// The alert the edit mode shows; every one also tells `onError`, as no moment after one is a good one to ask for a
+	/// rating.
+	var error: SceneError? {
+		didSet { if error != nil { onError() } }
+	}
 	private(set) var isBusy = false
 	private(set) var isLoading = true
 	/// Whether the widget picture is the one `setMainPhoto(_:)` derived in this session, so a reframed main photo can take
@@ -36,6 +40,7 @@ final class PersonEditorPresenter {
 	private let removeUseCase: RemovePersonUseCase
 	private let fetchUseCase: FetchPersonsUseCase
 	private let onMutation: (PersonMutation) -> Void
+	private let onError: () -> Void
 
 	init(
 		person: Person?, addUseCase: AddPersonUseCase, editUseCase: EditPersonUseCase,
@@ -43,7 +48,7 @@ final class PersonEditorPresenter {
 		now: Date = Date(), loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
-		onMutation: @escaping (PersonMutation) -> Void
+		onError: @escaping () -> Void = {}, onMutation: @escaping (PersonMutation) -> Void
 	) {
 		let calendar = Calendar.current
 		let birthday = person?.birthday ?? calendar.startOfDay(for: now)
@@ -66,6 +71,7 @@ final class PersonEditorPresenter {
 		self.removeUseCase = removeUseCase
 		self.fetchUseCase = fetchUseCase
 		self.onMutation = onMutation
+		self.onError = onError
 	}
 
 	/// Whether the time of birth is known.

@@ -13,7 +13,10 @@ final class AppStoreScreenshotTests: XCTestCase {
 	private var confetti: XCUIElement { app.descendants(matching: .any).matching(identifier: "person.confetti").firstMatch }
 	private var birthdayToday: String { locale == "ru" ? "Сегодня день рождения 🎂" : "Birthday today 🎂" }
 	/// Leo's fireworks frames, in milliseconds after the swipe that returns to his page; the renderer picks one by name.
-	private let fireworksFrames = [1500, 1700, 1900, 2100, 2300, 2500]
+	/// An iPad's full-screen shot takes about half a second, so it shoots every other frame, all inside the 4 s burst.
+	private var fireworksFrames: [Int] {
+		UIDevice.current.userInterfaceIdiom == .pad ? [1500, 1900, 2300] : [1500, 1700, 1900, 2100, 2300, 2500]
+	}
 
 	func testCaptureAppStoreScreenshots() throws {
 		let environment = ProcessInfo.processInfo.environment
@@ -181,27 +184,6 @@ final class AppStoreScreenshotTests: XCTestCase {
 		checkpoint("store-\(locale)-teddy")
 	}
 
-	private func captureWidgets() {
-		for (family, count) in [("small", 1), ("medium", 3), ("large", 4)] {
-			relaunch(widgetFamily: family)
-			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
-			XCTAssertTrue(widget.waitForExistence(timeout: 10))
-			let nominal = CGSize(width: family == "small" ? 170 : 364, height: family == "large" ? 382 : 170)
-			// iPhone Duo's accessibility frame can extend past the drawn widget; the capture crops it to the real size.
-			XCTAssertGreaterThanOrEqual(widget.frame.width, nominal.width - 0.5)
-			XCTAssertGreaterThanOrEqual(widget.frame.height, nominal.height - 0.5)
-			for (index, name) in names.enumerated() {
-				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
-				if index < count {
-					XCTAssertTrue(person.waitForExistence(timeout: 5))
-				} else {
-					XCTAssertFalse(person.exists)
-				}
-			}
-			checkpoint("store-\(locale)-widget-\(family)", element: widget, croppedTo: nominal)
-		}
-	}
-
 	private func addPerson(index: Int, year: Int, month: Int, day: Int) {
 		XCTAssertTrue(app.buttons["person.add"].waitForExistence(timeout: 5))
 		app.buttons["person.add"].tap()
@@ -227,7 +209,8 @@ final class AppStoreScreenshotTests: XCTestCase {
 		let dayButton = picker.collectionViews.staticTexts[String(day)]
 		XCTAssertTrue(dayButton.waitForExistence(timeout: 5))
 		dayButton.tap()
-		// A tap on the dim layer below the centred calendar closes it.
+		// A tap low on the window closes the calendar: on the dim layer below a phone's centred card, or beside an iPad's
+		// popover.
 		app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.85)).tap()
 		XCTAssertTrue(picker.waitForNonExistence(timeout: 5))
 		XCTAssertEqual(control("editor.pin").value as? String, "1")
@@ -280,6 +263,36 @@ final class AppStoreScreenshotTests: XCTestCase {
 	/// Edit-mode switches are buttons that report their state as a "1"/"0" value.
 	private func control(_ identifier: String) -> XCUIElement {
 		app.descendants(matching: .any).matching(identifier: identifier).firstMatch
+	}
+}
+
+extension AppStoreScreenshotTests {
+	private func captureWidgets() {
+		var families = [("small", 1), ("medium", 3), ("large", 4)]
+		// iPad's own extra large widget gets its card too.
+		if UIDevice.current.userInterfaceIdiom == .pad { families.append(("extraLarge", 4)) }
+		for (family, count) in families {
+			relaunch(widgetFamily: family)
+			let widget = app.otherElements.matching(identifier: "widget.preview").firstMatch
+			XCTAssertTrue(widget.waitForExistence(timeout: 10))
+			// UITestWidgetPreview's sizes: a 6.3-inch iPhone's, and an 11-inch iPad's extra large one.
+			let nominal = [
+				"small": CGSize(width: 170, height: 170), "medium": CGSize(width: 364, height: 170),
+				"large": CGSize(width: 364, height: 382), "extraLarge": CGSize(width: 715, height: 342)
+			][family]!
+			// iPhone Duo's accessibility frame can extend past the drawn widget; the capture crops it to the real size.
+			XCTAssertGreaterThanOrEqual(widget.frame.width, nominal.width - 0.5)
+			XCTAssertGreaterThanOrEqual(widget.frame.height, nominal.height - 0.5)
+			for (index, name) in names.enumerated() {
+				let person = widget.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", name)).firstMatch
+				if index < count {
+					XCTAssertTrue(person.waitForExistence(timeout: 5))
+				} else {
+					XCTAssertFalse(person.exists)
+				}
+			}
+			checkpoint("store-\(locale)-widget-\(family)", element: widget, croppedTo: nominal)
+		}
 	}
 }
 

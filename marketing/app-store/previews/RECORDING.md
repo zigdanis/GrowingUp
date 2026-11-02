@@ -21,8 +21,9 @@ python3 marketing/app-store/previews/support/rebuild.py di en \
 
 ## Если нужна новая запись
 
-1. На Mac выбери отдельный совместимый simulator, держи включённым только один.
-   Использовали iOS 26.5: 17 Pro Max, 14 Plus, SE 3. Caffeinate сейчас запрещён
+1. Устройство, очередь и уборка — по Fleet-навыку `simulator-queue`
+   (`~/myai/fleet/skills/simulator-queue/SKILL.md`): общий пул MacPro, отдельных
+   симуляторов не создавать. Прежняя запись шла на iOS 26.5: 17 Pro Max, 14 Plus, SE 3. Caffeinate сейчас запрещён
    Данисом; запускать его можно только после нового разрешения.
 2. UI-сценарий — `GrowingUpUITests/AppStoreScreenshotTests.swift`:
    `testPrepareAppPreview` создаёт вымышленные EN/RU данные, затем
@@ -31,7 +32,7 @@ python3 marketing/app-store/previews/support/rebuild.py di en \
    `en`/`ru`, фото `docs/app-store-demo-photos`, отдельный DerivedData вне repo.
 3. `record-no-confetti.py` пишет нативный HEVC через simctl одновременно с одним
    UI-тестом; `PREVIEW_MARK` связывает сцены и запись. Конфетти отключали штатным
-   Reduce Motion только на task simulator, затем восстанавливали настройку.
+   Reduce Motion только на время записи, затем восстанавливали настройку.
    Старые UUID/рабочие пути в batch-скриптах — параметры прежней сессии; замени
    их на свои. Не запускай `capture-remaining.py` вслепую.
 4. `assemble.py` показывает принцип выбора сцен по markers. Исключай startup,
