@@ -14,7 +14,7 @@ def resource(identifier, **attributes):
 
 
 class FakeAPI:
-    """App Store Connect with an editable 3.1.0 that still has the 3.0.0 search fields."""
+    """App Store Connect with an editable 3.1.0 that still has the 3.0.0 search fields and a new en-GB copied from en-US."""
 
     def __init__(self):
         self.calls = []
@@ -25,9 +25,11 @@ class FakeAPI:
         self.locs = {
             "appStoreVersionLocalizations": [
                 resource("vl-us", locale="en-US", keywords="baby,kids", description="Kids grow up fast."),
+                resource("vl-gb", locale="en-GB", keywords="baby,kids", description="Kids grow up fast."),
                 resource("vl-ru", locale="ru", keywords="ребенок,дети", description="Дети растут быстро.")],
             "appInfoLocalizations": [
                 resource("il-us", locale="en-US", name="GrowingUp Watcher", subtitle="Exact age & birthday widgets"),
+                resource("il-gb", locale="en-GB", name="GrowingUp Watcher", subtitle="Exact age & birthday widgets"),
                 resource("il-ru", locale="ru", name="GrowingUp Watcher", subtitle="Точный возраст и дни рождения")],
         }
 
@@ -56,23 +58,28 @@ class ListingTests(unittest.TestCase):
     def test_committed_listing_is_valid(self):
         self.assertEqual(listing_tool.validate(self.listing), [])
 
-    def test_en_us_carries_the_russian_name_for_cis_search(self):
-        """Kazakhstan and the rest of the CIS search only en-US here, so the Russian name must be findable there."""
+    def test_en_gb_carries_the_russian_name_for_cis_search(self):
+        """Kazakhstan and the rest of the CIS search only en-GB, so the Russian name must be findable there."""
         locales = self.listing["localizations"]
-        carried = set(listing_tool.words(locales["en-US"]["keywords"]))
+        carried = set(listing_tool.words(locales["en-GB"]["keywords"]))
         for word in listing_tool.words(locales["ru"]["name"]):
             if word != "growingup" and len(word) > 1:
                 self.assertIn(word, carried)
         broken = copy.deepcopy(self.listing)
-        broken["localizations"]["en-US"]["keywords"] = "baby,widget"
-        self.assertTrue(any("Russian name" in p for p in listing_tool.validate(broken)))
+        broken["localizations"]["en-GB"]["keywords"] = "baby,widget"
+        self.assertTrue(any("en-GB" in p and "Russian name" in p for p in listing_tool.validate(broken)))
 
-    def test_requires_both_localizations(self):
-        for locale in ("en-US", "ru"):
+    def test_en_us_keeps_english_keywords(self):
+        """en-US is searched only where English is the point (United States, Canada, Japan)."""
+        keywords = self.listing["localizations"]["en-US"]["keywords"]
+        self.assertTrue(keywords.isascii(), keywords)
+
+    def test_requires_all_three_localizations(self):
+        for locale in ("en-US", "en-GB", "ru"):
             broken = copy.deepcopy(self.listing)
             del broken["localizations"][locale]
             self.assertIn(f"{locale}: localization is missing", listing_tool.validate(broken))
-        self.assertEqual(len(listing_tool.validate({"app_id": listing_tool.APP_ID, "localizations": {}})), 2)
+        self.assertEqual(len(listing_tool.validate({"app_id": listing_tool.APP_ID, "localizations": {}})), 3)
 
     def test_rejects_apple_limit_and_keyword_format_violations(self):
         broken = copy.deepcopy(self.listing)
@@ -94,21 +101,37 @@ class ListingTests(unittest.TestCase):
         self.assertEqual(by_target[("appInfoLocalizations", "ru")],
                          {"name": "GrowingUp: сколько лет и дней", "subtitle": "Возраст близких и дни рождения"})
         self.assertNotIn(("appInfoLocalizations", "en-US"), by_target, "en-US name and subtitle stay")
+        self.assertNotIn(("appInfoLocalizations", "en-GB"), by_target, "en-GB name and subtitle stay English")
         self.assertEqual(set(by_target[("appStoreVersionLocalizations", "en-US")]), {"keywords"})
+        self.assertEqual(by_target[("appStoreVersionLocalizations", "en-GB")],
+                         {"keywords": self.listing["localizations"]["en-GB"]["keywords"]})
+
+    def test_en_gb_mirrors_the_en_us_texts(self):
+        api = FakeAPI()
+        api.locs["appStoreVersionLocalizations"][0]["attributes"]["whatsNew"] = "Now on iPad."
+        changes = listing_tool.plan(self.listing, listing_tool.read_state(api))
+        gb = next(attributes for kind, _, locale, attributes in changes
+                  if kind == "appStoreVersionLocalizations" and locale == "en-GB")
+        self.assertEqual(gb["whatsNew"], "Now on iPad.")
+        self.assertNotIn("description", gb, "an equal text is not patched")
+        us = next(attributes for kind, _, locale, attributes in changes
+                  if kind == "appStoreVersionLocalizations" and locale == "en-US")
+        self.assertEqual(set(us), {"keywords"}, "en-US texts are never written")
 
     def test_apply_patches_then_reads_back_nothing_left(self):
         api = FakeAPI()
         state = listing_tool.read_state(api)
         listing_tool.apply(api, self.listing, state, listing_tool.plan(self.listing, state))
         self.assertTrue(all(call[0] == "PATCH" for call in api.calls))
-        self.assertEqual(len(api.calls), 3)
+        self.assertEqual(len(api.calls), 4)
         self.assertEqual(listing_tool.plan(self.listing, listing_tool.read_state(api)), [])
 
     def test_refuses_a_localization_missing_in_app_store_connect(self):
-        listing = copy.deepcopy(self.listing)
-        listing["localizations"]["en-GB"] = copy.deepcopy(listing["localizations"]["en-US"])
+        api = FakeAPI()
+        for kind in api.locs:
+            api.locs[kind] = [item for item in api.locs[kind] if item["attributes"]["locale"] != "en-GB"]
         with self.assertRaisesRegex(ValueError, "en-GB is missing"):
-            listing_tool.plan(listing, listing_tool.read_state(FakeAPI()))
+            listing_tool.plan(self.listing, listing_tool.read_state(api))
 
     def test_refuses_without_an_editable_version(self):
         api = FakeAPI()
