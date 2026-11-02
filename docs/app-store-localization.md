@@ -39,7 +39,7 @@ outside the US.
   adults, family, pets or a date such as the day you quit smoking. Its keywords target Russia, Ukraine and the
   US, where `ru` is indexed, and add those uses (родные, питомец, не курю, трезвость).
 - **`en-GB`** is the only index of the CIS storefronts. Its name and subtitle stay English, because English-language
-  devices in the UK, Europe and India read them, but all 100 characters of its keywords, which nobody sees, are
+  devices in the UK, Europe and India read them, but all its keyword room (99 of 100 characters), which nobody sees, is
   Russian: every word of the Russian name (сколько, лет, дней) plus the common forms of birthday, age, counter,
   calculator, child and "days since" queries (день, дни, рождения, возраст, возраста, счетчик, калькулятор,
   ребенок, малыш, отсчет, прошло). Russia and Ukraine index it next to `ru`, and Russian speakers in the Baltics,
