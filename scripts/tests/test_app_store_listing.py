@@ -99,7 +99,7 @@ class ListingTests(unittest.TestCase):
         changes = listing_tool.plan(self.listing, listing_tool.read_state(FakeAPI()))
         by_target = {(kind, locale): attributes for kind, _, locale, attributes in changes}
         self.assertEqual(by_target[("appInfoLocalizations", "ru")],
-                         {"name": "GrowingUp: сколько лет и дней", "subtitle": "Возраст близких и дни рождения"})
+                         {"name": "GrowingUp: кому сколько", "subtitle": "Возраст близких и дни рождения"})
         self.assertNotIn(("appInfoLocalizations", "en-US"), by_target, "en-US name and subtitle stay")
         self.assertNotIn(("appInfoLocalizations", "en-GB"), by_target, "en-GB name and subtitle stay English")
         self.assertEqual(set(by_target[("appStoreVersionLocalizations", "en-US")]), {"keywords"})

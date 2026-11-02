@@ -34,15 +34,15 @@ the United States, Canada and Japan lack it; they search `en-US` (Canada through
 Decided by Danis on 2026-11-02: Russian search in Kazakhstan and the CIS matters more than English keywords
 outside the US.
 
-- **`ru`** is what Russian speakers read in Russia, Ukraine, the CIS and the US. Its name, «GrowingUp: сколько
-  лет и дней», and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
+- **`ru`** is what Russian speakers read in Russia, Ukraine, the CIS and the US. Its name, «GrowingUp: кому
+  сколько», and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
   adults, family, pets or a date such as the day you quit smoking. Its keywords target Russia, Ukraine and the
   US, where `ru` is indexed, and add those uses (родные, питомец, не курю, трезвость).
 - **`en-GB`** is the only index of the CIS storefronts. Its name and subtitle stay English, because English-language
   devices in the UK, Europe and India read them, but all its keyword room (99 of 100 characters), which nobody sees, is
-  Russian: every word of the Russian name (сколько, лет, дней) plus the common forms of birthday, age, counter,
-  calculator, child and "days since" queries (день, дни, рождения, возраст, возраста, счетчик, калькулятор,
-  ребенок, малыш, отсчет, прошло). Russia and Ukraine index it next to `ru`, and Russian speakers in the Baltics,
+  Russian: every word of the Russian name (кому, сколько) plus the common forms of how-old, birthday, age, counter,
+  calculator, child and "days since" queries (лет, дней, день, дни, рождения, возраст, возраста, счетчик,
+  калькулятор, ребенок, отсчет, прошло). Russia and Ukraine index it next to `ru`, and Russian speakers in the Baltics,
   Israel or Germany find the app too. Its description, What's New and promotional text are copies of `en-US`, and its
   screenshots default to the primary language's.
 - **`en-US`** keeps English keywords. Outside the United States, Canada and Japan English searches match only the
@@ -91,6 +91,6 @@ then PATCH that with copies of the `en-US` description, What's New, promotional 
 versions inherit the localization.
 
 **After release** (indexing takes hours to two days), check per storefront, a few seconds apart:
-`https://itunes.apple.com/search?term=сколько+лет+и+дней&country=kz&entity=software` should list `1461697772`,
-as should «возраст», «день рождения» and «счетчик дней» in kz, by and ge, and «toddler» in us. On a Kazakhstan Apple ID with a Russian iPhone, the
-page should read «GrowingUp: сколько лет и дней» with the Russian screenshots.
+`https://itunes.apple.com/search?term=кому+сколько&country=kz&entity=software` should list `1461697772`,
+as should «сколько лет», «возраст», «день рождения» and «счетчик дней» in kz, by and ge, and «toddler» in us. On a Kazakhstan Apple ID with a Russian iPhone, the
+page should read «GrowingUp: кому сколько» with the Russian screenshots.
