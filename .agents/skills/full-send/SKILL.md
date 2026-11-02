@@ -49,4 +49,4 @@ A PR should open early. UI tests and captures run only when the developer reques
 - **Resume:** use the same tool's `status RUN_ID` or `resume RUN_ID` for an interrupted release, never a duplicate upload. Use `notes RUN_ID NOTES_JSON` for text-only corrections without rebuilding.
 - **Wait:** if Apple processing, beta review or phone confirmation is pending, report what's missing.
 - **Report:** share the PR, version/build, CI attempts and actual release status. For first delivery, ask the developer to confirm the build and notes on their phone before claiming completion.
-- **Devices:** close every Device panel connection opened for the task when its interactive check ends, including on failure or handoff. An open connection must have a stated active check and purpose. Keep it open only while that check runs or when the user asks; closing the panel does not require shutting down a shared simulator.
+- **Devices:** release simulators and Device panels as the Fleet `simulator-queue` skill says when the check ends, including on failure or handoff.
