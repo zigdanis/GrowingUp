@@ -32,7 +32,11 @@ struct FloatingCapsuleButton: View {
 		.lineLimit(1)
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
 		.accessibilityShowsLargeContentViewer()
-		.onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
+		.onGeometryChange(for: CGFloat.self) { geometry in
+			geometry.size.height
+		} action: { newHeight in
+			height = newHeight
+		}
 		withShadow(button)
 	}
 
