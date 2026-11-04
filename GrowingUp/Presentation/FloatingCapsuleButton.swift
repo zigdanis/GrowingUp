@@ -12,7 +12,9 @@ struct FloatingCapsuleButton: View {
 	let systemImage: String
 	let action: () -> Void
 	/// Where a zoom transition grows out of the button, if one does.
-	var zoomSource: (id: UUID?, namespace: Namespace.ID)? = nil
+	var zoomSource: (id: UUID?, namespace: Namespace.ID)?
+	/// The capsule's height, whose half rounds the iOS 18 transition source into the capsule.
+	@State private var height: CGFloat = 0
 
 	private static var shadowColor: Color { Color(uiColor: .appColor).opacity(0.4) }
 	private static let shadowRadius: CGFloat = 12
@@ -30,6 +32,7 @@ struct FloatingCapsuleButton: View {
 		.lineLimit(1)
 		.dynamicTypeSize(...DynamicTypeSize.accessibility1)
 		.accessibilityShowsLargeContentViewer()
+		.onGeometryChange(for: CGFloat.self) { $0.size.height } action: { height = $0 }
 		withShadow(button)
 	}
 
@@ -44,11 +47,11 @@ struct FloatingCapsuleButton: View {
 			} else {
 				// On iOS 18 the transition source is drawn on a rectangular plate clipped to its frame, which would show
 				// as a white rectangle behind the capsule and cut off its shadow. Styling the source itself as the
-				// capsule, with the shadow, avoids both.
+				// capsule, with the shadow, avoids both; the source clips only to rounded rectangles, so a capsule's radius.
 				button.matchedTransitionSource(id: zoomSource.id, in: zoomSource.namespace) { source in
 					source
 						.background(.clear)
-						.clipShape(.capsule)
+						.clipShape(.rect(cornerRadius: height / 2))
 						.shadow(color: Self.shadowColor, radius: Self.shadowRadius, x: 0, y: Self.shadowOffset)
 				}
 			}
