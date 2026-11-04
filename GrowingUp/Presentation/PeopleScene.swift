@@ -41,11 +41,12 @@ struct PeopleScene: View {
 							trailingPane: trailingPane)
 					} else if !presenter.isLoading, presenter.canAdd {
 						floating(
-							FloatingCapsuleButton(title: "Add person", systemImage: "plus", action: add)
-								.keyboardShortcut("n", modifiers: .command)
-								.accessibilityIdentifier("person.add")
-								// A new person's edit mode grows out of the button, which no selected person names.
-								.matchedTransitionSource(id: UUID?.none, in: zoom),
+							// A new person's edit mode grows out of the button, which no selected person names.
+							FloatingCapsuleButton(
+								title: "Add person", systemImage: "plus", action: add, zoomSource: (UUID?.none, zoom)
+							)
+							.keyboardShortcut("n", modifiers: .command)
+							.accessibilityIdentifier("person.add"),
 							trailingPane: trailingPane)
 					}
 				}
