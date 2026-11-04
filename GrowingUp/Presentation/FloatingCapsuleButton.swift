@@ -6,7 +6,7 @@ import SwiftUI
 /// It keeps to one line, growing up to a size that leaves the mosaic room; beyond it, a long press shows it in the large
 /// content viewer, like the edit mode's Cancel and Done.
 ///
-/// A `zoomSource` makes the button the source of a zoom transition, with its shadow kept on the source.
+/// A `zoomSource` makes the button the source of a zoom transition.
 struct FloatingCapsuleButton: View {
 	let title: LocalizedStringKey
 	let systemImage: String
@@ -40,6 +40,7 @@ struct FloatingCapsuleButton: View {
 		withShadow(button)
 	}
 
+	/// Casts the capsule's shadow and, with a `zoomSource`, makes the button that zoom's source.
 	@ViewBuilder
 	private func withShadow(_ button: some View) -> some View {
 		if let zoomSource {
@@ -50,14 +51,16 @@ struct FloatingCapsuleButton: View {
 					.matchedTransitionSource(id: zoomSource.id, in: zoomSource.namespace)
 			} else {
 				// On iOS 18 the transition source is drawn on a rectangular plate clipped to its frame, which would show
-				// as a white rectangle behind the capsule and cut off its shadow. Styling the source itself as the
-				// capsule, with the shadow, avoids both; the source clips only to rounded rectangles, so a capsule's radius.
-				button.matchedTransitionSource(id: zoomSource.id, in: zoomSource.namespace) { source in
-					source
-						.background(.clear)
-						.clipShape(.rect(cornerRadius: height / 2))
-						.shadow(color: Self.shadowColor, radius: Self.shadowRadius, x: 0, y: Self.shadowOffset)
-				}
+				// as a white rectangle behind the capsule and cut off a shadow inside it. The source is styled as the
+				// capsule instead (it clips only to rounded rectangles, so a capsule's radius), and the shadow is cast
+				// outside it.
+				button
+					.matchedTransitionSource(id: zoomSource.id, in: zoomSource.namespace) { source in
+						source
+							.background(.clear)
+							.clipShape(.rect(cornerRadius: height / 2))
+					}
+					.shadow(color: Self.shadowColor, radius: Self.shadowRadius, y: Self.shadowOffset)
 			}
 		} else {
 			button.shadow(color: Self.shadowColor, radius: Self.shadowRadius, y: Self.shadowOffset)
