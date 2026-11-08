@@ -365,6 +365,7 @@
 		C3C000000000000000000001 /* PeopleLibraryState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C000000000000000000002 /* PeopleLibraryState.swift */; };
 		C3C000000000000000000003 /* PeopleLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C000000000000000000004 /* PeopleLibrary.swift */; };
 		C3C000000000000000000005 /* PeopleLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C000000000000000000006 /* PeopleLibraryTests.swift */; };
+		C3C000000000000000000007 /* MosaicPicturesRetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C000000000000000000008 /* MosaicPicturesRetryTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -775,6 +776,7 @@
 		C3C000000000000000000002 /* PeopleLibraryState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleLibraryState.swift; sourceTree = "<group>"; };
 		C3C000000000000000000004 /* PeopleLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleLibrary.swift; sourceTree = "<group>"; };
 		C3C000000000000000000006 /* PeopleLibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleLibraryTests.swift; sourceTree = "<group>"; };
+		C3C000000000000000000008 /* MosaicPicturesRetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesRetryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1227,6 +1229,7 @@
 				0FAC532B12FC972DF7E1E427 /* PersonPageLayoutTests.swift */,
 				D5A049498DF599C96FA2807B /* CancelledSaveGateway.swift */,
 				6E9DA998137B36105ED7A7E9 /* MosaicPicturesPresenterTests.swift */,
+				C3C000000000000000000008 /* MosaicPicturesRetryTests.swift */,
 				C3C000000000000000000006 /* PeopleLibraryTests.swift */,
 				9EB6967799EF8CA1CB2C4E5A /* PeopleSelectionTests.swift */,
 				5BDCEC4C18D1BDE046EA7C3C /* PersonPictureCandidatesTests.swift */,
@@ -1948,6 +1951,7 @@
 				311B935BF60264652DF86B4A /* PersonPageLayoutTests.swift in Sources */,
 				B73E38BD21007ED8B98B2E3D /* CancelledSaveGateway.swift in Sources */,
 				3C8F9B0F06783D82F4EEFB4C /* MosaicPicturesPresenterTests.swift in Sources */,
+				C3C000000000000000000007 /* MosaicPicturesRetryTests.swift in Sources */,
 				C3C000000000000000000005 /* PeopleLibraryTests.swift in Sources */,
 				C33B75ADCA15896AD7E24D3C /* PeopleSelectionTests.swift in Sources */,
 				849221E116FFFE34DDE990EC /* PersonPictureCandidatesTests.swift in Sources */,
