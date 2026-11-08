@@ -41,7 +41,8 @@ public final class CoreDataStackImplementation: CoreDataStack {
 					} catch {
 						guard PersistentStoreRecovery.shouldBackUp(error as NSError) else { throw error }
 						Logging.logError(CoreError(error: error))
-						let backup = try SQLiteStoreBackup().moveStore(at: coordinatedURL)
+						let cause = PreservedStoreCause.incompatibleModel(code: (error as NSError).code)
+						let backup = try SQLiteStoreBackup().moveStore(at: coordinatedURL, cause: cause)
 						Logging.logWarning("Incompatible Core Data store preserved at \(backup.path)")
 						// Retry once on the same container, so callers receive the successfully loaded store.
 						try loadStore(container)
@@ -57,11 +58,20 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		}
 	}
 
-	private static func makeSharedContainer() throws -> NSPersistentContainer {
+	/// The App Group container the app and the widget share; photos lie at its top level.
+	static func appGroupDirectory() throws -> URL {
 		guard let appGroup = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Constants.appGroupId) else {
 			throw CoreError(message: "Failed to get App Group URL")
 		}
-		let url = appGroup.appendingPathComponent("Application Support/GrowingUp.sqlite")
+		return appGroup
+	}
+
+	static func storeURL(in appGroup: URL) -> URL {
+		appGroup.appendingPathComponent("Application Support/GrowingUp.sqlite")
+	}
+
+	private static func makeSharedContainer() throws -> NSPersistentContainer {
+		let url = storeURL(in: try appGroupDirectory())
 		try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
 		guard let modelURL = Bundle(for: CoreDataPerson.self).url(forResource: "GrowingUp", withExtension: "momd"),
 			let model = NSManagedObjectModel(contentsOf: modelURL)

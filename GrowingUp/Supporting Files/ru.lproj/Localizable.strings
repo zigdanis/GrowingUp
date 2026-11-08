@@ -194,3 +194,68 @@
 "Reorder" = "Переставить";
 "Move earlier" = "Переместить раньше";
 "Move later" = "Переместить позже";
+
+/* Earlier data that store recovery preserved */
+
+/* Corner capsule on the home screen while store recovery keeps earlier data aside */
+"Earlier data preserved" = "Прежние данные сохранены";
+
+/* VoiceOver hint of the earlier data capsule */
+"Shows what happened and lets you export a copy" = "Показывает, что произошло, и позволяет экспортировать копию";
+
+/* Title of the earlier data sheet */
+"Earlier data" = "Прежние данные";
+
+/* Row of one preserved copy when there are several; the date it was set aside */
+"Earlier data from %@" = "Прежние данные от %@";
+
+/* Headline of the earlier data sheet */
+"Your earlier people and photos are kept" = "Ваши прежние люди и фото сохранены";
+
+/* What store recovery did */
+"This version of GrowingUp couldn't open what was saved on this device before, so it set that data aside and started with an empty list. Nothing was deleted." = "Эта версия «Кому сколько» не смогла открыть данные, сохранённые на этом устройстве раньше, поэтому отложила их в сторону и начала с пустого списка. Ничего не удалено.";
+
+/* What the person can do about preserved data */
+"The app can't bring these people back by itself yet. A newer version may be able to. To be safe, export a copy now and keep it outside the app, for example in Files." = "Вернуть этих людей само приложение пока не может. Возможно, это получится в более новой версии. На всякий случай экспортируйте копию сейчас и храните её вне приложения, например в «Файлах».";
+
+/* When the earlier data was set aside */
+"Set aside" = "Отложены";
+
+/* Size of the preserved copy */
+"Size" = "Размер";
+
+/* Button that exports the preserved copy */
+"Export a copy…" = "Экспортировать копию…";
+
+/* Shown while the export archive is written */
+"Preparing the copy…" = "Подготовка копии…";
+
+/* VoiceOver value of the export button while it works */
+"Preparing the copy" = "Подготовка копии";
+
+/* Footer of the export button */
+"One file with your earlier people, their photos and a short note about what it contains. You choose where it goes; the app never sends it anywhere by itself." = "Один файл с прежними людьми, их фото и короткой запиской о содержимом. Куда его отправить, решаете вы: само приложение никуда его не отправляет.";
+
+/* Button that deletes the preserved copy */
+"Delete preserved copy…" = "Удалить сохранённую копию…";
+
+/* Title of the confirmation before deleting the preserved copy */
+"Delete the preserved copy?" = "Удалить сохранённую копию?";
+
+/* Message of the confirmation before deleting the preserved copy */
+"Your earlier people and photos will be gone from this device for good. Export a copy first if you haven't." = "Прежние люди и фото исчезнут с этого устройства навсегда. Если ещё не экспортировали копию, сделайте это сначала.";
+
+/* Destructive button of the confirmation before deleting the preserved copy */
+"Delete Copy" = "Удалить копию";
+
+/* Alert title when the export failed */
+"Couldn't export the copy" = "Не удалось экспортировать копию";
+
+/* Alert message when the export failed */
+"Your earlier data is still kept on this device. Free up some space and try again." = "Прежние данные по-прежнему сохранены на устройстве. Освободите место и попробуйте ещё раз.";
+
+/* Alert title when deleting the preserved copy failed */
+"Couldn't delete the copy" = "Не удалось удалить копию";
+
+/* Alert message when deleting the preserved copy failed */
+"Try again in a moment." = "Попробуйте ещё раз чуть позже.";

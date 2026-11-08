@@ -1,3 +1,4 @@
+import Core
 import StoreKit
 import SwiftUI
 
@@ -8,6 +9,11 @@ struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
 	@State private var pictures: MosaicPicturesPresenter
+	/// Earlier data store recovery set aside, which the corner capsule opens.
+	@State private var preserved: PreservedDataPresenter
+	@State private var showsPreservedData = false
+	/// Whether the people loaded; until then, and after a failed load, no loose photo file counts as unused.
+	@State private var peopleLoaded = false
 	@Namespace private var zoom
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
@@ -22,6 +28,8 @@ struct PeopleScene: View {
 		_presenter = Bindable(presenter)
 		self.preferredColorScheme = preferredColorScheme
 		_pictures = State(initialValue: MosaicPicturesPresenter(loadThumbnail: presenter.configurator.loadThumbnail))
+		_preserved = State(
+			initialValue: PreservedDataPresenter(gateway: presenter.configurator.preservedStores, analytics: presenter.configurator.analytics))
 	}
 
 	var body: some View {
@@ -32,6 +40,14 @@ struct PeopleScene: View {
 				layout: layout, spansFold: layout.spansFold(idiom: idiom), window: window, trailingInset: geometry.safeAreaInsets.trailing)
 			home(layout: layout, trailingPane: trailingPane)
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
+				.safeAreaInset(edge: .top, spacing: 8) {
+					if preserved.newest != nil {
+						HomeCornerButton { showsPreservedData = true }
+							.frame(maxWidth: .infinity, alignment: .trailing)
+							.padding(.horizontal, 16)
+							.transition(.opacity)
+					}
+				}
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
 					if presenter.isReordering {
@@ -54,7 +70,12 @@ struct PeopleScene: View {
 		// The mosaic has no text input; beside another app in Split View, its keyboard must not move it.
 		.ignoresSafeArea(.keyboard)
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
-		.task { await presenter.load() }
+		.task {
+			await presenter.load()
+			// A failed load sets its error before it returns.
+			peopleLoaded = !presenter.isLoading && presenter.error == nil
+			await preserved.refresh(people: loadedPeople)
+		}
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
@@ -64,7 +85,19 @@ struct PeopleScene: View {
 				// The viewer lies on photos, so it stays dark whatever the mosaic's theme.
 				.preferredColorScheme(.dark)
 		}
+		.sheet(isPresented: $showsPreservedData) {
+			PreservedDataSheet(presenter: preserved, people: loadedPeople)
+		}
+		// A widget link that opens a person takes the screen over.
+		.onChange(of: presenter.isViewing) { _, isViewing in
+			if isViewing { showsPreservedData = false }
+		}
 		.sceneError($presenter.error)
+		// The widget may have set a library aside while the app was away.
+		.onChange(of: scenePhase) { _, phase in
+			guard phase == .active else { return }
+			Task { await preserved.refresh(people: loadedPeople) }
+		}
 		.onChange(of: scenePhase, initial: true) { _, phase in
 			guard let prompter = presenter.configurator.reviewPrompter else { return }
 			switch phase {
@@ -105,6 +138,9 @@ struct PeopleScene: View {
 	}
 
 	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+
+	/// The people the active library holds, or nil unless they loaded.
+	private var loadedPeople: [Person]? { peopleLoaded ? presenter.persons : nil }
 
 	/// Opens the person with `id` in the viewer, with a light tap when their tile did open them.
 	private func openPerson(_ id: UUID) {

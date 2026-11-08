@@ -16,6 +16,8 @@ enum AnalyticsEvent: Equatable {
 	/// The app asked iOS for the App Store rating sheet; iOS alone decides whether it shows.
 	case reviewPromptRequested(
 		activeDays: Int, daysSinceFirstActive: Int, viewerVisits: Int, peopleWithPhotoCount: Int, requestNumber: Int)
+	/// The person chose to export a library that store recovery preserved, and the archive is ready to share.
+	case preservedDataExported
 
 	var name: String {
 		switch self {
@@ -32,6 +34,7 @@ enum AnalyticsEvent: Equatable {
 		case .personRemoved: "person_removed"
 		case .peopleReordered: "people_reordered"
 		case .reviewPromptRequested: "review_prompt_requested"
+		case .preservedDataExported: "preserved_data_exported"
 		}
 	}
 
@@ -49,7 +52,7 @@ enum AnalyticsEvent: Equatable {
 			["field": .string(Self.field(popover))]
 		case .photoPicked(let source):
 			["source": .string(Self.source(source))]
-		case .photoRemoved, .photoReframed, .widgetPictureFramed:
+		case .photoRemoved, .photoReframed, .widgetPictureFramed, .preservedDataExported:
 			[:]
 		case .personSaved(let person):
 			[

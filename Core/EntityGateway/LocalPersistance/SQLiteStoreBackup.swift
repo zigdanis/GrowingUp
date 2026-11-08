@@ -3,8 +3,9 @@ import Foundation
 struct SQLiteStoreBackup {
 	var moveItem: (URL, URL) throws -> Void = FileManager.default.moveItem(at:to:)
 
-	/// Keep the SQLite family together in a unique, timestamped sibling directory. No store files are deleted.
-	func moveStore(at url: URL, date: Date = Date()) throws -> URL {
+	/// Keep the SQLite family together in a unique, timestamped sibling directory. No store files are deleted. The
+	/// folder's `PreservedStoreManifest` notes `cause` before any file moves, so even an interrupted move keeps it.
+	func moveStore(at url: URL, cause: PreservedStoreCause = .unknown, date: Date = Date()) throws -> URL {
 		let manager = FileManager.default
 		let parent = url.deletingLastPathComponent()
 		let names = try manager.contentsOfDirectory(atPath: parent.path)
@@ -14,6 +15,12 @@ struct SQLiteStoreBackup {
 		let timestamp = ISO8601DateFormatter().string(from: date).replacingOccurrences(of: ":", with: "-")
 		let backup = parent.appendingPathComponent("\(url.lastPathComponent).backup-\(timestamp)-\(UUID().uuidString)", isDirectory: true)
 		try manager.createDirectory(at: backup, withIntermediateDirectories: false)
+		// The note only explains the backup; failing to write it must not stop the store from being preserved.
+		do {
+			try PreservedStoreManifest(preservedAt: date, cause: cause).write(in: backup)
+		} catch {
+			Logging.logError(CoreError(error: error))
+		}
 		// The atomic journal precedes every move and survives process termination. Every loader
 		// resumes it under SQLiteStoreAccess before touching SQLite, even if the WAL moved first.
 		let journal = url.appendingPathExtension("recovery")
@@ -71,6 +78,14 @@ struct SQLiteStoreBackup {
 			try moveItem(source, backup.appendingPathComponent(source.lastPathComponent))
 		}
 		try manager.removeItem(at: journal)
+		// A move begun by an earlier version of the app left no note of its cause.
+		if (try? PreservedStoreManifest.read(in: backup)) == nil {
+			do {
+				try PreservedStoreManifest(preservedAt: Date(), cause: .interrupted).write(in: backup)
+			} catch {
+				Logging.logError(CoreError(error: error))
+			}
+		}
 		return backup
 	}
 }

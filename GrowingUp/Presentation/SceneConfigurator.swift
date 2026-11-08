@@ -19,15 +19,18 @@ struct SceneConfigurator {
 	let analytics: AnalyticsGateway
 	/// Times the App Store rating request; nil where the app never asks: tests, previews and verification launches.
 	let reviewPrompter: ReviewPrompter?
+	/// The earlier libraries store recovery set aside; nil where there are none to find: tests, previews and UI tests.
+	let preservedStores: PreservedStoreGateway?
 
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
-		reviewPrompter: ReviewPrompter? = nil
+		reviewPrompter: ReviewPrompter? = nil, preservedStores: PreservedStoreGateway? = nil
 	) {
 		self.analytics = analytics
+		self.preservedStores = preservedStores
 		self.reviewPrompter = reviewPrompter
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
@@ -56,6 +59,6 @@ struct SceneConfigurator {
 		let reviewPrompter = ReviewPromptMode.current().map { ReviewPrompter(store: ReviewPromptStore(), mode: $0) }
 		return SceneConfigurator(
 			gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics,
-			reviewPrompter: reviewPrompter)
+			reviewPrompter: reviewPrompter, preservedStores: try? PreservedStoreLibrary.shared())
 	}
 }

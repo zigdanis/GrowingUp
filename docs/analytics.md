@@ -28,6 +28,7 @@ every name, key and text value a snake_case word.
 | `person_removed` | `people_count` | A person is removed |
 | `people_reordered` | `people_count` | A new mosaic order is stored |
 | `review_prompt_requested` | `active_days`, `days_since_first_active`, `viewer_visits`, `people_with_photo_count`, `request_number` | The app asked iOS for the App Store rating sheet; iOS decides whether it shows ([rating prompt](rating-prompt.md)) |
+| `preserved_data_exported` | – | The archive of a library that store recovery preserved is ready in the share sheet; the person decides where it goes |
 
 PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events and, to every
 event, its anonymous installation ID, device model and screen size, OS and app version, language,
@@ -40,7 +41,10 @@ context (`test` for TestFlight, `app store`). The same counts travel to Sentry
 as the `app_state` context, and every product event becomes a Sentry breadcrumb.
 
 Handled failures (`AnalyticsFailure`) go to Sentry only, tagged with `operation`: `load_people`,
-`save_order`, `load_widget_people`, `save_person`, `remove_person`, `load_photo`. Only the error's
+`save_order`, `load_widget_people`, `save_person`, `remove_person`, `load_photo`, and for libraries that
+store recovery set aside: `recover_store` (once per preserved library; the error is only the cause's category,
+the Core Data code such as `NSCocoaErrorDomain 134100`, or `pro.ziganshin.GrowingUp.PreservedStore` 0 for unknown and
+1 for an interrupted recovery), `preserve_photos`, `read_preserved_data`, `export_preserved_data` and `delete_preserved_data`. Only the error's
 domain, code and Swift type travel (`AnalyticsFailure.sanitizedError`): a Core Data error can carry
 the failing record, and a `CoreError` message can quote one. A `CoreError` keeps the domain and code
 of the error it wraps (`underlyingDomain`, `underlyingCode`), so different causes stay apart. Cancellation and the six-person widget

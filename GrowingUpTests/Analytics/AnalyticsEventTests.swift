@@ -22,7 +22,8 @@ final class AnalyticsEventTests: XCTestCase {
 			.birthdayPickerOpened(.time), .photoPicked(source: .photos), .photoPicked(source: .camera), .photoRemoved,
 			.photoReframed, .widgetPictureFramed, .personSaved(saved), .personRemoved(peopleCount: 2),
 			.peopleReordered(peopleCount: 3),
-			.reviewPromptRequested(activeDays: 3, daysSinceFirstActive: 7, viewerVisits: 5, peopleWithPhotoCount: 2, requestNumber: 1)
+			.reviewPromptRequested(activeDays: 3, daysSinceFirstActive: 7, viewerVisits: 5, peopleWithPhotoCount: 2, requestNumber: 1),
+			.preservedDataExported
 		]
 		let snakeCase = /^[a-z]+(_[a-z]+)*$/
 		for event in events {
@@ -34,7 +35,7 @@ final class AnalyticsEventTests: XCTestCase {
 				}
 			}
 		}
-		XCTAssertEqual(Set(events.map(\.name)).count, 13, "Every event has its own name")
+		XCTAssertEqual(Set(events.map(\.name)).count, 14, "Every event has its own name")
 	}
 
 	func testASavedPersonIsDescribedByFlagsAndCountsOnly() {
