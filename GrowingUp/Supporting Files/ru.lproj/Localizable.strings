@@ -78,7 +78,7 @@
 "Take a photo" = "Сделать фото";
 
 /* Message shown before the system camera permission prompt, explaining what the camera is used for */
-"GrowingUp uses your camera to take a picture for this person." = "GrowingUp использует камеру, чтобы сделать фото для этого человека.";
+"GrowingUp uses your camera to take a picture for this person." = "«Кому сколько» использует камеру, чтобы сделать фото для этого человека.";
 
 /* Button that continues to the system camera permission prompt */
 "Continue" = "Продолжить";
