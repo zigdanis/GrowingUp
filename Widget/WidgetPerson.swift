@@ -6,9 +6,11 @@ struct WidgetPerson: Identifiable {
 	let index: Int
 	let name: String
 	let birthday: Date
-	/// The widget image with the legibility scrims drawn in, made once so tiles never redraw it.
+	/// The widget image as stored, without scrims; `nil` when the person has no photo.
 	let photo: UIImage?
-	/// What a Home Screen tile shows: the photo, or the person's monogram when they have none, with the same scrims.
+	/// The photo, or the person's monogram when they have none, without scrims: what the Lock Screen widget shows in a circle.
+	let avatar: UIImage
+	/// What a Home Screen tile shows: the avatar with the legibility scrims drawn in, made once so tiles never redraw it.
 	let tilePicture: UIImage
 
 	var deepLinkURL: URL {
@@ -20,7 +22,8 @@ struct WidgetPerson: Identifiable {
 		self.index = index
 		self.name = name
 		self.birthday = birthday
-		photo = image.map(PhotoScrim.apply)
-		tilePicture = photo ?? PhotoScrim.apply(to: MonogramPicture.draw(id: id, name: name))
+		photo = image
+		avatar = image ?? MonogramPicture.draw(id: id, name: name)
+		tilePicture = PhotoScrim.apply(to: avatar)
 	}
 }

@@ -6,7 +6,7 @@
 
 	/// Exercises the extension's actual rendering against the isolated UI-test store.
 	/// WidgetKit Home Screen and Lock Screen hosting still needs a device check. The app cannot set
-	/// `widgetRenderingMode`, so the Lock Screen families render in their full-color StandBy look.
+	/// `widgetRenderingMode`, so the Lock Screen widget renders in its full-color StandBy look.
 	struct UITestWidgetPreview: View {
 		let configurator: SceneConfigurator
 		let familyName: String
@@ -17,15 +17,13 @@
 			case "small": .systemSmall
 			case "medium": .systemMedium
 			case "extraLarge": .systemExtraLarge
-			case "circular": .accessoryCircular
 			case "rectangular": .accessoryRectangular
-			case "inline": .accessoryInline
 			default: .systemLarge
 			}
 		}
 
 		private var isLockScreen: Bool {
-			[.accessoryCircular, .accessoryRectangular, .accessoryInline].contains(family)
+			family == .accessoryRectangular
 		}
 
 		/// Home Screen widget sizes of a 6.3-inch iPhone; the extra large one, iPad's only, of an 11-inch iPad.
@@ -38,14 +36,8 @@
 			}
 		}
 
-		/// Lock Screen widget sizes of a 6.3-inch iPhone.
-		private var lockScreenSize: CGSize {
-			switch family {
-			case .accessoryCircular: CGSize(width: 76, height: 76)
-			case .accessoryInline: CGSize(width: 257, height: 26)
-			default: CGSize(width: 172, height: 76)
-			}
-		}
+		/// The Lock Screen widget's size on a 6.3-inch iPhone.
+		private let lockScreenSize = CGSize(width: 172, height: 76)
 
 		var body: some View {
 			ZStack {
@@ -74,7 +66,7 @@
 		private func widget(_ entry: AgeEntry) -> some View {
 			if isLockScreen {
 				// White content, as on a dark Lock Screen.
-				LockScreenWidgetContentView(entry: LockScreenEntry(date: entry.date, person: entry.persons.first), family: family)
+				LockScreenWidgetContentView(entry: LockScreenEntry(date: entry.date, person: entry.persons.first))
 					.frame(width: lockScreenSize.width, height: lockScreenSize.height)
 					.environment(\.colorScheme, .dark)
 			} else {
