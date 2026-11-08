@@ -203,3 +203,28 @@
 "Reorder" = "Reorder";
 "Move earlier" = "Move earlier";
 "Move later" = "Move later";
+
+/* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
+"On your Home Screen too" = "On your Home Screen too";
+"A widget with your people's photos and ages" = "A widget with your people's photos and ages";
+"Widget with photos and ages of your people" = "A widget with your people's photos and ages";
+"See how ›" = "See how ›";
+/* VoiceOver: the hint's link and its close action. */
+"See how" = "See how";
+"Close" = "Close";
+
+/* Widget guide sheet. "Edit", "Add Widget" and "Customize" must match the system's own Home Screen titles. */
+"GrowingUp widgets" = "GrowingUp widgets";
+"Where" = "Where";
+"Home Screen" = "Home Screen";
+"Today View" = "Today View";
+"Touch and hold an empty spot on your Home Screen" = "Touch and hold an empty spot on your Home Screen";
+"Tap Edit, then Add Widget" = "Tap Edit, then Add Widget";
+"Find GrowingUp" = "Find GrowingUp";
+"Pick a size and tap Add Widget" = "Pick a size and tap Add Widget";
+"On your first Home Screen page, swipe right" = "On your first Home Screen page, swipe right";
+"Touch and hold an empty spot, tap Edit, then Add Widget" = "Touch and hold an empty spot, tap Edit, then Add Widget";
+"Add Widget" = "Add Widget";
+"Customize" = "Customize";
+/* The widget's description in the system widget gallery, as the guide's picture shows it. */
+"See up to six pinned people and their live age." = "See up to six pinned people and their live age.";

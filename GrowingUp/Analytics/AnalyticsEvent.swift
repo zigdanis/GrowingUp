@@ -16,6 +16,12 @@ enum AnalyticsEvent: Equatable {
 	/// The app asked iOS for the App Store rating sheet; iOS alone decides whether it shows.
 	case reviewPromptRequested(
 		activeDays: Int, daysSinceFirstActive: Int, viewerVisits: Int, peopleWithPhotoCount: Int, requestNumber: Int)
+	/// The mosaic shows the Home Screen widget hint on this launch; `shownLaunches` counts this one.
+	case widgetHintShown(shownLaunches: Int)
+	/// The hint was tapped and the widget guide opened.
+	case widgetHintOpened(shownLaunches: Int)
+	/// × closed the hint.
+	case widgetHintDismissed(shownLaunches: Int)
 
 	var name: String {
 		switch self {
@@ -32,6 +38,9 @@ enum AnalyticsEvent: Equatable {
 		case .personRemoved: "person_removed"
 		case .peopleReordered: "people_reordered"
 		case .reviewPromptRequested: "review_prompt_requested"
+		case .widgetHintShown: "widget_hint_shown"
+		case .widgetHintOpened: "widget_hint_opened"
+		case .widgetHintDismissed: "widget_hint_dismissed"
 		}
 	}
 
@@ -72,6 +81,8 @@ enum AnalyticsEvent: Equatable {
 				"people_with_photo_count": .int(peopleWithPhotoCount),
 				"request_number": .int(requestNumber)
 			]
+		case .widgetHintShown(let shownLaunches), .widgetHintOpened(let shownLaunches), .widgetHintDismissed(let shownLaunches):
+			["shown_launches": .int(shownLaunches)]
 		}
 	}
 

@@ -28,6 +28,9 @@ every name, key and text value a snake_case word.
 | `person_removed` | `people_count` | A person is removed |
 | `people_reordered` | `people_count` | A new mosaic order is stored |
 | `review_prompt_requested` | `active_days`, `days_since_first_active`, `viewer_visits`, `people_with_photo_count`, `request_number` | The app asked iOS for the App Store rating sheet; iOS decides whether it shows ([rating prompt](rating-prompt.md)) |
+| `widget_hint_shown` | `shown_launches` | The mosaic shows the Home Screen widget hint on this launch, counted once per launch ([widget hint](widget-hint.md)) |
+| `widget_hint_opened` | `shown_launches` | The widget hint was tapped and the "GrowingUp widgets" sheet opened |
+| `widget_hint_dismissed` | `shown_launches` | × closed the widget hint |
 
 PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events and, to every
 event, its anonymous installation ID, device model and screen size, OS and app version, language,

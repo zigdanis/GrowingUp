@@ -24,8 +24,8 @@ So the moment is the end of a visit: the user closes the viewer, after it showed
 Only time in the foreground counts toward the 3 seconds. The request comes **2 seconds** after the viewer has
 zoomed back into the mosaic. If meanwhile the app stops being active (Control Center, a notification, the app
 switcher), the viewer or a new person's page is open
-again, the mosaic is being reordered, or an alert shows, the moment is skipped and a later
-visit can try again.
+again, the mosaic is being reordered, an alert shows, or the mosaic shows the
+[Home Screen widget hint](widget-hint.md), the moment is skipped and a later visit can try again.
 
 The request never lands on the viewer, so it never covers a birthday celebration, and since birthdays play no
 part in the rules its timing says nothing about anyone's birthday.

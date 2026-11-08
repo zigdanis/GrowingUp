@@ -203,3 +203,28 @@
 "Reorder" = "Переставить";
 "Move earlier" = "Переместить раньше";
 "Move later" = "Переместить позже";
+
+/* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
+"On your Home Screen too" = "И на экране «Домой»";
+"A widget with your people's photos and ages" = "Виджет с фото и возрастом ваших близких";
+"Widget with photos and ages of your people" = "Виджет с фото и возрастом близких";
+"See how ›" = "Как добавить ›";
+/* VoiceOver: the hint's link and its close action. */
+"See how" = "Как добавить";
+"Close" = "Закрыть";
+
+/* Widget guide sheet. "Edit", "Add Widget" and "Customize" must match the system's own Home Screen titles. */
+"GrowingUp widgets" = "Виджеты GrowingUp";
+"Where" = "Где";
+"Home Screen" = "Экран «Домой»";
+"Today View" = "Экран «Сегодня»";
+"Touch and hold an empty spot on your Home Screen" = "Удерживайте палец на пустом месте экрана «Домой»";
+"Tap Edit, then Add Widget" = "Нажмите «Изменить», затем «Добавить виджет»";
+"Find GrowingUp" = "Найдите GrowingUp";
+"Pick a size and tap Add Widget" = "Выберите размер и нажмите «Добавить виджет»";
+"On your first Home Screen page, swipe right" = "На первом экране «Домой» смахните вправо";
+"Touch and hold an empty spot, tap Edit, then Add Widget" = "Удерживайте пустое место, нажмите «Изменить» → «Добавить виджет»";
+"Add Widget" = "Добавить виджет";
+"Customize" = "Настроить";
+/* The widget's description in the system widget gallery, as the guide's picture shows it. */
+"See up to six pinned people and their live age." = "До шести человек и их возраст в виджете.";
