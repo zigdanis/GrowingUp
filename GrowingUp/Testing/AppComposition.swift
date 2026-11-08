@@ -46,10 +46,18 @@ enum AppComposition {
 			let gateway = CachePersonsGateway(coreDataGateway: failureGateway, imageStore: images)
 			let clockStarted = Date()
 			let clockRuns = environment["GROWINGUP_BIRTHDAY_CLOCK_RUNNING"] == "1"
+			let now = { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) }
+			let analytics = NoopAnalyticsGateway()
+			// Only a forced check shows the widget hint here; it stores nothing and looks up no widget.
+			let widgetHinter =
+				WidgetHintMode.current(environment: environment) == .forced
+				? WidgetHinter(
+					store: WidgetHintStore(), usage: { ReviewPromptState() }, mode: .forced, lookUpWidget: { nil }, analytics: analytics,
+					now: now)
+				: nil
 			return SceneConfigurator(
 				gateway: gateway, loadImage: images.load, loadOriginal: images.loadOriginal, loadThumbnail: images.loadThumbnail,
-				now: { clockDate.addingTimeInterval(clockRuns ? Date().timeIntervalSince(clockStarted) : 0) },
-				photoFixtures: photoFixtures)
+				now: now, photoFixtures: photoFixtures, analytics: analytics, widgetHinter: widgetHinter)
 		}
 
 		private static func photoFixtures(environment: [String: String]) throws -> [UIImage] {

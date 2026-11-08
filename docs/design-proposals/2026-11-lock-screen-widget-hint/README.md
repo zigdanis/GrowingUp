@@ -28,6 +28,6 @@ Shown only when at least one person has "Widget" on, from the second day of use,
 - The "How to add" sheet has a Home Screen tab and a Today View tab: an illustration that acts out each step (long press, Edit → Add Widget, search GrowingUp, pick a size) and four numbered steps using the system's own button names.
 - The Lock Screen widget keeps only the rectangular family, now with a round photo; the ring and the inline family go. That change ships in its own PR, without any hint or instructions.
 
-## Next step
+## Status
 
-Danis approves the round 2 sheet; the implementation then lands in this PR.
+Danis approved round 2 on 8 November 2026. The implementation lands in this PR; [docs/widget-hint.md](../../widget-hint.md) describes how it works.

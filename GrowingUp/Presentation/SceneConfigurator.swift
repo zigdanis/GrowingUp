@@ -19,16 +19,20 @@ struct SceneConfigurator {
 	let analytics: AnalyticsGateway
 	/// Times the App Store rating request; nil where the app never asks: tests, previews and verification launches.
 	let reviewPrompter: ReviewPrompter?
+	/// Shows the Home Screen widget hint on the mosaic; nil where it never shows: tests, previews and verification
+	/// launches other than `GROWINGUP_WIDGET_HINT=force`.
+	let widgetHinter: WidgetHinter?
 
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
-		reviewPrompter: ReviewPrompter? = nil
+		reviewPrompter: ReviewPrompter? = nil, widgetHinter: WidgetHinter? = nil
 	) {
 		self.analytics = analytics
 		self.reviewPrompter = reviewPrompter
+		self.widgetHinter = widgetHinter
 		self.loadImage = loadImage
 		self.loadOriginal = loadOriginal
 		self.loadThumbnail = loadThumbnail
@@ -48,14 +52,30 @@ struct SceneConfigurator {
 			person: person, addUseCase: addUseCase, editUseCase: editUseCase,
 			removeUseCase: removeUseCase, fetchUseCase: fetchUseCase,
 			now: now(), loadImage: loadImage, loadOriginal: loadOriginal, photoFixtures: photoFixtures, analytics: analytics,
-			onError: { [weak reviewPrompter] in reviewPrompter?.noteSetback() }, onMutation: onMutation)
+			onError: { [weak reviewPrompter, weak widgetHinter] in
+				reviewPrompter?.noteSetback()
+				widgetHinter?.noteSetback()
+			}, onMutation: onMutation)
+	}
+
+	/// An alert or a removal: the session is no moment for a rating request or the widget hint.
+	func noteSetback() {
+		reviewPrompter?.noteSetback()
+		widgetHinter?.noteSetback()
 	}
 
 	static func live(analytics: AnalyticsGateway) -> SceneConfigurator {
 		let gateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
-		let reviewPrompter = ReviewPromptMode.current().map { ReviewPrompter(store: ReviewPromptStore(), mode: $0) }
+		let reviewStore = ReviewPromptStore()
+		let reviewPrompter = ReviewPromptMode.current().map { ReviewPrompter(store: reviewStore, mode: $0) }
+		// The hint counts days and visits as the rating prompt stores them.
+		let widgetHinter = WidgetHintMode.current().map {
+			WidgetHinter(
+				store: WidgetHintStore(), usage: { reviewStore.state }, mode: $0,
+				lookUpWidget: InstalledWidgetLookup.isHomeScreenWidgetInstalled, analytics: analytics)
+		}
 		return SceneConfigurator(
 			gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics,
-			reviewPrompter: reviewPrompter)
+			reviewPrompter: reviewPrompter, widgetHinter: widgetHinter)
 	}
 }

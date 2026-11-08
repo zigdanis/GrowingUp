@@ -5,11 +5,12 @@
 //  Entry point for the GrowingUp WidgetKit extension.
 //
 
+import Core
 import SwiftUI
 import WidgetKit
 
 struct GrowingUpWidget: Widget {
-	let kind = "pro.ziganshin.GrowingUp.Widget"
+	let kind = Constants.homeScreenWidgetKind
 
 	var body: some WidgetConfiguration {
 		// The entry view chooses its container background per family: the person's photo in the small widget.

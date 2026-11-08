@@ -21,9 +21,9 @@ final class PeoplePresenter {
 	/// The open editing session, a new or an existing person's, which the cover shows as its in-place edit mode. Only this
 	/// session moves the navigation when its change lands; see `apply(_:from:)`.
 	private(set) var editor: PersonEditorPresenter?
-	/// The alert the mosaic shows; after one, the session is no moment to ask for a rating.
+	/// The alert the mosaic shows; after one, the session is no moment to ask for a rating or show the widget hint.
 	var error: SceneError? {
-		didSet { if error != nil { configurator.reviewPrompter?.noteSetback() } }
+		didSet { if error != nil { configurator.noteSetback() } }
 	}
 	private(set) var isLoading = true
 	/// Whether a long press put the mosaic in reordering, where tiles drag to new places instead of opening the viewer.
@@ -323,7 +323,7 @@ final class PeoplePresenter {
 			persons.sort()
 			if ownsNavigation { selectedID = person.id }
 		case .removed(let person):
-			configurator.reviewPrompter?.noteSetback()
+			configurator.noteSetback()
 			storedOrders[person.id] = nil
 			// Back on the mosaic, where the missing tile shows what was removed; a neighbour's page would hide it. A viewer
 			// a widget link opened on the removed person closes too, as nothing is left to show.
