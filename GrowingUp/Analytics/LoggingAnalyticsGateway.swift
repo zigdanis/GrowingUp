@@ -11,7 +11,7 @@ final class LoggingAnalyticsGateway: AnalyticsGateway {
 	}
 
 	func report(_ failure: AnalyticsFailure) {
-		let reason = failure.sanitizedError.localizedDescription
+		let reason = ([failure.sanitizedError.localizedDescription] + failure.causes).joined(separator: " ← ")
 		Self.logger.error("failure \(failure.operation, privacy: .public): \(reason, privacy: .public)")
 	}
 

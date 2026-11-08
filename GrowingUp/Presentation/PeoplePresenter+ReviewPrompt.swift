@@ -5,8 +5,8 @@ extension PeoplePresenter {
 	/// request, the app is active, nothing went wrong meanwhile, and the mosaic shows with nothing over it, not even the
 	/// widget hint. A request that may not go is dropped, and a later visit can try again; one that goes is recorded here.
 	func takeReviewRequest(_ request: UUID) -> Bool {
-		guard let prompter = configurator.reviewPrompter, prompter.takeRequest(request), !isLoading, !isViewing, editor == nil,
-			!isReordering, error == nil, !reservesWidgetHint
+		guard let prompter = configurator.reviewPrompter, prompter.takeRequest(request), library.state == .loaded, !isViewing,
+			editor == nil, !isReordering, error == nil, !reservesWidgetHint
 		else { return false }
 		configurator.analytics.track(prompter.recordRequest(people: persons))
 		return true

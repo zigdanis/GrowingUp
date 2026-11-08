@@ -100,6 +100,35 @@ final class AnalyticsEventTests: XCTestCase {
 		XCTAssertTrue(sanitized.localizedDescription.contains("CoreError"))
 	}
 
+	/// A failed migration says why only in the errors underneath it, such as a full disk or a busy SQLite file.
+	func testAReportedErrorNamesTheCausesUnderneathWithoutTheirText() {
+		let sqlite = NSError(domain: NSSQLiteErrorDomain, code: 5, userInfo: [NSLocalizedDescriptionKey: "Ada Lovelace is busy"])
+		let file = NSError(
+			domain: NSCocoaErrorDomain, code: NSFileWriteOutOfSpaceError,
+			userInfo: [NSUnderlyingErrorKey: sqlite, NSFilePathErrorKey: "/Ada Lovelace.sqlite"])
+		let validation = NSError(
+			domain: NSCocoaErrorDomain, code: NSValidationMissingMandatoryPropertyError,
+			userInfo: ["NSValidationErrorObject": "Ada Lovelace"])
+		let migration = NSError(
+			domain: NSCocoaErrorDomain, code: NSMigrationError,
+			userInfo: [
+				NSUnderlyingErrorKey: file, NSDetailedErrorsKey: [validation], NSSQLiteErrorDomain: 13,
+				NSLocalizedDescriptionKey: "Ada Lovelace could not migrate"
+			])
+		let failure = AnalyticsFailure(operation: "load_people", error: migration)
+		XCTAssertEqual(
+			failure.causes,
+			[
+				"\(NSCocoaErrorDomain) \(NSFileWriteOutOfSpaceError)",
+				"\(NSCocoaErrorDomain) \(NSValidationMissingMandatoryPropertyError)",
+				"\(NSSQLiteErrorDomain) 13",
+				"\(NSSQLiteErrorDomain) 5"
+			])
+		XCTAssertEqual(failure.sanitizedError.code, NSMigrationError, "The failure still groups by its own code")
+		XCTAssertFalse(failure.causes.joined().contains("Ada"))
+		XCTAssertEqual(AnalyticsFailure(operation: "save_person", error: CoreError(message: "Ada")).causes, [])
+	}
+
 	func testContextCarriesCountsOnly() {
 		XCTAssertEqual(
 			AnalyticsContext(peopleCount: 4, widgetPeopleCount: 2).properties,

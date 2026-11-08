@@ -5,7 +5,7 @@ extension PeoplePresenter {
 	/// Whether the Home Screen widget hint keeps its place in the mosaic. Reordering hides the strip but keeps its place,
 	/// so no tile moves as a long press lifts one.
 	var reservesWidgetHint: Bool {
-		!isLoading && configurator.widgetHinter?.offers(people: persons) == true
+		library.state == .loaded && configurator.widgetHinter?.offers(people: persons) == true
 	}
 
 	/// Whether the mosaic shows the widget hint now.
@@ -29,7 +29,7 @@ extension PeoplePresenter {
 	/// Gives the widget hint its place in the mosaic when its rules allow it; only while the mosaic is off screen, as
 	/// before it first shows or while the viewer covers it, so the strip never appears in front of the user.
 	func revealWidgetHint() {
-		guard !isLoading else { return }
+		guard library.state == .loaded else { return }
 		configurator.widgetHinter?.reveal(people: persons)
 	}
 

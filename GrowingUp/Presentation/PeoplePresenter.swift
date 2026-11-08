@@ -25,7 +25,8 @@ final class PeoplePresenter {
 	var error: SceneError? {
 		didSet { if error != nil { configurator.noteSetback() } }
 	}
-	private(set) var isLoading = true
+	/// Whether the people are read yet; until then the mosaic offers no first person, as the library may not be empty.
+	let library: PeopleLibrary
 	/// Whether a long press put the mosaic in reordering, where tiles drag to new places instead of opening the viewer.
 	private(set) var isReordering = false
 	/// The latest order being stored; each save waits for the one before, so the store ends in the last order shown.
@@ -45,6 +46,7 @@ final class PeoplePresenter {
 	init(configurator: SceneConfigurator, reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() }) {
 		self.configurator = configurator
 		self.reloadWidgets = reloadWidgets
+		library = PeopleLibrary(fetch: configurator.fetchUseCase.fetchPersons, analytics: configurator.analytics)
 	}
 
 	var canAdd: Bool { persons.count < Constants.peopleLimit }
@@ -55,23 +57,24 @@ final class PeoplePresenter {
 		return inPlaceEditMode
 	}
 
+	/// Reads the people until a read succeeds, such as at launch, from Retry or on return to the app; once they are
+	/// loaded, the presenter keeps them itself and a later call changes nothing, whatever is open.
 	func load() async {
-		do {
-			persons = try await configurator.fetchUseCase.fetchPersons().sorted()
+		guard let result = await library.read() else { return }
+		switch result {
+		case .success(let loaded):
+			persons = loaded.sorted()
 			storedOrders = Dictionary(persons.map { ($0.id, $0.displayOrder) }, uniquingKeysWith: { first, _ in first })
-			isLoading = false
 			configurator.analytics.update(AnalyticsContext(people: persons))
 			selectWidgetPerson()
 			if pendingAdd { addFromWidget() }
-		} catch is CancellationError {
-		} catch {
-			isLoading = false
-			// A failed first load must not open the editor or select a person on a later successful one.
+		case .failure:
+			// The mosaic shows the people as unavailable, with Retry, instead of an alert over an empty library.
+			configurator.noteSetback()
+			// A link that came before a failed read must not open the editor or a person after a later successful one.
 			pendingAdd = false
 			pendingWidgetIndex = nil
 			pendingWidgetID = nil
-			self.error = SceneError(error)
-			configurator.analytics.report(AnalyticsFailure(operation: "load_people", error: error))
 		}
 	}
 
@@ -222,7 +225,7 @@ final class PeoplePresenter {
 			configurator.analytics.track(.widgetLinkOpened(target: .addPerson))
 			// Waits for the people, like a person link, so the editor only opens while there is room for one more.
 			pendingAdd = true
-			if !isLoading { addFromWidget() }
+			if library.state == .loaded { addFromWidget() }
 			return
 		}
 		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
@@ -238,7 +241,7 @@ final class PeoplePresenter {
 			pendingWidgetID = nil
 		}
 		configurator.analytics.track(.widgetLinkOpened(target: .person))
-		if !isLoading { selectWidgetPerson() }
+		if library.state == .loaded { selectWidgetPerson() }
 	}
 
 	private func addFromWidget() {

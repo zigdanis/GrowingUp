@@ -4,7 +4,19 @@
 "Add someone" = "Добавьте кого-нибудь";
 
 /* Empty widget caption under the invitation */
-"Choose people in GrowingUp" = "Выберите людей в GrowingUp";
+"Choose people in GrowingUp" = "Выберите людей в «Кому сколько»";
+
+/* Widget while the store is temporarily unavailable, e.g. right after a restart; it refreshes by itself */
+"Ages will be back soon" = "Возраст скоро появится";
+
+/* Caption under the temporarily unavailable title in larger widgets */
+"The widget refreshes by itself." = "Виджет обновится сам.";
+
+/* VoiceOver label of the temporarily unavailable widget */
+"Ages will be back soon. The widget refreshes by itself." = "Возраст скоро появится. Виджет обновится сам.";
+
+/* Lock Screen widget while the store is temporarily unavailable */
+"Back soon" = "Скоро появится";
 
 /* Tile caption after the primary age, e.g. "и 3 месяца" */
 "and %@" = "и %@";

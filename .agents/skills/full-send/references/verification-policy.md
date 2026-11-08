@@ -2,9 +2,11 @@
 
 ## What CI runs
 
-- **Every PR:** Secret Patterns, Release Tools, Swift Format, SwiftLint and Build & Test (unit tests). These five are the required checks. They finish in about 12 minutes, or about a minute when only docs, agent skills or tooling changed.
+- **Every PR:** Secret Patterns, Release Tools, Swift Format, SwiftLint and Build & Test (unit tests) are the required checks. Only Build & Test needs a macOS runner; Swift Format and SwiftLint run on Linux with the same Swift 6.4 and SwiftLint versions as `scripts/check-formatting.sh` and `scripts/install-swiftlint.sh`. Release Tools runs on macOS only when release inputs change (fastlane, Gemfile, project, plists, entitlements, workflows) and is skipped otherwise, which still satisfies the check. Docs, skills, tooling and store-media changes skip the iOS checks and finish in about a minute.
+- **Master pushes** run all five, including Release Tools, because TestFlight requires a green master CI.
 - **Duo UI journeys:** manual opt-in only, with `run_duo_ui_tests=true` on `workflow_dispatch`. Automatic PR and master runs never start them, including when app or UI-test files change. A manual run without the opt-in also skips them.
-- **Captures:** App Store Screenshots remains manual. Run UI tests/captures only when the developer explicitly requests them; do not launch extra Duo journeys to satisfy ordinary PR delivery. iOS 18 is not tested in CI.
+- **Simulator App:** built only on request. `scripts/simulator-app.sh [PR_NUMBER]` reuses a build of that exact commit or dispatches one and waits.
+- **App Store screenshots:** never on CI. They are captured on MacPro (`app-store-screenshots` skill) and committed; `app-store-metadata.yml` validates or places them. iOS 18 is not tested in CI.
 - **Evidence:** XCTest screenshots are the default. Enable `record_ui_video` for a manual CI run only when the change requires motion review. Routine checks must not depend on a video recorder starting or finalizing.
 - **To request Duo UI tests:** `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`. Enable video separately only when needed.
 
@@ -24,7 +26,7 @@
 
 ## CI budget
 
-- **Batch:** run local checks and integrate known fixes before pushing. Never rerun a green check for an unchanged commit.
+- **Batch:** run local checks (AGENTS.md, CI and pushing) and integrate known fixes before pushing; one push per batch. Never rerun a green check for an unchanged commit.
 - **Classify failures:** app bug, test bug, or CI/simulator problem. A timeout-shaped UI failure in a journey the PR didn't touch is usually the simulator. Rerun only that job once with `gh run rerun RUN_ID --failed`.
 - **No blind retry loops:** after the same failure twice, change the diagnosis/implementation or reproduce it in isolation; do not launch another unchanged run. Concrete fixes and their required CI remain authorized within the task; a run count alone is not a reason to stop for permission. Record the failure classification and next action in the PR status line.
 
