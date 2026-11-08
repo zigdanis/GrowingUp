@@ -25,6 +25,8 @@ final class AnalyticsEventTests: XCTestCase {
 			.reviewPromptRequested(activeDays: 3, daysSinceFirstActive: 7, viewerVisits: 5, peopleWithPhotoCount: 2, requestNumber: 1),
 			.preservedDataExported, .dataExported(peopleCount: 4),
 			.dataRestored(source: .file, peopleAdded: 2, peopleAlreadyPresent: 1, peopleOverLimit: 0, intoEmptyLibrary: true),
+			.dataRestored(source: .icloud, peopleAdded: 2, peopleAlreadyPresent: 0, peopleOverLimit: 0, intoEmptyLibrary: true),
+			.iCloudBackupToggled(isOn: false),
 			.widgetHintShown(shownLaunches: 1), .widgetHintOpened(shownLaunches: 2),
 			.widgetHintDismissed(shownLaunches: 3)
 		]
@@ -38,7 +40,7 @@ final class AnalyticsEventTests: XCTestCase {
 				}
 			}
 		}
-		XCTAssertEqual(Set(events.map(\.name)).count, 19, "Every event has its own name")
+		XCTAssertEqual(Set(events.map(\.name)).count, 20, "Every event has its own name")
 	}
 
 	func testASavedPersonIsDescribedByFlagsAndCountsOnly() {

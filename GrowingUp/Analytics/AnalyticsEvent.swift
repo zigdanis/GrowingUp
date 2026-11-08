@@ -23,6 +23,8 @@ enum AnalyticsEvent: Equatable {
 	/// A backup was restored; only people the library lacked were added.
 	case dataRestored(
 		source: BackupRestoreSource, peopleAdded: Int, peopleAlreadyPresent: Int, peopleOverLimit: Int, intoEmptyLibrary: Bool)
+	/// The iCloud backup was switched on or off in Settings.
+	case iCloudBackupToggled(isOn: Bool)
 	/// The mosaic shows the Home Screen widget hint on this launch; `shownLaunches` counts this one.
 	case widgetHintShown(shownLaunches: Int)
 	/// The hint was tapped and the widget guide opened.
@@ -48,6 +50,7 @@ enum AnalyticsEvent: Equatable {
 		case .preservedDataExported: "preserved_data_exported"
 		case .dataExported: "data_exported"
 		case .dataRestored: "data_restored"
+		case .iCloudBackupToggled: "icloud_backup_toggled"
 		case .widgetHintShown: "widget_hint_shown"
 		case .widgetHintOpened: "widget_hint_opened"
 		case .widgetHintDismissed: "widget_hint_dismissed"
@@ -91,6 +94,8 @@ enum AnalyticsEvent: Equatable {
 				"people_over_limit": .int(peopleOverLimit),
 				"into_empty_library": .bool(intoEmptyLibrary)
 			]
+		case .iCloudBackupToggled(let isOn):
+			["is_on": .bool(isOn)]
 		case .reviewPromptRequested(let activeDays, let daysSinceFirstActive, let viewerVisits, let peopleWithPhotoCount, let requestNumber):
 			[
 				"active_days": .int(activeDays),

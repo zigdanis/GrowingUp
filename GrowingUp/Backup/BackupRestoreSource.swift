@@ -2,4 +2,6 @@
 enum BackupRestoreSource: String {
 	/// A file the person picked with "Import from file".
 	case file
+	/// A backup in the person's iCloud, from Settings or the empty mosaic's offer.
+	case icloud
 }

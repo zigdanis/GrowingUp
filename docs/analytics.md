@@ -30,7 +30,8 @@ every name, key and text value a snake_case word.
 | `review_prompt_requested` | `active_days`, `days_since_first_active`, `viewer_visits`, `people_with_photo_count`, `request_number` | The app asked iOS for the App Store rating sheet; iOS decides whether it shows ([rating prompt](rating-prompt.md)) |
 | `preserved_data_exported` | – | The archive of a library that store recovery preserved is ready in the share sheet; the person decides where it goes |
 | `data_exported` | `people_count` | "Export all data" wrote the whole library to a zip that is ready in the share sheet; the person decides where it goes |
-| `data_restored` | `source` file, `people_added`, `people_already_present`, `people_over_limit`, `into_empty_library` | A confirmed restore finished; it only ever adds people the library lacks |
+| `data_restored` | `source` file/icloud, `people_added`, `people_already_present`, `people_over_limit`, `into_empty_library` | A confirmed restore finished, from a picked file or a backup in iCloud (Settings or the empty mosaic's offer); it only ever adds people the library lacks |
+| `icloud_backup_toggled` | `is_on` | The iCloud backup switch in Settings was turned on or off |
 | `widget_hint_shown` | `shown_launches` | The mosaic shows the Home Screen widget hint on this launch, counted once per launch ([widget hint](widget-hint.md)) |
 | `widget_hint_opened` | `shown_launches` | The widget hint was tapped and the "GrowingUp widgets" sheet opened |
 | `widget_hint_dismissed` | `shown_launches` | × closed the widget hint |
@@ -49,7 +50,7 @@ Handled failures (`AnalyticsFailure`) go to Sentry only, tagged with `operation`
 `save_order`, `load_widget_people`, `save_person`, `remove_person`, `load_photo`, and for libraries that
 store recovery set aside: `recover_store` (once per preserved library; the error is only the cause's category,
 the Core Data code such as `NSCocoaErrorDomain 134100`, or `pro.ziganshin.GrowingUp.PreservedStore` 0 for unknown and
-1 for an interrupted recovery), `preserve_photos`, `read_preserved_data`, `export_preserved_data` and `delete_preserved_data`; for backups: `export_data`, `import_data` (a picked file that could not be read for a reason other than not being a backup) and `restore_backup`. Only the error's
+1 for an interrupted recovery), `preserve_photos`, `read_preserved_data`, `export_preserved_data` and `delete_preserved_data`; for backups: `export_data`, `import_data` (a picked file that could not be read for a reason other than not being a backup), `restore_backup`, and for the iCloud backup `read_backup` (the library could not be read for a backup) and `write_backup` (the backup could not be written to iCloud), each once per launch, and `delete_backup` (a backup could not be deleted from iCloud). A backup in iCloud that could not be loaded, as with a photo iCloud could not download, is explained to the person and not reported. Only the error's
 domain, code and Swift type travel (`AnalyticsFailure.sanitizedError`): a Core Data error can carry
 the failing record, and a `CoreError` message can quote one. A `CoreError` keeps the domain and code
 of the error it wraps (`underlyingDomain`, `underlyingCode`), so different causes stay apart. The errors underneath a

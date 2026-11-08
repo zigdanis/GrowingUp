@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 
 /// Writes and reads `backup.json`, the `BackupDocument` of a backup, and checks what it names before anything uses it:
@@ -16,6 +17,16 @@ public enum BackupCodec {
 			try container.encode(date.formatted(Self.dateFormat))
 		}
 		return try encoder.encode(document)
+	}
+
+	/// A SHA-256 of what `document` holds, without when, by which version or on which device it was written: two backups
+	/// of the same library share it, so an unchanged library needs no new backup. Photos count by their files' digests.
+	public static func contentHash(of document: BackupDocument) throws -> String {
+		var content = document
+		content.createdAt = .distantPast
+		content.appVersion = ""
+		content.deviceModel = ""
+		return SHA256.hash(data: try encode(content)).map { String(format: "%02x", $0) }.joined()
 	}
 
 	/// The document in `data`, once it is a GrowingUp backup in a format this version reads and every name in it is

@@ -44,8 +44,7 @@ struct BackupArchive: Sendable {
 	/// a backup names them are taken, at the top or inside one folder (as when the person zipped the unpacked folder
 	/// again); anything else in the zip is ignored.
 	func open(_ url: URL) throws -> LoadedBackup {
-		try reset(importsDirectory)
-		let folder = importsDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+		let folder = try stagingFolder()
 		let archive: Archive
 		do {
 			archive = try Archive(url: url, accessMode: .read)
@@ -102,6 +101,15 @@ struct BackupArchive: Sendable {
 		}
 		if let coordinationError { throw coordinationError }
 		return try result.get()
+	}
+
+	/// A new, empty folder for an import, the one before it gone, which `removeImports()` removes with the rest: for an
+	/// unpacked zip, or the checked photos of a backup in iCloud.
+	func stagingFolder() throws -> URL {
+		try reset(importsDirectory)
+		let folder = importsDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+		try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+		return folder
 	}
 
 	/// Removes every file an export or import left, as when its sheet closes.

@@ -88,6 +88,9 @@ public final class CoreDataStackImplementation: CoreDataStack {
 		appGroup.appendingPathComponent("Application Support/GrowingUp.sqlite")
 	}
 
+	/// A plain `NSPersistentContainer`, which never mirrors to CloudKit. It must stay one: the app has an iCloud
+	/// entitlement for its backup (iCloud Documents only, no CloudKit), which writes copies of the library into its own
+	/// ubiquity container; a CloudKit-mirroring container would sync and merge the live store across devices instead.
 	private static func makeSharedContainer() throws -> NSPersistentContainer {
 		let url = storeURL(in: try appGroupDirectory())
 		try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)

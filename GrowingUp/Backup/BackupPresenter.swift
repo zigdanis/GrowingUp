@@ -3,9 +3,9 @@ import Foundation
 import Observation
 import UIKit
 
-/// The Backup sheet's export and import: "Export all data" writes every person and photo to one file for the share
-/// sheet, and "Import from file" reads such a file and, once the person confirms, adds whoever the app lacks. Nothing
-/// is ever sent by the app, and a restore never changes or deletes anyone.
+/// Settings' Backup: "Export all data" writes every person and photo to one file for the share sheet, "Import from file"
+/// reads such a file and, once the person confirms, adds whoever the app lacks, and with an iCloud backup, its list of
+/// backups and the empty mosaic's offer restore from iCloud the same way. A restore never changes or deletes anyone.
 @MainActor
 @Observable
 final class BackupPresenter {
@@ -15,7 +15,11 @@ final class BackupPresenter {
 	/// A backup read and checked, waiting for the person's confirmation.
 	var pendingRestore: PendingRestore?
 	private(set) var isRestoring = false
+	/// The iCloud backup being loaded to restore, by `BackupCandidate.id`.
+	private(set) var loadingCandidateID: String?
 	var alert: BackupAlert?
+	/// The library's backup in iCloud; nil where there is none, as in tests, previews and UI-test launches.
+	@ObservationIgnored let iCloud: ICloudBackupService?
 	@ObservationIgnored private let gateway: PeopleBackupGateway?
 	@ObservationIgnored private let archive: BackupArchive
 	@ObservationIgnored private let analytics: AnalyticsGateway
@@ -32,10 +36,12 @@ final class BackupPresenter {
 	@ObservationIgnored private(set) var restoreTask: Task<Void, Never>?
 
 	init(
-		gateway: PeopleBackupGateway?, archive: BackupArchive = .temporary, analytics: AnalyticsGateway,
-		isLibraryLoaded: @escaping () -> Bool, libraryRestored: @escaping () async -> Void, now: @escaping () -> Date = Date.init
+		gateway: PeopleBackupGateway?, iCloud: ICloudBackupService? = nil, archive: BackupArchive = .temporary,
+		analytics: AnalyticsGateway, isLibraryLoaded: @escaping () -> Bool, libraryRestored: @escaping () async -> Void,
+		now: @escaping () -> Date = Date.init
 	) {
 		self.gateway = gateway
+		self.iCloud = iCloud
 		self.archive = archive
 		self.analytics = analytics
 		self.isLibraryLoaded = isLibraryLoaded
@@ -44,7 +50,7 @@ final class BackupPresenter {
 	}
 
 	var isAvailable: Bool { gateway != nil && isLibraryLoaded() }
-	var isBusy: Bool { export == .preparing || isReading || isRestoring }
+	var isBusy: Bool { export == .preparing || isReading || isRestoring || loadingCandidateID != nil }
 
 	// MARK: - Export
 
@@ -118,6 +124,68 @@ final class BackupPresenter {
 			}
 		}
 	}
+
+	// MARK: - iCloud
+
+	/// The backup the empty mosaic offers to restore, while the iCloud backup is on and the people are loaded.
+	var restoreOffer: BackupCandidate? {
+		guard gateway != nil, isLibraryLoaded() else { return nil }
+		return iCloud?.restoreOffer
+	}
+
+	/// An empty library may be a reinstall: looks in iCloud for a backup to offer, as at launch and on return to the app.
+	func lookForBackupToRestore(libraryIsEmpty: Bool) async {
+		guard libraryIsEmpty, gateway != nil, isLibraryLoaded(), let iCloud, iCloud.isEnabled, !iCloud.isRestoreOfferDismissed
+		else { return }
+		await iCloud.refreshCandidates()
+	}
+
+	/// Loads a backup picked in the list of iCloud backups and asks to confirm the restore.
+	func open(_ candidate: BackupCandidate) async {
+		let generation = importGeneration
+		guard let backup = await load(candidate) else { return }
+		// Settings closed meanwhile: nobody is left to confirm the restore.
+		guard generation == importGeneration else {
+			archive.removeImports()
+			return
+		}
+		pendingRestore = PendingRestore(backup: backup, source: .icloud)
+	}
+
+	/// Restores the backup the empty mosaic offers, whose card is the confirmation.
+	func restoreOffered(_ candidate: BackupCandidate) async {
+		guard let backup = await load(candidate) else { return }
+		await confirmRestore(PendingRestore(backup: backup, source: .icloud))?.value
+	}
+
+	/// The backup `candidate` stands for with every photo checked; nil, with the alert saying why, when it can't be
+	/// loaded whole. A photo iCloud could not download fails the load: restoring without it would lose it for good.
+	private func load(_ candidate: BackupCandidate) async -> LoadedBackup? {
+		guard gateway != nil, let iCloud, isLibraryLoaded(), !isBusy else { return nil }
+		loadingCandidateID = candidate.id
+		defer { loadingCandidateID = nil }
+		pendingRestore = nil
+		do {
+			return try await iCloud.loadBackup(candidate, stagingDirectory: archive.stagingFolder())
+		} catch {
+			archive.removeImports()
+			alert = .iCloudUnreadable(error as? BackupError)
+			return nil
+		}
+	}
+
+	/// Removes a backup from iCloud, as the list's swipe and its confirmation ask; the people in the app stay as they are.
+	func delete(_ candidate: BackupCandidate) async {
+		guard let iCloud else { return }
+		do {
+			try await iCloud.deleteBackup(candidate)
+		} catch {
+			alert = .deleteFailed
+			analytics.report(AnalyticsFailure(operation: "delete_backup", error: error))
+		}
+	}
+
+	// MARK: - Restore
 
 	/// Starts adding the people of the confirmed backup that the library lacks. The restore owns the backup's files from
 	/// this moment, so the confirmation closing afterwards can't take them away.

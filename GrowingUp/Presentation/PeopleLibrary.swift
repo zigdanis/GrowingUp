@@ -12,10 +12,13 @@ final class PeopleLibrary {
 	@ObservationIgnored private var reading: Task<Result<[Person], Error>?, Never>?
 	private let fetch: () async throws -> [Person]
 	private let analytics: AnalyticsGateway
+	/// Runs once, when a read first succeeds.
+	private let onLoaded: () -> Void
 
-	init(fetch: @escaping () async throws -> [Person], analytics: AnalyticsGateway) {
+	init(fetch: @escaping () async throws -> [Person], analytics: AnalyticsGateway, onLoaded: @escaping () -> Void = {}) {
 		self.fetch = fetch
 		self.analytics = analytics
+		self.onLoaded = onLoaded
 	}
 
 	/// Reads the people unless a read already succeeded, such as at launch, from Retry or on every return to the app;
@@ -43,6 +46,7 @@ final class PeopleLibrary {
 		do {
 			let people = try await fetch()
 			state = .loaded
+			onLoaded()
 			return .success(people)
 		} catch is CancellationError {
 			if case .unavailable = state { state = .unavailable(isRetrying: false) }

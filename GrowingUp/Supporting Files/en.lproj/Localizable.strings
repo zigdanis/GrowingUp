@@ -372,6 +372,80 @@
 
 /* Alert message when the export of all data failed */
 "Your people and photos are still saved on this device. Try again in a moment." = "Your people and photos are still saved on this device. Try again in a moment.";
+
+/* The iCloud backup and restoring from it */
+
+/* Switch in Settings that keeps a backup in iCloud */
+"iCloud backup" = "iCloud backup";
+
+/* Settings row that lists the backups in iCloud, and that list's title */
+"Restore from iCloud" = "Restore from iCloud";
+
+/* Backup status while the app looks for iCloud */
+"Checking iCloud…" = "Checking iCloud…";
+
+/* Backup status while the backup is written */
+"Backing up…" = "Backing up…";
+
+/* Backup status: when the last backup was written, such as 2 minutes ago */
+"Last backup %@." = "Last backup %@.";
+
+/* Backup status: when the last backup was written, while iCloud still uploads it */
+"Last backup %@. Uploading to iCloud…" = "Last backup %@. Uploading to iCloud…";
+
+/* Backup status before the first backup */
+"Your people and photos are backed up to iCloud after each change." = "Your people and photos are backed up to iCloud after each change.";
+
+/* Backup status without iCloud */
+"iCloud is not available. To keep a backup, sign in to iCloud in the Settings app and turn on iCloud Drive." = "iCloud is not available. To keep a backup, sign in to iCloud in the Settings app and turn on iCloud Drive.";
+
+/* Backup status when iCloud refused the upload */
+"Couldn't upload the backup. Check that your iCloud storage is not full." = "Couldn't upload the backup. Check that your iCloud storage is not full.";
+
+/* Backup status when the backup could not be written */
+"Couldn't save the backup. Check that this device has free space." = "Couldn't save the backup. Check that this device has free space.";
+
+/* Backup status with the iCloud backup off */
+"iCloud backup is off. New changes stay only on this device. Earlier backups remain in iCloud until you delete them in Restore from iCloud." = "iCloud backup is off. New changes stay only on this device. Earlier backups remain in iCloud until you delete them in Restore from iCloud.";
+
+/* Footer of the Backup section while the iCloud backup is on */
+"Your people and photos are kept in your iCloud, so they stay safe if you delete the app or change phones. The backup doesn't appear in iCloud Drive." = "Your people and photos are kept in your iCloud, so they stay safe if you delete the app or change phones. The backup doesn't appear in iCloud Drive.";
+
+/* The list of iCloud backups when there are none */
+"No backups in iCloud yet." = "No backups in iCloud yet.";
+
+/* The list of iCloud backups while it loads */
+"Looking for backups…" = "Looking for backups…";
+
+/* A backup this install of the app wrote */
+"This device" = "This device";
+
+/* A backup's copy before its latest one */
+"Earlier copy" = "Earlier copy";
+
+/* How many people a backup holds */
+"People: %lld" = "People: %lld";
+
+/* Title of the offer to restore a backup on the empty home screen */
+"Restore from iCloud?" = "Restore from iCloud?";
+
+/* The offered backup's date */
+"Your backup from %@." = "Your backup from %@.";
+
+/* Hides the offer to restore a backup */
+"Not now" = "Not now";
+
+/* Title of the confirmation before deleting a backup from iCloud */
+"Delete this backup from iCloud?" = "Delete this backup from iCloud?";
+
+/* Deletes a backup from iCloud */
+"Delete Backup" = "Delete Backup";
+
+/* Message of the confirmation before deleting a backup from iCloud */
+"Your people and photos in the app stay as they are." = "Your people and photos in the app stay as they are.";
+
+/* Alert title when deleting a backup from iCloud failed */
+"Couldn't delete the backup" = "Couldn't delete the backup";
 /* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
 "On your Home Screen too" = "On your Home Screen too";
 "A widget with your people's photos and ages" = "A widget with your people's photos and ages";
