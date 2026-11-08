@@ -52,6 +52,6 @@ extension PeoplePresenter {
 	func widgetPreviewEntry() async -> AgeEntry {
 		let pinned = persons.filter(\.isOnWidget)
 		let loader = WidgetPersonLoader(fetch: { pinned }, loadImage: configurator.loadImage)
-		return AgeEntry(date: configurator.now(), persons: await loader.load(limit: Constants.widgetPeopleLimit))
+		return AgeEntry(date: configurator.now(), content: await loader.load(limit: Constants.widgetPeopleLimit))
 	}
 }
