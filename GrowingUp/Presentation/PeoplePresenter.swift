@@ -46,7 +46,7 @@ final class PeoplePresenter {
 	init(configurator: SceneConfigurator, reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() }) {
 		self.configurator = configurator
 		self.reloadWidgets = reloadWidgets
-		library = PeopleLibrary(analytics: configurator.analytics)
+		library = PeopleLibrary(fetch: configurator.fetchUseCase.fetchPersons, analytics: configurator.analytics)
 	}
 
 	var canAdd: Bool { persons.count < Constants.peopleLimit }
@@ -60,7 +60,7 @@ final class PeoplePresenter {
 	/// Reads the people until a read succeeds, such as at launch, from Retry or on return to the app; once they are
 	/// loaded, the presenter keeps them itself and a later call changes nothing, whatever is open.
 	func load() async {
-		guard let result = await library.read({ try await configurator.fetchUseCase.fetchPersons() }) else { return }
+		guard let result = await library.read() else { return }
 		switch result {
 		case .success(let loaded):
 			persons = loaded.sorted()

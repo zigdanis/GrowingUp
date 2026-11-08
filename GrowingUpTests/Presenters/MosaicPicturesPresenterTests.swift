@@ -235,6 +235,26 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 		XCTAssertEqual(requests, 4)
 	}
 
+	func testARetryWaitingToRunNeverSupersedesNewerPeopleWithOlderOnes() async {
+		var removed = Person.createPerson()
+		removed.widgetPicId = nil
+		let added = Person.createPerson()
+		var fails = true
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
+			if fails, picture.id == removed.appPicId { throw CoreError.missingValue }
+			return Self.photo(.systemTeal)
+		})
+		await presenter.load([removed])
+		fails = false
+		let retry = Task { await presenter.retryFailedPictures() }
+		await Task.yield()
+		// The person leaves and another arrives while the retry waits for its turn.
+		await presenter.load([added])
+		await retry.value
+		XCTAssertNil(presenter.picture(for: removed))
+		XCTAssertEqual(presenter.picture(for: added)?.pictureID, added.appPicId)
+	}
+
 	private static func photo(_ colour: UIColor, size: CGSize = CGSize(width: 600, height: 400)) -> UIImage {
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = 1

@@ -42,10 +42,12 @@ final class PeopleLibraryTests: XCTestCase {
 		let retry = Task { await presenter.load() }
 		while gate == nil { await Task.yield() }
 		XCTAssertEqual(presenter.library.state, .unavailable(isRetrying: true))
-		await presenter.load()
-		XCTAssertEqual(gateway.fetchPersonsCount, 2, "Return to the app during Try Again reads nothing more")
+		let returned = Task { await presenter.load() }
+		for _ in 0..<5 { await Task.yield() }
 		gate?.resume()
 		await retry.value
+		await returned.value
+		XCTAssertEqual(gateway.fetchPersonsCount, 2, "Return to the app during Try Again waits for it and reads nothing more")
 		XCTAssertEqual(presenter.library.state, .loaded)
 		XCTAssertEqual(presenter.persons.count, 1)
 	}
@@ -65,7 +67,7 @@ final class PeopleLibraryTests: XCTestCase {
 		XCTAssertTrue(presenter.editor === editor)
 	}
 
-	func testACancelledFirstReadStaysLoadingAndReportsNothing() async {
+	func testAReadWhoseCallerIsCancelledStillLoadsThePeopleARequestMeanwhileWaitedFor() async {
 		let people = makePeople(count: 1)
 		let gateway = PersonsGatewaySpy()
 		gateway.fetchPersonsResultToBeReturned = .success(people)
@@ -74,14 +76,33 @@ final class PeopleLibraryTests: XCTestCase {
 			await withCheckedContinuation { gate = $0 }
 			try Task.checkCancellation()
 		}
+		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
+		presenter.open(URL(string: "growingup-app://?personID=\(people[0].id.uuidString)")!)
+		// The app leaves the foreground during the read, then comes back before it ends.
+		let first = Task { await presenter.load() }
+		while gate == nil { await Task.yield() }
+		first.cancel()
+		let second = Task { await presenter.load() }
+		for _ in 0..<5 { await Task.yield() }
+		gate?.resume()
+		await first.value
+		await second.value
+		XCTAssertEqual(gateway.fetchPersonsCount, 1)
+		XCTAssertEqual(presenter.library.state, .loaded)
+		XCTAssertEqual(presenter.persons.map(\.id), people.map(\.id))
+		XCTAssertEqual(presenter.selectedID, people[0].id, "The widget link opens its person once the read ends")
+		XCTAssertTrue(presenter.isViewing)
+	}
+
+	func testACancelledFirstReadStaysLoadingAndReportsNothing() async {
+		let people = makePeople(count: 1)
+		let gateway = PersonsGatewaySpy()
+		gateway.fetchPersonsResultToBeReturned = .success(people)
+		gateway.onFetch = { throw CancellationError() }
 		let analytics = AnalyticsGatewaySpy()
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway, analytics: analytics), reloadWidgets: {})
 		presenter.open(URL(string: "growingup-app://?personID=\(people[0].id.uuidString)")!)
-		let read = Task { await presenter.load() }
-		while gate == nil { await Task.yield() }
-		read.cancel()
-		gate?.resume()
-		await read.value
+		await presenter.load()
 		XCTAssertEqual(presenter.library.state, .loading)
 		XCTAssertTrue(analytics.failures.isEmpty)
 

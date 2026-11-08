@@ -77,11 +77,15 @@ final class MosaicPicturesPresenter {
 	/// The retry runs to its end even when the caller is cancelled, as when the app leaves the foreground again: it
 	/// supersedes the load before it, which would otherwise leave tiles without their pictures.
 	func retryFailedPictures() async {
+		await Task { await self.loadRetriedPictures() }.value
+	}
+
+	/// Takes the people only once the retry runs, so a newer load that came meanwhile is never superseded by older ones.
+	private func loadRetriedPictures() async {
 		let retried = failedPictures.filter { failures[$0, default: 0] < maxAttempts }
 		guard !retried.isEmpty else { return }
 		failedPictures.subtract(retried)
-		let persons = listed
-		await Task { await load(persons) }.value
+		await load(listed)
 	}
 
 	/// The first of `candidates` that loads, or the monogram; throws only when cancelled.
