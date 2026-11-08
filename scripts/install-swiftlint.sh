@@ -6,7 +6,8 @@ set -eu
 # same lint before pushing. On macOS use `brew install swiftlint`.
 # The dynamic build needs libxml2.so.2 and finds SourceKit through scripts/lint-swift.sh; where libxml2.so.2 is
 # missing, the static build is installed instead, which skips the few SourceKit rules (CI still runs them).
-# SWIFTLINT_REQUIRE_SOURCEKIT=1 (set by CI) fails instead of falling back to the static build.
+# SWIFTLINT_BUILD=dynamic (set by CI, which runs it inside the Swift container) skips that check and always
+# installs the SourceKit build.
 VERSION=0.65.1
 DIRECTORY=${1:-"$HOME/.local/bin"}
 
@@ -24,10 +25,9 @@ echo "$SHA256  $TEMPORARY/$ASSET" | sha256sum -c - >/dev/null
 python3 -c 'import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])' "$TEMPORARY/$ASSET" "$TEMPORARY"
 chmod +x "$TEMPORARY/swiftlint" "$TEMPORARY/swiftlint-static"
 BINARY=swiftlint
-if ! "$TEMPORARY/swiftlint" version >/dev/null 2>&1; then
-  test "${SWIFTLINT_REQUIRE_SOURCEKIT:-0}" != 1 || { echo "error: the SourceKit build of SwiftLint does not load here" >&2; exit 1; }
+if [ "${SWIFTLINT_BUILD:-auto}" != dynamic ] && ! "$TEMPORARY/swiftlint" version >/dev/null 2>&1; then
   BINARY=swiftlint-static
 fi
 mkdir -p "$DIRECTORY"
 mv "$TEMPORARY/$BINARY" "$DIRECTORY/swiftlint"
-echo "Installed SwiftLint $("$DIRECTORY/swiftlint" version) ($BINARY) at $DIRECTORY/swiftlint"
+echo "Installed SwiftLint $VERSION ($BINARY) at $DIRECTORY/swiftlint"

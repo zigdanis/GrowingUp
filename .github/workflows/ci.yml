@@ -172,7 +172,7 @@ jobs:
       # SourceKit, so rules such as statement_position run too.
       - name: Install pinned SwiftLint
         env:
-          SWIFTLINT_REQUIRE_SOURCEKIT: '1'
+          SWIFTLINT_BUILD: dynamic
         run: scripts/install-swiftlint.sh "$RUNNER_TEMP/swiftlint"
 
       - name: Run SwiftLint
