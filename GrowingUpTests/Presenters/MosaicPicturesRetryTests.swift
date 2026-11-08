@@ -106,6 +106,21 @@ final class MosaicPicturesRetryTests: XCTestCase {
 		XCTAssertEqual(presenter.picture(for: added)?.pictureID, added.appPicId)
 	}
 
+	func testARetryThatFailsAgainKeepsTheFallbackPhotoWithoutReadingItAgain() async {
+		let person = Person.createPerson()
+		var requests: [UUID?] = []
+		let presenter = MosaicPicturesPresenter(loadThumbnail: { picture, _ in
+			requests.append(picture.id)
+			guard picture.id == person.widgetPicId, requests.count == 2 else { throw CoreError.missingValue }
+			return Self.photo(.systemTeal)
+		})
+		await presenter.load([person])
+		XCTAssertEqual(presenter.picture(for: person)?.pictureID, person.widgetPicId)
+		await presenter.retryFailedPictures()
+		XCTAssertEqual(requests, [person.appPicId, person.widgetPicId, person.appPicId])
+		XCTAssertEqual(presenter.picture(for: person)?.pictureID, person.widgetPicId, "The widget photo stays, not the monogram")
+	}
+
 	private static func photo(_ colour: UIColor) -> UIImage {
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = 1

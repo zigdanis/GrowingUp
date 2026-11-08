@@ -61,7 +61,7 @@ final class MosaicPicturesPresenter {
 				continue
 			}
 			do {
-				let picture = try await loadPicture(of: person, from: candidates)
+				let picture = try await loadPicture(of: person, from: candidates, cached: pictures[person.id])
 				guard generation == self.generation, !Task.isCancelled else { return }
 				pictures[person.id] = picture
 			} catch {
@@ -89,8 +89,12 @@ final class MosaicPicturesPresenter {
 	}
 
 	/// The first of `candidates` that loads, or the monogram; throws only when cancelled.
-	private func loadPicture(of person: Person, from candidates: [UUID]) async throws -> MosaicPicture {
+	///
+	/// A candidate the tile already shows as its `cached` photo is kept rather than read again, so a preferred photo that
+	/// fails once more on a retry leaves the fallback photo in place instead of the monogram.
+	private func loadPicture(of person: Person, from candidates: [UUID], cached: MosaicPicture?) async throws -> MosaicPicture {
 		for id in candidates {
+			if let cached, cached.pictureID == id { return cached }
 			do {
 				let thumbnail = try await loadThumbnail(PersonImage(id: id, uiImage: nil), maxPixelSize)
 				try Task.checkCancellation()
