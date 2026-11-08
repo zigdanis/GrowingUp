@@ -22,9 +22,20 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  # Swift Format and SwiftLint run on Linux with the Swift version of Xcode 27.1 (.swift-version), so a pull
+  # request takes only one macOS runner: Build & Test. Release Tools adds a second only when release inputs change.
+  SWIFT_IMAGE: swift:6.4.0-noble@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca
+  SWIFTLINT_VERSION: 0.65.1
+  SWIFTLINT_LINUX_SHA256: caeed6f4a679c35539ffaf124f6c4ab4a8416917f7d8796279dc52b74026059d
+
 jobs:
   release-tools:
     name: Release Tools
+    # Pull requests run it only when fastlane, Gemfile, project, plist, entitlement or workflow files change;
+    # master pushes and manual runs always do. A skipped job still satisfies the required check.
+    needs: changes
+    if: ${{ !cancelled() && needs.changes.outputs.release_required != 'false' }}
     runs-on: macos-26
     env:
       MATCH_GIT_URL: git@github.com:zigdanis/zigdanis-certificates.git
@@ -32,6 +43,13 @@ jobs:
       FASTLANE_SKIP_DOCS: 'true'
     steps:
       - uses: actions/checkout@v7
+        with:
+          # marketing/ holds ~800 MB of store media that no build or test reads.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/marketing/
       - uses: ruby/setup-ruby@de492cf36cbab201753d720ce4f4e336cd688c94 # v1
         with:
           ruby-version: '3.3'
@@ -68,11 +86,13 @@ jobs:
     outputs:
       ios_required: ${{ steps.filter.outputs.ios_required }}
       ui_required: ${{ steps.filter.outputs.ui_required }}
+      release_required: ${{ steps.filter.outputs.release_required }}
       ui_matrix: ${{ steps.ui.outputs.matrix }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+          filter: blob:none
 
       - name: Check changed files
         id: filter
@@ -117,34 +137,52 @@ jobs:
     name: Swift Format
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: xcode-27
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/marketing/
+            !/docs/
 
       - name: Check formatting
         run: |
-          xcodebuild -version
-          xcrun swift-format --version
-          scripts/check-formatting.sh
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/src" -w /src "$SWIFT_IMAGE" \
+            sh -c 'swift --version && scripts/check-formatting.sh'
 
   lint:
     name: SwiftLint
     needs: changes
     if: ${{ !cancelled() && needs.changes.outputs.ios_required != 'false' }}
-    runs-on: macos-26
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/marketing/
+            !/docs/
 
-      - name: Install SwiftLint
+      - name: Install pinned SwiftLint
         run: |
-          command -v swiftlint >/dev/null 2>&1 || brew install swiftlint
-          swiftlint version
+          curl -fsSL --retry 3 -o "$RUNNER_TEMP/swiftlint.zip" \
+            "https://github.com/realm/SwiftLint/releases/download/$SWIFTLINT_VERSION/swiftlint_linux_amd64.zip"
+          echo "$SWIFTLINT_LINUX_SHA256  $RUNNER_TEMP/swiftlint.zip" | sha256sum -c -
+          unzip -q "$RUNNER_TEMP/swiftlint.zip" swiftlint -d "$RUNNER_TEMP/swiftlint"
 
+      # The dynamic build uses the toolchain's SourceKit, so rules such as statement_position still run.
       - name: Run SwiftLint
-        run: scripts/lint-swift.sh
+        run: |
+          docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/src" -w /src \
+            -v "$RUNNER_TEMP/swiftlint:/opt/swiftlint:ro" \
+            -e PATH=/opt/swiftlint:/usr/local/bin:/usr/bin:/bin \
+            -e LINUX_SOURCEKIT_LIB_PATH=/usr/lib \
+            "$SWIFT_IMAGE" sh -c 'swiftlint version && scripts/lint-swift.sh'
 
   build-test:
     name: Build & Test
@@ -153,32 +191,20 @@ jobs:
     runs-on: xcode-27
     steps:
       - uses: actions/checkout@v7
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/marketing/
 
       - name: Select Xcode
-        run: sudo xcode-select -switch /Applications/Xcode_27.1.app
-
-      - name: Show versions
         run: |
+          sudo xcode-select -switch /Applications/Xcode_27.1.app
           xcodebuild -version
-          swift --version
 
-      - name: Cache SwiftPM
-        uses: actions/cache@v6
-        with:
-          path: |
-            ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
-            ~/Library/Caches/org.swift.swiftpm
-          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-spm-
-
-      - name: Resolve packages
-        run: |
-          xcodebuild -resolvePackageDependencies \
-            -project GrowingUp.xcodeproj \
-            -scheme GrowingUp
-
-      - name: Pick iOS Simulator
+      # A cold simulator takes minutes to boot, so it boots while packages restore and the app builds.
+      - name: Boot iOS Simulator in the background
         id: sim
         run: |
           DEVICE=$(xcrun simctl list devices available --json \
@@ -187,16 +213,67 @@ jobs:
           UDID=$(jq -r '.udid' <<< "$DEVICE")
           echo "Using $(jq -r '.name' <<< "$DEVICE") ($UDID)"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          nohup xcrun simctl boot "$UDID" > "$RUNNER_TEMP/simulator-boot.log" 2>&1 &
 
-      - name: Build & Test
+      - uses: ./.github/actions/swift-packages
+
+      # Xcode's content-addressed compilation cache survives a fresh checkout, unlike DerivedData timestamps.
+      # Master pushes and manual runs save it; pull requests only restore it.
+      - name: Restore compilation cache
+        id: cas
+        uses: actions/cache/restore@v6
+        with:
+          path: ~/DerivedData/CompilationCache.noindex
+          key: xcode-cas-27.1-debug-${{ github.sha }}
+          restore-keys: |
+            xcode-cas-27.1-debug-
+
+      - name: Build for testing
         env:
           SIM_UDID: ${{ steps.sim.outputs.udid }}
         run: |
-          xcodebuild test \
+          xcodebuild build-for-testing \
+            -project GrowingUp.xcodeproj \
+            -scheme GrowingUp \
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath ~/DerivedData \
+            -clonedSourcePackagesDirPath ~/SourcePackages \
+            -disablePackageRepositoryCache \
+            -disableAutomaticPackageResolution \
+            -enableCodeCoverage NO \
+            COMPILATION_CACHE_ENABLE_CACHING=YES
+          du -sh ~/DerivedData/CompilationCache.noindex || true
+
+      - name: Wait for simulator boot
+        env:
+          SIM_UDID: ${{ steps.sim.outputs.udid }}
+        run: |
+          SECONDS=0
+          xcrun simctl bootstatus "$SIM_UDID" -b
+          echo "Simulator ready after a further ${SECONDS}s"
+          cat "$RUNNER_TEMP/simulator-boot.log"
+
+      - name: Unit tests
+        env:
+          SIM_UDID: ${{ steps.sim.outputs.udid }}
+        run: |
+          xcodebuild test-without-building \
             -project GrowingUp.xcodeproj \
             -scheme GrowingUp \
             -only-testing:GrowingUpTests \
-            -destination "id=$SIM_UDID"
+            -destination "id=$SIM_UDID" \
+            -derivedDataPath ~/DerivedData \
+            -clonedSourcePackagesDirPath ~/SourcePackages \
+            -disablePackageRepositoryCache \
+            -enableCodeCoverage NO \
+            -collect-test-diagnostics never
+
+      - name: Save compilation cache
+        if: ${{ success() && github.event_name != 'pull_request' && steps.cas.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v6
+        with:
+          path: ~/DerivedData/CompilationCache.noindex
+          key: xcode-cas-27.1-debug-${{ github.sha }}
 
   ui-tests:
     name: UI Tests — ${{ matrix.name }}

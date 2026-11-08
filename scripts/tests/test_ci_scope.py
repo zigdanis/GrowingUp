@@ -67,7 +67,7 @@ class CIScopeTests(unittest.TestCase):
         for path in ("Core/Person.swift", "GrowingUp/Assets.xcassets/icon.png", "GrowingUp.xcodeproj/project.pbxproj",
                      "GrowingUp.xcodeproj/xcshareddata/swiftpm/Package.resolved", "GrowingUpTests/PersonTests.swift",
                      "GrowingUpUITests/JourneyTests.swift", "scripts/run-ui-journeys.sh",
-                     "scripts/run-app-store-screenshots.sh", "scripts/ci-scope.py", "scripts/tests/test_ci_scope.py",
+                     "scripts/run-local-app-store-screenshots.py", "scripts/ci-scope.py", "scripts/tests/test_ci_scope.py",
                      ".github/workflows/ci.yml", "docs/app-store-demo-photos/baby-girl.png", "unknown/tool.py",
                      "marketing/app-store/screenshots/new.swift", "Gemfile", ".swiftlint.yml"):
             with self.subTest(path=path):
@@ -142,7 +142,30 @@ class CIScopeTests(unittest.TestCase):
     def test_tool_only_changes_skip_ui_journeys(self):
         self.write("docs/guide.md")
         self.commit()
-        self.assertEqual(self.outputs("push"), ["ios_required=false", "ui_required=false"])
+        self.assertEqual(self.outputs("push"), ["ios_required=false", "ui_required=false", "release_required=true"])
+
+    def classify_release(self, event="pull_request", base=None, head=None):
+        return self.outputs(event, base, head)[2]
+
+    def test_pull_requests_run_release_tools_only_for_release_inputs(self):
+        for path, expected in (("fastlane/Fastfile", True), ("Gemfile.lock", True),
+                               ("GrowingUp.xcodeproj/project.pbxproj", True), ("scripts/testflight.py", True),
+                               ("scripts/testflight-ci-gate.py", True), (".github/workflows/ci.yml", True),
+                               ("GrowingUp/Supporting Files/Info.plist", True), ("Widget/Widget.entitlements", True),
+                               ("GrowingUp/App.swift", False), ("Core/Person.swift", False), ("docs/guide.md", False),
+                               ("scripts/app-store-metadata.py", False)):
+            with self.subTest(path=path):
+                self.git("reset", "--hard", self.base)
+                self.write(path)
+                self.commit()
+                self.assertEqual(self.classify_release(), f"release_required={str(expected).lower()}")
+
+    def test_pushes_manual_runs_and_untrusted_diffs_always_run_release_tools(self):
+        self.write("GrowingUp/App.swift")
+        self.commit()
+        for event, base in (("push", None), ("workflow_dispatch", None), ("pull_request", ""), ("pull_request", "f" * 40)):
+            with self.subTest(event=event, base=base):
+                self.assertEqual(self.classify_release(event, base), "release_required=true")
 
     def test_empty_diff_fails_closed(self):
         self.assertEqual(self.classify(), "ios_required=true")
