@@ -36,8 +36,7 @@ struct WidgetHintStrip: View {
 		.accessibilityIdentifier("people.widgetHint")
 	}
 
-	@ViewBuilder
-	private var content: some View {
+	@ViewBuilder private var content: some View {
 		if isCard {
 			card
 		} else {

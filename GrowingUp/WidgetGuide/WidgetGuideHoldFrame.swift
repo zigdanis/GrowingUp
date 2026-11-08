@@ -14,8 +14,7 @@ struct WidgetGuideHoldFrame: View {
 		}
 	}
 
-	@ViewBuilder
-	private var touch: some View {
+	@ViewBuilder private var touch: some View {
 		if isAnimated {
 			// Presses in, holds, and lets go, again and again.
 			PhaseAnimator([false, true]) { isPressing in

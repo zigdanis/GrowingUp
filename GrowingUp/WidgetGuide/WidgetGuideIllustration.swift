@@ -21,8 +21,7 @@ struct WidgetGuideIllustration: View {
 		.accessibilityHidden(true)
 	}
 
-	@ViewBuilder
-	private var picture: some View {
+	@ViewBuilder private var picture: some View {
 		switch frame {
 		case .hold: WidgetGuideHoldFrame(isAnimated: isAnimated)
 		case .swipe: WidgetGuideSwipeFrame(isAnimated: isAnimated)
