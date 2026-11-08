@@ -204,6 +204,71 @@
 "Move earlier" = "Move earlier";
 "Move later" = "Move later";
 
+/* Earlier data that store recovery preserved */
+
+/* Corner capsule on the home screen while store recovery keeps earlier data aside */
+"Earlier data preserved" = "Earlier data preserved";
+
+/* VoiceOver hint of the earlier data capsule */
+"Shows what happened and lets you export a copy" = "Shows what happened and lets you export a copy";
+
+/* Title of the earlier data sheet */
+"Earlier data" = "Earlier data";
+
+/* Row of one preserved copy when there are several; the date it was set aside */
+"Earlier data from %@" = "Earlier data from %@";
+
+/* Headline of the earlier data sheet */
+"Your earlier people and photos are kept" = "Your earlier people and photos are kept";
+
+/* What store recovery did */
+"This version of GrowingUp couldn't open what was saved on this device before, so it set that data aside and started with an empty list. Nothing was deleted." = "This version of GrowingUp couldn't open what was saved on this device before, so it set that data aside and started with an empty list. Nothing was deleted.";
+
+/* What the person can do about preserved data */
+"The app can't bring these people back by itself yet. A newer version may be able to. To be safe, export a copy now and keep it outside the app, for example in Files." = "The app can't bring these people back by itself yet. A newer version may be able to. To be safe, export a copy now and keep it outside the app, for example in Files.";
+
+/* When the earlier data was set aside */
+"Set aside" = "Set aside";
+
+/* Size of the preserved copy */
+"Size" = "Size";
+
+/* Button that exports the preserved copy */
+"Export a copy…" = "Export a copy…";
+
+/* Shown while the export archive is written */
+"Preparing the copy…" = "Preparing the copy…";
+
+/* VoiceOver value of the export button while it works */
+"Preparing the copy" = "Preparing the copy";
+
+/* Footer of the export button */
+"One file with your earlier people, their photos and a short note about what it contains. You choose where it goes; the app never sends it anywhere by itself." = "One file with your earlier people, their photos and a short note about what it contains. You choose where it goes; the app never sends it anywhere by itself.";
+
+/* Button that deletes the preserved copy */
+"Delete preserved copy…" = "Delete preserved copy…";
+
+/* Title of the confirmation before deleting the preserved copy */
+"Delete the preserved copy?" = "Delete the preserved copy?";
+
+/* Message of the confirmation before deleting the preserved copy */
+"Your earlier people will be gone from this device for good. Export a copy first if you haven't." = "Your earlier people will be gone from this device for good. Export a copy first if you haven't.";
+
+/* Destructive button of the confirmation before deleting the preserved copy */
+"Delete Copy" = "Delete Copy";
+
+/* Alert title when the export failed */
+"Couldn't export the copy" = "Couldn't export the copy";
+
+/* Alert message when the export failed */
+"Your earlier data is still kept on this device. Free up some space and try again." = "Your earlier data is still kept on this device. Free up some space and try again.";
+
+/* Alert title when deleting the preserved copy failed */
+"Couldn't delete the copy" = "Couldn't delete the copy";
+
+/* Alert message when deleting the preserved copy failed */
+"Try again in a moment." = "Try again in a moment.";
+
 /* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
 "On your Home Screen too" = "On your Home Screen too";
 "A widget with your people's photos and ages" = "A widget with your people's photos and ages";

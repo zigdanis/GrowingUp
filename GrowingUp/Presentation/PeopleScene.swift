@@ -10,6 +10,9 @@ struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
 	@State private var pictures: MosaicPicturesPresenter
+	/// Earlier data store recovery set aside, which the corner capsule opens.
+	@State private var preserved: PreservedDataPresenter
+	@State private var showsPreservedData = false
 	@Namespace private var zoom
 	@State private var isShowingWidgetGuide = false
 	/// The pinned people as the widget shows them, for the widget hint and its guide; nil while neither needs them.
@@ -27,6 +30,8 @@ struct PeopleScene: View {
 		_presenter = Bindable(presenter)
 		self.preferredColorScheme = preferredColorScheme
 		_pictures = State(initialValue: MosaicPicturesPresenter(loadThumbnail: presenter.configurator.loadThumbnail))
+		_preserved = State(
+			initialValue: PreservedDataPresenter(gateway: presenter.configurator.preservedStores, analytics: presenter.configurator.analytics))
 	}
 
 	var body: some View {
@@ -37,6 +42,14 @@ struct PeopleScene: View {
 				layout: layout, spansFold: layout.spansFold(idiom: idiom), window: window, trailingInset: geometry.safeAreaInsets.trailing)
 			home(layout: layout, trailingPane: trailingPane)
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
+				.safeAreaInset(edge: .top, spacing: 8) {
+					if preserved.newest != nil {
+						HomeCornerButton { showsPreservedData = true }
+							.frame(maxWidth: .infinity, alignment: .trailing)
+							.padding(.horizontal, 16)
+							.transition(.opacity)
+					}
+				}
 				// The list's last row always scrolls clear of the button.
 				.safeAreaInset(edge: .bottom, spacing: 12) {
 					if presenter.isReordering {
@@ -65,12 +78,18 @@ struct PeopleScene: View {
 		// The mosaic has no text input; beside another app in Split View, its keyboard must not move it.
 		.ignoresSafeArea(.keyboard)
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
-		.task { await presenter.loadWithWidgetHint() }
+		.task {
+			await presenter.loadWithWidgetHint()
+			// The load may have just set a store aside, by this process or the widget's; only now is it there to find.
+			await preserved.refresh()
+		}
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		// Back in the app, whatever could not be read before gets another try, such as after the device was unlocked.
 		.task(id: scenePhase) {
 			guard scenePhase == .active else { return }
 			await presenter.load()
+			// A load that only now succeeded may have set a store aside, and the widget may have while the app was away.
+			await preserved.refresh()
 			await pictures.retryFailedPictures()
 		}
 		.onOpenURL(perform: presenter.open)
@@ -80,6 +99,14 @@ struct PeopleScene: View {
 				.navigationTransition(.zoom(sourceID: presenter.selectedID, in: zoom))
 				// The viewer lies on photos, so it stays dark whatever the mosaic's theme.
 				.preferredColorScheme(.dark)
+		}
+		// An archive the closed sheet can no longer share is removed, even one still being written.
+		.sheet(isPresented: $showsPreservedData, onDismiss: preserved.abandonExport) {
+			PreservedDataSheet(presenter: preserved)
+		}
+		// A widget link that opens a person takes the screen over.
+		.onChange(of: presenter.isViewing) { _, isViewing in
+			if isViewing { showsPreservedData = false }
 		}
 		.sheet(isPresented: $isShowingWidgetGuide) {
 			WidgetGuideSheet(entry: widgetPreview, now: presenter.configurator.now)
@@ -190,7 +217,10 @@ struct PeopleScene: View {
 	}
 
 	private func retry() {
-		Task { await presenter.load() }
+		Task {
+			await presenter.load()
+			await preserved.refresh()
+		}
 	}
 
 	private func finishReordering() {
