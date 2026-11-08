@@ -220,6 +220,32 @@ final class ICloudBackupServiceTests: XCTestCase {
 		XCTAssertTrue(settings.isRestoreOfferDismissed)
 	}
 
+	func testABackupChosenBeforeTheAccountChangedIsNotDeleted() async throws {
+		try addPerson("Mia")
+		let service = await makeService()
+		await service.backUpNow()
+		await service.refreshCandidates()
+		let chosen = try XCTUnwrap(service.candidates.first)
+		// The same install folder may exist in the new account: it is another backup.
+		service.accountChanged()
+		try await waitUntil { service.availability == .available }
+
+		do {
+			try await service.deleteBackup(chosen)
+			XCTFail("A backup of the previous account is not deleted")
+		} catch {}
+		XCTAssertTrue(folder.hasDocument)
+	}
+
+	func testAScheduledWriteChecksTheUpload() async throws {
+		try addPerson("Mia")
+		let service = await makeService(debounce: .milliseconds(10))
+		service.libraryChanged()
+		try await waitUntil { service.lastBackupAt != nil }
+		// A folder on the device is no iCloud file; the check after the write says so.
+		try await waitUntil { service.uploadState == .notInICloud }
+	}
+
 	func testDeletingThisDevicesBackupWritesItAgainOnTheNextChange() async throws {
 		try addPerson("Mia")
 		let service = await makeService()

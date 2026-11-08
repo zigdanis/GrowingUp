@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0757B4346EA75197BC728C7B /* BackupDigestCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */; };
 		3D155C652CCBCEF34672506C /* BackupPassScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */; };
 		460B67970D2B170D9D402401 /* PeoplePresenter+ICloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639B959958389D2742679C7C /* PeoplePresenter+ICloudBackup.swift */; };
 		27FD26186F4F83FF0CC9DB80 /* BackupPresenterICloudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA959E2FACBC71E86F40D0A5 /* BackupPresenterICloudTests.swift */; };
@@ -549,6 +550,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDigestCache.swift; sourceTree = "<group>"; };
 		84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPassScheduler.swift; sourceTree = "<group>"; };
 		639B959958389D2742679C7C /* PeoplePresenter+ICloudBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+ICloudBackup.swift"; sourceTree = "<group>"; };
 		FA959E2FACBC71E86F40D0A5 /* BackupPresenterICloudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPresenterICloudTests.swift; sourceTree = "<group>"; };
@@ -1566,6 +1568,7 @@
 				93B8D213DC2807BDEEC598AD /* PreservedStoreLibrary.swift */,
 				9D08932AFF4FAEDA3E9DFCEF /* CoreDataPeopleBackupGateway.swift */,
 				EDE14ABF56E98BE2939FDB6F /* BackupFolder.swift */,
+				4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */,
 				F8DBCF490AE681151EDFA280 /* BackupFolderStore.swift */,
 				00B3D1D5B0BF8A80996BE0ED /* BackupFileAccess.swift */,
 				58AB29B03C5D4CF625A7F77B /* BackupCodec.swift */,
@@ -2304,6 +2307,7 @@
 				B76DE2AF7D931D1078CC9995 /* PreservedStoreLibrary.swift in Sources */,
 				4ABD0C514DEB46776FF4FE81 /* CoreDataPeopleBackupGateway.swift in Sources */,
 				AD78C55B1C6E9BD217C34781 /* BackupFolder.swift in Sources */,
+				0757B4346EA75197BC728C7B /* BackupDigestCache.swift in Sources */,
 				2576B480269D7F7322322C7C /* BackupFolderStore.swift in Sources */,
 				52ED765CF5A007BB23E45DFB /* BackupFileAccess.swift in Sources */,
 				65BA0887AB10C0DB36AB3C50 /* BackupCodec.swift in Sources */,

@@ -38,6 +38,10 @@ struct ICloudBackupsView: View {
 		.task { await backup.refreshCandidates() }
 		.refreshable { await backup.refreshCandidates() }
 		.modifier(RestoreConfirmation(presenter: presenter, source: .icloud))
+		// A backup no longer listed, as after the iCloud account changed, can't be deleted from here any more.
+		.onChange(of: backup.candidates) { _, listed in
+			if let deletion, !listed.contains(deletion) { self.deletion = nil }
+		}
 		.confirmationDialog(
 			"Delete this backup from iCloud?", isPresented: isDeleting, titleVisibility: .visible, presenting: deletion
 		) { candidate in

@@ -81,6 +81,39 @@ final class BackupFolderTests: XCTestCase {
 		XCTAssertTrue(folder.isIntact)
 	}
 
+	/// Overwrites the photo file `name` with other bytes of the same length, as a damaged file can be.
+	private func damage(_ name: String) throws {
+		let url = photosURL.appendingPathComponent(name)
+		let size = try Data(contentsOf: url).count
+		try Data(repeating: 0x21, count: size).write(to: url)
+	}
+
+	func testAPhotoDamagedWithoutChangingItsSizeIsNeverPromotedToThePreviousCopy() async throws {
+		let first = try await addPersonWithPicture("Mia", at: 1_000)
+		try folder.write(first)
+		let second = try await addPersonWithPicture("Leo", at: 2_000)
+		try folder.write(second)
+		try damage(try XCTUnwrap(second.document.photos.map(\.file).first { !first.document.photos.map(\.file).contains($0) }))
+		XCTAssertFalse(folder.isIntact, "Same size, other bytes: not intact")
+		try library.removePerson(try XCTUnwrap(library.storedPeople().first { $0.name == "Leo" }).id)
+
+		try folder.write(try await addPersonWithPicture("Ava", at: 3_000))
+
+		XCTAssertEqual(try folder.document(previous: true).people.map(\.name), ["Mia"], "The good copy stays the previous one")
+		XCTAssertNoThrow(try folder.load(previous: true), "Its photos stay too")
+	}
+
+	func testAWriteReplacesAPhotoDamagedWithoutChangingItsSize() async throws {
+		let first = try await addPersonWithPicture("Mia", at: 1_000)
+		try folder.write(first)
+		try damage(try XCTUnwrap(first.document.photos.first?.file))
+
+		try folder.write(try await addPersonWithPicture("Leo", at: 2_000))
+
+		XCTAssertTrue(folder.isIntact)
+		XCTAssertNoThrow(try folder.load())
+	}
+
 	func testAWritePutsBackAPhotoTheLatestCopyLacks() async throws {
 		let first = try await addPersonWithPicture("Mia", at: 1_000)
 		try folder.write(first)

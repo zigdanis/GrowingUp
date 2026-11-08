@@ -146,6 +146,8 @@ final class ICloudBackupService {
 		}.value
 		// A write for the previous account must not mark the new one as backed up.
 		guard generation == storeGeneration else { return }
+		// After every pass, scheduled or not: iCloud may still be uploading, or may refuse the upload.
+		defer { watchUpload() }
 		switch outcome {
 		case .success(.written(let hash)):
 			settings.lastContentHash = hash
@@ -272,9 +274,11 @@ final class ICloudBackupService {
 		return try result.get()
 	}
 
-	/// Removes `candidate` from iCloud: an install's whole backup, or only its earlier copy.
+	/// Removes `candidate` from iCloud: an install's whole backup, or only its earlier copy. Only a backup still listed
+	/// goes: one chosen before the iCloud account changed belongs to the previous account, and the same install folder in
+	/// the new one is another backup.
 	func deleteBackup(_ candidate: BackupCandidate) async throws {
-		guard let store else { throw CocoaError(.fileNoSuchFile) }
+		guard let store, candidates.contains(candidate) else { throw CocoaError(.fileNoSuchFile) }
 		try await Task.detached(priority: .userInitiated) { try store.delete(candidate) }.value
 		candidates.removeAll { $0.folderName == candidate.folderName && (!candidate.isPreviousCopy || $0.isPreviousCopy) }
 		if candidate.isThisDevice, !candidate.isPreviousCopy {

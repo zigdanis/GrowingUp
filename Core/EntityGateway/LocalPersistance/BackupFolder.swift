@@ -25,8 +25,8 @@ public struct BackupFolder: Sendable {
 	// MARK: - Writing
 
 	/// Writes `snapshot` as the folder's backup: the photos first and the document last, so the document never names a
-	/// photo that is not there. A photo file already in the folder holds the same bytes, as its name says, and stays,
-	/// unless its size shows it damaged. The backup it replaces becomes the previous copy when it is complete; otherwise
+	/// photo that is not there. A photo file already in the folder stays when its bytes still match the SHA-256 its name
+	/// records, and is written again when they don't. The backup it replaces becomes the previous copy when it is complete; otherwise
 	/// the previous copy stays as it was.
 	public func write(_ snapshot: LibrarySnapshot) throws {
 		try FileManager.default.createDirectory(at: photosURL, withIntermediateDirectories: true)
@@ -118,15 +118,21 @@ public struct BackupFolder: Sendable {
 		return states.contains(.uploading) ? .uploading : .uploaded
 	}
 
-	/// Whether every photo `document` lists is in the folder.
+	/// Whether every photo `document` lists is in the folder, each on the device with the bytes its name records.
 	func isComplete(_ document: BackupDocument) -> Bool {
 		document.photos.allSatisfy(holds)
 	}
 
-	/// Whether the folder has the file of `photo`, downloaded or not; one on the device must also have the right size.
+	/// Whether the folder has the file of `photo` with the right bytes. A file on the device must match the SHA-256 its
+	/// name records, so a damaged one is never taken for a good copy; one iCloud has not downloaded yet can't be checked
+	/// without downloading it, and counts as there.
 	private func holds(_ photo: BackupPhoto) -> Bool {
 		let file = photosURL.appendingPathComponent(photo.file)
-		return access.exists(file) && (access.localSize(of: file).map { $0 == photo.size } ?? true)
+		guard access.exists(file) else { return false }
+		guard let size = access.localSize(of: file) else { return true }
+		guard size == photo.size else { return false }
+		let digest = try? access.reading(file) { try BackupDigestCache.shared.digest(of: $0) }
+		return digest == BackupCodec.digest(inPhotoFile: photo.file)
 	}
 
 	private func readDocument(at url: URL) throws -> (data: Data, document: BackupDocument) {
