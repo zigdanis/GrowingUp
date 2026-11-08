@@ -21,6 +21,8 @@ struct SceneConfigurator {
 	let reviewPrompter: ReviewPrompter?
 	/// The earlier libraries store recovery set aside; nil where there are none to find: tests, previews and UI tests.
 	let preservedStores: PreservedStoreGateway?
+	/// Reads the whole library for an export and adds a backup's people back; nil where the Backup sheet offers neither.
+	let backup: PeopleBackupGateway?
 	/// Shows the Home Screen widget hint on the mosaic; nil where it never shows: tests, previews and verification
 	/// launches other than `GROWINGUP_WIDGET_HINT=force`.
 	let widgetHinter: WidgetHinter?
@@ -30,10 +32,12 @@ struct SceneConfigurator {
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
-		reviewPrompter: ReviewPrompter? = nil, preservedStores: PreservedStoreGateway? = nil, widgetHinter: WidgetHinter? = nil
+		reviewPrompter: ReviewPrompter? = nil, preservedStores: PreservedStoreGateway? = nil, backup: PeopleBackupGateway? = nil,
+		widgetHinter: WidgetHinter? = nil
 	) {
 		self.analytics = analytics
 		self.preservedStores = preservedStores
+		self.backup = backup
 		self.reviewPrompter = reviewPrompter
 		self.widgetHinter = widgetHinter
 		self.loadImage = loadImage
@@ -79,6 +83,7 @@ struct SceneConfigurator {
 		}
 		return SceneConfigurator(
 			gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics,
-			reviewPrompter: reviewPrompter, preservedStores: try? PreservedStoreLibrary.shared(), widgetHinter: widgetHinter)
+			reviewPrompter: reviewPrompter, preservedStores: try? PreservedStoreLibrary.shared(), backup: try? CoreDataPeopleBackupGateway.shared(),
+			widgetHinter: widgetHinter)
 	}
 }

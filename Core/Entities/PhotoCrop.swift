@@ -5,7 +5,7 @@ import CoreGraphics
 ///
 /// Every picture is rendered from the original through its own region, never from another picture, so framing a picture
 /// again starts from the whole photo and loses no pixels.
-public struct PhotoCrop: Hashable, Sendable {
+public struct PhotoCrop: Codable, Hashable, Sendable {
 	/// The whole photo, the region of a picture picked before originals were kept, which serves as its own original.
 	public static let whole = PhotoCrop(minX: 0, minY: 0, width: 1, height: 1)
 

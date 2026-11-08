@@ -11,7 +11,7 @@ import Observation
 final class PreservedDataPresenter {
 	/// Every preserved store, newest first; empty when nothing was ever set aside.
 	private(set) var stores: [PreservedStore] = []
-	private(set) var export: PreservedDataExport = .idle
+	private(set) var export: FileExport = .idle
 	/// Whether a confirmed deletion is under way.
 	private(set) var isDeleting = false
 	/// What the sheet's alert explains: an export or a deletion that failed.

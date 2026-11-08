@@ -57,7 +57,8 @@ enum AppComposition {
 				: nil
 			return SceneConfigurator(
 				gateway: gateway, loadImage: images.load, loadOriginal: images.loadOriginal, loadThumbnail: images.loadThumbnail,
-				now: now, photoFixtures: photoFixtures, analytics: analytics, widgetHinter: widgetHinter)
+				now: now, photoFixtures: photoFixtures, analytics: analytics,
+				backup: CoreDataPeopleBackupGateway(coreDataStack: stack, photosDirectory: root), widgetHinter: widgetHinter)
 		}
 
 		private static func photoFixtures(environment: [String: String]) throws -> [UIImage] {
