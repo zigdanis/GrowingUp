@@ -2,7 +2,7 @@
 //  GrowingUpLockScreenWidget.swift
 //  Widget
 //
-//  Lock Screen and StandBy widgets with the age and next birthday of the
+//  The Lock Screen and StandBy widget with the name, age and next birthday of the
 //  first pinned person.
 //
 
@@ -19,6 +19,6 @@ struct GrowingUpLockScreenWidget: Widget {
 		}
 		.configurationDisplayName("GrowingUp")
 		.description("Age and next birthday of your first pinned person.")
-		.supportedFamilies([.accessoryCircular, .accessoryRectangular, .accessoryInline])
+		.supportedFamilies([.accessoryRectangular])
 	}
 }
