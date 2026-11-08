@@ -68,8 +68,11 @@ struct PeopleScene: View {
 		// The mosaic has no text input; beside another app in Split View, its keyboard must not move it.
 		.ignoresSafeArea(.keyboard)
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
-		.task { await presenter.load() }
-		.task { await preserved.refresh() }
+		.task {
+			await presenter.load()
+			// The load may have just set a store aside, by this process or the widget's; only now is it there to find.
+			await preserved.refresh()
+		}
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
