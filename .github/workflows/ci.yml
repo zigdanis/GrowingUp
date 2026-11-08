@@ -202,8 +202,7 @@ jobs:
           sudo xcode-select -switch /Applications/Xcode_27.1.app
           xcodebuild -version
 
-      # A cold simulator takes minutes to boot, so it boots while packages restore and the app builds.
-      - name: Boot iOS Simulator in the background
+      - name: Pick iOS Simulator
         id: sim
         run: |
           DEVICE=$(xcrun simctl list devices available --json \
@@ -212,7 +211,6 @@ jobs:
           UDID=$(jq -r '.udid' <<< "$DEVICE")
           echo "Using $(jq -r '.name' <<< "$DEVICE") ($UDID)"
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
-          nohup xcrun simctl boot "$UDID" > "$RUNNER_TEMP/simulator-boot.log" 2>&1 &
 
       - uses: ./.github/actions/swift-packages
 
@@ -227,11 +225,15 @@ jobs:
           restore-keys: |
             xcode-cas-27.1-debug-
 
-      - name: Build for testing
+      # A fresh runner's simulator takes minutes for its first boot, and any xcodebuild started during that boot
+      # stalls until it ends. So the build starts first and the simulator boots once the build is under way.
+      - name: Build for testing while the simulator boots
         env:
           SIM_UDID: ${{ steps.sim.outputs.udid }}
         run: |
-          xcodebuild build-for-testing \
+          LOG="$RUNNER_TEMP/build-for-testing.log"
+          # The subshell inherits pipefail, so its status is xcodebuild's.
+          (xcodebuild build-for-testing \
             -project GrowingUp.xcodeproj \
             -scheme GrowingUp \
             -destination "id=$SIM_UDID" \
@@ -240,7 +242,12 @@ jobs:
             -disablePackageRepositoryCache \
             -disableAutomaticPackageResolution \
             -enableCodeCoverage NO \
-            COMPILATION_CACHE_ENABLE_CACHING=YES
+            COMPILATION_CACHE_ENABLE_CACHING=YES 2>&1 | tee "$LOG") &
+          BUILD=$!
+          until grep -q 'Build description path' "$LOG" || ! kill -0 "$BUILD" 2>/dev/null; do sleep 1; done
+          echo "::notice::Booting the simulator at ${SECONDS}s into the build"
+          xcrun simctl boot "$SIM_UDID" > "$RUNNER_TEMP/simulator-boot.log" 2>&1 &
+          wait "$BUILD"
           du -sh ~/DerivedData/CompilationCache.noindex || true
 
       - name: Wait for simulator boot
@@ -249,7 +256,7 @@ jobs:
         run: |
           SECONDS=0
           xcrun simctl bootstatus "$SIM_UDID" -b
-          echo "Simulator ready after a further ${SECONDS}s"
+          echo "::notice::Simulator ready ${SECONDS}s after the build"
           cat "$RUNNER_TEMP/simulator-boot.log"
 
       - name: Unit tests
