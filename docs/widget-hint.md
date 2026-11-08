@@ -35,7 +35,8 @@ For good, after any of:
 - ×, which fades it out;
 - a GrowingUp Home Screen or Today View widget found on a later foreground;
 - **10 launches** it was shown on without a tap. A launch is one stay in the foreground, from the app
-  coming up until it goes to the background, and it counts only when the strip took its place in it.
+  coming up until it goes to the background, and it counts only when the mosaic showed the strip in it
+  (as the people load, or when the viewer closes over a strip that took its place under it).
   The strip leaves, unseen, when the app goes to the background; on the next launch it comes back only
   after that launch's widget lookup found no widget, as the people load or under the viewer.
 

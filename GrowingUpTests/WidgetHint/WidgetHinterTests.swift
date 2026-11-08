@@ -23,9 +23,9 @@ final class WidgetHinterTests: XCTestCase {
 	func testShowsOnceTheLookupFindsNoWidgetAndCountsTheLaunchOnce() async {
 		let hinter = await makeHinter()
 		XCTAssertFalse(hinter.offers(people: people()), "Nothing before the mosaic reveals it")
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertTrue(hinter.offers(people: people()))
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertEqual(store().state.shownLaunches, 1)
 		XCTAssertEqual(analytics.events, [.widgetHintShown(shownLaunches: 1)])
 		XCTAssertFalse(hinter.offers(people: [person(onWidget: false)]), "Nobody on the widget any more")
@@ -34,23 +34,23 @@ final class WidgetHinterTests: XCTestCase {
 	func testWaitsForTheDaysAndVisitsTheRatingPromptCounts() async {
 		usage.activeDays = 1
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertFalse(hinter.offers(people: people()))
 		usage.activeDays = 2
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertTrue(hinter.offers(people: people()))
 	}
 
 	func testAnInstalledWidgetEndsTheHintForGoodAndAFailedLookupHidesIt() async {
 		installed = nil
 		let failed = await makeHinter()
-		failed.reveal(people: people())
+		show(failed)
 		XCTAssertFalse(failed.offers(people: people()), "A failed lookup means no hint")
 		XCTAssertFalse(store().state.isRetired)
 		installed = false
 		failed.appBecameActive()
 		await failed.waitForWidgetLookup()
-		failed.reveal(people: people())
+		show(failed)
 		XCTAssertTrue(failed.offers(people: people()))
 		installed = true
 		failed.appBecameActive()
@@ -60,24 +60,24 @@ final class WidgetHinterTests: XCTestCase {
 		installed = false
 		failed.appBecameActive()
 		await failed.waitForWidgetLookup()
-		failed.reveal(people: people())
+		show(failed)
 		XCTAssertFalse(failed.offers(people: people()), "Gone for good, even once the widget is removed")
 	}
 
 	func testATapOrCloseEndsTheHintForGood() async {
 		let opened = await makeHinter()
-		opened.reveal(people: people())
+		show(opened)
 		opened.opened()
 		XCTAssertFalse(opened.offers(people: people()))
 		XCTAssertEqual(analytics.events.last, .widgetHintOpened(shownLaunches: 1))
 		XCTAssertTrue(store().state.isRetired)
 		let reopened = await makeHinter()
-		reopened.reveal(people: people())
+		show(reopened)
 		XCTAssertFalse(reopened.offers(people: people()), "Retirement is stored")
 
 		let closedDefaults = UserDefaults(suiteName: "WidgetHinterTests.\(UUID().uuidString)")!
 		let closed = await makeHinter(defaults: closedDefaults)
-		closed.reveal(people: people())
+		show(closed)
 		closed.dismissed()
 		XCTAssertFalse(closed.offers(people: people()))
 		XCTAssertEqual(analytics.events.last, .widgetHintDismissed(shownLaunches: 1))
@@ -86,28 +86,28 @@ final class WidgetHinterTests: XCTestCase {
 
 	func testASetbackHidesTheHintForTheSession() async {
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		hinter.noteSetback()
 		XCTAssertFalse(hinter.offers(people: people()))
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertFalse(hinter.offers(people: people()), "Not again in the same session")
 		await startNewSession(hinter)
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertTrue(hinter.offers(people: people()))
 		XCTAssertEqual(store().state.shownLaunches, 2)
 	}
 
 	func testEveryLaunchTheStripTakesItsPlaceCountsUntilTheTenth() async {
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		for _ in 0..<9 {
 			await startNewSession(hinter)
-			hinter.reveal(people: people())
+			show(hinter)
 		}
 		XCTAssertTrue(hinter.offers(people: people()))
 		XCTAssertEqual(store().state.shownLaunches, 10)
 		await startNewSession(hinter)
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertFalse(hinter.offers(people: people()), "Ten launches without a tap")
 		XCTAssertEqual(store().state.shownLaunches, 10)
 		XCTAssertEqual(analytics.events.count, 10)
@@ -115,24 +115,24 @@ final class WidgetHinterTests: XCTestCase {
 
 	func testALaunchWithoutTheStripIsNotCounted() async {
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		await startNewSession(hinter)
 		XCTAssertFalse(hinter.offers(people: people()), "The strip waits for the mosaic to be covered again")
 		hinter.reveal(people: [person(onWidget: false)])
 		await startNewSession(hinter)
 		XCTAssertEqual(store().state.shownLaunches, 1, "Launches spent without the strip leave the count alone")
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertEqual(store().state.shownLaunches, 2)
 	}
 
 	func testAForegroundWaitsForItsOwnLookup() async {
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		installed = true
 		hinter.appEnteredBackground()
 		hinter.appBecameActive()
 		XCTAssertFalse(hinter.offers(people: people()), "No stale strip before the lookup answers")
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertFalse(hinter.offers(people: people()), "Nor from the previous launch's answer")
 		await hinter.waitForWidgetLookup()
 		XCTAssertTrue(store().state.isRetired)
@@ -141,10 +141,10 @@ final class WidgetHinterTests: XCTestCase {
 	func testARecentRatingRequestKeepsTheHintAway() async {
 		usage.requestDates = [now - 3_600]
 		let hinter = await makeHinter()
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertFalse(hinter.offers(people: people()))
 		now += day
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertTrue(hinter.offers(people: people()))
 	}
 
@@ -152,7 +152,7 @@ final class WidgetHinterTests: XCTestCase {
 		usage = ReviewPromptState()
 		installed = true
 		let hinter = await makeHinter(mode: .forced)
-		hinter.reveal(people: people())
+		show(hinter)
 		XCTAssertTrue(hinter.offers(people: people()), "Whatever the days, visits and installed widgets")
 		hinter.dismissed()
 		XCTAssertFalse(hinter.offers(people: people()))
@@ -171,7 +171,22 @@ final class WidgetHinterTests: XCTestCase {
 		XCTAssertTrue(store().state.isRetired)
 	}
 
+	func testAStripLeftUnderTheViewerIsNotCounted() async {
+		let hinter = await makeHinter()
+		hinter.reveal(people: people())
+		XCTAssertTrue(hinter.offers(people: people()))
+		await startNewSession(hinter)
+		XCTAssertEqual(store().state.shownLaunches, 0, "The app went away before the viewer closed over it")
+		XCTAssertTrue(analytics.events.isEmpty)
+	}
+
 	// MARK: - Helpers
+
+	/// The strip takes its place under the viewer, which then closes over it.
+	private func show(_ hinter: WidgetHinter) {
+		hinter.reveal(people: people())
+		hinter.seen()
+	}
 
 	private func makeHinter(mode: WidgetHintMode = .policy, defaults: UserDefaults? = nil) async -> WidgetHinter {
 		let hinter = WidgetHinter(

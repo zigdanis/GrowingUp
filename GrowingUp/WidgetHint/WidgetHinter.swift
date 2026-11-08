@@ -66,6 +66,12 @@ final class WidgetHinter {
 			guard isWidgetAbsent, policy.allowsLaunch(state, usage: usage(), now: now()) else { return }
 		}
 		isRevealed = true
+	}
+
+	/// The mosaic shows the strip: this launch counts toward the strip's launches, once. A strip that took its place
+	/// under the viewer counts only when the viewer closes, so one left unseen, as the app goes away, never does.
+	func seen() {
+		guard isRevealed else { return }
 		countLaunch()
 	}
 

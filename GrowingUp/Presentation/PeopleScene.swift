@@ -99,7 +99,10 @@ struct PeopleScene: View {
 				widgetPreview = nil
 				return
 			}
-			widgetPreview = await presenter.widgetPreviewEntry()
+			let entry = await presenter.widgetPreviewEntry()
+			// A load the hint closing or the pinned people changing replaced must not bring back its pictures.
+			guard !Task.isCancelled else { return }
+			widgetPreview = entry
 		}
 		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
 		.task(id: presenter.configurator.reviewPrompter?.pendingRequest) {
@@ -125,7 +128,7 @@ struct PeopleScene: View {
 				evenColumns: layout == .landscape && layout.spansFold(idiom: idiom), tileWidths: MosaicGridLayout.tileWidths(idiom: idiom),
 				fillsWindow: idiom == .pad,
 				isReordering: presenter.isReordering, reservesHint: presenter.reservesWidgetHint,
-				hint: presenter.showsWidgetHint ? widgetHint : nil, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
+				hint: presenter.reservesWidgetHint ? widgetHint : nil, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
 				onStartReordering: presenter.startReordering, onFinishReordering: finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
 			)
@@ -188,6 +191,8 @@ struct PeopleScene: View {
 	/// the invitation takes the place of the last one.
 	private func coverDidClose() {
 		withAnimation(reduceMotion ? nil : .snappy(duration: 0.35)) { presenter.coverDidClose() }
+		// The mosaic shows again, with the strip if it took its place under the viewer: now the launch counts.
+		presenter.noteWidgetHintSeen()
 	}
 
 	/// The whole window, safe areas included, whose shape picks the layout like the viewer's pages.

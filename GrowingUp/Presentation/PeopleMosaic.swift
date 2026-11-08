@@ -25,7 +25,8 @@ struct PeopleMosaic: View {
 	let isReordering: Bool
 	/// Whether the widget hint keeps its place after the tiles; reordering hides it but keeps the place, so no tile moves.
 	let reservesHint: Bool
-	/// The widget hint in its place, while it shows.
+	/// The widget hint in its place, while it keeps it; reordering hides it there, so its row or slot keeps its size and
+	/// the scroll offset stays put under a lifted tile.
 	let hint: ((WidgetHintPlacement) -> WidgetHintStrip)?
 	let zoom: Namespace.ID
 	let now: () -> Date
@@ -69,13 +70,13 @@ struct PeopleMosaic: View {
 									.id(person.id)
 							}
 							if let hint, let placement, placement != .row {
-								hint(placement)
+								hidingWhileReordering(hint(placement))
 									.frame(width: grid.tileWidth, height: grid.tileHeight)
 									.transition(.opacity)
 							}
 						}
 						if let hint, placement == .row {
-							hint(.row)
+							hidingWhileReordering(hint(.row))
 								.frame(width: grid.contentWidth)
 								.transition(.opacity)
 						}
@@ -116,6 +117,14 @@ struct PeopleMosaic: View {
 		}
 		// The first row's names stay clear of a window's controls.
 		.modifier(WindowControlsClearance(edges: .top))
+	}
+
+	/// The widget hint, invisible and out of reach while reordering but still taking its room.
+	private func hidingWhileReordering(_ strip: WidgetHintStrip) -> some View {
+		strip
+			.opacity(isReordering ? 0 : 1)
+			.allowsHitTesting(!isReordering)
+			.accessibilityHidden(isReordering)
 	}
 
 	/// The grid in `size` and, while the widget hint keeps its place, where the hint goes.

@@ -17,6 +17,13 @@ extension PeoplePresenter {
 	func loadWithWidgetHint() async {
 		await load()
 		revealWidgetHint()
+		noteWidgetHintSeen()
+	}
+
+	/// The mosaic is on screen: a strip in it now counts toward its launches.
+	func noteWidgetHintSeen() {
+		guard showsWidgetHint else { return }
+		configurator.widgetHinter?.seen()
 	}
 
 	/// Gives the widget hint its place in the mosaic when its rules allow it; only while the mosaic is off screen, as
