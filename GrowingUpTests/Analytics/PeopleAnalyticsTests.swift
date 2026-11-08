@@ -19,7 +19,7 @@ final class PeopleAnalyticsTests: XCTestCase {
 		let failing = AnalyticsGatewaySpy()
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway, analytics: failing), reloadWidgets: {})
 		await presenter.load()
-		XCTAssertNotNil(presenter.error)
+		XCTAssertEqual(presenter.library.state, .unavailable(isRetrying: false))
 		XCTAssertEqual(failing.operations, ["load_people"])
 	}
 

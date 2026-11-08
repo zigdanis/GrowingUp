@@ -69,13 +69,13 @@ final class SwiftUIPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.selectedID, pinned[0].id)
 	}
 
-	func testLoadErrorIsVisibleAndEndsLoading() async {
+	func testLoadErrorShowsThePeopleAsUnavailableWithoutAnAlert() async {
 		let gateway = PersonsGatewaySpy()
 		gateway.fetchPersonsResultToBeReturned = .failure(.coreDataFetchFailed)
 		let presenter = PeoplePresenter(configurator: SceneConfigurator(gateway: gateway), reloadWidgets: {})
 		await presenter.load()
-		XCTAssertFalse(presenter.isLoading)
-		XCTAssertEqual(presenter.error?.message, CoreError.coreDataFetchFailed.message)
+		XCTAssertEqual(presenter.library.state, .unavailable(isRetrying: false))
+		XCTAssertNil(presenter.error, "The unavailable mosaic with Try Again explains the failure in place of an alert")
 	}
 
 	func testSaveFailureRestoresButtonsAndDoesNotDismiss() async {
