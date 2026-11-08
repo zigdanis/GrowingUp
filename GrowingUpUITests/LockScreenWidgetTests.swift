@@ -10,11 +10,11 @@ final class LockScreenWidgetTests: XCTestCase {
 		app = XCUIApplication()
 	}
 
-	func testLockScreenWidgetFamiliesAndStates() {
-		launch(seed: .sixPinned, widgetFamily: "circular")
+	func testLockScreenWidgetStates() {
+		launch(seed: .sixPinned, widgetFamily: "rectangular")
 		XCTAssertTrue(widgetTile("Alice").waitForExistence(timeout: 5))
 		XCTAssertFalse(widgetTile("Boris").exists)
-		checkpoint("widget-circular-en")
+		checkpoint("widget-rectangular-en")
 		app.terminate()
 		launch(seed: .birthdays, locale: "ru", widgetFamily: "rectangular", clock: "2027-01-16T08:00:00Z")
 		let alice = widgetTile("Alice")
@@ -22,10 +22,10 @@ final class LockScreenWidgetTests: XCTestCase {
 		XCTAssertTrue(alice.label.contains("Сегодня день рождения"), alice.label)
 		checkpoint("widget-rectangular-birthday-ru")
 		app.terminate()
-		launch(seed: .empty, widgetFamily: "inline")
+		launch(seed: .empty, widgetFamily: "rectangular")
 		let invitation = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "Add someone")).firstMatch
 		XCTAssertTrue(invitation.waitForExistence(timeout: 5))
-		checkpoint("widget-inline-empty-en")
+		checkpoint("widget-rectangular-empty-en")
 	}
 
 	private func launch(seed: UITestSeed, locale: String = "en", widgetFamily: String, clock: String? = nil) {

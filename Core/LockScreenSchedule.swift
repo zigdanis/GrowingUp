@@ -6,7 +6,7 @@ public enum LockScreenSchedule {
 	public static let horizon: TimeInterval = 7 * 86_400
 
 	/// The moments strictly after `now`, at most `limit` of them and at most `horizon` ahead, at which the Lock Screen
-	/// changes: every local midnight, when the birthday countdown and the ring move on, and every age change it shows.
+	/// may change: every local midnight, when the birthday countdown moves on, and every age change it shows.
 	///
 	/// The Lock Screen counts hours during the first day of life and days afterwards, so a newborn's timeline ends when
 	/// they turn one day old and the next one continues in days. Birthdays start at midnight, so the next birthday is

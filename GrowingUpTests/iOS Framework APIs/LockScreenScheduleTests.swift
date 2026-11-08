@@ -20,23 +20,18 @@ final class LockScreenScheduleTests: XCTestCase {
 		XCTAssertEqual(entryDates(leo, now, limit: 14), expected)
 	}
 
-	func testEveryEntryChangesTheText() {
+	/// Midnights are scheduled whether or not the text changes then, so only the age changes between them must show.
+	func testEveryAgeChangeIsAnEntry() {
 		let now = date(2025, 9, 29, 20, 30)
-		var previous = text(leo, now)
-		for moment in entryDates(leo, now, limit: 14) {
-			let current = text(leo, moment)
-			XCTAssertNotEqual(current, previous, "\(moment)")
-			XCTAssertEqual(text(leo, moment.addingTimeInterval(-1)), previous, "\(moment)")
-			previous = current
-		}
+		assertTextChangesOnlyAtEntries(leo, after: now, limit: 14)
 	}
 
 	func testNextBirthdayIsScheduledWithTheAgeChangeAtTheBirthTime() {
 		let dates = entryDates(leo, date(2026, 5, 28, 12), limit: 14)
 		XCTAssertTrue(dates.contains(date(2026, 6, 3)))
 		XCTAssertTrue(dates.contains(date(2026, 6, 3, 8)))
-		XCTAssertTrue(text(leo, date(2026, 6, 3)).isBirthday)
-		XCTAssertFalse(text(leo, date(2026, 6, 3).addingTimeInterval(-1)).isBirthday)
+		XCTAssertEqual(text(leo, date(2026, 6, 3)).birthdayLine, "Birthday today 🎂")
+		XCTAssertEqual(text(leo, date(2026, 6, 3).addingTimeInterval(-1)).birthdayLine, "Birthday in 1 day")
 	}
 
 	func testLimitCapsTheEntries() {
@@ -84,14 +79,7 @@ final class LockScreenScheduleTests: XCTestCase {
 
 	func testEveryHourOfTheFirstDayChangesTheText() {
 		let birth = date(2026, 1, 10, 10, 7).addingTimeInterval(30)
-		let now = date(2026, 1, 10, 10, 30)
-		var previous = text(birth, now)
-		for moment in entryDates(birth, now, limit: 40) {
-			let current = text(birth, moment)
-			XCTAssertNotEqual(current, previous, "\(moment)")
-			XCTAssertEqual(text(birth, moment.addingTimeInterval(-1)), previous, "\(moment)")
-			previous = current
-		}
+		assertTextChangesOnlyAtEntries(birth, after: date(2026, 1, 10, 10, 30), limit: 40)
 	}
 
 	func testAfterTheFirstDayTheAgeChangesOnceADay() {
@@ -107,6 +95,19 @@ final class LockScreenScheduleTests: XCTestCase {
 		XCTAssertTrue(dates.contains(date(2026, 6, 4, 8)))
 		for (earlier, later) in zip(dates, dates.dropFirst()) {
 			XCTAssertGreaterThanOrEqual(later.timeIntervalSince(earlier), 3_600, "\(earlier) – \(later)")
+		}
+	}
+
+	/// The text never changes between two entries, and every entry but a midnight changes it.
+	private func assertTextChangesOnlyAtEntries(_ birthday: Date, after now: Date, limit: Int, line: UInt = #line) {
+		var previous = text(birthday, now)
+		for moment in entryDates(birthday, now, limit: limit) {
+			let current = text(birthday, moment)
+			if !isMidnight(moment) {
+				XCTAssertNotEqual(current, previous, "\(moment)", line: line)
+			}
+			XCTAssertEqual(text(birthday, moment.addingTimeInterval(-1)), previous, "\(moment)", line: line)
+			previous = current
 		}
 	}
 
