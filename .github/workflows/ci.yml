@@ -225,15 +225,11 @@ jobs:
           restore-keys: |
             xcode-cas-27.1-debug-
 
-      # A fresh runner's simulator takes minutes for its first boot, and any xcodebuild started during that boot
-      # stalls until it ends. So the build starts first and the simulator boots once the build is under way.
-      - name: Build for testing while the simulator boots
+      - name: Build for testing
         env:
           SIM_UDID: ${{ steps.sim.outputs.udid }}
         run: |
-          LOG="$RUNNER_TEMP/build-for-testing.log"
-          # The subshell inherits pipefail, so its status is xcodebuild's.
-          (xcodebuild build-for-testing \
+          xcodebuild build-for-testing \
             -project GrowingUp.xcodeproj \
             -scheme GrowingUp \
             -destination "id=$SIM_UDID" \
@@ -242,22 +238,17 @@ jobs:
             -disablePackageRepositoryCache \
             -disableAutomaticPackageResolution \
             -enableCodeCoverage NO \
-            COMPILATION_CACHE_ENABLE_CACHING=YES 2>&1 | tee "$LOG") &
-          BUILD=$!
-          until grep -q 'Build description path' "$LOG" || ! kill -0 "$BUILD" 2>/dev/null; do sleep 1; done
-          echo "::notice::Booting the simulator at ${SECONDS}s into the build"
-          xcrun simctl boot "$SIM_UDID" > "$RUNNER_TEMP/simulator-boot.log" 2>&1 &
-          wait "$BUILD"
+            COMPILATION_CACHE_ENABLE_CACHING=YES
           du -sh ~/DerivedData/CompilationCache.noindex || true
 
-      - name: Wait for simulator boot
+      # A fresh runner's first simulator boot is disk-heavy and stalls any xcodebuild running at the same time,
+      # so it runs on its own between the build and the tests.
+      - name: Boot simulator
         env:
           SIM_UDID: ${{ steps.sim.outputs.udid }}
         run: |
-          SECONDS=0
           xcrun simctl bootstatus "$SIM_UDID" -b
-          echo "::notice::Simulator ready ${SECONDS}s after the build"
-          cat "$RUNNER_TEMP/simulator-boot.log"
+          echo "::notice::Simulator booted in ${SECONDS}s"
 
       - name: Unit tests
         env:
