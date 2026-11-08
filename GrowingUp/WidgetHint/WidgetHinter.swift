@@ -98,10 +98,15 @@ final class WidgetHinter {
 		startLookup()
 	}
 
-	/// The app left the screen; the next foreground use is a new launch.
+	/// The app left the screen; the next foreground use is a new launch. The strip leaves with it, unseen, and the last
+	/// lookup no longer counts: the next launch shows the strip again only once its own lookup has found no widget and the
+	/// mosaic is covered once more, so a widget added meanwhile never shows a stale strip and the launch counts only when
+	/// the strip really takes its place.
 	func appEnteredBackground() {
 		hadSetbackThisSession = false
 		countedThisSession = false
+		isRevealed = false
+		isWidgetAbsent = false
 	}
 
 	/// Waits for the widget lookup under way, if any.
@@ -127,10 +132,8 @@ final class WidgetHinter {
 			isWidgetAbsent = false
 			if !state.isRetired { retire() }
 		case false?:
+			// The strip takes its place at the next `reveal(people:)`, while the mosaic is covered.
 			isWidgetAbsent = true
-			// A strip still in place from an earlier launch shows on this one too, if the rules still allow it.
-			guard isRevealed, !countedThisSession else { return }
-			if policy.allowsLaunch(state, usage: usage(), now: now()) { countLaunch() } else { isRevealed = false }
 		case nil:
 			isWidgetAbsent = false
 			isRevealed = false

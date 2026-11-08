@@ -35,7 +35,9 @@ For good, after any of:
 - ×, which fades it out;
 - a GrowingUp Home Screen or Today View widget found on a later foreground;
 - **10 launches** it was shown on without a tap. A launch is one stay in the foreground, from the app
-  coming up until it goes to the background.
+  coming up until it goes to the background, and it counts only when the strip took its place in it.
+  The strip leaves, unseen, when the app goes to the background; on the next launch it comes back only
+  after that launch's widget lookup found no widget, as the people load or under the viewer.
 
 The state lives in the app's own `UserDefaults` under `widgetHint` and survives updates. A value the app
 can't read counts as ended, so a damaged value never brings the hint back.
@@ -47,7 +49,8 @@ can't read counts as ended, so a damaged value never brings the hint back.
   the viewer opened over the mosaic, once its cover has grown over it. So it is already there whenever
   the mosaic shows, and the user never sees it arrive.
 - **Never with the rating request.** While the strip has its place, the rating prompt does not ask
-  (`takeReviewRequest`); and the strip stays away for 24 hours after a request.
+  (`takeReviewRequest`); a tap on the strip drops a request still waiting for its pause, so the rating sheet
+  never lands on the guide; and the strip stays away for 24 hours after a request.
 - **Never during a birthday celebration, an alert, or reordering**, as above.
 
 ## Where it sits

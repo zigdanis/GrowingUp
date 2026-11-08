@@ -46,7 +46,7 @@ struct WidgetHintStrip: View {
 	}
 
 	/// The tile-sized card: the Home Screen on top, the words below. When the words need all the room, as at the largest
-	/// text sizes, the picture gives way.
+	/// text sizes, the picture gives way, and words still taller than the tile scroll within it.
 	private var card: some View {
 		ViewThatFits(in: .vertical) {
 			VStack(alignment: .leading, spacing: 14) {
@@ -55,9 +55,12 @@ struct WidgetHintStrip: View {
 				words(subtitle: "Widget with photos and ages of your people")
 			}
 			words(subtitle: "Widget with photos and ages of your people")
+			ScrollView(.vertical) {
+				words(subtitle: "Widget with photos and ages of your people")
+			}
+			.scrollBounceBehavior(.basedOnSize)
 		}
 		.padding(12)
-		.dynamicTypeSize(...DynamicTypeSize.xxxLarge)
 	}
 
 	/// The full-width row: the Home Screen beside the words, or above them at accessibility text sizes.

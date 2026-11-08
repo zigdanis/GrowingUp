@@ -54,6 +54,21 @@ final class PeopleWidgetHintTests: XCTestCase {
 		XCTAssertFalse(presenter.takeReviewRequest(request))
 	}
 
+	func testOpeningTheGuideDropsAWaitingRatingRequest() async throws {
+		let (presenter, _) = await loadedPresenter()
+		let prompter = try XCTUnwrap(presenter.configurator.reviewPrompter)
+		presenter.view(presenter.persons[0].id)
+		now += 5
+		presenter.closeViewer()
+		presenter.coverDidClose()
+		let request = try XCTUnwrap(prompter.pendingRequest)
+		// The hint is tapped during the pause, which gives up its place before the pause ends.
+		XCTAssertTrue(presenter.openWidgetHint())
+		XCTAssertFalse(presenter.reservesWidgetHint)
+		XCTAssertNil(prompter.pendingRequest)
+		XCTAssertFalse(presenter.takeReviewRequest(request), "The rating sheet never lands on the guide")
+	}
+
 	func testThePreviewShowsThePinnedPeople() async {
 		let (presenter, _) = await loadedPresenter()
 		let entry = await presenter.widgetPreviewEntry()

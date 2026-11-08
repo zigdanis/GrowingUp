@@ -30,6 +30,8 @@ extension PeoplePresenter {
 	func openWidgetHint() -> Bool {
 		guard showsWidgetHint, let hinter = configurator.widgetHinter else { return false }
 		hinter.opened()
+		// The guide is no moment for the rating sheet, even once the hint has given up its place.
+		configurator.reviewPrompter?.dropPendingRequest()
 		return true
 	}
 

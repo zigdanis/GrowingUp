@@ -97,16 +97,45 @@ final class WidgetHinterTests: XCTestCase {
 		XCTAssertEqual(store().state.shownLaunches, 2)
 	}
 
-	func testAHintInPlaceCountsEveryLaunchUntilTheTenth() async {
+	func testEveryLaunchTheStripTakesItsPlaceCountsUntilTheTenth() async {
 		let hinter = await makeHinter()
 		hinter.reveal(people: people())
-		for _ in 0..<9 { await startNewSession(hinter) }
+		for _ in 0..<9 {
+			await startNewSession(hinter)
+			hinter.reveal(people: people())
+		}
 		XCTAssertTrue(hinter.offers(people: people()))
 		XCTAssertEqual(store().state.shownLaunches, 10)
 		await startNewSession(hinter)
+		hinter.reveal(people: people())
 		XCTAssertFalse(hinter.offers(people: people()), "Ten launches without a tap")
 		XCTAssertEqual(store().state.shownLaunches, 10)
 		XCTAssertEqual(analytics.events.count, 10)
+	}
+
+	func testALaunchWithoutTheStripIsNotCounted() async {
+		let hinter = await makeHinter()
+		hinter.reveal(people: people())
+		await startNewSession(hinter)
+		XCTAssertFalse(hinter.offers(people: people()), "The strip waits for the mosaic to be covered again")
+		hinter.reveal(people: [person(onWidget: false)])
+		await startNewSession(hinter)
+		XCTAssertEqual(store().state.shownLaunches, 1, "Launches spent without the strip leave the count alone")
+		hinter.reveal(people: people())
+		XCTAssertEqual(store().state.shownLaunches, 2)
+	}
+
+	func testAForegroundWaitsForItsOwnLookup() async {
+		let hinter = await makeHinter()
+		hinter.reveal(people: people())
+		installed = true
+		hinter.appEnteredBackground()
+		hinter.appBecameActive()
+		XCTAssertFalse(hinter.offers(people: people()), "No stale strip before the lookup answers")
+		hinter.reveal(people: people())
+		XCTAssertFalse(hinter.offers(people: people()), "Nor from the previous launch's answer")
+		await hinter.waitForWidgetLookup()
+		XCTAssertTrue(store().state.isRetired)
 	}
 
 	func testARecentRatingRequestKeepsTheHintAway() async {

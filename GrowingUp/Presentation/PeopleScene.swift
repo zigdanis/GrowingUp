@@ -94,7 +94,11 @@ struct PeopleScene: View {
 			if presenter.isViewing { presenter.revealWidgetHint() }
 		}
 		.task(id: widgetPreviewPeople) {
-			guard widgetPreviewPeople != nil else { return }
+			// Once neither the hint nor its guide shows, the preview's pictures are let go.
+			guard widgetPreviewPeople != nil else {
+				widgetPreview = nil
+				return
+			}
 			widgetPreview = await presenter.widgetPreviewEntry()
 		}
 		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
