@@ -29,6 +29,6 @@ struct CircularAgeView: View {
 			.padding(10)
 		}
 		.accessibilityElement(children: .ignore)
-		.accessibilityLabel(redactionReasons.contains(.privacy) ? "GrowingUp" : text.accessibilityLabel)
+		.accessibilityLabel(redactionReasons.contains(.privacy) ? String(localized: "GrowingUp") : text.accessibilityLabel)
 	}
 }

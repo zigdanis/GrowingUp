@@ -29,6 +29,6 @@ struct RectangularAgeView: View {
 		}
 		.frame(maxWidth: .infinity, alignment: .leading)
 		.accessibilityElement(children: .ignore)
-		.accessibilityLabel(redactionReasons.contains(.privacy) ? "GrowingUp" : text.accessibilityLabel)
+		.accessibilityLabel(redactionReasons.contains(.privacy) ? String(localized: "GrowingUp") : text.accessibilityLabel)
 	}
 }
