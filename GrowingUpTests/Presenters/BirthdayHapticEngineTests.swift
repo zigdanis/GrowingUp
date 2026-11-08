@@ -10,21 +10,25 @@ final class BirthdayHapticEngineTests: XCTestCase {
 	private static let pulses = BirthdayHapticPattern.pulses(for: .poppers)
 
 	func testTheEngineIsMadeOffTheMainThreadAndOnlyOnce() {
+		let queue = DispatchQueue(label: "BirthdayHapticEngineTests")
 		let made = expectation(description: "the engine is made once")
 		let release = DispatchSemaphore(value: 0)
-		let haptics = BirthdayHapticEngine(makeEngine: {
-			XCTAssertFalse(Thread.isMainThread, "Making the engine must not block the main thread")
-			// A main-thread call would wait here instead of returning to the test.
-			XCTAssertEqual(release.wait(timeout: .now() + 2), .success)
-			made.fulfill()
-			return nil
-		})
+		let haptics = BirthdayHapticEngine(
+			makeEngine: {
+				XCTAssertFalse(Thread.isMainThread, "Making the engine must not block the main thread")
+				// A main-thread call would wait here instead of returning to the test.
+				XCTAssertEqual(release.wait(timeout: .now() + 2), .success)
+				made.fulfill()
+				return nil
+			}, engineQueue: queue)
 
 		haptics.play(Self.pulses, startedAt: Date())
 		haptics.play(Self.pulses, startedAt: Date())
 		release.signal()
 
 		wait(for: [made], timeout: 5)
+		// A second request would be queued behind the first; run it so an over-fulfilled expectation fails this test.
+		queue.sync {}
 	}
 
 	func testACelebrationAfterAnUnavailableEngineAsksAgain() {
