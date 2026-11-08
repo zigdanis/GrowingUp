@@ -39,7 +39,13 @@ struct PeopleScene: View {
 							FloatingCapsuleButton(title: "Done", systemImage: "checkmark", action: finishReordering)
 								.accessibilityIdentifier("people.reorder.done"),
 							trailingPane: trailingPane)
-					} else if !presenter.isLoading, presenter.canAdd {
+					} else if case .unavailable(let isRetrying) = presenter.library.state {
+						floating(
+							FloatingCapsuleButton(title: "Try Again", systemImage: "arrow.clockwise", action: retry)
+								.disabled(isRetrying)
+								.accessibilityIdentifier("people.retry"),
+							trailingPane: trailingPane)
+					} else if presenter.library.state == .loaded, presenter.canAdd {
 						floating(
 							// A new person's edit mode grows out of the button, which no selected person names.
 							FloatingCapsuleButton(
@@ -56,6 +62,12 @@ struct PeopleScene: View {
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
 		.task { await presenter.load() }
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
+		// Back in the app, whatever could not be read before gets another try, such as after the device was unlocked.
+		.task(id: scenePhase) {
+			guard scenePhase == .active else { return }
+			await presenter.load()
+			await pictures.retryFailedPictures()
+		}
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
 		.fullScreenCover(isPresented: $presenter.isViewing, onDismiss: coverDidClose) {
@@ -83,11 +95,16 @@ struct PeopleScene: View {
 
 	@ViewBuilder
 	private func home(layout: PersonPageLayout, trailingPane: TrailingPaneOnLandscape) -> some View {
-		if presenter.isLoading {
+		if presenter.library.state == .loading {
 			ProgressView()
 				.frame(maxWidth: .infinity, maxHeight: .infinity)
+		} else if presenter.library.state != .loaded {
+			PeopleNotice.unavailable
+				.modifier(trailingPane)
+				.frame(maxHeight: .infinity)
+				.transition(.opacity)
 		} else if presenter.persons.isEmpty {
-			PeopleInvitation()
+			PeopleNotice.invitation
 				.modifier(trailingPane)
 				.frame(maxHeight: .infinity)
 				.transition(.opacity)
@@ -115,6 +132,10 @@ struct PeopleScene: View {
 	private func add() {
 		presenter.add()
 		if presenter.isAddingPerson { haptics.play(.addPerson) }
+	}
+
+	private func retry() {
+		Task { await presenter.load() }
 	}
 
 	private func finishReordering() {

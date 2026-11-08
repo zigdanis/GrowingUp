@@ -175,6 +175,15 @@
 /* Invitation under the headline of the empty mosaic. */
 "Add someone you love and watch their age count up, live to the second." = "Добавьте близкого и следите, как растёт его возраст — с точностью до секунды.";
 
+/* Headline of the mosaic while the people could not be read, in place of the empty mosaic's invitation. */
+"Couldn't load your people" = "Не удалось загрузить список";
+
+/* Message under that headline. */
+"The app couldn't read them just now. Try again in a moment." = "Приложению сейчас не удалось его прочитать. Попробуйте ещё раз чуть позже.";
+
+/* Floating button of that mosaic, which reads the people again. */
+"Try Again" = "Повторить";
+
 /* Edit mode: the photo menu and the switches. */
 "Change photo" = "Изменить фото";
 "Add a photo" = "Добавить фото";

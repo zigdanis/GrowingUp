@@ -4,24 +4,35 @@ import UIKit
 
 /// Loads the pictures of the mosaic tiles once per picture as small thumbnails, choosing them by
 /// `PersonPictureCandidates` like the viewer, and measures each one's average colour for the ambient background.
+///
+/// A picture that fails to load leaves its tile to the next candidate or the monogram, and is not asked for again until
+/// `retryFailedPictures()`, at most `maxAttempts` times in all, so one that is gone for good costs only a few requests.
 @MainActor
 @Observable
 final class MosaicPicturesPresenter {
 	/// The tile pictures keyed by person ID.
 	private(set) var pictures: [UUID: MosaicPicture] = [:]
+	/// The number of failed loads of each picture that has not loaded since.
+	@ObservationIgnored private var failures: [UUID: Int] = [:]
+	/// The failed pictures left out of loads until the next `retryFailedPictures()`.
 	@ObservationIgnored private var failedPictures: Set<UUID> = []
+	/// The people of the latest load, whose failed pictures a retry loads again.
+	@ObservationIgnored private var listed: [Person] = []
 	/// Counts the loads, so one that a newer load superseded never publishes over the newer pictures.
 	@ObservationIgnored private var generation = 0
 	private let loadThumbnail: (PersonImage, Int) async throws -> UIImage
 	private let maxPixelSize: Int
+	private let maxAttempts: Int
 
 	/// - Parameters:
 	///   - loadThumbnail: decodes a stored picture to a thumbnail whose longer side is at most the given pixels, without
 	///     keeping the full-size picture in memory.
 	///   - maxPixelSize: the longer side kept in pixels, enough for a portrait photo to fill a phone tile on a 3x screen.
-	init(loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage, maxPixelSize: Int = 960) {
+	///   - maxAttempts: how many times a picture that keeps failing is asked for before its tile keeps the fallback.
+	init(loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage, maxPixelSize: Int = 960, maxAttempts: Int = 3) {
 		self.loadThumbnail = loadThumbnail
 		self.maxPixelSize = maxPixelSize
+		self.maxAttempts = maxAttempts
 	}
 
 	/// The tile picture of `person`; nil while it loads.
@@ -40,6 +51,7 @@ final class MosaicPicturesPresenter {
 	func load(_ persons: [Person]) async {
 		generation += 1
 		let generation = generation
+		self.listed = persons
 		let listed = Set(persons.map(\.id))
 		pictures = pictures.filter { listed.contains($0.key) }
 		for person in persons {
@@ -49,7 +61,7 @@ final class MosaicPicturesPresenter {
 				continue
 			}
 			do {
-				let picture = try await loadPicture(of: person, from: candidates)
+				let picture = try await loadPicture(of: person, from: candidates, cached: pictures[person.id])
 				guard generation == self.generation, !Task.isCancelled else { return }
 				pictures[person.id] = picture
 			} catch {
@@ -58,16 +70,40 @@ final class MosaicPicturesPresenter {
 		}
 	}
 
+	/// Gives the failed pictures of the latest load another try, unless they failed `maxAttempts` times, such as when the
+	/// app returns to the foreground after a read failed while the device was locked; a picture that loads now replaces
+	/// its tile's fallback.
+	///
+	/// The retry runs to its end even when the caller is cancelled, as when the app leaves the foreground again: it
+	/// supersedes the load before it, which would otherwise leave tiles without their pictures.
+	func retryFailedPictures() async {
+		await Task { await self.loadRetriedPictures() }.value
+	}
+
+	/// Takes the people only once the retry runs, so a newer load that came meanwhile is never superseded by older ones.
+	private func loadRetriedPictures() async {
+		let retried = failedPictures.filter { failures[$0, default: 0] < maxAttempts }
+		guard !retried.isEmpty else { return }
+		failedPictures.subtract(retried)
+		await load(listed)
+	}
+
 	/// The first of `candidates` that loads, or the monogram; throws only when cancelled.
-	private func loadPicture(of person: Person, from candidates: [UUID]) async throws -> MosaicPicture {
+	///
+	/// A candidate the tile already shows as its `cached` photo is kept rather than read again, so a preferred photo that
+	/// fails once more on a retry leaves the fallback photo in place instead of the monogram.
+	private func loadPicture(of person: Person, from candidates: [UUID], cached: MosaicPicture?) async throws -> MosaicPicture {
 		for id in candidates {
+			if let cached, cached.pictureID == id { return cached }
 			do {
 				let thumbnail = try await loadThumbnail(PersonImage(id: id, uiImage: nil), maxPixelSize)
 				try Task.checkCancellation()
+				failures[id] = nil
 				return MosaicPicture(pictureID: id, name: person.name, image: thumbnail, averageColor: await Self.averageColor(of: thumbnail))
 			} catch is CancellationError {
 				throw CancellationError()
 			} catch {
+				failures[id, default: 0] += 1
 				failedPictures.insert(id)
 			}
 		}
