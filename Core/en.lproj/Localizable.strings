@@ -26,8 +26,5 @@
 "Failed initializing Core Data stack" = "Failed initializing Core Data stack";
 "Failed to get App Group URL" = "Failed to get App Group URL";
 
-/* Lock Screen inline widget: the person's name and age, such as "Leo · 5 years" */
-"%@ · %@" = "%@ · %@";
-
 /* Lock Screen rectangular widget line on the person's birthday */
 "Birthday today" = "Birthday today 🎂";
