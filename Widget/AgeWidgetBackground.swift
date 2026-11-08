@@ -2,7 +2,7 @@ import SwiftUI
 import WidgetKit
 
 /// The whole widget's background: the person's photo in the small family, the seams between tiles, and a soft gradient
-/// behind the empty state.
+/// behind the empty and unavailable states.
 ///
 /// The extension installs it as the WidgetKit container background; the UI-test preview, which runs outside WidgetKit,
 /// draws it as a plain background so it shows the same design.
