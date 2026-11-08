@@ -88,6 +88,8 @@ struct PeopleScene: View {
 		.task(id: scenePhase) {
 			guard scenePhase == .active else { return }
 			await presenter.load()
+			// A load that only now succeeded may have set a store aside, and the widget may have while the app was away.
+			await preserved.refresh()
 			await pictures.retryFailedPictures()
 		}
 		.onOpenURL(perform: presenter.open)
@@ -98,7 +100,8 @@ struct PeopleScene: View {
 				// The viewer lies on photos, so it stays dark whatever the mosaic's theme.
 				.preferredColorScheme(.dark)
 		}
-		.sheet(isPresented: $showsPreservedData) {
+		// An archive the closed sheet can no longer share is removed, even one still being written.
+		.sheet(isPresented: $showsPreservedData, onDismiss: preserved.abandonExport) {
 			PreservedDataSheet(presenter: preserved)
 		}
 		// A widget link that opens a person takes the screen over.
@@ -109,11 +112,6 @@ struct PeopleScene: View {
 			WidgetGuideSheet(entry: widgetPreview, now: presenter.configurator.now)
 		}
 		.sceneError($presenter.error)
-		// The widget may have set a library aside while the app was away.
-		.onChange(of: scenePhase) { _, phase in
-			guard phase == .active else { return }
-			Task { await preserved.refresh() }
-		}
 		.onChange(of: scenePhase, initial: true) { _, phase in
 			let prompter = presenter.configurator.reviewPrompter
 			let hinter = presenter.configurator.widgetHinter
@@ -219,7 +217,10 @@ struct PeopleScene: View {
 	}
 
 	private func retry() {
-		Task { await presenter.load() }
+		Task {
+			await presenter.load()
+			await preserved.refresh()
+		}
 	}
 
 	private func finishReordering() {

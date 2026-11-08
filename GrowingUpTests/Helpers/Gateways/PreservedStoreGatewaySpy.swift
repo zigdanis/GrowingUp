@@ -12,6 +12,8 @@ final class PreservedStoreGatewaySpy: PreservedStoreGateway, @unchecked Sendable
 	private var held: [PreservedStore]
 	private var recorded: [Call] = []
 	private var failingCalls: Set<String> = []
+	/// When set, `export` waits for it, as a large archive takes a while.
+	var exportGate: DispatchSemaphore?
 
 	init(stores: [PreservedStore]) {
 		held = stores
@@ -38,6 +40,7 @@ final class PreservedStoreGatewaySpy: PreservedStoreGateway, @unchecked Sendable
 
 	func export(_ store: PreservedStore, now: Date) throws -> URL {
 		try record(.export(store.id), name: "export")
+		exportGate?.wait()
 		return URL(fileURLWithPath: "/tmp/\(store.id).zip")
 	}
 

@@ -56,7 +56,7 @@ final class PreservedDataPresenterTests: XCTestCase {
 		gateway.fail(["stores"])
 		await presenter.refresh()
 		XCTAssertEqual(analytics.operations.last, "read_preserved_data")
-		XCTAssertEqual(presenter.stores, [])
+		XCTAssertEqual(presenter.stores.map(\.id), ["A"], "A failed read keeps the notice")
 		gateway.fail([])
 		await presenter.refresh()
 		XCTAssertEqual(presenter.newest?.hasPreservedPhotos, true, "A later refresh keeps the photos after all")
@@ -114,5 +114,42 @@ final class PreservedDataPresenterTests: XCTestCase {
 		XCTAssertEqual(presenter.stores.map(\.id), ["A"])
 		XCTAssertEqual(presenter.failure, .delete)
 		XCTAssertEqual(analytics.operations.last, "delete_preserved_data")
+	}
+
+	func testAnExportTheClosedSheetAbandonedCleansUpWithoutOpeningTheShareSheet() async throws {
+		let gateway = PreservedStoreGatewaySpy(stores: [PreservedStoreGatewaySpy.store("A")])
+		let presenter = PreservedDataPresenter(gateway: gateway, analytics: AnalyticsGatewaySpy())
+		await presenter.refresh()
+		let store = try XCTUnwrap(presenter.newest)
+		let gate = DispatchSemaphore(value: 0)
+		gateway.exportGate = gate
+		let export = Task { await presenter.startExport(store) }
+		while presenter.export != .preparing { await Task.yield() }
+		presenter.abandonExport()
+		XCTAssertEqual(presenter.export, .preparing, "No new export starts into the folder cleanup empties")
+		gate.signal()
+		await export.value
+		XCTAssertEqual(presenter.export, .idle)
+		XCTAssertEqual(gateway.calls.last, .removeExports)
+		// A finished archive the sheet no longer shows goes at once.
+		gateway.exportGate = nil
+		await presenter.startExport(store)
+		presenter.abandonExport()
+		XCTAssertEqual(presenter.export, .idle)
+		XCTAssertEqual(gateway.calls.last, .removeExports)
+	}
+
+	func testARecoveryWhoseNoteFailsToSaveIsReportedAgainLater() async {
+		let analytics = AnalyticsGatewaySpy()
+		let gateway = PreservedStoreGatewaySpy(stores: [PreservedStoreGatewaySpy.store("A")])
+		gateway.fail(["markReported"])
+		let presenter = PreservedDataPresenter(gateway: gateway, analytics: analytics)
+		await presenter.refresh()
+		XCTAssertEqual(analytics.operations, ["recover_store"])
+		gateway.fail([])
+		await presenter.refresh()
+		XCTAssertEqual(analytics.operations, ["recover_store", "recover_store"])
+		await presenter.refresh()
+		XCTAssertEqual(analytics.operations.count, 2)
 	}
 }

@@ -4,22 +4,19 @@ import XCTest
 @testable import Core
 
 final class PreservedStoreLibraryTests: XCTestCase {
-	private var root: URL!
-	/// A space in the path, as in the App Group's `Application Support`, catches percent-encoded lookups.
-	private var storeFolder: URL { root.appendingPathComponent("Application Support", isDirectory: true) }
-	private var store: URL { storeFolder.appendingPathComponent("GrowingUp.sqlite") }
-	private var exports: URL { root.appendingPathComponent("Exports", isDirectory: true) }
-	private var library: PreservedStoreLibrary {
-		PreservedStoreLibrary(storeURL: store, photosDirectory: root, exportsDirectory: exports)
-	}
+	private var fixture: PreservedStoreFixture!
+	private var root: URL { fixture.root }
+	private var storeFolder: URL { fixture.storeFolder }
+	private var store: URL { fixture.store }
+	private var exports: URL { fixture.exports }
+	private var library: PreservedStoreLibrary { fixture.library }
 
 	override func setUpWithError() throws {
-		root = FileManager.default.temporaryDirectory.appendingPathComponent("Preserved \(UUID().uuidString)", isDirectory: true)
-		try FileManager.default.createDirectory(at: storeFolder, withIntermediateDirectories: true)
+		fixture = try PreservedStoreFixture()
 	}
 
 	override func tearDownWithError() throws {
-		try FileManager.default.removeItem(at: root)
+		try fixture.remove()
 	}
 
 	func testNoFolderOrNoBackupsMeansNothingPreserved() throws {
@@ -30,7 +27,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testRecoveryNotesItsCauseAndTheStoreIsListedAfterRelaunch() throws {
-		try writeFamily()
+		try fixture.writeFamily()
 		let date = Date(timeIntervalSince1970: 1_800_000_000)
 		let backup = try SQLiteStoreBackup().moveStore(
 			at: store, cause: .incompatibleModel(code: NSPersistentStoreIncompatibleVersionHashError), date: date)
@@ -46,7 +43,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testStoreRecoveryThroughTheStackIsListedWithItsCause() throws {
-		try writeFamily()
+		try fixture.writeFamily()
 		var attempts = 0
 		let stack = CoreDataStackImplementation(makeContainer: makeContainer) { candidate in
 			attempts += 1
@@ -59,7 +56,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testFolderFromAnEarlierVersionIsListedWithTheDateInItsName() throws {
-		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-\(UUID().uuidString)")
+		let folder = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-\(UUID().uuidString)")
 		let stores = try library.stores()
 		XCTAssertEqual(stores.map(\.id), [folder.lastPathComponent])
 		XCTAssertEqual(stores[0].cause, .unknown)
@@ -68,19 +65,19 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testNewestFirstAndFoldersWithoutAStoreOrStillMovingAreLeftOut() throws {
-		let older = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-01-01T00-00-00Z-A")
-		let newer = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-06-01T00-00-00Z-B")
+		let older = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-01-01T00-00-00Z-A")
+		let newer = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-06-01T00-00-00Z-B")
 		// A rolled back move leaves only its note.
 		let empty = storeFolder.appendingPathComponent("GrowingUp.sqlite.backup-2026-07-01T00-00-00Z-C", isDirectory: true)
 		try FileManager.default.createDirectory(at: empty, withIntermediateDirectories: false)
 		try PreservedStoreManifest(preservedAt: Date(), cause: .unknown).write(in: empty)
-		let moving = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-08-01T00-00-00Z-D")
+		let moving = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-08-01T00-00-00Z-D")
 		try Data(moving.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"))
 		XCTAssertEqual(try library.stores().map(\.id), [newer.lastPathComponent, older.lastPathComponent])
 	}
 
 	func testInterruptedMoveFromAnEarlierVersionIsNotedAsInterrupted() throws {
-		try writeFamily()
+		try fixture.writeFamily()
 		let backup = storeFolder.appendingPathComponent("GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-X", isDirectory: true)
 		try FileManager.default.createDirectory(at: backup, withIntermediateDirectories: false)
 		try Data(backup.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"))
@@ -91,7 +88,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testInterruptedMoveKeepsTheCauseNotedBeforeIt() throws {
-		try writeFamily()
+		try fixture.writeFamily()
 		let mover = SQLiteStoreBackup { source, destination in
 			// The process "dies" after the WAL moved: the journal stays.
 			if !source.lastPathComponent.hasSuffix("-wal") { throw CocoaError(.fileWriteUnknown) }
@@ -107,7 +104,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testPhotosOfAnEarlierVersionsStoreAreKeptOnceAndOutliveTheirLooseFiles() throws {
-		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-P")
+		let folder = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-P")
 		let old = UUID()
 		try Data("old picture".utf8).write(to: root.appendingPathComponent("\(old.uuidString).png"))
 		try Data("old original".utf8).write(to: root.appendingPathComponent("\(old.uuidString).heic"))
@@ -126,7 +123,7 @@ final class PreservedStoreLibraryTests: XCTestCase {
 	}
 
 	func testRecoveryKeepsThePhotosAsItSetsTheStoreAside() throws {
-		try writeFamily()
+		try fixture.writeFamily()
 		let photo = UUID()
 		try Data("photo".utf8).write(to: root.appendingPathComponent("\(photo.uuidString).heic"))
 		var attempts = 0
@@ -145,99 +142,16 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		XCTAssertEqual(try Data(contentsOf: folder.appendingPathComponent("Photos/\(photo.uuidString).heic")), Data("photo".utf8))
 	}
 
-	func testExportOfAnInterruptedPhotoPassIncludesTheLinkedAndTheLoosePhotos() throws {
-		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-I")
-		let linked = UUID()
-		let loose = UUID()
-		let photos = folder.appendingPathComponent("Photos")
-		try FileManager.default.createDirectory(at: photos, withIntermediateDirectories: true)
-		// The pass linked one photo, then stopped; its loose source has gone since.
-		try Data("linked".utf8).write(to: photos.appendingPathComponent("\(linked.uuidString).png"))
-		try Data("loose".utf8).write(to: root.appendingPathComponent("\(loose.uuidString).png"))
-		let preserved = try XCTUnwrap(library.stores().first)
-		XCTAssertFalse(preserved.hasPreservedPhotos)
-		XCTAssertEqual(
-			try library.exportedPhotos(in: folder).map(\.lastPathComponent), ["\(linked.uuidString).png", "\(loose.uuidString).png"].sorted())
-		let rescued = try XCTUnwrap(library.exportedPhotos(in: folder).first { $0.lastPathComponent.hasPrefix(linked.uuidString) })
-		XCTAssertEqual(try Data(contentsOf: rescued), Data("linked".utf8))
-		XCTAssertNoThrow(try library.export(preserved, now: Date()))
-		// Once the pass is done, only what it kept counts.
-		_ = try library.preservePhotos(of: preserved)
-		try Data("later".utf8).write(to: root.appendingPathComponent("\(UUID().uuidString).png"))
-		XCTAssertEqual(try library.exportedPhotos(in: folder).count, 2)
-	}
-
 	func testRecoveryIsReportedOnce() throws {
-		_ = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-S")
+		_ = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-S")
 		let reported = try library.markReported(try XCTUnwrap(library.stores().first))
 		XCTAssertTrue(reported.isReported)
 		XCTAssertTrue(try XCTUnwrap(library.stores().first).isReported)
 		XCTAssertEqual(try library.markReported(reported), reported)
 	}
 
-	func testExportIsOneArchiveAndLeavesThePreservedFilesAsTheyWere() throws {
-		try writeFamily()
-		let backup = try SQLiteStoreBackup().moveStore(at: store, cause: .incompatibleModel(code: 134_100), date: Date(timeIntervalSince1970: 0))
-		let photo = UUID()
-		try Data("photo".utf8).write(to: root.appendingPathComponent("\(photo.uuidString).png"))
-		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first))
-		let before = try digests(in: backup)
-		let archive = try library.export(kept, now: Date(timeIntervalSince1970: 60))
-		XCTAssertEqual(archive.lastPathComponent, "GrowingUp-earlier-data-1970-01-01.zip")
-		XCTAssertEqual(try Data(contentsOf: archive).prefix(2), Data("PK".utf8))
-		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: exports.path), [archive.lastPathComponent], "Staging is removed")
-		XCTAssertEqual(try digests(in: backup), before)
-		XCTAssertEqual(try library.stores(), [kept])
-		library.removeExports()
-		XCTAssertFalse(FileManager.default.fileExists(atPath: exports.path))
-	}
-
-	func testStagedArchiveListsEveryFileWithItsChecksum() throws {
-		try writeFamily()
-		let backup = try SQLiteStoreBackup().moveStore(at: store, date: Date(timeIntervalSince1970: 0))
-		let photo = root.appendingPathComponent("\(UUID().uuidString).heic")
-		try Data("photo".utf8).write(to: photo)
-		let preserved = try XCTUnwrap(library.stores().first)
-		try FileManager.default.createDirectory(at: exports, withIntermediateDirectories: true)
-		let staged = try PreservedStoreArchiver(storeFileName: "GrowingUp.sqlite").stage(
-			store: preserved, folder: backup, photos: [photo], exportedAt: Date(timeIntervalSince1970: 60), in: exports)
-		let data = try Data(contentsOf: staged.appendingPathComponent("manifest.json"))
-		let decoder = JSONDecoder()
-		decoder.dateDecodingStrategy = .iso8601
-		let manifest = try decoder.decode(ArchiveManifest.self, from: data)
-		XCTAssertEqual(manifest.preservedAt, Date(timeIntervalSince1970: 0))
-		XCTAssertEqual(manifest.cause, 0)
-		XCTAssertEqual(
-			manifest.files.map(\.path),
-			["Store/GrowingUp.sqlite", "Store/GrowingUp.sqlite-wal", "Store/GrowingUp.sqlite-shm", "Photos/\(photo.lastPathComponent)"])
-		for file in manifest.files {
-			let url = staged.appendingPathComponent(file.path)
-			XCTAssertEqual(file.sha256, try ArchivedFile.digest(of: url))
-			XCTAssertEqual(file.size, try Data(contentsOf: url).count)
-		}
-		XCTAssertEqual(manifest.files[0].sha256, try ArchivedFile.digest(of: backup.appendingPathComponent("GrowingUp.sqlite")))
-		XCTAssertTrue(FileManager.default.fileExists(atPath: staged.appendingPathComponent("README.txt").path))
-	}
-
-	func testFailedExportLeavesNoArchiveAndKeepsThePreservedStore() throws {
-		try writeFamily()
-		let backup = try SQLiteStoreBackup().moveStore(at: store, date: Date(timeIntervalSince1970: 0))
-		let preserved = try XCTUnwrap(library.stores().first)
-		let before = try digests(in: backup)
-		// A photo that vanishes between listing and staging fails the export.
-		let missing = root.appendingPathComponent("\(UUID().uuidString).png")
-		try FileManager.default.createDirectory(at: exports, withIntermediateDirectories: true)
-		XCTAssertThrowsError(
-			try PreservedStoreArchiver(storeFileName: "GrowingUp.sqlite").stage(
-				store: preserved, folder: backup, photos: [missing], exportedAt: Date(), in: exports))
-		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: exports.path), [])
-		XCTAssertEqual(try digests(in: backup), before)
-		// A retry once the cause is gone succeeds.
-		XCTAssertNoThrow(try library.export(preserved, now: Date()))
-	}
-
 	func testDeletingRemovesOnlyTheFolderAndKeepsEveryLoosePhoto() throws {
-		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-D")
+		let folder = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-D")
 		let photo = root.appendingPathComponent("\(UUID().uuidString).png")
 		try Data("photo".utf8).write(to: photo)
 		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first))
@@ -252,26 +166,24 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		XCTAssertThrowsError(try library.delete(outside))
 	}
 
-	private func writeFamily() throws {
-		for suffix in ["", "-wal", "-shm"] {
-			try Data("saved\(suffix)".utf8).write(to: URL(fileURLWithPath: store.path + suffix))
-		}
+	func testAnUnreadableNoteIsKeptAsideRatherThanOverwritten() throws {
+		let folder = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-U")
+		try Data("{ not json".utf8).write(to: folder.appendingPathComponent("Preserved.json"))
+		let listed = try XCTUnwrap(library.stores().first, "An unreadable note still shows the store")
+		XCTAssertEqual(listed.cause, .unknown)
+		_ = try library.preservePhotos(of: listed)
+		let kept = try FileManager.default.contentsOfDirectory(atPath: folder.path).filter { $0.hasPrefix("Preserved-unreadable-") }
+		XCTAssertEqual(kept.count, 1)
+		XCTAssertEqual(try Data(contentsOf: folder.appendingPathComponent(kept[0])), Data("{ not json".utf8))
+		XCTAssertNotNil(try PreservedStoreManifest.read(in: folder))
 	}
 
-	private func legacyFolder(named name: String) throws -> URL {
-		let folder = storeFolder.appendingPathComponent(name, isDirectory: true)
-		try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: false)
-		try Data("old people".utf8).write(to: folder.appendingPathComponent("GrowingUp.sqlite"))
-		return folder
-	}
-
-	private func digests(in folder: URL) throws -> [String: String] {
-		var digests: [String: String] = [:]
-		for name in ["GrowingUp.sqlite", "GrowingUp.sqlite-wal", "GrowingUp.sqlite-shm"] {
-			let url = folder.appendingPathComponent(name)
-			if FileManager.default.fileExists(atPath: url.path) { digests[name] = try ArchivedFile.digest(of: url) }
-		}
-		return digests
+	func testAStoreARecoveryJournalNamesCannotBeDeleted() throws {
+		let folder = try fixture.legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-J")
+		let listed = try XCTUnwrap(library.stores().first)
+		try Data(folder.lastPathComponent.utf8).write(to: store.appendingPathExtension("recovery"))
+		XCTAssertThrowsError(try library.delete(listed))
+		XCTAssertTrue(FileManager.default.fileExists(atPath: folder.appendingPathComponent("GrowingUp.sqlite").path))
 	}
 
 	private func makeContainer() throws -> NSPersistentContainer {

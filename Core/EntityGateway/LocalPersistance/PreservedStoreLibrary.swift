@@ -118,7 +118,8 @@ public struct PreservedStoreLibrary: PreservedStoreGateway {
 		return photos.values.sorted { $0.lastPathComponent < $1.lastPathComponent }
 	}
 
-	/// Deletes `store`'s folder, which only an explicit, confirmed request does. Loose photo files stay: the active
+	/// Deletes `store`'s folder, which only an explicit, confirmed request does, and never while a recovery's journal
+	/// names it. Loose photo files stay: the active
 	/// library or another preserved store may still need them, and nothing can tell for certain that they don't.
 	public func delete(_ store: PreservedStore) throws {
 		let folder = folder(of: store)
@@ -126,6 +127,9 @@ public struct PreservedStoreLibrary: PreservedStoreGateway {
 			throw CocoaError(.fileNoSuchFile)
 		}
 		try SQLiteStoreAccess.coordinate(at: storeURL) { _ in
+			// A recovery still moving files into the folder resumes on the next load; without the folder it couldn't.
+			let pending = (try? Data(contentsOf: storeURL.appendingPathExtension("recovery"))).flatMap { String(data: $0, encoding: .utf8) }
+			guard pending != store.id else { throw CocoaError(.fileWriteNoPermission) }
 			try FileManager.default.removeItem(at: folder)
 		}
 	}

@@ -78,7 +78,7 @@ struct SQLiteStoreBackup {
 			try moveItem(source, backup.appendingPathComponent(source.lastPathComponent))
 		}
 		try manager.removeItem(at: journal)
-		// A move begun by an earlier version of the app left no note of its cause.
+		// A move begun by an earlier version of the app left no note of its cause. One that can't be read is kept aside.
 		if (try? PreservedStoreManifest.read(in: backup)) == nil {
 			do {
 				try PreservedStoreManifest(preservedAt: Date(), cause: .interrupted).write(in: backup)

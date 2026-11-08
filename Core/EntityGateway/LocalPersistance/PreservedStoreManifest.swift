@@ -56,8 +56,15 @@ struct PreservedStoreManifest: Codable, Equatable {
 		return try decoder.decode(Self.self, from: data)
 	}
 
+	/// Saves the note. A note already there that can't be read is never overwritten: it is renamed aside first, so its
+	/// bytes, which may hold the original cause, stay for whoever examines the folder.
 	func write(in folder: URL) throws {
-		try Self.encoder.encode(self).write(to: folder.appendingPathComponent(Self.fileName), options: .atomic)
+		let url = folder.appendingPathComponent(Self.fileName)
+		if FileManager.default.fileExists(atPath: url.path), (try? Self.read(in: folder)) == nil {
+			let stamp = Int(Date().timeIntervalSince1970)
+			try FileManager.default.moveItem(at: url, to: folder.appendingPathComponent("Preserved-unreadable-\(stamp)-\(UUID().uuidString).json"))
+		}
+		try Self.encoder.encode(self).write(to: url, options: .atomic)
 	}
 
 	static var currentAppVersion: String? {
