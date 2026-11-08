@@ -4,7 +4,8 @@ import SwiftUI
 
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
 /// open in the full-screen viewer, which swipes down back into the tile. "Add" zooms open a new person's empty edit mode
-/// the same way; while a long press reorders the mosaic, "Done" takes the button's place.
+/// the same way; while a long press reorders the mosaic, "Done" takes the button's place. After the last tile, the mosaic
+/// may offer the Home Screen widget hint, which opens the widget guide.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
@@ -13,6 +14,9 @@ struct PeopleScene: View {
 	@State private var preserved: PreservedDataPresenter
 	@State private var showsPreservedData = false
 	@Namespace private var zoom
+	@State private var isShowingWidgetGuide = false
+	/// The pinned people as the widget shows them, for the widget hint and its guide; nil while neither needs them.
+	@State private var widgetPreview: AgeEntry?
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
 	@Environment(\.haptics)
@@ -75,7 +79,7 @@ struct PeopleScene: View {
 		.ignoresSafeArea(.keyboard)
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
 		.task {
-			await presenter.load()
+			await presenter.loadWithWidgetHint()
 			// The load may have just set a store aside, by this process or the widget's; only now is it there to find.
 			await preserved.refresh()
 		}
@@ -101,6 +105,9 @@ struct PeopleScene: View {
 		.onChange(of: presenter.isViewing) { _, isViewing in
 			if isViewing { showsPreservedData = false }
 		}
+		.sheet(isPresented: $isShowingWidgetGuide) {
+			WidgetGuideSheet(entry: widgetPreview, now: presenter.configurator.now)
+		}
 		.sceneError($presenter.error)
 		// The widget may have set a library aside while the app was away.
 		.onChange(of: scenePhase) { _, phase in
@@ -108,12 +115,35 @@ struct PeopleScene: View {
 			Task { await preserved.refresh() }
 		}
 		.onChange(of: scenePhase, initial: true) { _, phase in
-			guard let prompter = presenter.configurator.reviewPrompter else { return }
+			let prompter = presenter.configurator.reviewPrompter
+			let hinter = presenter.configurator.widgetHinter
 			switch phase {
-			case .active: prompter.appBecameActive()
-			case .background: prompter.appEnteredBackground()
-			default: prompter.appResignedActive()
+			// The prompter counts the day of use first, which the hint's rules read.
+			case .active:
+				prompter?.appBecameActive()
+				hinter?.appBecameActive()
+			case .background:
+				prompter?.appEnteredBackground()
+				hinter?.appEnteredBackground()
+			default: prompter?.appResignedActive()
 			}
+		}
+		// The widget hint takes its place while the viewer covers the mosaic, once the cover has grown over it.
+		.task(id: presenter.isViewing) {
+			guard presenter.isViewing, presenter.configurator.widgetHinter != nil else { return }
+			do { try await Task.sleep(for: .seconds(0.6)) } catch { return }
+			if presenter.isViewing { presenter.revealWidgetHint() }
+		}
+		.task(id: widgetPreviewPeople) {
+			// Once neither the hint nor its guide shows, the preview's pictures are let go.
+			guard widgetPreviewPeople != nil else {
+				widgetPreview = nil
+				return
+			}
+			let entry = await presenter.widgetPreviewEntry()
+			// A load the hint closing or the pinned people changing replaced must not bring back its pictures.
+			guard !Task.isCancelled else { return }
+			widgetPreview = entry
 		}
 		// The viewer has zoomed back into the mosaic; after a short pause there, as Apple advises, iOS may show its rating sheet.
 		.task(id: presenter.configurator.reviewPrompter?.pendingRequest) {
@@ -143,7 +173,8 @@ struct PeopleScene: View {
 				persons: presenter.persons, pictures: pictures, selectedID: presenter.selectedID,
 				evenColumns: layout == .landscape && layout.spansFold(idiom: idiom), tileWidths: MosaicGridLayout.tileWidths(idiom: idiom),
 				fillsWindow: idiom == .pad,
-				isReordering: presenter.isReordering, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
+				isReordering: presenter.isReordering, reservesHint: presenter.reservesWidgetHint,
+				hint: presenter.reservesWidgetHint ? widgetHint : nil, zoom: zoom, now: presenter.configurator.now, onOpen: openPerson,
 				onStartReordering: presenter.startReordering, onFinishReordering: finishReordering, onMove: presenter.move,
 				onShift: presenter.shift, onSaveOrder: presenter.saveOrder
 			)
@@ -152,6 +183,29 @@ struct PeopleScene: View {
 	}
 
 	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+
+	/// The widget hint in `placement`.
+	private func widgetHint(_ placement: WidgetHintPlacement) -> WidgetHintStrip {
+		WidgetHintStrip(placement: placement, entry: widgetPreview, onOpen: openWidgetGuide, onDismiss: dismissWidgetHint)
+	}
+
+	/// The people the widget preview shows while the hint or its guide needs it, so a change to them redraws it.
+	private var widgetPreviewPeople: [Person]? {
+		presenter.reservesWidgetHint || isShowingWidgetGuide ? presenter.persons.filter(\.isOnWidget) : nil
+	}
+
+	/// A tap on the hint opens the guide, as the hint fades out for good.
+	private func openWidgetGuide() {
+		let opens = withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { presenter.openWidgetHint() }
+		guard opens else { return }
+		haptics.play(.tileOpened)
+		isShowingWidgetGuide = true
+	}
+
+	/// × fades the hint out, and the tiles close up behind it.
+	private func dismissWidgetHint() {
+		withAnimation(reduceMotion ? nil : .easeOut(duration: 0.25)) { presenter.dismissWidgetHint() }
+	}
 
 	/// Opens the person with `id` in the viewer, with a light tap when their tile did open them.
 	private func openPerson(_ id: UUID) {
@@ -187,6 +241,8 @@ struct PeopleScene: View {
 	/// the invitation takes the place of the last one.
 	private func coverDidClose() {
 		withAnimation(reduceMotion ? nil : .snappy(duration: 0.35)) { presenter.coverDidClose() }
+		// The mosaic shows again, with the strip if it took its place under the viewer: now the launch counts.
+		presenter.noteWidgetHintSeen()
 	}
 
 	/// The whole window, safe areas included, whose shape picks the layout like the viewer's pages.

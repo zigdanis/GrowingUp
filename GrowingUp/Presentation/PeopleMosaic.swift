@@ -6,6 +6,9 @@ import SwiftUI
 /// A long press on a tile starts reordering: the tile lifts and follows the finger, its neighbours make room live, and
 /// the mosaic scrolls when the finger nears its top or bottom edge. A removed person's tile fades away as its neighbours
 /// slide into the gap, under the animation the change comes with. With Reduce Motion, tiles take their new places at once.
+///
+/// The Home Screen widget hint, while the mosaic offers it, follows the last tile as part of the scrolling content; see
+/// `MosaicGridLayout.withWidgetHint`. It is no tile: drags, slots and reordering leave it out.
 struct PeopleMosaic: View {
 	private static let contentSpace = NamedCoordinateSpace.named("mosaic.content")
 
@@ -20,6 +23,11 @@ struct PeopleMosaic: View {
 	/// Lets few people fill the window, centred in it, as on iPad; see `MosaicGridLayout`.
 	let fillsWindow: Bool
 	let isReordering: Bool
+	/// Whether the widget hint keeps its place after the tiles; reordering hides it but keeps the place, so no tile moves.
+	let reservesHint: Bool
+	/// The widget hint in its place, while it keeps it; reordering hides it there, so its row or slot keeps its size and
+	/// the scroll offset stays put under a lifted tile.
+	let hint: ((WidgetHintPlacement) -> WidgetHintStrip)?
 	let zoom: Namespace.ID
 	let now: () -> Date
 	let onOpen: (UUID) -> Void
@@ -44,21 +52,33 @@ struct PeopleMosaic: View {
 
 	var body: some View {
 		GeometryReader { geometry in
-			let grid = MosaicGridLayout(
-				size: geometry.size, count: persons.count, evenColumns: evenColumns, minimumTileWidth: tileWidths.lowerBound,
-				maximumTileWidth: tileWidths.upperBound, fillsWindow: fillsWindow)
+			let placed = layout(size: geometry.size)
+			let grid = placed.grid
+			let placement = placed.hint
 			let width = geometry.size.width
 			ScrollViewReader { proxy in
 				ScrollView {
-					LazyVGrid(
-						columns: Array(repeating: GridItem(.fixed(grid.tileWidth), spacing: MosaicGridLayout.spacing), count: grid.columns),
-						spacing: MosaicGridLayout.spacing
-					) {
-						ForEach(persons, id: \.id) { person in
-							tile(person, grid: grid, width: width)
-								.frame(width: grid.tileWidth, height: grid.tileHeight)
-								.transition(.scale(scale: 0.85).combined(with: .opacity))
-								.id(person.id)
+					VStack(spacing: MosaicGridLayout.spacing) {
+						LazyVGrid(
+							columns: Array(repeating: GridItem(.fixed(grid.tileWidth), spacing: MosaicGridLayout.spacing), count: grid.columns),
+							spacing: MosaicGridLayout.spacing
+						) {
+							ForEach(persons, id: \.id) { person in
+								tile(person, grid: grid, width: width)
+									.frame(width: grid.tileWidth, height: grid.tileHeight)
+									.transition(.scale(scale: 0.85).combined(with: .opacity))
+									.id(person.id)
+							}
+							if let hint, let placement, placement != .row {
+								hidingWhileReordering(hint(placement))
+									.frame(width: grid.tileWidth, height: grid.tileHeight)
+									.transition(.opacity)
+							}
+						}
+						if let hint, placement == .row {
+							hidingWhileReordering(hint(.row))
+								.frame(width: grid.contentWidth)
+								.transition(.opacity)
 						}
 					}
 					.frame(maxWidth: .infinity)
@@ -97,6 +117,28 @@ struct PeopleMosaic: View {
 		}
 		// The first row's names stay clear of a window's controls.
 		.modifier(WindowControlsClearance(edges: .top))
+	}
+
+	/// The widget hint, invisible and out of reach while reordering but still taking its room.
+	private func hidingWhileReordering(_ strip: WidgetHintStrip) -> some View {
+		strip
+			.opacity(isReordering ? 0 : 1)
+			.allowsHitTesting(!isReordering)
+			.accessibilityHidden(isReordering)
+	}
+
+	/// The grid in `size` and, while the widget hint keeps its place, where the hint goes.
+	private func layout(size: CGSize) -> (grid: MosaicGridLayout, hint: WidgetHintPlacement?) {
+		guard reservesHint else {
+			let grid = MosaicGridLayout(
+				size: size, count: persons.count, evenColumns: evenColumns, minimumTileWidth: tileWidths.lowerBound,
+				maximumTileWidth: tileWidths.upperBound, fillsWindow: fillsWindow)
+			return (grid, nil)
+		}
+		let placed = MosaicGridLayout.withWidgetHint(
+			size: size, count: persons.count, evenColumns: evenColumns, minimumTileWidth: tileWidths.lowerBound,
+			maximumTileWidth: tileWidths.upperBound, fillsWindow: fillsWindow)
+		return (placed.grid, placed.hint)
 	}
 
 	private func tile(_ person: Person, grid: MosaicGridLayout, width: CGFloat) -> some View {

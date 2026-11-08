@@ -7,6 +7,45 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D3C000000000000000000003 /* InstalledWidgetLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000002 /* InstalledWidgetLookup.swift */; };
+		D3C000000000000000000005 /* WidgetHintMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000004 /* WidgetHintMode.swift */; };
+		D3C000000000000000000007 /* WidgetHintPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000006 /* WidgetHintPolicy.swift */; };
+		D3C000000000000000000009 /* WidgetHintState.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000008 /* WidgetHintState.swift */; };
+		D3C00000000000000000000B /* WidgetHintStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000000A /* WidgetHintStore.swift */; };
+		D3C00000000000000000000D /* WidgetHinter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000000C /* WidgetHinter.swift */; };
+		D3C000000000000000000010 /* AppIconImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000000F /* AppIconImage.swift */; };
+		D3C000000000000000000012 /* IconRocking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000011 /* IconRocking.swift */; };
+		D3C000000000000000000014 /* PlaceholderIconGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000013 /* PlaceholderIconGrid.swift */; };
+		D3C000000000000000000016 /* WidgetGuideCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000015 /* WidgetGuideCanvas.swift */; };
+		D3C000000000000000000018 /* WidgetGuideEditFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000017 /* WidgetGuideEditFrame.swift */; };
+		D3C00000000000000000001A /* WidgetGuideFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000019 /* WidgetGuideFrame.swift */; };
+		D3C00000000000000000001C /* WidgetGuideHighlightedWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000001B /* WidgetGuideHighlightedWidget.swift */; };
+		D3C00000000000000000001E /* WidgetGuideHoldFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000001D /* WidgetGuideHoldFrame.swift */; };
+		D3C000000000000000000020 /* WidgetGuideHomeResultFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000001F /* WidgetGuideHomeResultFrame.swift */; };
+		D3C000000000000000000022 /* WidgetGuideIllustration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000021 /* WidgetGuideIllustration.swift */; };
+		D3C000000000000000000024 /* WidgetGuidePlayback.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000023 /* WidgetGuidePlayback.swift */; };
+		D3C000000000000000000026 /* WidgetGuideSearchFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000025 /* WidgetGuideSearchFrame.swift */; };
+		D3C000000000000000000028 /* WidgetGuideSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000027 /* WidgetGuideSheet.swift */; };
+		D3C00000000000000000002A /* WidgetGuideSizeFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000029 /* WidgetGuideSizeFrame.swift */; };
+		D3C00000000000000000002C /* WidgetGuideStepRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000002B /* WidgetGuideStepRow.swift */; };
+		D3C00000000000000000002E /* WidgetGuideSwipeFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000002D /* WidgetGuideSwipeFrame.swift */; };
+		D3C000000000000000000030 /* WidgetGuideTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000002F /* WidgetGuideTab.swift */; };
+		D3C000000000000000000032 /* WidgetGuideTimerKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000031 /* WidgetGuideTimerKey.swift */; };
+		D3C000000000000000000034 /* WidgetGuideTodayResultFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000033 /* WidgetGuideTodayResultFrame.swift */; };
+		D3C000000000000000000036 /* WidgetGuideTouch.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000035 /* WidgetGuideTouch.swift */; };
+		D3C000000000000000000038 /* WidgetGuideWallpaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000037 /* WidgetGuideWallpaper.swift */; };
+		D3C00000000000000000003A /* WidgetPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000039 /* WidgetPreview.swift */; };
+		D3C00000000000000000003D /* PeopleWidgetHintTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000003C /* PeopleWidgetHintTests.swift */; };
+		D3C00000000000000000003F /* WidgetGuidePlaybackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000003E /* WidgetGuidePlaybackTests.swift */; };
+		D3C000000000000000000041 /* WidgetHintPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000040 /* WidgetHintPolicyTests.swift */; };
+		D3C000000000000000000043 /* WidgetHinterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000042 /* WidgetHinterTests.swift */; };
+		D3C000000000000000000045 /* MosaicGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000044 /* MosaicGlass.swift */; };
+		D3C000000000000000000047 /* WidgetHintPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000046 /* WidgetHintPlacement.swift */; };
+		D3C000000000000000000049 /* MosaicGridLayout+WidgetHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000048 /* MosaicGridLayout+WidgetHint.swift */; };
+		D3C00000000000000000004B /* WidgetHintHomeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000004A /* WidgetHintHomeScreen.swift */; };
+		D3C00000000000000000004D /* WidgetHintStrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000004C /* WidgetHintStrip.swift */; };
+		D3C00000000000000000004F /* PeoplePresenter+WidgetHint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C00000000000000000004E /* PeoplePresenter+WidgetHint.swift */; };
+		D3C000000000000000000051 /* MosaicWidgetHintLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000050 /* MosaicWidgetHintLayoutTests.swift */; };
 		C2B000000000000000000016 /* PeoplePresenter+ReviewPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */; };
 		C2B000000000000000000004 /* ReviewPromptState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000003 /* ReviewPromptState.swift */; };
 		C2B000000000000000000006 /* ReviewPromptPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2B000000000000000000005 /* ReviewPromptPolicy.swift */; };
@@ -456,6 +495,45 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		D3C000000000000000000002 /* InstalledWidgetLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledWidgetLookup.swift; sourceTree = "<group>"; };
+		D3C000000000000000000004 /* WidgetHintMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintMode.swift; sourceTree = "<group>"; };
+		D3C000000000000000000006 /* WidgetHintPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintPolicy.swift; sourceTree = "<group>"; };
+		D3C000000000000000000008 /* WidgetHintState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintState.swift; sourceTree = "<group>"; };
+		D3C00000000000000000000A /* WidgetHintStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintStore.swift; sourceTree = "<group>"; };
+		D3C00000000000000000000C /* WidgetHinter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHinter.swift; sourceTree = "<group>"; };
+		D3C00000000000000000000F /* AppIconImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconImage.swift; sourceTree = "<group>"; };
+		D3C000000000000000000011 /* IconRocking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconRocking.swift; sourceTree = "<group>"; };
+		D3C000000000000000000013 /* PlaceholderIconGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderIconGrid.swift; sourceTree = "<group>"; };
+		D3C000000000000000000015 /* WidgetGuideCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideCanvas.swift; sourceTree = "<group>"; };
+		D3C000000000000000000017 /* WidgetGuideEditFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideEditFrame.swift; sourceTree = "<group>"; };
+		D3C000000000000000000019 /* WidgetGuideFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideFrame.swift; sourceTree = "<group>"; };
+		D3C00000000000000000001B /* WidgetGuideHighlightedWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideHighlightedWidget.swift; sourceTree = "<group>"; };
+		D3C00000000000000000001D /* WidgetGuideHoldFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideHoldFrame.swift; sourceTree = "<group>"; };
+		D3C00000000000000000001F /* WidgetGuideHomeResultFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideHomeResultFrame.swift; sourceTree = "<group>"; };
+		D3C000000000000000000021 /* WidgetGuideIllustration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideIllustration.swift; sourceTree = "<group>"; };
+		D3C000000000000000000023 /* WidgetGuidePlayback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuidePlayback.swift; sourceTree = "<group>"; };
+		D3C000000000000000000025 /* WidgetGuideSearchFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideSearchFrame.swift; sourceTree = "<group>"; };
+		D3C000000000000000000027 /* WidgetGuideSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideSheet.swift; sourceTree = "<group>"; };
+		D3C000000000000000000029 /* WidgetGuideSizeFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideSizeFrame.swift; sourceTree = "<group>"; };
+		D3C00000000000000000002B /* WidgetGuideStepRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideStepRow.swift; sourceTree = "<group>"; };
+		D3C00000000000000000002D /* WidgetGuideSwipeFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideSwipeFrame.swift; sourceTree = "<group>"; };
+		D3C00000000000000000002F /* WidgetGuideTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideTab.swift; sourceTree = "<group>"; };
+		D3C000000000000000000031 /* WidgetGuideTimerKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideTimerKey.swift; sourceTree = "<group>"; };
+		D3C000000000000000000033 /* WidgetGuideTodayResultFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideTodayResultFrame.swift; sourceTree = "<group>"; };
+		D3C000000000000000000035 /* WidgetGuideTouch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideTouch.swift; sourceTree = "<group>"; };
+		D3C000000000000000000037 /* WidgetGuideWallpaper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuideWallpaper.swift; sourceTree = "<group>"; };
+		D3C000000000000000000039 /* WidgetPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetPreview.swift; sourceTree = "<group>"; };
+		D3C00000000000000000003C /* PeopleWidgetHintTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleWidgetHintTests.swift; sourceTree = "<group>"; };
+		D3C00000000000000000003E /* WidgetGuidePlaybackTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetGuidePlaybackTests.swift; sourceTree = "<group>"; };
+		D3C000000000000000000040 /* WidgetHintPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintPolicyTests.swift; sourceTree = "<group>"; };
+		D3C000000000000000000042 /* WidgetHinterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHinterTests.swift; sourceTree = "<group>"; };
+		D3C000000000000000000044 /* MosaicGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicGlass.swift; sourceTree = "<group>"; };
+		D3C000000000000000000046 /* WidgetHintPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintPlacement.swift; sourceTree = "<group>"; };
+		D3C000000000000000000048 /* MosaicGridLayout+WidgetHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MosaicGridLayout+WidgetHint.swift"; sourceTree = "<group>"; };
+		D3C00000000000000000004A /* WidgetHintHomeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintHomeScreen.swift; sourceTree = "<group>"; };
+		D3C00000000000000000004C /* WidgetHintStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintStrip.swift; sourceTree = "<group>"; };
+		D3C00000000000000000004E /* PeoplePresenter+WidgetHint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+WidgetHint.swift"; sourceTree = "<group>"; };
+		D3C000000000000000000050 /* MosaicWidgetHintLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicWidgetHintLayoutTests.swift; sourceTree = "<group>"; };
 		C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+ReviewPrompt.swift"; sourceTree = "<group>"; };
 		C2B000000000000000000003 /* ReviewPromptState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptState.swift; sourceTree = "<group>"; };
 		C2B000000000000000000005 /* ReviewPromptPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewPromptPolicy.swift; sourceTree = "<group>"; };
@@ -882,6 +960,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D3C000000000000000000001 /* WidgetHint */ = {
+			isa = PBXGroup;
+			children = (
+				D3C000000000000000000002 /* InstalledWidgetLookup.swift */,
+				D3C000000000000000000004 /* WidgetHintMode.swift */,
+				D3C000000000000000000006 /* WidgetHintPolicy.swift */,
+				D3C000000000000000000008 /* WidgetHintState.swift */,
+				D3C00000000000000000000A /* WidgetHintStore.swift */,
+				D3C00000000000000000000C /* WidgetHinter.swift */,
+			);
+			path = WidgetHint;
+			sourceTree = "<group>";
+		};
+		D3C00000000000000000000E /* WidgetGuide */ = {
+			isa = PBXGroup;
+			children = (
+				D3C00000000000000000000F /* AppIconImage.swift */,
+				D3C000000000000000000011 /* IconRocking.swift */,
+				D3C000000000000000000013 /* PlaceholderIconGrid.swift */,
+				D3C000000000000000000015 /* WidgetGuideCanvas.swift */,
+				D3C000000000000000000017 /* WidgetGuideEditFrame.swift */,
+				D3C000000000000000000019 /* WidgetGuideFrame.swift */,
+				D3C00000000000000000001B /* WidgetGuideHighlightedWidget.swift */,
+				D3C00000000000000000001D /* WidgetGuideHoldFrame.swift */,
+				D3C00000000000000000001F /* WidgetGuideHomeResultFrame.swift */,
+				D3C000000000000000000021 /* WidgetGuideIllustration.swift */,
+				D3C000000000000000000023 /* WidgetGuidePlayback.swift */,
+				D3C000000000000000000025 /* WidgetGuideSearchFrame.swift */,
+				D3C000000000000000000027 /* WidgetGuideSheet.swift */,
+				D3C000000000000000000029 /* WidgetGuideSizeFrame.swift */,
+				D3C00000000000000000002B /* WidgetGuideStepRow.swift */,
+				D3C00000000000000000002D /* WidgetGuideSwipeFrame.swift */,
+				D3C00000000000000000002F /* WidgetGuideTab.swift */,
+				D3C000000000000000000031 /* WidgetGuideTimerKey.swift */,
+				D3C000000000000000000033 /* WidgetGuideTodayResultFrame.swift */,
+				D3C000000000000000000035 /* WidgetGuideTouch.swift */,
+				D3C000000000000000000037 /* WidgetGuideWallpaper.swift */,
+				D3C000000000000000000039 /* WidgetPreview.swift */,
+			);
+			path = WidgetGuide;
+			sourceTree = "<group>";
+		};
+		D3C00000000000000000003B /* WidgetHint */ = {
+			isa = PBXGroup;
+			children = (
+				D3C00000000000000000003C /* PeopleWidgetHintTests.swift */,
+				D3C00000000000000000003E /* WidgetGuidePlaybackTests.swift */,
+				D3C000000000000000000040 /* WidgetHintPolicyTests.swift */,
+				D3C000000000000000000042 /* WidgetHinterTests.swift */,
+			);
+			path = WidgetHint;
+			sourceTree = "<group>";
+		};
 		C2B000000000000000000001 /* ReviewPrompt */ = {
 			isa = PBXGroup;
 			children = (
@@ -1017,6 +1148,8 @@
 				A7A100000000000000000001 /* Analytics */,
 				B1A000000000000000000001 /* Haptics */,
 				C2B000000000000000000001 /* ReviewPrompt */,
+				D3C00000000000000000000E /* WidgetGuide */,
+				D3C000000000000000000001 /* WidgetHint */,
 			);
 			path = GrowingUp;
 			sourceTree = "<group>";
@@ -1199,6 +1332,7 @@
 				094DF9C4223AB35D00C331EC /* Info.plist */,
 				A7A100000000000000000028 /* Analytics */,
 				C2B000000000000000000002 /* ReviewPrompt */,
+				D3C00000000000000000003B /* WidgetHint */,
 			);
 			path = GrowingUpTests;
 			sourceTree = "<group>";
@@ -1315,6 +1449,7 @@
 				ED181AF0FF489C49F6BD2E3E /* PeopleReorderingTests.swift */,
 				D9E9E7278C11D3886028F995 /* AmbientPaletteTests.swift */,
 				EA5A27707E689AF159A2DDBE /* MosaicGridLayoutTests.swift */,
+				D3C000000000000000000050 /* MosaicWidgetHintLayoutTests.swift */,
 				B5554FA6520391E07FE91343 /* KeyboardCommandTests.swift */,
 				A6A9E5F97AFF616FDBB5AB79 /* EditModeColumnWidthTests.swift */,
 				A7F1C2D3E4B5968778695A4E /* MosaicAutoscrollTests.swift */,
@@ -1483,6 +1618,12 @@
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
 				B1A00000000000000000001A /* SceneErrorHaptics.swift */,
 				C2B000000000000000000015 /* PeoplePresenter+ReviewPrompt.swift */,
+				D3C000000000000000000044 /* MosaicGlass.swift */,
+				D3C000000000000000000046 /* WidgetHintPlacement.swift */,
+				D3C000000000000000000048 /* MosaicGridLayout+WidgetHint.swift */,
+				D3C00000000000000000004A /* WidgetHintHomeScreen.swift */,
+				D3C00000000000000000004C /* WidgetHintStrip.swift */,
+				D3C00000000000000000004E /* PeoplePresenter+WidgetHint.swift */,
 				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
@@ -1990,6 +2131,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3C00000000000000000003D /* PeopleWidgetHintTests.swift in Sources */,
+				D3C00000000000000000003F /* WidgetGuidePlaybackTests.swift in Sources */,
+				D3C000000000000000000041 /* WidgetHintPolicyTests.swift in Sources */,
+				D3C000000000000000000043 /* WidgetHinterTests.swift in Sources */,
+				D3C000000000000000000051 /* MosaicWidgetHintLayoutTests.swift in Sources */,
 				A265EA47490FD78244DF9232 /* KeyboardCommandTests.swift in Sources */,
 				679B15AFB5E3B561F4904DFC /* EditModeColumnWidthTests.swift in Sources */,
 				ED172F33C0677DF9ABD5794D /* PersonEditorPresenterTests.swift in Sources */,
@@ -2080,6 +2226,40 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3C000000000000000000003 /* InstalledWidgetLookup.swift in Sources */,
+				D3C000000000000000000005 /* WidgetHintMode.swift in Sources */,
+				D3C000000000000000000007 /* WidgetHintPolicy.swift in Sources */,
+				D3C000000000000000000009 /* WidgetHintState.swift in Sources */,
+				D3C00000000000000000000B /* WidgetHintStore.swift in Sources */,
+				D3C00000000000000000000D /* WidgetHinter.swift in Sources */,
+				D3C000000000000000000010 /* AppIconImage.swift in Sources */,
+				D3C000000000000000000012 /* IconRocking.swift in Sources */,
+				D3C000000000000000000014 /* PlaceholderIconGrid.swift in Sources */,
+				D3C000000000000000000016 /* WidgetGuideCanvas.swift in Sources */,
+				D3C000000000000000000018 /* WidgetGuideEditFrame.swift in Sources */,
+				D3C00000000000000000001A /* WidgetGuideFrame.swift in Sources */,
+				D3C00000000000000000001C /* WidgetGuideHighlightedWidget.swift in Sources */,
+				D3C00000000000000000001E /* WidgetGuideHoldFrame.swift in Sources */,
+				D3C000000000000000000020 /* WidgetGuideHomeResultFrame.swift in Sources */,
+				D3C000000000000000000022 /* WidgetGuideIllustration.swift in Sources */,
+				D3C000000000000000000024 /* WidgetGuidePlayback.swift in Sources */,
+				D3C000000000000000000026 /* WidgetGuideSearchFrame.swift in Sources */,
+				D3C000000000000000000028 /* WidgetGuideSheet.swift in Sources */,
+				D3C00000000000000000002A /* WidgetGuideSizeFrame.swift in Sources */,
+				D3C00000000000000000002C /* WidgetGuideStepRow.swift in Sources */,
+				D3C00000000000000000002E /* WidgetGuideSwipeFrame.swift in Sources */,
+				D3C000000000000000000030 /* WidgetGuideTab.swift in Sources */,
+				D3C000000000000000000032 /* WidgetGuideTimerKey.swift in Sources */,
+				D3C000000000000000000034 /* WidgetGuideTodayResultFrame.swift in Sources */,
+				D3C000000000000000000036 /* WidgetGuideTouch.swift in Sources */,
+				D3C000000000000000000038 /* WidgetGuideWallpaper.swift in Sources */,
+				D3C00000000000000000003A /* WidgetPreview.swift in Sources */,
+				D3C000000000000000000045 /* MosaicGlass.swift in Sources */,
+				D3C000000000000000000047 /* WidgetHintPlacement.swift in Sources */,
+				D3C000000000000000000049 /* MosaicGridLayout+WidgetHint.swift in Sources */,
+				D3C00000000000000000004B /* WidgetHintHomeScreen.swift in Sources */,
+				D3C00000000000000000004D /* WidgetHintStrip.swift in Sources */,
+				D3C00000000000000000004F /* PeoplePresenter+WidgetHint.swift in Sources */,
 				D83B0424086BCA2C03D4F456 /* KeyboardCommand+Lists.swift in Sources */,
 				D1316802A0D7FA11010F1908 /* WindowControlsClearance.swift in Sources */,
 				3CA40D66589C284C6FA696C7 /* KeyboardCommand.swift in Sources */,
@@ -2705,7 +2885,7 @@
 		098E561D21C409E400E4CA1E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				EXCLUDED_SOURCE_FILE_NAMES = "AgeWidgetContentView.swift AgeEntry.swift EmptyWidgetView.swift WidgetPerson.swift UITestWidgetPreview.swift PersonTile.swift PersonTileContent.swift PersonPhotoBackground.swift PhotoScrim.swift AgeWidgetBackground.swift WidgetPersonLoader.swift LockScreenEntry.swift LockScreenWidgetContentView.swift RectangularAgeView.swift LockScreenEmptyView.swift WidgetTileLayout.swift TileTypeScale.swift WidgetLoadResult.swift WidgetRetrySchedule.swift UnavailableWidgetView.swift LockScreenUnavailableView.swift";
+				EXCLUDED_SOURCE_FILE_NAMES = "UITestWidgetPreview.swift LockScreenEntry.swift LockScreenWidgetContentView.swift RectangularAgeView.swift LockScreenEmptyView.swift LockScreenUnavailableView.swift";
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = NO;

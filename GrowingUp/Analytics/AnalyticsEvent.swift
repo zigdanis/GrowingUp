@@ -18,6 +18,12 @@ enum AnalyticsEvent: Equatable {
 		activeDays: Int, daysSinceFirstActive: Int, viewerVisits: Int, peopleWithPhotoCount: Int, requestNumber: Int)
 	/// The person chose to export a library that store recovery preserved, and the archive is ready to share.
 	case preservedDataExported
+	/// The mosaic shows the Home Screen widget hint on this launch; `shownLaunches` counts this one.
+	case widgetHintShown(shownLaunches: Int)
+	/// The hint was tapped and the widget guide opened.
+	case widgetHintOpened(shownLaunches: Int)
+	/// × closed the hint.
+	case widgetHintDismissed(shownLaunches: Int)
 
 	var name: String {
 		switch self {
@@ -35,6 +41,9 @@ enum AnalyticsEvent: Equatable {
 		case .peopleReordered: "people_reordered"
 		case .reviewPromptRequested: "review_prompt_requested"
 		case .preservedDataExported: "preserved_data_exported"
+		case .widgetHintShown: "widget_hint_shown"
+		case .widgetHintOpened: "widget_hint_opened"
+		case .widgetHintDismissed: "widget_hint_dismissed"
 		}
 	}
 
@@ -75,6 +84,8 @@ enum AnalyticsEvent: Equatable {
 				"people_with_photo_count": .int(peopleWithPhotoCount),
 				"request_number": .int(requestNumber)
 			]
+		case .widgetHintShown(let shownLaunches), .widgetHintOpened(let shownLaunches), .widgetHintDismissed(let shownLaunches):
+			["shown_launches": .int(shownLaunches)]
 		}
 	}
 

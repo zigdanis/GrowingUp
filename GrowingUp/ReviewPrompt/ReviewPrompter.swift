@@ -74,6 +74,12 @@ final class ReviewPrompter {
 		if visitStarted == nil || replacingNewPerson { visitStarted = now() }
 	}
 
+	/// Something else took the screen, such as the widget guide: a request still waiting for its pause is dropped, and a
+	/// later visit can try again.
+	func dropPendingRequest() {
+		pendingRequest = nil
+	}
+
 	/// The cover turned into a new person's empty page, which is no visit to anyone.
 	func viewerLeftForNewPerson() {
 		pendingRequest = nil

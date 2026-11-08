@@ -12,6 +12,8 @@ public enum Constants {
 	public static let bundleIdentifier = "pro.ziganshin.Core"
 	public static let appGroupId = "group.pro.ziganshin.aging"
 	public static let widgetBundle = "pro.ziganshin.GrowingUp.Widget"
+	/// The kind of the Home Screen widget, which the app looks for to tell whether one is installed.
+	public static let homeScreenWidgetKind = "pro.ziganshin.GrowingUp.Widget"
 	/// The most people the app keeps; the mosaic offers no "Add" beyond it.
 	public static let peopleLimit = 20
 	public static let widgetPeopleLimit = 6
