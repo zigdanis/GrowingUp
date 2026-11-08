@@ -11,7 +11,7 @@ struct LockScreenWidgetContentView: View {
 		switch entry.content {
 		case .loaded(let person):
 			// Accessory widgets cannot hold links, so the whole widget opens the person.
-			RectangularAgeView(person: person, text: LockScreenText(name: person.name, birthday: person.birthday, now: entry.date, locale: locale))
+			RectangularAgeView(text: LockScreenText(name: person.name, birthday: person.birthday, now: entry.date, locale: locale))
 				.privacySensitive()
 				.widgetURL(person.deepLinkURL)
 		case .nobodyPinned:

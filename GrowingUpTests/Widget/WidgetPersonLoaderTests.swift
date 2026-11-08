@@ -6,7 +6,8 @@ import XCTest
 @testable import GrowingUp
 
 final class WidgetPersonLoaderTests: XCTestCase {
-	/// A real picture: the person's `photo` is drawn from it, which an empty `UIImage` cannot be.
+	/// A real picture: the person's tile picture is drawn from it, which an empty `UIImage` cannot be. Its 4-point side
+	/// tells a tile drawn from it apart from a monogram's.
 	private static let photo = UIGraphicsImageRenderer(size: CGSize(width: 4, height: 4)).image { context in
 		UIColor.orange.setFill()
 		context.fill(CGRect(x: 0, y: 0, width: 4, height: 4))
@@ -39,7 +40,7 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		XCTAssertEqual(first?.index, 0)
 		XCTAssertEqual(first?.name, people[0].name)
 		XCTAssertEqual(first?.birthday, people[0].birthday)
-		XCTAssertNotNil(first?.photo)
+		XCTAssertEqual(first?.tilePicture.size, Self.photo.size, "The tile is drawn from the loaded photo")
 		XCTAssertEqual(requestedImages, [people[0].widgetPicId].compactMap { $0 })
 		let loadedTwo = await loader.load(limit: 2)
 		let two = try XCTUnwrap(loadedTwo.value)
@@ -95,8 +96,8 @@ final class WidgetPersonLoaderTests: XCTestCase {
 		let loaded = await loader.load(limit: Constants.widgetPeopleLimit)
 		let persons = try XCTUnwrap(loaded.value)
 		XCTAssertEqual(persons.map(\.id), people.map(\.id))
-		XCTAssertNil(persons[0].photo)
-		XCTAssertNil(persons[1].photo)
+		let monogramSize = CGSize(width: MonogramPicture.side, height: MonogramPicture.side)
+		XCTAssertEqual(persons.map(\.tilePicture.size), [monogramSize, monogramSize], "Both tiles fall back to the monogram")
 	}
 
 	func testLockedOrUnreadableStoreIsUnavailable() async {
