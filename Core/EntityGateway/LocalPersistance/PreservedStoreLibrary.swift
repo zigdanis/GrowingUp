@@ -11,12 +11,6 @@ public struct PreservedStoreLibrary: PreservedStoreGateway {
 	/// Where exports are written; each export replaces the ones before it.
 	let exportsDirectory: URL
 
-	init(storeURL: URL, photosDirectory: URL, exportsDirectory: URL) {
-		self.storeURL = storeURL
-		self.photosDirectory = photosDirectory
-		self.exportsDirectory = exportsDirectory
-	}
-
 	/// The App Group's store and photos, as the app and the widget use them.
 	public static func shared() throws -> PreservedStoreLibrary {
 		let appGroup = try CoreDataStackImplementation.appGroupDirectory()

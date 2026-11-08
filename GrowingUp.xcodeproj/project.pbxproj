@@ -352,6 +352,7 @@
 		2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */; };
 		05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */; };
 		C610195F536767E86B2824DA /* PreservedStoreLibraryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FEF50696366AEE9ED10D9BF /* PreservedStoreLibraryTests.swift */; };
+		DE5F4A8D8A51D0A63578F84F /* PhotoFileNameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D127AB1510356C97FA13682C /* PhotoFileNameTests.swift */; };
 		7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */; };
 		CF6F04B22E594F399E944388 /* SQLiteStoreAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F5E154F23824F82B105C458 /* SQLiteStoreAccess.swift */; };
 		A7A100000000000000000003 /* AnalyticsContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A100000000000000000002 /* AnalyticsContext.swift */; };
@@ -777,10 +778,11 @@
 		6EF714690C801EA9B0C04B86 /* ArchivedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchivedFile.swift; sourceTree = "<group>"; };
 		B7D1EFC0A983C399E3255FB6 /* ArchiveManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArchiveManifest.swift; sourceTree = "<group>"; };
 		3CF821533715DEB7E574FCDE /* PhotoFileName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFileName.swift; sourceTree = "<group>"; };
-		FF0DF54697FBFFD3D53C2713 /* FileManager+LinkOrCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManager+LinkOrCopy.swift; sourceTree = "<group>"; };
+		FF0DF54697FBFFD3D53C2713 /* FileManager+LinkOrCopy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+LinkOrCopy.swift"; sourceTree = "<group>"; };
 		DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentStoreRecoveryTests.swift; sourceTree = "<group>"; };
 		AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStoreBackupTests.swift; sourceTree = "<group>"; };
 		0FEF50696366AEE9ED10D9BF /* PreservedStoreLibraryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedStoreLibraryTests.swift; sourceTree = "<group>"; };
+		D127AB1510356C97FA13682C /* PhotoFileNameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoFileNameTests.swift; sourceTree = "<group>"; };
 		D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStackImplementationTests.swift; sourceTree = "<group>"; };
 		4F5E154F23824F82B105C458 /* SQLiteStoreAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteStoreAccess.swift; sourceTree = "<group>"; };
 		A7A100000000000000000002 /* AnalyticsContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsContext.swift; sourceTree = "<group>"; };
@@ -1178,6 +1180,7 @@
 				D8083CFA763A4B0698B72F8D /* CoreDataStackImplementationTests.swift */,
 				AA76651AB65041C181CCAB61 /* SQLiteStoreBackupTests.swift */,
 				0FEF50696366AEE9ED10D9BF /* PreservedStoreLibraryTests.swift */,
+				D127AB1510356C97FA13682C /* PhotoFileNameTests.swift */,
 				DF60644426F44E7E8AA2F7D5 /* PersistentStoreRecoveryTests.swift */,
 				094DF9CB223ADC6100C331EC /* CoreDataPersonsGatewayTests.swift */,
 				ED18EF40553A6D416F5697C0 /* CoreDataPersonsOrderTests.swift */,
@@ -1966,6 +1969,7 @@
 				7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */,
 				05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */,
 				C610195F536767E86B2824DA /* PreservedStoreLibraryTests.swift in Sources */,
+				DE5F4A8D8A51D0A63578F84F /* PhotoFileNameTests.swift in Sources */,
 				2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */,
 				091BEEB5223D61F600A3D057 /* PersonsGatewaySpy.swift in Sources */,
 				A10000000000000000000004 /* ImageStoreSpy.swift in Sources */,

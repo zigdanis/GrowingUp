@@ -252,15 +252,6 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		XCTAssertThrowsError(try library.delete(outside))
 	}
 
-	func testPhotoFileNames() {
-		let id = UUID()
-		XCTAssertEqual(PhotoFileName.id(of: "\(id.uuidString).png"), id)
-		XCTAssertEqual(PhotoFileName.id(of: "\(id.uuidString).HEIC"), id)
-		XCTAssertEqual(PhotoFileName.id(of: "\(id.uuidString).jpg"), id)
-		XCTAssertNil(PhotoFileName.id(of: "\(id.uuidString).sqlite"))
-		XCTAssertNil(PhotoFileName.id(of: "cover.png"))
-	}
-
 	private func writeFamily() throws {
 		for suffix in ["", "-wal", "-shm"] {
 			try Data("saved\(suffix)".utf8).write(to: URL(fileURLWithPath: store.path + suffix))

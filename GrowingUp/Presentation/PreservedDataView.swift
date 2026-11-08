@@ -20,10 +20,16 @@ struct PreservedDataView: View {
 						.font(.headline)
 						.accessibilityAddTraits(.isHeader)
 					Text(
-						"This version of GrowingUp couldn't open what was saved on this device before, so it set that data aside and started with an empty list. Nothing was deleted."
+						"""
+						This version of GrowingUp couldn't open what was saved on this device before, so it set that data \
+						aside and started with an empty list. Nothing was deleted.
+						"""
 					)
 					Text(
-						"The app can't bring these people back by itself yet. A newer version may be able to. To be safe, export a copy now and keep it outside the app, for example in Files."
+						"""
+						The app can't bring these people back by itself yet. A newer version may be able to. To be safe, \
+						export a copy now and keep it outside the app, for example in Files.
+						"""
 					)
 				}
 				.padding(.vertical, 4)
@@ -51,7 +57,10 @@ struct PreservedDataView: View {
 				.accessibilityIdentifier("preservedData.export")
 			} footer: {
 				Text(
-					"One file with your earlier people, their photos and a short note about what it contains. You choose where it goes; the app never sends it anywhere by itself."
+					"""
+					One file with your earlier people, their photos and a short note about what it contains. You choose \
+					where it goes; the app never sends it anywhere by itself.
+					"""
 				)
 			}
 			Section {
