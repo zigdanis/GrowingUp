@@ -1,6 +1,6 @@
 # Lock Screen widget hint, November 2026
 
-Mockups only, no app code yet. Open [index.html](index.html) in a browser; the demo photos are embedded, so the page works on its own.
+Mockups only, no app code yet. Open [index.html](index.html) (round 2, current) in a browser; [round-1.html](round-1.html) holds the first four variants. Demo photos are embedded, so each page works on its own.
 
 ## Problem
 
@@ -19,8 +19,15 @@ All four open the same "How to add" sheet: a SwiftUI Lock Screen illustration wi
 
 ## Shared rules
 
-Shown only when at least one person has "Widget" on, from the second day of use, never when a GrowingUp Lock Screen widget is already installed (`WidgetCenter.getCurrentConfigurations`), never together with the rating prompt, an alert, reordering or a birthday celebration, and never again after a tap or ×. Open question: whether one person is enough (Astra) or two are needed (Fable).
+Shown only when at least one person has "Widget" on, from the second day of use, never when a GrowingUp Home Screen or Today widget is already installed (`WidgetCenter.getCurrentConfigurations`), never together with the rating prompt, an alert, reordering or a birthday celebration, and never again after a tap or ×. One person with "Widget" on is enough.
+
+## Round 2: Danis's decisions (8 November 2026)
+
+- The hint is variant A, the strip under the mosaic with × and "How to add".
+- It is about the large widgets on the Home Screen and in the Today View, not the Lock Screen.
+- The "How to add" sheet has a Home Screen tab and a Today View tab: an illustration that acts out each step (long press, Edit → Add Widget, search GrowingUp, pick a size) and four numbered steps using the system's own button names.
+- The Lock Screen widget keeps only the rectangular family, now with a round photo; the ring and the inline family go. That change ships in its own PR, without any hint or instructions.
 
 ## Next step
 
-Danis picks a variant; the implementation then lands in this PR.
+Danis approves the round 2 sheet; the implementation then lands in this PR.
