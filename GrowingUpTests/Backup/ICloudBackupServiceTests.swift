@@ -220,6 +220,24 @@ final class ICloudBackupServiceTests: XCTestCase {
 		XCTAssertTrue(settings.isRestoreOfferDismissed)
 	}
 
+	func testICloudThatWasNotReadyAtLaunchIsFoundOnTheNextChange() async throws {
+		try addPerson("Mia")
+		var isReady = false
+		let located = store
+		let service = ICloudBackupService(
+			settings: settings, gateway: gateway, analytics: analytics, debounce: .milliseconds(10),
+			locateStore: { isReady ? located : nil }, appVersion: "3.2 (50)", deviceModel: "iPhone")
+		await service.start(isLibraryLoaded: { true }).value
+		XCTAssertEqual(service.availability, .unavailable)
+
+		isReady = true
+		service.libraryChanged()
+
+		try await waitUntil { service.lastBackupAt != nil }
+		XCTAssertEqual(service.availability, .available)
+		XCTAssertTrue(folder.isIntact)
+	}
+
 	func testABackupChosenBeforeTheAccountChangedIsNotDeleted() async throws {
 		try addPerson("Mia")
 		let service = await makeService()

@@ -145,6 +145,7 @@ struct PeopleScene: View {
 			case .active:
 				prompter?.appBecameActive()
 				hinter?.appBecameActive()
+				presenter.configurator.iCloudBackup?.appBecameActive()
 			case .background:
 				prompter?.appEnteredBackground()
 				hinter?.appEnteredBackground()

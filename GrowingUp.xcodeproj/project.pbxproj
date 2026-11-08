@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9FA97292A2A9A63D50132377 /* ICloudBackupService+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0251E47CBBC3FF67D2352890 /* ICloudBackupService+Write.swift */; };
 		0757B4346EA75197BC728C7B /* BackupDigestCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */; };
 		3D155C652CCBCEF34672506C /* BackupPassScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */; };
 		460B67970D2B170D9D402401 /* PeoplePresenter+ICloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 639B959958389D2742679C7C /* PeoplePresenter+ICloudBackup.swift */; };
@@ -550,6 +551,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0251E47CBBC3FF67D2352890 /* ICloudBackupService+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ICloudBackupService+Write.swift"; sourceTree = "<group>"; };
 		4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDigestCache.swift; sourceTree = "<group>"; };
 		84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPassScheduler.swift; sourceTree = "<group>"; };
 		639B959958389D2742679C7C /* PeoplePresenter+ICloudBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+ICloudBackup.swift"; sourceTree = "<group>"; };
@@ -1095,6 +1097,7 @@
 				84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */,
 				346E5289E485E433D6C8976A /* BackupStatusText.swift */,
 				AF5A4C695189372336C65106 /* ICloudBackupService+Live.swift */,
+				0251E47CBBC3FF67D2352890 /* ICloudBackupService+Write.swift */,
 				98C6E704E86DC3D3D93C531A /* ICloudBackupService.swift */,
 				27C3D5EDF2A89C5C542B93EC /* ICloudBackupDiscovery.swift */,
 				9418FB3AABF3D9F8B5868601 /* BackupSettings.swift */,
@@ -2539,6 +2542,7 @@
 				3D155C652CCBCEF34672506C /* BackupPassScheduler.swift in Sources */,
 				4DAFCB8D396E9CD624D35DF8 /* BackupStatusText.swift in Sources */,
 				0852A6E713F31DA7C871C8D1 /* ICloudBackupService+Live.swift in Sources */,
+				9FA97292A2A9A63D50132377 /* ICloudBackupService+Write.swift in Sources */,
 				A9E2E75FDE75F261562079EC /* ICloudBackupService.swift in Sources */,
 				6E3B6739EF6E0427801E21D9 /* ICloudBackupDiscovery.swift in Sources */,
 				C3F5E79D6B3200CB27168D8F /* BackupSettings.swift in Sources */,

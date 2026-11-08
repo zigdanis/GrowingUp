@@ -90,16 +90,32 @@ final class ICloudBackupService {
 		self.isLibraryLoaded = isLibraryLoaded
 		return Task {
 			await locateStoreIfNeeded()
-			libraryChanged()
+			if isEnabled, store != nil { passes.schedule() }
 		}
+	}
+
+	/// Back in the app: iCloud that was not ready before, as before the first unlock, gets another look.
+	func appBecameActive() {
+		guard isEnabled, store == nil else { return }
+		retryLocating()
 	}
 
 	// MARK: - Backing up
 
-	/// The library changed: back up once the changes stop for a moment.
+	/// The library changed: back up once the changes stop for a moment. Without iCloud found yet, it looks again first.
 	func libraryChanged() {
-		guard isEnabled, availability != .unavailable else { return }
+		guard isEnabled else { return }
+		guard store != nil else { return retryLocating() }
 		passes.schedule()
+	}
+
+	/// Looks for the iCloud container again, after a lookup that found none, and backs up once it is there.
+	private func retryLocating() {
+		guard locating == nil else { return }
+		Task {
+			await locateStoreIfNeeded()
+			if isEnabled, store != nil { passes.schedule() }
+		}
 	}
 
 	/// The app is going to the background: writes a waiting backup now instead of after the pause, and lets a write under
@@ -166,18 +182,6 @@ final class ICloudBackupService {
 			// Once per launch: a full disk would otherwise report after every change.
 			report(error, operation: "write_backup", once: &hasReportedWriteFailure)
 		}
-	}
-
-	nonisolated private static func write(
-		_ snapshot: LibrarySnapshot, to folder: BackupFolder, lastHash: String?
-	) throws -> ICloudBackupWriteOutcome {
-		let hash = try BackupCodec.contentHash(of: snapshot.document)
-		let exists = folder.hasDocument
-		// An unchanged library needs no write, unless the backup is gone, as when deleted from another device, or damaged.
-		if hash == lastHash, exists, folder.isIntact { return .unchanged }
-		if snapshot.document.isEmpty, !exists { return .skipped }
-		try folder.write(snapshot)
-		return .written(hash)
 	}
 
 	private func report(_ error: Error, operation: String, once reported: inout Bool) {
