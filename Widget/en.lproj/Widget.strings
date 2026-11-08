@@ -6,6 +6,18 @@
 /* Empty widget caption under the invitation */
 "Choose people in GrowingUp" = "Choose people in GrowingUp";
 
+/* Widget while the store is temporarily unavailable, e.g. right after a restart; it refreshes by itself */
+"Ages will be back soon" = "Ages will be back soon";
+
+/* Caption under the temporarily unavailable title in larger widgets */
+"The widget refreshes by itself." = "The widget refreshes by itself.";
+
+/* VoiceOver label of the temporarily unavailable widget */
+"Ages will be back soon. The widget refreshes by itself." = "Ages will be back soon. The widget refreshes by itself.";
+
+/* Lock Screen widget while the store is temporarily unavailable */
+"Back soon" = "Back soon";
+
 /* Tile caption after the primary age, e.g. "and 3 months" */
 "and %@" = "and %@";
 
