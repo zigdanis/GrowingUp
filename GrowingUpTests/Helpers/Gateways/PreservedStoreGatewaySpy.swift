@@ -5,8 +5,7 @@ import Foundation
 /// Preserved stores held in memory, recording each call; `failing` makes the named calls throw.
 final class PreservedStoreGatewaySpy: PreservedStoreGateway, @unchecked Sendable {
 	enum Call: Equatable {
-		case stores, preservePhotos(String, Set<UUID>), markReported(String), export(String, Set<UUID>), delete(String, Set<UUID>?)
-		case removeExports
+		case stores, preservePhotos(String), markReported(String), export(String), delete(String), removeExports
 	}
 
 	private let lock = NSLock()
@@ -27,8 +26,8 @@ final class PreservedStoreGatewaySpy: PreservedStoreGateway, @unchecked Sendable
 		return lock.withLock { held }
 	}
 
-	func preservePhotos(of store: PreservedStore, activePhotoIDs: Set<UUID>) throws -> PreservedStore {
-		try record(.preservePhotos(store.id, activePhotoIDs), name: "preservePhotos")
+	func preservePhotos(of store: PreservedStore) throws -> PreservedStore {
+		try record(.preservePhotos(store.id), name: "preservePhotos")
 		return update(store) { Self.copy($0, hasPreservedPhotos: true) }
 	}
 
@@ -37,13 +36,13 @@ final class PreservedStoreGatewaySpy: PreservedStoreGateway, @unchecked Sendable
 		return update(store) { Self.copy($0, isReported: true) }
 	}
 
-	func export(_ store: PreservedStore, activePhotoIDs: Set<UUID>, now: Date) throws -> URL {
-		try record(.export(store.id, activePhotoIDs), name: "export")
+	func export(_ store: PreservedStore, now: Date) throws -> URL {
+		try record(.export(store.id), name: "export")
 		return URL(fileURLWithPath: "/tmp/\(store.id).zip")
 	}
 
-	func delete(_ store: PreservedStore, activePhotoIDs: Set<UUID>?) throws {
-		try record(.delete(store.id, activePhotoIDs), name: "delete")
+	func delete(_ store: PreservedStore) throws {
+		try record(.delete(store.id), name: "delete")
 		lock.withLock { held.removeAll { $0.id == store.id } }
 	}
 

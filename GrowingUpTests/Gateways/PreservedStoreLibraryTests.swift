@@ -106,16 +106,13 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		XCTAssertEqual(try library.stores().map(\.cause), [.incompatibleModel(code: 134_100)])
 	}
 
-	func testPhotosAreKeptOnceWithoutTheActiveLibrarysAndOutliveTheirLooseFiles() throws {
+	func testPhotosOfAnEarlierVersionsStoreAreKeptOnceAndOutliveTheirLooseFiles() throws {
 		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-P")
 		let old = UUID()
-		let active = UUID()
 		try Data("old picture".utf8).write(to: root.appendingPathComponent("\(old.uuidString).png"))
 		try Data("old original".utf8).write(to: root.appendingPathComponent("\(old.uuidString).heic"))
-		try Data("new picture".utf8).write(to: root.appendingPathComponent("\(active.uuidString).png"))
 		try Data("not a photo".utf8).write(to: root.appendingPathComponent("notes.png"))
-		let store = try XCTUnwrap(library.stores().first)
-		let kept = try library.preservePhotos(of: store, activePhotoIDs: [active])
+		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first))
 		XCTAssertTrue(kept.hasPreservedPhotos)
 		let photos = folder.appendingPathComponent("Photos")
 		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: photos.path).sorted(), ["\(old.uuidString).heic", "\(old.uuidString).png"])
@@ -123,25 +120,51 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		// A photo added later belongs to the active library, and a person removed from it takes only the loose file.
 		try Data("later".utf8).write(to: root.appendingPathComponent("\(UUID().uuidString).png"))
 		try FileManager.default.removeItem(at: root.appendingPathComponent("\(old.uuidString).png"))
-		XCTAssertEqual(try library.preservePhotos(of: kept, activePhotoIDs: []), kept)
+		XCTAssertEqual(try library.preservePhotos(of: kept), kept)
 		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: photos.path).count, 2)
 		XCTAssertEqual(try Data(contentsOf: photos.appendingPathComponent("\(old.uuidString).png")), Data("old picture".utf8))
 	}
 
-	func testInterruptedPhotoPassResumesWithoutDuplicatingOrOverwriting() throws {
-		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-R")
-		let first = UUID()
-		let second = UUID()
-		try Data("first".utf8).write(to: root.appendingPathComponent("\(first.uuidString).png"))
-		try Data("second".utf8).write(to: root.appendingPathComponent("\(second.uuidString).jpg"))
+	func testRecoveryKeepsThePhotosAsItSetsTheStoreAside() throws {
+		try writeFamily()
+		let photo = UUID()
+		try Data("photo".utf8).write(to: root.appendingPathComponent("\(photo.uuidString).heic"))
+		var attempts = 0
+		let stack = CoreDataStackImplementation(makeContainer: makeContainer, photosDirectory: root) { candidate in
+			attempts += 1
+			if attempts == 1 { throw NSError(domain: NSCocoaErrorDomain, code: NSPersistentStoreIncompatibleVersionHashError) }
+			try CoreDataStackImplementation.loadPersistentStores(candidate)
+		}
+		let container = try stack.persistentContainer
+		defer { container.persistentStoreCoordinator.persistentStores.forEach { try? container.persistentStoreCoordinator.remove($0) } }
+		let preserved = try XCTUnwrap(library.stores().first)
+		XCTAssertTrue(preserved.hasPreservedPhotos, "Kept before the app, which may hold the old people in memory, refreshes")
+		let folder = storeFolder.appendingPathComponent(preserved.id)
+		XCTAssertEqual(try PreservedStoreManifest.read(in: folder)?.photoFileNames, ["\(photo.uuidString).heic"])
+		try FileManager.default.removeItem(at: root.appendingPathComponent("\(photo.uuidString).heic"))
+		XCTAssertEqual(try Data(contentsOf: folder.appendingPathComponent("Photos/\(photo.uuidString).heic")), Data("photo".utf8))
+	}
+
+	func testExportOfAnInterruptedPhotoPassIncludesTheLinkedAndTheLoosePhotos() throws {
+		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-I")
+		let linked = UUID()
+		let loose = UUID()
 		let photos = folder.appendingPathComponent("Photos")
 		try FileManager.default.createDirectory(at: photos, withIntermediateDirectories: true)
-		try FileManager.default.linkItem(
-			at: root.appendingPathComponent("\(first.uuidString).png"), to: photos.appendingPathComponent("\(first.uuidString).png"))
-		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first), activePhotoIDs: [])
-		XCTAssertTrue(kept.hasPreservedPhotos)
+		// The pass linked one photo, then stopped; its loose source has gone since.
+		try Data("linked".utf8).write(to: photos.appendingPathComponent("\(linked.uuidString).png"))
+		try Data("loose".utf8).write(to: root.appendingPathComponent("\(loose.uuidString).png"))
+		let preserved = try XCTUnwrap(library.stores().first)
+		XCTAssertFalse(preserved.hasPreservedPhotos)
 		XCTAssertEqual(
-			try PreservedStoreManifest.read(in: folder)?.photoFileNames, ["\(first.uuidString).png", "\(second.uuidString).jpg"].sorted())
+			try library.exportedPhotos(in: folder).map(\.lastPathComponent), ["\(linked.uuidString).png", "\(loose.uuidString).png"].sorted())
+		let rescued = try XCTUnwrap(library.exportedPhotos(in: folder).first { $0.lastPathComponent.hasPrefix(linked.uuidString) })
+		XCTAssertEqual(try Data(contentsOf: rescued), Data("linked".utf8))
+		XCTAssertNoThrow(try library.export(preserved, now: Date()))
+		// Once the pass is done, only what it kept counts.
+		_ = try library.preservePhotos(of: preserved)
+		try Data("later".utf8).write(to: root.appendingPathComponent("\(UUID().uuidString).png"))
+		XCTAssertEqual(try library.exportedPhotos(in: folder).count, 2)
 	}
 
 	func testRecoveryIsReportedOnce() throws {
@@ -157,9 +180,9 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		let backup = try SQLiteStoreBackup().moveStore(at: store, cause: .incompatibleModel(code: 134_100), date: Date(timeIntervalSince1970: 0))
 		let photo = UUID()
 		try Data("photo".utf8).write(to: root.appendingPathComponent("\(photo.uuidString).png"))
-		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first), activePhotoIDs: [])
+		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first))
 		let before = try digests(in: backup)
-		let archive = try library.export(kept, activePhotoIDs: [], now: Date(timeIntervalSince1970: 60))
+		let archive = try library.export(kept, now: Date(timeIntervalSince1970: 60))
 		XCTAssertEqual(archive.lastPathComponent, "GrowingUp-earlier-data-1970-01-01.zip")
 		XCTAssertEqual(try Data(contentsOf: archive).prefix(2), Data("PK".utf8))
 		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: exports.path), [archive.lastPathComponent], "Staging is removed")
@@ -210,36 +233,23 @@ final class PreservedStoreLibraryTests: XCTestCase {
 		XCTAssertEqual(try FileManager.default.contentsOfDirectory(atPath: exports.path), [])
 		XCTAssertEqual(try digests(in: backup), before)
 		// A retry once the cause is gone succeeds.
-		XCTAssertNoThrow(try library.export(preserved, activePhotoIDs: [], now: Date()))
+		XCTAssertNoThrow(try library.export(preserved, now: Date()))
 	}
 
-	func testDeletingRemovesTheFolderAndOnlyItsOwnLoosePhotos() throws {
+	func testDeletingRemovesOnlyTheFolderAndKeepsEveryLoosePhoto() throws {
 		let folder = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-D")
-		let old = UUID()
-		let active = UUID()
-		try Data("old".utf8).write(to: root.appendingPathComponent("\(old.uuidString).png"))
-		try Data("active".utf8).write(to: root.appendingPathComponent("\(active.uuidString).png"))
-		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first), activePhotoIDs: [])
+		let photo = root.appendingPathComponent("\(UUID().uuidString).png")
+		try Data("photo".utf8).write(to: photo)
+		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first))
 		XCTAssertGreaterThan(kept.byteCount, 0)
-		try library.delete(kept, activePhotoIDs: [active])
+		try library.delete(kept)
 		XCTAssertFalse(FileManager.default.fileExists(atPath: folder.path))
-		XCTAssertFalse(FileManager.default.fileExists(atPath: root.appendingPathComponent("\(old.uuidString).png").path))
-		XCTAssertEqual(try Data(contentsOf: root.appendingPathComponent("\(active.uuidString).png")), Data("active".utf8))
+		XCTAssertEqual(try Data(contentsOf: photo), Data("photo".utf8))
 		XCTAssertEqual(try library.stores(), [])
 		XCTAssertTrue(FileManager.default.fileExists(atPath: storeFolder.path), "The active store's folder stays")
-	}
-
-	func testDeletingWithoutTheActivePeopleKeepsEveryLooseFile() throws {
-		_ = try legacyFolder(named: "GrowingUp.sqlite.backup-2026-10-21T08-15-30Z-E")
-		let photo = root.appendingPathComponent("\(UUID().uuidString).png")
-		try Data("old".utf8).write(to: photo)
-		let kept = try library.preservePhotos(of: try XCTUnwrap(library.stores().first), activePhotoIDs: [])
-		try library.delete(kept, activePhotoIDs: nil)
-		XCTAssertEqual(try library.stores(), [])
-		XCTAssertTrue(FileManager.default.fileExists(atPath: photo.path))
 		let outside = PreservedStore(
 			id: "../Elsewhere", preservedAt: Date(), cause: .unknown, appVersion: nil, hasPreservedPhotos: false, isReported: false)
-		XCTAssertThrowsError(try library.delete(outside, activePhotoIDs: []))
+		XCTAssertThrowsError(try library.delete(outside))
 	}
 
 	func testPhotoFileNames() {

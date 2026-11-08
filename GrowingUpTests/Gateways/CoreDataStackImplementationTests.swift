@@ -140,6 +140,58 @@ final class CoreDataStackImplementationTests: XCTestCase {
 		XCTAssertEqual(returned.persistentStoreCoordinator.persistentStores.count, 1)
 	}
 
+	/// Every model version that shipped stays in the bundle: a store of each opens with the current model through
+	/// migration, keeps its people, and never takes the recovery path that sets a store aside.
+	func testEveryShippedModelVersionMigratesWithoutRecovery() throws {
+		let bundle = try XCTUnwrap(Bundle(for: CoreDataPerson.self).url(forResource: "GrowingUp", withExtension: "momd"))
+		let versions = try FileManager.default.contentsOfDirectory(at: bundle, includingPropertiesForKeys: nil)
+			.filter { $0.pathExtension == "mom" }
+		XCTAssertEqual(
+			Set(versions.map { $0.deletingPathExtension().lastPathComponent }),
+			["GrowingUp", "GrowingUpSixPeople", "GrowingUpCelebrations", "GrowingUpDisplayOrder", "GrowingUpOriginalPhotos"],
+			"A new model version needs to join this test")
+		for version in versions {
+			try FileManager.default.removeItem(at: directory)
+			try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+			let birthdate = Date(timeIntervalSince1970: 1_500_000_000)
+			try writeStore(with: XCTUnwrap(NSManagedObjectModel(contentsOf: version)), name: version.lastPathComponent, birthdate: birthdate)
+			var attempts = 0
+			let stack = CoreDataStackImplementation(makeContainer: makeContainer) { candidate in
+				attempts += 1
+				try CoreDataStackImplementation.loadPersistentStores(candidate)
+			}
+			let container = try stack.persistentContainer
+			defer { close(container) }
+			XCTAssertEqual(attempts, 1, version.lastPathComponent)
+			try container.viewContext.performAndWait {
+				let people = try container.viewContext.fetch(CoreDataPerson.fetchRequest())
+				XCTAssertEqual(people.map(\.name), [version.lastPathComponent])
+				XCTAssertEqual(people.first?.birthdate, birthdate)
+			}
+			XCTAssertFalse(
+				try FileManager.default.contentsOfDirectory(atPath: directory.path).contains { $0.contains(".backup-") },
+				version.lastPathComponent)
+		}
+	}
+
+	/// Saves one person, named `name`, in a store of the earlier `model`, filling every required attribute it has.
+	private func writeStore(with model: NSManagedObjectModel, name: String, birthdate: Date) throws {
+		// The current classes may name attributes the earlier model lacks; plain objects only set what it has.
+		for entity in model.entities { entity.managedObjectClassName = NSStringFromClass(NSManagedObject.self) }
+		let container = NSPersistentContainer(name: "GrowingUp", managedObjectModel: model)
+		container.persistentStoreDescriptions = [NSPersistentStoreDescription(url: store)]
+		try CoreDataStackImplementation.loadPersistentStores(container)
+		defer { close(container) }
+		let context = container.viewContext
+		let entity = try XCTUnwrap(model.entitiesByName["CoreDataPerson"])
+		let person = NSManagedObject(entity: entity, insertInto: context)
+		person.setValue(name, forKey: "name")
+		person.setValue(birthdate, forKey: "birthdate")
+		person.setValue(Date(), forKey: "createdDate")
+		person.setValue(UUID().uuidString, forKey: "id")
+		try context.save()
+	}
+
 	private func makeContainer() throws -> NSPersistentContainer {
 		let modelURL = try XCTUnwrap(Bundle(for: CoreDataPerson.self).url(forResource: "GrowingUp", withExtension: "momd"))
 		let model = try XCTUnwrap(NSManagedObjectModel(contentsOf: modelURL))

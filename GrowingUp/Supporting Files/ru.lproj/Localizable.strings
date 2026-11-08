@@ -243,7 +243,7 @@
 "Delete the preserved copy?" = "Удалить сохранённую копию?";
 
 /* Message of the confirmation before deleting the preserved copy */
-"Your earlier people and photos will be gone from this device for good. Export a copy first if you haven't." = "Прежние люди и фото исчезнут с этого устройства навсегда. Если ещё не экспортировали копию, сделайте это сначала.";
+"Your earlier people will be gone from this device for good. Export a copy first if you haven't." = "Прежние люди исчезнут с этого устройства навсегда. Если ещё не экспортировали копию, сделайте это сначала.";
 
 /* Destructive button of the confirmation before deleting the preserved copy */
 "Delete Copy" = "Удалить копию";

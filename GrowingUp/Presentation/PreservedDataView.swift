@@ -6,7 +6,6 @@ import SwiftUI
 struct PreservedDataView: View {
 	let presenter: PreservedDataPresenter
 	let store: PreservedStore
-	let people: [Person]?
 	@State private var confirmsDeletion = false
 
 	var body: some View {
@@ -35,7 +34,7 @@ struct PreservedDataView: View {
 			}
 			Section {
 				Button {
-					Task { await presenter.startExport(store, people: people) }
+					Task { await presenter.startExport(store) }
 				} label: {
 					if presenter.export == .preparing {
 						Label {
@@ -68,10 +67,10 @@ struct PreservedDataView: View {
 		.navigationTitle("Earlier data")
 		.confirmationDialog("Delete the preserved copy?", isPresented: $confirmsDeletion, titleVisibility: .visible) {
 			Button("Delete Copy", role: .destructive) {
-				Task { await presenter.delete(store, people: people) }
+				Task { await presenter.delete(store) }
 			}
 		} message: {
-			Text("Your earlier people and photos will be gone from this device for good. Export a copy first if you haven't.")
+			Text("Your earlier people will be gone from this device for good. Export a copy first if you haven't.")
 		}
 	}
 }

@@ -4,10 +4,7 @@ import Observation
 
 /// The earlier libraries store recovery set aside, which the app keeps visible until the person no longer needs the
 /// notice, and their export. Store recovery may run in the widget's process, so the app learns of it from the files a
-/// recovery leaves, whenever it refreshes: after the people load and on each return to the foreground.
-///
-/// Keeping or deleting photo files must leave the active library's alone, so each call takes the people the active
-/// library holds, or nil unless they loaded successfully, in which case no loose photo is kept or deleted.
+/// recovery leaves, whenever it refreshes: at launch and on each return to the foreground.
 @MainActor
 @Observable
 final class PreservedDataPresenter {
@@ -29,22 +26,20 @@ final class PreservedDataPresenter {
 
 	var newest: PreservedStore? { stores.first }
 
-	/// Reads the preserved stores again. With the active library's people, it also keeps each store's photos with it,
-	/// which needs to know the photos the active library uses, and reports each new recovery once, with only its cause's
-	/// category. Refreshes run one after another, so none reports a store twice.
-	func refresh(people: [Person]?) async {
+	/// Reads the preserved stores again, keeps the photos of one an earlier version set aside with it, and reports each
+	/// new recovery once, with only its cause's category. Refreshes run one after another, so none reports a store twice.
+	func refresh() async {
 		guard gateway != nil else { return }
-		let activePhotoIDs = people.map(Self.photoIDs)
 		let previous = refreshing
 		let refresh = Task { [weak self] in
 			await previous?.value
-			await self?.performRefresh(activePhotoIDs: activePhotoIDs)
+			await self?.performRefresh()
 		}
 		refreshing = refresh
 		await refresh.value
 	}
 
-	private func performRefresh(activePhotoIDs: Set<UUID>?) async {
+	private func performRefresh() async {
 		guard let gateway else { return }
 		let (stores, failures) = await Task.detached(priority: .utility) { () -> ([PreservedStore], [AnalyticsFailure]) in
 			var stores: [PreservedStore]
@@ -55,9 +50,9 @@ final class PreservedDataPresenter {
 			}
 			var failures: [AnalyticsFailure] = []
 			for (index, store) in stores.enumerated() {
-				if let activePhotoIDs, !store.hasPreservedPhotos {
+				if !store.hasPreservedPhotos {
 					do {
-						stores[index] = try gateway.preservePhotos(of: store, activePhotoIDs: activePhotoIDs)
+						stores[index] = try gateway.preservePhotos(of: store)
 					} catch {
 						failures.append(AnalyticsFailure(operation: "preserve_photos", error: error))
 					}
@@ -74,14 +69,12 @@ final class PreservedDataPresenter {
 	}
 
 	/// Writes `store` as an archive for the share sheet. Nothing is sent: only the person's choice in the sheet moves it.
-	/// A store whose photos are not kept with it yet exports the loose photos the active library does not use.
-	func startExport(_ store: PreservedStore, people: [Person]?) async {
+	func startExport(_ store: PreservedStore) async {
 		guard let gateway, export != .preparing else { return }
 		gateway.removeExports()
 		export = .preparing
-		let activePhotoIDs = people.map(Self.photoIDs) ?? []
 		let result = await Task.detached(priority: .userInitiated) {
-			Result { try gateway.export(store, activePhotoIDs: activePhotoIDs, now: Date()) }
+			Result { try gateway.export(store, now: Date()) }
 		}.value
 		switch result {
 		case .success(let archive):
@@ -94,14 +87,13 @@ final class PreservedDataPresenter {
 		}
 	}
 
-	/// Deletes `store` for good, which the person confirmed; see `PreservedStoreGateway.delete(_:activePhotoIDs:)`.
-	func delete(_ store: PreservedStore, people: [Person]?) async {
+	/// Deletes `store` for good, which the person confirmed.
+	func delete(_ store: PreservedStore) async {
 		guard let gateway, !isDeleting else { return }
 		isDeleting = true
 		defer { isDeleting = false }
-		let activePhotoIDs = people.map(Self.photoIDs)
 		let result = await Task.detached(priority: .userInitiated) {
-			Result { try gateway.delete(store, activePhotoIDs: activePhotoIDs) }
+			Result { try gateway.delete(store) }
 		}.value
 		switch result {
 		case .success:
@@ -117,9 +109,5 @@ final class PreservedDataPresenter {
 		guard export != .preparing else { return }
 		export = .idle
 		gateway?.removeExports()
-	}
-
-	static func photoIDs(of people: [Person]) -> Set<UUID> {
-		Set(people.flatMap { [$0.appPicId, $0.widgetPicId, $0.originalPicId].compactMap { $0 } })
 	}
 }

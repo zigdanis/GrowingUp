@@ -5,8 +5,6 @@ import SwiftUI
 /// a list of them that each opens its own.
 struct PreservedDataSheet: View {
 	@Bindable var presenter: PreservedDataPresenter
-	/// The active library's people, or nil unless they loaded; see `PreservedDataPresenter`.
-	let people: [Person]?
 	@State private var path: [PreservedStore] = []
 	@Environment(\.dismiss)
 	private var dismiss
@@ -22,10 +20,10 @@ struct PreservedDataSheet: View {
 					}
 					.navigationTitle("Earlier data")
 					.navigationDestination(for: PreservedStore.self) { store in
-						PreservedDataView(presenter: presenter, store: store, people: people)
+						PreservedDataView(presenter: presenter, store: store)
 					}
 				} else if let store = presenter.newest {
-					PreservedDataView(presenter: presenter, store: store, people: people)
+					PreservedDataView(presenter: presenter, store: store)
 				}
 			}
 			.navigationBarTitleDisplayMode(.inline)

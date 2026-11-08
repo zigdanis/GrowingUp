@@ -12,8 +12,6 @@ struct PeopleScene: View {
 	/// Earlier data store recovery set aside, which the corner capsule opens.
 	@State private var preserved: PreservedDataPresenter
 	@State private var showsPreservedData = false
-	/// Whether the people loaded; until then, and after a failed load, no loose photo file counts as unused.
-	@State private var peopleLoaded = false
 	@Namespace private var zoom
 	@Environment(\.accessibilityReduceMotion)
 	private var reduceMotion
@@ -70,12 +68,8 @@ struct PeopleScene: View {
 		// The mosaic has no text input; beside another app in Split View, its keyboard must not move it.
 		.ignoresSafeArea(.keyboard)
 		.background { AmbientBackground(seeds: pictures.ambientSeeds(for: presenter.persons)) }
-		.task {
-			await presenter.load()
-			// A failed load sets its error before it returns.
-			peopleLoaded = !presenter.isLoading && presenter.error == nil
-			await preserved.refresh(people: loadedPeople)
-		}
+		.task { await presenter.load() }
+		.task { await preserved.refresh() }
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
@@ -86,7 +80,7 @@ struct PeopleScene: View {
 				.preferredColorScheme(.dark)
 		}
 		.sheet(isPresented: $showsPreservedData) {
-			PreservedDataSheet(presenter: preserved, people: loadedPeople)
+			PreservedDataSheet(presenter: preserved)
 		}
 		// A widget link that opens a person takes the screen over.
 		.onChange(of: presenter.isViewing) { _, isViewing in
@@ -96,7 +90,7 @@ struct PeopleScene: View {
 		// The widget may have set a library aside while the app was away.
 		.onChange(of: scenePhase) { _, phase in
 			guard phase == .active else { return }
-			Task { await preserved.refresh(people: loadedPeople) }
+			Task { await preserved.refresh() }
 		}
 		.onChange(of: scenePhase, initial: true) { _, phase in
 			guard let prompter = presenter.configurator.reviewPrompter else { return }
@@ -138,9 +132,6 @@ struct PeopleScene: View {
 	}
 
 	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
-
-	/// The people the active library holds, or nil unless they loaded.
-	private var loadedPeople: [Person]? { peopleLoaded ? presenter.persons : nil }
 
 	/// Opens the person with `id` in the viewer, with a light tap when their tile did open them.
 	private func openPerson(_ id: UUID) {
