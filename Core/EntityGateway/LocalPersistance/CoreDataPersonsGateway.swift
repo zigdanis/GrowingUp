@@ -38,6 +38,13 @@ public class CoreDataPersonsGateway: PersonsGateway {
 				let lastOrder: Int64
 				do {
 					lastOrder = try Self.lastDisplayOrder(in: context)
+					// Counted under the lock, so a restore that filled the last place meanwhile is seen.
+					guard try context.count(for: CoreDataPerson.fetchRequest()) < Constants.peopleLimit else {
+						throw CoreError.peopleLimitReached
+					}
+				} catch let error as CoreError {
+					continuation.resume(throwing: error)
+					return
 				} catch {
 					continuation.resume(throwing: CoreError(error: error))
 					return

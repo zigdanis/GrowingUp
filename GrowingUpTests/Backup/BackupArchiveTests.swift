@@ -93,6 +93,15 @@ final class BackupArchiveTests: XCTestCase {
 		XCTAssertThrowsError(try small.open(url)) { XCTAssertEqual($0 as? BackupError, .notABackup) }
 	}
 
+	func testTheDocumentCountsTowardTheLimitToo() async throws {
+		let snapshot = try await snapshot()
+		let url = try archive.export(snapshot)
+		let documentSize = try BackupCodec.encode(snapshot.document).count
+		// Room for the document but not for the photo after it: unpacking fails cleanly instead of overflowing.
+		let tight = BackupArchive(directory: archive.directory.appendingPathComponent("Tight"), maximumSize: UInt64(documentSize))
+		XCTAssertThrowsError(try tight.open(url)) { XCTAssertEqual($0 as? BackupError, .notABackup) }
+	}
+
 	func testRemovingAllLeavesNothingBehind() async throws {
 		_ = try archive.export(try await snapshot())
 		archive.removeAll()

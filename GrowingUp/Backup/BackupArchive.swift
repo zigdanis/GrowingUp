@@ -65,7 +65,9 @@ struct BackupArchive: Sendable {
 		var total: UInt64 = 0
 		for entry in taken {
 			guard let relative = Self.relativePath(of: entry.path) else { continue }
-			let limit = relative == BackupFolder.documentName ? UInt64(BackupCodec.maximumDocumentSize) : maximumSize - total
+			// Every entry, the document too, fits in what is left, so the total never passes the limit.
+			let remaining = maximumSize - total
+			let limit = relative == BackupFolder.documentName ? min(UInt64(BackupCodec.maximumDocumentSize), remaining) : remaining
 			total += try extract(entry, from: archive, to: folder.appendingPathComponent(relative), limit: limit)
 		}
 		return try BackupFolder(url: folder).load()

@@ -276,8 +276,9 @@ final class PersonEditorPresenter {
 		} catch is CancellationError {
 		} catch {
 			self.error = SceneError(error)
-			// A seventh pinned person is a rule the alert explains, not a failure.
-			if error as? CoreError != .widgetPeopleLimitReached {
+			// A seventh pinned person, or a 21st person after a restore filled the last place, is a rule the alert
+			// explains, not a failure.
+			if ![CoreError.widgetPeopleLimitReached, .peopleLimitReached].contains(where: { $0 == error as? CoreError }) {
 				analytics.report(AnalyticsFailure(operation: "save_person", error: error))
 			}
 		}

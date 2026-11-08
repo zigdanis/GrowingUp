@@ -119,6 +119,24 @@ final class CoreDataPeopleBackupGatewayTests: XCTestCase {
 		XCTAssertEqual(people.suffix(5).map(\.name), (0..<5).map { "Person \($0)" }, "The first of the backup fit, in its order")
 	}
 
+	func testAnOrdinaryAddAfterARestoreFilledTheLastPlaceIsRefused() async throws {
+		for index in 0..<(Constants.peopleLimit - 1) {
+			try target.addPerson(name: "Here \(index)", order: Int64(index))
+		}
+		try source.addPerson(name: "Mia")
+		let backup = try source.roundTrip(try await source.gateway.snapshot(createdAt: Date(), appVersion: "1", deviceModel: "iPhone"))
+		_ = try await target.gateway.restore(backup)
+
+		let persons = CoreDataPersonsGateway(coreDataStack: target.stack)
+		do {
+			_ = try await persons.add(parameters: AddPersonParameters.createParameters())
+			XCTFail("The library is full")
+		} catch {
+			XCTAssertEqual(error as? CoreError, .peopleLimitReached)
+		}
+		XCTAssertEqual(try target.storedPeople().count, Constants.peopleLimit)
+	}
+
 	func testARestoreThatFailsAddsNobodyAndLeavesNoFileBehind() async throws {
 		let first = UUID()
 		let second = UUID()
