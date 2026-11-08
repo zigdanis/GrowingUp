@@ -34,11 +34,10 @@ final class MonogramPictureTests: XCTestCase {
 		XCTAssertFalse(CGColorSpaceUsesExtendedRange(try XCTUnwrap(portrait.colorSpace)))
 	}
 
-	/// The monogram stands in for the photo in tiles and in the Lock Screen's circle. The final picture, scrims
+	/// The monogram stands in for the photo in tiles; the Lock Screen shows no picture. The final picture, scrims
 	/// included, must stay in standard range like a photo, or archiving it can exceed the extension's memory limit.
 	func testPersonWithoutPhotoGetsAStandardRangeMonogramTilePicture() throws {
 		let person = WidgetPerson(id: UUID(), index: 0, name: "Clara", birthday: Date(), image: nil)
-		XCTAssertNil(person.photo)
 		let cgImage = try XCTUnwrap(person.tilePicture.cgImage)
 		XCTAssertEqual(cgImage.width, 256)
 		XCTAssertEqual(cgImage.height, 256)

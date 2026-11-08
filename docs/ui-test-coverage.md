@@ -27,7 +27,7 @@ Names below omit the `test` prefix. Existing unit tests are retained unless expl
 | Journey: WidgetSizesRenderPinnedPeopleInBothLanguages | Three families with 1/3/6 people in `HomeScreenWidgetSizes`; Russian large widget captions in `RussianCountdownPhotoAndPinLimit`; existing `WidgetPersonLoaderTests` and `PersonTileContentTests` cover ordering, counts and localized content. |
 | Lock screen: RenderTheFirstPinnedPersonInBothLanguages | First-person rendering merged into `LockScreenWidgetStates`; existing `WidgetPersonLoaderTests` and `LockScreenTextTests` cover first-person selection and localized text. |
 | Lock screen: CelebrateTheFirstPinnedBirthday | Russian rectangular birthday merged into `LockScreenWidgetStates`; existing `LockScreenTextTests` cover the birthday line in both languages. |
-| Lock screen: InviteToAddSomeoneWhenNobodyIsPinned | Empty invitation merged into `LockScreenWidgetStates`; existing `WidgetPersonLoaderTests.testNobodyPinnedOrFailedFetchLoadsNobody` covers empty state. |
+| Lock screen: InviteToAddSomeoneWhenNobodyIsPinned | Empty invitation merged into `LockScreenWidgetStates`; existing `WidgetPersonLoaderTests.testNobodyPinnedIsAConfirmedAbsence` covers empty state. |
 | Navigation: AvatarStripSwitchesPeopleAndOpensTheAddPage | Merged into `NavigationAvatarsEditorAndWidgetLinks`. |
 | Navigation: LongPressOnThePhotoAndTheEditButtonOpenTheEditor | Merged into `NavigationAvatarsEditorAndWidgetLinks`. |
 | Removal: RemovalConfirmationStaysNearButton | Retained once in English/light, including Glass anchoring geometry. |
