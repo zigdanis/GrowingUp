@@ -73,7 +73,7 @@ public enum BackupCodec {
 		for photo in document.photos {
 			guard PhotoFileName.isPhoto(photo.name), !photo.name.contains("/"), isPhotoFile(photo.file), photo.size >= 0,
 				URL(fileURLWithPath: photo.name).pathExtension.lowercased() == URL(fileURLWithPath: photo.file).pathExtension,
-				names.insert(photo.name).inserted
+				names.insert(photo.name.lowercased()).inserted
 			else { throw BackupError.notABackup }
 		}
 		let pictures = Set(document.photos.compactMap { PhotoFileName.id(of: $0.name) })

@@ -31,10 +31,11 @@ enum BackupAlert: Identifiable, Equatable {
 	var message: String {
 		switch self {
 		case .restored(let summary):
+			let everyoneHere = !summary.addedAnything && summary.peopleOverLimit == 0
 			var lines = [
-				summary.addedAnything
-					? String(localized: "People added: \(summary.peopleAdded).")
-					: String(localized: "Everyone in this backup is already in the app.")
+				everyoneHere
+					? String(localized: "Everyone in this backup is already in the app.")
+					: String(localized: "People added: \(summary.peopleAdded).")
 			]
 			if summary.peopleOverLimit > 0 {
 				lines.append(String(localized: "Not added because the app keeps up to 20 people: \(summary.peopleOverLimit)."))

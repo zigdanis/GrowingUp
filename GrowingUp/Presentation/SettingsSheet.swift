@@ -51,8 +51,10 @@ struct SettingsSheet: View {
 				}
 			}
 			.fileImporter(isPresented: $isPickingFile, allowedContentTypes: [.zip]) { result in
-				guard case .success(let url) = result else { return }
-				Task { await backup.open(pickedFile: url) }
+				switch result {
+				case .success(let url): Task { await backup.open(pickedFile: url) }
+				case .failure: backup.alert = .unreadable(nil)
+				}
 			}
 			.confirmationDialog(
 				"Restore this backup?", isPresented: isConfirmingRestore, titleVisibility: .visible, presenting: backup.pendingRestore

@@ -74,13 +74,14 @@ final class CoreDataPeopleBackupGatewayTests: XCTestCase {
 
 	func testRestoreOnlyAddsWhoIsMissingAndNeverChangesAnyone() async throws {
 		let mia = try step("add Mia") { try source.addPerson(name: "Mia", order: 1) }
-		try step("add Leo") { try source.addPerson(name: "Leo", birthday: Date(timeIntervalSince1970: 1_500_000_000), order: 2) }
+		try step("add Leo") { try source.addPerson(name: "Leo", birthday: Date(timeIntervalSince1970: 1_500_033_600), order: 2) }
 		try step("add Ava") { try source.addPerson(name: "Ava", order: 3) }
 		let snapshot = try await source.gateway.snapshot(createdAt: Date(), appVersion: "1", deviceModel: "iPhone")
 		let backup = try step("round trip") { try source.roundTrip(snapshot) }
-		// Mia is here by identifier, renamed since; Leo was added again by hand after a reinstall.
+		// Mia is here by identifier, renamed since; Leo was added again by hand after a reinstall. Both of Leo's birthdays
+		// fall at midday UTC, on the same day in every time zone.
 		try step("add Mia Rose") { try target.addPerson(name: "Mia Rose", order: 1, id: mia) }
-		try step("add leo") { try target.addPerson(name: "  leo ", birthday: Date(timeIntervalSince1970: 1_500_000_000 + 3600), order: 2) }
+		try step("add leo") { try target.addPerson(name: "  leo ", birthday: Date(timeIntervalSince1970: 1_500_033_600 + 3600), order: 2) }
 
 		let summary = try await target.gateway.restore(backup)
 
@@ -117,6 +118,14 @@ final class CoreDataPeopleBackupGatewayTests: XCTestCase {
 		XCTAssertEqual(people.count, Constants.peopleLimit)
 		XCTAssertEqual(people.filter(\.isOnWidget).count, Constants.widgetPeopleLimit, "Only as many pins as the widget holds")
 		XCTAssertEqual(people.suffix(5).map(\.name), (0..<5).map { "Person \($0)" }, "The first of the backup fit, in its order")
+	}
+
+	func testTwoPeopleOfOneBackupWithTheSameNameAndBirthdayAreBothRestored() async throws {
+		try source.addPerson(name: "Sam", order: 1)
+		try source.addPerson(name: "Sam", order: 2)
+		let backup = try source.roundTrip(try await source.gateway.snapshot(createdAt: Date(), appVersion: "1", deviceModel: "iPhone"))
+		let summary = try await target.gateway.restore(backup)
+		XCTAssertEqual(summary.peopleAdded, 2)
 	}
 
 	func testAnOrdinaryAddAfterARestoreFilledTheLastPlaceIsRefused() async throws {

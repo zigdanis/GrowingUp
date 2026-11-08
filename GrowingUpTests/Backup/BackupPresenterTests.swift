@@ -138,7 +138,9 @@ final class BackupPresenterTests: XCTestCase {
 	func testTheRestoreAlertSaysWhoDidNotFit() {
 		let summary = RestoreSummary(peopleAdded: 0, peopleAlreadyPresent: 3, peopleOverLimit: 2, intoEmptyLibrary: false)
 		let message = BackupAlert.restored(summary).message
-		XCTAssertTrue(message.contains("already"), message)
+		XCTAssertFalse(message.contains("already"), "Not everyone is here: two did not fit")
 		XCTAssertTrue(message.contains("2"), message)
+		let none = BackupAlert.restored(RestoreSummary(peopleAdded: 0, peopleAlreadyPresent: 3, peopleOverLimit: 0, intoEmptyLibrary: false))
+		XCTAssertTrue(none.message.contains("already"), none.message)
 	}
 }

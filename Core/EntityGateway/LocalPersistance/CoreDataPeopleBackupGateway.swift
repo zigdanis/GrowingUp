@@ -77,7 +77,8 @@ public final class CoreDataPeopleBackupGateway: PeopleBackupGateway, @unchecked 
 	private func restore(_ backup: LoadedBackup, in context: NSManagedObjectContext, written: inout [URL]) throws -> RestoreSummary {
 		let stored = try context.fetch(CoreDataPerson.fetchRequest()).map(\.person)
 		var ids = Set(stored.map(\.id))
-		var keys = Set(stored.map { Self.matchKey(name: $0.name, birthday: $0.birthday) })
+		// Name and day of birth only match people who were here before: two people of the backup are two people.
+		let keys = Set(stored.map { Self.matchKey(name: $0.name, birthday: $0.birthday) })
 		var count = stored.count
 		var pinned = stored.filter(\.isOnWidget).count
 		var order = try CoreDataPersonsGateway.lastDisplayOrder(in: context)
@@ -103,7 +104,6 @@ public final class CoreDataPeopleBackupGateway: PeopleBackupGateway, @unchecked 
 				pinned += 1
 			}
 			ids.insert(person.id)
-			keys.insert(key)
 			count += 1
 			summary.peopleAdded += 1
 		}
