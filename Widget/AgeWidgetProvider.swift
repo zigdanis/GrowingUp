@@ -15,29 +15,23 @@ import WidgetKit
 struct AgeWidgetProvider: TimelineProvider {
 
 	func placeholder(in context: Context) -> AgeEntry {
-		AgeEntry(date: Date(), persons: Self.samplePersons())
+		AgeEntry(date: Date(), content: .loaded(Self.samplePersons()))
 	}
 
 	func getSnapshot(in context: Context, completion: @escaping (AgeEntry) -> Void) {
 		if context.isPreview {
-			completion(AgeEntry(date: Date(), persons: Self.samplePersons()))
+			completion(placeholder(in: context))
 			return
 		}
 		Task {
-			completion(AgeEntry(date: Date(), persons: await loadPersons(family: context.family)))
+			completion(AgeEntry(date: Date(), content: await loadPersons(family: context.family)))
 		}
 	}
 
-	/// Adds entries only when a tile's text can change: the next age change of any person, shown to the minute,
-	/// and local midnight for birthday captions. WidgetKit reloads at the first change after the last entry, which is always in the future.
 	func getTimeline(in context: Context, completion: @escaping (Timeline<AgeEntry>) -> Void) {
 		Task {
-			let persons = await loadPersons(family: context.family)
-			let now = Date()
-			let schedule = AgeTimelineSchedule(birthdays: persons.map(\.birthday), finestUnit: PersonTileContent.finestUnit)
-			let dates = schedule.entryDates(from: now)
-			let entries = dates.map { AgeEntry(date: $0, persons: persons) }
-			completion(Timeline(entries: entries, policy: .after(schedule.reloadDate(after: dates, now: now))))
+			let content = await loadPersons(family: context.family)
+			completion(AgeEntry.timeline(for: content, now: Date()))
 		}
 	}
 
@@ -45,7 +39,7 @@ struct AgeWidgetProvider: TimelineProvider {
 
 	/// Fetches the pinned people (in mosaic order, matching the app's
 	/// deep-link indexing) and loads their widget images from the shared cache.
-	private func loadPersons(family: WidgetFamily) async -> [WidgetPerson] {
+	private func loadPersons(family: WidgetFamily) async -> WidgetLoadResult<[WidgetPerson]> {
 		await WidgetPersonLoader.live.load(limit: personLimit(for: family))
 	}
 

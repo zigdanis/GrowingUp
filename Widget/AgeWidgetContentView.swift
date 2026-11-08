@@ -10,28 +10,32 @@ struct AgeWidgetContentView: View {
 	private static let seam: CGFloat = 2
 
 	var body: some View {
-		if entry.persons.isEmpty {
+		switch entry.content {
+		case .nobodyPinned:
 			EmptyWidgetView(isCompact: family == .systemSmall)
-		} else if family == .systemSmall {
-			smallView
-		} else {
-			tiles
+		case .unavailable:
+			UnavailableWidgetView(isCompact: family == .systemSmall)
+		case .loaded(let persons):
+			if family == .systemSmall {
+				smallView(persons[0])
+			} else {
+				tiles(persons)
+			}
 		}
 	}
 
 	// One person over their photo, which `AgeWidgetBackground` supplies; the whole widget deep-links to them.
-	private var smallView: some View {
-		let person = entry.persons[0]
-		return PersonTile(person: person, date: entry.date, family: family)
+	private func smallView(_ person: WidgetPerson) -> some View {
+		PersonTile(person: person, date: entry.date, family: family)
 			.widgetURL(person.deepLinkURL)
 	}
 
 	// Rows of independently tappable tiles in pinned order, so each keeps its deep link.
-	private var tiles: some View {
+	private func tiles(_ persons: [WidgetPerson]) -> some View {
 		VStack(spacing: Self.seam) {
-			ForEach(WidgetTileLayout.rows(count: entry.persons.count, family: family), id: \.lowerBound) { row in
+			ForEach(WidgetTileLayout.rows(count: persons.count, family: family), id: \.lowerBound) { row in
 				HStack(spacing: Self.seam) {
-					ForEach(entry.persons[row]) { person in
+					ForEach(persons[row]) { person in
 						link(to: person)
 					}
 				}

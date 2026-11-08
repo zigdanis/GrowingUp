@@ -57,8 +57,8 @@
 			.task {
 				let useCase = configurator.fetchUseCase
 				let loader = WidgetPersonLoader(fetch: { try await useCase.fetchWidgetPersons() }, loadImage: configurator.loadImage)
-				let persons = await loader.load(limit: isLockScreen ? 1 : Constants.widgetPeopleLimit)
-				entry = AgeEntry(date: configurator.now(), persons: persons)
+				let content = await loader.load(limit: isLockScreen ? 1 : Constants.widgetPeopleLimit)
+				entry = AgeEntry(date: configurator.now(), content: content)
 			}
 		}
 
@@ -66,7 +66,7 @@
 		private func widget(_ entry: AgeEntry) -> some View {
 			if isLockScreen {
 				// White content, as on a dark Lock Screen.
-				LockScreenWidgetContentView(entry: LockScreenEntry(date: entry.date, person: entry.persons.first))
+				LockScreenWidgetContentView(entry: LockScreenEntry(date: entry.date, content: entry.content.map { $0[0] }))
 					.frame(width: lockScreenSize.width, height: lockScreenSize.height)
 					.environment(\.colorScheme, .dark)
 			} else {

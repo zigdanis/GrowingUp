@@ -6,6 +6,8 @@ import Sentry
 final class SentryCrashReportingGateway: AnalyticsGateway {
 	/// The tag every handled failure carries; its error is sanitized before it is captured.
 	nonisolated static let operationTag = "operation"
+	/// The nearest error underneath a handled failure, as `domain code`, so its causes can be searched and told apart.
+	nonisolated static let causeTag = "cause"
 
 	init(dsn: String, environment: String) {
 		SentrySDK.start { options in
@@ -34,8 +36,13 @@ final class SentryCrashReportingGateway: AnalyticsGateway {
 	}
 
 	func report(_ failure: AnalyticsFailure) {
+		let causes = failure.causes
 		SentrySDK.capture(error: failure.sanitizedError) { scope in
 			scope.setTag(value: failure.operation, key: Self.operationTag)
+			if let cause = causes.first {
+				scope.setTag(value: cause, key: Self.causeTag)
+				scope.setContext(value: ["errors": causes], key: "causes")
+			}
 		}
 	}
 

@@ -1,23 +1,26 @@
 name: App Store Metadata
-run-name: App Store screenshots — ${{ inputs.operation }} — ${{ inputs.version }}
+run-name: App Store screenshots — ${{ inputs.operation }} — ${{ inputs.groups || 'all sets' }}
 
+# Screenshots are never captured on CI. They are shot on MacPro (see .agents/skills/app-store-screenshots),
+# committed with their native captures and listed in marketing/app-store/screenshots/families.json.
+# This workflow only inspects App Store Connect or places those committed sets on the manifest's draft version.
 on:
   workflow_dispatch:
     inputs:
       operation:
-        description: Inspect Apple inventory, or prepare draft screenshot placements (never submit)
+        description: Inspect Apple inventory, validate the committed sets against Apple, or place them on the draft (never submit)
         type: choice
-        options: [inventory, upload]
+        options: [inventory, validate, upload]
         default: inventory
         required: true
       source_sha:
         description: Reviewed full master commit SHA with successful CI and committed screenshots
         type: string
         required: true
-      version:
-        description: next, or the next minor version of the live App Store version
+      groups:
+        description: Optional space-separated families.json groups (e.g. IPAD_13_PROFILE); empty means every set
         type: string
-        default: next
+        default: ''
 
 permissions:
   contents: read
@@ -38,7 +41,7 @@ jobs:
     env:
       SOURCE_SHA: ${{ inputs.source_sha }}
       OPERATION: ${{ inputs.operation }}
-      VERSION: ${{ inputs.version }}
+      SCREENSHOT_GROUPS: ${{ inputs.groups }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -52,17 +55,18 @@ jobs:
           git merge-base --is-ancestor "$SOURCE_SHA" origin/master
           CI=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --branch master --event push --commit "$SOURCE_SHA" --limit 1 --json status,conclusion)
           jq -e '.[0].status == "completed" and .[0].conclusion == "success"' <<< "$CI" >/dev/null
-          case "$OPERATION" in inventory|upload) ;; *) exit 1 ;; esac
+          case "$OPERATION" in inventory|validate|upload) ;; *) exit 1 ;; esac
+          [[ "$SCREENSHOT_GROUPS" =~ ^[A-Z0-9_\ ]*$ ]] || { echo 'groups must be space-separated placement group IDs'; exit 1; }
           METADATA_DIRECTORY=$(mktemp -d "$RUNNER_TEMP/app-store-metadata.XXXXXX")
           chmod 700 "$METADATA_DIRECTORY"
           echo "METADATA_TEMP=$METADATA_DIRECTORY" >> "$GITHUB_ENV"
           git worktree add --detach "$METADATA_DIRECTORY/source" "$SOURCE_SHA"
-          test -f "$METADATA_DIRECTORY/source/scripts/app-store-metadata.py"
+          test -f "$METADATA_DIRECTORY/source/scripts/app-store-families.py"
       - name: Install isolated API signing dependency
         run: |
           python3 -m venv "$METADATA_TEMP/venv"
           "$METADATA_TEMP/venv/bin/pip" install 'PyJWT==2.10.1' 'cryptography==46.0.3'
-      - name: Inspect or prepare App Store draft screenshots
+      - name: Inspect, validate or place the MacPro-captured screenshot sets
         env:
           ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
@@ -80,10 +84,18 @@ jobs:
           PY
           export ASC_KEY_PATH="$METADATA_TEMP/AuthKey.p8"
           unset ASC_PRIVATE_KEY
-          "$METADATA_TEMP/venv/bin/python" "$METADATA_TEMP/source/scripts/app-store-metadata.py" "$OPERATION" \
-            --version "$VERSION" --source-sha "$SOURCE_SHA" \
-            --screenshots "$METADATA_TEMP/source/marketing/app-store/screenshots" \
-            --receipt "$METADATA_TEMP/receipt.json"
+          SOURCE="$METADATA_TEMP/source"
+          if [ "$OPERATION" = inventory ]; then
+            "$METADATA_TEMP/venv/bin/python" "$SOURCE/scripts/app-store-metadata.py" inventory \
+              --source-sha "$SOURCE_SHA" --receipt "$METADATA_TEMP/receipt.json"
+          else
+            ARGS=()
+            test "$OPERATION" != upload || ARGS+=(--upload)
+            for GROUP in $SCREENSHOT_GROUPS; do ARGS+=(--group "$GROUP"); done
+            "$METADATA_TEMP/venv/bin/python" "$SOURCE/scripts/app-store-families.py" \
+              "$SOURCE/marketing/app-store/screenshots/families.json" "${ARGS[@]}" \
+              --receipt "$METADATA_TEMP/receipt.json"
+          fi
       - name: Retain nonsecret Apple inventory or verified screenshot receipt
         if: always() && env.METADATA_TEMP != ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

@@ -47,7 +47,10 @@ the Core Data code such as `NSCocoaErrorDomain 134100`, or `pro.ziganshin.Growin
 1 for an interrupted recovery), `preserve_photos`, `read_preserved_data`, `export_preserved_data` and `delete_preserved_data`. Only the error's
 domain, code and Swift type travel (`AnalyticsFailure.sanitizedError`): a Core Data error can carry
 the failing record, and a `CoreError` message can quote one. A `CoreError` keeps the domain and code
-of the error it wraps (`underlyingDomain`, `underlyingCode`), so different causes stay apart. Cancellation and the six-person widget
+of the error it wraps (`underlyingDomain`, `underlyingCode`), so different causes stay apart. The errors underneath a
+failure (`AnalyticsFailure.causes`: its underlying and detailed errors and the SQLite result code Core Data attaches)
+travel the same way, as `domain code`: the nearest as the `cause` tag, all of them in the `causes` context. A failed
+migration (`NSCocoaErrorDomain 134110`) says why only there. Cancellation and the six-person widget
 limit, which the alert explains, are not reported.
 
 Switched off on purpose:

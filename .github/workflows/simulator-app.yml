@@ -1,29 +1,13 @@
 name: Simulator App
 
-# A Release build for the iOS Simulator. Linux agents install it on an Expo cloud simulator
-# via scripts/simulator-app.sh. It lives outside CI so it never gates merges, screenshots or TestFlight.
+# A Release build for the iOS Simulator, built only on request: scripts/simulator-app.sh dispatches it for a PR head
+# or master when no current build exists, waits, and downloads the app. CI never builds it, so routine pushes don't
+# compile the app twice, and it never gates merges, screenshots or TestFlight.
 
 permissions:
   contents: read
 
 on:
-  push:
-    branches: [master]
-    paths-ignore:
-      - '*.md'
-      - '.coderabbit.yaml'
-      - '.agents/**'
-      - '.macroscope/**'
-      - 'docs/**'
-      - 'marketing/**'
-  pull_request:
-    paths-ignore:
-      - '*.md'
-      - '.coderabbit.yaml'
-      - '.agents/**'
-      - '.macroscope/**'
-      - 'docs/**'
-      - 'marketing/**'
   workflow_dispatch:
 
 concurrency:
@@ -37,9 +21,18 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
+        with:
+          # marketing/ holds ~800 MB of store media that the app build never reads.
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/marketing/
 
       - name: Select Xcode
         run: sudo xcode-select -switch /Applications/Xcode_27.1.app
+
+      - uses: ./.github/actions/swift-packages
 
       - name: Build Release app for the simulator
         run: |
@@ -49,7 +42,10 @@ jobs:
             -configuration Release \
             -sdk iphonesimulator \
             -destination 'generic/platform=iOS Simulator' \
-            -derivedDataPath "$RUNNER_TEMP/simulator-app"
+            -derivedDataPath "$RUNNER_TEMP/simulator-app" \
+            -clonedSourcePackagesDirPath ~/SourcePackages \
+            -disablePackageRepositoryCache \
+            -disableAutomaticPackageResolution
 
       - name: Package app
         # tar keeps the executable bits that upload-artifact drops; COPYFILE_DISABLE keeps out AppleDouble files.

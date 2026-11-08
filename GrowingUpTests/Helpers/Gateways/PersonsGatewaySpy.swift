@@ -17,6 +17,9 @@ class PersonsGatewaySpy: PersonsGateway {
 	var addPersonResultToBeReturned: Result<Person, CoreError>!
 	var addPersonCalled = false
 	var fetchPersonsCalled = false
+	var fetchPersonsCount = 0
+	/// Runs inside `fetchPersons()` before its result, such as to hold a read open or to throw `CancellationError`.
+	var onFetch: (@MainActor () async throws -> Void)?
 	var fetchPersonsResultToBeReturned: Result<[Person], CoreError>!
 	var editPersonCalled = false
 	var editPersonResultToBeReturned: Result<Person, CoreError>!
@@ -38,6 +41,8 @@ class PersonsGatewaySpy: PersonsGateway {
 
 	func fetchPersons() async throws -> [Person] {
 		fetchPersonsCalled = true
+		fetchPersonsCount += 1
+		try await onFetch?()
 		return try fetchPersonsResultToBeReturned.get()
 	}
 
