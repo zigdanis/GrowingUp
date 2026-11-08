@@ -34,8 +34,8 @@ the United States, Canada and Japan lack it; they search `en-US` (Canada through
 Decided by Danis on 2026-11-02: Russian search in Kazakhstan and the CIS matters more than English keywords
 outside the US.
 
-- **`ru`** is what Russian speakers read in Russia, Ukraine, the CIS and the US. Its name, «GrowingUp: кому
-  сколько», and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
+- **`ru`** is what Russian speakers read in Russia, Ukraine, the CIS and the US. Its name, «Кому сколько»
+  (since 3.1.1, 2026-11-08; also the Russian name under the home screen icon), and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
   adults, family, pets or a date such as the day you quit smoking. Its keywords target Russia, Ukraine and the
   US, where `ru` is indexed, and add those uses (родные, питомец, не курю, трезвость).
 - **`en-GB`** is the only index of the CIS storefronts. Its name and subtitle stay English, because English-language
@@ -93,4 +93,4 @@ versions inherit the localization.
 **After release** (indexing takes hours to two days), check per storefront, a few seconds apart:
 `https://itunes.apple.com/search?term=кому+сколько&country=kz&entity=software` should list `1461697772`,
 as should «сколько лет», «возраст», «день рождения» and «счетчик дней» in kz, by and ge, and «toddler» in us. On a Kazakhstan Apple ID with a Russian iPhone, the
-page should read «GrowingUp: кому сколько» with the Russian screenshots.
+page should read «Кому сколько» with the Russian screenshots.
