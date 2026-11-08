@@ -126,8 +126,8 @@ def image_label(path):
 
 def checked_run(repo, sha, metadata):
     workflow = metadata.get("workflow", "ci.yml")
-    if workflow not in ("ci.yml", "app-store-screenshots.yml"):
-        raise ValueError("Evidence must come from CI or App Store Screenshots.")
+    if workflow != "ci.yml":
+        raise ValueError("Evidence must come from CI.")
     runs = json.loads(gh(
         "run", "list", "--repo", repo, "--workflow", workflow,
         "--commit", sha, "--limit", "1", "--json", "databaseId",
@@ -165,14 +165,10 @@ def invalidate(endpoint, evidence):
 def publish(number, directory, summary, images, videos):
     directory = directory.resolve()
     metadata = json.loads((directory / "metadata.json").read_text())
-    workflow = metadata.get("workflow", "ci.yml")
-    if workflow == "ci.yml":
-        outcomes = ("journey_outcome", "export_outcome")
-    elif workflow == "app-store-screenshots.yml":
-        outcomes = ("capture_outcome", "export_outcome", "verification_outcome", "composition_outcome")
-    else:
-        raise ValueError("Evidence must come from CI or App Store Screenshots.")
-    if any(metadata.get(outcome) != "success" for outcome in outcomes):
+    # App Store captures happen on MacPro, never on CI, so only CI UI-journey evidence is published here.
+    if metadata.get("workflow", "ci.yml") != "ci.yml":
+        raise ValueError("Evidence must come from CI.")
+    if any(metadata.get(outcome) != "success" for outcome in ("journey_outcome", "export_outcome")):
         raise ValueError("Only successful, exported and verified workflow evidence can be published.")
     if not summary.strip():
         raise ValueError("Describe the behavior inspected and any limits in the summary file.")
@@ -245,7 +241,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("pr", type=int)
     parser.add_argument("directory", type=Path,
-                        help="one ui-* or app-store-capture-* artifact directory with metadata.json")
+                        help="one ui-* artifact directory with metadata.json")
     parser.add_argument("--summary-file", type=Path, required=True, help="agent's visual review in Markdown")
     parser.add_argument("--image", action="append", default=[], help="PNG path relative to the artifact directory")
     parser.add_argument("--video", action="append", default=[], help="short MP4 path relative to the artifact directory")

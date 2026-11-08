@@ -1,0 +1,26 @@
+name: Swift packages
+description: Restore the pinned Swift package checkouts from cache and resolve them into ~/SourcePackages.
+
+# Pass `-clonedSourcePackagesDirPath ~/SourcePackages -disablePackageRepositoryCache` to every later xcodebuild call
+# so it uses these checkouts instead of fetching again. The global SwiftPM cache is disabled because it duplicated
+# every repository and doubled the cache size.
+runs:
+  using: composite
+  steps:
+    - name: Cache Swift packages
+      uses: actions/cache@v6
+      with:
+        path: ~/SourcePackages
+        key: spm-v2-${{ hashFiles('GrowingUp.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+        restore-keys: |
+          spm-v2-
+
+    - name: Resolve packages
+      shell: bash
+      run: |
+        xcodebuild -resolvePackageDependencies \
+          -project GrowingUp.xcodeproj \
+          -scheme GrowingUp \
+          -clonedSourcePackagesDirPath ~/SourcePackages \
+          -disablePackageRepositoryCache \
+          -onlyUsePackageVersionsFromResolvedFile

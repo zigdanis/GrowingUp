@@ -66,7 +66,7 @@ no Carthage or CocoaPods step is required:
   Duo UI journeys run only on an explicitly opted-in manual dispatch:
   `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`.
   The manual UI job uses iPhone Duo / iOS 27.1 / Xcode 27.1. App Store
-  screenshot capture also remains manual. iOS 18 is not tested in CI.
+  screenshots are captured on a Mac, never in CI. iOS 18 is not tested in CI.
 
 ## Tooling
 
@@ -75,7 +75,8 @@ no Carthage or CocoaPods step is required:
   first-party Swift sources or `scripts/check-formatting.sh` to check without
   changing files. The scripts use the formatter from the selected Xcode
   toolchain on macOS and a standalone `swift-format` on Linux. On Linux,
-  install the pinned toolchain with `swiftly install`. CI uses Xcode's formatter.
+  install the pinned toolchain with `swiftly install`. CI runs the same Swift 6.4
+  formatter on Linux.
   VS Code formats on save through Xcode's SourceKit-LSP via `.vscode/settings.json`;
   install the recommended Swift and SweetPad extensions. For full code completion,
   install the SweetPad CLI (`brew install sweetpad-dev/tap/sweetpad`) and run
@@ -83,15 +84,17 @@ no Carthage or CocoaPods step is required:
   machine-specific; keep it out of Git.
 - **[SwiftLint](https://github.com/realm/SwiftLint)** runs as an optional build
   phase (skipped with a warning if not installed); run
-  `scripts/lint-swift.sh` for the same strict check used in CI.
+  `scripts/lint-swift.sh` for the same strict check used in CI. On Linux,
+  `scripts/install-swiftlint.sh` installs the SwiftLint release CI pins.
 - **Git hooks** are installed once per clone with
   `scripts/install-git-hooks.sh`. They check formatting and SwiftLint before
   every commit. Fix reported violations instead of bypassing the hook.
 - **[fastlane](https://fastlane.tools)** lanes under `fastlane/` handle
   TestFlight distribution and `match`-based signing for release builds.
-- **CI** — GitHub Actions (`.github/workflows/ci.yml`) checks formatting, runs
-  SwiftLint, and builds + tests on an iOS Simulator on every pull request and
-  on pushes to `master`.
+- **CI** — GitHub Actions (`.github/workflows/ci.yml`) checks formatting and
+  runs SwiftLint on Linux, and builds + tests on an iOS Simulator on macOS, on
+  every pull request and on pushes to `master`. The Release simulator app
+  (`simulator-app.yml`) is built only on request by `scripts/simulator-app.sh`.
 
 ## TestFlight deployment
 

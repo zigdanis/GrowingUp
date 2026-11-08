@@ -24,9 +24,9 @@ A PR should open early. UI tests and captures run only when the developer reques
 ## Flow
 
 1. **Understand:** know the requested change and what success looks like. Reuse an existing PR for the same task. For UI changes, also use `visual-acceptance`.
-2. **Implement:** make the change with focused tests, then run the Linux checks: `python3 -m unittest discover -s scripts/tests` and `scripts/check-secrets.sh`.
+2. **Implement:** make the change with focused tests, then run the local checks from AGENTS.md (CI and pushing): `scripts/check-formatting.sh` and `scripts/lint-swift.sh` for Swift changes, `python3 -m unittest discover -s scripts/tests` and `scripts/check-secrets.sh` always. Iterate on compile errors and unit tests on MacPro, not through CI.
 3. **Review once:** have the Codex reviewer check correctness and the requested behavior. Fix confirmed issues before pushing.
-4. **Open the PR early:** push and open the PR, as a draft if work remains. Write the description for the developer (see below). One push per batch of fixes.
+4. **Open the PR early:** push and open the PR, as a draft if work remains. Write the description for the developer (see below). One push per batch of fixes: every push queues a macOS runner shared with Danis's other apps.
 5. **Show when requested:** publish 1–3 reviewed screenshots from the requested UI verification or native capture task while the PR is open. Use `scripts/pr-visual-evidence.py` for requested CI evidence. Do not dispatch Duo UI tests just to satisfy a routine PR evidence gate.
 6. **Bot comments:** handle the bots' first review in one batch (see the [verification policy](references/verification-policy.md)). Don't ask for another bot review.
 7. **Merge:** once review fixes are pushed and any explicitly requested visual verification is complete, run `gh pr merge PR --auto --merge` so GitHub merges when the required checks pass. Automatic Duo UI tests and screenshots are not a merge gate. A behind-master branch doesn't need an update unless it conflicts.
