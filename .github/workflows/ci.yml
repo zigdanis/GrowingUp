@@ -26,8 +26,6 @@ env:
   # Swift Format and SwiftLint run on Linux with the Swift version of Xcode 27.1 (.swift-version), so a pull
   # request takes only one macOS runner: Build & Test. Release Tools adds a second only when release inputs change.
   SWIFT_IMAGE: swift:6.4.0-noble@sha256:31d14d727f4451f25e29bac9c42563a098c39ac66415e8bad970f48038e38aca
-  SWIFTLINT_VERSION: 0.65.1
-  SWIFTLINT_LINUX_SHA256: caeed6f4a679c35539ffaf124f6c4ab4a8416917f7d8796279dc52b74026059d
 
 jobs:
   release-tools:
@@ -78,6 +76,8 @@ jobs:
           bash -n scripts/run-ui-journeys.sh
           bash -n scripts/pr-evidence.sh
           bash -n scripts/simulator-app.sh
+          sh -n scripts/install-swiftlint.sh
+          sh -n scripts/lint-swift.sh
           PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s scripts/tests
 
   changes:
@@ -168,14 +168,13 @@ jobs:
             !/marketing/
             !/docs/
 
+      # The same pinned release agents install locally. The SourceKit build uses the container toolchain's
+      # SourceKit, so rules such as statement_position run too.
       - name: Install pinned SwiftLint
-        run: |
-          curl -fsSL --retry 3 -o "$RUNNER_TEMP/swiftlint.zip" \
-            "https://github.com/realm/SwiftLint/releases/download/$SWIFTLINT_VERSION/swiftlint_linux_amd64.zip"
-          echo "$SWIFTLINT_LINUX_SHA256  $RUNNER_TEMP/swiftlint.zip" | sha256sum -c -
-          unzip -q "$RUNNER_TEMP/swiftlint.zip" swiftlint -d "$RUNNER_TEMP/swiftlint"
+        env:
+          SWIFTLINT_REQUIRE_SOURCEKIT: '1'
+        run: scripts/install-swiftlint.sh "$RUNNER_TEMP/swiftlint"
 
-      # The dynamic build uses the toolchain's SourceKit, so rules such as statement_position still run.
       - name: Run SwiftLint
         run: |
           docker run --rm --user "$(id -u):$(id -g)" -v "$PWD:/src" -w /src \

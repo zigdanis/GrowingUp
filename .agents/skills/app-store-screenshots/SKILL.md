@@ -5,7 +5,7 @@ description: Re-shoot, compose and upload the GrowingUp App Store screenshots (E
 
 # App Store screenshots
 
-One real UI test captures the real app on a simulator, a renderer turns the captures into store cards per locale, and one uploader places them on the editable App Store version. Do not invent another route: no hand-made mocks, no extra tests, no injected dates.
+One real UI test captures the real app on a MacPro pool simulator, a renderer turns the captures into store cards per locale, and one uploader places them on the editable App Store version. Captures never run on CI. Do not invent another route: no hand-made mocks, no extra tests, no injected dates.
 
 ## What gets shot (flexible)
 
@@ -39,7 +39,7 @@ The story follows the app's *current* design; nothing about the screens, people 
 6. **Compose the cards** with `scripts/render-app-store-screenshots.py` (standard families), `scripts/render-duo-app-store-screenshots.py` (Duo) or `scripts/render-ipad-app-store-screenshots.py` (13-inch iPad), into an empty folder under `marketing/app-store/screenshots/families/`. Change the design in the renderer (copy, layout, backgrounds), not in the app.
 7. **Look at every PNG.** Open all cards one by one: correct locale, no clipped text (RU headlines are longer), no cut-off device frame or widgets, any animation shown (e.g. confetti) is real, nothing from another app, correct pixel size, no alpha channel. Fix problems in the renderer or touch up the PNG directly, whichever is quicker; if you edit a PNG, update its hash in `source.json`.
 8. **Update the manifest and build the review page** in `docs/` (like `docs/app-store-hardware-preview.html`): every uploaded screenshot, grouped by device and locale, in one file that is quick to browse. Don't wait for Danis.
-9. **Upload the groups you re-shot** with `scripts/app-store-families.py` (see `--help`), without waiting for approval. Never print or commit the App Store Connect key, never submit for App Review, and commit the receipt. Then open the review page from step 8 for Danis (it shows exactly what was uploaded, per device and locale), so he can check it without opening App Store Connect.
+9. **Upload the groups you re-shot** with `scripts/app-store-families.py` (see `--help`), without waiting for approval. Without the App Store Connect key on your machine, upload from the merged master commit instead: `gh workflow run app-store-metadata.yml --ref master -f operation=upload -f source_sha=SHA -f groups='GROUP ...'` (`validate` checks the committed sets first; `inventory` reads what Apple has). It reads the same `families.json`. Never print or commit the App Store Connect key, never submit for App Review, and commit the receipt. Then open the review page from step 8 for Danis (it shows exactly what was uploaded, per device and locale), so he can check it without opening App Store Connect.
 10. **Deliver.** Commit tooling, manifest, assets, retained native captures and receipt; open the PR through `full-send`. Release the simulator as the `simulator-queue` skill says. Remove temp keys and DerivedData.
 
 ## Rules that save time
