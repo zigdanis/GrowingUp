@@ -35,9 +35,12 @@ Decided by Danis on 2026-11-02: Russian search in Kazakhstan and the CIS matters
 outside the US.
 
 - **`ru`** is what Russian speakers read in Russia, Ukraine, the CIS and the US. Its name, «Кому сколько»
-  (since 3.1.1, 2026-11-08; also the Russian name under the home screen icon), and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
+  (since 3.1.1, 2026-11-08), and subtitle, «Возраст близких и дни рождения», say what the app does for anyone: children,
   adults, family, pets or a date such as the day you quit smoking. Its keywords target Russia, Ukraine and the
   US, where `ru` is indexed, and add those uses (родные, питомец, не курю, трезвость).
+- **Under the icon** the Russian name is «Кому Сколько», both words capitalised (Danis, 2026-11-10). When the label
+  is too wide, as next to the dot iOS shows before a TestFlight or newly installed app, iOS drops the space; the
+  capital «С» keeps the merged «КомуСколько» readable instead of «Комусколько». The store name stays «Кому сколько».
 - **`en-GB`** is the only index of the CIS storefronts. Its name and subtitle stay English, because English-language
   devices in the UK, Europe and India read them, but all its keyword room (99 of 100 characters), which nobody sees, is
   Russian: every word of the Russian name (кому, сколько) plus the common forms of how-old, birthday, age, counter,
