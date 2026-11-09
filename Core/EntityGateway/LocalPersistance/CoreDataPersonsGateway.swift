@@ -12,14 +12,14 @@ import Foundation
 public class CoreDataPersonsGateway: PersonsGateway {
 
 	/// The mosaic order: by `displayOrder`, and people never reordered, who share 0, by `createdDate`.
-	private static let mosaicOrder = [
+	static let mosaicOrder = [
 		NSSortDescriptor(key: #keyPath(CoreDataPerson.displayOrder), ascending: true),
 		NSSortDescriptor(key: #keyPath(CoreDataPerson.createdDate), ascending: true)
 	]
 
 	/// Keeps a new person's place at the end and a reordering from interleaving: each reads the stored order and then
-	/// saves, so one must finish before the other starts.
-	private static let orderLock = NSLock()
+	/// saves, so one must finish before the other starts. A restore from a backup takes it too.
+	static let orderLock = NSLock()
 
 	let coreDataStack: CoreDataStack
 
@@ -38,6 +38,13 @@ public class CoreDataPersonsGateway: PersonsGateway {
 				let lastOrder: Int64
 				do {
 					lastOrder = try Self.lastDisplayOrder(in: context)
+					// Counted under the lock, so a restore that filled the last place meanwhile is seen.
+					guard try context.count(for: CoreDataPerson.fetchRequest()) < Constants.peopleLimit else {
+						throw CoreError.peopleLimitReached
+					}
+				} catch let error as CoreError {
+					continuation.resume(throwing: error)
+					return
 				} catch {
 					continuation.resume(throwing: CoreError(error: error))
 					return
@@ -189,7 +196,7 @@ public class CoreDataPersonsGateway: PersonsGateway {
 	}
 
 	/// The highest stored `displayOrder`, or 0 without people.
-	private static func lastDisplayOrder(in context: NSManagedObjectContext) throws -> Int64 {
+	static func lastDisplayOrder(in context: NSManagedObjectContext) throws -> Int64 {
 		let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 		request.sortDescriptors = [NSSortDescriptor(key: #keyPath(CoreDataPerson.displayOrder), ascending: false)]
 		request.fetchLimit = 1

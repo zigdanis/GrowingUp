@@ -23,6 +23,7 @@
 "Missing value" = "Отсутствует параметр";
 "Unknown error occured" = "Неизвестная ошибка";
 "Unable to add more than 6 persons" = "В виджет можно добавить не больше 6 человек.";
+"Unable to add more than 20 people" = "В приложении помещается не больше 20 человек.";
 "Failed initializing Core Data stack" = "Не удалось открыть хранилище данных";
 "Failed to get App Group URL" = "Не удалось открыть общее хранилище приложения и виджета";
 

@@ -7,6 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8BED3827D0F30A83E7265417 /* AppVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3289FAE5E10C34927E629899 /* AppVersion.swift */; };
+		F027ADC2F56197D731ADB15D /* SettingsAboutSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D0320DDB1F094A11950473 /* SettingsAboutSection.swift */; };
+		42EF3598A3288D5C9938B75F /* SettingsWidgetSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CACFDE191F75CFB98A30B5B /* SettingsWidgetSection.swift */; };
+		D56705F2C8AB087086357A5B /* PeoplePresenter+Viewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCBCC9A9ADFA41A69AD9D47B /* PeoplePresenter+Viewer.swift */; };
+		72831D34A6114C6CE29C05E5 /* BackupPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 305A893317A5612B99D5FE4D /* BackupPresenterTests.swift */; };
+		BD7329BAF14DC98DAA8B4F69 /* BackupArchiveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D41029B054A1D865874664 /* BackupArchiveTests.swift */; };
+		B271BEC9D9B3AE867108BEC8 /* CoreDataPeopleBackupGatewayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C51F069E91ED49B7E61DCEF /* CoreDataPeopleBackupGatewayTests.swift */; };
+		0CCC1DB9856F3924685C069E /* BackupCodecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEFE7C1477A481634C4C159A /* BackupCodecTests.swift */; };
+		C153D035DC59B28E2A1980B4 /* PeopleBackupGatewaySpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 163D00C02C977EE2CC246938 /* PeopleBackupGatewaySpy.swift */; };
+		2125F3778DF0498D48E24EF1 /* BackupLibraryFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2896218ED7BB1B2F8A9B8AF0 /* BackupLibraryFixture.swift */; };
+		C4E1B0A0000000000000A003 /* ZIPFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = C4E1B0A0000000000000A002 /* ZIPFoundation */; };
+		6B62AE527311F398A9522402 /* BackupPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69C3875E7487C2D587FCA06 /* BackupPresenter.swift */; };
+		4DD98B48D63C3D07B271A659 /* BackupAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1350147F5D866FA0BB38FF0 /* BackupAlert.swift */; };
+		0774CC888D7E4D26224DA641 /* PendingRestore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AF5C4AE59591F54BDC75B5B /* PendingRestore.swift */; };
+		AEDE1F79E79F514979BEC525 /* BackupRestoreSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16E54106E90C67EC2370156 /* BackupRestoreSource.swift */; };
+		904AFCC8A6A278CF5392DF7E /* BackupArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE8138AF1442CC330DA31E1 /* BackupArchive.swift */; };
+		85F465FB240CE9C2188E19D9 /* BackupFileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8CF5E3B8E151FFF832133F /* BackupFileSection.swift */; };
+		CDC86FAB82A4058992309F83 /* BackupRecoverySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FFEA09E9C93FD0B8F6DA411 /* BackupRecoverySection.swift */; };
+		394C1990D5259B4185403952 /* SettingsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE164251F0A06D4CB107195 /* SettingsSheet.swift */; };
+		4ABD0C514DEB46776FF4FE81 /* CoreDataPeopleBackupGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D08932AFF4FAEDA3E9DFCEF /* CoreDataPeopleBackupGateway.swift */; };
+		AD78C55B1C6E9BD217C34781 /* BackupFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE14ABF56E98BE2939FDB6F /* BackupFolder.swift */; };
+		65BA0887AB10C0DB36AB3C50 /* BackupCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58AB29B03C5D4CF625A7F77B /* BackupCodec.swift */; };
+		8D27F83D01B92417A6005FCB /* PeopleBackupGateway.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD0695C188B194767A4660AA /* PeopleBackupGateway.swift */; };
+		C951826DB21AA83DC088B9DA /* BackupError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 758AE29B51D061C4A155BACA /* BackupError.swift */; };
+		37F4C538BAD87283585F7602 /* RestoreSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6214045AEC4D3228BE5D20 /* RestoreSummary.swift */; };
+		A26476749F2297BD7BA70973 /* LoadedBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478417085A2758AF7189CF86 /* LoadedBackup.swift */; };
+		8D5DDBE31ACB15307266D304 /* LibrarySnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA903AC4A96BA28261ADCE2B /* LibrarySnapshot.swift */; };
+		CDFB3C21A73747B620E08F44 /* BackupDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0290BE8EE607F8FF1C2C504 /* BackupDocument.swift */; };
+		83B1FF5E43A19150E840E3F2 /* BackupPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9532B678D8A0E34A0E535F07 /* BackupPhoto.swift */; };
+		EFCE548D86004BB19317F0AC /* BackupPerson.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B634A7680F00D07023E2ED8 /* BackupPerson.swift */; };
 		D3C000000000000000000003 /* InstalledWidgetLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000002 /* InstalledWidgetLookup.swift */; };
 		D3C000000000000000000005 /* WidgetHintMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000004 /* WidgetHintMode.swift */; };
 		D3C000000000000000000007 /* WidgetHintPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C000000000000000000006 /* WidgetHintPolicy.swift */; };
@@ -256,7 +286,7 @@
 		4B866129B9E8A09A937A05AB /* GlassButtonChrome.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE08344E54D8D6A00AD87C95 /* GlassButtonChrome.swift */; };
 		4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */; };
 		CD3D3CEECDC2248C4817DBB6 /* PreservedDataPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E29B222597C1FE57A6B87BC8 /* PreservedDataPresenter.swift */; };
-		2C4F241ADCCF4B65F3E067B3 /* PreservedDataExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D15890AF0C3A3A5032A23C4 /* PreservedDataExport.swift */; };
+		2C4F241ADCCF4B65F3E067B3 /* FileExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D15890AF0C3A3A5032A23C4 /* FileExport.swift */; };
 		557505C9FFE6A2D14A9942F3 /* ImageCaptureFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC1AD146DC8587C7F792A1F /* ImageCaptureFlowView.swift */; };
 		59292205208AA413665CE54F /* ValueWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E88731C743E444D0561E0DE /* ValueWrapper.swift */; };
 		5C4D9D88EEDFD46C147A60EA /* PersonOverviewScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433F12964DC9FC4E8DA0C10A /* PersonOverviewScene.swift */; };
@@ -304,7 +334,6 @@
 		C72D6BECAF9D381BA04D5CB8 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5292F8584945007D5945FF00 /* CameraPreview.swift */; };
 		C87931BC22CD54809B6D8A06 /* PeopleScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */; };
 		26851528EB15B0530A3A53AF /* HomeCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFBD821034AEA36F94E33220 /* HomeCornerButton.swift */; };
-		B1BB89469A5983A5D753BDF1 /* PreservedDataSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D579A41641500B1B23DBBDBE /* PreservedDataSheet.swift */; };
 		FFBC268A358F522BB8367C99 /* PreservedDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C63CD3D4F67C842AD0FF357 /* PreservedDataView.swift */; };
 		78294ACD0B4F9E84E33AA43C /* ActivityShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC75A927BF688385320AAB4 /* ActivityShareSheet.swift */; };
 		DCCA79114CB3602981FF0777 /* PreservedDataFailure.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8F1367EAE0F5E6461BD41B8 /* PreservedDataFailure.swift */; };
@@ -497,6 +526,35 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3289FAE5E10C34927E629899 /* AppVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersion.swift; sourceTree = "<group>"; };
+		C0D0320DDB1F094A11950473 /* SettingsAboutSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAboutSection.swift; sourceTree = "<group>"; };
+		7CACFDE191F75CFB98A30B5B /* SettingsWidgetSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWidgetSection.swift; sourceTree = "<group>"; };
+		BCBCC9A9ADFA41A69AD9D47B /* PeoplePresenter+Viewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PeoplePresenter+Viewer.swift"; sourceTree = "<group>"; };
+		305A893317A5612B99D5FE4D /* BackupPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPresenterTests.swift; sourceTree = "<group>"; };
+		12D41029B054A1D865874664 /* BackupArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchiveTests.swift; sourceTree = "<group>"; };
+		9C51F069E91ED49B7E61DCEF /* CoreDataPeopleBackupGatewayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPeopleBackupGatewayTests.swift; sourceTree = "<group>"; };
+		FEFE7C1477A481634C4C159A /* BackupCodecTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCodecTests.swift; sourceTree = "<group>"; };
+		163D00C02C977EE2CC246938 /* PeopleBackupGatewaySpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleBackupGatewaySpy.swift; sourceTree = "<group>"; };
+		2896218ED7BB1B2F8A9B8AF0 /* BackupLibraryFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupLibraryFixture.swift; sourceTree = "<group>"; };
+		B69C3875E7487C2D587FCA06 /* BackupPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPresenter.swift; sourceTree = "<group>"; };
+		C1350147F5D866FA0BB38FF0 /* BackupAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupAlert.swift; sourceTree = "<group>"; };
+		5AF5C4AE59591F54BDC75B5B /* PendingRestore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingRestore.swift; sourceTree = "<group>"; };
+		B16E54106E90C67EC2370156 /* BackupRestoreSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestoreSource.swift; sourceTree = "<group>"; };
+		2BE8138AF1442CC330DA31E1 /* BackupArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupArchive.swift; sourceTree = "<group>"; };
+		6B8CF5E3B8E151FFF832133F /* BackupFileSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFileSection.swift; sourceTree = "<group>"; };
+		7FFEA09E9C93FD0B8F6DA411 /* BackupRecoverySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRecoverySection.swift; sourceTree = "<group>"; };
+		2BE164251F0A06D4CB107195 /* SettingsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSheet.swift; sourceTree = "<group>"; };
+		9D08932AFF4FAEDA3E9DFCEF /* CoreDataPeopleBackupGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataPeopleBackupGateway.swift; sourceTree = "<group>"; };
+		EDE14ABF56E98BE2939FDB6F /* BackupFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupFolder.swift; sourceTree = "<group>"; };
+		58AB29B03C5D4CF625A7F77B /* BackupCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupCodec.swift; sourceTree = "<group>"; };
+		FD0695C188B194767A4660AA /* PeopleBackupGateway.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleBackupGateway.swift; sourceTree = "<group>"; };
+		758AE29B51D061C4A155BACA /* BackupError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupError.swift; sourceTree = "<group>"; };
+		BE6214045AEC4D3228BE5D20 /* RestoreSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreSummary.swift; sourceTree = "<group>"; };
+		478417085A2758AF7189CF86 /* LoadedBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadedBackup.swift; sourceTree = "<group>"; };
+		BA903AC4A96BA28261ADCE2B /* LibrarySnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibrarySnapshot.swift; sourceTree = "<group>"; };
+		B0290BE8EE607F8FF1C2C504 /* BackupDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDocument.swift; sourceTree = "<group>"; };
+		9532B678D8A0E34A0E535F07 /* BackupPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPhoto.swift; sourceTree = "<group>"; };
+		6B634A7680F00D07023E2ED8 /* BackupPerson.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPerson.swift; sourceTree = "<group>"; };
 		D3C000000000000000000002 /* InstalledWidgetLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledWidgetLookup.swift; sourceTree = "<group>"; };
 		D3C000000000000000000004 /* WidgetHintMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintMode.swift; sourceTree = "<group>"; };
 		D3C000000000000000000006 /* WidgetHintPolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetHintPolicy.swift; sourceTree = "<group>"; };
@@ -740,7 +798,6 @@
 		701D5F8308378A9531D176F8 /* CameraSessionWorker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CameraSessionWorker.swift; sourceTree = "<group>"; };
 		7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PeopleScene.swift; sourceTree = "<group>"; };
 		EFBD821034AEA36F94E33220 /* HomeCornerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCornerButton.swift; sourceTree = "<group>"; };
-		D579A41641500B1B23DBBDBE /* PreservedDataSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedDataSheet.swift; sourceTree = "<group>"; };
 		2C63CD3D4F67C842AD0FF357 /* PreservedDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedDataView.swift; sourceTree = "<group>"; };
 		AAC75A927BF688385320AAB4 /* ActivityShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityShareSheet.swift; sourceTree = "<group>"; };
 		A8F1367EAE0F5E6461BD41B8 /* PreservedDataFailure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedDataFailure.swift; sourceTree = "<group>"; };
@@ -777,7 +834,7 @@
 		BDAB1D029EDF4BE9071E03E5 /* LimitedAccessHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitedAccessHeader.swift; sourceTree = "<group>"; };
 		C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneConfigurator.swift; sourceTree = "<group>"; };
 		E29B222597C1FE57A6B87BC8 /* PreservedDataPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedDataPresenter.swift; sourceTree = "<group>"; };
-		9D15890AF0C3A3A5032A23C4 /* PreservedDataExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreservedDataExport.swift; sourceTree = "<group>"; };
+		9D15890AF0C3A3A5032A23C4 /* FileExport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExport.swift; sourceTree = "<group>"; };
 		C3E2FFFFA1FF06532CE31DC1 /* UITestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestStore.swift; sourceTree = "<group>"; };
 		C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskImageStore.swift; sourceTree = "<group>"; };
 		ED19A2E6FBDA55F151C773B2 /* OriginalPhotoFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OriginalPhotoFile.swift; sourceTree = "<group>"; };
@@ -950,6 +1007,7 @@
 				09051B5D21C55EB6008A99C6 /* Core.framework in Frameworks */,
 				A7A100000000000000000035 /* PostHog in Frameworks */,
 				A7A100000000000000000038 /* Sentry in Frameworks */,
+				C4E1B0A0000000000000A003 /* ZIPFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -964,6 +1022,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		14C89167492183BAAB0EE217 /* Backup */ = {
+			isa = PBXGroup;
+			children = (
+				305A893317A5612B99D5FE4D /* BackupPresenterTests.swift */,
+				12D41029B054A1D865874664 /* BackupArchiveTests.swift */,
+				9C51F069E91ED49B7E61DCEF /* CoreDataPeopleBackupGatewayTests.swift */,
+				FEFE7C1477A481634C4C159A /* BackupCodecTests.swift */,
+			);
+			path = Backup;
+			sourceTree = "<group>";
+		};
+		96850D63B151840C6B52E9CB /* Backup */ = {
+			isa = PBXGroup;
+			children = (
+				B69C3875E7487C2D587FCA06 /* BackupPresenter.swift */,
+				C1350147F5D866FA0BB38FF0 /* BackupAlert.swift */,
+				5AF5C4AE59591F54BDC75B5B /* PendingRestore.swift */,
+				B16E54106E90C67EC2370156 /* BackupRestoreSource.swift */,
+				2BE8138AF1442CC330DA31E1 /* BackupArchive.swift */,
+			);
+			path = Backup;
+			sourceTree = "<group>";
+		};
 		D3C000000000000000000001 /* WidgetHint */ = {
 			isa = PBXGroup;
 			children = (
@@ -1148,6 +1229,7 @@
 				09165327223ECBC40081FB10 /* Others */,
 				0916532E223ECBC40081FB10 /* Supporting Files */,
 				499D6EF315D5CC57361D1497 /* Presentation */,
+				96850D63B151840C6B52E9CB /* Backup */,
 				6EAF7AFE19C3D2DCA662652E /* Testing */,
 				A7A100000000000000000001 /* Analytics */,
 				B1A000000000000000000001 /* Haptics */,
@@ -1187,6 +1269,7 @@
 			children = (
 				0916531E223ECBC40081FB10 /* PersonsGateway.swift */,
 				22E1D28F619286012BB82E49 /* PreservedStoreGateway.swift */,
+				FD0695C188B194767A4660AA /* PeopleBackupGateway.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -1216,6 +1299,13 @@
 				09D26ADD2251091700BF452F /* PersonImage.swift */,
 				ED1943EB1EBBDE9E4424EA94 /* PhotoCrop.swift */,
 				B8EA07AC0A0A8253D93178E9 /* PreservedStore.swift */,
+				758AE29B51D061C4A155BACA /* BackupError.swift */,
+				BE6214045AEC4D3228BE5D20 /* RestoreSummary.swift */,
+				478417085A2758AF7189CF86 /* LoadedBackup.swift */,
+				BA903AC4A96BA28261ADCE2B /* LibrarySnapshot.swift */,
+				B0290BE8EE607F8FF1C2C504 /* BackupDocument.swift */,
+				9532B678D8A0E34A0E535F07 /* BackupPhoto.swift */,
+				6B634A7680F00D07023E2ED8 /* BackupPerson.swift */,
 				486757E11FC391EE53FBECA7 /* PreservedStoreCause.swift */,
 				2352944A067948DFD24D8DFB /* PersonImages.swift */,
 			);
@@ -1266,6 +1356,8 @@
 				A7A100000000000000000031 /* AnalyticsGatewaySpy.swift */,
 				F9AA51D25DEF85CA591040A1 /* PreservedStoreGatewaySpy.swift */,
 				D0184BABCAF2D685B5C8320B /* PreservedStoreFixture.swift */,
+				163D00C02C977EE2CC246938 /* PeopleBackupGatewaySpy.swift */,
+				2896218ED7BB1B2F8A9B8AF0 /* BackupLibraryFixture.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -1330,6 +1422,7 @@
 				091BEEB0223D612C00A3D057 /* UseCases */,
 				098054F4223C295400E24D40 /* Presenters */,
 				094DF9CA223ADC3800C331EC /* Gateways */,
+				14C89167492183BAAB0EE217 /* Backup */,
 				0929F1E52258CA7100212F29 /* iOS Framework APIs */,
 				B60000000000000000000028 /* Widget */,
 				4EC8924D144DC798B8A912C8 /* ImageCapture */,
@@ -1409,6 +1502,9 @@
 				1C26DB971613467092BD4C6B /* SQLiteStoreBackup.swift */,
 				B66EABB880CD7CCFBBA4A95E /* PreservedStoreManifest.swift */,
 				93B8D213DC2807BDEEC598AD /* PreservedStoreLibrary.swift */,
+				9D08932AFF4FAEDA3E9DFCEF /* CoreDataPeopleBackupGateway.swift */,
+				EDE14ABF56E98BE2939FDB6F /* BackupFolder.swift */,
+				58AB29B03C5D4CF625A7F77B /* BackupCodec.swift */,
 				027C93378A163DB626728475 /* PreservedStoreArchiver.swift */,
 				6EF714690C801EA9B0C04B86 /* ArchivedFile.swift */,
 				B7D1EFC0A983C399E3255FB6 /* ArchiveManifest.swift */,
@@ -1564,8 +1660,13 @@
 				449ED61637164BFF288A6770 /* PeoplePresenter.swift */,
 				7800E32C26A4A7FD4B7434ED /* PeopleScene.swift */,
 				EFBD821034AEA36F94E33220 /* HomeCornerButton.swift */,
-				D579A41641500B1B23DBBDBE /* PreservedDataSheet.swift */,
 				2C63CD3D4F67C842AD0FF357 /* PreservedDataView.swift */,
+				6B8CF5E3B8E151FFF832133F /* BackupFileSection.swift */,
+				7FFEA09E9C93FD0B8F6DA411 /* BackupRecoverySection.swift */,
+				2BE164251F0A06D4CB107195 /* SettingsSheet.swift */,
+				3289FAE5E10C34927E629899 /* AppVersion.swift */,
+				C0D0320DDB1F094A11950473 /* SettingsAboutSection.swift */,
+				7CACFDE191F75CFB98A30B5B /* SettingsWidgetSection.swift */,
 				AAC75A927BF688385320AAB4 /* ActivityShareSheet.swift */,
 				A8F1367EAE0F5E6461BD41B8 /* PreservedDataFailure.swift */,
 				D49519304E33331E7D07F0F4 /* TrailingPaneOnLandscape.swift */,
@@ -1619,7 +1720,7 @@
 				898315CCC5CACED1D6D6CB1D /* PhotoRequest.swift */,
 				C06E07DA0B4BE73B535C04EF /* SceneConfigurator.swift */,
 				E29B222597C1FE57A6B87BC8 /* PreservedDataPresenter.swift */,
-				9D15890AF0C3A3A5032A23C4 /* PreservedDataExport.swift */,
+				9D15890AF0C3A3A5032A23C4 /* FileExport.swift */,
 				D709780AF10F557CB4110DF1 /* SceneError.swift */,
 				691EC675EDB3055672611D95 /* View+SceneError.swift */,
 				B1A00000000000000000001A /* SceneErrorHaptics.swift */,
@@ -1630,6 +1731,7 @@
 				D3C00000000000000000004A /* WidgetHintHomeScreen.swift */,
 				D3C00000000000000000004C /* WidgetHintStrip.swift */,
 				D3C00000000000000000004E /* PeoplePresenter+WidgetHint.swift */,
+				BCBCC9A9ADFA41A69AD9D47B /* PeoplePresenter+Viewer.swift */,
 				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
@@ -1862,6 +1964,7 @@
 			packageProductDependencies = (
 				A7A100000000000000000034 /* PostHog */,
 				A7A100000000000000000037 /* Sentry */,
+				C4E1B0A0000000000000A002 /* ZIPFoundation */,
 			);
 			productName = Aging;
 			productReference = 098E560921C409E300E4CA1E /* GrowingUp.app */;
@@ -1946,6 +2049,7 @@
 				B09CA085DD0CCDC5D8CA11D7 /* XCRemoteSwiftPackageReference "Disk" */,
 				A7A100000000000000000033 /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				A7A100000000000000000036 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
+				C4E1B0A0000000000000A001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */,
 			);
 			productRefGroup = 098E560A21C409E300E4CA1E /* Products */;
 			projectDirPath = "";
@@ -2101,11 +2205,19 @@
 				095000D8226DD9D800789BED /* CoreDataPersonsGateway.swift in Sources */,
 				0983E763226D964A007EC8D2 /* PersonsGateway.swift in Sources */,
 				CBD3CD6D6EF3739F03962414 /* PreservedStoreGateway.swift in Sources */,
+				8D27F83D01B92417A6005FCB /* PeopleBackupGateway.swift in Sources */,
 				095000D9226DDB3500789BED /* CoreDataPerson.swift in Sources */,
 				095000DF226DEBA800789BED /* Constants.swift in Sources */,
 				0983E769226D9659007EC8D2 /* PersonImage.swift in Sources */,
 				ED1981414917567E7782DD6B /* PhotoCrop.swift in Sources */,
 				17247953409CAA226CAF4E44 /* PreservedStore.swift in Sources */,
+				C951826DB21AA83DC088B9DA /* BackupError.swift in Sources */,
+				37F4C538BAD87283585F7602 /* RestoreSummary.swift in Sources */,
+				A26476749F2297BD7BA70973 /* LoadedBackup.swift in Sources */,
+				8D5DDBE31ACB15307266D304 /* LibrarySnapshot.swift in Sources */,
+				CDFB3C21A73747B620E08F44 /* BackupDocument.swift in Sources */,
+				83B1FF5E43A19150E840E3F2 /* BackupPhoto.swift in Sources */,
+				EFCE548D86004BB19317F0AC /* BackupPerson.swift in Sources */,
 				C6E430AF4BEBFE575896BE6D /* PreservedStoreCause.swift in Sources */,
 				09F6B52623535E26003A1A01 /* MemoryCache.swift in Sources */,
 				09E75944227735E9005025AD /* UUID+Extensions.swift in Sources */,
@@ -2119,6 +2231,9 @@
 				A3A7D5EF49F14A50A9AEF3C6 /* SQLiteStoreBackup.swift in Sources */,
 				28E96237F54690F74DB52865 /* PreservedStoreManifest.swift in Sources */,
 				B76DE2AF7D931D1078CC9995 /* PreservedStoreLibrary.swift in Sources */,
+				4ABD0C514DEB46776FF4FE81 /* CoreDataPeopleBackupGateway.swift in Sources */,
+				AD78C55B1C6E9BD217C34781 /* BackupFolder.swift in Sources */,
+				65BA0887AB10C0DB36AB3C50 /* BackupCodec.swift in Sources */,
 				2E9BFC8B231F0796A8E9AF8B /* PreservedStoreArchiver.swift in Sources */,
 				5044B61C54A8CFCB680EFE57 /* ArchivedFile.swift in Sources */,
 				0D7CBDA9990B017CB8FC87AA /* ArchiveManifest.swift in Sources */,
@@ -2159,6 +2274,10 @@
 				7D9981F821714D0292565094 /* CoreDataStackImplementationTests.swift in Sources */,
 				05BD967EC0DA4F56A725D6BC /* SQLiteStoreBackupTests.swift in Sources */,
 				C610195F536767E86B2824DA /* PreservedStoreLibraryTests.swift in Sources */,
+				72831D34A6114C6CE29C05E5 /* BackupPresenterTests.swift in Sources */,
+				BD7329BAF14DC98DAA8B4F69 /* BackupArchiveTests.swift in Sources */,
+				B271BEC9D9B3AE867108BEC8 /* CoreDataPeopleBackupGatewayTests.swift in Sources */,
+				0CCC1DB9856F3924685C069E /* BackupCodecTests.swift in Sources */,
 				FC4F593530263D9207BAA75A /* PreservedStoreExportTests.swift in Sources */,
 				DE5F4A8D8A51D0A63578F84F /* PhotoFileNameTests.swift in Sources */,
 				2D799B9EC08E4D10B8654A9F /* PersistentStoreRecoveryTests.swift in Sources */,
@@ -2227,6 +2346,8 @@
 				A7A100000000000000000032 /* AnalyticsGatewaySpy.swift in Sources */,
 				0821EC15C9DE693DB7FEAB8B /* PreservedStoreGatewaySpy.swift in Sources */,
 				310BD82536AF7374E11DDC90 /* PreservedStoreFixture.swift in Sources */,
+				C153D035DC59B28E2A1980B4 /* PeopleBackupGatewaySpy.swift in Sources */,
+				2125F3778DF0498D48E24EF1 /* BackupLibraryFixture.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2268,6 +2389,7 @@
 				D3C00000000000000000004B /* WidgetHintHomeScreen.swift in Sources */,
 				D3C00000000000000000004D /* WidgetHintStrip.swift in Sources */,
 				D3C00000000000000000004F /* PeoplePresenter+WidgetHint.swift in Sources */,
+				D56705F2C8AB087086357A5B /* PeoplePresenter+Viewer.swift in Sources */,
 				D83B0424086BCA2C03D4F456 /* KeyboardCommand+Lists.swift in Sources */,
 				D1316802A0D7FA11010F1908 /* WindowControlsClearance.swift in Sources */,
 				3CA40D66589C284C6FA696C7 /* KeyboardCommand.swift in Sources */,
@@ -2327,8 +2449,18 @@
 				BC25D01BED8E56ED655941C6 /* PeoplePresenter.swift in Sources */,
 				C87931BC22CD54809B6D8A06 /* PeopleScene.swift in Sources */,
 				26851528EB15B0530A3A53AF /* HomeCornerButton.swift in Sources */,
-				B1BB89469A5983A5D753BDF1 /* PreservedDataSheet.swift in Sources */,
 				FFBC268A358F522BB8367C99 /* PreservedDataView.swift in Sources */,
+				6B62AE527311F398A9522402 /* BackupPresenter.swift in Sources */,
+				4DD98B48D63C3D07B271A659 /* BackupAlert.swift in Sources */,
+				0774CC888D7E4D26224DA641 /* PendingRestore.swift in Sources */,
+				AEDE1F79E79F514979BEC525 /* BackupRestoreSource.swift in Sources */,
+				904AFCC8A6A278CF5392DF7E /* BackupArchive.swift in Sources */,
+				85F465FB240CE9C2188E19D9 /* BackupFileSection.swift in Sources */,
+				CDC86FAB82A4058992309F83 /* BackupRecoverySection.swift in Sources */,
+				394C1990D5259B4185403952 /* SettingsSheet.swift in Sources */,
+				8BED3827D0F30A83E7265417 /* AppVersion.swift in Sources */,
+				F027ADC2F56197D731ADB15D /* SettingsAboutSection.swift in Sources */,
+				42EF3598A3288D5C9938B75F /* SettingsWidgetSection.swift in Sources */,
 				78294ACD0B4F9E84E33AA43C /* ActivityShareSheet.swift in Sources */,
 				DCCA79114CB3602981FF0777 /* PreservedDataFailure.swift in Sources */,
 				761476D71001BE90879AC852 /* TrailingPaneOnLandscape.swift in Sources */,
@@ -2376,7 +2508,7 @@
 				AD9C29AA3E3817E33857FC69 /* PhotoRequest.swift in Sources */,
 				4D2BEC8DA453018BAC2FE4FA /* SceneConfigurator.swift in Sources */,
 				CD3D3CEECDC2248C4817DBB6 /* PreservedDataPresenter.swift in Sources */,
-				2C4F241ADCCF4B65F3E067B3 /* PreservedDataExport.swift in Sources */,
+				2C4F241ADCCF4B65F3E067B3 /* FileExport.swift in Sources */,
 				9125CA94453C916124E5FBD9 /* SceneError.swift in Sources */,
 				3908904420489F2B34C71D1A /* View+SceneError.swift in Sources */,
 				71B4A629EB430499CE5C7679 /* CameraFlashMode.swift in Sources */,
@@ -3042,6 +3174,14 @@
 				minimumVersion = 9.31.0;
 			};
 		};
+		C4E1B0A0000000000000A001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/weichsel/ZIPFoundation.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.9.20;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -3059,6 +3199,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A7A100000000000000000036 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
 			productName = Sentry;
+		};
+		C4E1B0A0000000000000A002 /* ZIPFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C4E1B0A0000000000000A001 /* XCRemoteSwiftPackageReference "ZIPFoundation" */;
+			productName = ZIPFoundation;
 		};
 /* End XCSwiftPackageProductDependency section */
 

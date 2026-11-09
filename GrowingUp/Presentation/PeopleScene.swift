@@ -10,9 +10,15 @@ struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
 	@State private var pictures: MosaicPicturesPresenter
-	/// Earlier data store recovery set aside, which the corner capsule opens.
+	/// Earlier data store recovery set aside, which the Backup sheet shows while there is any.
 	@State private var preserved: PreservedDataPresenter
-	@State private var showsPreservedData = false
+	/// The library's export and import, on the Settings sheet the corner button opens.
+	@State private var backup: BackupPresenter
+	@State private var showsSettings = false
+	/// The earlier data Settings opens at once, as the capsule asks.
+	@State private var settingsPreservedStore: PreservedStore?
+	/// The widget guide opened from Settings, over it.
+	@State private var isShowingSettingsWidgetGuide = false
 	@Namespace private var zoom
 	@State private var isShowingWidgetGuide = false
 	/// The pinned people as the widget shows them, for the widget hint and its guide; nil while neither needs them.
@@ -32,6 +38,11 @@ struct PeopleScene: View {
 		_pictures = State(initialValue: MosaicPicturesPresenter(loadThumbnail: presenter.configurator.loadThumbnail))
 		_preserved = State(
 			initialValue: PreservedDataPresenter(gateway: presenter.configurator.preservedStores, analytics: presenter.configurator.analytics))
+		_backup = State(
+			initialValue: BackupPresenter(
+				gateway: presenter.configurator.backup, analytics: presenter.configurator.analytics,
+				isLibraryLoaded: { [weak presenter] in presenter?.library.state == .loaded },
+				libraryRestored: { [weak presenter] in await presenter?.reloadAfterRestore() }, now: presenter.configurator.now))
 	}
 
 	var body: some View {
@@ -43,8 +54,9 @@ struct PeopleScene: View {
 			home(layout: layout, trailingPane: trailingPane)
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
 				.safeAreaInset(edge: .top, spacing: 8) {
-					if preserved.newest != nil {
-						HomeCornerButton { showsPreservedData = true }
+					// The corner waits for the first read, which may also have set earlier data aside.
+					if presenter.library.state != .loading || preserved.newest != nil {
+						HomeCornerButton(showsPreservedData: preserved.newest != nil, action: openSettings)
 							.frame(maxWidth: .infinity, alignment: .trailing)
 							.padding(.horizontal, 16)
 							.transition(.opacity)
@@ -100,13 +112,15 @@ struct PeopleScene: View {
 				// The viewer lies on photos, so it stays dark whatever the mosaic's theme.
 				.preferredColorScheme(.dark)
 		}
-		// An archive the closed sheet can no longer share is removed, even one still being written.
-		.sheet(isPresented: $showsPreservedData, onDismiss: preserved.abandonExport) {
-			PreservedDataSheet(presenter: preserved)
+		// A file the closed sheet can no longer share is removed, even one still being written.
+		.sheet(isPresented: $showsSettings, onDismiss: closeSettings) {
+			SettingsSheet(
+				backup: backup, preserved: preserved, widgetPreview: widgetPreview, isShowingWidgetGuide: $isShowingSettingsWidgetGuide,
+				now: presenter.configurator.now, preservedStore: settingsPreservedStore)
 		}
 		// A widget link that opens a person takes the screen over.
 		.onChange(of: presenter.isViewing) { _, isViewing in
-			if isViewing { showsPreservedData = false }
+			if isViewing { showsSettings = false }
 		}
 		.sheet(isPresented: $isShowingWidgetGuide) {
 			WidgetGuideSheet(entry: widgetPreview, now: presenter.configurator.now)
@@ -189,7 +203,8 @@ struct PeopleScene: View {
 
 	/// The people the widget preview shows while the hint or its guide needs it, so a change to them redraws it.
 	private var widgetPreviewPeople: [Person]? {
-		presenter.reservesWidgetHint || isShowingWidgetGuide ? presenter.persons.filter(\.isOnWidget) : nil
+		presenter.reservesWidgetHint || isShowingWidgetGuide || isShowingSettingsWidgetGuide
+			? presenter.persons.filter(\.isOnWidget) : nil
 	}
 
 	/// A tap on the hint opens the guide, as the hint fades out for good.
@@ -221,6 +236,18 @@ struct PeopleScene: View {
 			await presenter.load()
 			await preserved.refresh()
 		}
+	}
+
+	/// Opens Settings; the capsule's one preserved copy opens there at once.
+	private func openSettings() {
+		settingsPreservedStore = preserved.stores.count == 1 ? preserved.newest : nil
+		showsSettings = true
+	}
+
+	private func closeSettings() {
+		isShowingSettingsWidgetGuide = false
+		preserved.abandonExport()
+		backup.abandon()
 	}
 
 	private func finishReordering() {

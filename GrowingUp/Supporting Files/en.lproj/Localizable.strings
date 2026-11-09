@@ -269,6 +269,109 @@
 /* Alert message when deleting the preserved copy failed */
 "Try again in a moment." = "Try again in a moment.";
 
+/* Settings, and the backup with export and import of all data */
+
+/* Corner button on the home screen that opens Settings, and the Settings title */
+"Settings" = "Settings";
+
+/* Settings row that opens the Home Screen widget guide */
+"Home Screen widget" = "Home Screen widget";
+
+/* Footer of the widget guide row */
+"How to add the widget with your people's photos and ages to your Home Screen or Today View." = "How to add the widget with your people's photos and ages to your Home Screen or Today View.";
+
+/* Settings section about the app */
+"About" = "About";
+
+/* Settings row that opens the privacy policy */
+"Privacy Policy" = "Privacy Policy";
+
+/* VoiceOver hint of the privacy policy row */
+"Opens in Safari" = "Opens in Safari";
+
+/* Settings row that writes to the developer */
+"Contact the developer" = "Contact the developer";
+
+/* VoiceOver hint of the contact row */
+"Opens your email app" = "Opens your email app";
+
+/* Context menu of the contact row */
+"Copy address" = "Copy address";
+
+/* Subject of a mail to the developer: the app's name and version */
+"GrowingUp %@" = "GrowingUp %@";
+
+/* Footer of the About section: the version and the build */
+"Version %@ (%@)" = "Version %@ (%@)";
+
+/* Section of Settings with the iCloud backup, export and import */
+"Backup" = "Backup";
+
+/* Button that exports every person and photo to one file */
+"Export all data" = "Export all data";
+
+/* Shown while the export file is written */
+"Preparing the export…" = "Preparing the export…";
+
+/* VoiceOver value of the export button while it works */
+"Preparing the export" = "Preparing the export";
+
+/* Button that imports a backup file */
+"Import from file" = "Import from file";
+
+/* Shown while a picked backup file is read */
+"Reading the file…" = "Reading the file…";
+
+/* Shown while a backup is restored */
+"Restoring…" = "Restoring…";
+
+/* Footer of export and import */
+"Export saves all your people and photos to one file. Import adds who is missing from such a file and never deletes anyone." = "Export saves all your people and photos to one file. Import adds who is missing from such a file and never deletes anyone.";
+
+/* Title of the confirmation before restoring a backup */
+"Restore this backup?" = "Restore this backup?";
+
+/* Confirms restoring a backup */
+"Restore" = "Restore";
+
+/* Message of the confirmation before restoring a backup: when it was saved and how many people it holds */
+"Saved %@. People: %lld.\n\nOnly who is missing is added, up to 20 people in all. Nothing in the app is changed or deleted." = "Saved %@. People: %lld.\n\nOnly who is missing is added, up to 20 people in all. Nothing in the app is changed or deleted.";
+
+/* Alert title after a restore */
+"Backup restored" = "Backup restored";
+
+/* How many people a restore added */
+"People added: %lld." = "People added: %lld.";
+
+/* A restore found nobody missing */
+"Everyone in this backup is already in the app." = "Everyone in this backup is already in the app.";
+
+/* How many people of a backup did not fit */
+"Not added because the app keeps up to 20 people: %lld." = "Not added because the app keeps up to 20 people: %lld.";
+
+/* Alert title when a restore failed */
+"Couldn't restore the backup" = "Couldn't restore the backup";
+
+/* Alert message when a restore failed */
+"Nothing was changed. Try again." = "Nothing was changed. Try again.";
+
+/* Alert title when a backup could not be read */
+"Couldn't open the backup" = "Couldn't open the backup";
+
+/* A backup in a newer format */
+"This backup was made by a newer version of GrowingUp. Update the app and try again." = "This backup was made by a newer version of GrowingUp. Update the app and try again.";
+
+/* A picked file that is no backup */
+"This file is not a GrowingUp backup, or it is damaged." = "This file is not a GrowingUp backup, or it is damaged.";
+
+/* A backup that could not be read, as without a connection */
+"Couldn't read the backup. Check your internet connection and try again." = "Couldn't read the backup. Check your internet connection and try again.";
+
+/* Alert title when the export of all data failed */
+"Couldn't export the data" = "Couldn't export the data";
+
+/* Alert message when the export of all data failed */
+"Your people and photos are still saved on this device. Try again in a moment." = "Your people and photos are still saved on this device. Try again in a moment.";
 /* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
 "On your Home Screen too" = "On your Home Screen too";
 "A widget with your people's photos and ages" = "A widget with your people's photos and ages";

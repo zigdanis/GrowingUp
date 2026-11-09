@@ -269,6 +269,109 @@
 /* Alert message when deleting the preserved copy failed */
 "Try again in a moment." = "Попробуйте ещё раз чуть позже.";
 
+/* Settings, and the backup with export and import of all data */
+
+/* Corner button on the home screen that opens Settings, and the Settings title */
+"Settings" = "Настройки";
+
+/* Settings row that opens the Home Screen widget guide */
+"Home Screen widget" = "Виджет на экране «Домой»";
+
+/* Footer of the widget guide row */
+"How to add the widget with your people's photos and ages to your Home Screen or Today View." = "Как добавить виджет с фото и возрастом ваших близких на экран «Домой» или «Сегодня».";
+
+/* Settings section about the app */
+"About" = "О приложении";
+
+/* Settings row that opens the privacy policy */
+"Privacy Policy" = "Политика конфиденциальности";
+
+/* VoiceOver hint of the privacy policy row */
+"Opens in Safari" = "Откроется в Safari";
+
+/* Settings row that writes to the developer */
+"Contact the developer" = "Написать разработчику";
+
+/* VoiceOver hint of the contact row */
+"Opens your email app" = "Откроется почтовое приложение";
+
+/* Context menu of the contact row */
+"Copy address" = "Скопировать адрес";
+
+/* Subject of a mail to the developer: the app's name and version */
+"GrowingUp %@" = "Кому сколько %@";
+
+/* Footer of the About section: the version and the build */
+"Version %@ (%@)" = "Версия %@ (%@)";
+
+/* Section of Settings with the iCloud backup, export and import */
+"Backup" = "Резервная копия";
+
+/* Button that exports every person and photo to one file */
+"Export all data" = "Экспортировать все данные";
+
+/* Shown while the export file is written */
+"Preparing the export…" = "Подготовка экспорта…";
+
+/* VoiceOver value of the export button while it works */
+"Preparing the export" = "Подготовка экспорта";
+
+/* Button that imports a backup file */
+"Import from file" = "Импортировать из файла";
+
+/* Shown while a picked backup file is read */
+"Reading the file…" = "Чтение файла…";
+
+/* Shown while a backup is restored */
+"Restoring…" = "Восстановление…";
+
+/* Footer of export and import */
+"Export saves all your people and photos to one file. Import adds who is missing from such a file and never deletes anyone." = "Экспорт сохраняет всех людей и фото в один файл. Импорт добавляет из такого файла тех, кого не хватает, и никого не удаляет.";
+
+/* Title of the confirmation before restoring a backup */
+"Restore this backup?" = "Восстановить эту копию?";
+
+/* Confirms restoring a backup */
+"Restore" = "Восстановить";
+
+/* Message of the confirmation before restoring a backup: when it was saved and how many people it holds */
+"Saved %@. People: %lld.\n\nOnly who is missing is added, up to 20 people in all. Nothing in the app is changed or deleted." = "Сохранена %@. Людей: %lld.\n\nДобавятся только те, кого не хватает, всего не больше 20 человек. Ничего в приложении не изменится и не удалится.";
+
+/* Alert title after a restore */
+"Backup restored" = "Копия восстановлена";
+
+/* How many people a restore added */
+"People added: %lld." = "Добавлено людей: %lld.";
+
+/* A restore found nobody missing */
+"Everyone in this backup is already in the app." = "Все из этой копии уже есть в приложении.";
+
+/* How many people of a backup did not fit */
+"Not added because the app keeps up to 20 people: %lld." = "Не добавлено, потому что в приложении помещается не больше 20 человек: %lld.";
+
+/* Alert title when a restore failed */
+"Couldn't restore the backup" = "Не удалось восстановить копию";
+
+/* Alert message when a restore failed */
+"Nothing was changed. Try again." = "Ничего не изменилось. Попробуйте ещё раз.";
+
+/* Alert title when a backup could not be read */
+"Couldn't open the backup" = "Не удалось открыть копию";
+
+/* A backup in a newer format */
+"This backup was made by a newer version of GrowingUp. Update the app and try again." = "Эта копия создана в более новой версии «Кому сколько». Обновите приложение и попробуйте ещё раз.";
+
+/* A picked file that is no backup */
+"This file is not a GrowingUp backup, or it is damaged." = "Этот файл не является копией «Кому сколько» или повреждён.";
+
+/* A backup that could not be read, as without a connection */
+"Couldn't read the backup. Check your internet connection and try again." = "Не удалось прочитать копию. Проверьте подключение к интернету и попробуйте ещё раз.";
+
+/* Alert title when the export of all data failed */
+"Couldn't export the data" = "Не удалось экспортировать данные";
+
+/* Alert message when the export of all data failed */
+"Your people and photos are still saved on this device. Try again in a moment." = "Люди и фото по-прежнему сохранены на этом устройстве. Попробуйте ещё раз чуть позже.";
 /* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
 "On your Home Screen too" = "И на экране «Домой»";
 "A widget with your people's photos and ages" = "Виджет с фото и возрастом ваших близких";

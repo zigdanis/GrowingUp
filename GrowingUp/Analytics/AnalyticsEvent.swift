@@ -18,6 +18,11 @@ enum AnalyticsEvent: Equatable {
 		activeDays: Int, daysSinceFirstActive: Int, viewerVisits: Int, peopleWithPhotoCount: Int, requestNumber: Int)
 	/// The person chose to export a library that store recovery preserved, and the archive is ready to share.
 	case preservedDataExported
+	/// "Export all data" wrote the whole library to a file, which is ready in the share sheet.
+	case dataExported(peopleCount: Int)
+	/// A backup was restored; only people the library lacked were added.
+	case dataRestored(
+		source: BackupRestoreSource, peopleAdded: Int, peopleAlreadyPresent: Int, peopleOverLimit: Int, intoEmptyLibrary: Bool)
 	/// The mosaic shows the Home Screen widget hint on this launch; `shownLaunches` counts this one.
 	case widgetHintShown(shownLaunches: Int)
 	/// The hint was tapped and the widget guide opened.
@@ -41,6 +46,8 @@ enum AnalyticsEvent: Equatable {
 		case .peopleReordered: "people_reordered"
 		case .reviewPromptRequested: "review_prompt_requested"
 		case .preservedDataExported: "preserved_data_exported"
+		case .dataExported: "data_exported"
+		case .dataRestored: "data_restored"
 		case .widgetHintShown: "widget_hint_shown"
 		case .widgetHintOpened: "widget_hint_opened"
 		case .widgetHintDismissed: "widget_hint_dismissed"
@@ -74,8 +81,16 @@ enum AnalyticsEvent: Equatable {
 				"people_count": .int(person.peopleCount),
 				"widget_people_count": .int(person.widgetPeopleCount)
 			]
-		case .personRemoved(let peopleCount), .peopleReordered(let peopleCount):
+		case .personRemoved(let peopleCount), .peopleReordered(let peopleCount), .dataExported(let peopleCount):
 			["people_count": .int(peopleCount)]
+		case .dataRestored(let source, let peopleAdded, let peopleAlreadyPresent, let peopleOverLimit, let intoEmptyLibrary):
+			[
+				"source": .string(source.rawValue),
+				"people_added": .int(peopleAdded),
+				"people_already_present": .int(peopleAlreadyPresent),
+				"people_over_limit": .int(peopleOverLimit),
+				"into_empty_library": .bool(intoEmptyLibrary)
+			]
 		case .reviewPromptRequested(let activeDays, let daysSinceFirstActive, let viewerVisits, let peopleWithPhotoCount, let requestNumber):
 			[
 				"active_days": .int(activeDays),

@@ -23,7 +23,9 @@ final class AnalyticsEventTests: XCTestCase {
 			.photoReframed, .widgetPictureFramed, .personSaved(saved), .personRemoved(peopleCount: 2),
 			.peopleReordered(peopleCount: 3),
 			.reviewPromptRequested(activeDays: 3, daysSinceFirstActive: 7, viewerVisits: 5, peopleWithPhotoCount: 2, requestNumber: 1),
-			.preservedDataExported, .widgetHintShown(shownLaunches: 1), .widgetHintOpened(shownLaunches: 2),
+			.preservedDataExported, .dataExported(peopleCount: 4),
+			.dataRestored(source: .file, peopleAdded: 2, peopleAlreadyPresent: 1, peopleOverLimit: 0, intoEmptyLibrary: true),
+			.widgetHintShown(shownLaunches: 1), .widgetHintOpened(shownLaunches: 2),
 			.widgetHintDismissed(shownLaunches: 3)
 		]
 		let snakeCase = /^[a-z]+(_[a-z]+)*$/
@@ -36,7 +38,7 @@ final class AnalyticsEventTests: XCTestCase {
 				}
 			}
 		}
-		XCTAssertEqual(Set(events.map(\.name)).count, 17, "Every event has its own name")
+		XCTAssertEqual(Set(events.map(\.name)).count, 19, "Every event has its own name")
 	}
 
 	func testASavedPersonIsDescribedByFlagsAndCountsOnly() {

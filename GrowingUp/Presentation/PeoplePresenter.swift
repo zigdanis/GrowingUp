@@ -49,8 +49,6 @@ final class PeoplePresenter {
 		library = PeopleLibrary(fetch: configurator.fetchUseCase.fetchPersons, analytics: configurator.analytics)
 	}
 
-	var canAdd: Bool { persons.count < Constants.peopleLimit }
-
 	/// The cover's in-place edit mode, while its session still owns editing and the cover shows.
 	var editMode: PersonEditModePresenter? {
 		guard let inPlaceEditMode, inPlaceEditMode.editor === editor, isViewing else { return nil }
@@ -76,6 +74,18 @@ final class PeoplePresenter {
 			pendingWidgetIndex = nil
 			pendingWidgetID = nil
 		}
+	}
+
+	/// Reads the people again after a restore added some to the store. A restore only adds, so whoever is shown stays.
+	func reloadAfterRestore() async {
+		defer { reloadWidgets() }
+		guard library.state == .loaded, let stored = try? await configurator.fetchUseCase.fetchPersons() else { return }
+		let shown = Set(persons.map(\.id))
+		let added = stored.filter { !shown.contains($0.id) }
+		guard !added.isEmpty else { return }
+		persons = (persons + added).sorted()
+		for person in added { storedOrders[person.id] = person.displayOrder }
+		configurator.analytics.update(AnalyticsContext(people: persons.filter { $0.id != leavingID }))
 	}
 
 	/// Opens a new person's empty edit mode in the cover, grown out of the "Add" button; Done adds them to the end of the
@@ -123,13 +133,6 @@ final class PeoplePresenter {
 		selectedID = id
 	}
 
-	/// The person `offset` places from the one with `id` in mosaic order, such as the viewer's next page; nil past either
-	/// end.
-	func neighbour(of id: UUID, by offset: Int) -> UUID? {
-		guard let index = persons.firstIndex(where: { $0.id == id }), persons.indices.contains(index + offset) else { return nil }
-		return persons[index + offset].id
-	}
-
 	/// Finishes what waited for the cover to close: a removed person's tile leaves the mosaic, and a new person's page is
 	/// gone. A cover opened again meanwhile keeps what it shows.
 	func coverDidClose() {
@@ -138,13 +141,6 @@ final class PeoplePresenter {
 		finishLeaving()
 		// A viewer that showed someone may start a rating request; see `takeReviewRequest(_:)`.
 		configurator.reviewPrompter?.viewerClosed(people: persons)
-	}
-
-	/// Returns from the viewer to the mosaic. Edit mode locks the viewer's swipe, so only an accessibility action can get
-	/// here while editing; the draft goes with the viewer, as with Cancel.
-	func closeViewer() {
-		cancelEditing(editMode?.editor)
-		isViewing = false
 	}
 
 	/// Lets the mosaic's tiles be dragged to new places, as a long press on one does; a removed person's tile that is
