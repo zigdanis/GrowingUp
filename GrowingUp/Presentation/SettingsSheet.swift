@@ -3,8 +3,8 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 /// Settings, which the home screen's corner button opens: the earlier data store recovery set aside, while there is any;
-/// the library's backup, export to a file and import from one; the Home Screen widget guide; and the privacy policy,
-/// the developer's address and the app's version.
+/// the library's backup, to iCloud and restored from there, export to a file and import from one; the Home Screen widget
+/// guide; and the privacy policy, the developer's address and the app's version.
 struct SettingsSheet: View {
 	@Bindable var backup: BackupPresenter
 	@Bindable var preserved: PreservedDataPresenter
@@ -56,31 +56,19 @@ struct SettingsSheet: View {
 				case .failure: backup.alert = .unreadable(nil)
 				}
 			}
-			.confirmationDialog(
-				"Restore this backup?", isPresented: isConfirmingRestore, titleVisibility: .visible, presenting: backup.pendingRestore
-			) { pending in
-				Button("Restore") { backup.confirmRestore(pending) }
-				Button("Cancel", role: .cancel) { backup.cancelRestore() }
-			} message: { pending in
-				Text(
-					"""
-					Saved \(pending.createdAt.formatted(date: .long, time: .shortened)). People: \(pending.peopleCount).
-
-					Only who is missing is added, up to 20 people in all. Nothing in the app is changed or deleted.
-					"""
-				)
-			}
+			.modifier(RestoreConfirmation(presenter: backup, source: .file))
 			.sheet(isPresented: isSharingBackup) {
 				if case .ready(let url) = backup.export {
 					ActivityShareSheet(url: url) { backup.finishExport() }
 						.presentationDetents([.medium, .large])
 				}
 			}
-			.alert(backup.alert?.title ?? "", isPresented: showsBackupAlert, presenting: backup.alert) { _ in
-				Button("OK", role: .cancel) { backup.alert = nil }
-			} message: { alert in
-				Text(alert.message)
-			}
+		}
+		// On the stack, so it also shows over the list of iCloud backups.
+		.alert(backup.alert?.title ?? "", isPresented: showsBackupAlert, presenting: backup.alert) { _ in
+			Button("OK", role: .cancel) { backup.alert = nil }
+		} message: { alert in
+			Text(alert.message)
 		}
 		// Pushed pages, such as the earlier data, need the whole height.
 		.presentationDetents([.large])
@@ -103,11 +91,6 @@ struct SettingsSheet: View {
 		} message: {
 			Text(preserved.failure?.message ?? "")
 		}
-	}
-
-	private var isConfirmingRestore: Binding<Bool> {
-		// Closing only forgets the question: SwiftUI may close it before or after running the chosen button.
-		Binding(get: { backup.pendingRestore != nil }, set: { if !$0 { backup.dismissRestoreConfirmation() } })
 	}
 
 	private var showsBackupAlert: Binding<Bool> {

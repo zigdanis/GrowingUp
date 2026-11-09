@@ -1,21 +1,26 @@
 import Core
 import Foundation
 
-/// What the Backup sheet's alert tells after an export, an import or a restore.
+/// What the Backup alert tells after an export, an import, a restore or a deletion from iCloud.
 enum BackupAlert: Identifiable, Equatable {
 	case restored(RestoreSummary)
 	/// The store refused the people, or the library could not be read first; nothing was added.
 	case restoreFailed
 	/// The backup could not be read; `reason` is nil for an error no `BackupError` names.
 	case unreadable(BackupError?)
+	/// A backup in iCloud could not be loaded whole, as with a photo iCloud could not download; trying again may work.
+	case iCloudUnreadable(BackupError?)
 	case exportFailed
+	case deleteFailed
 
 	var id: String {
 		switch self {
 		case .restored: "restored"
 		case .restoreFailed: "restoreFailed"
 		case .unreadable: "unreadable"
+		case .iCloudUnreadable: "iCloudUnreadable"
 		case .exportFailed: "exportFailed"
+		case .deleteFailed: "deleteFailed"
 		}
 	}
 
@@ -23,8 +28,9 @@ enum BackupAlert: Identifiable, Equatable {
 		switch self {
 		case .restored: String(localized: "Backup restored")
 		case .restoreFailed: String(localized: "Couldn't restore the backup")
-		case .unreadable: String(localized: "Couldn't open the backup")
+		case .unreadable, .iCloudUnreadable: String(localized: "Couldn't open the backup")
 		case .exportFailed: String(localized: "Couldn't export the data")
+		case .deleteFailed: String(localized: "Couldn't delete the backup")
 		}
 	}
 
@@ -43,14 +49,16 @@ enum BackupAlert: Identifiable, Equatable {
 			return lines.joined(separator: "\n")
 		case .restoreFailed:
 			return String(localized: "Nothing was changed. Try again.")
-		case .unreadable(.newerVersion):
+		case .unreadable(.newerVersion), .iCloudUnreadable(.newerVersion):
 			return String(localized: "This backup was made by a newer version of GrowingUp. Update the app and try again.")
 		case .unreadable(.notABackup), .unreadable(.photoUnavailable):
 			return String(localized: "This file is not a GrowingUp backup, or it is damaged.")
-		case .unreadable(nil):
+		case .unreadable(nil), .iCloudUnreadable:
 			return String(localized: "Couldn't read the backup. Check your internet connection and try again.")
 		case .exportFailed:
 			return String(localized: "Your people and photos are still saved on this device. Try again in a moment.")
+		case .deleteFailed:
+			return String(localized: "Try again in a moment.")
 		}
 	}
 }

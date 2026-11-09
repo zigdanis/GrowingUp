@@ -23,6 +23,9 @@ struct SceneConfigurator {
 	let preservedStores: PreservedStoreGateway?
 	/// Reads the whole library for an export and adds a backup's people back; nil where the Backup sheet offers neither.
 	let backup: PeopleBackupGateway?
+	/// Keeps a copy of the library in the person's iCloud and restores from it; nil where nothing may touch the real
+	/// iCloud: tests, previews and UI-test launches.
+	let iCloudBackup: ICloudBackupService?
 	/// Shows the Home Screen widget hint on the mosaic; nil where it never shows: tests, previews and verification
 	/// launches other than `GROWINGUP_WIDGET_HINT=force`.
 	let widgetHinter: WidgetHinter?
@@ -33,11 +36,12 @@ struct SceneConfigurator {
 		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
 		reviewPrompter: ReviewPrompter? = nil, preservedStores: PreservedStoreGateway? = nil, backup: PeopleBackupGateway? = nil,
-		widgetHinter: WidgetHinter? = nil
+		iCloudBackup: ICloudBackupService? = nil, widgetHinter: WidgetHinter? = nil
 	) {
 		self.analytics = analytics
 		self.preservedStores = preservedStores
 		self.backup = backup
+		self.iCloudBackup = iCloudBackup
 		self.reviewPrompter = reviewPrompter
 		self.widgetHinter = widgetHinter
 		self.loadImage = loadImage
@@ -71,6 +75,11 @@ struct SceneConfigurator {
 		widgetHinter?.noteSetback()
 	}
 
+	/// The stored people changed, or were first read: the iCloud backup follows a moment later.
+	func libraryChanged() {
+		iCloudBackup?.libraryChanged()
+	}
+
 	static func live(analytics: AnalyticsGateway) -> SceneConfigurator {
 		let gateway = CoreDataPersonsGateway(coreDataStack: CoreDataStackImplementation.sharedInstance)
 		let reviewStore = ReviewPromptStore()
@@ -81,9 +90,10 @@ struct SceneConfigurator {
 				store: WidgetHintStore(), usage: { reviewStore.state }, mode: $0,
 				lookUpWidget: InstalledWidgetLookup.isHomeScreenWidgetInstalled, analytics: analytics)
 		}
+		let backup = try? CoreDataPeopleBackupGateway.shared()
 		return SceneConfigurator(
 			gateway: CachePersonsGateway(coreDataGateway: gateway, imageStore: DiskImageStore()), analytics: analytics,
-			reviewPrompter: reviewPrompter, preservedStores: try? PreservedStoreLibrary.shared(), backup: try? CoreDataPeopleBackupGateway.shared(),
-			widgetHinter: widgetHinter)
+			reviewPrompter: reviewPrompter, preservedStores: try? PreservedStoreLibrary.shared(), backup: backup,
+			iCloudBackup: backup.map { ICloudBackupService.live(gateway: $0, analytics: analytics) }, widgetHinter: widgetHinter)
 	}
 }

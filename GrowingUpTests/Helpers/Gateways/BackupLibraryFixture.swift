@@ -49,6 +49,16 @@ final class BackupLibraryFixture {
 		return id
 	}
 
+	func removePerson(_ id: UUID) throws {
+		let context = stack.persistentContainer.newBackgroundContext()
+		try context.performAndWait {
+			let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
+			request.predicate = NSPredicate(format: "id == %@", id.uuidString)
+			for person in try context.fetch(request) { context.delete(person) }
+			try context.save()
+		}
+	}
+
 	func storedPeople() throws -> [Person] {
 		let request: NSFetchRequest<CoreDataPerson> = CoreDataPerson.fetchRequest()
 		request.sortDescriptors = CoreDataPersonsGateway.mosaicOrder

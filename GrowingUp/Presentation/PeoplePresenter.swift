@@ -45,8 +45,8 @@ final class PeoplePresenter {
 
 	init(configurator: SceneConfigurator, reloadWidgets: @escaping () -> Void = { WidgetCenter.shared.reloadAllTimelines() }) {
 		self.configurator = configurator
-		self.reloadWidgets = reloadWidgets
-		library = PeopleLibrary(fetch: configurator.fetchUseCase.fetchPersons, analytics: configurator.analytics)
+		self.reloadWidgets = Self.storedPeopleChanged(reloadWidgets: reloadWidgets, configurator: configurator)
+		library = Self.makeLibrary(configurator: configurator)
 	}
 
 	/// The cover's in-place edit mode, while its session still owns editing and the cover shows.

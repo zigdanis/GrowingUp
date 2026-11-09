@@ -372,6 +372,80 @@
 
 /* Alert message when the export of all data failed */
 "Your people and photos are still saved on this device. Try again in a moment." = "Люди и фото по-прежнему сохранены на этом устройстве. Попробуйте ещё раз чуть позже.";
+
+/* The iCloud backup and restoring from it */
+
+/* Switch in Settings that keeps a backup in iCloud */
+"iCloud backup" = "Копия в iCloud";
+
+/* Settings row that lists the backups in iCloud, and that list's title */
+"Restore from iCloud" = "Восстановить из iCloud";
+
+/* Backup status while the app looks for iCloud */
+"Checking iCloud…" = "Проверяем iCloud…";
+
+/* Backup status while the backup is written */
+"Backing up…" = "Создание копии…";
+
+/* Backup status: when the last backup was written, such as 2 minutes ago */
+"Last backup %@." = "Последняя копия: %@.";
+
+/* Backup status: when the last backup was written, while iCloud still uploads it */
+"Last backup %@. Uploading to iCloud…" = "Последняя копия: %@. Выгрузка в iCloud…";
+
+/* Backup status before the first backup */
+"Your people and photos are backed up to iCloud after each change." = "Ваши близкие и фото сохраняются в iCloud после каждого изменения.";
+
+/* Backup status without iCloud */
+"iCloud is not available. To keep a backup, sign in to iCloud in the Settings app and turn on iCloud Drive." = "iCloud недоступен. Чтобы хранить копию, войдите в iCloud в приложении «Настройки» и включите iCloud Drive.";
+
+/* Backup status when iCloud refused the upload */
+"Couldn't upload the backup. Check that your iCloud storage is not full." = "Не удалось выгрузить копию в iCloud. Проверьте, не заполнено ли хранилище iCloud.";
+
+/* Backup status when the backup could not be written */
+"Couldn't save the backup. Check that this device has free space." = "Не удалось сохранить копию. Проверьте, есть ли свободное место на устройстве.";
+
+/* Backup status with the iCloud backup off */
+"iCloud backup is off. New changes stay only on this device. Earlier backups remain in iCloud until you delete them in Restore from iCloud." = "Копия в iCloud выключена. Новые изменения остаются только на этом устройстве. Прежние копии хранятся в iCloud, пока вы не удалите их в разделе «Восстановить из iCloud».";
+
+/* Footer of the Backup section while the iCloud backup is on */
+"Your people and photos are kept in your iCloud, so they stay safe if you delete the app or change phones. The backup doesn't appear in iCloud Drive." = "Люди и фото хранятся в вашем iCloud, поэтому не потеряются, если удалить приложение или сменить телефон. Копия не появляется в iCloud Drive.";
+
+/* The list of iCloud backups when there are none */
+"No backups in iCloud yet." = "В iCloud пока нет копий.";
+
+/* The list of iCloud backups while it loads */
+"Looking for backups…" = "Ищем копии…";
+
+/* A backup this install of the app wrote */
+"This device" = "Это устройство";
+
+/* A backup's copy before its latest one */
+"Earlier copy" = "Предыдущая копия";
+
+/* How many people a backup holds */
+"People: %lld" = "Людей: %lld";
+
+/* Title of the offer to restore a backup on the empty home screen */
+"Restore from iCloud?" = "Восстановить из iCloud?";
+
+/* The offered backup's date */
+"Your backup from %@." = "Ваша копия от %@.";
+
+/* Hides the offer to restore a backup */
+"Not now" = "Не сейчас";
+
+/* Title of the confirmation before deleting a backup from iCloud */
+"Delete this backup from iCloud?" = "Удалить эту копию из iCloud?";
+
+/* Deletes a backup from iCloud */
+"Delete Backup" = "Удалить копию";
+
+/* Message of the confirmation before deleting a backup from iCloud */
+"Your people and photos in the app stay as they are." = "Ваши близкие и фото в приложении останутся как есть.";
+
+/* Alert title when deleting a backup from iCloud failed */
+"Couldn't delete the backup" = "Не удалось удалить копию";
 /* Home Screen widget hint at the end of the mosaic. The card variant uses a shorter subtitle where it fits better. */
 "On your Home Screen too" = "И на экране «Домой»";
 "A widget with your people's photos and ages" = "Виджет с фото и возрастом ваших близких";

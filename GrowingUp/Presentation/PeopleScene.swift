@@ -5,7 +5,8 @@ import SwiftUI
 /// The home screen: the mosaic of people over their ambient glow, with the floating "Add" button; a tile zooms its person
 /// open in the full-screen viewer, which swipes down back into the tile. "Add" zooms open a new person's empty edit mode
 /// the same way; while a long press reorders the mosaic, "Done" takes the button's place. After the last tile, the mosaic
-/// may offer the Home Screen widget hint, which opens the widget guide.
+/// may offer the Home Screen widget hint, which opens the widget guide. An empty mosaic may offer to restore a backup
+/// from iCloud, as after a reinstall.
 struct PeopleScene: View {
 	@Bindable var presenter: PeoplePresenter
 	let preferredColorScheme: ColorScheme?
@@ -40,7 +41,8 @@ struct PeopleScene: View {
 			initialValue: PreservedDataPresenter(gateway: presenter.configurator.preservedStores, analytics: presenter.configurator.analytics))
 		_backup = State(
 			initialValue: BackupPresenter(
-				gateway: presenter.configurator.backup, analytics: presenter.configurator.analytics,
+				gateway: presenter.configurator.backup, iCloud: presenter.configurator.iCloudBackup,
+				analytics: presenter.configurator.analytics,
 				isLibraryLoaded: { [weak presenter] in presenter?.library.state == .loaded },
 				libraryRestored: { [weak presenter] in await presenter?.reloadAfterRestore() }, now: presenter.configurator.now))
 	}
@@ -52,6 +54,12 @@ struct PeopleScene: View {
 			let trailingPane = TrailingPaneOnLandscape(
 				layout: layout, spansFold: layout.spansFold(idiom: idiom), window: window, trailingInset: geometry.safeAreaInsets.trailing)
 			home(layout: layout, trailingPane: trailingPane)
+				// The offer's restore ends here, with Settings closed.
+				.alert(backup.alert?.title ?? "", isPresented: showsBackupAlert, presenting: backup.alert) { _ in
+					Button("OK", role: .cancel) { backup.alert = nil }
+				} message: { alert in
+					Text(alert.message)
+				}
 				.overlay { MosaicEdgeScrims(safeAreaInsets: geometry.safeAreaInsets) }
 				.safeAreaInset(edge: .top, spacing: 8) {
 					// The corner waits for the first read, which may also have set earlier data aside.
@@ -94,6 +102,7 @@ struct PeopleScene: View {
 			await presenter.loadWithWidgetHint()
 			// The load may have just set a store aside, by this process or the widget's; only now is it there to find.
 			await preserved.refresh()
+			await backup.lookForBackupToRestore(libraryIsEmpty: presenter.persons.isEmpty)
 		}
 		.task(id: presenter.persons) { await pictures.load(presenter.persons) }
 		// Back in the app, whatever could not be read before gets another try, such as after the device was unlocked.
@@ -103,6 +112,8 @@ struct PeopleScene: View {
 			// A load that only now succeeded may have set a store aside, and the widget may have while the app was away.
 			await preserved.refresh()
 			await pictures.retryFailedPictures()
+			// iCloud may list a backup only a while after a reinstall.
+			await backup.lookForBackupToRestore(libraryIsEmpty: presenter.persons.isEmpty)
 		}
 		.onOpenURL(perform: presenter.open)
 		.preferredColorScheme(preferredColorScheme)
@@ -134,9 +145,11 @@ struct PeopleScene: View {
 			case .active:
 				prompter?.appBecameActive()
 				hinter?.appBecameActive()
+				presenter.configurator.iCloudBackup?.appBecameActive()
 			case .background:
 				prompter?.appEnteredBackground()
 				hinter?.appEnteredBackground()
+				presenter.configurator.iCloudBackup?.flushPendingBackup()
 			default: prompter?.appResignedActive()
 			}
 		}
@@ -177,6 +190,13 @@ struct PeopleScene: View {
 				.transition(.opacity)
 		} else if presenter.persons.isEmpty {
 			PeopleNotice.invitation
+				.accessory {
+					if let offer = backup.restoreOffer {
+						RestoreOfferCard(presenter: backup, offer: offer)
+							.padding(.top, 12)
+							.transition(.opacity)
+					}
+				}
 				.modifier(trailingPane)
 				.frame(maxHeight: .infinity)
 				.transition(.opacity)
@@ -195,6 +215,11 @@ struct PeopleScene: View {
 	}
 
 	private var idiom: UIUserInterfaceIdiom { UIDevice.current.userInterfaceIdiom }
+
+	private var showsBackupAlert: Binding<Bool> {
+		// Settings shows its own.
+		Binding(get: { backup.alert != nil && !showsSettings }, set: { if !$0 { backup.alert = nil } })
+	}
 
 	/// The widget hint in `placement`.
 	private func widgetHint(_ placement: WidgetHintPlacement) -> WidgetHintStrip {
