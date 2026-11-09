@@ -6,7 +6,7 @@
   Copyright © 2018-2026 Danis Ziganshin.
 */
 
-"CFBundleDisplayName" = "Кому сколько";
+"CFBundleDisplayName" = "Кому Сколько";
 
 "NSCameraUsageDescription" = "Приложение делает снимки, чтобы установить изображения для добавленных людей";
 
