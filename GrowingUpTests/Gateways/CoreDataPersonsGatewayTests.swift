@@ -21,6 +21,20 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 		return CoreDataPersonsGateway(coreDataStack: inMemoryCoreDataStack)
 	}
 
+	/// Saves a person through the main queue's context. Async tests run off the main thread, so they must never touch it
+	/// directly.
+	private func storedPerson() -> Person {
+		let viewContext = inMemoryCoreDataStack.persistentContainer.viewContext
+		return viewContext.performAndWait {
+			let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
+			cdPerson.id = UUID().uuidString
+			cdPerson.createdDate = Date()
+			cdPerson.birthdate = Date()
+			inMemoryCoreDataStack.saveContext()
+			return cdPerson.person
+		}
+	}
+
 	func test_SUT_AddPersonWithParameters_Succeed() async throws {
 		let addPersonParameters = AddPersonParameters.createParameters()
 
@@ -31,31 +45,23 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 
 	func test_SUT_EditPerson_ShouldSucceedWithCorrectParameters() async throws {
 		// Given
-		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		cdPerson.id = UUID().uuidString
-		cdPerson.createdDate = Date()
-		cdPerson.birthdate = Date()
-		inMemoryCoreDataStack.saveContext()
+		let stored = storedPerson()
 		var editParams = AddPersonParameters.createParameters()
 		editParams.name = "John Snow"
 		editParams.isOnWidget = true
 		editParams.dayOfBirth = Date().addingTimeInterval(-60 * 60 * 24 * 365 * 10)
 		editParams.timeOfBirth = Date().addingTimeInterval(-60)
 
-		let person = try await inMemoryCoreDataGateway.edit(person: cdPerson.person, with: editParams)
+		let person = try await inMemoryCoreDataGateway.edit(person: stored, with: editParams)
 
 		assert(person: person, builtFromParameters: editParams)
 	}
 
 	func test_SUT_RemovePerson_ShouldSucceed() async throws {
 		// Given
-		let cdPerson = inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self)
-		cdPerson.id = UUID().uuidString
-		cdPerson.createdDate = Date()
-		cdPerson.birthdate = Date()
-		inMemoryCoreDataStack.saveContext()
+		let stored = storedPerson()
 
-		try await inMemoryCoreDataGateway.remove(person: cdPerson.person)
+		try await inMemoryCoreDataGateway.remove(person: stored)
 	}
 
 	func test_SUT_FetchPersons_ShouldSucceed() async throws {
@@ -63,8 +69,12 @@ class CoreDataPersonsGatewayTests: XCTestCase {
 	}
 
 	func test_CelebratesBirthdays_DefaultsToTrueAndRoundTrips() async throws {
-		XCTAssertTrue(inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self).celebratesBirthdays)
-		inMemoryCoreDataStack.persistentContainer.viewContext.rollback()
+		let viewContext = inMemoryCoreDataStack.persistentContainer.viewContext
+		let defaultsToCelebrating = viewContext.performAndWait {
+			defer { viewContext.rollback() }
+			return inMemoryCoreDataStack.fakeEntity(withType: CoreDataPerson.self).celebratesBirthdays
+		}
+		XCTAssertTrue(defaultsToCelebrating)
 		let gateway = inMemoryCoreDataGateway
 		var parameters = AddPersonParameters.createParameters()
 		XCTAssertTrue(parameters.celebratesBirthdays)
