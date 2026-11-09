@@ -5,7 +5,7 @@ import UIKit
 /// itself.
 struct SettingsAboutSection: View {
 	static let privacyPolicy = URL(string: "https://ziganshin.pro/growing-up/privacy-policy")!
-	static let supportAddress = "zigdanis@gmail.com"
+	static let supportAddress = "support@ziganshin.pro"
 
 	let version: AppVersion
 
