@@ -30,7 +30,7 @@ final class PersonPictureCandidatesTests: XCTestCase {
 		await viewer.load(person: person)
 		XCTAssertTrue(viewer.image === widgetPhoto)
 		XCTAssertFalse(viewer.showsMonogram)
-		let tile = MosaicPicturesPresenter(loadThumbnail: { _, _ in widgetPhoto })
+		let tile = MosaicPicturesPresenter(loadThumbnail: { _, _ in TileThumbnail(image: widgetPhoto, isFromCache: false) })
 		await tile.load([person])
 		XCTAssertEqual(tile.picture(for: person)?.pictureID, person.widgetPicId, "Both show the widget photo")
 	}

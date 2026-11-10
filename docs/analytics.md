@@ -35,6 +35,7 @@ every name, key and text value a snake_case word.
 | `widget_hint_shown` | `shown_launches` | The mosaic shows the Home Screen widget hint on this launch, counted once per launch ([widget hint](widget-hint.md)) |
 | `widget_hint_opened` | `shown_launches` | The widget hint was tapped and the "GrowingUp widgets" sheet opened |
 | `widget_hint_dismissed` | `shown_launches` | × closed the widget hint |
+| `mosaic_pictures_loaded` | `people_count`, `cached_count`, `decoded_count`, `monogram_count`, `duration_ms` | Once per launch, when the first load of the mosaic's tile pictures completes: how many came ready from the on-disk thumbnail cache, were decoded from the full-size picture or show a monogram (no photo, or none loaded), and the milliseconds from the start of that load to the last tile's picture. A load superseded by a newer one (or cancelled) before its end is folded into the one that completes |
 
 PostHog adds its own `Application Installed / Updated / Opened / Backgrounded` events and, to every
 event, its anonymous installation ID, device model and screen size, OS and app version, language,

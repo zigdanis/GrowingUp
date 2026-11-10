@@ -40,8 +40,10 @@
 			return try await ImagesCache.loadFullSize(at: url)
 		}
 
-		func loadThumbnail(_ image: PersonImage, maxPixelSize: Int) async throws -> UIImage {
-			try await ImagesCache.loadThumbnail(at: root.appendingPathComponent(image.cachingKey), maxPixelSize: maxPixelSize)
+		/// Decodes every time: UI-test stores keep no thumbnail cache.
+		func loadThumbnail(_ image: PersonImage, maxPixelSize: Int) async throws -> TileThumbnail {
+			let thumbnail = try await ImagesCache.loadThumbnail(at: root.appendingPathComponent(image.cachingKey), maxPixelSize: maxPixelSize)
+			return TileThumbnail(image: thumbnail, isFromCache: false)
 		}
 	}
 #endif

@@ -36,7 +36,9 @@ struct PeopleScene: View {
 	init(presenter: PeoplePresenter, preferredColorScheme: ColorScheme?) {
 		_presenter = Bindable(presenter)
 		self.preferredColorScheme = preferredColorScheme
-		_pictures = State(initialValue: MosaicPicturesPresenter(loadThumbnail: presenter.configurator.loadThumbnail))
+		_pictures = State(
+			initialValue: MosaicPicturesPresenter(
+				loadThumbnail: presenter.configurator.loadThumbnail, analytics: presenter.configurator.analytics))
 		_preserved = State(
 			initialValue: PreservedDataPresenter(gateway: presenter.configurator.preservedStores, analytics: presenter.configurator.analytics))
 		_backup = State(

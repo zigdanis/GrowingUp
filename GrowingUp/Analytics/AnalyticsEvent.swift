@@ -31,6 +31,9 @@ enum AnalyticsEvent: Equatable {
 	case widgetHintOpened(shownLaunches: Int)
 	/// × closed the hint.
 	case widgetHintDismissed(shownLaunches: Int)
+	/// The launch's first load of the mosaic's tile pictures completed: how many came ready from the thumbnail cache,
+	/// were decoded from the full-size picture or show a monogram, and how long the tiles waited.
+	case mosaicPicturesLoaded(peopleCount: Int, cachedCount: Int, decodedCount: Int, monogramCount: Int, durationMs: Int)
 
 	var name: String {
 		switch self {
@@ -54,6 +57,7 @@ enum AnalyticsEvent: Equatable {
 		case .widgetHintShown: "widget_hint_shown"
 		case .widgetHintOpened: "widget_hint_opened"
 		case .widgetHintDismissed: "widget_hint_dismissed"
+		case .mosaicPicturesLoaded: "mosaic_pictures_loaded"
 		}
 	}
 
@@ -106,6 +110,14 @@ enum AnalyticsEvent: Equatable {
 			]
 		case .widgetHintShown(let shownLaunches), .widgetHintOpened(let shownLaunches), .widgetHintDismissed(let shownLaunches):
 			["shown_launches": .int(shownLaunches)]
+		case .mosaicPicturesLoaded(let peopleCount, let cachedCount, let decodedCount, let monogramCount, let durationMs):
+			[
+				"people_count": .int(peopleCount),
+				"cached_count": .int(cachedCount),
+				"decoded_count": .int(decodedCount),
+				"monogram_count": .int(monogramCount),
+				"duration_ms": .int(durationMs)
+			]
 		}
 	}
 

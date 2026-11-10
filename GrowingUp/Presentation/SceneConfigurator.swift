@@ -11,8 +11,9 @@ struct SceneConfigurator {
 	let loadImage: (PersonImage) async throws -> UIImage
 	/// Decodes a person's stored original at its full size, for framing their pictures.
 	let loadOriginal: (PersonImage) async throws -> UIImage
-	/// Decodes a stored picture to a thumbnail whose longer side is at most the given pixels, without caching the original.
-	let loadThumbnail: (PersonImage, Int) async throws -> UIImage
+	/// A mosaic tile's thumbnail of a stored picture, at most the given pixels on its longer side: kept on disk between
+	/// launches, else decoded without caching the full-size picture.
+	let loadThumbnail: (PersonImage, Int) async throws -> TileThumbnail
 	let now: () -> Date
 	let photoFixtures: [UIImage]?
 	/// Product events and handled failures; silent in tests, previews and UI-test launches.
@@ -33,7 +34,7 @@ struct SceneConfigurator {
 	init(
 		gateway: PersonsGateway, loadImage: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadImageFromDiskOrMemory,
 		loadOriginal: @escaping (PersonImage) async throws -> UIImage = ImagesCache.loadOriginal,
-		loadThumbnail: @escaping (PersonImage, Int) async throws -> UIImage = ImagesCache.loadThumbnail,
+		loadThumbnail: @escaping (PersonImage, Int) async throws -> TileThumbnail = ImagesCache.loadTileThumbnail,
 		now: @escaping () -> Date = Date.init, photoFixtures: [UIImage]? = nil, analytics: AnalyticsGateway = NoopAnalyticsGateway(),
 		reviewPrompter: ReviewPrompter? = nil, preservedStores: PreservedStoreGateway? = nil, backup: PeopleBackupGateway? = nil,
 		iCloudBackup: ICloudBackupService? = nil, widgetHinter: WidgetHinter? = nil

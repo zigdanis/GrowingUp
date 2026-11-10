@@ -50,9 +50,19 @@ public enum ImagesCache {
 	/// original and the memory cache of full-size pictures untouched.
 	public static func loadThumbnail(image: PersonImage, maxPixelSize: Int) async throws -> UIImage {
 		try Task.checkCancellation()
+		return try await loadThumbnail(at: storedURL(of: image), maxPixelSize: maxPixelSize)
+	}
+
+	/// A mosaic tile's thumbnail of a stored picture, from the thumbnail cache when it holds one; see `ThumbnailCache`.
+	public static func loadTileThumbnail(image: PersonImage, maxPixelSize: Int) async throws -> TileThumbnail {
+		try Task.checkCancellation()
+		return try await ThumbnailCache.shared.thumbnail(of: image.id, maxPixelSize: maxPixelSize, picture: storedURL(of: image))
+	}
+
+	/// Where `image` is stored in the App Group, as PNG or as a legacy JPEG.
+	private static func storedURL(of image: PersonImage) throws -> URL {
 		let directory = Disk.Directory.sharedContainer(appGroupName: Constants.appGroupId)
-		let url = try Disk.url(for: storedCachingKey(for: image, in: directory), in: directory)
-		return try await loadThumbnail(at: url, maxPixelSize: maxPixelSize)
+		return try Disk.url(for: storedCachingKey(for: image, in: directory), in: directory)
 	}
 
 	/// Decodes a person's original photo at its full size, upright, without keeping it in the memory cache: it is only
@@ -68,7 +78,7 @@ public enum ImagesCache {
 
 	/// Decodes the picture at `url` at its full size, upright and at once, off the main actor.
 	public static func loadFullSize(at url: URL) async throws -> UIImage {
-		try await decode(at: url, maxPixelSize: nil)
+		try await decode(at: url, maxPixelSize: nil, qos: .userInitiated)
 	}
 
 	static func storedCachingKey(
@@ -77,17 +87,17 @@ public enum ImagesCache {
 		Disk.exists(image.cachingKey, in: directory) ? image.cachingKey : image.legacyCachingKey
 	}
 
-	/// Decodes the picture at `url` straight to a thumbnail whose longer side is at most `maxPixelSize` pixels.
-	public static func loadThumbnail(at url: URL, maxPixelSize: Int) async throws -> UIImage {
-		try await decode(at: url, maxPixelSize: maxPixelSize)
+	/// Decodes the picture at `url` straight to a thumbnail whose longer side is at most `maxPixelSize` pixels; a smaller
+	/// picture keeps its own size. At utility priority unless someone waits for it, as for the mosaic's tiles.
+	public static func loadThumbnail(at url: URL, maxPixelSize: Int, qos: DispatchQoS.QoSClass = .utility) async throws -> UIImage {
+		try await decode(at: url, maxPixelSize: maxPixelSize, qos: qos)
 	}
 
-	/// Decodes the picture at `url` upright, at most `maxPixelSize` pixels on its longer side or else at its own size,
-	/// which someone waits for to frame a picture.
-	private static func decode(at url: URL, maxPixelSize: Int?) async throws -> UIImage {
+	/// Decodes the picture at `url` upright, at most `maxPixelSize` pixels on its longer side or else at its own size.
+	private static func decode(at url: URL, maxPixelSize: Int?, qos: DispatchQoS.QoSClass) async throws -> UIImage {
 		try Task.checkCancellation()
 		let thumbnail: UIImage = try await withCheckedThrowingContinuation { continuation in
-			DispatchQueue.global(qos: maxPixelSize == nil ? .userInitiated : .utility).async {
+			DispatchQueue.global(qos: qos).async {
 				let sourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
 				var thumbnailOptions: [CFString: Any] = [
 					kCGImageSourceCreateThumbnailFromImageAlways: true,

@@ -121,12 +121,14 @@ final class MosaicPicturesRetryTests: XCTestCase {
 		XCTAssertEqual(presenter.picture(for: person)?.pictureID, person.widgetPicId, "The widget photo stays, not the monogram")
 	}
 
-	private static func photo(_ colour: UIColor) -> UIImage {
+	/// A decoded tile thumbnail in `colour`.
+	private static func photo(_ colour: UIColor) -> TileThumbnail {
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = 1
-		return UIGraphicsImageRenderer(size: CGSize(width: 60, height: 40), format: format).image { context in
+		let image = UIGraphicsImageRenderer(size: CGSize(width: 60, height: 40), format: format).image { context in
 			colour.setFill()
 			context.fill(CGRect(x: 0, y: 0, width: 60, height: 40))
 		}
+		return TileThumbnail(image: image, isFromCache: false)
 	}
 }
