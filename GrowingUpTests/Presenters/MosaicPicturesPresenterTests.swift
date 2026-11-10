@@ -157,14 +157,16 @@ final class MosaicPicturesPresenterTests: XCTestCase {
 		XCTAssertNil(presenter.picture(for: person))
 	}
 
-	private static func photo(_ colour: UIColor, size: CGSize = CGSize(width: 600, height: 400)) -> UIImage {
+	/// A decoded tile thumbnail in `colour`.
+	private static func photo(_ colour: UIColor, size: CGSize = CGSize(width: 600, height: 400)) -> TileThumbnail {
 		let format = UIGraphicsImageRendererFormat()
 		format.scale = 1
 		format.preferredRange = .standard
-		return UIGraphicsImageRenderer(size: size, format: format).image { context in
+		let image = UIGraphicsImageRenderer(size: size, format: format).image { context in
 			colour.setFill()
 			context.fill(CGRect(origin: .zero, size: size))
 		}
+		return TileThumbnail(image: image, isFromCache: false)
 	}
 
 	private static func isClose(_ colour: UIColor, to expected: UIColor) -> Bool {

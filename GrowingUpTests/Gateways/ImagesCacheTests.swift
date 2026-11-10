@@ -177,6 +177,27 @@ final class ImagesCacheTests: XCTestCase {
 		XCTAssertNil(ImagesCache.memoryCache.value(forKey: image.cachingKey), "Only the thumbnail stays in memory")
 	}
 
+	/// A tile's thumbnail is kept between launches and removed with its picture, as when a photo is replaced.
+	func testTileThumbnailIsCachedAndDeletedWithItsPicture() async throws {
+		let image = PersonImage(uiImage: photo())
+		let url = try storedURL(for: image.cachingKey)
+		let thumbnailURL = ThumbnailCache.shared.url(of: image.id, maxPixelSize: 150)
+		defer {
+			ImagesCache.memoryCache.removeValue(forKey: image.cachingKey)
+			try? FileManager.default.removeItem(at: url)
+			ThumbnailCache.shared.remove(image.id)
+		}
+		try await DiskImageStore().save(image)
+		let decoded = try await ImagesCache.loadTileThumbnail(image: PersonImage(id: image.id), maxPixelSize: 150)
+		XCTAssertFalse(decoded.isFromCache)
+		XCTAssertEqual(try XCTUnwrap(decoded.image.cgImage).width, 150)
+		let cached = try await ImagesCache.loadTileThumbnail(image: PersonImage(id: image.id), maxPixelSize: 150)
+		XCTAssertTrue(cached.isFromCache)
+		XCTAssertTrue(FileManager.default.fileExists(atPath: thumbnailURL.path))
+		try await DiskImageStore().delete(image)
+		XCTAssertFalse(FileManager.default.fileExists(atPath: thumbnailURL.path))
+	}
+
 	func testWidgetThumbnailBoundsDecodedPixelsAndPreservesOriginal() async throws {
 		let url = FileManager.default.temporaryDirectory.appendingPathComponent("\(UUID()).jpg")
 		defer { try? FileManager.default.removeItem(at: url) }

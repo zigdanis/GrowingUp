@@ -53,6 +53,7 @@ public final class DiskImageStore: @unchecked Sendable, ImageStore {
 					for key in image.storedCachingKeys where Disk.exists(key, in: self.directory) {
 						try Disk.remove(key, from: self.directory)
 					}
+					ThumbnailCache.shared.remove(image.id)
 					continuation.resume()
 				} catch {
 					continuation.resume(throwing: error)

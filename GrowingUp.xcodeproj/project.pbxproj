@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F8F118994E51B6E4AA024A94 /* MosaicPicturesAnalyticsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43EA40B9A4B1A5C809478D3 /* MosaicPicturesAnalyticsTests.swift */; };
+		A2C269DAA8BDD7C260422676 /* ThumbnailCacheBenchmarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F62522DEC9C03AEB3232D628 /* ThumbnailCacheBenchmarkTests.swift */; };
+		06A3204555F906BD0D429542 /* ThumbnailCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAEF9ABD6BC8D680E29E31 /* ThumbnailCacheTests.swift */; };
+		ED77F48CAEE99B83696573C1 /* MosaicPicturesLoadReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF99EFEF90F72C9E2175B06 /* MosaicPicturesLoadReport.swift */; };
+		D1445B6D3EC7CCB9F1EA2435 /* ThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF608A57218B2B83C00005DB /* ThumbnailCache.swift */; };
+		487385AAF07A864FEA338D46 /* TileThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA22D7A47C325F4B9E82954 /* TileThumbnail.swift */; };
 		9FA97292A2A9A63D50132377 /* ICloudBackupService+Write.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0251E47CBBC3FF67D2352890 /* ICloudBackupService+Write.swift */; };
 		0757B4346EA75197BC728C7B /* BackupDigestCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */; };
 		3D155C652CCBCEF34672506C /* BackupPassScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */; };
@@ -551,6 +557,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A43EA40B9A4B1A5C809478D3 /* MosaicPicturesAnalyticsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesAnalyticsTests.swift; sourceTree = "<group>"; };
+		F62522DEC9C03AEB3232D628 /* ThumbnailCacheBenchmarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCacheBenchmarkTests.swift; sourceTree = "<group>"; };
+		2DEAEF9ABD6BC8D680E29E31 /* ThumbnailCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCacheTests.swift; sourceTree = "<group>"; };
+		1FF99EFEF90F72C9E2175B06 /* MosaicPicturesLoadReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MosaicPicturesLoadReport.swift; sourceTree = "<group>"; };
+		DF608A57218B2B83C00005DB /* ThumbnailCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailCache.swift; sourceTree = "<group>"; };
+		6DA22D7A47C325F4B9E82954 /* TileThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileThumbnail.swift; sourceTree = "<group>"; };
 		0251E47CBBC3FF67D2352890 /* ICloudBackupService+Write.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ICloudBackupService+Write.swift"; sourceTree = "<group>"; };
 		4B6CF0EB2F3931910B849BF0 /* BackupDigestCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupDigestCache.swift; sourceTree = "<group>"; };
 		84ABE1A915971FA882FBD761 /* BackupPassScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupPassScheduler.swift; sourceTree = "<group>"; };
@@ -1466,6 +1478,8 @@
 				09F6B52523535E26003A1A01 /* MemoryCache.swift */,
 				C5A5CE25AE4BC2162C18D3CF /* DiskImageStore.swift */,
 				ED19A2E6FBDA55F151C773B2 /* OriginalPhotoFile.swift */,
+				DF608A57218B2B83C00005DB /* ThumbnailCache.swift */,
+				6DA22D7A47C325F4B9E82954 /* TileThumbnail.swift */,
 				8E88731C743E444D0561E0DE /* ValueWrapper.swift */,
 			);
 			path = Cache;
@@ -1515,6 +1529,8 @@
 				ED18EF40553A6D416F5697C0 /* CoreDataPersonsOrderTests.swift */,
 				0929F1EA2259120300212F29 /* CachePersonsGatewayTests.swift */,
 				CA9319E726711F9C5D5FB002 /* ImagesCacheTests.swift */,
+				F62522DEC9C03AEB3232D628 /* ThumbnailCacheBenchmarkTests.swift */,
+				2DEAEF9ABD6BC8D680E29E31 /* ThumbnailCacheTests.swift */,
 			);
 			path = Gateways;
 			sourceTree = "<group>";
@@ -1808,6 +1824,7 @@
 				639B959958389D2742679C7C /* PeoplePresenter+ICloudBackup.swift */,
 				BCBCC9A9ADFA41A69AD9D47B /* PeoplePresenter+Viewer.swift */,
 				A7A7712286042972254A6CDC /* MosaicPicturesPresenter.swift */,
+				1FF99EFEF90F72C9E2175B06 /* MosaicPicturesLoadReport.swift */,
 				A0015B5F413251C88922327A /* AgeTicker.swift */,
 				6C792696F087ADD48137C6CD /* BirthdayCountdown.swift */,
 				D1FD0A72FBD2F3D3790EE477 /* PersonAgeCard.swift */,
@@ -1940,6 +1957,7 @@
 			isa = PBXGroup;
 			children = (
 				A7A100000000000000000029 /* AnalyticsEventTests.swift */,
+				A43EA40B9A4B1A5C809478D3 /* MosaicPicturesAnalyticsTests.swift */,
 				A7A100000000000000000039 /* CrashReportScrubbingTests.swift */,
 				A7A10000000000000000002B /* MonitoringConfigurationTests.swift */,
 				A7A10000000000000000002D /* PeopleAnalyticsTests.swift */,
@@ -2302,6 +2320,8 @@
 				7137377D7FA4F961F833CDFA /* PersonImages.swift in Sources */,
 				93FD87F27D684E64797A6BF5 /* DiskImageStore.swift in Sources */,
 				ED194B4E97268FAC77C109F3 /* OriginalPhotoFile.swift in Sources */,
+				D1445B6D3EC7CCB9F1EA2435 /* ThumbnailCache.swift in Sources */,
+				487385AAF07A864FEA338D46 /* TileThumbnail.swift in Sources */,
 				59292205208AA413665CE54F /* ValueWrapper.swift in Sources */,
 				AED00FF147F3E528FB039EE6 /* CoreDataStackImplementation.swift in Sources */,
 				CF6F04B22E594F399E944388 /* SQLiteStoreAccess.swift in Sources */,
@@ -2372,6 +2392,8 @@
 				ED19B45C9634A0F497E0CAC5 /* MemoryImageStore.swift in Sources */,
 				0929F1EB2259120300212F29 /* CachePersonsGatewayTests.swift in Sources */,
 				CA9319E726711F9C5D5FB001 /* ImagesCacheTests.swift in Sources */,
+				A2C269DAA8BDD7C260422676 /* ThumbnailCacheBenchmarkTests.swift in Sources */,
+				06A3204555F906BD0D429542 /* ThumbnailCacheTests.swift in Sources */,
 				099C9165225F4D64005C963C /* FetchPersonsUseCaseTests.swift in Sources */,
 				09AE1B282263A5F800D6A78B /* AgeCalculatorTests.swift in Sources */,
 				271F881A72E118B9D4719FD5 /* AgeSummaryTests.swift in Sources */,
@@ -2425,6 +2447,7 @@
 				014245F0AC9F2B4219AEB16D /* AgeTickerTests.swift in Sources */,
 				090EF5C3C35C7B906EA72870 /* OverviewPresenterTests.swift in Sources */,
 				A7A10000000000000000002A /* AnalyticsEventTests.swift in Sources */,
+				F8F118994E51B6E4AA024A94 /* MosaicPicturesAnalyticsTests.swift in Sources */,
 				A7A10000000000000000003A /* CrashReportScrubbingTests.swift in Sources */,
 				A7A10000000000000000002C /* MonitoringConfigurationTests.swift in Sources */,
 				A7A10000000000000000002E /* PeopleAnalyticsTests.swift in Sources */,
@@ -2642,6 +2665,7 @@
 				2BB71BBF149DFBAC627D05A8 /* UITestImageStore.swift in Sources */,
 				23B57E20419711EC7A32EB4B /* UITestStore.swift in Sources */,
 				47F91BDB15D345441CFF1C01 /* MosaicPicturesPresenter.swift in Sources */,
+				ED77F48CAEE99B83696573C1 /* MosaicPicturesLoadReport.swift in Sources */,
 				0C4CF8D641DA6DD20936D7EC /* AgeTicker.swift in Sources */,
 				143A6954D1AF60E981AF5572 /* BirthdayCountdown.swift in Sources */,
 				3E1771FDB28AE0D662A0F557 /* PersonAgeCard.swift in Sources */,

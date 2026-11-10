@@ -28,7 +28,8 @@ final class AnalyticsEventTests: XCTestCase {
 			.dataRestored(source: .icloud, peopleAdded: 2, peopleAlreadyPresent: 0, peopleOverLimit: 0, intoEmptyLibrary: true),
 			.iCloudBackupToggled(isOn: false),
 			.widgetHintShown(shownLaunches: 1), .widgetHintOpened(shownLaunches: 2),
-			.widgetHintDismissed(shownLaunches: 3)
+			.widgetHintDismissed(shownLaunches: 3),
+			.mosaicPicturesLoaded(peopleCount: 4, cachedCount: 2, decodedCount: 1, monogramCount: 1, durationMs: 420)
 		]
 		let snakeCase = /^[a-z]+(_[a-z]+)*$/
 		for event in events {
@@ -40,7 +41,16 @@ final class AnalyticsEventTests: XCTestCase {
 				}
 			}
 		}
-		XCTAssertEqual(Set(events.map(\.name)).count, 20, "Every event has its own name")
+		XCTAssertEqual(Set(events.map(\.name)).count, 21, "Every event has its own name")
+	}
+
+	func testTheMosaicLoadIsDescribedByCountsAndItsDuration() {
+		XCTAssertEqual(
+			AnalyticsEvent.mosaicPicturesLoaded(peopleCount: 4, cachedCount: 2, decodedCount: 1, monogramCount: 1, durationMs: 420).properties,
+			[
+				"people_count": .int(4), "cached_count": .int(2), "decoded_count": .int(1), "monogram_count": .int(1),
+				"duration_ms": .int(420)
+			])
 	}
 
 	func testASavedPersonIsDescribedByFlagsAndCountsOnly() {
