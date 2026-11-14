@@ -150,18 +150,26 @@ class LocalExecutorTests(unittest.TestCase):
             with local.release_file_lock(path):
                 pass
 
-    def test_credential_permissions_reject_shared_or_tracked_files(self):
+    def test_credentials_come_only_from_the_sops_vault(self):
         with tempfile.TemporaryDirectory() as directory:
-            path = Path(directory) / 'key.json'
-            path.write_text('{}')
-            path.chmod(0o644)
-            with self.assertRaisesRegex(ValueError, 'owner-only'):
-                local.restricted(path)
-            path.chmod(0o600)
-            self.assertEqual(path.resolve(), local.restricted(path))
-            (path.parent / '.git').mkdir()
-            with self.assertRaisesRegex(ValueError, 'Git checkouts'):
-                local.restricted(path)
+            key_file = Path(directory) / 'growingup/asc-api-key.json'
+            with patch.object(local, 'ASC_KEY_FILE', key_file), patch.object(local.shutil, 'which', return_value='sops'):
+                with self.assertRaisesRegex(RuntimeError, 'fleet-secrets'):
+                    local.load_key()
+                key_file.parent.mkdir()
+                key_file.write_text('encrypted')
+                decrypted = json.dumps({'key_id': 'K', 'issuer_id': 'I', 'key': 'PEM'})
+                with patch.object(local.subprocess, 'run',
+                                  return_value=subprocess.CompletedProcess([], 0, decrypted, '')) as run:
+                    self.assertEqual('K', local.load_key()['key_id'])
+                self.assertEqual(['sops', 'decrypt', str(key_file)], run.call_args.args[0])
+                with patch.object(local.subprocess, 'run',
+                                  return_value=subprocess.CompletedProcess([], 1, '', 'no identity matched')):
+                    with self.assertRaisesRegex(RuntimeError, 'no identity matched'):
+                        local.load_key()
+                with patch.object(local.subprocess, 'run', return_value=subprocess.CompletedProcess([], 0, '{}', '')):
+                    with self.assertRaisesRegex(ValueError, 'key_id, issuer_id and key'):
+                        local.load_key()
 
     def test_local_execution_isolated_source_and_redacted_logs(self):
         calls = []

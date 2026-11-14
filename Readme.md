@@ -98,10 +98,12 @@ no Carthage or CocoaPods step is required:
 
 ## TestFlight deployment
 
-One-time Mac setup (an existing App Store Connect API key JSON, kept outside Git):
+One-time Mac setup (the App Store Connect key and Match password come from Danis's
+SOPS vault `~/myai/fleet-secrets/growingup/`, never from files in Git or plaintext files;
+see `fastlane/README.md`):
 
 ```sh
-scripts/testflight setup local --api-key /path/to/asc_api_key.json
+scripts/testflight setup local
 ```
 
 Generate English/Russian notes with your signed-in local Codex CLI and review the

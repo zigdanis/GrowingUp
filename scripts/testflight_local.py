@@ -6,35 +6,44 @@ import json
 import os
 from pathlib import Path
 import platform
-import stat
+import shutil
 import subprocess
 import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-CONFIG = Path.home() / '.config/growingup-testflight/local.json'
+# Release credentials live only in Danis's SOPS vault (zigdanis/fleet-secrets), decrypted in memory
+# with the Mac's own age key; there are no plaintext key or password files on Fleet machines.
+VAULT = Path.home() / 'myai/fleet-secrets'
+ASC_KEY_FILE = VAULT / 'growingup/asc-api-key.json'
+MATCH_PASSWORD_FILE = VAULT / 'growingup/match-password'
 STATE = Path.home() / 'Library/Application Support/GrowingUp/releases'
 BUNDLE_PATH = Path.home() / '.local/share/growingup/bundle'
 
 
-def restricted(path):
-    path = Path(path).expanduser().resolve(strict=True)
-    mode = path.stat()
-    if not stat.S_ISREG(mode.st_mode) or mode.st_uid != os.getuid() or mode.st_mode & 0o077:
-        raise ValueError('Use an owner-only regular credential file (chmod 600) outside the repository')
-    if ROOT in path.parents or any((parent / '.git').exists() for parent in path.parents):
-        raise ValueError('Credential files must be outside Git checkouts')
-    return path
+def vault_read(path):
+    """Decrypt one vault file with sops; the value never reaches arguments, output or errors."""
+    sops = shutil.which('sops') or next(
+        (c for c in (Path.home() / '.local/bin/sops', Path('/opt/homebrew/bin/sops')) if c.exists()), None)
+    if not sops:
+        raise RuntimeError('sops is not installed; see ~/myai/fleet-secrets/README.md')
+    if not path.exists():
+        raise RuntimeError(f'{path} is missing; clone zigdanis/fleet-secrets to {VAULT}')
+    result = subprocess.run([str(sops), 'decrypt', str(path)], capture_output=True, text=True)
+    if result.returncode:
+        reason = (result.stderr.strip().splitlines() or ['unknown error'])[-1]
+        raise RuntimeError(f'sops could not decrypt {path}: {reason}')
+    return result.stdout
 
 
-def load_key(path):
+def load_key():
     try:
-        data = json.loads(restricted(path).read_text())
+        data = json.loads(vault_read(ASC_KEY_FILE))
         if not all(isinstance(data.get(key), str) and data[key].strip() for key in ('key_id', 'issuer_id', 'key')):
             raise ValueError()
         return data
     except (ValueError, KeyError, TypeError):
-        raise ValueError('Use an App Store Connect API JSON key with key_id, issuer_id and key fields') from None
+        raise ValueError(f'{ASC_KEY_FILE} must be an App Store Connect API JSON key with key_id, issuer_id and key') from None
 
 
 def bundle_environment():
@@ -43,23 +52,16 @@ def bundle_environment():
             'FASTLANE_HIDE_CHANGELOG': 'true', 'FASTLANE_DISABLE_COLORS': '1'}
 
 
-def setup_local(api_key=None):
+def setup_local():
     if platform.system() != 'Darwin':
         raise RuntimeError('Local TestFlight deployment requires macOS and Xcode; use cloud on this machine')
-    if api_key:
-        path = restricted(api_key)
-        load_key(path)
-        CONFIG.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        CONFIG.write_text(json.dumps({'api_key_file': str(path)}, indent=2) + '\n')
-        CONFIG.chmod(0o600)
-    if not CONFIG.exists():
-        raise RuntimeError('Run scripts/testflight setup local --api-key /path/to/asc_api_key.json once')
-    config = json.loads(restricted(CONFIG).read_text())
-    load_key(config['api_key_file'])
+    load_key()
+    if not vault_read(MATCH_PASSWORD_FILE).strip():
+        raise RuntimeError(f'{MATCH_PASSWORD_FILE} is empty')
     result = subprocess.run(['bundle', 'install', '--jobs', '4'], cwd=ROOT, env=bundle_environment())
     if result.returncode:
         raise RuntimeError('Could not install the locked Fastlane dependencies')
-    print('Local setup saved. Credentials stay on this Mac; next run scripts/testflight check local.')
+    print('Local setup done. Credentials come from the SOPS vault; next run scripts/testflight check local.')
 
 
 def last_local_id():
@@ -116,15 +118,11 @@ def release_file_lock(directory):
 def credentials(api):
     if platform.system() != 'Darwin':
         raise RuntimeError('Local TestFlight deployment requires macOS and Xcode; use cloud on this machine')
-    if not CONFIG.exists():
-        raise RuntimeError('Run scripts/testflight setup local --api-key /path/to/asc_api_key.json once')
-    config = json.loads(restricted(CONFIG).read_text())
-    key = load_key(config['api_key_file'])
+    key = load_key()
+    password = vault_read(MATCH_PASSWORD_FILE).rstrip('\n')
+    if not password:
+        raise RuntimeError(f'{MATCH_PASSWORD_FILE} is empty')
     variables = {item['name']: item['value'] for item in api('actions/variables')['variables']}
-    password = subprocess.run(['security', 'find-generic-password', '-s', 'pro.ziganshin.GrowingUp.match',
-                               '-a', 'growingup-ci-20261004', '-w'], capture_output=True, text=True)
-    if password.returncode:
-        raise RuntimeError('The GrowingUp Match password is missing from the Mac login Keychain')
     token = subprocess.run(['gh', 'auth', 'token'], capture_output=True, text=True)
     if token.returncode:
         raise RuntimeError('GitHub CLI is not signed in; run gh auth login')
@@ -137,7 +135,7 @@ def credentials(api):
     # Git reads credentials from the environment, never command arguments or files.
     env.update({'GIT_CONFIG_COUNT': '1', 'GIT_CONFIG_KEY_0': 'http.https://github.com/.extraheader',
                 'GIT_CONFIG_VALUE_0': 'Authorization: Basic ' + basic, 'GIT_TERMINAL_PROMPT': '0',
-                'MATCH_PASSWORD': password.stdout.rstrip('\n'),
+                'MATCH_PASSWORD': password,
                 'ASC_KEY_ID': key['key_id'], 'ASC_ISSUER_ID': key['issuer_id']})
     content = base64.b64decode(key['key']).decode() if key.get('is_key_content_base64') else key['key']
     secrets = [env['MATCH_PASSWORD'], token.stdout.strip(), basic, key['key_id'], key['issuer_id'],
