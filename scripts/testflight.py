@@ -215,7 +215,6 @@ def unified_main(argv):
     generate.add_argument('--source', default='master')
     setup = sub.add_parser('setup', help='One-time setup')
     setup.add_argument('target', choices=['local', 'cloud'])
-    setup.add_argument('--api-key', help='Local App Store Connect API key JSON file')
     for operation in ('check', 'deploy', 'archive', 'status', 'resume', 'update-notes'):
         command = sub.add_parser(operation)
         command.add_argument('target', choices=['local', 'cloud'])
@@ -231,7 +230,7 @@ def unified_main(argv):
         return
     if args.operation == 'setup':
         if args.target == 'local':
-            setup_local(args.api_key)
+            setup_local()
         else:
             readiness()
         return

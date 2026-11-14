@@ -27,17 +27,22 @@ numbers in the developer's working copy.
 
 ## One-time setup
 
-- Local: install Xcode, Ruby/Bundler, GitHub CLI (`gh auth login`) and Codex CLI.
-  Run `scripts/testflight setup local --api-key /path/to/asc_api_key.json` with an
-  existing owner-only API JSON key outside Git. It contains `key_id`, `issuer_id`
-  and `key` (PEM content), optionally `is_key_content_base64`.
-- Local setup saves only the key file path in owner-only
-  `~/.config/growingup-testflight/local.json` and installs the locked gems in
-  `~/.local/share/growingup/bundle`. The existing Apple Distribution identity and
-  its private key must be available in the Mac login Keychain.
-- The existing Match password backup is read from the Mac login Keychain: service
-  `pro.ziganshin.GrowingUp.match`, account `growingup-ci-20261004`. Local signing
-  syncs existing material read-only; it does not create or revoke certificates.
+- Local: install Xcode, Ruby/Bundler, GitHub CLI (`gh auth login`), Codex CLI and
+  `sops`, and clone Danis's private vault `zigdanis/fleet-secrets` to
+  `~/myai/fleet-secrets` (the Mac's age key must be a recipient; MacPro is). Then run
+  `scripts/testflight setup local`: it checks that the vault decrypts and installs the
+  locked gems in `~/.local/share/growingup/bundle`. The existing Apple Distribution
+  identity and its private key must be available in the Mac login Keychain.
+- Local releases decrypt their credentials from the vault in memory; there are no
+  plaintext key or password files on Fleet machines:
+  - `growingup/asc-api-key.json`: App Store Connect Admin API key `fastlane`
+    (`key_id`, `issuer_id`, `key` PEM content), written to a temporary owner-only
+    `.p8` only while Fastlane runs;
+  - `growingup/match-password`: Match passphrase for the `growingup-ci` branch of
+    `zigdanis/zigdanis-certificates`. Local signing syncs existing material
+    read-only; it does not create or revoke certificates.
+  To rotate either value: `sops edit` the file in `~/myai/fleet-secrets`, commit and
+  push there, then update the matching `testflight` environment secret.
 - Cloud: `scripts/testflight setup cloud` checks the existing master-only
   `testflight` GitHub environment. Keep Apple/Match credentials in that environment;
   `scripts/testflight-secrets.py` securely imports them when setup is needed.
