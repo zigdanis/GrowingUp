@@ -149,7 +149,10 @@ def apple():
     sops = shutil.which("sops") or next((p for p in (os.path.expanduser("~/.local/bin/sops"), "/opt/homebrew/bin/sops") if os.path.exists(p)), None)
     if not sops or not FLEET_CREDENTIALS.exists():
         sys.exit(f"Need sops and the Fleet vault at {FLEET_CREDENTIALS} (or ASC_KEY_PATH, ASC_KEY_ID, ASC_ISSUER_ID).")
-    credentials = json.loads(subprocess.run([sops, "decrypt", str(FLEET_CREDENTIALS)], check=True, capture_output=True, text=True).stdout)
+    result = subprocess.run([sops, "decrypt", str(FLEET_CREDENTIALS)], capture_output=True, text=True)
+    if result.returncode:
+        sys.exit(f"sops could not decrypt {FLEET_CREDENTIALS}: {result.stderr.strip()}")
+    credentials = json.loads(result.stdout)
     with tempfile.NamedTemporaryFile("w", suffix=".p8") as key:
         os.chmod(key.name, 0o600)
         key.write(credentials["key"])
