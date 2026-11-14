@@ -13,13 +13,16 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
+import subprocess
 import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 LISTING = ROOT / "marketing/app-store/listing.json"
 APP_ID = "1461697772"
-FLEET_CREDENTIALS = Path("~/.config/app-store-connect/fleet.json").expanduser()
+# "Fleet agents" team key, encrypted with SOPS in the Fleet vault; each Fleet machine decrypts it with its own age key.
+FLEET_CREDENTIALS = Path("~/myai/fleet-secrets/fleet/all/app-store-connect-fleet.json").expanduser()
 # Name and subtitle live on the appInfo, keywords and texts on the version; both are editable only in these states.
 EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"}
 INFO_FIELDS = ("name", "subtitle")
@@ -143,7 +146,13 @@ def apple():
     spec.loader.exec_module(metadata)
     if all(os.environ.get(name) for name in ("ASC_KEY_PATH", "ASC_KEY_ID", "ASC_ISSUER_ID")):
         return metadata.Apple()
-    credentials = json.loads(FLEET_CREDENTIALS.read_text())
+    sops = shutil.which("sops") or next((p for p in (os.path.expanduser("~/.local/bin/sops"), "/opt/homebrew/bin/sops") if os.path.exists(p)), None)
+    if not sops or not FLEET_CREDENTIALS.exists():
+        sys.exit(f"Need sops and the Fleet vault at {FLEET_CREDENTIALS} (or ASC_KEY_PATH, ASC_KEY_ID, ASC_ISSUER_ID).")
+    result = subprocess.run([sops, "decrypt", str(FLEET_CREDENTIALS)], capture_output=True, text=True)
+    if result.returncode:
+        sys.exit(f"sops could not decrypt {FLEET_CREDENTIALS}: {result.stderr.strip()}")
+    credentials = json.loads(result.stdout)
     with tempfile.NamedTemporaryFile("w", suffix=".p8") as key:
         os.chmod(key.name, 0o600)
         key.write(credentials["key"])
