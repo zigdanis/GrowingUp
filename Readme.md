@@ -125,8 +125,8 @@ Both paths select the next free build number, apply matching app/widget versions
 sign, upload, publish EN/RU notes and distribute to the tester group. Omit `--version`
 to choose the next patch above the recorded Apple/beta versions. New explicit
 versions must exceed the approved App Store version. Notes are regenerated if the
-source changes. Credentials stay in the Mac Keychain/private API key file locally,
-or the existing protected GitHub `testflight` environment in the cloud.
+source changes. Credentials come from the SOPS vault `~/myai/fleet-secrets/growingup/`
+locally, or from the existing protected GitHub `testflight` environment in the cloud.
 
 `scripts/testflight check local` (or `cloud`) checks without uploading;
 `archive local` (or `cloud`) creates an archive without uploading.
