@@ -1,6 +1,6 @@
 ---
 name: delivery
-description: GrowingUp's delivery workflow for features, fixes and new builds: roles, review, checks, PR, merge and TestFlight. Use for any delivery request in this repository; when Danis says "full send" or "full stop", it supplies the steps those skills run. An explicit full-send request includes TestFlight. Discussion and read-only questions do not start delivery.
+description: GrowingUp's delivery workflow for features, fixes and new builds (roles, review, checks, PR, merge and TestFlight). Use for any delivery request in this repository; when Danis says "full send" or "full stop", it supplies the steps those skills run. An explicit full-send request includes TestFlight. Discussion and read-only questions do not start delivery.
 ---
 
 # Delivery
