@@ -1,7 +1,7 @@
 ## Standing Rules
 
 - Write all GitHub-facing prose in English, including commit messages, code comments, PR and issue titles and descriptions, review comments, discussions, and release notes.
-- Deliver changes with the `full-send` skill in `.agents/skills/`: its roles, merge gate, bot-review and CI-budget rules apply to every PR, including PR-only work.
+- Deliver changes with the `delivery` skill in `.agents/skills/` ("full send" from Danis means through merge and TestFlight, "full stop" means a PR ready to merge): its roles, merge gate, bot-review and CI-budget rules apply to every PR, including PR-only work.
 - On Linux, validate iOS changes through the PR's macOS build/unit CI. If the developer explicitly requested UI verification, inspect its exported screenshots with `scripts/pr-evidence.sh PR_NUMBER`, fix concrete failures on the same PR, and remove downloaded evidence after review.
 - Simulators: every simulator run, test, capture or Device panel follows the Fleet `simulator-queue` skill (`~/myai/fleet/skills/simulator-queue/SKILL.md`), which is shared by all projects: which device, how to reach MacPro from Linux, the queue, the cloud fallback and cleanup. `scripts/simulator-app.sh [PR_NUMBER]` prints the CI simulator build for a PR head, or for master without an argument; the `visual-acceptance` skill has what GrowingUp itself needs.
 - Duo UI journeys are manual opt-in only: `gh workflow run ci.yml --ref BRANCH -f run_duo_ui_tests=true`. Run them only when the developer explicitly requests UI tests or captures. Routine PRs and master pushes must not launch them or wait for their screenshots before merge.
