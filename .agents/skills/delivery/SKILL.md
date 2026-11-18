@@ -1,9 +1,9 @@
 ---
-name: full-send
-description: Deliver features, fixes and new builds through implementation, review, checks and merge. An explicit full-send request includes TestFlight. Discussion and read-only questions do not start delivery.
+name: delivery
+description: GrowingUp's delivery workflow for features, fixes and new builds (roles, review, checks, PR, merge and TestFlight). Use for any delivery request in this repository; when Danis says "full send" or "full stop", it supplies the steps those skills run. An explicit full-send request includes TestFlight. Discussion and read-only questions do not start delivery.
 ---
 
-# Full send
+# Delivery
 
 A PR should open early. UI tests and captures run only when the developer requests them; ordinary delivery does not dispatch Duo UI journeys or wait for their screenshots. A requested TestFlight delivery ends at its actual Apple/tester status, not at merge. Any loop that repeats without new information is a bug in the process: diagnose it and report the blocker.
 
@@ -16,7 +16,8 @@ A PR should open early. UI tests and captures run only when the developer reques
 
 ## Authorization
 
-- **Full-send:** when the developer explicitly requests it, finish through PR, merge and TestFlight. Don't ask for deployment permission again.
+- **Full send:** when the developer explicitly requests it, finish through PR, merge and TestFlight. Don't ask for deployment permission again.
+- **Full stop:** finish with the PR ready to merge; no merge and no TestFlight.
 - **TestFlight:** an explicit TestFlight request also authorizes beta deployment. App Store actions need separate approval.
 - **Limits:** `PR-only` stops before merge. `No-deploy` stops before TestFlight.
 - **Discussion:** loading or discussing this skill does not authorize a release.
