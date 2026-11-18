@@ -12,9 +12,9 @@ import tempfile
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-# Release credentials live only in Danis's SOPS vault (zigdanis/fleet-secrets), decrypted in memory
+# Release credentials live only in Danis's SOPS vault (zigdanis/secrets), decrypted in memory
 # with the Mac's own age key; there are no plaintext key or password files on Fleet machines.
-VAULT = Path.home() / 'myai/fleet-secrets'
+VAULT = Path.home() / 'myai/secrets'
 ASC_KEY_FILE = VAULT / 'growingup/asc-api-key.json'
 MATCH_PASSWORD_FILE = VAULT / 'growingup/match-password'
 STATE = Path.home() / 'Library/Application Support/GrowingUp/releases'
@@ -26,9 +26,9 @@ def vault_read(path):
     sops = shutil.which('sops') or next(
         (c for c in (Path.home() / '.local/bin/sops', Path('/opt/homebrew/bin/sops')) if c.exists()), None)
     if not sops:
-        raise RuntimeError('sops is not installed; see ~/myai/fleet-secrets/README.md')
+        raise RuntimeError('sops is not installed; see ~/myai/secrets/README.md')
     if not path.exists():
-        raise RuntimeError(f'{path} is missing; clone zigdanis/fleet-secrets to {VAULT}')
+        raise RuntimeError(f'{path} is missing; clone zigdanis/secrets to {VAULT}')
     result = subprocess.run([str(sops), 'decrypt', str(path)], capture_output=True, text=True)
     if result.returncode:
         reason = (result.stderr.strip().splitlines() or ['unknown error'])[-1]

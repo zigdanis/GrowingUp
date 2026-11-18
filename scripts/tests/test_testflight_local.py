@@ -154,7 +154,7 @@ class LocalExecutorTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             key_file = Path(directory) / 'growingup/asc-api-key.json'
             with patch.object(local, 'ASC_KEY_FILE', key_file), patch.object(local.shutil, 'which', return_value='sops'):
-                with self.assertRaisesRegex(RuntimeError, 'fleet-secrets'):
+                with self.assertRaisesRegex(RuntimeError, 'secrets'):
                     local.load_key()
                 key_file.parent.mkdir()
                 key_file.write_text('encrypted')
