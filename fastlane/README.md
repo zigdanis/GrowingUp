@@ -28,8 +28,8 @@ numbers in the developer's working copy.
 ## One-time setup
 
 - Local: install Xcode, Ruby/Bundler, GitHub CLI (`gh auth login`), Codex CLI and
-  `sops`, and clone Danis's private vault `zigdanis/fleet-secrets` to
-  `~/myai/fleet-secrets` (the Mac's age key must be a recipient; MacPro is). Then run
+  `sops`, and clone Danis's private vault `zigdanis/secrets` to
+  `~/myai/secrets` (the Mac's age key must be a recipient; MacPro is). Then run
   `scripts/testflight setup local`: it checks that the vault decrypts and installs the
   locked gems in `~/.local/share/growingup/bundle`. The existing Apple Distribution
   identity and its private key must be available in the Mac login Keychain.
@@ -41,7 +41,7 @@ numbers in the developer's working copy.
   - `growingup/match-password`: Match passphrase for the `growingup-ci` branch of
     `zigdanis/zigdanis-certificates`. Local signing syncs existing material
     read-only; it does not create or revoke certificates.
-  To rotate either value: `sops edit` the file in `~/myai/fleet-secrets`, commit and
+  To rotate either value: `sops edit` the file in `~/myai/secrets`, commit and
   push there, then update the matching `testflight` environment secret.
 - Cloud: `scripts/testflight setup cloud` checks the existing master-only
   `testflight` GitHub environment. Keep Apple/Match credentials in that environment;
