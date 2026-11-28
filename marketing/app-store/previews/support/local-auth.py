@@ -14,11 +14,11 @@ spec = importlib.util.spec_from_file_location('growingup_metadata', ROOT / 'scri
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 # Same key and vault file as scripts/testflight_local.py; there is no plaintext copy on Fleet machines.
-vault_file = Path.home() / 'myai/secrets/growingup/asc-api-key.json'
+vault_file = Path.home() / 'workspace/home/secrets/growingup/asc-api-key.json'
 sops = shutil.which('sops') or next(
     (str(c) for c in (Path.home() / '.local/bin/sops', Path('/opt/homebrew/bin/sops')) if c.exists()), None)
 if not sops or not vault_file.exists():
-    sys.exit(f'Need sops and the vault file {vault_file} (clone zigdanis/secrets to ~/myai/secrets)')
+    sys.exit(f'Need sops and the vault file {vault_file} (clone zigdanis/secrets to ~/workspace/home/secrets)')
 result = subprocess.run([sops, 'decrypt', str(vault_file)], capture_output=True, text=True)
 if result.returncode:
     sys.exit(f'sops could not decrypt {vault_file}')

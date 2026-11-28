@@ -22,7 +22,7 @@ python3 marketing/app-store/previews/support/rebuild.py di en \
 ## Если нужна новая запись
 
 1. Устройство, очередь и уборка — по Fleet-навыку `simulator-queue`
-   (`~/myai/fleet/skills/simulator-queue/SKILL.md`): общий пул MacPro, отдельных
+   (`~/workspace/home/fleet/skills/simulator-queue/SKILL.md`): общий пул MacPro, отдельных
    симуляторов не создавать. Прежняя запись шла на iOS 26.5: 17 Pro Max, 14 Plus, SE 3. Caffeinate сейчас запрещён
    Данисом; запускать его можно только после нового разрешения.
 2. UI-сценарий — `GrowingUpUITests/AppStoreScreenshotTests.swift`:

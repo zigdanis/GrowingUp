@@ -80,7 +80,7 @@ python3 scripts/app-store-listing.py plan           # read-only diff against App
 python3 scripts/app-store-listing.py apply --confirm 3.1.0 # writes, then reads back
 ```
 
-The script uses `ASC_KEY_PATH`/`ASC_KEY_ID`/`ASC_ISSUER_ID` or the Fleet team key, decrypted from the Fleet SOPS vault (`~/myai/secrets`). It changes only name,
+The script uses `ASC_KEY_PATH`/`ASC_KEY_ID`/`ASC_ISSUER_ID` or the Fleet team key, decrypted from the Fleet SOPS vault (`~/workspace/home/secrets`). It changes only name,
 subtitle and keywords of existing localizations and copies the `en-US` description, What's New, promotional text and
 URLs into `en-GB`. It never creates a version or localization, edits the `en-US` or `ru` texts, touches
 screenshots, or submits. After editing the `en-US` texts in App Store Connect, run `plan` and `apply` again.

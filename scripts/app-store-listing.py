@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LISTING = ROOT / "marketing/app-store/listing.json"
 APP_ID = "1461697772"
 # "Fleet agents" team key, encrypted with SOPS in the Fleet vault; each Fleet machine decrypts it with its own age key.
-FLEET_CREDENTIALS = Path("~/myai/secrets/fleet/all/app-store-connect-fleet.json").expanduser()
+FLEET_CREDENTIALS = Path("~/workspace/home/secrets/fleet/all/app-store-connect-fleet.json").expanduser()
 # Name and subtitle live on the appInfo, keywords and texts on the version; both are editable only in these states.
 EDITABLE = {"PREPARE_FOR_SUBMISSION", "DEVELOPER_REJECTED", "REJECTED", "METADATA_REJECTED"}
 INFO_FIELDS = ("name", "subtitle")
