@@ -99,7 +99,7 @@ no Carthage or CocoaPods step is required:
 ## TestFlight deployment
 
 One-time Mac setup (the App Store Connect key and Match password come from Danis's
-SOPS vault `~/myai/secrets/growingup/`, never from files in Git or plaintext files;
+SOPS vault `~/workspace/home/secrets/growingup/`, never from files in Git or plaintext files;
 see `fastlane/README.md`):
 
 ```sh
@@ -125,7 +125,7 @@ Both paths select the next free build number, apply matching app/widget versions
 sign, upload, publish EN/RU notes and distribute to the tester group. Omit `--version`
 to choose the next patch above the recorded Apple/beta versions. New explicit
 versions must exceed the approved App Store version. Notes are regenerated if the
-source changes. Credentials come from the SOPS vault `~/myai/secrets/growingup/`
+source changes. Credentials come from the SOPS vault `~/workspace/home/secrets/growingup/`
 locally, or from the existing protected GitHub `testflight` environment in the cloud.
 
 `scripts/testflight check local` (or `cloud`) checks without uploading;
